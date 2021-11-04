@@ -1,35 +1,105 @@
-#name: Post merge checks
-#
-#env:
-#  FLUTTER_VERSION: "2.2.3"
-#
-#on:
-#  push:
-#    branches:
-#      - main
-#
-#jobs:
-#  Basic-checks:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Install Flutter
-#        uses: britannio/action-install-flutter@v1
-#        with:
-#          version: $FLUTTER_VERSION
-#
-#      - name: Get Packages
-#        run: |
-#          flutter pub get
-#          dart pub get
-#      - name: Flutter format
-#        run: |
-#          flutter format lib --set-exit-if-changed
-#          flutter format test --set-exit-if-changed
-#      - name: Flutter Analyze
-#        run: |
-#          flutter analyze lib test
-#      - name: Run Tests
-#        run: |
-#          flutter test
+name: Post Merge Release to Internal/Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      param:
+        description: 'Manually run releases choose one or many of: ios_internal, android_internal, none'
+        required: true
+        default: 'ios_internal android_internal'
+
+env:
+  flutter_channel: 'stable'
+  flutter_version: '2.5.3'
+  java_version: '12.x'
+  ios_device: 'iPhone 11 Pro (14.5)'
+  # Common environment variables used inside ./build_scripts files
+  GITHUB_USERNAME: 'xayn-admin'
+  # GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+
+jobs:
+  test_and_publish:
+    name: iOS, Android and Web distribution
+    runs-on: macos-latest
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            /Users/runner/hostedtoolcache/flutter
+            ~/application/ios/Pods
+          key: ios-flutter-${{ env.flutter_version }}
+          restore-keys: |
+            ios-flutter-cache-
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: ${{ env.flutter_channel }}
+          flutter-version: ${{ env.flutter_version }}
+
+      # - name: Analyze & unit test code
+      #   run: ./run_all_checks.sh
+
+      # - name: Build and submit new internal Android version to app center
+      #   timeout-minutes: 20
+      #   env:
+      #     PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+      #     APPCENTER_ANDROID_TOKEN: ${{ secrets.APPCENTER_ANDROID_TOKEN }}
+      #     APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
+      #   working-directory: ./application
+      #   run: |
+      #     build_scripts/build_android_for_release.sh -I -r
+      #   if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_internal'))
+
+      - name: Select Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build and submit new internal iOS version to app center
+        timeout-minutes: 20
+        env:
+          PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          APPCENTER_IOS_TOKEN: ${{ secrets.APPCENTER_IOS_TOKEN }}
+          APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
+        working-directory: ./application/ios
+        run: |
+          fastlane internal
+        if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_internal'))
+
+      # - name: Build and submit new release Android version to app center
+      #   timeout-minutes: 20
+      #   env:
+      #     PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_RELEASE_PASSWORD }}
+      #     APPCENTER_ANDROID_RELEASE_TOKEN: ${{ secrets.APPCENTER_ANDROID_RELEASE_TOKEN }}
+      #   working-directory: ./xayn_search
+      #   run: |
+      #     build_scripts/build_android_for_release.sh -R -r
+      #   if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_release'))
+
+      # - name: Build and submit new release iOS version to app center
+      #   timeout-minutes: 20
+      #   env:
+      #     PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_RELEASE_PASSWORD }}
+      #     APPCENTER_IOS_RELEASE_TOKEN: ${{ secrets.APPCENTER_IOS_RELEASE_TOKEN }}
+      #   working-directory: ./xayn_search
+      #   run: |
+      #     build_scripts/build_ios_for_release.sh -R -r
+      #   if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_release'))
