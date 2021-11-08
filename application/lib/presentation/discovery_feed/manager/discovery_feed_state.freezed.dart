@@ -19,10 +19,12 @@ class _$DiscoveryFeedStateTearOff {
 
   _DiscoveryFeedState call(
       {List<Document>? results,
+      required int resultIndex,
       required bool isComplete,
       required bool isInErrorState}) {
     return _DiscoveryFeedState(
       results: results,
+      resultIndex: resultIndex,
       isComplete: isComplete,
       isInErrorState: isInErrorState,
     );
@@ -35,6 +37,7 @@ const $DiscoveryFeedState = _$DiscoveryFeedStateTearOff();
 /// @nodoc
 mixin _$DiscoveryFeedState {
   List<Document>? get results => throw _privateConstructorUsedError;
+  int get resultIndex => throw _privateConstructorUsedError;
   bool get isComplete => throw _privateConstructorUsedError;
   bool get isInErrorState => throw _privateConstructorUsedError;
 
@@ -48,7 +51,11 @@ abstract class $DiscoveryFeedStateCopyWith<$Res> {
   factory $DiscoveryFeedStateCopyWith(
           DiscoveryFeedState value, $Res Function(DiscoveryFeedState) then) =
       _$DiscoveryFeedStateCopyWithImpl<$Res>;
-  $Res call({List<Document>? results, bool isComplete, bool isInErrorState});
+  $Res call(
+      {List<Document>? results,
+      int resultIndex,
+      bool isComplete,
+      bool isInErrorState});
 }
 
 /// @nodoc
@@ -63,6 +70,7 @@ class _$DiscoveryFeedStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? results = freezed,
+    Object? resultIndex = freezed,
     Object? isComplete = freezed,
     Object? isInErrorState = freezed,
   }) {
@@ -71,6 +79,10 @@ class _$DiscoveryFeedStateCopyWithImpl<$Res>
           ? _value.results
           : results // ignore: cast_nullable_to_non_nullable
               as List<Document>?,
+      resultIndex: resultIndex == freezed
+          ? _value.resultIndex
+          : resultIndex // ignore: cast_nullable_to_non_nullable
+              as int,
       isComplete: isComplete == freezed
           ? _value.isComplete
           : isComplete // ignore: cast_nullable_to_non_nullable
@@ -90,7 +102,11 @@ abstract class _$DiscoveryFeedStateCopyWith<$Res>
           _DiscoveryFeedState value, $Res Function(_DiscoveryFeedState) then) =
       __$DiscoveryFeedStateCopyWithImpl<$Res>;
   @override
-  $Res call({List<Document>? results, bool isComplete, bool isInErrorState});
+  $Res call(
+      {List<Document>? results,
+      int resultIndex,
+      bool isComplete,
+      bool isInErrorState});
 }
 
 /// @nodoc
@@ -107,6 +123,7 @@ class __$DiscoveryFeedStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? results = freezed,
+    Object? resultIndex = freezed,
     Object? isComplete = freezed,
     Object? isInErrorState = freezed,
   }) {
@@ -115,6 +132,10 @@ class __$DiscoveryFeedStateCopyWithImpl<$Res>
           ? _value.results
           : results // ignore: cast_nullable_to_non_nullable
               as List<Document>?,
+      resultIndex: resultIndex == freezed
+          ? _value.resultIndex
+          : resultIndex // ignore: cast_nullable_to_non_nullable
+              as int,
       isComplete: isComplete == freezed
           ? _value.isComplete
           : isComplete // ignore: cast_nullable_to_non_nullable
@@ -131,11 +152,16 @@ class __$DiscoveryFeedStateCopyWithImpl<$Res>
 
 class _$_DiscoveryFeedState extends _DiscoveryFeedState {
   const _$_DiscoveryFeedState(
-      {this.results, required this.isComplete, required this.isInErrorState})
+      {this.results,
+      required this.resultIndex,
+      required this.isComplete,
+      required this.isInErrorState})
       : super._();
 
   @override
   final List<Document>? results;
+  @override
+  final int resultIndex;
   @override
   final bool isComplete;
   @override
@@ -143,7 +169,7 @@ class _$_DiscoveryFeedState extends _DiscoveryFeedState {
 
   @override
   String toString() {
-    return 'DiscoveryFeedState(results: $results, isComplete: $isComplete, isInErrorState: $isInErrorState)';
+    return 'DiscoveryFeedState(results: $results, resultIndex: $resultIndex, isComplete: $isComplete, isInErrorState: $isInErrorState)';
   }
 
   @override
@@ -152,6 +178,8 @@ class _$_DiscoveryFeedState extends _DiscoveryFeedState {
         (other.runtimeType == runtimeType &&
             other is _DiscoveryFeedState &&
             const DeepCollectionEquality().equals(other.results, results) &&
+            (identical(other.resultIndex, resultIndex) ||
+                other.resultIndex == resultIndex) &&
             (identical(other.isComplete, isComplete) ||
                 other.isComplete == isComplete) &&
             (identical(other.isInErrorState, isInErrorState) ||
@@ -159,8 +187,12 @@ class _$_DiscoveryFeedState extends _DiscoveryFeedState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(results), isComplete, isInErrorState);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(results),
+      resultIndex,
+      isComplete,
+      isInErrorState);
 
   @JsonKey(ignore: true)
   @override
@@ -171,12 +203,15 @@ class _$_DiscoveryFeedState extends _DiscoveryFeedState {
 abstract class _DiscoveryFeedState extends DiscoveryFeedState {
   const factory _DiscoveryFeedState(
       {List<Document>? results,
+      required int resultIndex,
       required bool isComplete,
       required bool isInErrorState}) = _$_DiscoveryFeedState;
   const _DiscoveryFeedState._() : super._();
 
   @override
   List<Document>? get results;
+  @override
+  int get resultIndex;
   @override
   bool get isComplete;
   @override

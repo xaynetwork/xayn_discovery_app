@@ -9,11 +9,13 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
 
   const factory DiscoveryFeedState({
     List<Document>? results,
+    required int resultIndex,
     required bool isComplete,
     required bool isInErrorState,
   }) = _DiscoveryFeedState;
 
   factory DiscoveryFeedState.empty() => const DiscoveryFeedState(
+        resultIndex: 0,
         isComplete: false,
         isInErrorState: false,
       );
