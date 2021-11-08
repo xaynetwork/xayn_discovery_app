@@ -25,7 +25,15 @@ jobs:
         with:
           version: $FLUTTER_VERSION
 
-      - name: Make env file
+      - name: Make .env.dev file
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_SEARCH_API_BASE_URL: "api-gw.xaynet.dev"
+          envkey_SEARCH_API_SECRET_KEY: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          directory: application
+          file_name: .env.dev
+
+      - name: Make .env.prod file
         uses: SpicyPizza/create-envfile@v1
         with:
           envkey_SEARCH_API_BASE_URL: "api-gw.xayn.com"
