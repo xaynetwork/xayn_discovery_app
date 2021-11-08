@@ -15,6 +15,11 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 
+/// Mock implementation.
+/// This will be deprecated once the real discovery engine is available.
+///
+/// These are random keywords, real keywords are to be provided by the
+/// real discovery engine.
 const List<String> randomKeywords = [
   'german',
   'french',
@@ -35,6 +40,8 @@ const List<String> randomKeywords = [
   'financial',
 ];
 
+/// Mock implementation.
+/// This will be deprecated once the real discovery engine is available.
 @singleton
 class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
     with UseCaseBlocHelper<DiscoveryEngineState>

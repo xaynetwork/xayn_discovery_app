@@ -7,6 +7,11 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engin
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
+/// Mock implementation,
+/// This will be deprecated once the real discovery engine is available.
+///
+/// An implementation of [InvokeApiEndpointUseCase] which uses the Bing news api
+/// to fetch results.
 @Injectable(as: InvokeApiEndpointUseCase)
 class InvokeBingUseCase<T> extends InvokeApiEndpointUseCase {
   InvokeBingUseCase();
@@ -63,5 +68,6 @@ class InvokeBingUseCase<T> extends InvokeApiEndpointUseCase {
   }
 }
 
+/// A standalone Function which can be used in combination with [compute].
 Map<String, dynamic> _decodeJson(String raw) =>
     const JsonDecoder().convert(raw);

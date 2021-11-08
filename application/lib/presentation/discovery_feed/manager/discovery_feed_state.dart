@@ -1,8 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 
 part 'discovery_feed_state.freezed.dart';
 
+/// The state of the [DiscoveryFeedManager].
 @freezed
 class DiscoveryFeedState with _$DiscoveryFeedState {
   const DiscoveryFeedState._();

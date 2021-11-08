@@ -8,9 +8,15 @@ import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 
 typedef UriHandler = void Function(Uri uri);
 
+/// The state manager of a [DiscoveryCard] widget.
+///
+/// Currently has 2 goals:
+/// - provide the html reader mode elements for the story-mode display
+/// - provide the color palette of the card's background image
 @injectable
 class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with UseCaseBlocHelper<DiscoveryCardState> {
@@ -28,14 +34,22 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._extractElementsUseCase,
     this._imagePaletteUseCase,
   ) : super(DiscoveryCardState.initial()) {
-    init();
+    _init();
   }
 
+  /// Update the uri which contains the news article
   void updateUri(Uri uri) => _updateUri(uri);
 
+  /// Update the uri which contains the news article's background image
   void updateImageUri(Uri uri) => _updateImageUri(uri);
 
-  Future<void> init() async {
+  Future<void> _init() async {
+    /// html reader mode elements:
+    ///
+    /// - loads the source html
+    ///   * emits a loading state while the source html is loading
+    /// - transforms the loaded html into reader mode html
+    /// - extracts lists of html elements from the html tree, to display in story mode
     _updateUri = pipe(_loadHtmlUseCase)
         .transform(
           (out) => out
@@ -62,6 +76,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           }),
         );
 
+    /// background image color palette:
+    /// - invokes the palette use case and grabs the color palette
     _updateImageUri = pipe(_imagePaletteUseCase).fold(
       onSuccess: (it) => state.copyWith(paletteGenerator: it),
       onFailure: HandleFailure(

@@ -18,6 +18,7 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 enum SwipeOption { like, share, dislike }
 
+/// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
   const DiscoveryFeed({Key? key}) : super(key: key);
 
@@ -56,11 +57,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         if (results == null) {
           return const CircularProgressIndicator();
         }
+
         final padding = MediaQuery.of(context).padding;
+
         return Padding(
           padding: EdgeInsets.only(top: padding.top),
           child: LayoutBuilder(builder: (context, constraints) {
             final pageSize = constraints.maxHeight - padding.bottom;
+
             return MediaQuery.removePadding(
               context: context,
               removeTop: true,

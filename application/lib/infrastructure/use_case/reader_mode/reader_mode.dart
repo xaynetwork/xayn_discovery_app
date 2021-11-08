@@ -1,3 +1,5 @@
+/// A barrel file for all reader mode use cases.
+
 library reader_mode;
 
 export 'extract_elements_use_case.dart';

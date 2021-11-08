@@ -5,6 +5,11 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/disc
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 
+/// Manages the state for the main, or home discovery feed screen.
+///
+/// It consumes events from the discovery engine and emits a state
+/// which contains a list of discovery news items which should be displayed
+/// in a list format by widgets.
 @injectable
 class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     with UseCaseBlocHelper<DiscoveryFeedState> {
@@ -16,6 +21,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   @override
   void initHandlers() {
+    /// Consumes the discovery engine's results output,
+    /// emits a managed list of max 15 results to subscribers.
     consume(_discoveryEngineResultsUseCase, initialData: 3)
         .transform((out) => out.followedBy(
             DiscoveryEngineResultCombinerUseCase(() => state.results)))

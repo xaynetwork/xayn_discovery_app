@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 part 'env.g.dart';
 
+/// Standard Env config.
 @Envify(path: kReleaseMode ? '.env.prod' : '.env.dev')
 abstract class Env {
   static const String searchApiBaseUrl = _Env.searchApiBaseUrl;

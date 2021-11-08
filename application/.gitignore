@@ -40,6 +40,7 @@ report.xml
 *.config.dart
 *.freezed.dart
 *.g.dart
+*.mocks.dart
 
 # Env
 .env.dev
