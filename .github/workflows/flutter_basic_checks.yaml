@@ -25,21 +25,23 @@ jobs:
         with:
           version: $FLUTTER_VERSION
 
-      - name: Make .env.dev file
-        uses: SpicyPizza/create-envfile@v1.2
-        with:
-          envkey_SEARCH_API_BASE_URL: "api-gw.xaynet.dev"
-          envkey_SEARCH_API_SECRET_KEY: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
-          directory: "application"
-          file_name: ".env.dev"
+      - name: Create .env.dev file
+        run: |
+          cd application
+          cat << EOF > .env.dev
+          SEARCH_API_BASE_URL="api-gw.xaynet.dev"
+          SEARCH_API_SECRET_KEY=${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          EOF
+          cd -
 
-      - name: Make .env.prod file
-        uses: SpicyPizza/create-envfile@v1.2
-        with:
-          envkey_SEARCH_API_BASE_URL: "api-gw.xayn.com"
-          envkey_SEARCH_API_SECRET_KEY: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
-          directory: "application"
-          file_name: ".env.prod"
+      - name: Create .env.prod file
+        run: |
+          cd application
+          cat << EOF > .env.prod
+          SEARCH_API_BASE_URL="api-gw.xayn.com"
+          SEARCH_API_SECRET_KEY=${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          EOF
+          cd -
 
       - name: Get Packages
         run: |
