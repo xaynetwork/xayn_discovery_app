@@ -9,24 +9,26 @@
 #
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
+import("../ios/fastlane/Fastfile")
 
 #ios, android, web
 platform="android" 
 
 #apk, appbundle
-android_output="appbundle"
+android_output="apk"
 
 #internal, external
 build_flavor="internal"
 
 #release, debug
-build_type="debug"
+build="debug"
 
+# Common checks before running a lane
 before_all do |lane, options|
   options[:platform] = options[:platform] || platform
   options[:android_output] = options[:android_output] || android_output
   options[:build_flavor] = options[:build_flavor] || build_flavor
-  options[:build_type] = options[:build_type] || build_type
+  options[:build] = options[:build] || build
 
   version_name=`git describe --tags | tr -d '\n'`
   build_number=`git rev-list --count HEAD | tr -d '\n'` 
@@ -35,6 +37,7 @@ before_all do |lane, options|
   puts options 
 end
 
+# Private lanes, that we only call internnaly, they are nice because they have an own description
 desc "Flutter build runner"
 private_lane :flutter_build_runner do 
   flutter("pub  run build_runner build --delete-conflicting-outputs")
@@ -45,18 +48,18 @@ private_lane :flutter_pub_get do |options|
    flutter("pub get")
 end 
 
-# flutter build ios --release --no-codesign --build-number=$BUILD_VERSION --build-name=$VERSION_NAME $FLUTTER_INTERNAL_BUILD_PARAM $FLUTTER_HASH_PARAM --bundle-sksl-path flutter_01.sksl.json
 desc "Flutter build"
 private_lane :flutter_build do |options|
   flutter_pub_get
 
   target = options[:platform] == "android" ? options[:android_output] : options[:platform]
   type = options[:build_type] == "release" ? "--release" : "--debug"
-  codesign = options[:platform] == "ios" || options[:build_type] != "release" ? "--no-codesign" :  "";
+  codesign = options[:platform] == "ios" ? "--no-codesign" :  "";
 
   flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]}")
 end
 
+# Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 desc "Sanity checks"
 lane :check do |options|
   flutter_pub_get
@@ -65,8 +68,46 @@ lane :check do |options|
   flutter("test")
 end
 
+desc "Build and publish (i.e fastlane publish platform:ios build_type:release)"
+lane :publish do |options|
+  flutter_build(options)
+  if options[:platform] == "ios"
+    Dir.chdir("../ios/fastlane") do
+      ios_create_ipa(options)
+    end
+    UI.user_error!("No $APPCENTER_IOS_INTERNAL_TOKEN provided!") unless ENV.key?("APPCENTER_IOS_INTERNAL_TOKEN")
+    uploadToAppCenter(
+      ENV["APPCENTER_IOS_INTERNAL_TOKEN"],
+     "Discovery-App-internal",
+      "build/discovery-app.ipa", 
+      options[:version_name])
+  end 
+end
+
+# Private helper methods 
 def flutter(args) 
   Dir.chdir("..") do
     sh "flutter #{args}"
   end
+end
+
+def createChangelog(version)
+  Dir.chdir("../") do
+    gitlog = sh "git log | head -n50"
+    return "Version: #{version}\n\n#{gitlog}"
+  end
+end
+
+def uploadToAppCenter(token, appName, path, version)
+  changelog = createChangelog(version)
+  appcenter_upload(
+  api_token: token,
+  owner_name: "XAIN_AG",
+  owner_type: "organization", 
+  app_name: appName,
+  file: path,
+  release_notes: changelog,
+  destinations: "Collaborators",
+  notify_testers: true
+)
 end
