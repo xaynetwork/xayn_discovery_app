@@ -30,6 +30,7 @@ jobs:
         with:
           envkey_SEARCH_API_BASE_URL: "api-gw.xayn.com"
           envkey_SEARCH_API_SECRET_KEY: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          directory: application
           file_name: .env.prod
 
       - name: Get Packages
