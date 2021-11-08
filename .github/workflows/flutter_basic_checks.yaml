@@ -25,26 +25,42 @@ jobs:
         with:
           version: $FLUTTER_VERSION
 
+      - name: Make dev envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          SEARCH_API_BASE_URL: "api-gw.xaynet.dev"
+          SEARCH_API_SECRET_KEY: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
+
+      - name: Make prod envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          SEARCH_API_BASE_URL: "api-gw.xayn.com"
+          SEARCH_API_SECRET_KEY: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+
       - name: Get Packages
         run: |
           cd application
           flutter pub get
           cd -
+
       - name: Run build_runner
         run: |
           cd application
           flutter pub run build_runner build --delete-conflicting-outputs
           cd -
+
       - name: Flutter format
         run: |
           cd application
           flutter format ./ --set-exit-if-changed
           cd -
+
       - name: Flutter Analyze
         run: |
           cd application
           flutter analyze lib test
           cd -
+
       - name: Run Tests
         run: |
           cd application
