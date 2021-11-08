@@ -1,0 +1,39 @@
+import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+
+class DiscoveryEngineState {
+  final List<Document> results;
+  final bool isComplete;
+  final Object? error;
+  final StackTrace? stackTrace;
+
+  bool get isLoading => !isComplete && results.isEmpty && !hasError;
+
+  bool get hasError => error != null;
+
+  DiscoveryEngineState({
+    required this.results,
+    required this.isComplete,
+  })  : error = null,
+        stackTrace = null;
+
+  const DiscoveryEngineState.initial()
+      : results = const [],
+        isComplete = false,
+        error = null,
+        stackTrace = null;
+
+  const DiscoveryEngineState.loading()
+      : results = const [],
+        isComplete = false,
+        error = null,
+        stackTrace = null;
+
+  DiscoveryEngineState.error({
+    required this.error,
+    required this.stackTrace,
+  })  : results = const [],
+        isComplete = false {
+    // ignore: avoid_print
+    print('e: $error, st: $stackTrace');
+  }
+}
