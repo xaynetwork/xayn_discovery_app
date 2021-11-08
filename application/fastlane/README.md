@@ -15,21 +15,21 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### flutter_pub_get
+### ios_create_ipa
 ```
-fastlane flutter_pub_get
+fastlane ios_create_ipa
 ```
-Flutter pub get
-### flutter_build
-```
-fastlane flutter_build
-```
-Flutter build
+Create a signed IPA package
 ### check
 ```
 fastlane check
 ```
 Sanity checks
+### publish
+```
+fastlane publish
+```
+Build and publish (i.e fastlane publish platform:ios build_type:release)
 
 ----
 

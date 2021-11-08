@@ -79,9 +79,9 @@ jobs:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_IOS_TOKEN: ${{ secrets.APPCENTER_IOS_TOKEN }}
           APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
-        working-directory: ./application/ios
+        working-directory: ./application
         run: |
-          fastlane internal
+          fastlane publish platform:ios build_type:release
         if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_internal'))
 
       # - name: Build and submit new release Android version to app center

@@ -15,20 +15,11 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### check
+### ios_create_ipa
 ```
-fastlane check
+fastlane ios_create_ipa
 ```
-Sanity checks
-
-----
-
-## iOS
-### ios internal
-```
-fastlane ios internal
-```
-Create a new internal build
+Create a signed IPA package
 
 ----
 
