@@ -36,6 +36,14 @@ report.xml
 .pub/
 /build/
 
+# Generated files
+*.freezed.dart
+*.g.dart
+
+# Env
+.env.dev
+.env.prod
+
 # Web related
 lib/generated_plugin_registrant.dart
 
