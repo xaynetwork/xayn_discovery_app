@@ -27,7 +27,9 @@ jobs:
 
       - name: Get Packages
         run: |
+          cd application
           flutter pub get
+          cd -
       - name: Run build_runner
         run: |
           cd application
@@ -35,10 +37,16 @@ jobs:
           cd -
       - name: Flutter format
         run: |
+          cd application
           flutter format ./ --set-exit-if-changed
+          cd -
       - name: Flutter Analyze
         run: |
+          cd application
           flutter analyze lib test
+          cd -
       - name: Run Tests
         run: |
+          cd application
           flutter test
+          cd -
