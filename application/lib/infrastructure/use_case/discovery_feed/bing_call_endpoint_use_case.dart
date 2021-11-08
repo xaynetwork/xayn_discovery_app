@@ -13,7 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 /// An implementation of [InvokeApiEndpointUseCase] which uses the Bing news api
 /// to fetch results.
 @Injectable(as: InvokeApiEndpointUseCase)
-class InvokeBingUseCase<T> extends InvokeApiEndpointUseCase {
+class InvokeBingUseCase extends InvokeApiEndpointUseCase {
   InvokeBingUseCase();
 
   @override
