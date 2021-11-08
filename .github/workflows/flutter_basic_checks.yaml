@@ -49,6 +49,12 @@ jobs:
           flutter pub get
           cd -
 
+      - name: Run build_runner
+        run: |
+          cd application
+          flutter pub run build_runner build --delete-conflicting-outputs
+          cd -
+
       - name: Flutter format
         run: |
           cd application
@@ -59,12 +65,6 @@ jobs:
         run: |
           cd application
           flutter analyze lib test
-          cd -
-
-      - name: Run build_runner
-        run: |
-          cd application
-          flutter pub run build_runner build --delete-conflicting-outputs
           cd -
 
       - name: Run Tests
