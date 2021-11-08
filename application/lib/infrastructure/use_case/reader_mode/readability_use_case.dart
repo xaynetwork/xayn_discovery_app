@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 /// A [UseCase] which invokes xayn_readability.
 /// The html that is being provided by [ReadabilityConfig] as input,
 /// is processed into reader mode html, and returned as output with [ProcessHtmlResult].
 @injectable
-class ReadabilityUseCase<T>
-    extends UseCase<ReadabilityConfig, ProcessHtmlResult> {
+class ReadabilityUseCase extends UseCase<ReadabilityConfig, ProcessHtmlResult> {
   ReadabilityUseCase();
 
   @override

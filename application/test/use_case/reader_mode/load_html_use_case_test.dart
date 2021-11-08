@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html
 
 import 'load_html_use_case_test.mocks.dart';
 
-@GenerateMocks([http.Client])
+@GenerateMocks([Client])
 void main() {
   late MockClient client;
   final uri = Uri.dataFromString('<p>hi!</p>');
@@ -28,7 +28,7 @@ void main() {
   group('LoadHtmlUseCase: ', () {
     useCaseTest(
       'Can log incoming events: ',
-      build: () => LoadHtmlUseCase(httpClient: client),
+      build: () => LoadHtmlUseCase(client: client),
       input: [uri],
       expect: [
         useCaseSuccess(Progress.start(uri: uri)),

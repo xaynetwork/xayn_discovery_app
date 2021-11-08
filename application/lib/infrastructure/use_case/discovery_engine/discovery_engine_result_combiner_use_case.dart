@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';

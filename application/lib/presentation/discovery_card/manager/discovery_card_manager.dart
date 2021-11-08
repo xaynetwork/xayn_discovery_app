@@ -6,7 +6,9 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/on_failure.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/reader_mode.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 

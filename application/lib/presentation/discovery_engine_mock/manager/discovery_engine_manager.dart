@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:xayn_architecture/concepts/on_failure.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
@@ -13,7 +14,6 @@ import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.

@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 /// A [UseCase] which extracts any html elements as a List,
 /// so that they can be loaded sequentially, as opposed to as an html tree.
 @injectable
-class ExtractElementsUseCase<T> extends UseCase<ProcessHtmlResult, Elements> {
+class ExtractElementsUseCase extends UseCase<ProcessHtmlResult, Elements> {
   ExtractElementsUseCase();
 
   @override

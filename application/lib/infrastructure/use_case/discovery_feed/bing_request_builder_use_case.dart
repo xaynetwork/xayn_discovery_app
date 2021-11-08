@@ -14,7 +14,7 @@ const Duration kScrollUpdateUseCaseDebounceTime = Duration(milliseconds: 600);
 /// An implementation of [CreateHttpRequestUseCase] which creates a http
 /// request for usage with the Bing news api.
 @Injectable(as: CreateHttpRequestUseCase)
-class CreateBingRequestUseCase<T> extends CreateHttpRequestUseCase {
+class CreateBingRequestUseCase extends CreateHttpRequestUseCase {
   CreateBingRequestUseCase();
 
   @override

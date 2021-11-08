@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 part 'load_html_use_case.freezed.dart';
@@ -17,16 +17,15 @@ const String kUserAgent =
 ///
 /// This [UseCase] emits both a start and finish [Progress].
 @injectable
-class LoadHtmlUseCase<T> extends UseCase<Uri, Progress> {
-  http.Client? httpClient;
+class LoadHtmlUseCase extends UseCase<Uri, Progress> {
+  final Client client;
 
-  LoadHtmlUseCase({this.httpClient});
+  LoadHtmlUseCase({required this.client});
 
   @override
   Stream<Progress> transaction(Uri param) async* {
     yield Progress.start(uri: param);
 
-    final client = httpClient ?? createHttpClient(userAgent: kUserAgent);
     final url = param.toString();
     final response = await client.send(http.Request(kRequestMethod, url));
     final body = await _extractResponseBody(response);
@@ -70,5 +69,18 @@ class Progress with _$Progress {
     required Uri uri,
     required String html,
   }) =>
-      Progress(uri: uri, html: '', isCompleted: true);
+      Progress(uri: uri, html: html, isCompleted: true);
+}
+
+@injectable
+class Client implements http.Client {
+  final http.Client _client;
+
+  Client() : _client = createHttpClient(userAgent: kUserAgent);
+
+  @override
+  Future close({bool force = false}) => _client.close(force: force);
+
+  @override
+  Future<http.Response> send(http.Request request) => _client.send(request);
 }
