@@ -13,12 +13,15 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+import "../../fastlane/Fastfile"
+
 default_platform(:ios)
 
 platform :ios do
 
   desc "Create a new internal build"
   lane :internal do
+    flutter_build
     UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
 
     begin
