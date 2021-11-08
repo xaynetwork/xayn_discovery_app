@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
+
+part 'load_html_use_case.freezed.dart';
 
 const String kRequestMethod = 'GET';
 const String kUserAgent =
@@ -15,13 +18,15 @@ const String kUserAgent =
 /// This [UseCase] emits both a start and finish [Progress].
 @injectable
 class LoadHtmlUseCase<T> extends UseCase<Uri, Progress> {
-  LoadHtmlUseCase();
+  http.Client? httpClient;
+
+  LoadHtmlUseCase({this.httpClient});
 
   @override
   Stream<Progress> transaction(Uri param) async* {
     yield Progress.start(uri: param);
 
-    final client = createHttpClient(userAgent: kUserAgent);
+    final client = httpClient ?? createHttpClient(userAgent: kUserAgent);
     final url = param.toString();
     final response = await client.send(http.Request(kRequestMethod, url));
     final body = await _extractResponseBody(response);
@@ -48,17 +53,22 @@ class LoadHtmlUseCase<T> extends UseCase<Uri, Progress> {
 /// When finished, [html] is filled.
 /// [isCompleted] is true when finished, false when started.
 /// [uri] is the Uri that is being fetched.
-class Progress {
-  final String html;
-  final Uri uri;
-  final bool isCompleted;
+@freezed
+class Progress with _$Progress {
+  const Progress._();
 
-  const Progress.start({required this.uri})
-      : html = '',
-        isCompleted = false;
+  const factory Progress({
+    required String html,
+    required Uri uri,
+    required bool isCompleted,
+  }) = _Progress;
 
-  const Progress.finish({
-    required this.uri,
-    required this.html,
-  }) : isCompleted = true;
+  factory Progress.start({required Uri uri}) =>
+      Progress(uri: uri, html: '', isCompleted: false);
+
+  factory Progress.finish({
+    required Uri uri,
+    required String html,
+  }) =>
+      Progress(uri: uri, html: '', isCompleted: true);
 }
