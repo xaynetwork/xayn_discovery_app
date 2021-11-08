@@ -6,6 +6,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 part 'document.freezed.dart';
 part 'document.g.dart';
 
+/// Mock implementation which implements [xayn.Document].
+/// This will be deprecated once the real discovery engine is available.
 @freezed
 class Document with _$Document implements xayn.Document {
   const Document._();

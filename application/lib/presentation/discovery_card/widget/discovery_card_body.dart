@@ -31,6 +31,8 @@ class _ResultCardBody extends StatelessWidget {
       );
 }
 
+/// The first or front story page of a discovery card.
+/// This typically contains the title and snippet.
 class DiscoveryCardPrimaryBody extends _ResultCardBody {
   final String title;
   final String snippet;
@@ -88,6 +90,8 @@ class DiscoveryCardPrimaryBody extends _ResultCardBody {
   }
 }
 
+/// The secondary story page of a discovery card.
+/// This typically contains a single html element that belongs to the reader mode.
 class DiscoveryCardSecondaryBody extends _ResultCardBody {
   final String html;
   final OnLink? onLink;

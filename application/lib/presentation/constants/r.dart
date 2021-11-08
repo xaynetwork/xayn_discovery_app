@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 
+/// Wraps the Linden design system as an R object.
 @immutable
 class R {
   const R._();

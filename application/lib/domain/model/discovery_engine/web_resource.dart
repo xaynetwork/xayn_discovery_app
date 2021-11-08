@@ -4,6 +4,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 part 'web_resource.freezed.dart';
 part 'web_resource.g.dart';
 
+/// Mock implementation which implements [xayn.WebResource].
+/// This will be deprecated once the real discovery engine is available.
 @freezed
 class WebResource with _$WebResource implements xayn.WebResource {
   const WebResource._();

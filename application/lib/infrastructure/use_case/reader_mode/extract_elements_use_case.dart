@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
+/// A [UseCase] which extracts any html elements as a List,
+/// so that they can be loaded sequentially, as opposed to as an html tree.
 @injectable
 class ExtractElementsUseCase<T> extends UseCase<ProcessHtmlResult, Elements> {
   ExtractElementsUseCase();
@@ -21,6 +23,7 @@ class ExtractElementsUseCase<T> extends UseCase<ProcessHtmlResult, Elements> {
   }
 }
 
+/// Standalone Function which can be used as a target for [compute].
 _ProcessHtmlResult _processHtml(final String html) {
   final document = dom.Document.html(html);
   final article = document.querySelector('[id="readability-page-1"]');
@@ -39,6 +42,8 @@ _ProcessHtmlResult _processHtml(final String html) {
   );
 }
 
+/// The return type of [ExtractElementsUseCase],
+/// Represents the html elements that were extracted
 class Elements {
   final ProcessHtmlResult processHtmlResult;
   final List<String> paragraphs;

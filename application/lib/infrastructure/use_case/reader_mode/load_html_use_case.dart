@@ -9,6 +9,10 @@ const String kRequestMethod = 'GET';
 const String kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
 
+/// A [UseCase] which uses a Platform-specific client to fetch the html
+/// contents at the Uri that was provided as input.
+///
+/// This [UseCase] emits both a start and finish [Progress].
 @injectable
 class LoadHtmlUseCase<T> extends UseCase<Uri, Progress> {
   LoadHtmlUseCase();
@@ -40,6 +44,10 @@ class LoadHtmlUseCase<T> extends UseCase<Uri, Progress> {
   }
 }
 
+/// The progress status of the html fetch.
+/// When finished, [html] is filled.
+/// [isCompleted] is true when finished, false when started.
+/// [uri] is the Uri that is being fetched.
 class Progress {
   final String html;
   final Uri uri;

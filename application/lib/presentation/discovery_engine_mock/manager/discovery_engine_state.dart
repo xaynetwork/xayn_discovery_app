@@ -1,5 +1,7 @@
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 
+/// Mock implementation.
+/// This will be deprecated once the real discovery engine is available.
 class DiscoveryEngineState {
   final List<Document> results;
   final bool isComplete;

@@ -3,6 +3,9 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
+/// A [UseCase] which invokes xayn_readability.
+/// The html that is being provided by [ReadabilityConfig] as input,
+/// is processed into reader mode html, and returned as output with [ProcessHtmlResult].
 @injectable
 class ReadabilityUseCase<T>
     extends UseCase<ReadabilityConfig, ProcessHtmlResult> {
@@ -28,6 +31,9 @@ class ReadabilityUseCase<T>
   }
 }
 
+/// The input for [ReadabilityUseCase].
+/// This class represents configuration options for the readability
+/// operation which will be executed within the [ReadabilityUseCase].
 class ReadabilityConfig {
   final String html;
   final bool disableJsonLd;
