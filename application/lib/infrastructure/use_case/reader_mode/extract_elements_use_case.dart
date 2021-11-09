@@ -26,13 +26,12 @@ class ExtractElementsUseCase extends UseCase<ProcessHtmlResult, Elements> {
 /// Standalone Function which can be used as a target for [compute].
 _ProcessHtmlResult _processHtml(final String html) {
   final document = dom.Document.html(html);
-  final article = document.querySelector('[id="readability-page-1"]');
-  final list = article?.children.first.children ?? const [];
+  final list = document.querySelectorAll('p');
 
   return _ProcessHtmlResult(
     paragraphs: list
+        .where((it) => it.text.isNotEmpty)
         .map((it) => it.outerHtml)
-        .where((it) => it.length >= 10)
         .toList(growable: false),
     images: document
         .querySelectorAll('img')
