@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 
@@ -20,6 +21,7 @@ class ApiEndpointResponse {
 }
 
 /// Error which can be emitted during [InvokeApiEndpointUseCase]
+@immutable
 class ApiEndpointError extends Error {
   final int statusCode;
   final String body;
