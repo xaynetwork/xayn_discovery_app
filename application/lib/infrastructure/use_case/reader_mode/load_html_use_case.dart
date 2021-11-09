@@ -6,8 +6,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
-part 'load_html_use_case.freezed.dart';
-
 const String kRequestMethod = 'GET';
 const String kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
@@ -53,23 +51,19 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
 /// [isCompleted] is true when finished, false when started.
 /// [uri] is the Uri that is being fetched.
 @freezed
-class Progress with _$Progress {
-  const Progress._();
+class Progress {
+  final String html;
+  final Uri uri;
+  final bool isCompleted;
 
-  const factory Progress({
-    required String html,
-    required Uri uri,
-    required bool isCompleted,
-  }) = _Progress;
+  const Progress.start({required this.uri})
+      : html = '',
+        isCompleted = false;
 
-  factory Progress.start({required Uri uri}) =>
-      Progress(uri: uri, html: '', isCompleted: false);
-
-  factory Progress.finish({
-    required Uri uri,
-    required String html,
-  }) =>
-      Progress(uri: uri, html: html, isCompleted: true);
+  const Progress.finish({
+    required this.uri,
+    required this.html,
+  }) : isCompleted = true;
 }
 
 @injectable

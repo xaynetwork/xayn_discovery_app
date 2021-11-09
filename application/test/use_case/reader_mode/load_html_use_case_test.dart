@@ -6,6 +6,7 @@ import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 
 import 'load_html_use_case_test.mocks.dart';
+import 'matchers.dart';
 
 @GenerateMocks([Client])
 void main() {
@@ -31,8 +32,8 @@ void main() {
       build: () => LoadHtmlUseCase(client: client),
       input: [uri],
       expect: [
-        useCaseSuccess(Progress.start(uri: uri)),
-        useCaseSuccess(Progress.finish(uri: uri, html: '<p>hi!</p>')),
+        progressSuccess(Progress.start(uri: uri)),
+        progressSuccess(Progress.finish(uri: uri, html: '<p>hi!</p>')),
       ],
     );
   });
