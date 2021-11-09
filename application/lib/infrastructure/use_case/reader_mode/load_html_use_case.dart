@@ -50,7 +50,6 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
 /// When finished, [html] is filled.
 /// [isCompleted] is true when finished, false when started.
 /// [uri] is the Uri that is being fetched.
-@freezed
 class Progress {
   final String html;
   final Uri uri;
