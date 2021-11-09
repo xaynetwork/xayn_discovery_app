@@ -39,7 +39,10 @@ end
 
 # Private lanes, that we only call internnaly, they are nice because they have an own description
 desc "Flutter build runner"
-private_lane :flutter_build_runner do 
+private_lane :flutter_build_runner do
+  checkAndCreateEnv('../.env.dev', 'SEARCH_API_SECRET_DEBUG', 'api-gw.xaynet.dev')
+  checkAndCreateEnv('../.env.prod', 'SEARCH_API_SECRET_PRODUCTION', 'api-gw.xayn.com')
+
   flutter("pub  run build_runner build --delete-conflicting-outputs")
 end
 
@@ -48,9 +51,16 @@ private_lane :flutter_pub_get do |options|
    flutter("pub get")
 end 
 
+desc "Flutter clean"
+private_lane :flutter_clean do |options| 
+   flutter("clean")
+end 
+
 desc "Flutter build"
 private_lane :flutter_build do |options|
-  flutter_pub_get
+  flutter_clean(options)
+  flutter_pub_get(options)
+  flutter_build_runner(options)
 
   target = options[:platform] == "android" ? options[:android_output] : options[:platform]
   type = options[:build_type] == "release" ? "--release" : "--debug"
@@ -62,8 +72,10 @@ end
 # Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 desc "Sanity checks"
 lane :check do |options|
-  flutter_pub_get
-  # flutter_build_runner
+  flutter_pub_get(options)
+  if Dir.glob("../**/env.g.dart").empty?
+    flutter_build_runner(options)
+  end
   flutter("analyze lib test")
   flutter("test")
 end
@@ -110,4 +122,21 @@ def uploadToAppCenter(token, appName, path, version)
   destinations: "Collaborators",
   notify_testers: true
 )
+end
+
+def checkAndCreateEnv(file, searchApiEnvKey, searchApiUrl)
+  if !File.file?(file)
+    searchApiSecret = ENV[searchApiEnvKey]
+    if !ENV.key?(searchApiEnvKey)
+      searchApiSecret = UI.input("#{searchApiEnvKey}: ")
+    end
+    writeEnvFile(file, searchApiSecret, searchApiUrl)
+  end
+end
+
+def writeEnvFile(file, searchApiKey, searchApiUrl)
+  File.open(file, 'w') do |fo|
+    fo.write("SEARCH_API_BASE_URL=\"#{searchApiUrl}\"\n")
+    fo.write("SEARCH_API_SECRET_KEY=\"#{searchApiKey}\"\n")
+  end
 end
