@@ -33,6 +33,7 @@ class ReadabilityUseCase extends UseCase<ReadabilityConfig, ProcessHtmlResult> {
 /// The input for [ReadabilityUseCase].
 /// This class represents configuration options for the readability
 /// operation which will be executed within the [ReadabilityUseCase].
+@immutable
 class ReadabilityConfig {
   final String html;
   final bool disableJsonLd;

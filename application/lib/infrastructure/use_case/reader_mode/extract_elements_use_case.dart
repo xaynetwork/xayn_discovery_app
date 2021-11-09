@@ -44,6 +44,7 @@ _ProcessHtmlResult _processHtml(final String html) {
 
 /// The return type of [ExtractElementsUseCase],
 /// Represents the html elements that were extracted
+@immutable
 class Elements {
   final ProcessHtmlResult processHtmlResult;
   final List<String> paragraphs;
@@ -56,6 +57,7 @@ class Elements {
   });
 }
 
+@immutable
 class _ProcessHtmlResult {
   final List<String> paragraphs;
   final List<String> images;

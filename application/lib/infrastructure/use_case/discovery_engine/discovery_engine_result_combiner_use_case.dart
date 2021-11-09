@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
@@ -54,6 +55,7 @@ class DiscoveryEngineResultCombinerUseCase
 /// This class simply contains a report of what was [added] and [removed],
 /// and returns the remaining actual [documents] list, in combination with
 /// the [apiState] that was received as input.
+@immutable
 class ResultCombinerJob {
   /// what was added and/or removed.
   /// if nothing, then these are empty lists.

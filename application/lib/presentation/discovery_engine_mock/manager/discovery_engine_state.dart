@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
+@immutable
 class DiscoveryEngineState {
   final List<Document> results;
   final bool isComplete;
@@ -12,7 +14,7 @@ class DiscoveryEngineState {
 
   bool get hasError => error != null;
 
-  DiscoveryEngineState({
+  const DiscoveryEngineState({
     required this.results,
     required this.isComplete,
   })  : error = null,
