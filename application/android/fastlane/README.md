@@ -15,11 +15,11 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### ios_create_ipa
+### android_prepare_internal
 ```
-fastlane ios_create_ipa
+fastlane android_prepare_internal
 ```
-Create a signed IPA package
+Build internal apk
 
 ----
 

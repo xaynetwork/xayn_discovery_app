@@ -15,21 +15,21 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### flutter_pub_get
+### clean
 ```
-fastlane flutter_pub_get
+fastlane clean
 ```
-Flutter pub get
-### flutter_build
-```
-fastlane flutter_build
-```
-Flutter build
+Flutter clean
 ### check
 ```
 fastlane check
 ```
 Sanity checks
+### publish
+```
+fastlane publish
+```
+Build and publish (i.e fastlane publish platform:ios build:release)
 
 ----
 

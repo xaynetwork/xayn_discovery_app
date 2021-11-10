@@ -13,50 +13,45 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-import "../../fastlane/Fastfile"
+desc "Create a signed IPA package"
+private_lane :ios_create_ipa do
+  UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
 
-default_platform(:ios)
-
-platform :ios do
-
-  desc "Create a new internal build"
-  lane :internal do
-    flutter_build
-    UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
-
-    begin
-      delete_keychain(name: "fastlane_tmp_keychain-db") 
-    rescue Exception
-    end
-    create_keychain(
-      name: "fastlane_tmp_keychain-db",
-      default_keychain: true,
-      unlock: true,
-      timeout: 0,
-      lock_when_sleeps: false,
-      password: ""
-    )
-    setup_ci(force:true)
-
-    import_certificate(
-      certificate_path: "profiles/Certificates-internal.p12",
-      certificate_password: ENV["PROVISIONING_PASSWORD"],
-      keychain_name: "fastlane_tmp_keychain-db",
-      keychain_password: ""
-    )
-
-    install_provisioning_profile(path: "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision")
-    install_provisioning_profile(path: "profiles/Xayn_Discovery_Internal_Develop_Profile.mobileprovision")
-   
-    build_app(scheme: "Runner",
-              workspace: "Runner.xcworkspace",
-              export_method: "ad-hoc",
-              export_options: {
-                "uploadBitcode" => false,
-                provisioningProfiles: { 
-                  "com.xayn.discovery.internal" => "Xayn Discovery Internal Adhoc Profile",
-                }
-              },
-              include_bitcode: false)
+  begin
+    delete_keychain(name: "fastlane_tmp_keychain-db") 
+  rescue Exception
   end
+  create_keychain(
+    name: "fastlane_tmp_keychain-db",
+    default_keychain: true,
+    unlock: true,
+    timeout: 0,
+    lock_when_sleeps: false,
+    password: ""
+  )
+  setup_ci(force:true)
+
+  import_certificate(
+    certificate_path: "profiles/Certificates-internal.p12",
+    certificate_password: ENV["PROVISIONING_PASSWORD"],
+    keychain_name: "fastlane_tmp_keychain-db",
+    keychain_password: ""
+  )
+
+  install_provisioning_profile(path: "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision")
+  
+  build_app(scheme: "Runner",
+            configuration: "Release",
+            workspace: "Runner.xcworkspace",
+            export_method: "ad-hoc",
+            export_options: {
+              "uploadBitcode" => false,
+              provisioningProfiles: { 
+                "com.xayn.discovery.internal" => "Xayn Discovery Internal Adhoc Profile",
+              }
+            },
+            include_bitcode: false,
+            skip_profile_detection: true,
+            output_directory: "../build/",
+            output_name: "discovery-app.ipa")
 end
