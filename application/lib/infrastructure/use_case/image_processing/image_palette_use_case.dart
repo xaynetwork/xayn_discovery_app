@@ -11,8 +11,14 @@ class ImagePaletteUseCase extends UseCase<Uri, PaletteGenerator> {
 
   @override
   Stream<PaletteGenerator> transaction(Uri param) async* {
-    final imageProvider = NetworkImage(param.toString());
+    if (!param.scheme.contains('http')) {
+      throw ImagePaletteError();
+    } else {
+      final imageProvider = NetworkImage(param.toString());
 
-    yield await PaletteGenerator.fromImageProvider(imageProvider);
+      yield await PaletteGenerator.fromImageProvider(imageProvider);
+    }
   }
 }
+
+class ImagePaletteError extends Error {}
