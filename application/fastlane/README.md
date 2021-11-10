@@ -15,20 +15,21 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
+### flutter_pub_get
+```
+fastlane flutter_pub_get
+```
+Flutter pub get
+### flutter_build
+```
+fastlane flutter_build
+```
+Flutter build
 ### check
 ```
 fastlane check
 ```
 Sanity checks
-
-----
-
-## iOS
-### ios internal
-```
-fastlane ios internal
-```
-Create a new internal build
 
 ----
 

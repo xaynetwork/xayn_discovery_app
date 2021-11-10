@@ -1,0 +1,11 @@
+#ios, android, web
+platform="ios" 
+
+#apk, appbundle
+android_output="appbundle"
+
+#internal, external
+build_flavor="internal"
+
+#release, debug
+build_type="release"

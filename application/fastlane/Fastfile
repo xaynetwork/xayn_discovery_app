@@ -1,0 +1,72 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+#ios, android, web
+platform="android" 
+
+#apk, appbundle
+android_output="appbundle"
+
+#internal, external
+build_flavor="internal"
+
+#release, debug
+build_type="debug"
+
+before_all do |lane, options|
+  options[:platform] = options[:platform] || platform
+  options[:android_output] = options[:android_output] || android_output
+  options[:build_flavor] = options[:build_flavor] || build_flavor
+  options[:build_type] = options[:build_type] || build_type
+
+  version_name=`git describe --tags | tr -d '\n'`
+  build_number=`git rev-list --count HEAD | tr -d '\n'` 
+  options[:build_number] = options[:build_number] || build_number
+  options[:version_name] = options[:version_name] || version_name
+  puts options 
+end
+
+desc "Flutter build runner"
+private_lane :flutter_build_runner do 
+  flutter("pub  run build_runner build --delete-conflicting-outputs")
+end
+
+desc "Flutter pub get"
+private_lane :flutter_pub_get do |options| 
+   flutter("pub get")
+end 
+
+# flutter build ios --release --no-codesign --build-number=$BUILD_VERSION --build-name=$VERSION_NAME $FLUTTER_INTERNAL_BUILD_PARAM $FLUTTER_HASH_PARAM --bundle-sksl-path flutter_01.sksl.json
+desc "Flutter build"
+private_lane :flutter_build do |options|
+  flutter_pub_get
+
+  target = options[:platform] == "android" ? options[:android_output] : options[:platform]
+  type = options[:build_type] == "release" ? "--release" : "--debug"
+  codesign = options[:platform] == "ios" || options[:build_type] != "release" ? "--no-codesign" :  "";
+
+  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]}")
+end
+
+desc "Sanity checks"
+lane :check do |options|
+  flutter_pub_get
+  # flutter_build_runner
+  flutter("analyze lib test")
+  flutter("test")
+end
+
+def flutter(args) 
+  Dir.chdir("..") do
+    sh "flutter #{args}"
+  end
+end
