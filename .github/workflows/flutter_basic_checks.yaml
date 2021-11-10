@@ -1,35 +1,74 @@
-#name: Basic checks
-#
-#env:
-#  FLUTTER_VERSION: "2.2.3"
-#
-#on:
-#  pull_request:
-#    branches:
-#      - '*'
-#
-#jobs:
-#  Basic-checks:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Install Flutter
-#        uses: britannio/action-install-flutter@v1
-#        with:
-#          version: $FLUTTER_VERSION
-#
-#      - name: Get Packages
-#        run: |
-#          flutter pub get
-#          dart pub get
-#      - name: Flutter format
-#        run: |
-#          flutter format lib --set-exit-if-changed
-#          flutter format test --set-exit-if-changed
-#      - name: Flutter Analyze
-#        run: |
-#          flutter analyze lib test
-#      - name: Run Tests
-#        run: |
-#          flutter test
+name: Basic checks
+
+env:
+  FLUTTER_VERSION: "2.5.3"
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  Basic-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - uses: actions/checkout@v2
+
+      - name: Install Flutter
+        uses: britannio/action-install-flutter@v1
+        with:
+          version: $FLUTTER_VERSION
+
+      - name: Create .env.dev file
+        run: |
+          cd application
+          cat << EOF > .env.dev
+          SEARCH_API_BASE_URL="api-gw.xaynet.dev"
+          SEARCH_API_SECRET_KEY=${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          EOF
+          cd -
+
+      - name: Create .env.prod file
+        run: |
+          cd application
+          cat << EOF > .env.prod
+          SEARCH_API_BASE_URL="api-gw.xayn.com"
+          SEARCH_API_SECRET_KEY=${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          EOF
+          cd -
+
+      - name: Get Packages
+        run: |
+          cd application
+          flutter pub get
+          cd -
+
+      - name: Run build_runner
+        run: |
+          cd application
+          flutter pub run build_runner build --delete-conflicting-outputs
+          cd -
+
+      - name: Flutter format
+        run: |
+          cd application
+          flutter format ./ --set-exit-if-changed
+          cd -
+
+      - name: Flutter Analyze
+        run: |
+          cd application
+          flutter analyze lib test
+          cd -
+
+      - name: Run Tests
+        run: |
+          cd application
+          flutter test
+          cd -
