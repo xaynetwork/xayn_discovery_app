@@ -26,8 +26,6 @@ void main() {
     textSize: 136,
   );
 
-  setUp(() {});
-
   group('ReadabilityUseCase: ', () {
     useCaseTest(
       'Converts into readable html: ',
@@ -36,10 +34,7 @@ void main() {
       expect: [
         elementsSuccess(
           const Elements(
-            paragraphs: [
-              '''<p>1</p>''',
-              '''<p>2</p>''',
-            ],
+            paragraphs: ['<p>1</p>', '<p>2</p>'],
             images: ['https://www.xayn.com'],
             processHtmlResult: result,
           ),
