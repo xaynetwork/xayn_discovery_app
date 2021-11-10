@@ -87,6 +87,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           log('e: $e, st: $st');
           return DiscoveryCardState.error();
         },
+        matchers: {
+          On<ImagePaletteError>((e, st) => state),
+        },
       ),
     );
   }

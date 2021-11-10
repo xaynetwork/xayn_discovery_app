@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
@@ -118,11 +119,17 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     required List<String> paragraphs,
     PaletteGenerator? palette,
   }) {
-    final backgroundImage = Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      errorBuilder: (context, e, s) => Container(),
+    final backgroundPane = ColoredBox(
+      color: palette?.dominantColor?.color ?? R.colors.imageBackground,
     );
+    final backgroundImage = !imageUrl.startsWith('http')
+        ? backgroundPane
+        : Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, e, s) =>
+                Text('Unable to load image with url: $imageUrl\n\n$e'),
+          );
     final primaryStoryPage = DiscoveryCardPrimaryBody(
       palette: palette,
       title: widget.title,
