@@ -9,24 +9,27 @@
 #
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
+import("../ios/fastlane/Fastfile")
+import("../android/fastlane/Fastfile")
 
 #ios, android, web
 platform="android" 
 
 #apk, appbundle
-android_output="appbundle"
+android_output="apk"
 
 #internal, external
-build_flavor="internal"
+flavor="internal"
 
 #release, debug
-build_type="debug"
+build="debug"
 
+# Common checks before running a lane
 before_all do |lane, options|
   options[:platform] = options[:platform] || platform
   options[:android_output] = options[:android_output] || android_output
-  options[:build_flavor] = options[:build_flavor] || build_flavor
-  options[:build_type] = options[:build_type] || build_type
+  options[:flavor] = options[:flavor] || flavor
+  options[:build] = options[:build] || build
 
   version_name=`git describe --tags | tr -d '\n'`
   build_number=`git rev-list --count HEAD | tr -d '\n'` 
@@ -35,38 +38,115 @@ before_all do |lane, options|
   puts options 
 end
 
+# Private lanes, that we only call internnaly, they are nice because they have an own description
 desc "Flutter build runner"
-private_lane :flutter_build_runner do 
+private_lane :build_runner do
+  checkAndCreateEnv('../.env.dev', 'SEARCH_API_SECRET_DEBUG', 'api-gw.xaynet.dev')
+  checkAndCreateEnv('../.env.prod', 'SEARCH_API_SECRET_PRODUCTION', 'api-gw.xayn.com')
+
   flutter("pub  run build_runner build --delete-conflicting-outputs")
 end
 
 desc "Flutter pub get"
-private_lane :flutter_pub_get do |options| 
+private_lane :pub_get do |options| 
    flutter("pub get")
 end 
 
-# flutter build ios --release --no-codesign --build-number=$BUILD_VERSION --build-name=$VERSION_NAME $FLUTTER_INTERNAL_BUILD_PARAM $FLUTTER_HASH_PARAM --bundle-sksl-path flutter_01.sksl.json
 desc "Flutter build"
 private_lane :flutter_build do |options|
-  flutter_pub_get
+  clean(options)
+  pub_get(options)
+  build_runner(options)
 
   target = options[:platform] == "android" ? options[:android_output] : options[:platform]
-  type = options[:build_type] == "release" ? "--release" : "--debug"
-  codesign = options[:platform] == "ios" || options[:build_type] != "release" ? "--no-codesign" :  "";
+  type = options[:build] == "release" ? "--release" : "--debug"
+  codesign = options[:platform] == "ios" ? "--no-codesign" :  "";
 
   flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]}")
 end
 
+desc "Flutter clean"
+lane :clean do |options| 
+   flutter("clean")
+end 
+
+# Public lanes, can also be used via tab completion: `fastelane enable_auto_complete`
 desc "Sanity checks"
 lane :check do |options|
-  flutter_pub_get
-  # flutter_build_runner
+  pub_get(options)
+  if Dir.glob("../**/env.g.dart").empty?
+    build_runner(options)
+  end
   flutter("analyze lib test")
   flutter("test")
 end
 
+desc "Build and publish (i.e fastlane publish platform:ios build:release)"
+lane :publish do |options|
+  if options[:platform] == "android"
+    android_prepare_internal
+  end
+  flutter_build(options)
+  if options[:platform] == "ios"
+    Dir.chdir("../ios/fastlane") do
+      ios_create_ipa(options)
+    end
+    UI.user_error!("No $APPCENTER_IOS_INTERNAL_TOKEN provided!") unless ENV.key?("APPCENTER_IOS_INTERNAL_TOKEN")
+    uploadToAppCenter(
+      ENV["APPCENTER_IOS_INTERNAL_TOKEN"],
+     "Discovery-App-internal",
+      "build/discovery-app.ipa", 
+      options[:version_name])
+  else
+    uploadToAppCenter(
+      ENV["APPCENTER_ANDROID_INTERNAL_TOKEN"],
+     "Discovery-App-Android-internal",
+      "build/app/outputs/flutter-apk/app-release.apk", 
+      options[:version_name])
+  end 
+end
+
+# Private helper methods 
 def flutter(args) 
   Dir.chdir("..") do
     sh "flutter #{args}"
   end
 end
+
+def createChangelog(version)
+  Dir.chdir("../") do
+    gitlog = sh "git log | head -n50"
+    return "Version: #{version}\n\n#{gitlog}"
+  end
+end
+
+def uploadToAppCenter(token, appName, path, version)
+  changelog = createChangelog(version)
+  appcenter_upload(
+  api_token: token,
+  owner_name: "XAIN_AG",
+  owner_type: "organization", 
+  app_name: appName,
+  file: path,
+  release_notes: changelog,
+  destinations: "Collaborators",
+  notify_testers: true
+)
+end
+
+def checkAndCreateEnv(file, searchApiEnvKey, searchApiUrl)
+  if !File.file?(file)
+    searchApiSecret = ENV[searchApiEnvKey]
+    if !ENV.key?(searchApiEnvKey)
+      searchApiSecret = UI.input("#{searchApiEnvKey}: ")
+    end
+    writeEnvFile(file, searchApiSecret, searchApiUrl)
+  end
+end
+
+def writeEnvFile(file, searchApiKey, searchApiUrl)
+  File.open(file, 'w') do |fo|
+    fo.write("SEARCH_API_BASE_URL=\"#{searchApiUrl}\"\n")
+    fo.write("SEARCH_API_SECRET_KEY=\"#{searchApiKey}\"\n")
+  end
+  end
