@@ -13,12 +13,30 @@ part 'race_condition_manager.g.dart';
 typedef UpdateHandler = RaceConditionState Function(RaceConditionState state);
 typedef SettingsHandler = void Function(UpdateHandler updateHandler);
 
-final fakeHive = BehaviorSubject.seeded(const RaceConditionState(
-  a: 0,
-  b: 0,
-  c: 0,
-  d: 0,
-));
+/// Note:
+/// Use below code to test this setup:
+/// final RaceConditionManager manager = di.get();
+///
+///     fakeHiveAdapter.stream.listen((event) => print({
+///       'a': event.a,
+///       'b': event.b,
+///       'c': event.c,
+///       'd': event.d,
+///     }.toString())); // emits: {a: 2, b: 3, c: 4, d: 5} eventually
+///
+///     manager.handleUpdateA(1);
+///     manager.handleUpdateB(1);
+///     manager.handleUpdateC(1);
+///     manager.handleUpdateD(1);
+///
+///     manager.handleUpdateA(2);
+///     manager.handleUpdateB(3);
+///     manager.handleUpdateC(4);
+///     manager.handleUpdateD(5);
+///
+
+/// The fake hive box's adapter
+final FakeHiveAdapter fakeHiveAdapter = FakeHiveAdapter();
 
 @injectable
 class RaceConditionManager extends Cubit<bool> with UseCaseBlocHelper<bool> {
@@ -101,7 +119,9 @@ class RaceConditionManager extends Cubit<bool> with UseCaseBlocHelper<bool> {
 class UpdateSettingsUseCase extends UseCase<UpdateHandler, RaceConditionState> {
   @override
   Stream<RaceConditionState> transaction(UpdateHandler param) async* {
-    yield* fakeHive.stream.where((state) => state != param(state)).map(param);
+    yield* fakeHiveAdapter.stream
+        .where((state) => state != param(state))
+        .map(param);
   }
 }
 
@@ -110,13 +130,16 @@ class StoreSettingsUseCase
     extends UseCase<RaceConditionState, RaceConditionState> {
   @override
   Stream<RaceConditionState> transaction(RaceConditionState param) async* {
-    // fake io write delay
-    await Future.delayed(const Duration(milliseconds: 20));
     // write success, push stored value
-    fakeHive.add(param);
+    fakeHiveAdapter.update(param);
     // yield stored value
     yield param;
   }
+
+  /// back-pressure to prevent excessive I/O
+  @override
+  Stream<RaceConditionState> transform(Stream<RaceConditionState> incoming) =>
+      incoming.debounceTime(const Duration(milliseconds: 20));
 }
 
 @freezed
@@ -132,12 +155,33 @@ class RaceConditionState with _$RaceConditionState {
       _$RaceConditionStateFromJson(json);
 }
 
-class RaceConditionStateAndParam {
-  final RaceConditionState state;
-  final int param;
+/// todo: should be auto-generated
+/// unwraps a complex data type,
+/// stores individual properties as key/value
+/// emits the latest combined [RaceConditionState] always.
+class FakeHiveAdapter {
+  // RaceConditionState has a, b, c, d properties
+  // this is representing the single-storage
+  final propertyStoreA = BehaviorSubject.seeded(0);
+  final propertyStoreB = BehaviorSubject.seeded(0);
+  final propertyStoreC = BehaviorSubject.seeded(0);
+  final propertyStoreD = BehaviorSubject.seeded(0);
 
-  const RaceConditionStateAndParam({
-    required this.state,
-    required this.param,
-  });
+  Stream<RaceConditionState>? _stream;
+  Stream<RaceConditionState> get stream =>
+      _stream ??
+      Rx.combineLatest4(
+          propertyStoreA,
+          propertyStoreB,
+          propertyStoreC,
+          propertyStoreD,
+          (int a, int b, int c, int d) =>
+              RaceConditionState(a: a, b: b, c: c, d: d));
+
+  void update(RaceConditionState state) {
+    if (propertyStoreA.value != state.a) propertyStoreA.add(state.a);
+    if (propertyStoreB.value != state.b) propertyStoreB.add(state.b);
+    if (propertyStoreC.value != state.c) propertyStoreC.add(state.c);
+    if (propertyStoreD.value != state.d) propertyStoreD.add(state.d);
+  }
 }
