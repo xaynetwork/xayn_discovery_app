@@ -15,24 +15,18 @@
 
 default_platform(:android)
 
-platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
-  end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
-  end
+desc "Build internal apk"
+private_lane :android_prepare_internal do |options|
+  UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
+  writeKeyProperties(ENV["PROVISIONING_PASSWORD"])
+end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+def writeKeyProperties(provisionigPassword) 
+  File.open('../key.properties', 'w') do |fo|
+    fo.write("storePassword=#{provisionigPassword}\n")
+    fo.write("keyPassword=#{provisionigPassword}\n")
+    fo.write("keyAlias=release\n")
+    fo.write("storeFile=internal_release.jks\n")
   end
 end

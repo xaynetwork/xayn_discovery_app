@@ -15,21 +15,11 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### clean
+### android_prepare_internal
 ```
-fastlane clean
+fastlane android_prepare_internal
 ```
-Flutter clean
-### check
-```
-fastlane check
-```
-Sanity checks
-### publish
-```
-fastlane publish
-```
-Build and publish (i.e fastlane publish platform:ios build:release)
+Build internal apk
 
 ----
 

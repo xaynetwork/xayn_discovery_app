@@ -14,7 +14,7 @@
 # update_fastlane
 
 desc "Create a signed IPA package"
-lane :ios_create_ipa do
+private_lane :ios_create_ipa do
   UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
 
   begin
