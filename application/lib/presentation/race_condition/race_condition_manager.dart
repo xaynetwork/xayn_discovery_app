@@ -123,6 +123,12 @@ class UpdateSettingsUseCase extends UseCase<UpdateHandler, RaceConditionState> {
         .where((state) => state != param(state))
         .map(param);
   }
+
+  /// "Reset" if fakeHiveAdapter had an update during the lifetime of
+  /// [UpdateSettingsUseCase]
+  @override
+  Stream<UpdateHandler> transform(Stream<UpdateHandler> incoming) =>
+      incoming.switchMap((it) => fakeHiveAdapter.stream.mapTo(it));
 }
 
 @injectable
@@ -135,11 +141,6 @@ class StoreSettingsUseCase
     // yield stored value
     yield param;
   }
-
-  /// back-pressure to prevent excessive I/O
-  @override
-  Stream<RaceConditionState> transform(Stream<RaceConditionState> incoming) =>
-      incoming.debounceTime(const Duration(milliseconds: 20));
 }
 
 @freezed
