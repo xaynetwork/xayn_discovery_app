@@ -54,9 +54,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
       return Document(
         documentId: const DocumentId(key: ''),
         webResource: WebResource(
-          displayUrl: imageUrl != null
-              ? Uri.parse(imageUrl)
-              : Uri.parse('https://www.xayn.com'),
+          displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
