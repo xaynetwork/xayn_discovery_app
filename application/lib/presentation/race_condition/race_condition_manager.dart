@@ -180,9 +180,22 @@ class FakeHiveAdapter {
               RaceConditionState(a: a, b: b, c: c, d: d));
 
   void update(RaceConditionState state) {
-    if (propertyStoreA.value != state.a) propertyStoreA.add(state.a);
-    if (propertyStoreB.value != state.b) propertyStoreB.add(state.b);
-    if (propertyStoreC.value != state.c) propertyStoreC.add(state.c);
-    if (propertyStoreD.value != state.d) propertyStoreD.add(state.d);
+    // todo: we should really consider doing updates in a transactional way
+    final rollbackState = RaceConditionState(
+      a: propertyStoreA.value,
+      b: propertyStoreB.value,
+      c: propertyStoreC.value,
+      d: propertyStoreD.value,
+    );
+
+    try {
+      if (propertyStoreA.value != state.a) propertyStoreA.add(state.a);
+      if (propertyStoreB.value != state.b) propertyStoreB.add(state.b);
+      if (propertyStoreC.value != state.c) propertyStoreC.add(state.c);
+      if (propertyStoreD.value != state.d) propertyStoreD.add(state.d);
+    } catch (e, st) {
+      // transaction failed, do rollback
+      update(rollbackState);
+    }
   }
 }
