@@ -193,7 +193,7 @@ class FakeHiveAdapter {
       if (propertyStoreB.value != state.b) propertyStoreB.add(state.b);
       if (propertyStoreC.value != state.c) propertyStoreC.add(state.c);
       if (propertyStoreD.value != state.d) propertyStoreD.add(state.d);
-    } catch (e, st) {
+    } catch (e) {
       // transaction failed, do rollback
       update(rollbackState);
     }
