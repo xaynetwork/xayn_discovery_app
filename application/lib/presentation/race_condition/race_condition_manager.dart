@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -71,7 +72,7 @@ class RaceConditionManager extends Cubit<bool> with UseCaseBlocHelper<bool> {
           onSuccess: (it) => true,
           onFailure: HandleFailure(
             (e, st) {
-              print('$e $st');
+              log('$e $st');
               return false;
             },
           ),
@@ -83,7 +84,7 @@ class RaceConditionManager extends Cubit<bool> with UseCaseBlocHelper<bool> {
           onSuccess: (it) => true,
           onFailure: HandleFailure(
             (e, st) {
-              print('$e $st');
+              log('$e $st');
               return false;
             },
           ),
@@ -95,7 +96,7 @@ class RaceConditionManager extends Cubit<bool> with UseCaseBlocHelper<bool> {
           onSuccess: (it) => true,
           onFailure: HandleFailure(
             (e, st) {
-              print('$e $st');
+              log('$e $st');
               return false;
             },
           ),
@@ -107,7 +108,7 @@ class RaceConditionManager extends Cubit<bool> with UseCaseBlocHelper<bool> {
           onSuccess: (it) => true,
           onFailure: HandleFailure(
             (e, st) {
-              print('$e $st');
+              log('$e $st');
               return false;
             },
           ),
