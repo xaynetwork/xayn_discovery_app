@@ -33,7 +33,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: aabc86fd036a1977eae251081ce3c70d0d12ab8f
+      ref: 78408e7337673927729a93b20fd365f3a8b884b8
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine.git
@@ -74,3 +74,7 @@ flutter:
           weight: 400
 
   uses-material-design: true
+
+  assets:
+    # icons
+    - packages/xayn_design/assets/icons/icon_search.svg
