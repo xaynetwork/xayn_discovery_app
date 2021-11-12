@@ -9,20 +9,20 @@
 #
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
+
 import("../ios/fastlane/Fastfile")
-import("../android/fastlane/Fastfile")
 
 #ios, android, web
-platform="android" 
+platform = "android"
 
 #apk, appbundle
-android_output="apk"
+android_output = "apk"
 
 #internal, external
-flavor="internal"
+flavor = "internal"
 
 #release, debug
-build="debug"
+build = "debug"
 
 # Common checks before running a lane
 before_all do |lane, options|
@@ -31,26 +31,26 @@ before_all do |lane, options|
   options[:flavor] = options[:flavor] || flavor
   options[:build] = options[:build] || build
 
-  version_name=`git describe --tags | tr -d '\n'`
-  build_number=`git rev-list --count HEAD | tr -d '\n'` 
+  version_name = `git describe --tags | tr -d '\n'`
+  build_number = `git rev-list --count HEAD | tr -d '\n'`
   options[:build_number] = options[:build_number] || build_number
   options[:version_name] = options[:version_name] || version_name
-  puts options 
+  puts options
 end
 
-# Private lanes, that we only call internnaly, they are nice because they have an own description
+# Private lanes, that we only call internaly, they are nice because they have an own description
 desc "Flutter build runner"
 private_lane :build_runner do
-  checkAndCreateEnv('../.env.dev', 'SEARCH_API_SECRET_DEBUG', 'api-gw.xaynet.dev')
-  checkAndCreateEnv('../.env.prod', 'SEARCH_API_SECRET_PRODUCTION', 'api-gw.xayn.com')
+  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "api-gw.xaynet.dev")
+  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "api-gw.xayn.com")
 
   flutter("pub  run build_runner build --delete-conflicting-outputs")
 end
 
 desc "Flutter pub get"
-private_lane :pub_get do |options| 
-   flutter("pub get")
-end 
+private_lane :pub_get do |options|
+  flutter("pub get")
+end
 
 desc "Flutter build"
 private_lane :flutter_build do |options|
@@ -60,17 +60,32 @@ private_lane :flutter_build do |options|
 
   target = options[:platform] == "android" ? options[:android_output] : options[:platform]
   type = options[:build] == "release" ? "--release" : "--debug"
-  codesign = options[:platform] == "ios" ? "--no-codesign" :  "";
+  codesign = options[:platform] == "ios" ? "--no-codesign" : ""
 
   flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]}")
 end
 
-desc "Flutter clean"
-lane :clean do |options| 
-   flutter("clean")
-end 
+desc "Build internal apk"
+private_lane :android_prepare_internal do |options|
+  UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
+  provisionigPassword = ENV["PROVISIONING_PASSWORD"]
+  writeProperties("../android/key.properties", {
+    :storePassword => provisionigPassword,
+    :keyPassword => provisionigPassword,
+    :keyAlias => "release",
+    :storeFile => "internal_release.jks",
+  })
+end
 
-# Public lanes, can also be used via tab completion: `fastelane enable_auto_complete`
+####
+#### Public lanes, can also be used via tab completion: `fastelane enable_auto_complete`
+####
+
+desc "Flutter clean"
+lane :clean do |options|
+  flutter("clean")
+end
+
 desc "Sanity checks"
 lane :check do |options|
   pub_get(options)
@@ -94,20 +109,22 @@ lane :publish do |options|
     UI.user_error!("No $APPCENTER_IOS_INTERNAL_TOKEN provided!") unless ENV.key?("APPCENTER_IOS_INTERNAL_TOKEN")
     uploadToAppCenter(
       ENV["APPCENTER_IOS_INTERNAL_TOKEN"],
-     "Discovery-App-internal",
-      "build/discovery-app.ipa", 
-      options[:version_name])
+      "Discovery-App-internal",
+      "build/discovery-app.ipa",
+      options[:version_name]
+    )
   else
     uploadToAppCenter(
       ENV["APPCENTER_ANDROID_INTERNAL_TOKEN"],
-     "Discovery-App-Android-internal",
-      "build/app/outputs/flutter-apk/app-release.apk", 
-      options[:version_name])
-  end 
+      "Discovery-App-Android-internal",
+      "build/app/outputs/flutter-apk/app-release.apk",
+      options[:version_name]
+    )
+  end
 end
 
-# Private helper methods 
-def flutter(args) 
+# Private helper methods
+def flutter(args)
   Dir.chdir("..") do
     sh "flutter #{args}"
   end
@@ -123,15 +140,15 @@ end
 def uploadToAppCenter(token, appName, path, version)
   changelog = createChangelog(version)
   appcenter_upload(
-  api_token: token,
-  owner_name: "XAIN_AG",
-  owner_type: "organization", 
-  app_name: appName,
-  file: path,
-  release_notes: changelog,
-  destinations: "Collaborators",
-  notify_testers: true
-)
+    api_token: token,
+    owner_name: "XAIN_AG",
+    owner_type: "organization",
+    app_name: appName,
+    file: path,
+    release_notes: changelog,
+    destinations: "Collaborators",
+    notify_testers: true,
+  )
 end
 
 def checkAndCreateEnv(file, searchApiEnvKey, searchApiUrl)
@@ -145,8 +162,18 @@ def checkAndCreateEnv(file, searchApiEnvKey, searchApiUrl)
 end
 
 def writeEnvFile(file, searchApiKey, searchApiUrl)
-  File.open(file, 'w') do |fo|
-    fo.write("SEARCH_API_BASE_URL=\"#{searchApiUrl}\"\n")
-    fo.write("SEARCH_API_SECRET_KEY=\"#{searchApiKey}\"\n")
+  writeProperties(file, {
+    :SEARCH_API_BASE_URL => searchApiUrl,
+    :SEARCH_API_SECRET_KEY => searchApiKey,
+  })
+end
+
+# Clears and rewrites a properties file
+def writeProperties(path, hash)
+  File.delete(path) if File.exist?(path)
+  File.open(path, "w") do |fo|
+    hash.each do |key, value|
+      fo.write("#{key}=#{value}\n")
+    end
   end
-  end
+end
