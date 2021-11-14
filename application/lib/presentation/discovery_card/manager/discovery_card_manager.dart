@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/on_failure.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
@@ -27,8 +26,10 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final ExtractElementsUseCase _extractElementsUseCase;
   final ImagePaletteUseCase _imagePaletteUseCase;
 
-  late final UriHandler _updateUri;
-  late final UriHandler _updateImageUri;
+  late final UseCaseSink<Uri, Elements> _updateUri;
+  late final UseCaseSink<Uri, PaletteGenerator> _updateImageUri;
+
+  bool _isLoading = false;
 
   DiscoveryCardManager(
     this._loadHtmlUseCase,
@@ -52,47 +53,49 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     ///   * emits a loading state while the source html is loading
     /// - transforms the loaded html into reader mode html
     /// - extracts lists of html elements from the html tree, to display in story mode
-    _updateUri = pipe(_loadHtmlUseCase)
-        .transform(
-          (out) => out
-              .maybeResolveEarly(
-                condition: (it) => !it.isCompleted,
-                stateBuilder: (it) => state.copyWith(isComplete: false),
-              )
-              .map(_createReadabilityConfig)
-              .followedBy(_readabilityUseCase)
-              .followedBy(_extractElementsUseCase),
-        )
-        .fold(
-          onSuccess: (it) => state.copyWith(
-            result: it.processHtmlResult,
-            paragraphs: it.paragraphs,
-            images: it.images,
+    _updateUri = pipe(_loadHtmlUseCase).transform(
+      (out) => out
+          .scheduleComputeState(
+            condition: (it) => !it.isCompleted,
+            whenTrue: (it) => _isLoading = true,
+          )
+          .map(_createReadabilityConfig)
+          .followedBy(_readabilityUseCase)
+          .followedBy(_extractElementsUseCase)
+          .scheduleComputeState(
+            condition: (it) => true,
+            whenTrue: (it) => _isLoading = false,
+            swallowEvent: false,
           ),
-          onFailure: HandleFailure((e, st) {
-            log('e: $e, st: $st');
-            return DiscoveryCardState.error();
-          }, matchers: {
-            On<TimeoutException>((e, st) => DiscoveryCardState.error()),
-            On<FormatException>((e, st) => DiscoveryCardState.error()),
-          }),
-        );
+    );
 
     /// background image color palette:
     /// - invokes the palette use case and grabs the color palette
-    _updateImageUri = pipe(_imagePaletteUseCase).fold(
-      onSuccess: (it) => state.copyWith(paletteGenerator: it),
-      onFailure: HandleFailure(
-        (e, st) {
-          log('e: $e, st: $st');
-          return DiscoveryCardState.error();
-        },
-        matchers: {
-          On<ImagePaletteError>((e, st) => state),
-        },
-      ),
-    );
+    _updateImageUri = pipe(_imagePaletteUseCase);
   }
+
+  @override
+  Future<DiscoveryCardState?> computeState() async =>
+      fold2(_updateUri, _updateImageUri).foldAll((a, b, errorReport) {
+        if (errorReport.isNotEmpty) {
+          return DiscoveryCardState.error();
+        }
+
+        var nextState = state.copyWith(
+          paletteGenerator: b,
+          isComplete: !_isLoading,
+        );
+
+        if (a != null) {
+          nextState = nextState.copyWith(
+            result: a.processHtmlResult,
+            paragraphs: a.paragraphs,
+            images: a.images,
+          );
+        }
+
+        return nextState;
+      });
 
   ReadabilityConfig _createReadabilityConfig(Progress progress) =>
       ReadabilityConfig(

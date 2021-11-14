@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:xayn_architecture/concepts/on_failure.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
@@ -53,9 +52,11 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   late final StreamSubscription<ClientEvent> _clientEventSubscription;
   final Random rnd = Random();
 
-  late final Handler<String> _handleQuery;
+  late final UseCaseSink<String, ApiEndpointResponse> _handleQuery;
 
   late String nextFakeKeyword;
+
+  bool _isLoading = false;
 
   Sink<ClientEvent> get onClientEvent => _onClientEvent.sink;
 
@@ -82,48 +83,48 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   }
 
   void _initHandlers() {
-    _handleQuery = pipe(_createHttpRequestUseCase)
-        .transform(
-          (out) => out
-              .followedBy(LogUseCase((it) => 'will fetch $it'))
-              .followedBy(_invokeApiEndpointUseCase)
-              .maybeResolveEarly(
-                  condition: (data) => !data.isComplete,
-                  stateBuilder: (data) => const DiscoveryEngineState.loading())
-              .followedBy(
-                LogUseCase(
-                  (it) => 'did fetch ${it.results.length} results',
-                  when: (it) => it.isComplete,
-                ),
-              ),
-        )
-        .fold(
-          onSuccess: (it) => _extractFakeKeywordAndEmit(it.results),
-          onFailure: HandleFailure(
-              (e, s) => DiscoveryEngineState.error(error: e, stackTrace: s),
-              matchers: {
-                On<ApiEndpointError>(
-                  (e, s) => DiscoveryEngineState.error(error: e, stackTrace: s),
-                ),
-              }),
-          guard: (nextState) {
-            // allow going from loading state to filled state
-            if (state.isLoading && nextState.isComplete) return true;
-
-            // allow going from loading state to error state
-            if (state.isLoading && nextState.hasError) return true;
-
-            // allow going from error state to loading state
-            if (state.hasError && nextState.isLoading) return true;
-
-            // allow going from loaded state to loading state
-            if (state.isComplete && nextState.isLoading) return true;
-
-            // disallow any other changes
-            return false;
-          },
-        );
+    _handleQuery = pipe(_createHttpRequestUseCase).transform(
+      (out) => out
+          .followedBy(LogUseCase((it) => 'will fetch $it'))
+          .followedBy(_invokeApiEndpointUseCase)
+          .scheduleComputeState(
+            condition: (data) => !data.isComplete,
+            whenTrue: (data) => _isLoading = true,
+          )
+          .scheduleComputeState(
+            condition: (data) => data.isComplete,
+            whenTrue: (data) => _isLoading = false,
+            swallowEvent: false,
+          )
+          .followedBy(
+            LogUseCase(
+              (it) => 'did fetch ${it.results.length} results',
+              when: (it) => it.isComplete,
+            ),
+          ),
+    );
   }
+
+  @override
+  Future<DiscoveryEngineState?> computeState() async =>
+      fold(_handleQuery).foldAll((a, errorReport) {
+        if (errorReport.isNotEmpty) {
+          final errorAndStackTrace = errorReport.of(_handleQuery)!;
+
+          return DiscoveryEngineState.error(
+            error: errorAndStackTrace.error,
+            stackTrace: errorAndStackTrace.stackTrace,
+          );
+        }
+
+        if (_isLoading) {
+          return const DiscoveryEngineState.loading();
+        }
+
+        if (a != null) {
+          return _extractFakeKeywordAndEmit(a.results);
+        }
+      });
 
   void _handleClientEvent(ClientEvent event) {
     if (event is SearchRequested) _handleSearchEvent(event);
