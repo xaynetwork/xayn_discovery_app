@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:injectable/injectable.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:xayn_architecture/concepts/use_case.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 
 /// A [UseCase] which loads the color palette from the image which exists
 /// at the Uri that is provided as input.
