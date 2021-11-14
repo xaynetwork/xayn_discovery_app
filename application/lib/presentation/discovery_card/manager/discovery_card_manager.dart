@@ -56,17 +56,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _updateUri = pipe(_loadHtmlUseCase).transform(
       (out) => out
           .scheduleComputeState(
-            condition: (it) => !it.isCompleted,
-            whenTrue: (it) => _isLoading = true,
+            consumeEvent: (it) => !it.isCompleted,
+            run: (it) => _isLoading = !it.isCompleted,
           )
           .map(_createReadabilityConfig)
           .followedBy(_readabilityUseCase)
-          .followedBy(_extractElementsUseCase)
-          .scheduleComputeState(
-            condition: (it) => true,
-            whenTrue: (it) => _isLoading = false,
-            swallowEvent: false,
-          ),
+          .followedBy(_extractElementsUseCase),
     );
 
     /// background image color palette:
