@@ -6,17 +6,11 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/feed_view.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 import 'package:xayn_design/xayn_design.dart';
-
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 enum SwipeOption { like, share, dislike }
 
@@ -29,20 +23,17 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed> {
-  late final DiscoveryEngineManager _discoveryEngineManager;
   late final ScrollController _scrollController;
   late final DiscoveryFeedManager _discoveryFeedManager;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _discoveryEngineManager = di.get();
     _discoveryFeedManager = di.get();
 
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge && _scrollController.offset != .0) {
-        _discoveryEngineManager.onClientEvent
-            .add(const SearchRequested('', [SearchType.web]));
+        _discoveryFeedManager.loadMore();
       }
     });
 
