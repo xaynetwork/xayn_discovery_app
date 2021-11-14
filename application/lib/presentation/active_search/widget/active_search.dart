@@ -38,8 +38,10 @@ class _ActiveSearchState extends State<ActiveSearch> {
       builder: (context, state) {
         final results = state.results ?? [];
 
-        if (results.isEmpty) {
+        if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
+        } else if (results.isEmpty) {
+          return Container();
         }
 
         return FeedView(

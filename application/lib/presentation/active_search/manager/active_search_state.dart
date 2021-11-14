@@ -12,11 +12,19 @@ class ActiveSearchState with _$ActiveSearchState {
   const factory ActiveSearchState({
     List<Document>? results,
     required bool isComplete,
+    required bool isLoading,
     required bool isInErrorState,
   }) = _ActiveSearchState;
 
   factory ActiveSearchState.empty() => const ActiveSearchState(
         isComplete: false,
+        isLoading: false,
+        isInErrorState: false,
+      );
+
+  factory ActiveSearchState.loading() => const ActiveSearchState(
+        isComplete: false,
+        isLoading: true,
         isInErrorState: false,
       );
 }
