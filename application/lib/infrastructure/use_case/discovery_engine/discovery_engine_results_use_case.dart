@@ -13,15 +13,21 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 ///
 /// A [UseCase] which forwards the output documents stream of the [DiscoveryEngineManager].
 @injectable
-class DiscoveryEngineResultsUseCase extends UseCase<int, DiscoveryEngineState> {
+class DiscoveryEngineResultsUseCase
+    extends UseCase<String?, DiscoveryEngineState> {
   final DiscoveryEngineManager _discoveryApi;
 
   DiscoveryEngineResultsUseCase(this._discoveryApi);
 
+  void search(String term) {
+    _discoveryApi.onClientEvent.add(SearchRequested(term, [SearchType.web]));
+  }
+
   @override
-  Stream<DiscoveryEngineState> transaction(int param) async* {
-    _discoveryApi.onClientEvent
-        .add(const SearchRequested('', [SearchType.web]));
+  Stream<DiscoveryEngineState> transaction(String? param) async* {
+    if (param != null) {
+      _discoveryApi.onClientEvent.add(SearchRequested(param, [SearchType.web]));
+    }
 
     yield* _discoveryApi.stream;
   }
