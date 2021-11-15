@@ -73,9 +73,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
     return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
       bloc: _discoveryFeedManager,
       builder: (context, state) {
-        final results = state.results ?? [];
+        final results = state.results;
 
-        if (results.isEmpty) {
+        if (results == null) {
           return const Center(child: CircularProgressIndicator());
         }
 
