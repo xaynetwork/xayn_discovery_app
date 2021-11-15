@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
@@ -53,8 +54,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     ///   * emits a loading state while the source html is loading
     /// - transforms the loaded html into reader mode html
     /// - extracts lists of html elements from the html tree, to display in story mode
-    _updateUri = pipe(_loadHtmlUseCase).transform(
+    _updateUri = pipe(ConnectivityUseCase<Uri>()).transform(
       (out) => out
+          .followedBy(_loadHtmlUseCase)
           .scheduleComputeState(
             consumeEvent: (it) => !it.isCompleted,
             run: (it) => _isLoading = !it.isCompleted,
@@ -66,7 +68,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
     /// background image color palette:
     /// - invokes the palette use case and grabs the color palette
-    _updateImageUri = pipe(_imagePaletteUseCase);
+    _updateImageUri = pipe(ConnectivityUseCase<Uri>())
+        .transform((out) => out.followedBy(_imagePaletteUseCase));
   }
 
   @override

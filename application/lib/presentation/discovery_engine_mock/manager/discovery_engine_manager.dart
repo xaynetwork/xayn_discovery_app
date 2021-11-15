@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
@@ -83,8 +84,9 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   }
 
   void _initHandlers() {
-    _handleQuery = pipe(_createHttpRequestUseCase).transform(
+    _handleQuery = pipe(ConnectivityUseCase<String>()).transform(
       (out) => out
+          .followedBy(_createHttpRequestUseCase)
           .followedBy(LogUseCase((it) => 'will fetch $it'))
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
