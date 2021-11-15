@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/presentation/util/custom_page_scroll_physics.dart';
 
+/// Extended version of [ListView] intended to display [DiscoveryCard]s.
+/// All items are displayed full screen with vertical scrolling.
 class FeedView extends StatelessWidget {
   const FeedView({
     Key? key,
