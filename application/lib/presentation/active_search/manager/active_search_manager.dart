@@ -7,6 +7,11 @@ import 'package:injectable/injectable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 
+/// Manages the state for the active search screen.
+///
+/// It consumes events from the discovery engine and emits a state
+/// which contains a list of discovery news items which should be displayed
+/// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends Cubit<ActiveSearchState>
     with UseCaseBlocHelper<ActiveSearchState> {

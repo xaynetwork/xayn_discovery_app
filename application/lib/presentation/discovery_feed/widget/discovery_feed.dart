@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 
