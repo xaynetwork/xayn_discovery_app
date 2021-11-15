@@ -14,14 +14,22 @@ class ConnectivityUseCase<T> extends UseCase<T, T> {
 
   @override
   Stream<T> transaction(T param) async* {
-    yield* connectivity.onConnectivityChanged.distinct().switchMap((it) {
+    final startingValue = await connectivity.checkConnectivity();
+
+    mapper(ConnectivityResult it) {
       switch (it) {
         case ConnectivityResult.none:
           return Stream<T>.error(ConnectivityError(), StackTrace.current);
         default:
           return Stream.value(param);
       }
-    }).take(1);
+    }
+
+    yield* connectivity.onConnectivityChanged
+        .startWith(startingValue)
+        .distinct()
+        .switchMap(mapper)
+        .take(1);
   }
 }
 
