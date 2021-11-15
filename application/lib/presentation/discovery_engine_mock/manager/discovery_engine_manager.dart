@@ -84,9 +84,9 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   }
 
   void _initHandlers() {
-    _handleQuery = pipe(ConnectivityUseCase<String>()).transform(
+    _handleQuery = pipe(_createHttpRequestUseCase).transform(
       (out) => out
-          .followedBy(_createHttpRequestUseCase)
+          .followedBy(ConnectivityUseCase())
           .followedBy(LogUseCase((it) => 'will fetch $it'))
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
