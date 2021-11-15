@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:xayn_architecture/concepts/use_case.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:injectable/injectable.dart';
 

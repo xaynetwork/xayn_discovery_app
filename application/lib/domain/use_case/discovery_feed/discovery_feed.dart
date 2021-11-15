@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:xayn_architecture/concepts/use_case.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 
 /// [UseCase] interface for abstracting createHttpRequest
