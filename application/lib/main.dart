@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 
 void main() {
   configureDependencies();
 
-  runApp(const App());
+  final unterDenLinden = UnterDenLinden(
+    child: const App(),
+    initialLinden: Linden(),
+  );
+
+  runApp(unterDenLinden);
 }
 
 class App extends StatefulWidget {
