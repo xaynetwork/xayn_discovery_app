@@ -27,11 +27,11 @@ const List<String> randomKeywords = [
 ];
 
 @injectable
-class RandomWordUseCase extends UseCase<List<Document>, String> {
+class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
   final Random rnd = Random();
   late String nextFakeKeyword;
 
-  RandomWordUseCase() {
+  RandomKeyWordsUseCase() {
     _initGeneral();
   }
 

@@ -9,8 +9,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
-import 'package:xayn_design/xayn_design.dart';
 
 enum SwipeOption { like, share, dislike }
 
@@ -42,15 +42,22 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomNav = Positioned(
+      bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
+      child: TempSearchButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ActiveSearch()),
+        ),
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
           _buildFeedView(),
-          Positioned(
-            bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
-            child: _buildSearchButton(context),
-          ),
+          bottomNav,
         ],
       ),
     );
@@ -61,21 +68,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         final document = results[index];
         return _buildResultCard(document);
       };
-
-  /// Temporary navigation to the Active Search screen.
-  /// Should be replaced with the navbar prototype when ready.
-  Widget _buildSearchButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ActiveSearch()),
-      ),
-      child: SvgPicture.asset(
-        R.assets.icons.search,
-        color: R.colors.iconBackground,
-      ),
-    );
-  }
 
   Widget _buildFeedView() {
     return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
