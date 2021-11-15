@@ -22,6 +22,7 @@ typedef UriHandler = void Function(Uri uri);
 @injectable
 class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with UseCaseBlocHelper<DiscoveryCardState> {
+  final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
   final ExtractElementsUseCase _extractElementsUseCase;
@@ -33,6 +34,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   bool _isLoading = false;
 
   DiscoveryCardManager(
+    this._connectivityUseCase,
     this._loadHtmlUseCase,
     this._readabilityUseCase,
     this._extractElementsUseCase,
@@ -68,7 +70,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
     /// background image color palette:
     /// - invokes the palette use case and grabs the color palette
-    _updateImageUri = pipe(ConnectivityUseCase<Uri>())
+    _updateImageUri = pipe(_connectivityUseCase)
         .transform((out) => out.followedBy(_imagePaletteUseCase));
   }
 

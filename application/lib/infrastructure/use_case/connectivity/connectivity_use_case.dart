@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 
@@ -22,6 +23,11 @@ class ConnectivityUseCase<T> extends UseCase<T, T> {
       }
     }).take(1);
   }
+}
+
+@injectable
+class ConnectivityUriUseCase extends ConnectivityUseCase<Uri> {
+  ConnectivityUriUseCase();
 }
 
 class ConnectivityError extends Error {}

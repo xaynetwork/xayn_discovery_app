@@ -46,6 +46,7 @@ const List<String> randomKeywords = [
 class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
     with UseCaseBlocHelper<DiscoveryEngineState>
     implements xayn.DiscoveryEngine {
+  final ConnectivityUriUseCase _connectivityUseCase;
   final CreateHttpRequestUseCase _createHttpRequestUseCase;
   final InvokeApiEndpointUseCase _invokeApiEndpointUseCase;
   final StreamController<ClientEvent> _onClientEvent =
@@ -62,6 +63,7 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   Sink<ClientEvent> get onClientEvent => _onClientEvent.sink;
 
   DiscoveryEngineManager(
+    this._connectivityUseCase,
     this._createHttpRequestUseCase,
     this._invokeApiEndpointUseCase,
   ) : super(const DiscoveryEngineState.initial()) {
@@ -86,7 +88,7 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   void _initHandlers() {
     _handleQuery = pipe(_createHttpRequestUseCase).transform(
       (out) => out
-          .followedBy(ConnectivityUseCase())
+          .followedBy(_connectivityUseCase)
           .followedBy(LogUseCase((it) => 'will fetch $it'))
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
