@@ -19,8 +19,11 @@ class DiscoveryEngineResultsUseCase
 
   DiscoveryEngineResultsUseCase(this._discoveryApi);
 
-  void search(String term) {
-    _discoveryApi.onClientEvent.add(SearchRequested(term, [SearchType.web]));
+  void search(
+    String term, {
+    List<SearchType> types = const [SearchType.web],
+  }) {
+    _discoveryApi.onClientEvent.add(SearchRequested(term, types));
   }
 
   @override

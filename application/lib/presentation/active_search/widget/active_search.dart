@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/temp_search_bar.dart';
 
 class ActiveSearch extends StatefulWidget {
   const ActiveSearch({Key? key}) : super(key: key);
@@ -27,8 +28,23 @@ class _ActiveSearchState extends State<ActiveSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomNav = Positioned(
+      bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
+      left: R.dimen.unit2,
+      right: R.dimen.unit2,
+      child: TempSearchBar(
+        onSearch: (term) => _activeSearchManager.search(term),
+      ),
+    );
+
     return Scaffold(
-      body: _buildFeedView(),
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          _buildFeedView(),
+          bottomNav,
+        ],
+      ),
     );
   }
 

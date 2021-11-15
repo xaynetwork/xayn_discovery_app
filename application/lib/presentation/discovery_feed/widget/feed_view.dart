@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/presentation/scroll_physics/custom_page_scroll_physics.dart';
+import 'package:xayn_discovery_app/presentation/util/custom_page_scroll_physics.dart';
 
 class FeedView extends StatelessWidget {
   const FeedView({

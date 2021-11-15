@@ -4,7 +4,7 @@ import 'package:xayn_architecture/concepts/on_failure.dart';
 import 'package:xayn_architecture/concepts/use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_result_combiner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/temporary/random_words_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 
 /// Manages the state for the main, or home discovery feed screen.
@@ -17,16 +17,16 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     with UseCaseBlocHelper<DiscoveryFeedState> {
   DiscoveryFeedManager(
     this._discoveryEngineResultsUseCase,
-    this._randomWordUseCase,
+    this._randomKeyWordsUseCase,
   ) : super(DiscoveryFeedState.empty());
 
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
-  final RandomWordUseCase _randomWordUseCase;
+  final RandomKeyWordsUseCase _randomKeyWordsUseCase;
 
-  String get _nextFakeKeyword => _randomWordUseCase.nextFakeKeyword;
+  String get _nextFakeKeyword => _randomKeyWordsUseCase.nextFakeKeyword;
 
   void loadMore() async {
-    await _randomWordUseCase.call(state.results ?? []);
+    await _randomKeyWordsUseCase.call(state.results ?? []);
     _discoveryEngineResultsUseCase.search(_nextFakeKeyword);
   }
 
