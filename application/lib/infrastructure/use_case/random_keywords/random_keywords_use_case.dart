@@ -28,7 +28,7 @@ const List<String> randomKeywords = [
 
 @injectable
 class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
-  final Random rnd = Random();
+  final Random _rnd = Random();
   late String nextFakeKeyword;
 
   RandomKeyWordsUseCase() {
@@ -36,7 +36,7 @@ class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
   }
 
   void _initGeneral() {
-    nextFakeKeyword = randomKeywords[rnd.nextInt(randomKeywords.length)];
+    nextFakeKeyword = randomKeywords[_rnd.nextInt(randomKeywords.length)];
   }
 
   @override
@@ -48,7 +48,7 @@ class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
   /// selects a random word from the combined set of [Result.description]s.
   String _fakeNextKeywork(List<Document> nextResults) {
     if (nextResults.isEmpty) {
-      return randomKeywords[rnd.nextInt(randomKeywords.length)];
+      return randomKeywords[_rnd.nextInt(randomKeywords.length)];
     }
 
     final words = nextResults
@@ -59,9 +59,9 @@ class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
         .toList(growable: false);
 
     if (words.isEmpty) {
-      return randomKeywords[rnd.nextInt(randomKeywords.length)];
+      return randomKeywords[_rnd.nextInt(randomKeywords.length)];
     }
 
-    return words[rnd.nextInt(words.length)];
+    return words[_rnd.nextInt(words.length)];
   }
 }
