@@ -1,7 +1,6 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/on_failure.dart';
-import 'package:xayn_architecture/concepts/use_case.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_result_combiner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
@@ -18,7 +17,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   DiscoveryFeedManager(
     this._discoveryEngineResultsUseCase,
     this._randomKeyWordsUseCase,
-  ) : super(DiscoveryFeedState.empty());
+  ) : super(DiscoveryFeedState.empty()) {
+    _initHandlers();
+  }
 
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final RandomKeyWordsUseCase _randomKeyWordsUseCase;
@@ -30,27 +31,34 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     _discoveryEngineResultsUseCase.search(_nextFakeKeyword);
   }
 
-  @override
-  void initHandlers() {
+  late final UseCaseValueStream<ResultCombinerJob> _resultsObserver;
+
+  void _initHandlers() {
     /// Consumes the discovery engine's results output,
     /// emits a managed list of max 15 results to subscribers.
-    consume(_discoveryEngineResultsUseCase, initialData: _nextFakeKeyword)
-        .transform((out) => out.followedBy(
-            DiscoveryEngineResultCombinerUseCase(() => state.results)))
-        .fold(
-          onSuccess: (it) => state.copyWith(
-            results: it.documents,
-            resultIndex:
-                (state.resultIndex - it.removed).clamp(0, it.documents.length),
-            isComplete: it.apiState.isComplete,
-            isInErrorState: false,
-          ),
-          onFailure: HandleFailure((e, s) {
-            //print('$e $s');
-            return state.copyWith(
-              isInErrorState: true,
-            );
-          }),
-        );
+    _resultsObserver =
+        consume(_discoveryEngineResultsUseCase, initialData: _nextFakeKeyword)
+            .transform((out) => out.followedBy(
+                DiscoveryEngineResultCombinerUseCase(() => state.results)));
   }
+
+  @override
+  Future<DiscoveryFeedState?> computeState() async =>
+      fold(_resultsObserver).foldAll((a, errorReport) {
+        if (errorReport.isNotEmpty) {
+          return state.copyWith(
+            isInErrorState: true,
+          );
+        }
+
+        if (a != null) {
+          return state.copyWith(
+            results: a.documents,
+            resultIndex:
+                (state.resultIndex - a.removed).clamp(0, a.documents.length),
+            isComplete: a.apiState.isComplete,
+            isInErrorState: false,
+          );
+        }
+      });
 }
