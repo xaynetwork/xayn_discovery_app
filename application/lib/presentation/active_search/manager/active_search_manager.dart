@@ -7,6 +7,9 @@ import 'package:injectable/injectable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 
+// ignore: implementation_imports
+import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
+
 /// Manages the state for the active search screen.
 ///
 /// It consumes events from the discovery engine and emits a state
@@ -22,18 +25,23 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
   }
 
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
-  late final UseCaseValueStream<DiscoveryEngineState> _resultsObserver;
+  late final UseCaseSink<DiscoveryEngineResultsParam, DiscoveryEngineState>
+      _searchHandler;
 
-  void search(String term) => _discoveryEngineResultsUseCase.search(term);
+  void handleSearch(String term) {
+    _searchHandler(DiscoveryEngineResultsParam(
+      searchTerm: term,
+      searchTypes: const [SearchType.web],
+    ));
+  }
 
   void _init() {
-    _resultsObserver =
-        consume(_discoveryEngineResultsUseCase, initialData: null);
+    _searchHandler = pipe(_discoveryEngineResultsUseCase);
   }
 
   @override
   Future<ActiveSearchState?> computeState() async =>
-      fold(_resultsObserver).foldAll((a, errorReport) {
+      fold(_searchHandler).foldAll((a, errorReport) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,

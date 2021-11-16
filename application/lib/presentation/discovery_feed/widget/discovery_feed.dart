@@ -33,7 +33,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge && _scrollController.offset != .0) {
-        _discoveryFeedManager.loadMore();
+        _discoveryFeedManager.handleLoadMore();
       }
     });
 
