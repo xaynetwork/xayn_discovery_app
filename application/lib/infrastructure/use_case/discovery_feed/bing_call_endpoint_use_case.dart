@@ -81,7 +81,10 @@ WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
     } catch (e) {} //TODO: add logger call
 
     return providerName != null
-        ? WebResourceProvider(name: providerName, thumbnail: providerLogoUrl)
+        ? WebResourceProvider(
+            name: providerName,
+            thumbnail: providerLogoUrl == null ? null : '$providerLogoUrl?w=64',
+          )
         : null;
   }
 }
