@@ -73,12 +73,12 @@ class _ElementsSuccess extends Matcher {
       item.fold(
           defaultOnError: (e, s) {},
           onValue: (it) =>
-              listEquals(_expected.paragraphs, it.paragraphs) &&
-              listEquals(_expected.images, it.images) &&
-              processHtmlSuccess(_expected.processHtmlResult).matches(
-                UseCaseResult.success(it.processHtmlResult),
-                matchState,
-              ));
+              isMatched = listEquals(_expected.paragraphs, it.paragraphs) &&
+                  listEquals(_expected.images, it.images) &&
+                  processHtmlSuccess(_expected.processHtmlResult).matches(
+                    UseCaseResult.success(it.processHtmlResult),
+                    matchState,
+                  ));
     }
 
     return isMatched;
