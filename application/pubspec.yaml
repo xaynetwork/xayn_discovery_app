@@ -34,7 +34,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 78408e7337673927729a93b20fd365f3a8b884b8
+      ref: 0d5ebc6686b902f769dff98b672dcc3cd38fde36
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine.git
@@ -78,4 +78,4 @@ flutter:
 
   assets:
     # icons
-    - packages/xayn_design/assets/icons/icon_search.svg
+    - packages/xayn_design/assets/icons/search.svg
