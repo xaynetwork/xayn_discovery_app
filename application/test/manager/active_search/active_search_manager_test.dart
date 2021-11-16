@@ -41,7 +41,7 @@ void main() {
   );
 
   blocTest<ActiveSearchManager, ActiveSearchState>(
-    'GIVEN use case emits results THEN the state is contains results',
+    'GIVEN use case emits results THEN the state contains results',
     build: () {
       when(useCase.transform(any))
           .thenAnswer((realInvocation) => Stream.value(testParams));
