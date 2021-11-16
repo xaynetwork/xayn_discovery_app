@@ -56,7 +56,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     ///   * emits a loading state while the source html is loading
     /// - transforms the loaded html into reader mode html
     /// - extracts lists of html elements from the html tree, to display in story mode
-    _updateUri = pipe(ConnectivityUseCase<Uri>()).transform(
+    _updateUri = pipe(_connectivityUseCase).transform(
       (out) => out
           .followedBy(_loadHtmlUseCase)
           .scheduleComputeState(

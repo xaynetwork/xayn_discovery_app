@@ -1,10 +1,14 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_result_combiner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+
+// ignore: implementation_imports
+import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -24,27 +28,35 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final RandomKeyWordsUseCase _randomKeyWordsUseCase;
 
-  String get _nextFakeKeyword => _randomKeyWordsUseCase.nextFakeKeyword;
+  late final UseCaseSink<List<Document>, ResultCombinerJob> _searchHandler;
 
-  void loadMore() async {
-    await _randomKeyWordsUseCase.call(state.results ?? []);
-    _discoveryEngineResultsUseCase.search(_nextFakeKeyword);
+  void handleLoadMore() async {
+    _searchHandler(state.results ?? const <Document>[]);
   }
-
-  late final UseCaseValueStream<ResultCombinerJob> _resultsObserver;
 
   void _initHandlers() {
     /// Consumes the discovery engine's results output,
     /// emits a managed list of max 15 results to subscribers.
-    _resultsObserver =
-        consume(_discoveryEngineResultsUseCase, initialData: _nextFakeKeyword)
-            .transform((out) => out.followedBy(
-                DiscoveryEngineResultCombinerUseCase(() => state.results)));
+    _searchHandler = pipe(_randomKeyWordsUseCase).transform(
+      (out) => out
+          .map(
+            (it) => DiscoveryEngineResultsParam(
+              searchTerm: it,
+              searchTypes: const [SearchType.web],
+            ),
+          )
+          .followedBy(_discoveryEngineResultsUseCase)
+          .followedBy(
+            DiscoveryEngineResultCombinerUseCase(() => state.results),
+          ),
+    );
+
+    _searchHandler.call(const <Document>[]);
   }
 
   @override
   Future<DiscoveryFeedState?> computeState() async =>
-      fold(_resultsObserver).foldAll((a, errorReport) {
+      fold(_searchHandler).foldAll((a, errorReport) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,

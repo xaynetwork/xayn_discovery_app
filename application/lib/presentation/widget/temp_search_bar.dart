@@ -23,7 +23,7 @@ class TempSearchBar extends StatelessWidget {
     );
 
     final textField = TextField(
-      onSubmitted: (term) => onSearch(term),
+      onChanged: (term) => onSearch(term),
       decoration: InputDecoration(
         hintText: 'Search',
         border: InputBorder.none,
