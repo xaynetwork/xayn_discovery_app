@@ -35,7 +35,7 @@ class _ActiveSearchState extends State<ActiveSearch> {
       left: R.dimen.unit2,
       right: R.dimen.unit2,
       child: TempSearchBar(
-        onSearch: (term) => _activeSearchManager.search(term),
+        onSearch: (term) => _activeSearchManager.handleSearch(term),
       ),
     );
 
