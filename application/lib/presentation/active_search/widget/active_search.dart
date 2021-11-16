@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
-import 'package:xayn_discovery_app/presentation/widget/temp_search_bar.dart';
+import 'package:xayn_discovery_app/presentation/active_search/widget/temp_search_bar.dart';
 
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.

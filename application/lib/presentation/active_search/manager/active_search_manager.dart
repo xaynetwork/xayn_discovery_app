@@ -41,18 +41,18 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
 
   @override
   Future<ActiveSearchState?> computeState() async =>
-      fold(_searchHandler).foldAll((a, errorReport) {
+      fold(_searchHandler).foldAll((engineState, errorReport) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,
           );
         }
 
-        if (a != null) {
+        if (engineState != null) {
           return state.copyWith(
-            results: a.results,
-            isLoading: a.isLoading,
-            isComplete: a.isComplete,
+            results: engineState.results,
+            isLoading: engineState.isLoading,
+            isComplete: engineState.isComplete,
             isInErrorState: false,
           );
         }
