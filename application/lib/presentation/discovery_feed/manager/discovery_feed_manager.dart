@@ -56,19 +56,19 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   @override
   Future<DiscoveryFeedState?> computeState() async =>
-      fold(_searchHandler).foldAll((a, errorReport) {
+      fold(_searchHandler).foldAll((combinedResult, errorReport) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,
           );
         }
 
-        if (a != null) {
+        if (combinedResult != null) {
           return state.copyWith(
-            results: a.documents,
-            resultIndex:
-                (state.resultIndex - a.removed).clamp(0, a.documents.length),
-            isComplete: a.apiState.isComplete,
+            results: combinedResult.documents,
+            resultIndex: (state.resultIndex - combinedResult.removed)
+                .clamp(0, combinedResult.documents.length),
+            isComplete: combinedResult.apiState.isComplete,
             isInErrorState: false,
           );
         }
