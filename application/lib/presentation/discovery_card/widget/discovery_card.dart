@@ -12,14 +12,13 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 class DiscoveryCard extends StatefulWidget {
   const DiscoveryCard({
     Key? key,
-    required this.title,
     required this.snippet,
     required this.imageUrl,
     required this.url,
+    required this.footer,
   }) : super(key: key);
 
-  /// The title of the card, displayed on the primary page
-  final String title;
+  final Widget footer;
 
   /// The snippet of the card, displayed on the primary page
   final String snippet;
@@ -108,6 +107,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
                 imageUrl: imageUrl,
                 paragraphs: state.paragraphs,
                 palette: state.paletteGenerator,
+                constraints: constraints,
               ),
             );
           });
@@ -117,47 +117,69 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   Widget _buildCardDisplayStack({
     required String imageUrl,
     required List<String> paragraphs,
+    required BoxConstraints constraints,
     PaletteGenerator? palette,
   }) {
     final backgroundPane = ColoredBox(
-      color: palette?.dominantColor?.color ?? R.colors.imageBackground,
+      color: palette?.dominantColor?.color ?? R.colors.swipeCardBackground,
     );
-    final backgroundImage = !imageUrl.startsWith('http')
+
+    final isImageNotAvailable = !imageUrl.startsWith('http');
+
+    final backgroundImage = isImageNotAvailable
         ? backgroundPane
         : Image.network(
             imageUrl,
             fit: BoxFit.cover,
+            loadingBuilder:
+                (context, Widget child, ImageChunkEvent? loadingProgress) {
+              return loadingProgress != null ? backgroundPane : child;
+            },
             errorBuilder: (context, e, s) =>
                 Text('Unable to load image with url: $imageUrl\n\n$e'),
           );
-    final primaryStoryPage = DiscoveryCardPrimaryBody(
-      palette: palette,
-      title: widget.title,
-      snippet: widget.snippet,
-    );
-    final secondaryStoryPages = paragraphs.map(
-      (it) => DiscoveryCardSecondaryBody(
-        palette: palette,
-        html: it,
-        onLink: (url) async {
-          _discoveryCardManager.updateUri(Uri.parse(url));
 
-          return true;
-        },
+    final shadedBackgroundImage = Positioned.fill(
+      bottom: constraints.maxHeight / 3,
+      child: Container(
+        foregroundDecoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              R.colors.swipeCardBackground.withAlpha(120),
+              Colors.transparent,
+              R.colors.swipeCardBackground.withAlpha(120),
+              R.colors.swipeCardBackground,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0, 0.15, 0.8, 1],
+          ),
+        ),
+        child: backgroundImage,
+      ),
+    );
+
+    final storyPages = [widget.snippet, ...paragraphs].map(
+      (it) => DiscoveryCardBody(
+        palette: palette,
+        snippet: it,
+        footer: widget.footer,
       ),
     );
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
+      borderRadius: BorderRadius.circular(12),
       child: Stack(
         children: [
-          Positioned.fill(child: backgroundImage),
+          Positioned.fill(
+            child: ColoredBox(
+              color: R.colors.swipeCardBackground,
+            ),
+          ),
+          isImageNotAvailable ? backgroundPane : shadedBackgroundImage,
           PageView(
             controller: _pageController,
-            children: [
-              primaryStoryPage,
-              ...secondaryStoryPages,
-            ],
+            children: storyPages.toList(),
           ),
         ],
       ),

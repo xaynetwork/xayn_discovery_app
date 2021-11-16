@@ -13,4 +13,6 @@ class R {
   static XSizes get dimen => _linden.dimen;
 
   static XColors get colors => _linden.colors;
+
+  static XAssets get assets => _linden.assets;
 }

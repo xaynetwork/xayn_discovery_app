@@ -15,8 +15,23 @@ class WebResource with _$WebResource implements xayn.WebResource {
     required String snippet,
     required String title,
     required Uri url,
+    required DateTime datePublished,
+    WebResourceProvider? provider,
   }) = _WebResource;
 
   factory WebResource.fromJson(Map<String, dynamic> json) =>
       _$WebResourceFromJson(json);
+}
+
+@freezed
+class WebResourceProvider with _$WebResourceProvider {
+  const WebResourceProvider._();
+
+  const factory WebResourceProvider({
+    required String name,
+    required String? thumbnail,
+  }) = _WebResourceProvider;
+
+  factory WebResourceProvider.fromJson(Map<String, dynamic> json) =>
+      _$WebResourceProviderFromJson(json);
 }

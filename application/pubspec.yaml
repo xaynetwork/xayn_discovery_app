@@ -19,6 +19,7 @@ dependencies:
   hydrated_bloc: ^7.1.0
   http: ^0.13.4
   injectable: ^1.2.2
+  intl: ^0.17.0
   json_annotation: ^4.3.0
   json_serializable: ^6.0.0
   logger: ^1.0.0
@@ -33,7 +34,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: aabc86fd036a1977eae251081ce3c70d0d12ab8f
+      ref: 4df3fa195955619f5fa4180877387a5164c41d37
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine.git
@@ -74,3 +75,15 @@ flutter:
           weight: 400
 
   uses-material-design: true
+  assets:
+    # Including all the files in a directory is not supported for external packages
+    # The following could be refactored when this issue is resolved
+    # https://github.com/flutter/flutter/issues/27802
+
+    - packages/xayn_design/assets/icons/share_android.svg
+    - packages/xayn_design/assets/icons/share_ios.svg
+    - packages/xayn_design/assets/icons/shield.svg
+    - packages/xayn_design/assets/icons/thumbs_down.svg
+    - packages/xayn_design/assets/icons/thumbs_down_active.svg
+    - packages/xayn_design/assets/icons/thumbs_up.svg
+    - packages/xayn_design/assets/icons/thumbs_up_active.svg
