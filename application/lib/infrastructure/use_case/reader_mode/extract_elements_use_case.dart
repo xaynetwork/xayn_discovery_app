@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 /// A [UseCase] which extracts any html elements as a List,
