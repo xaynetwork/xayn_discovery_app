@@ -14,7 +14,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
     _initHandlers();
   }
 
-  void handleHtmlResult({
+  void handleCardData({
     required String title,
     required String snippet,
     required Uri imageUri,
@@ -29,7 +29,17 @@ class ReaderModeManager extends Cubit<ReaderModeState>
 
   @override
   Future<ReaderModeState> computeState() async =>
-      fold(_postProcessHandler).foldAll((a, errorReport) {});
+      fold(_postProcessHandler).foldAll((a, errorReport) {
+        if (errorReport.isNotEmpty) {}
+
+        if (a != null) {
+          final html = a.contents;
+
+          if (html != null) {
+            return ReaderModeState(uri: Uri.dataFromString(html));
+          }
+        }
+      });
 
   void _initHandlers() {
     _postProcessHandler = pipe(_postProcessUseCase);
