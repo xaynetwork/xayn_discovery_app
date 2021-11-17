@@ -9,10 +9,10 @@ class ReaderModeState with _$ReaderModeState {
   const ReaderModeState._();
 
   const factory ReaderModeState({
-    String? html,
+    Uri? uri,
   }) = _ReaderModeState;
 
   factory ReaderModeState.empty() => const ReaderModeState(
-        html: null,
+        uri: null,
       );
 }
