@@ -80,16 +80,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   @override
   Future<DiscoveryCardState?> computeState() async =>
       fold2(_updateUri, _updateImageUri).foldAll((a, b, errorReport) {
-
-       if ( errorReport.isNotEmpty) {
-         if (errorReport.exists(_updateUri)) {
-           final errorAndSt = errorReport.of(_updateUri)!;
-
-           errorAndSt.error;
-           errorAndSt.stackTrace;
-         }
-       }
-
         if (errorReport.isNotEmpty) {
           return DiscoveryCardState.error();
         }
