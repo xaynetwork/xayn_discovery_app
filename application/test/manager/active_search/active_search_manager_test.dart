@@ -24,16 +24,18 @@ void main() {
     isComplete: true,
   );
 
+  ActiveSearchManager buildManager() => ActiveSearchManager(useCase);
+
   setUp(() {
     useCase = MockDiscoveryEngineResultsUseCase();
+    when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
   });
 
   blocTest<ActiveSearchManager, ActiveSearchState>(
     'GIVEN fresh manager THEN the state is ActiveSearchState.empty()',
     build: () {
-      when(useCase.transform(any))
-          .thenAnswer((realInvocation) => const Stream.empty());
-      return ActiveSearchManager(useCase);
+      when(useCase.transform(any)).thenAnswer((_) => const Stream.empty());
+      return buildManager();
     },
     verify: (bloc) {
       expect(bloc.state, ActiveSearchState.empty());
@@ -43,11 +45,10 @@ void main() {
   blocTest<ActiveSearchManager, ActiveSearchState>(
     'GIVEN use case emits results THEN the state contains results',
     build: () {
-      when(useCase.transform(any))
-          .thenAnswer((realInvocation) => Stream.value(testParams));
+      when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
       when(useCase.transaction(any))
-          .thenAnswer((realInvocation) => Stream.value(resultState));
-      return ActiveSearchManager(useCase);
+          .thenAnswer((_) => Stream.value(resultState));
+      return buildManager();
     },
     verify: (bloc) {
       expect(bloc.state.isComplete, isTrue);
@@ -60,12 +61,11 @@ void main() {
   blocTest<ActiveSearchManager, ActiveSearchState>(
     'GIVEN use case throws an error THEN the error state is true',
     build: () {
-      when(useCase.transform(any))
-          .thenAnswer((realInvocation) => Stream.value(testParams));
-      when(useCase.transaction(any)).thenAnswer((realInvocation) async* {
+      when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
+      when(useCase.transaction(any)).thenAnswer((_) async* {
         throw ArgumentError('bad data!');
       });
-      return ActiveSearchManager(useCase);
+      return buildManager();
     },
     verify: (bloc) {
       expect(bloc.state.isInErrorState, isTrue);
