@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
@@ -17,31 +15,6 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
-///
-/// These are random keywords, real keywords are to be provided by the
-/// real discovery engine.
-const List<String> randomKeywords = [
-  'german',
-  'french',
-  'english',
-  'american',
-  'hollywood',
-  'music',
-  'broadway',
-  'football',
-  'tennis',
-  'covid',
-  'trump',
-  'merkel',
-  'cars',
-  'sports',
-  'market',
-  'economy',
-  'financial',
-];
-
-/// Mock implementation.
-/// This will be deprecated once the real discovery engine is available.
 @singleton
 class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
     with UseCaseBlocHelper<DiscoveryEngineState>
@@ -52,11 +25,8 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   final StreamController<ClientEvent> _onClientEvent =
       StreamController<ClientEvent>();
   late final StreamSubscription<ClientEvent> _clientEventSubscription;
-  final Random rnd = Random();
 
   late final UseCaseSink<String, ApiEndpointResponse> _handleQuery;
-
-  late String nextFakeKeyword;
 
   bool _isLoading = false;
 
@@ -80,8 +50,6 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   }
 
   void _initGeneral() {
-    nextFakeKeyword = randomKeywords[rnd.nextInt(randomKeywords.length)];
-
     _clientEventSubscription = _onClientEvent.stream.listen(_handleClientEvent);
   }
 
@@ -121,7 +89,7 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
         }
 
         if (a != null) {
-          return _extractFakeKeywordAndEmit(a.results);
+          return DiscoveryEngineState(results: a.results, isComplete: true);
         }
       });
 
@@ -130,37 +98,6 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   }
 
   void _handleSearchEvent(SearchRequested event) {
-    // ignore event query for now
-    _handleQuery(nextFakeKeyword);
-  }
-
-  DiscoveryEngineState _extractFakeKeywordAndEmit(List<Document> nextResults) {
-    nextFakeKeyword = _fakeNextKeywork(nextResults);
-
-    if (nextResults.isEmpty) {
-      _handleQuery(nextFakeKeyword);
-    }
-
-    return DiscoveryEngineState(results: nextResults, isComplete: true);
-  }
-
-  /// selects a random word from the combined set of [Result.description]s.
-  String _fakeNextKeywork(List<Document> nextResults) {
-    if (nextResults.isEmpty) {
-      return randomKeywords[rnd.nextInt(randomKeywords.length)];
-    }
-
-    final words = nextResults
-        .map((it) => it.webResource.snippet)
-        .join(' ')
-        .split(RegExp(r'[\s]+'))
-        .where((it) => it.length >= 5)
-        .toList(growable: false);
-
-    if (words.isEmpty) {
-      return randomKeywords[rnd.nextInt(randomKeywords.length)];
-    }
-
-    return words[rnd.nextInt(words.length)];
+    _handleQuery(event.term);
   }
 }

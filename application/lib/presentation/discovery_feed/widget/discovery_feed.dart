@@ -3,18 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
-import 'package:xayn_discovery_app/presentation/scroll_physics/custom_page_scroll_physics.dart';
+import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
-
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 enum SwipeOption { like, share, dislike }
 
@@ -27,20 +23,17 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed> {
-  late final DiscoveryEngineManager _discoveryEngineManager;
   late final ScrollController _scrollController;
   late final DiscoveryFeedManager _discoveryFeedManager;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _discoveryEngineManager = di.get();
     _discoveryFeedManager = di.get();
 
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge && _scrollController.offset != .0) {
-        _discoveryEngineManager.onClientEvent
-            .add(const SearchRequested('', [SearchType.web]));
+        _discoveryFeedManager.handleLoadMore();
       }
     });
 
@@ -49,37 +42,24 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
-      bloc: _discoveryFeedManager,
-      builder: (context, state) {
-        final results = state.results;
+    final bottomNav = Positioned(
+      bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
+      child: TempSearchButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ActiveSearch()),
+        ),
+      ),
+    );
 
-        if (results == null) {
-          return const CircularProgressIndicator();
-        }
-
-        final padding = MediaQuery.of(context).padding;
-
-        return Padding(
-          padding: EdgeInsets.only(top: padding.top),
-          child: LayoutBuilder(builder: (context, constraints) {
-            final pageSize = constraints.maxHeight - padding.bottom;
-
-            return MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: ListView.builder(
-                itemExtent: pageSize,
-                physics: CustomPageScrollPhysics(pageSize: pageSize),
-                scrollDirection: Axis.vertical,
-                controller: _scrollController,
-                itemBuilder: _itemBuilder(results),
-                itemCount: results.length,
-              ),
-            );
-          }),
-        );
-      },
+    return Scaffold(
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          _buildFeedView(),
+          bottomNav,
+        ],
+      ),
     );
   }
 
@@ -88,6 +68,25 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         final document = results[index];
         return _buildResultCard(document);
       };
+
+  Widget _buildFeedView() {
+    return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
+      bloc: _discoveryFeedManager,
+      builder: (context, state) {
+        final results = state.results;
+
+        if (results == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return FeedView(
+          scrollController: _scrollController,
+          itemBuilder: _itemBuilder(results),
+          itemCount: results.length,
+        );
+      },
+    );
+  }
 
   Widget _buildSwipeWidget({required Widget child}) => Swipe(
         optionsLeft: const [SwipeOption.like, SwipeOption.share],
