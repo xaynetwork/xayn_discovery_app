@@ -78,12 +78,13 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
                 .toList(growable: false);
 
             return LayoutBuilder(
-                builder: (context, constraints) => _buildCardDisplayStack(
-                      imageUrl: imageUrl,
-                      snippets: snippets,
-                      palette: state.paletteGenerator,
-                      constraints: constraints,
-                    ));
+              builder: (context, constraints) => _buildCardDisplayStack(
+                imageUrl: imageUrl,
+                snippets: snippets,
+                palette: state.paletteGenerator,
+                constraints: constraints,
+              ),
+            );
           });
 
   Widget _buildCardDisplayStack({

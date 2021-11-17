@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 
 import 'favicon_bar.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -23,6 +24,8 @@ class DiscoveryCardFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DiscoveryCardManager _discoveryCardManager = di.get();
+
     final titleWidget = Text(
       title,
       style: R.styles.appScreenHeadline?.copyWith(color: Colors.white),
@@ -48,7 +51,7 @@ class DiscoveryCardFooter extends StatelessWidget {
               ),
             SizedBox(height: R.dimen.unit2),
             _ButtonRowFooter(
-              onSharePressed: () => Share.share(url.toString()),
+              onSharePressed: () => _discoveryCardManager.shareUri(url),
               onLikePressed: () => debugPrint('Like is pressed'),
               onDislikePressed: () => debugPrint('Dislike is pressed'),
             ),
