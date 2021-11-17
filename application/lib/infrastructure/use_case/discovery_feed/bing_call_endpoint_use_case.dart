@@ -58,11 +58,34 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
+          datePublished: DateTime.parse(it['datePublished'] as String),
+          provider: getProvider(it),
         ),
         nonPersonalizedRank: 0,
         personalizedRank: 0,
       );
     }).toList(growable: false);
+  }
+}
+
+WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
+  if (map.containsKey('provider')) {
+    String? providerName;
+    String? providerLogoUrl;
+
+    try {
+      providerName = map['provider'][0]['name'] as String?;
+      providerLogoUrl =
+          map['provider'][0]['image']['thumbnail']['contentUrl'] as String?;
+      // ignore: empty_catches
+    } catch (e) {} //TODO: add logger call
+
+    return providerName != null
+        ? WebResourceProvider(
+            name: providerName,
+            thumbnail: providerLogoUrl == null ? null : '$providerLogoUrl?w=64',
+          )
+        : null;
   }
 }
 
