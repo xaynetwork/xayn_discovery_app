@@ -35,7 +35,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 4f00d0a7059d91823865e6772c5084d1340f2cbb
+      ref: 645d816c9ce925383c80ee98e5bd8a0f7e789ea8
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine.git
@@ -76,11 +76,14 @@ flutter:
           weight: 400
 
   uses-material-design: true
+
   assets:
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
     # https://github.com/flutter/flutter/issues/27802
 
+    # icons
+    - packages/xayn_design/assets/icons/search.svg
     - packages/xayn_design/assets/icons/share_android.svg
     - packages/xayn_design/assets/icons/share_ios.svg
     - packages/xayn_design/assets/icons/shield.svg
