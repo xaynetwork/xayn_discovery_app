@@ -11,10 +11,14 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.title,
     required this.provider,
     required this.datePublished,
+    required this.actionButtonRow,
+    required this.onFooterPressed,
   }) : super(key: key);
   final String title;
   final WebResourceProvider? provider;
   final DateTime datePublished;
+  final ButtonRowFooter actionButtonRow;
+  final VoidCallback? onFooterPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +30,41 @@ class DiscoveryCardFooter extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
     );
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        titleWidget,
-        SizedBox(height: R.dimen.unit2),
-        if (provider != null)
-          FaviconBar(
-            provider: provider!,
-            datePublished: datePublished,
-          ),
-        SizedBox(height: R.dimen.unit2),
-        const ButtonRowFooter(),
-      ],
+    return InkWell(
+      onTap: onFooterPressed,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            titleWidget,
+            SizedBox(height: R.dimen.unit2),
+            if (provider != null)
+              FaviconBar(
+                provider: provider!,
+                datePublished: datePublished,
+              ),
+            SizedBox(height: R.dimen.unit2),
+            actionButtonRow,
+            SizedBox(height: R.dimen.unit5),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class ButtonRowFooter extends StatelessWidget {
-  const ButtonRowFooter({Key? key}) : super(key: key);
+  const ButtonRowFooter({
+    Key? key,
+    this.onSharePressed,
+    this.onLikePressed,
+    this.onDislikePressed,
+  }) : super(key: key);
+  final VoidCallback? onSharePressed;
+  final VoidCallback? onLikePressed;
+  final VoidCallback? onDislikePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +72,7 @@ class ButtonRowFooter extends StatelessWidget {
       spacing: R.dimen.unit4,
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: onLikePressed,
           icon: SvgPicture.asset(
             R.assets.icons.thumbsUp,
             fit: BoxFit.none,
@@ -61,7 +80,7 @@ class ButtonRowFooter extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: onSharePressed,
           icon: SvgPicture.asset(
             R.assets.icons.share,
             fit: BoxFit.none,
@@ -69,7 +88,7 @@ class ButtonRowFooter extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: onDislikePressed,
           icon: SvgPicture.asset(
             R.assets.icons.thumbsDown,
             fit: BoxFit.none,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -35,15 +35,12 @@ class DiscoveryCard extends StatefulWidget {
 
 class _DiscoveryCardState extends State<DiscoveryCard> {
   late final DiscoveryCardManager _discoveryCardManager;
-  late final PageController _pageController;
-  int _pageIndex = 0;
 
   @override
   void initState() {
     super.initState();
 
     _discoveryCardManager = di.get();
-    _pageController = PageController();
   }
 
   @override
@@ -57,7 +54,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _pageIndex = 0;
     _discoveryCardManager.updateUri(widget.url);
     _discoveryCardManager.updateImageUri(Uri.parse(widget.imageUrl));
   }
@@ -80,35 +76,16 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
-          final imageCollection = [widget.imageUrl, ...state.images];
-          final imageIndex = imageCollection.length ~/
-              (state.paragraphs.length + 1) *
-              _pageIndex;
-          final imageUrl = imageCollection[imageIndex];
+          final snippets = state.paragraphs
+              .map((it) => Bidi.stripHtmlIfNeeded(it))
+              .toList(growable: false);
 
           return LayoutBuilder(builder: (context, constraints) {
-            return GestureDetector(
-              onTapUp: (details) {
-                setState(() {
-                  if (details.localPosition.dx <= constraints.maxWidth / 2) {
-                    if (_pageIndex > 0) _pageIndex--;
-                  } else {
-                    if (_pageIndex < state.paragraphs.length) _pageIndex++;
-                  }
-                });
-
-                _pageController.animateToPage(
-                  _pageIndex,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeOut,
-                );
-              },
-              child: _buildCardDisplayStack(
-                imageUrl: imageUrl,
-                paragraphs: state.paragraphs,
-                palette: state.paletteGenerator,
-                constraints: constraints,
-              ),
+            return _buildCardDisplayStack(
+              imageUrl: widget.imageUrl,
+              snippets: snippets,
+              palette: state.paletteGenerator,
+              constraints: constraints,
             );
           });
         });
@@ -116,10 +93,51 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
 
   Widget _buildCardDisplayStack({
     required String imageUrl,
-    required List<String> paragraphs,
+    required List<String> snippets,
     required BoxConstraints constraints,
     PaletteGenerator? palette,
   }) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: ColoredBox(color: R.colors.swipeCardBackground),
+        ),
+        CardBackground(
+          imageUrl: imageUrl,
+          constraints: constraints,
+          palette: palette,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: DiscoveryCardBody(
+                snippets: [widget.snippet, ...snippets],
+                palette: palette,
+              ),
+            ),
+            widget.footer,
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class CardBackground extends StatelessWidget {
+  const CardBackground({
+    Key? key,
+    required this.imageUrl,
+    required this.constraints,
+    this.palette,
+  }) : super(key: key);
+  final String imageUrl;
+  final BoxConstraints constraints;
+  final PaletteGenerator? palette;
+
+  @override
+  Widget build(BuildContext context) {
     final backgroundPane = ColoredBox(
       color: palette?.dominantColor?.color ?? R.colors.swipeCardBackground,
     );
@@ -145,8 +163,8 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         foregroundDecoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              R.colors.swipeCardBackground.withAlpha(120),
-              Colors.transparent,
+              R.colors.swipeCardBackground,
+              R.colors.swipeCardBackground.withAlpha(40),
               R.colors.swipeCardBackground.withAlpha(120),
               R.colors.swipeCardBackground,
             ],
@@ -158,31 +176,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         child: backgroundImage,
       ),
     );
-
-    final storyPages = [widget.snippet, ...paragraphs].map(
-      (it) => DiscoveryCardBody(
-        palette: palette,
-        snippet: it,
-        footer: widget.footer,
-      ),
-    );
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ColoredBox(
-              color: R.colors.swipeCardBackground,
-            ),
-          ),
-          isImageNotAvailable ? backgroundPane : shadedBackgroundImage,
-          PageView(
-            controller: _pageController,
-            children: storyPages.toList(),
-          ),
-        ],
-      ),
-    );
+    return isImageNotAvailable ? backgroundPane : shadedBackgroundImage;
   }
 }

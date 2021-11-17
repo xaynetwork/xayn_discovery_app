@@ -17,6 +17,7 @@ import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
+import 'package:share/share.dart';
 
 enum SwipeOption { like, share, dislike }
 
@@ -32,13 +33,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   late final DiscoveryEngineManager _discoveryEngineManager;
   late final ScrollController _scrollController;
   late final DiscoveryFeedManager _discoveryFeedManager;
+  ValueNotifier<int> visibleIndex = ValueNotifier(0);
 
   @override
   void initState() {
     _scrollController = ScrollController();
     _discoveryEngineManager = di.get();
     _discoveryFeedManager = di.get();
-
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge && _scrollController.offset != .0) {
         _discoveryEngineManager.onClientEvent
@@ -67,13 +68,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           child: LayoutBuilder(builder: (context, constraints) {
             final pageSize =
                 constraints.maxHeight - padding.bottom - R.dimen.unit3;
+            final physics = CustomPageScrollPhysics(pageSize: pageSize);
 
             return MediaQuery.removePadding(
               context: context,
               removeTop: true,
               child: ListView.builder(
                 itemExtent: pageSize,
-                physics: CustomPageScrollPhysics(pageSize: pageSize),
+                physics: physics,
                 scrollDirection: Axis.vertical,
                 controller: _scrollController,
                 itemBuilder: _itemBuilder(results),
@@ -96,7 +98,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         optionsLeft: const [SwipeOption.like],
         optionsRight: const [SwipeOption.dislike],
         onFling: (options) => options.first,
-        opensToPosition: 0.5,
+        opensToPosition: 0.35,
         child: child,
         optionBuilder: (context, option, index, selected) {
           return SwipeOptionContainer(
@@ -119,22 +121,36 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         },
       );
 
-  Widget _buildResultCard(Document document) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: R.dimen.unit,
-          vertical: R.dimen.unit0_5,
-        ),
+  Widget _buildResultCard(Document document) {
+    final actionButtonRow = ButtonRowFooter(
+      onSharePressed: () => Share.share(document.webResource.url.toString()),
+      onLikePressed: () => debugPrint('Like is pressed'),
+      onDislikePressed: () => debugPrint('Dislike is pressed'),
+    );
+    final footer = DiscoveryCardFooter(
+      title: document.webResource.title,
+      provider: document.webResource.provider,
+      datePublished: document.webResource.datePublished,
+      actionButtonRow: actionButtonRow,
+      onFooterPressed: () => debugPrint('Open article'),
+    );
+    final card = DiscoveryCard(
+      snippet: document.webResource.snippet,
+      imageUrl: document.webResource.displayUrl.toString(),
+      url: document.webResource.url,
+      footer: footer,
+    );
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: R.dimen.unit,
+        vertical: R.dimen.unit0_5,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
         child: _buildSwipeWidget(
-          child: DiscoveryCard(
-            snippet: document.webResource.snippet,
-            imageUrl: document.webResource.displayUrl.toString(),
-            url: document.webResource.url,
-            footer: DiscoveryCardFooter(
-              title: document.webResource.title,
-              provider: document.webResource.provider,
-              datePublished: document.webResource.datePublished,
-            ),
-          ),
+          child: card,
         ),
-      );
+      ),
+    );
+  }
 }

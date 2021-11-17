@@ -19,6 +19,7 @@ dependencies:
   freezed_annotation: ^0.15.0
   hydrated_bloc: ^7.1.0
   http: ^0.13.4
+  html_unescape: 2.0.0
   injectable: ^1.2.2
   intl: ^0.17.0
   json_annotation: ^4.3.0
@@ -27,6 +28,11 @@ dependencies:
   palette_generator: ^0.3.2
   path_provider: ^2.0.5
   rxdart: ^0.27.2
+  share: ^2.0.4
+  story:
+    git:
+      url: git@github.com:xaynetwork/story.git
+      ref: 8d747504b5f71f5b9269b6430be65ead43890700
   uuid: ^3.0.5
   xayn_architecture:
     git:
@@ -48,7 +54,7 @@ dependencies:
   xayn_swipe_it:
     git:
       url: git@github.com:xaynetwork/xayn_swipe_it.git
-      ref: 04bc3acd355b906cd23ddcf1879ea8543222157d
+      ref: 671a8a74a8df20066f05048c4f156780fe8b4f52
 
 # Please list dependencies alphabetically!
 dev_dependencies:

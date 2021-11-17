@@ -40,6 +40,8 @@ class CustomPageScrollPhysics extends ScrollPhysics {
     return _getPixels(position, page.roundToDouble());
   }
 
+  double getPage(ScrollMetrics position) => position.pixels / pageSize;
+
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:story/story.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_readability/xayn_readability.dart';
 
 class _ResultCardBody extends StatelessWidget {
   final PaletteGenerator? palette;
@@ -25,47 +25,34 @@ class _ResultCardBody extends StatelessWidget {
 }
 
 /// The story page of a discovery card.
-/// This typically contains a single html element that belongs to the reader mode.
 class DiscoveryCardBody extends _ResultCardBody {
-  final String snippet;
-  final Widget footer;
-
   const DiscoveryCardBody({
     Key? key,
-    required this.snippet,
     PaletteGenerator? palette,
-    required this.footer,
+    required this.snippets,
   }) : super(key: key, palette: palette);
+  final List<String> snippets;
 
   @override
   Widget build(BuildContext context) {
-    final snippetWidget = SnippetWidget(
-      snippet: snippet,
-      backgroundColor: R.colors.snippetBackground,
-    );
-
-    return Container(
-      alignment: AlignmentDirectional.bottomCenter,
-      padding: EdgeInsets.only(
-          left: R.dimen.unit3,
-          right: R.dimen.unit3,
-          top: R.dimen.unit8,
-          bottom: R.dimen.unit6),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: snippetWidget,
+    Widget snippet(index) => Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.all(R.dimen.unit3),
+            child: SnippetWidget(
+              snippet: snippets.elementAt(index),
+              backgroundColor: R.colors.snippetBackground,
             ),
           ),
-          SizedBox(height: R.dimen.unit3),
-          footer,
-        ],
-      ),
-    );
+        );
+
+    return snippets.length < 2
+        ? snippet(0)
+        : StoryPageView(
+            itemBuilder: (context, _, index) => snippet(index),
+            storyLength: (_) => snippets.length,
+            displayShadows: false,
+          );
   }
 }
 
@@ -93,20 +80,19 @@ class SnippetWidget extends StatelessWidget {
           ..strokeJoin = StrokeJoin.round
           ..style = PaintingStyle.stroke);
 
-    final centeredSnippet =
-        '''<div style="text-align: center">$snippet<div/>''';
-
     // ref https://github.com/flutter/flutter/issues/29911
     // Flutter doesn't allow painting stroke with the fill at the same time
     // As a workaround, we stack both the fill and the rounded stroke highlight
     return Stack(children: [
-      HtmlWidget(
-        centeredSnippet,
-        textStyle: highlightedTextStyle,
+      Text(
+        snippet,
+        style: roundedHighlightsTextStyle,
+        textAlign: TextAlign.center,
       ),
-      HtmlWidget(
-        centeredSnippet,
-        textStyle: roundedHighlightsTextStyle,
+      Text(
+        snippet,
+        style: highlightedTextStyle,
+        textAlign: TextAlign.center,
       ),
     ]);
   }
