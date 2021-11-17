@@ -2,32 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
 
+import 'discovery_card_footer.dart';
+
 /// A widget which displays a discovery card.
 class DiscoveryCard extends StatefulWidget {
   const DiscoveryCard({
     Key? key,
-    required this.snippet,
-    required this.imageUrl,
-    required this.url,
-    required this.footer,
+    required this.webResource,
   }) : super(key: key);
 
-  final Widget footer;
-
-  /// The snippet of the card, displayed on the primary page
-  final String snippet;
-
-  /// The url of the card's background image
-  final String imageUrl;
-
-  /// The url of the card's news article
-  final Uri url;
+  final WebResource webResource;
 
   @override
   State<StatefulWidget> createState() => _DiscoveryCardState();
@@ -35,6 +26,10 @@ class DiscoveryCard extends StatefulWidget {
 
 class _DiscoveryCardState extends State<DiscoveryCard> {
   late final DiscoveryCardManager _discoveryCardManager;
+
+  Uri get url => widget.webResource.url;
+  String get imageUrl => widget.webResource.displayUrl.toString();
+  String get snippet => widget.webResource.snippet;
 
   @override
   void initState() {
@@ -54,42 +49,42 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _discoveryCardManager.updateUri(widget.url);
-    _discoveryCardManager.updateImageUri(Uri.parse(widget.imageUrl));
+    _discoveryCardManager.updateUri(url);
+    _discoveryCardManager.updateImageUri(Uri.parse(imageUrl));
   }
 
   @override
   void didUpdateWidget(DiscoveryCard oldWidget) {
     super.didUpdateWidget(oldWidget);
+    final oldUrl = oldWidget.webResource.url;
+    final oldImageUrl = oldWidget.webResource.displayUrl.toString();
 
-    if (oldWidget.url != widget.url) {
-      _discoveryCardManager.updateUri(widget.url);
+    if (oldUrl != url) {
+      _discoveryCardManager.updateUri(url);
     }
 
-    if (oldWidget.imageUrl != widget.imageUrl) {
-      _discoveryCardManager.updateImageUri(Uri.parse(widget.imageUrl));
+    if (oldImageUrl != imageUrl) {
+      _discoveryCardManager.updateImageUri(Uri.parse(imageUrl));
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-        bloc: _discoveryCardManager,
-        builder: (context, state) {
-          final snippets = state.paragraphs
-              .map((it) => Bidi.stripHtmlIfNeeded(it))
-              .toList(growable: false);
+  Widget build(BuildContext context) =>
+      BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+          bloc: _discoveryCardManager,
+          builder: (context, state) {
+            final snippets = state.paragraphs
+                .map((it) => Bidi.stripHtmlIfNeeded(it))
+                .toList(growable: false);
 
-          return LayoutBuilder(builder: (context, constraints) {
-            return _buildCardDisplayStack(
-              imageUrl: widget.imageUrl,
-              snippets: snippets,
-              palette: state.paletteGenerator,
-              constraints: constraints,
-            );
+            return LayoutBuilder(
+                builder: (context, constraints) => _buildCardDisplayStack(
+                      imageUrl: imageUrl,
+                      snippets: snippets,
+                      palette: state.paletteGenerator,
+                      constraints: constraints,
+                    ));
           });
-        });
-  }
 
   Widget _buildCardDisplayStack({
     required String imageUrl,
@@ -97,15 +92,23 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     required BoxConstraints constraints,
     PaletteGenerator? palette,
   }) {
+    final footer = DiscoveryCardFooter(
+      title: widget.webResource.title,
+      url: widget.webResource.url,
+      provider: widget.webResource.provider,
+      datePublished: widget.webResource.datePublished,
+      onFooterPressed: () => debugPrint('Open article'),
+    );
+
     return Stack(
       children: [
         Positioned.fill(
           child: ColoredBox(color: R.colors.swipeCardBackground),
         ),
-        CardBackground(
+        _CardBackground(
           imageUrl: imageUrl,
           constraints: constraints,
-          palette: palette,
+          dominantColor: palette?.dominantColor?.color,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -113,11 +116,11 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
           children: [
             Expanded(
               child: DiscoveryCardBody(
-                snippets: [widget.snippet, ...snippets],
+                snippets: [snippet, ...snippets],
                 palette: palette,
               ),
             ),
-            widget.footer,
+            footer,
           ],
         ),
       ],
@@ -125,21 +128,21 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }
 }
 
-class CardBackground extends StatelessWidget {
-  const CardBackground({
+class _CardBackground extends StatelessWidget {
+  const _CardBackground({
     Key? key,
     required this.imageUrl,
     required this.constraints,
-    this.palette,
+    this.dominantColor,
   }) : super(key: key);
   final String imageUrl;
   final BoxConstraints constraints;
-  final PaletteGenerator? palette;
+  final Color? dominantColor;
 
   @override
   Widget build(BuildContext context) {
     final backgroundPane = ColoredBox(
-      color: palette?.dominantColor?.color ?? R.colors.swipeCardBackground,
+      color: dominantColor ?? R.colors.swipeCardBackground,
     );
 
     final isImageNotAvailable = !imageUrl.startsWith('http');
@@ -150,9 +153,8 @@ class CardBackground extends StatelessWidget {
             imageUrl,
             fit: BoxFit.cover,
             loadingBuilder:
-                (context, Widget child, ImageChunkEvent? loadingProgress) {
-              return loadingProgress != null ? backgroundPane : child;
-            },
+                (context, Widget child, ImageChunkEvent? loadingProgress) =>
+                    loadingProgress != null ? backgroundPane : child,
             errorBuilder: (context, e, s) =>
                 Text('Unable to load image with url: $imageUrl\n\n$e'),
           );

@@ -24,6 +24,8 @@ class _ResultCardBody extends StatelessWidget {
   }
 }
 
+const kSnippetCountToDisplayAnimation = 2;
+
 /// The story page of a discovery card.
 class DiscoveryCardBody extends _ResultCardBody {
   const DiscoveryCardBody({
@@ -46,7 +48,7 @@ class DiscoveryCardBody extends _ResultCardBody {
           ),
         );
 
-    return snippets.length < 2
+    return snippets.length < kSnippetCountToDisplayAnimation
         ? snippet(0)
         : StoryPageView(
             itemBuilder: (context, _, index) => snippet(index),
