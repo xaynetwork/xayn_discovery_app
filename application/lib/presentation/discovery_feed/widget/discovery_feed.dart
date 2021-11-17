@@ -66,7 +66,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   }
 
   Widget Function(BuildContext, int) _itemBuilder(List<Document> results) =>
-          (BuildContext context, int index) {
+      (BuildContext context, int index) {
         final document = results[index];
         return _buildResultCard(document);
       };
@@ -91,48 +91,48 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   }
 
   Widget _buildSwipeWidget({required Widget child}) => Swipe(
-    optionsLeft: const [SwipeOption.like],
-    optionsRight: const [SwipeOption.dislike],
-    onFling: (options) => options.first,
-    opensToPosition: 0.5,
-    child: child,
-    optionBuilder: (context, option, index, selected) {
-      return SwipeOptionContainer(
-        option: option,
-        color: option == SwipeOption.dislike
-            ? R.colors.swipeBackgroundDelete
-            : R.colors.swipeBackgroundRelevant,
-        child: option == SwipeOption.dislike
-            ? SvgPicture.asset(
-          R.assets.icons.thumbsDown,
-          fit: BoxFit.none,
-          color: R.colors.brightIcon,
-        )
-            : SvgPicture.asset(
-          R.assets.icons.thumbsUp,
-          fit: BoxFit.none,
-          color: R.colors.brightIcon,
-        ),
+        optionsLeft: const [SwipeOption.like],
+        optionsRight: const [SwipeOption.dislike],
+        onFling: (options) => options.first,
+        opensToPosition: 0.5,
+        child: child,
+        optionBuilder: (context, option, index, selected) {
+          return SwipeOptionContainer(
+            option: option,
+            color: option == SwipeOption.dislike
+                ? R.colors.swipeBackgroundDelete
+                : R.colors.swipeBackgroundRelevant,
+            child: option == SwipeOption.dislike
+                ? SvgPicture.asset(
+                    R.assets.icons.thumbsDown,
+                    fit: BoxFit.none,
+                    color: R.colors.brightIcon,
+                  )
+                : SvgPicture.asset(
+                    R.assets.icons.thumbsUp,
+                    fit: BoxFit.none,
+                    color: R.colors.brightIcon,
+                  ),
+          );
+        },
       );
-    },
-  );
 
   Widget _buildResultCard(Document document) => Padding(
-    padding: EdgeInsets.symmetric(
-      horizontal: R.dimen.unit,
-      vertical: R.dimen.unit0_5,
-    ),
-    child: _buildSwipeWidget(
-      child: DiscoveryCard(
-        snippet: document.webResource.snippet,
-        imageUrl: document.webResource.displayUrl.toString(),
-        url: document.webResource.url,
-        footer: DiscoveryCardFooter(
-          title: document.webResource.title,
-          provider: document.webResource.provider,
-          datePublished: document.webResource.datePublished,
+        padding: EdgeInsets.symmetric(
+          horizontal: R.dimen.unit,
+          vertical: R.dimen.unit0_5,
         ),
-      ),
-    ),
-  );
+        child: _buildSwipeWidget(
+          child: DiscoveryCard(
+            snippet: document.webResource.snippet,
+            imageUrl: document.webResource.displayUrl.toString(),
+            url: document.webResource.url,
+            footer: DiscoveryCardFooter(
+              title: document.webResource.title,
+              provider: document.webResource.provider,
+              datePublished: document.webResource.datePublished,
+            ),
+          ),
+        ),
+      );
 }
