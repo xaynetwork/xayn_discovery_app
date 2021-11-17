@@ -75,3 +75,7 @@ flutter:
           weight: 400
 
   uses-material-design: true
+
+  assets:
+    # icons
+    - packages/xayn_design/assets/icons/search.svg
