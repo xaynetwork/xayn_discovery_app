@@ -39,19 +39,6 @@ before_all do |lane, options|
 end
 
 # Private lanes, that we only call internaly, they are nice because they have an own description
-desc "Flutter build runner"
-private_lane :build_runner do
-  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "api-gw.xaynet.dev")
-  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "api-gw.xayn.com")
-
-  flutter("pub  run build_runner build --delete-conflicting-outputs")
-end
-
-desc "Flutter pub get"
-private_lane :pub_get do |options|
-  flutter("pub get")
-end
-
 desc "Flutter build"
 private_lane :flutter_build do |options|
   clean(options)
@@ -78,8 +65,26 @@ private_lane :android_prepare_internal do |options|
 end
 
 ####
-#### Public lanes, can also be used via tab completion: `fastelane enable_auto_complete`
+#### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
+
+desc "Flutter build runner"
+lane :build_runner do
+  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "api-gw.xaynet.dev")
+  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "api-gw.xayn.com")
+
+  flutter("pub  run build_runner build --delete-conflicting-outputs")
+end
+
+desc "Flutter pub get"
+lane :pub_get do |options|
+  flutter("pub get")
+end
+
+desc "Watch changes for rerunning the build_runner"
+lane :watch do |options|
+  flutter("packages pub run build_runner watch --delete-conflicting-outputs")
+end
 
 desc "Flutter clean"
 lane :clean do |options|
@@ -93,6 +98,11 @@ lane :check do |options|
     build_runner(options)
   end
   flutter("analyze lib test")
+  if is_ci
+    flutter("format ./ --set-exit-if-changed")
+  else
+    flutter("format ./")
+  end
   flutter("test")
 end
 
@@ -114,6 +124,7 @@ lane :publish do |options|
       options[:version_name]
     )
   else
+    UI.user_error!("No $APPCENTER_IOS_ANDROID_TOKEN provided!") unless ENV.key?("APPCENTER_ANDROID_INTERNAL_TOKEN")
     uploadToAppCenter(
       ENV["APPCENTER_ANDROID_INTERNAL_TOKEN"],
       "Discovery-App-Android-internal",

@@ -15,6 +15,21 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
+### build_runner
+```
+fastlane build_runner
+```
+Flutter build runner
+### pub_get
+```
+fastlane pub_get
+```
+Flutter pub get
+### watch
+```
+fastlane watch
+```
+Watch changes for rerunning the build_runner
 ### clean
 ```
 fastlane clean
