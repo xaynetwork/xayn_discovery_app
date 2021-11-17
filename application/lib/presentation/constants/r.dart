@@ -8,6 +8,8 @@ class R {
 
   static final Linden _linden = Linden();
 
+  static XAssets get assets => _linden.assets;
+
   static XStyles get styles => _linden.styles;
 
   static XSizes get dimen => _linden.dimen;
