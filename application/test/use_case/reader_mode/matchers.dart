@@ -16,13 +16,18 @@ class _ProgressSuccess extends Matcher {
 
   @override
   bool matches(item, Map matchState) {
+    bool isMatched = false;
+
     if (item is UseCaseResult<Progress>) {
-      return _expected.isCompleted == item.data?.isCompleted &&
-          _expected.html == item.data?.html &&
-          _expected.uri == item.data?.uri;
+      item.fold(
+          defaultOnError: (e, s) {},
+          onValue: (it) => isMatched =
+              _expected.isCompleted == it.isCompleted &&
+                  _expected.html == it.html &&
+                  _expected.uri == it.uri);
     }
 
-    return false;
+    return isMatched;
   }
 
   @override
@@ -37,13 +42,17 @@ class _ProcessHtmlSuccess extends Matcher {
 
   @override
   bool matches(item, Map matchState) {
+    bool isMatched = false;
+
     if (item is UseCaseResult<ProcessHtmlResult>) {
-      return _expected.contents == item.data?.contents &&
-          _expected.themeColor == item.data?.themeColor &&
-          _expected.textSize == item.data?.textSize;
+      item.fold(
+          defaultOnError: (e, s) {},
+          onValue: (it) => isMatched = _expected.contents == it.contents &&
+              _expected.themeColor == it.themeColor &&
+              _expected.textSize == it.textSize);
     }
 
-    return false;
+    return isMatched;
   }
 
   @override
@@ -58,16 +67,21 @@ class _ElementsSuccess extends Matcher {
 
   @override
   bool matches(item, Map matchState) {
+    bool isMatched = false;
+
     if (item is UseCaseResult<Elements>) {
-      return listEquals(_expected.paragraphs, item.data?.paragraphs) &&
-          listEquals(_expected.images, item.data?.images) &&
-          processHtmlSuccess(_expected.processHtmlResult).matches(
-            UseCaseResult.success(item.data?.processHtmlResult),
-            matchState,
-          );
+      item.fold(
+          defaultOnError: (e, s) {},
+          onValue: (it) =>
+              isMatched = listEquals(_expected.paragraphs, it.paragraphs) &&
+                  listEquals(_expected.images, it.images) &&
+                  processHtmlSuccess(_expected.processHtmlResult).matches(
+                    UseCaseResult.success(it.processHtmlResult),
+                    matchState,
+                  ));
     }
 
-    return false;
+    return isMatched;
   }
 
   @override

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 
-enum SwipeOption { like, share, dislike }
+enum SwipeOption { like, dislike }
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -89,23 +91,28 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   }
 
   Widget _buildSwipeWidget({required Widget child}) => Swipe(
-        optionsLeft: const [SwipeOption.like, SwipeOption.share],
+        optionsLeft: const [SwipeOption.like],
         optionsRight: const [SwipeOption.dislike],
         onFling: (options) => options.first,
+        opensToPosition: 0.5,
         child: child,
         optionBuilder: (context, option, index, selected) {
           return SwipeOptionContainer(
             option: option,
             color: option == SwipeOption.dislike
                 ? R.colors.swipeBackgroundDelete
-                : option == SwipeOption.like
-                    ? R.colors.swipeBackgroundRelevant
-                    : R.colors.swipeBackgroundShare,
+                : R.colors.swipeBackgroundRelevant,
             child: option == SwipeOption.dislike
-                ? const Icon(Icons.close)
-                : option == SwipeOption.like
-                    ? const Icon(Icons.verified)
-                    : const Icon(Icons.share),
+                ? SvgPicture.asset(
+                    R.assets.icons.thumbsDown,
+                    fit: BoxFit.none,
+                    color: R.colors.brightIcon,
+                  )
+                : SvgPicture.asset(
+                    R.assets.icons.thumbsUp,
+                    fit: BoxFit.none,
+                    color: R.colors.brightIcon,
+                  ),
           );
         },
       );
@@ -117,10 +124,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         ),
         child: _buildSwipeWidget(
           child: DiscoveryCard(
-            title: document.webResource.title,
             snippet: document.webResource.snippet,
             imageUrl: document.webResource.displayUrl.toString(),
             url: document.webResource.url,
+            footer: DiscoveryCardFooter(
+              title: document.webResource.title,
+              provider: document.webResource.provider,
+              datePublished: document.webResource.datePublished,
+            ),
           ),
         ),
       );
