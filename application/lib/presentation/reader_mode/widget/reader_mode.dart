@@ -6,6 +6,21 @@ import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
+const String kUserAgent =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36';
+const List<String> kClassesToPreserve = [
+  'caption',
+  'emoji',
+  'hidden',
+  'invisible',
+  'sr-only',
+  'visually-hidden',
+  'visuallyhidden',
+  'wp-caption',
+  'wp-caption-text',
+  'wp-smiley',
+];
+
 class ReaderMode extends StatefulWidget {
   final String title;
   final String snippet;
@@ -71,14 +86,21 @@ class _ReaderModeState extends State<ReaderMode> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReaderModeManager, ReaderModeState>(
-        buildWhen: (a, b) => b.uri != null,
         bloc: _readerModeManager,
         builder: (context, state) {
-          _readerModeController.loadUri(state.uri!);
+          final uri = state.uri;
+
+          if (uri == null) {
+            return Container();
+          }
+
+          _readerModeController.loadUri(uri);
 
           return readability.ReaderMode(
             controller: _readerModeController,
             textStyle: R.styles.appBodyText,
+            userAgent: kUserAgent,
+            classesToPreserve: kClassesToPreserve,
           );
         });
   }
