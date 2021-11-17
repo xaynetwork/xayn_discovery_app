@@ -33,7 +33,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   late final DiscoveryEngineManager _discoveryEngineManager;
   late final ScrollController _scrollController;
   late final DiscoveryFeedManager _discoveryFeedManager;
-  ValueNotifier<int> visibleIndex = ValueNotifier(0);
 
   @override
   void initState() {
@@ -68,14 +67,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           child: LayoutBuilder(builder: (context, constraints) {
             final pageSize =
                 constraints.maxHeight - padding.bottom - R.dimen.unit3;
-            final physics = CustomPageScrollPhysics(pageSize: pageSize);
 
             return MediaQuery.removePadding(
               context: context,
               removeTop: true,
               child: ListView.builder(
                 itemExtent: pageSize,
-                physics: physics,
+                physics: CustomPageScrollPhysics(pageSize: pageSize),
                 scrollDirection: Axis.vertical,
                 controller: _scrollController,
                 itemBuilder: _itemBuilder(results),
