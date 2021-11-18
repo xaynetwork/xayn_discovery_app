@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:share/share.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
@@ -42,6 +43,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
+
+  void shareUri(Uri uri) => Share.share(uri.toString());
 
   /// Update the uri which contains the news article
   void updateUri(Uri uri) => _updateUri(uri);

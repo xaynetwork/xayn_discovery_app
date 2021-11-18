@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/presentation/active_search/manager/active_sea
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/temp_search_bar.dart';
 
@@ -83,14 +82,7 @@ class _ActiveSearchState extends State<ActiveSearch> {
           vertical: R.dimen.unit0_5,
         ),
         child: DiscoveryCard(
-          snippet: document.webResource.snippet,
-          imageUrl: document.webResource.displayUrl.toString(),
-          url: document.webResource.url,
-          footer: DiscoveryCardFooter(
-            title: document.webResource.title,
-            provider: document.webResource.provider,
-            datePublished: document.webResource.datePublished,
-          ),
+          webResource: document.webResource,
         ),
       );
 }
