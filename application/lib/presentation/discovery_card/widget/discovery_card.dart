@@ -12,19 +12,23 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'discovery_card_footer.dart';
 
 /// A widget which displays a discovery card.
-class DiscoveryCard extends StatefulWidget {
+class DiscoveryCard extends AutomaticKeepAlive {
+  final bool isPrimary;
+
   const DiscoveryCard({
     Key? key,
+    required this.isPrimary,
     required this.webResource,
   }) : super(key: key);
 
   final WebResource webResource;
 
   @override
-  State<StatefulWidget> createState() => _DiscoveryCardState();
+  State<AutomaticKeepAlive> createState() => _DiscoveryCardState();
 }
 
-class _DiscoveryCardState extends State<DiscoveryCard> {
+class _DiscoveryCardState extends State<DiscoveryCard>
+    with AutomaticKeepAliveClientMixin {
   late final DiscoveryCardManager _discoveryCardManager;
 
   Uri get url => widget.webResource.url;
@@ -49,7 +53,10 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _discoveryCardManager.updateUri(url);
+    if (widget.isPrimary) {
+      _discoveryCardManager.updateUri(url);
+    }
+
     _discoveryCardManager.updateImageUri(Uri.parse(imageUrl));
   }
 
@@ -59,7 +66,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     final oldUrl = oldWidget.webResource.url;
     final oldImageUrl = oldWidget.webResource.displayUrl.toString();
 
-    if (oldUrl != url) {
+    if (widget.isPrimary && oldUrl != url) {
       _discoveryCardManager.updateUri(url);
     }
 
@@ -69,30 +76,37 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-          bloc: _discoveryCardManager,
-          builder: (context, state) {
-            final snippets = state.paragraphs
-                .map((it) => Bidi.stripHtmlIfNeeded(it))
-                .toList(growable: false);
+  Widget build(BuildContext context) {
+    super.build(context);
 
-            return LayoutBuilder(
-              builder: (context, constraints) => _buildCardDisplayStack(
-                imageUrl: imageUrl,
-                snippets: snippets,
-                palette: state.paletteGenerator,
-                constraints: constraints,
-              ),
-            );
-          });
+    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+        bloc: _discoveryCardManager,
+        builder: (context, state) {
+          final snippets = state.paragraphs
+              .map((it) => Bidi.stripHtmlIfNeeded(it))
+              .toList(growable: false);
+
+          return LayoutBuilder(
+            builder: (context, constraints) => _buildCardDisplayStack(
+              isPrimary: widget.isPrimary,
+              imageUrl: imageUrl,
+              snippets: snippets,
+              palette: state.paletteGenerator,
+              constraints: constraints,
+            ),
+          );
+        });
+  }
 
   Widget _buildCardDisplayStack({
     required String imageUrl,
     required List<String> snippets,
     required BoxConstraints constraints,
+    required bool isPrimary,
     PaletteGenerator? palette,
   }) {
+    final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
+
     final footer = DiscoveryCardFooter(
       title: widget.webResource.title,
       url: widget.webResource.url,
@@ -117,7 +131,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
           children: [
             Expanded(
               child: DiscoveryCardBody(
-                snippets: [snippet, ...snippets],
+                snippets: allSnippets,
                 palette: palette,
               ),
             ),
@@ -127,6 +141,9 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _CardBackground extends StatelessWidget {
