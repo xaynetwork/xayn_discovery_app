@@ -29,6 +29,7 @@ class FeedView extends StatelessWidget {
           context: context,
           removeTop: true,
           child: CardView(
+            scrollDirection: Axis.vertical,
             controller: cardViewController,
             size: .947,
             itemBuilder: itemBuilder,
