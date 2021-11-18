@@ -41,8 +41,8 @@ end
 # Private lanes, that we only call internaly, they are nice because they have an own description
 desc "Flutter build runner"
 private_lane :build_runner do
-  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "api-gw.xaynet.dev")
-  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "api-gw.xayn.com")
+  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "api-gw.xaynet.dev", "https://img-fetcher.xaynet.dev")
+  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "api-gw.xayn.com", "https://img-fetcher.xayn.com")
 
   flutter("pub  run build_runner build --delete-conflicting-outputs")
 end
@@ -151,20 +151,21 @@ def uploadToAppCenter(token, appName, path, version)
   )
 end
 
-def checkAndCreateEnv(file, searchApiEnvKey, searchApiUrl)
+def checkAndCreateEnv(file, searchApiEnvKey, searchApiUrl, imageFetcherUrl)
   if !File.file?(file)
     searchApiSecret = ENV[searchApiEnvKey]
     if !ENV.key?(searchApiEnvKey)
       searchApiSecret = UI.input("#{searchApiEnvKey}: ")
     end
-    writeEnvFile(file, searchApiSecret, searchApiUrl)
+    writeEnvFile(file, searchApiSecret, searchApiUrl, imageFetcherUrl)
   end
 end
 
-def writeEnvFile(file, searchApiKey, searchApiUrl)
+def writeEnvFile(file, searchApiKey, searchApiUrl, imageFetcherUrl)
   writeProperties(file, {
     :SEARCH_API_BASE_URL => searchApiUrl,
     :SEARCH_API_SECRET_KEY => searchApiKey,
+    :IMAGE_FETCHER_URL => imageFetcherUrl,
   })
 end
 

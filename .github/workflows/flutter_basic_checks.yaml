@@ -31,6 +31,7 @@ jobs:
           cat << EOF > .env.dev
           SEARCH_API_BASE_URL="api-gw.xaynet.dev"
           SEARCH_API_SECRET_KEY=${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          IMAGE_FETCHER_URL="https://img-fetcher.xaynet.dev"
           EOF
           cd -
 
@@ -40,6 +41,7 @@ jobs:
           cat << EOF > .env.prod
           SEARCH_API_BASE_URL="api-gw.xayn.com"
           SEARCH_API_SECRET_KEY=${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          IMAGE_FETCHER_URL="https://img-fetcher.xayn.com"
           EOF
           cd -
 
