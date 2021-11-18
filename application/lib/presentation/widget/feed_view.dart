@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/presentation/util/custom_page_scroll_physics.dart';
+import 'package:xayn_card_view/xayn_card_view/card_view.dart';
+import 'package:xayn_card_view/xayn_card_view/card_view_controller.dart';
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
 /// All items are displayed full screen with vertical scrolling.
 class FeedView extends StatelessWidget {
   const FeedView({
     Key? key,
-    this.scrollController,
     required this.itemBuilder,
+    this.cardViewController,
+    this.secondaryItemBuilder,
     this.itemCount,
   }) : super(key: key);
 
-  final ScrollController? scrollController;
+  final CardViewController? cardViewController;
   final Widget Function(BuildContext, int) itemBuilder;
+  final Widget Function(BuildContext, int)? secondaryItemBuilder;
   final int? itemCount;
 
   @override
@@ -22,18 +25,17 @@ class FeedView extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: padding.top),
       child: LayoutBuilder(builder: (context, constraints) {
-        final pageSize = constraints.maxHeight - padding.bottom;
-
         return MediaQuery.removePadding(
           context: context,
           removeTop: true,
-          child: ListView.builder(
-            itemExtent: pageSize,
-            physics: CustomPageScrollPhysics(pageSize: pageSize),
-            scrollDirection: Axis.vertical,
-            controller: scrollController,
+          child: CardView(
+            controller: cardViewController,
+            size: .95,
             itemBuilder: itemBuilder,
-            itemCount: itemCount,
+            secondaryItemBuilder: secondaryItemBuilder,
+            itemCount: itemCount ?? 0,
+            itemSpacing: .0,
+            clipBorderRadius: const BorderRadius.all(Radius.zero),
           ),
         );
       }),
