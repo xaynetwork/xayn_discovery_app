@@ -159,13 +159,15 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ),
     );
 
-    final storyPages = [widget.snippet, ...paragraphs].map(
-      (it) => DiscoveryCardBody(
-        palette: palette,
-        snippet: it,
-        footer: widget.footer,
-      ),
-    );
+    final storyPages = [widget.snippet, ...paragraphs]
+        .map(
+          (it) => DiscoveryCardBody(
+            palette: palette,
+            snippet: it,
+            footer: widget.footer,
+          ),
+        )
+        .toList(growable: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
@@ -177,9 +179,10 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
             ),
           ),
           isImageNotAvailable ? backgroundPane : shadedBackgroundImage,
-          PageView(
+          PageView.builder(
             controller: _pageController,
-            children: storyPages.toList(),
+            itemBuilder: (context, index) => storyPages[index],
+            itemCount: storyPages.length,
           ),
         ],
       ),
