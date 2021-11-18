@@ -2,12 +2,15 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
-/// A [UseCase] which loads the color palette from the image which exists
-/// at the Uri that is provided as input.
+/// A [UseCase] which takes a proxy url [fetcherUrl], then appends all
+/// properties from [FetcherParams] as query parameters.
 @injectable
 class ProxyUriUseCase extends UseCase<FetcherParams, Uri> {
+  /// The proxy url
+  /// Example: "https://fetch.me"
   final String fetcherUrl;
 
+  /// Creates a new proxy url use case.
   ProxyUriUseCase({this.fetcherUrl = Env.imageFetcherUrl});
 
   @override
@@ -35,11 +38,18 @@ class ProxyUriUseCase extends UseCase<FetcherParams, Uri> {
   }
 }
 
+/// The input of [ProxyUriUseCase]
 class FetcherParams {
+  /// The original image uri
   final Uri uri;
+
+  /// The requested image width
   final int? width;
+
+  /// The requested image height
   final int? height;
 
+  /// Creates new parameters for fetching an image via a proxy.
   const FetcherParams({
     required this.uri,
     this.width,
