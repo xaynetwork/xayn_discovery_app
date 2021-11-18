@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -82,15 +81,11 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
-          final snippets = state.paragraphs
-              .map((it) => Bidi.stripHtmlIfNeeded(it))
-              .toList(growable: false);
-
           return LayoutBuilder(
             builder: (context, constraints) => _buildCardDisplayStack(
               isPrimary: widget.isPrimary,
               imageUrl: imageUrl,
-              snippets: snippets,
+              snippets: state.paragraphs,
               palette: state.paletteGenerator,
               constraints: constraints,
             ),
