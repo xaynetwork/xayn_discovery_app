@@ -63,25 +63,30 @@ class _ActiveSearchState extends State<ActiveSearch> {
         }
 
         return FeedView(
-          itemBuilder: _itemBuilder(results),
+          itemBuilder: _itemBuilder(results, true),
+          secondaryItemBuilder: _itemBuilder(results, false),
           itemCount: results.length,
         );
       },
     );
   }
 
-  Widget Function(BuildContext, int) _itemBuilder(List<Document> results) =>
+  Widget Function(BuildContext, int) _itemBuilder(
+    List<Document> results,
+    bool isPrimary,
+  ) =>
       (BuildContext context, int index) {
         final document = results[index];
-        return _buildResultCard(document);
+        return _buildResultCard(document, isPrimary);
       };
 
-  Widget _buildResultCard(Document document) => Padding(
+  Widget _buildResultCard(Document document, bool isPrimary) => Padding(
         padding: EdgeInsets.symmetric(
           horizontal: R.dimen.unit,
           vertical: R.dimen.unit0_5,
         ),
         child: DiscoveryCard(
+          isPrimary: isPrimary,
           webResource: document.webResource,
         ),
       );
