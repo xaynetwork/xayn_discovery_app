@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 void main() {
   configureDependencies();
 
   final unterDenLinden = UnterDenLinden(
+    initialLinden: R.linden,
+    onLindenUpdated: R.updateLinden,
     child: const App(),
-    initialLinden: Linden(),
   );
 
   runApp(unterDenLinden);
@@ -26,9 +28,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Xayn test app',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: UnterDenLinden.getLinden(context).themeData,
       home: const MainScreen(),
     );
   }

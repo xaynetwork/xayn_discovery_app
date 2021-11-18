@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,6 +75,17 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           bottomNav,
         ],
       ),
+
+      /// This is for testing purposes only
+      /// Should be removed once we have a settings page
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton(
+              onPressed: () => UnterDenLinden.of(context)
+                  .changeBrightness(R.invertedBrightness),
+              tooltip: 'Toggle Theme',
+              child: const Icon(Icons.theater_comedy),
+            )
+          : null,
     );
   }
 

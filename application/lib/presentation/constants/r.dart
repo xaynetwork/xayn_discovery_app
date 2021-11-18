@@ -6,7 +6,9 @@ import 'package:xayn_design/xayn_design.dart';
 class R {
   const R._();
 
-  static final Linden _linden = Linden();
+  static Linden _linden = Linden();
+
+  static Linden get linden => _linden;
 
   static XAssets get assets => _linden.assets;
 
@@ -15,4 +17,13 @@ class R {
   static XSizes get dimen => _linden.dimen;
 
   static XColors get colors => _linden.colors;
+
+  static bool get isDarkMode => _linden.brightness == Brightness.dark;
+
+  static Brightness get invertedBrightness =>
+      R.isDarkMode ? Brightness.light : Brightness.dark;
+
+  static void updateLinden(Linden linden) {
+    _linden = linden;
+  }
 }
