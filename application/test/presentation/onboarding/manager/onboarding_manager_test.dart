@@ -74,10 +74,8 @@ void main() {
     setUp: () {
       when(onBoardingCompletedUseCase.call(any)).thenAnswer((_) async => [
             UseCaseResult.failure(
-              UseCaseException(
-                error: Error,
-                stackTrace: StackTrace.current,
-              ),
+              Error(),
+              StackTrace.empty,
             ),
           ]);
     },
