@@ -34,30 +34,35 @@ class DiscoveryCardFooter extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
     );
 
+    final actionButtonRow = _ButtonRowFooter(
+      onSharePressed: () => _discoveryCardManager.shareUri(url),
+      onLikePressed: () => debugPrint('Like is pressed'),
+      onDislikePressed: () => debugPrint('Dislike is pressed'),
+    );
+
+    final faviconRow = FaviconBar(
+      provider: provider!,
+      datePublished: datePublished,
+    );
+
+    final footerColumn = Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        titleWidget,
+        SizedBox(height: R.dimen.unit2),
+        if (provider != null) faviconRow,
+        SizedBox(height: R.dimen.unit2),
+        actionButtonRow,
+        SizedBox(height: R.dimen.unit7),
+      ],
+    );
+
     return InkWell(
       onTap: onFooterPressed,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            titleWidget,
-            SizedBox(height: R.dimen.unit2),
-            if (provider != null)
-              FaviconBar(
-                provider: provider!,
-                datePublished: datePublished,
-              ),
-            SizedBox(height: R.dimen.unit2),
-            _ButtonRowFooter(
-              onSharePressed: () => _discoveryCardManager.shareUri(url),
-              onLikePressed: () => debugPrint('Like is pressed'),
-              onDislikePressed: () => debugPrint('Dislike is pressed'),
-            ),
-            SizedBox(height: R.dimen.unit7),
-          ],
-        ),
+        child: footerColumn,
       ),
     );
   }
