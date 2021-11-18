@@ -8,7 +8,7 @@ import 'onboarding_state.dart';
 @injectable
 class OnBoardingManager extends Cubit<OnBoardingState>
     with UseCaseBlocHelper<OnBoardingState> {
-  final OnOnBoardingCompletedUseCase _onBoardingCompletedUseCase;
+  final OnBoardingCompletedUseCase _onBoardingCompletedUseCase;
   OnBoardingManager(
     this._onBoardingCompletedUseCase,
   ) : super(const OnBoardingState.started());
