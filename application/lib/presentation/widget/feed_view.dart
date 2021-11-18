@@ -30,7 +30,7 @@ class FeedView extends StatelessWidget {
           removeTop: true,
           child: CardView(
             controller: cardViewController,
-            size: .95,
+            size: .947,
             itemBuilder: itemBuilder,
             secondaryItemBuilder: secondaryItemBuilder,
             itemCount: itemCount ?? 0,
