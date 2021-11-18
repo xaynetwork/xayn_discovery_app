@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/proxy_uri_use_case.dart';
 
 /// Mock implementation,
 /// This will be deprecated once the real discovery engine is available.
@@ -14,7 +15,9 @@ import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 /// to fetch results.
 @Injectable(as: InvokeApiEndpointUseCase)
 class InvokeBingUseCase extends InvokeApiEndpointUseCase {
-  InvokeBingUseCase();
+  final ProxyUriUseCase _proxyUriUseCase;
+
+  InvokeBingUseCase(this._proxyUriUseCase);
 
   @override
   Stream<ApiEndpointResponse> transaction(Uri param) async* {
@@ -32,29 +35,36 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
 
     final data = await compute(_decodeJson, response.body);
 
-    yield ApiEndpointResponse.complete(_deserialize(data));
+    yield ApiEndpointResponse.complete(await _deserialize(data));
   }
 
-  List<Document> _deserialize(Map<String, dynamic> data) {
+  Future<List<Document>> _deserialize(Map<String, dynamic> data) async {
     const emptyNewsMap = <String, dynamic>{'value': []};
     final newsMap = data['news'] as Map<String, dynamic>?;
     final news = (newsMap ?? emptyNewsMap)['value'] as List;
+    final documents = <Document>[];
 
-    return news.cast<Map>().map((it) {
+    for (var it in news.cast<Map>()) {
       String? imageUrl;
 
       if (it.containsKey('image')) {
         final image = it['image'] as Map<String, dynamic>;
 
         if (image.containsKey('contentUrl')) {
-          imageUrl = image['contentUrl'] as String;
+          final result = await _proxyUriUseCase(
+              FetcherParams(uri: Uri.parse(image['contentUrl'] as String)));
+
+          result.last.fold(
+            defaultOnError: (e, s) => imageUrl = null,
+            onValue: (it) => imageUrl = it.toString(),
+          );
         }
       }
 
-      return Document(
+      final document = Document(
         documentId: const DocumentId(key: ''),
         webResource: WebResource(
-          displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
+          displayUrl: imageUrl != null ? Uri.parse(imageUrl!) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
@@ -64,7 +74,11 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
         nonPersonalizedRank: 0,
         personalizedRank: 0,
       );
-    }).toList(growable: false);
+
+      documents.add(document);
+    }
+
+    return documents;
   }
 }
 
