@@ -8,6 +8,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
 
@@ -34,6 +36,9 @@ class _DiscoveryCardState extends State<DiscoveryCard>
   Uri get url => widget.webResource.url;
   String get imageUrl => widget.webResource.displayUrl.toString();
   String get snippet => widget.webResource.snippet;
+  String get title => widget.webResource.title;
+
+  bool _shouldShowReaderMode = false;
 
   @override
   void initState() {
@@ -89,6 +94,7 @@ class _DiscoveryCardState extends State<DiscoveryCard>
               snippets: state.paragraphs,
               palette: state.paletteGenerator,
               constraints: constraints,
+              processHtmlResult: state.result,
             ),
           );
         });
@@ -99,43 +105,63 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     required List<String> snippets,
     required BoxConstraints constraints,
     required bool isPrimary,
+    ProcessHtmlResult? processHtmlResult,
     PaletteGenerator? palette,
   }) {
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
 
     final footer = DiscoveryCardFooter(
-      title: widget.webResource.title,
-      url: widget.webResource.url,
-      provider: widget.webResource.provider,
-      datePublished: widget.webResource.datePublished,
-      onFooterPressed: () => debugPrint('Open article'),
-    );
+        title: widget.webResource.title,
+        url: widget.webResource.url,
+        shouldDisplayReaderMode: _shouldShowReaderMode,
+        readerModeBuilder: () => processHtmlResult != null
+            ? ReaderMode(
+                title: title,
+                snippet: snippet,
+                imageUri: Uri.parse(imageUrl),
+                processHtmlResult: processHtmlResult)
+            : const CircularProgressIndicator(),
+        provider: widget.webResource.provider,
+        datePublished: widget.webResource.datePublished,
+        onFooterPressed: () => debugPrint('Open article'),
+        onTitlePressed: () => setState(() =>
+            setState(() => _shouldShowReaderMode = !_shouldShowReaderMode)));
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: ColoredBox(color: R.colors.swipeCardBackground),
-        ),
-        _CardBackground(
-          imageUrl: imageUrl,
-          constraints: constraints,
-          dominantColor: palette?.dominantColor?.color,
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: DiscoveryCardBody(
-                snippets: allSnippets,
-                palette: palette,
-              ),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Stack(
+        children: [
+          Positioned.fill(
+            child: ColoredBox(color: R.colors.swipeCardBackground),
+          ),
+          AnimatedPositioned(
+            child: _CardBackground(
+              imageUrl: imageUrl,
+              constraints: constraints,
+              dominantColor: palette?.dominantColor?.color,
             ),
-            footer,
-          ],
-        ),
-      ],
-    );
+            duration: const Duration(milliseconds: 400),
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: _shouldShowReaderMode ? constraints.maxHeight - 260.0 : .0,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!_shouldShowReaderMode)
+                Expanded(
+                  child: DiscoveryCardBody(
+                    snippets: allSnippets,
+                    palette: palette,
+                  ),
+                ),
+              _shouldShowReaderMode ? Expanded(child: footer) : footer,
+            ],
+          ),
+        ],
+      );
+    });
   }
 
   @override
@@ -171,9 +197,10 @@ class _CardBackground extends StatelessWidget {
                 Text('Unable to load image with url: $imageUrl'),
           );
 
-    final shadedBackgroundImage = Positioned.fill(
-      bottom: constraints.maxHeight / 3,
-      child: Container(
+    final shadedBackgroundImage =
+        LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        height: 2 * constraints.maxHeight / 3,
         foregroundDecoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -188,8 +215,9 @@ class _CardBackground extends StatelessWidget {
           ),
         ),
         child: backgroundImage,
-      ),
-    );
+      );
+    });
+
     return isImageNotAvailable ? backgroundPane : shadedBackgroundImage;
   }
 }
