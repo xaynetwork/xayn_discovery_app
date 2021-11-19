@@ -43,6 +43,7 @@ class _CachedImageState extends State<CachedImage> {
       widget.uri,
       width: widget.width,
       height: widget.height,
+      fit: widget.fit,
     );
 
     super.initState();
@@ -52,11 +53,13 @@ class _CachedImageState extends State<CachedImage> {
   void didUpdateWidget(CachedImage oldWidget) {
     if (oldWidget.uri != widget.uri ||
         oldWidget.width != widget.width ||
-        oldWidget.height != widget.height) {
+        oldWidget.height != widget.height ||
+        oldWidget.fit != widget.fit) {
       _imageManager.getImage(
         widget.uri,
         width: widget.width,
         height: widget.height,
+        fit: widget.fit,
       );
     }
 
