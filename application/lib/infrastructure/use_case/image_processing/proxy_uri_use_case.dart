@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
@@ -10,9 +11,12 @@ class ProxyUriUseCase extends UseCase<FetcherParams, Uri> {
   /// Example: "https://fetch.me"
   final String fetcherUrl;
 
-  /// Creates a new proxy url use case.
+  /// Creates a new proxy url use case, testing only, see [ProxyUriUseCase.fetcherUrlFromEnv],
+  /// which is also the default di factory constructor.
+  @visibleForTesting
   ProxyUriUseCase({required this.fetcherUrl});
 
+  /// Creates a new proxy url use case, using [fetcherUrl] from `Env`.
   @factoryMethod
   ProxyUriUseCase.fetcherUrlFromEnv() : fetcherUrl = Env.imageFetcherUrl;
 
