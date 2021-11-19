@@ -77,10 +77,17 @@ class _ActiveSearchState extends State<ActiveSearch> {
   ) =>
       (BuildContext context, int index) {
         final document = results[index];
-        return _buildResultCard(document, isPrimary);
+        return _buildResultCard(
+          document,
+          isPrimary,
+        );
       };
 
-  Widget _buildResultCard(Document document, bool isPrimary) => Padding(
+  Widget _buildResultCard(
+    Document document,
+    bool isPrimary,
+  ) =>
+      Padding(
         padding: EdgeInsets.symmetric(
           horizontal: R.dimen.unit,
           vertical: R.dimen.unit0_5,

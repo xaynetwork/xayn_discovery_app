@@ -88,7 +88,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   }
 
   Widget Function(BuildContext, int) _itemBuilder(
-          List<Document> results, bool isPrimary) =>
+    List<Document> results,
+    bool isPrimary,
+  ) =>
       (BuildContext context, int index) {
         final document = results[index];
         return _buildResultCard(document, isPrimary);
@@ -141,7 +143,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         ),
       );
 
-  Widget _buildResultCard(Document document, bool isPrimary) {
+  Widget _buildResultCard(
+    Document document,
+    bool isPrimary,
+  ) {
     final card = DiscoveryCard(
       key: Key(document.webResource.url.toString()),
       isPrimary: isPrimary,
