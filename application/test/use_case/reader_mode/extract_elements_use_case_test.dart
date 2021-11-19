@@ -34,7 +34,7 @@ void main() {
       expect: [
         elementsSuccess(
           const Elements(
-            paragraphs: ['<p>1</p>', '<p>2</p>'],
+            paragraphs: ['1', '2'],
             images: ['https://www.xayn.com'],
             processHtmlResult: result,
           ),
