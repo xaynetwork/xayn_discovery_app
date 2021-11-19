@@ -98,7 +98,7 @@ class _ReaderModeState extends State<ReaderMode> {
 
           return readability.ReaderMode(
             controller: _readerModeController,
-            textStyle: R.styles.appBodyText,
+            textStyle: R.styles.appBodyTextBright,
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
           );
