@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_card_view/xayn_card_view/card_view.dart';
-import 'package:xayn_card_view/xayn_card_view/card_view_controller.dart';
+import 'package:xayn_card_view/xayn_card_view.dart';
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
 /// All items are displayed full screen with vertical scrolling.
