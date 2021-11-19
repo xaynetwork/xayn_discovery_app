@@ -4,7 +4,10 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:story/story.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-class _ResultCardBody extends StatelessWidget {
+const kSnippetCountToDisplayAnimation = 2;
+
+/// The story page of a discovery card.
+class DiscoveryCardBody extends StatelessWidget {
   final PaletteGenerator? palette;
 
   Color? get dominantColor => palette?.colors.first;
@@ -13,26 +16,11 @@ class _ResultCardBody extends StatelessWidget {
       ? const Color(0xFFF8F8F8)
       : const Color(0xFF303030);
 
-  const _ResultCardBody({
-    Key? key,
-    this.palette,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-}
-
-const kSnippetCountToDisplayAnimation = 2;
-
-/// The story page of a discovery card.
-class DiscoveryCardBody extends _ResultCardBody {
   const DiscoveryCardBody({
     Key? key,
-    PaletteGenerator? palette,
+    this.palette,
     required this.snippets,
-  }) : super(key: key, palette: palette);
+  }) : super(key: key);
   final List<String> snippets;
 
   @override

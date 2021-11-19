@@ -2,9 +2,9 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_result_combiner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 
 // ignore: implementation_imports
@@ -28,7 +28,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final RandomKeyWordsUseCase _randomKeyWordsUseCase;
 
-  late final UseCaseSink<List<Document>, ResultCombinerJob> _searchHandler;
+  late final UseCaseSink<List<Document>, DiscoveryEngineState> _searchHandler;
 
   void handleLoadMore() async {
     _searchHandler(state.results ?? const <Document>[]);
@@ -45,10 +45,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               searchTypes: const [SearchType.web],
             ),
           )
-          .followedBy(_discoveryEngineResultsUseCase)
-          .followedBy(
-            DiscoveryEngineResultCombinerUseCase(() => state.results),
-          ),
+          .followedBy(_discoveryEngineResultsUseCase),
     );
 
     _searchHandler.call(const <Document>[]);
@@ -56,19 +53,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   @override
   Future<DiscoveryFeedState?> computeState() async =>
-      fold(_searchHandler).foldAll((combinedResult, errorReport) {
+      fold(_searchHandler).foldAll((engineState, errorReport) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,
           );
         }
 
-        if (combinedResult != null) {
+        if (engineState != null) {
           return state.copyWith(
-            results: combinedResult.documents,
-            resultIndex: (state.resultIndex - combinedResult.removed)
-                .clamp(0, combinedResult.documents.length),
-            isComplete: combinedResult.apiState.isComplete,
+            results: [
+              ...state.results ?? const <Document>[],
+              ...engineState.results
+            ],
+            isComplete: engineState.isComplete,
             isInErrorState: false,
           );
         }

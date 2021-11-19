@@ -21,6 +21,7 @@ env:
   # Common environment variables used inside ./build_scripts files
   GITHUB_USERNAME: 'xayn-admin'
   # GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+  FASTLANE_SKIP_UPDATE_CHECK: "1"
 
 jobs:
   test_and_publish:
