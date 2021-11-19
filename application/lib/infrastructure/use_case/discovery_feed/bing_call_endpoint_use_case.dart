@@ -6,7 +6,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/proxy_uri_use_case.dart';
 
 /// Mock implementation,
 /// This will be deprecated once the real discovery engine is available.
@@ -15,9 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/prox
 /// to fetch results.
 @Injectable(as: InvokeApiEndpointUseCase)
 class InvokeBingUseCase extends InvokeApiEndpointUseCase {
-  final ProxyUriUseCase _proxyUriUseCase;
-
-  InvokeBingUseCase(this._proxyUriUseCase);
+  InvokeBingUseCase();
 
   @override
   Stream<ApiEndpointResponse> transaction(Uri param) async* {
@@ -35,10 +32,10 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
 
     final data = await compute(_decodeJson, response.body);
 
-    yield ApiEndpointResponse.complete(await _deserialize(data));
+    yield ApiEndpointResponse.complete(_deserialize(data));
   }
 
-  Future<List<Document>> _deserialize(Map<String, dynamic> data) async {
+  List<Document> _deserialize(Map<String, dynamic> data) {
     const emptyNewsMap = <String, dynamic>{'value': []};
     final newsMap = data['news'] as Map<String, dynamic>?;
     final news = (newsMap ?? emptyNewsMap)['value'] as List;
@@ -51,20 +48,14 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
         final image = it['image'] as Map<String, dynamic>;
 
         if (image.containsKey('contentUrl')) {
-          final result = await _proxyUriUseCase(
-              FetcherParams(uri: Uri.parse(image['contentUrl'] as String)));
-
-          result.last.fold(
-            defaultOnError: (e, s) => imageUrl = null,
-            onValue: (it) => imageUrl = it.toString(),
-          );
+          imageUrl = image['contentUrl'] as String;
         }
       }
 
       final document = Document(
         documentId: const DocumentId(key: ''),
         webResource: WebResource(
-          displayUrl: imageUrl != null ? Uri.parse(imageUrl!) : Uri.base,
+          displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
