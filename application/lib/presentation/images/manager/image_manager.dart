@@ -29,7 +29,7 @@ class ImageManager extends Cubit<ImageManagerState>
   }
 
   @override
-  Future<ImageManagerState> computeState() async =>
+  Future<ImageManagerState?> computeState() async =>
       fold(_imageFromCacheHandler).foldAll((imageData, errorReport) {
         if (errorReport.isNotEmpty) {
           return ImageManagerState.error(uri: _lastUri!);

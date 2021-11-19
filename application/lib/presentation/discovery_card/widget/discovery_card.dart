@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 
 import 'discovery_card_footer.dart';
 
@@ -150,14 +151,12 @@ class _CardBackground extends StatelessWidget {
 
     final backgroundImage = isImageNotAvailable
         ? backgroundPane
-        : Image.network(
-            imageUrl,
+        : CachedImage(
+            uri: Uri.parse(imageUrl),
             fit: BoxFit.cover,
-            loadingBuilder:
-                (context, Widget child, ImageChunkEvent? loadingProgress) =>
-                    loadingProgress != null ? backgroundPane : child,
-            errorBuilder: (context, e, s) =>
-                Text('Unable to load image with url: $imageUrl\n\n$e'),
+            loadingBuilder: (context, progress) => backgroundPane,
+            errorBuilder: (context) =>
+                Text('Unable to load image with url: $imageUrl'),
           );
 
     final shadedBackgroundImage = Positioned.fill(
