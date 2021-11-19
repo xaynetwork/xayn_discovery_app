@@ -21,7 +21,6 @@ void main() {
             path: '/',
             queryParameters: {
               'url': testImageUri.toString(),
-              'fit': 'cover',
             },
           ),
         )
@@ -36,6 +35,10 @@ void main() {
           uri: testImageUri,
           width: 10,
           height: 10,
+          fit: 'cover',
+          blur: 3,
+          tint: 'blue',
+          rotation: 45,
         )
       ],
       expect: [
@@ -47,29 +50,9 @@ void main() {
               'fit': 'cover',
               'w': '10',
               'h': '10',
-            },
-          ),
-        )
-      ],
-    );
-
-    useCaseTest(
-      'Excludes width and height if original uri is sized: ',
-      build: () => ProxyUriUseCase(fetcherUrl: testFetcherUrl),
-      input: [
-        FetcherParams(
-          uri: Uri.parse('$testImageUri?w=10&h=10'),
-          width: 10,
-          height: 10,
-        )
-      ],
-      expect: [
-        useCaseSuccess(
-          Uri.parse(testFetcherUrl).replace(
-            path: '/',
-            queryParameters: {
-              'url': '$testImageUri?w=10&h=10',
-              'fit': 'cover',
+              'blur': '3',
+              'rot': '45',
+              'tint': 'blue',
             },
           ),
         )
