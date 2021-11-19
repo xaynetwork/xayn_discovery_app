@@ -85,7 +85,11 @@ class _CachedImageState extends State<CachedImage> {
         bloc: _imageManager,
         builder: (context, state) {
           if (state.uri != widget.uri) {
-            return loadingBuilder(context, .0);
+            final uriAsParam = state.uri?.queryParameters['url'];
+
+            if (uriAsParam != widget.uri.toString()) {
+              return loadingBuilder(context, .0);
+            }
           }
 
           if (state.hasError) {

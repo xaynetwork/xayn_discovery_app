@@ -3,18 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/caching/cache_manager_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/proxy_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
 
 @injectable
 class ImageManager extends Cubit<ImageManagerState>
     with UseCaseBlocHelper<ImageManagerState> {
+  final ProxyUriUseCase _proxyUriUseCase;
   final CacheManagerUseCase _cacheManagerUseCase;
 
-  late final UseCaseSink<Uri, CacheManagerEvent> _imageFromCacheHandler;
+  late final UseCaseSink<FetcherParams, CacheManagerEvent>
+      _imageFromCacheHandler;
 
   Uri? _lastUri;
 
-  ImageManager(this._cacheManagerUseCase) : super(ImageManagerState.initial()) {
+  ImageManager(this._proxyUriUseCase, this._cacheManagerUseCase)
+      : super(ImageManagerState.initial()) {
     _initHandlers();
   }
 
@@ -24,8 +28,29 @@ class ImageManager extends Cubit<ImageManagerState>
     int? height,
     BoxFit? fit,
   }) {
+    String? fitAsString;
+
+    switch (fit) {
+      case BoxFit.cover:
+        fitAsString = 'cover';
+        break;
+      case BoxFit.fill:
+        fitAsString = 'fill';
+        break;
+      case BoxFit.contain:
+        fitAsString = 'contain';
+        break;
+      default:
+        fitAsString = null;
+    }
+
     _lastUri = uri;
-    _imageFromCacheHandler(uri);
+    _imageFromCacheHandler(FetcherParams(
+      uri: uri,
+      width: width,
+      height: height,
+      fit: fitAsString,
+    ));
   }
 
   @override
@@ -51,6 +76,7 @@ class ImageManager extends Cubit<ImageManagerState>
       });
 
   void _initHandlers() {
-    _imageFromCacheHandler = pipe(_cacheManagerUseCase);
+    _imageFromCacheHandler = pipe(_proxyUriUseCase)
+        .transform((out) => out.followedBy(_cacheManagerUseCase));
   }
 }
