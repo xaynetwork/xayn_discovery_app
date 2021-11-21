@@ -140,12 +140,9 @@ class _ResultCard extends AutomaticKeepAlive {
   State<AutomaticKeepAlive> createState() => _ResultCardState();
 }
 
-class _ResultCardState extends State<_ResultCard>
-    with AutomaticKeepAliveClientMixin {
+class _ResultCardState extends State<_ResultCard> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     final card = DiscoveryCard(
       isPrimary: widget.isPrimary,
       webResource: widget.document.webResource,
@@ -163,9 +160,6 @@ class _ResultCardState extends State<_ResultCard>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   Widget _buildSwipeWidget({required Widget child}) => Swipe(
         optionsLeft: const [SwipeOption.like],
