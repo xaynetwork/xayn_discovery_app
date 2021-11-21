@@ -25,14 +25,14 @@ class ReaderMode extends StatefulWidget {
   final String title;
   final String snippet;
   final Uri imageUri;
-  final readability.ProcessHtmlResult processHtmlResult;
+  final readability.ProcessHtmlResult? processHtmlResult;
 
   const ReaderMode({
     Key? key,
     required this.title,
     required this.snippet,
     required this.imageUri,
-    required this.processHtmlResult,
+    this.processHtmlResult,
   }) : super(key: key);
 
   @override
@@ -50,12 +50,7 @@ class _ReaderModeState extends State<ReaderMode> {
     _readerModeManager = di.get();
     _readerModeController = readability.ReaderModeController();
 
-    _readerModeManager.handleCardData(
-      title: widget.title,
-      snippet: widget.snippet,
-      imageUri: widget.imageUri,
-      processHtmlResult: widget.processHtmlResult,
-    );
+    _updateCardData();
   }
 
   @override
@@ -72,12 +67,7 @@ class _ReaderModeState extends State<ReaderMode> {
         oldWidget.snippet != widget.snippet ||
         oldWidget.imageUri != widget.imageUri ||
         oldWidget.processHtmlResult != widget.processHtmlResult) {
-      _readerModeManager.handleCardData(
-        title: widget.title,
-        snippet: widget.snippet,
-        imageUri: widget.imageUri,
-        processHtmlResult: widget.processHtmlResult,
-      );
+      _updateCardData();
     }
 
     super.didUpdateWidget(oldWidget);
@@ -103,5 +93,18 @@ class _ReaderModeState extends State<ReaderMode> {
             classesToPreserve: kClassesToPreserve,
           );
         });
+  }
+
+  void _updateCardData() {
+    final processHtmlResult = widget.processHtmlResult;
+
+    if (processHtmlResult != null) {
+      _readerModeManager.handleCardData(
+        title: widget.title,
+        snippet: widget.snippet,
+        imageUri: widget.imageUri,
+        processHtmlResult: processHtmlResult,
+      );
+    }
   }
 }
