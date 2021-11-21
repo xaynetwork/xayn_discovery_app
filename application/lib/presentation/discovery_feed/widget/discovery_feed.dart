@@ -124,7 +124,7 @@ class _ResultCard extends AutomaticKeepAlive {
     Key? key,
     required this.isPrimary,
     required this.document,
-  });
+  }) : super(key: key);
 
   @override
   State<AutomaticKeepAlive> createState() => _ResultCardState();
