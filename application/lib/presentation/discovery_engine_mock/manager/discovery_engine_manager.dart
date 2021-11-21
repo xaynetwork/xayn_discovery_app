@@ -60,7 +60,7 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
           .followedBy(LogUseCase((it) => 'will fetch $it'))
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
-            consumeEvent: (data) => !data.isComplete,
+            consumeEvent: (data) => !data.isComplete || data.results.isEmpty,
             run: (data) => _isLoading = !data.isComplete,
           )
           .followedBy(
@@ -89,7 +89,12 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
         }
 
         if (a != null) {
-          return DiscoveryEngineState(results: a.results, isComplete: true);
+          if (a.results.isNotEmpty) {
+            return DiscoveryEngineState(results: a.results, isComplete: true);
+          } else {
+            // no results, just go get some then without a query
+            _handleQuery('');
+          }
         }
       });
 

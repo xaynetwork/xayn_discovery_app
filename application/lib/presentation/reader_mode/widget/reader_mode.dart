@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -88,7 +89,12 @@ class _ReaderModeState extends State<ReaderMode> {
 
           return readability.ReaderMode(
             controller: _readerModeController,
-            textStyle: R.styles.appBodyTextBright,
+            // todo: move into xayn_design
+            textStyle: R.styles.appBodyTextBright?.copyWith(
+              fontSize: 14.0,
+              height: 1.75,
+              letterSpacing: 1.1,
+            ),
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
           );

@@ -15,6 +15,7 @@ import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 import 'discovery_card_footer.dart';
 
 const Duration kAnimationDuration = Duration(milliseconds: 600);
+const Curve kAnimationCurve = Curves.easeOut;
 
 /// A widget which displays a discovery card.
 class DiscoveryCard extends StatefulWidget {
@@ -32,7 +33,8 @@ class DiscoveryCard extends StatefulWidget {
   State<StatefulWidget> createState() => _DiscoveryCardState();
 }
 
-class _DiscoveryCardState extends State<DiscoveryCard> {
+class _DiscoveryCardState extends State<DiscoveryCard>
+    with AutomaticKeepAliveClientMixin {
   late final DiscoveryCardManager _discoveryCardManager;
 
   Uri get url => widget.webResource.url;
@@ -84,6 +86,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
@@ -110,6 +113,12 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }) {
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
 
+    final cardBackground = _CardBackground(
+      imageUrl: imageUrl,
+      constraints: constraints,
+      dominantColor: palette?.dominantColor?.color,
+      isDocked: _shouldShowReaderMode,
+    );
     final readerMode = Visibility(
       visible: _shouldShowReaderMode,
       maintainState: true,
@@ -151,51 +160,79 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         footer,
       ],
     );
+    final primaryChildren = [
+      AnimatedContainer(
+        height: _shouldShowReaderMode ? constraints.maxHeight : .0,
+        duration: kAnimationDuration,
+        curve: kAnimationCurve,
+        child: ColoredBox(color: R.colors.swipeCardBackground),
+      ),
+      Positioned.fill(
+        top: constraints.maxHeight / 4,
+        child: _buildAnimatedGrowing(
+          maxHeight: 3 * constraints.maxHeight / 4,
+          height: _shouldShowReaderMode ? 3 * constraints.maxHeight / 4 : .0,
+          opacity: _shouldShowReaderMode ? 1.0 : .0,
+          alignment: Alignment.bottomCenter,
+          child: readerMode,
+        ),
+      ),
+      InkWell(
+        onTap: () =>
+            setState(() => _shouldShowReaderMode = !_shouldShowReaderMode),
+        child: cardBackground,
+      ),
+      _buildAnimatedGrowing(
+        maxHeight: constraints.maxHeight,
+        height: _shouldShowReaderMode ? .0 : constraints.maxHeight,
+        opacity: _shouldShowReaderMode ? .0 : 1.0,
+        alignment: Alignment.topCenter,
+        child: bodyAndFooter,
+      ),
+    ];
+    final secondaryChildren = [
+      ColoredBox(color: R.colors.swipeCardBackground),
+      cardBackground,
+      bodyAndFooter,
+    ];
 
     return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        children: [
-          AnimatedContainer(
-            height: _shouldShowReaderMode ? constraints.maxHeight : .0,
-            duration: kAnimationDuration,
-            child: ColoredBox(color: R.colors.swipeCardBackground),
-          ),
-          Positioned.fill(
-            top: constraints.maxHeight / 4,
-            child: Container(
-              color: R.colors.swipeCardBackground,
-              child: readerMode,
-            ),
-          ),
-          InkWell(
-            onTap: () =>
-                setState(() => _shouldShowReaderMode = !_shouldShowReaderMode),
-            child: _CardBackground(
-              imageUrl: imageUrl,
-              constraints: constraints,
-              dominantColor: palette?.dominantColor?.color,
-              isDocked: _shouldShowReaderMode,
-            ),
-          ),
-          AnimatedContainer(
-            height: _shouldShowReaderMode ? .0 : constraints.maxHeight,
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(),
-            duration: kAnimationDuration,
-            child: OverflowBox(
-              maxHeight: constraints.maxHeight,
-              alignment: Alignment.topCenter,
-              child: AnimatedOpacity(
-                opacity: _shouldShowReaderMode ? .0 : 1.0,
-                duration: kAnimationDuration,
-                child: bodyAndFooter,
-              ),
-            ),
-          ),
-        ],
+      return ColoredBox(
+        color: R.colors.swipeCardBackground,
+        child: Stack(
+          children: isPrimary ? primaryChildren : secondaryChildren,
+        ),
       );
     });
   }
+
+  Widget _buildAnimatedGrowing({
+    required Widget child,
+    required Alignment alignment,
+    required double opacity,
+    required double maxHeight,
+    required double height,
+  }) =>
+      AnimatedContainer(
+        height: height,
+        clipBehavior: Clip.antiAlias,
+        decoration: const BoxDecoration(),
+        duration: kAnimationDuration,
+        curve: kAnimationCurve,
+        child: OverflowBox(
+          maxHeight: maxHeight,
+          alignment: alignment,
+          child: AnimatedOpacity(
+            opacity: opacity,
+            duration: kAnimationDuration,
+            curve: kAnimationCurve,
+            child: child,
+          ),
+        ),
+      );
+
+  @override
+  bool get wantKeepAlive => widget.isPrimary;
 }
 
 class _CardBackground extends StatelessWidget {
