@@ -126,7 +126,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
       );
 }
 
-class _ResultCard extends AutomaticKeepAlive {
+class _ResultCard extends StatelessWidget {
   final bool isPrimary;
   final Document document;
 
@@ -137,17 +137,12 @@ class _ResultCard extends AutomaticKeepAlive {
   }) : super(key: key);
 
   @override
-  State<AutomaticKeepAlive> createState() => _ResultCardState();
-}
-
-class _ResultCardState extends State<_ResultCard> {
-  @override
   Widget build(BuildContext context) {
     final card = DiscoveryCard(
-      isPrimary: widget.isPrimary,
-      webResource: widget.document.webResource,
+      isPrimary: isPrimary,
+      webResource: document.webResource,
     );
-    final child = widget.isPrimary ? _buildSwipeWidget(child: card) : card;
+    final child = isPrimary ? _buildSwipeWidget(child: card) : card;
 
     return Padding(
       padding: EdgeInsets.symmetric(
