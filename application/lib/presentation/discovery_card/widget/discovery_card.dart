@@ -114,7 +114,10 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       visible: _shouldShowReaderMode,
       maintainState: true,
       child: Padding(
-        padding: EdgeInsets.all(R.dimen.unit),
+        padding: EdgeInsets.symmetric(
+          horizontal: R.dimen.unit3,
+          vertical: R.dimen.unit2,
+        ),
         child: AnimatedOpacity(
           opacity: _shouldShowReaderMode ? 1.0 : .0,
           duration: kAnimationDuration * 2,
