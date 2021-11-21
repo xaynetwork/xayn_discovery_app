@@ -61,7 +61,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
       child: TempSearchButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ActiveSearch()),
+          MaterialPageRoute(
+            builder: (context) => const ActiveSearch(),
+          ),
         ),
       ),
     );
@@ -83,7 +85,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   ) =>
       (BuildContext context, int index) {
         final document = results[index];
-        return _buildResultCard(document, isPrimary);
+        return _ResultCard(
+          key: isPrimary ? Key(document.webResource.url.toString()) : null,
+          document: document,
+          isPrimary: isPrimary,
+        );
       };
 
   Widget _buildFeedView() =>
@@ -93,7 +99,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           final results = state.results;
 
           if (results == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           _totalResults = results.length;
@@ -106,6 +114,48 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           );
         },
       );
+}
+
+class _ResultCard extends AutomaticKeepAlive {
+  final bool isPrimary;
+  final Document document;
+
+  const _ResultCard({
+    Key? key,
+    required this.isPrimary,
+    required this.document,
+  });
+
+  @override
+  State<AutomaticKeepAlive> createState() => _ResultCardState();
+}
+
+class _ResultCardState extends State<_ResultCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    final card = DiscoveryCard(
+      isPrimary: widget.isPrimary,
+      webResource: widget.document.webResource,
+    );
+    final child = widget.isPrimary ? _buildSwipeWidget(child: card) : card;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: R.dimen.unit,
+        vertical: R.dimen.unit0_5,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
+        child: child,
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 
   Widget _buildSwipeWidget({required Widget child}) => Swipe(
         optionsLeft: const [SwipeOption.like],
@@ -132,27 +182,4 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
                 ),
         ),
       );
-
-  Widget _buildResultCard(
-    Document document,
-    bool isPrimary,
-  ) {
-    final card = DiscoveryCard(
-      key: Key(document.webResource.url.toString()),
-      isPrimary: isPrimary,
-      webResource: document.webResource,
-    );
-    final child = isPrimary ? _buildSwipeWidget(child: card) : card;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: R.dimen.unit,
-        vertical: R.dimen.unit0_5,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        child: child,
-      ),
-    );
-  }
 }
