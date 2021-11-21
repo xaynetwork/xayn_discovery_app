@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
@@ -13,8 +14,10 @@ import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
 
+const Duration kAnimationDuration = Duration(milliseconds: 600);
+
 /// A widget which displays a discovery card.
-class DiscoveryCard extends AutomaticKeepAlive {
+class DiscoveryCard extends StatefulWidget {
   final bool isPrimary;
 
   const DiscoveryCard({
@@ -26,11 +29,10 @@ class DiscoveryCard extends AutomaticKeepAlive {
   final WebResource webResource;
 
   @override
-  State<AutomaticKeepAlive> createState() => _DiscoveryCardState();
+  State<StatefulWidget> createState() => _DiscoveryCardState();
 }
 
-class _DiscoveryCardState extends State<DiscoveryCard>
-    with AutomaticKeepAliveClientMixin {
+class _DiscoveryCardState extends State<DiscoveryCard> {
   late final DiscoveryCardManager _discoveryCardManager;
 
   Uri get url => widget.webResource.url;
@@ -82,8 +84,6 @@ class _DiscoveryCardState extends State<DiscoveryCard>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
@@ -110,62 +110,89 @@ class _DiscoveryCardState extends State<DiscoveryCard>
   }) {
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
 
+    final readerMode = Visibility(
+      visible: _shouldShowReaderMode,
+      maintainState: true,
+      child: Padding(
+        padding: EdgeInsets.all(R.dimen.unit),
+        child: AnimatedOpacity(
+          opacity: _shouldShowReaderMode ? 1.0 : .0,
+          duration: kAnimationDuration * 2,
+          child: ReaderMode(
+            title: title,
+            snippet: snippet,
+            imageUri: Uri.parse(imageUrl),
+            processHtmlResult: processHtmlResult,
+          ),
+        ),
+      ),
+    );
     final footer = DiscoveryCardFooter(
-        title: widget.webResource.title,
-        url: widget.webResource.url,
-        shouldDisplayReaderMode: _shouldShowReaderMode,
-        readerModeBuilder: () => processHtmlResult != null
-            ? ReaderMode(
-                title: title,
-                snippet: snippet,
-                imageUri: Uri.parse(imageUrl),
-                processHtmlResult: processHtmlResult)
-            : const CircularProgressIndicator(),
-        provider: widget.webResource.provider,
-        datePublished: widget.webResource.datePublished,
-        onFooterPressed: () => debugPrint('Open article'),
-        onTitlePressed: () => setState(() =>
-            setState(() => _shouldShowReaderMode = !_shouldShowReaderMode)));
+      title: widget.webResource.title,
+      url: widget.webResource.url,
+      provider: widget.webResource.provider,
+      datePublished: widget.webResource.datePublished,
+      onFooterPressed: () => setState(
+          () => setState(() => _shouldShowReaderMode = !_shouldShowReaderMode)),
+    );
+    final bodyAndFooter = Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: DiscoveryCardBody(
+            snippets: allSnippets,
+            palette: palette,
+          ),
+        ),
+        footer,
+      ],
+    );
 
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         children: [
-          Positioned.fill(
+          AnimatedContainer(
+            height: _shouldShowReaderMode ? constraints.maxHeight : .0,
+            duration: kAnimationDuration,
             child: ColoredBox(color: R.colors.swipeCardBackground),
           ),
-          AnimatedPositioned(
+          Positioned.fill(
+            top: constraints.maxHeight / 4,
+            child: Container(
+              color: R.colors.swipeCardBackground,
+              child: readerMode,
+            ),
+          ),
+          InkWell(
+            onTap: () =>
+                setState(() => _shouldShowReaderMode = !_shouldShowReaderMode),
             child: _CardBackground(
               imageUrl: imageUrl,
               constraints: constraints,
               dominantColor: palette?.dominantColor?.color,
+              isDocked: _shouldShowReaderMode,
             ),
-            duration: const Duration(milliseconds: 400),
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: _shouldShowReaderMode ? constraints.maxHeight - 260.0 : .0,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (!_shouldShowReaderMode)
-                Expanded(
-                  child: DiscoveryCardBody(
-                    snippets: allSnippets,
-                    palette: palette,
-                  ),
-                ),
-              _shouldShowReaderMode ? Expanded(child: footer) : footer,
-            ],
+          AnimatedContainer(
+            height: _shouldShowReaderMode ? .0 : constraints.maxHeight,
+            clipBehavior: Clip.antiAlias,
+            decoration: const BoxDecoration(),
+            duration: kAnimationDuration,
+            child: OverflowBox(
+              maxHeight: constraints.maxHeight,
+              alignment: Alignment.topCenter,
+              child: AnimatedOpacity(
+                opacity: _shouldShowReaderMode ? .0 : 1.0,
+                duration: kAnimationDuration,
+                child: bodyAndFooter,
+              ),
+            ),
           ),
         ],
       );
     });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class _CardBackground extends StatelessWidget {
@@ -173,11 +200,13 @@ class _CardBackground extends StatelessWidget {
     Key? key,
     required this.imageUrl,
     required this.constraints,
+    required this.isDocked,
     this.dominantColor,
   }) : super(key: key);
   final String imageUrl;
   final BoxConstraints constraints;
   final Color? dominantColor;
+  final bool isDocked;
 
   @override
   Widget build(BuildContext context) {
@@ -197,26 +226,28 @@ class _CardBackground extends StatelessWidget {
                 Text('Unable to load image with url: $imageUrl'),
           );
 
-    final shadedBackgroundImage =
-        LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        height: 2 * constraints.maxHeight / 3,
-        foregroundDecoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              R.colors.swipeCardBackground,
-              R.colors.swipeCardBackground.withAlpha(40),
-              R.colors.swipeCardBackground.withAlpha(120),
-              R.colors.swipeCardBackground,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, 0.15, 0.8, 1],
-          ),
+    final shadedBackgroundImage = AnimatedContainer(
+      duration: kAnimationDuration,
+      width: constraints.maxWidth,
+      height:
+          isDocked ? constraints.maxHeight / 4 : 2 * constraints.maxHeight / 3,
+      decoration: const BoxDecoration(),
+      clipBehavior: Clip.antiAlias,
+      foregroundDecoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            R.colors.swipeCardBackground,
+            R.colors.swipeCardBackground.withAlpha(40),
+            R.colors.swipeCardBackground.withAlpha(120),
+            R.colors.swipeCardBackground,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: const [0, 0.15, 0.8, 1],
         ),
-        child: backgroundImage,
-      );
-    });
+      ),
+      child: backgroundImage,
+    );
 
     return isImageNotAvailable ? backgroundPane : shadedBackgroundImage;
   }

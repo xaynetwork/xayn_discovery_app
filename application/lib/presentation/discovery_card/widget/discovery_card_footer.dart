@@ -9,48 +9,31 @@ import 'package:xayn_design/xayn_design.dart';
 
 typedef ReaderModeBuilder = Widget Function();
 
-const double kReaderModeStartOffset = 200.0;
-const double kTitleReaderModeSize = 17.0;
-const double kTitleNormalSize = 24.0;
-
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
     Key? key,
     required this.title,
     required this.url,
     required this.datePublished,
-    required this.shouldDisplayReaderMode,
-    required this.readerModeBuilder,
     this.provider,
     this.onFooterPressed,
-    this.onTitlePressed,
   }) : super(key: key);
   final String title;
   final Uri url;
-  final bool shouldDisplayReaderMode;
-  final ReaderModeBuilder readerModeBuilder;
   final WebResourceProvider? provider;
   final DateTime datePublished;
   final VoidCallback? onFooterPressed;
-  final VoidCallback? onTitlePressed;
 
   @override
   Widget build(BuildContext context) {
     final DiscoveryCardManager _discoveryCardManager = di.get();
 
-    final titleWidget = InkWell(
-      onTap: onTitlePressed,
-      child: Text(
-        title,
-        style: R.styles.appScreenHeadline?.copyWith(
-          color: Colors.white,
-          fontSize:
-              shouldDisplayReaderMode ? kTitleReaderModeSize : kTitleNormalSize,
-        ),
-        textAlign: TextAlign.center,
-        maxLines: 5,
-        overflow: TextOverflow.ellipsis,
-      ),
+    final titleWidget = Text(
+      title,
+      style: R.styles.appScreenHeadline?.copyWith(color: Colors.white),
+      textAlign: TextAlign.center,
+      maxLines: 5,
+      overflow: TextOverflow.ellipsis,
     );
 
     final actionButtonRow = _ButtonRowFooter(
@@ -68,14 +51,8 @@ class DiscoveryCardFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (shouldDisplayReaderMode)
-          const SizedBox(height: kReaderModeStartOffset),
         titleWidget,
         SizedBox(height: R.dimen.unit2),
-        if (shouldDisplayReaderMode) ...[
-          Expanded(child: readerModeBuilder()),
-          SizedBox(height: R.dimen.unit2),
-        ],
         if (provider != null) faviconRow,
         SizedBox(height: R.dimen.unit2),
         actionButtonRow,
