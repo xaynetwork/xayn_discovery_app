@@ -103,3 +103,6 @@ flutter:
     - packages/xayn_design/assets/icons/thumbs_down_active.svg
     - packages/xayn_design/assets/icons/thumbs_up.svg
     - packages/xayn_design/assets/icons/thumbs_up_active.svg
+    - packages/xayn_design/assets/icons/moon_and_sun.svg
+    - packages/xayn_design/assets/icons/moon.svg
+    - packages/xayn_design/assets/icons/sun.svg
