@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fwfh_chewie/fwfh_chewie.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
@@ -97,6 +99,7 @@ class _ReaderModeState extends State<ReaderMode> {
             ),
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
+            factoryBuilder: () => _ReaderModeWidgetFactory(),
           );
         });
   }
@@ -112,5 +115,25 @@ class _ReaderModeState extends State<ReaderMode> {
         processHtmlResult: processHtmlResult,
       );
     }
+  }
+}
+
+class _ReaderModeWidgetFactory extends readability.WidgetFactory
+    with ChewieFactory {
+  _ReaderModeWidgetFactory();
+
+  @override
+  Widget? buildImageWidget(
+      readability.BuildMetadata meta, readability.ImageSource src) {
+    // if w/h is zero, fall back to R.dimen.unit8, showing the image as a thumbnail then
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(R.dimen.unit),
+      child: CachedImage(
+        uri: Uri.parse(src.url),
+        width: (src.width ?? R.dimen.unit8).floor(),
+        height: (src.height ?? R.dimen.unit8).floor(),
+        fit: BoxFit.fitWidth,
+      ),
+    );
   }
 }
