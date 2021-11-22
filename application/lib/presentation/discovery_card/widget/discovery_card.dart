@@ -102,7 +102,7 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     required bool isPrimary,
     PaletteGenerator? palette,
   }) {
-    final DiscoveryCardActionsManager actionsManager = di.get();
+    final DiscoveryCardActionsManager _actionsManager = di.get();
 
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
 
@@ -112,8 +112,8 @@ class _DiscoveryCardState extends State<DiscoveryCard>
       provider: webResource.provider,
       datePublished: webResource.datePublished,
       onFooterPressed: () => debugPrint('Open article'),
-      onLikePressed: () => actionsManager.likeDocument(widget.document),
-      onDislikePressed: () => actionsManager.dislikeDocument(widget.document),
+      onLikePressed: () => _actionsManager.likeDocument(widget.document),
+      onDislikePressed: () => _actionsManager.dislikeDocument(widget.document),
     );
 
     final cardWithFooter = Column(

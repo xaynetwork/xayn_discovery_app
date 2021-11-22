@@ -14,6 +14,7 @@ import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:share/share.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
@@ -148,4 +149,6 @@ class DiscoveryCardActionsManager {
       ),
     );
   }
+
+  void shareUri(Uri uri) => Share.share(uri.toString());
 }
