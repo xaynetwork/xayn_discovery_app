@@ -61,10 +61,12 @@ class ImageManager extends Cubit<ImageManagerState>
         }
 
         if (imageData != null) {
-          if (imageData.bytes != null) {
+          final bytes = imageData.bytes;
+
+          if (bytes != null) {
             return ImageManagerState.completed(
               uri: imageData.originalUri,
-              bytes: imageData.bytes!,
+              bytes: bytes,
             );
           }
 

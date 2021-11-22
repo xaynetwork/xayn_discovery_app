@@ -7,32 +7,23 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 @injectable
-class PostProcessUseCase extends UseCase<CardData, Uri> {
+class PostProcessUseCase extends UseCase<ProcessHtmlResult, Uri> {
   @override
-  Stream<Uri> transaction(CardData param) async* {
-    final html = await compute(_processHtml, param);
-    const encoder = Utf8Encoder();
+  Stream<Uri> transaction(ProcessHtmlResult param) async* {
+    final contents = param.contents;
 
-    yield Uri.dataFromBytes(encoder.convert(html));
+    if (contents != null) {
+      yield Uri.dataFromBytes(
+        const Utf8Encoder().convert(
+          await compute(_processHtml, contents),
+        ),
+      );
+    }
   }
 }
 
-String _processHtml(final CardData cardData) {
-  final document = dom.Document.html(cardData.processHtmlResult.contents!);
+String _processHtml(final String html) {
+  final document = dom.Document.html(html);
 
   return document.outerHtml;
-}
-
-class CardData {
-  final String title;
-  final String snippet;
-  final Uri imageUri;
-  final ProcessHtmlResult processHtmlResult;
-
-  const CardData({
-    required this.title,
-    required this.snippet,
-    required this.imageUri,
-    required this.processHtmlResult,
-  });
 }
