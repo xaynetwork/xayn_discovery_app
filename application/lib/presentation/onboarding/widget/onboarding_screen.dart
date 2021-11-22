@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
+import 'package:xayn_discovery_app/presentation/util/keys.dart';
 
 import '../model/onboarding_page_data.dart';
 import 'onboarding_page_builder.dart';
@@ -12,6 +13,11 @@ import 'onboarding_page_builder.dart';
 const kPageSwitchAnimationDuration = Duration(milliseconds: 400);
 const kPageSwitchAnimationCurve = Curves.ease;
 const kDotsIndicatorPositionFromBottom = 40.0;
+const kOnBoardingPagesKeys = [
+  Keys.onBoardingPageOne,
+  Keys.onBoardingPageTwo,
+  Keys.onBoardingPageThree,
+];
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -66,6 +72,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     final pageView = PageView.builder(
       controller: _pageController,
       itemBuilder: (_, index) => OnBoardingPageBuilder(
+        key: Key(kOnBoardingPagesKeys[index]),
         onBoardingPageData: _onBoardingPagesData[index],
       ),
       itemCount: _onBoardingPagesData.length,
@@ -82,25 +89,28 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ),
     );
 
+    final stack = Stack(
+      children: [
+        GestureDetector(
+          key: const Key(Keys.onBoardingPageTapDetector),
+          onTap: () => _onPageTap(
+            pageController: _pageController,
+          ),
+          child: pageView,
+        ),
+        Positioned(
+          right: .0,
+          left: .0,
+          bottom: kDotsIndicatorPositionFromBottom,
+          child: dotsIndicator,
+        ),
+      ],
+    );
+
     return Scaffold(
       backgroundColor: R.colors.onboardingTutorialBackground,
       body: SafeArea(
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: () => _onPageTap(
-                pageController: _pageController,
-              ),
-              child: pageView,
-            ),
-            Positioned(
-              right: .0,
-              left: .0,
-              bottom: kDotsIndicatorPositionFromBottom,
-              child: dotsIndicator,
-            ),
-          ],
-        ),
+        child: stack,
       ),
     );
   }
