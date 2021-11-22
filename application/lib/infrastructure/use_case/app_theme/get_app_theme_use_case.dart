@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+
+@injectable
+class FakeAppThemeStorage extends ValueNotifier<AppTheme> {
+  static FakeAppThemeStorage? _instance;
+
+  FakeAppThemeStorage._() : super(AppTheme.system);
+
+  factory FakeAppThemeStorage() {
+    _instance ??= FakeAppThemeStorage._();
+    return _instance!;
+  }
+}
+
+@injectable
+class GetAppThemeUseCase extends UseCase<void, AppTheme> {
+  final FakeAppThemeStorage _storage;
+
+  GetAppThemeUseCase(this._storage);
+
+  @override
+  Stream<AppTheme> transaction(void param) async* {
+    await Future.delayed(const Duration(milliseconds: 42));
+    yield _storage.value;
+  }
+}
