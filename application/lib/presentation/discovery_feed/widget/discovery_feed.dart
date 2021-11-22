@@ -95,8 +95,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   ) =>
       (BuildContext context, int index) {
         final document = results[index];
+
         return _ResultCard(
-          key: isPrimary ? Key(document.webResource.url.toString()) : null,
+          key: Key('card_$index'),
           document: document,
           isPrimary: isPrimary,
         );
@@ -126,7 +127,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
       );
 }
 
-class _ResultCard extends StatelessWidget {
+class _ResultCard extends StatefulWidget {
   final bool isPrimary;
   final Document document;
 
@@ -137,12 +138,20 @@ class _ResultCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => _ResultCardState();
+}
+
+class _ResultCardState extends State<_ResultCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final card = DiscoveryCard(
-      isPrimary: isPrimary,
-      webResource: document.webResource,
+      isPrimary: widget.isPrimary,
+      webResource: widget.document.webResource,
     );
-    final child = isPrimary ? _buildSwipeWidget(child: card) : card;
+    final child = widget.isPrimary ? _buildSwipeWidget(child: card) : card;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -181,4 +190,7 @@ class _ResultCard extends StatelessWidget {
                 ),
         ),
       );
+
+  @override
+  bool get wantKeepAlive => true;
 }

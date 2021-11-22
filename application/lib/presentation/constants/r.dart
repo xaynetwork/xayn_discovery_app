@@ -18,6 +18,8 @@ class R {
 
   static XColors get colors => _linden.colors;
 
+  static XAnimations get animations => _linden.animations;
+
   static bool get isDarkMode => _linden.brightness == Brightness.dark;
 
   static Brightness get invertedBrightness =>

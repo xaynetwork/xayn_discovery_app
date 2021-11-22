@@ -92,11 +92,7 @@ class _ReaderModeState extends State<ReaderMode> {
           return readability.ReaderMode(
             controller: _readerModeController,
             // todo: move into xayn_design
-            textStyle: R.styles.appBodyTextBright?.copyWith(
-              fontSize: 14.0,
-              height: 1.75,
-              letterSpacing: 1.1,
-            ),
+            textStyle: R.styles.readerModeTextStyle,
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
             factoryBuilder: () => _ReaderModeWidgetFactory(),

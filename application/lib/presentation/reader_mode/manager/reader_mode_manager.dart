@@ -10,7 +10,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
     with UseCaseBlocHelper<ReaderModeState> {
   final PostProcessUseCase _postProcessUseCase;
 
-  late final UseCaseSink<CardData, Uri> _postProcessHandler;
+  late final UseCaseSink<ProcessHtmlResult, Uri> _postProcessHandler;
 
   ReaderModeManager(this._postProcessUseCase) : super(ReaderModeState.empty()) {
     _initHandlers();
@@ -22,12 +22,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
     required Uri imageUri,
     required ProcessHtmlResult processHtmlResult,
   }) =>
-      _postProcessHandler(CardData(
-        title: title.trim(),
-        snippet: snippet.trim(),
-        imageUri: imageUri,
-        processHtmlResult: processHtmlResult,
-      ));
+      _postProcessHandler(processHtmlResult);
 
   @override
   Future<ReaderModeState?> computeState() async =>
