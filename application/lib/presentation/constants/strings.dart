@@ -1,10 +1,32 @@
-//TODO: to be refactored when translations manager is added
-
 class Strings {
-  static const minAgo = 'min ago';
-  static const momentsAgo = 'moments ago';
-  static const hourAgo = 'hour ago';
-  static const hoursAgo = 'hours ago';
-  static const dayAgo = 'day ago';
-  static const daysAgo = 'days ago';
+  const Strings._();
+
+  static const String your = 'Your';
+
+  static const String settingsTitle = 'Settings';
+  static const String settingsSectionTitleAppTheme = 'Your App Theme';
+  static const String settingsSectionTitleGeneralInfo = 'General information';
+  static const String settingsSectionTitleHelpImprove = 'Help Us Improve!';
+  static const String settingsSectionTitleSpreadTheWord = 'Spread the Word';
+
+  static const String settingsAppThemeSystem = 'System default';
+  static const String settingsAppThemeLight = 'Light mode';
+  static const String settingsAppThemeDark = 'Dark mode';
+
+  static const String settingsAboutXayn = 'About Xayn';
+  static const String settingsCarbonNeutral = 'We\'re carbon neutral!';
+  static const String settingsImprint = 'Imprint';
+  static const String settingsPrivacyPolicy = 'Privacy Policy';
+  static const String settingsTermsAndConditions = 'Terms & Conditions';
+  static const String settingsHaveFoundBug = 'Have you found a bug?';
+  static const String settingsShareBtn = 'Share with friends';
+  static const String settingsVersion = 'Version:';
+  static const String settingsBuild = 'Build:';
+
+  static const String minAgo = 'min ago';
+  static const String momentsAgo = 'moments ago';
+  static const String hourAgo = 'hour ago';
+  static const String hoursAgo = 'hours ago';
+  static const String dayAgo = 'day ago';
+  static const String daysAgo = 'days ago';
 }
