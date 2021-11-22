@@ -5,6 +5,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 
+const Duration kStalePeriod = Duration(days: 1);
+const int kMaxNrOfCacheObjects = 200;
+
 @injectable
 class CacheManagerUseCase extends UseCase<Uri, CacheManagerEvent> {
   final ImageCacheManager _cacheManager;
@@ -61,7 +64,7 @@ class AppImageCacheManager extends CacheManager with ImageCacheManager {
   AppImageCacheManager._()
       : super(Config(
           key,
-          stalePeriod: const Duration(days: 1),
-          maxNrOfCacheObjects: 200,
+          stalePeriod: kStalePeriod,
+          maxNrOfCacheObjects: kMaxNrOfCacheObjects,
         ));
 }
