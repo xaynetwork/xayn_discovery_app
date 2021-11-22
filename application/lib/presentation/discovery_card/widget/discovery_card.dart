@@ -14,17 +14,16 @@ import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
 
-const Duration kAnimationDuration = Duration(milliseconds: 600);
-const Curve kAnimationCurve = Curves.easeOut;
-
 /// A widget which displays a discovery card.
 class DiscoveryCard extends StatefulWidget {
   final bool isPrimary;
+  final Duration? transitionDuration;
 
   const DiscoveryCard({
     Key? key,
     required this.isPrimary,
     required this.webResource,
+    this.transitionDuration,
   }) : super(key: key);
 
   final WebResource webResource;
@@ -33,9 +32,9 @@ class DiscoveryCard extends StatefulWidget {
   State<StatefulWidget> createState() => _DiscoveryCardState();
 }
 
-class _DiscoveryCardState extends State<DiscoveryCard>
-    with AutomaticKeepAliveClientMixin {
+class _DiscoveryCardState extends State<DiscoveryCard> {
   late final DiscoveryCardManager _discoveryCardManager;
+  late final Duration _transitionDuration;
 
   Uri get url => widget.webResource.url;
   String get imageUrl => widget.webResource.displayUrl.toString();
@@ -49,6 +48,8 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     super.initState();
 
     _discoveryCardManager = di.get();
+    _transitionDuration =
+        widget.transitionDuration ?? R.animations.cardTransitionDuration;
   }
 
   @override
@@ -86,7 +87,6 @@ class _DiscoveryCardState extends State<DiscoveryCard>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
@@ -112,12 +112,16 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     PaletteGenerator? palette,
   }) {
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
+    final fullSize = constraints.maxHeight;
+    final imageAsHeaderSize = fullSize / 4;
+    final expandedReaderModeSize = 3 * imageAsHeaderSize;
 
     final cardBackground = _CardBackground(
       imageUrl: imageUrl,
       constraints: constraints,
       dominantColor: palette?.dominantColor?.color,
       isDocked: _shouldShowReaderMode,
+      transitionDuration: _transitionDuration,
     );
     final readerMode = Visibility(
       visible: _shouldShowReaderMode,
@@ -129,7 +133,7 @@ class _DiscoveryCardState extends State<DiscoveryCard>
         ),
         child: AnimatedOpacity(
           opacity: _shouldShowReaderMode ? 1.0 : .0,
-          duration: kAnimationDuration * 2,
+          duration: _transitionDuration * 2,
           child: ReaderMode(
             title: title,
             snippet: snippet,
@@ -145,7 +149,8 @@ class _DiscoveryCardState extends State<DiscoveryCard>
       provider: widget.webResource.provider,
       datePublished: widget.webResource.datePublished,
       onFooterPressed: () => setState(
-          () => setState(() => _shouldShowReaderMode = !_shouldShowReaderMode)),
+        () => setState(() => _shouldShowReaderMode = !_shouldShowReaderMode),
+      ),
     );
     final bodyAndFooter = Column(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -161,20 +166,17 @@ class _DiscoveryCardState extends State<DiscoveryCard>
       ],
     );
     final primaryChildren = [
-      AnimatedContainer(
-        height: _shouldShowReaderMode ? constraints.maxHeight : .0,
-        duration: kAnimationDuration,
-        curve: kAnimationCurve,
-        child: ColoredBox(color: R.colors.swipeCardBackground),
-      ),
       Positioned.fill(
-        top: constraints.maxHeight / 4,
+        top: imageAsHeaderSize,
         child: _buildAnimatedGrowing(
-          maxHeight: 3 * constraints.maxHeight / 4,
-          height: _shouldShowReaderMode ? 3 * constraints.maxHeight / 4 : .0,
+          maxHeight: expandedReaderModeSize,
+          height: _shouldShowReaderMode ? expandedReaderModeSize : .0,
           opacity: _shouldShowReaderMode ? 1.0 : .0,
           alignment: Alignment.bottomCenter,
-          child: readerMode,
+          child: ColoredBox(
+            color: R.colors.cardBackground,
+            child: readerMode,
+          ),
         ),
       ),
       InkWell(
@@ -183,8 +185,8 @@ class _DiscoveryCardState extends State<DiscoveryCard>
         child: cardBackground,
       ),
       _buildAnimatedGrowing(
-        maxHeight: constraints.maxHeight,
-        height: _shouldShowReaderMode ? .0 : constraints.maxHeight,
+        maxHeight: fullSize,
+        height: _shouldShowReaderMode ? .0 : fullSize,
         opacity: _shouldShowReaderMode ? .0 : 1.0,
         alignment: Alignment.topCenter,
         child: bodyAndFooter,
@@ -215,22 +217,17 @@ class _DiscoveryCardState extends State<DiscoveryCard>
         height: height,
         clipBehavior: Clip.antiAlias,
         decoration: const BoxDecoration(),
-        duration: kAnimationDuration,
-        curve: kAnimationCurve,
+        duration: _transitionDuration,
         child: OverflowBox(
           maxHeight: maxHeight,
           alignment: alignment,
           child: AnimatedOpacity(
             opacity: opacity,
-            duration: kAnimationDuration,
-            curve: kAnimationCurve,
+            duration: _transitionDuration,
             child: child,
           ),
         ),
       );
-
-  @override
-  bool get wantKeepAlive => widget.isPrimary;
 }
 
 class _CardBackground extends StatelessWidget {
@@ -239,12 +236,14 @@ class _CardBackground extends StatelessWidget {
     required this.imageUrl,
     required this.constraints,
     required this.isDocked,
+    required this.transitionDuration,
     this.dominantColor,
   }) : super(key: key);
   final String imageUrl;
   final BoxConstraints constraints;
   final Color? dominantColor;
   final bool isDocked;
+  final Duration transitionDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -265,25 +264,27 @@ class _CardBackground extends StatelessWidget {
           );
 
     final shadedBackgroundImage = AnimatedContainer(
-      duration: kAnimationDuration,
+      duration: transitionDuration,
       width: constraints.maxWidth,
       height:
           isDocked ? constraints.maxHeight / 4 : 2 * constraints.maxHeight / 3,
       decoration: const BoxDecoration(),
       clipBehavior: Clip.antiAlias,
-      foregroundDecoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            R.colors.swipeCardBackground,
-            R.colors.swipeCardBackground.withAlpha(40),
-            R.colors.swipeCardBackground.withAlpha(120),
-            R.colors.swipeCardBackground,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: const [0, 0.15, 0.8, 1],
-        ),
-      ),
+      foregroundDecoration: isDocked
+          ? const BoxDecoration()
+          : BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  R.colors.swipeCardBackground,
+                  R.colors.swipeCardBackground.withAlpha(40),
+                  R.colors.swipeCardBackground.withAlpha(120),
+                  R.colors.swipeCardBackground,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0, 0.15, 0.8, 1],
+              ),
+            ),
       child: backgroundImage,
     );
 
