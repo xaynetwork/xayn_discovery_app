@@ -196,14 +196,12 @@ class _DiscoveryCardState extends State<DiscoveryCard>
       bodyAndFooter,
     ];
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return ColoredBox(
-        color: R.colors.swipeCardBackground,
-        child: Stack(
-          children: isPrimary ? primaryChildren : secondaryChildren,
-        ),
-      );
-    });
+    return ColoredBox(
+      color: R.colors.swipeCardBackground,
+      child: Stack(
+        children: isPrimary ? primaryChildren : secondaryChildren,
+      ),
+    );
   }
 
   Widget _buildAnimatedGrowing({

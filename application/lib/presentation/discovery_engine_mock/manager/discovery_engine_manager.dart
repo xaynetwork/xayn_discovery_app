@@ -89,12 +89,7 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
         }
 
         if (a != null) {
-          if (a.results.isNotEmpty) {
-            return DiscoveryEngineState(results: a.results, isComplete: true);
-          } else {
-            // no results, just go get some then without a query
-            _handleQuery('');
-          }
+          return DiscoveryEngineState(results: a.results, isComplete: true);
         }
       });
 
