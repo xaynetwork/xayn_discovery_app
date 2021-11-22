@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -26,21 +27,31 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed> {
-  late final ScrollController _scrollController;
+  late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
+
+  int _totalResults = 0;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
+    _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.atEdge && _scrollController.offset != .0) {
+    _cardViewController.addListener(() {
+      if (_cardViewController.index == _totalResults - 1) {
         _discoveryFeedManager.handleLoadMore();
       }
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _cardViewController.dispose();
+    _discoveryFeedManager.close();
+
+    super.dispose();
   }
 
   @override
@@ -66,10 +77,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
     );
   }
 
-  Widget Function(BuildContext, int) _itemBuilder(List<Document> results) =>
+  Widget Function(BuildContext, int) _itemBuilder(
+          List<Document> results, bool isPrimary) =>
       (BuildContext context, int index) {
         final document = results[index];
-        return _buildResultCard(document);
+        return _buildResultCard(document, isPrimary);
       };
 
   Widget _buildFeedView() =>
@@ -82,10 +94,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
             return const Center(child: CircularProgressIndicator());
           }
 
+          _totalResults = results.length;
+
           return FeedView(
-            scrollController: _scrollController,
-            itemBuilder: _itemBuilder(results),
-            itemCount: results.length,
+            cardViewController: _cardViewController,
+            itemBuilder: _itemBuilder(results, true),
+            secondaryItemBuilder: _itemBuilder(results, false),
+            itemCount: _totalResults,
           );
         },
       );
@@ -116,10 +131,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         ),
       );
 
-  Widget _buildResultCard(Document document) {
+  Widget _buildResultCard(Document document, bool isPrimary) {
     final card = DiscoveryCard(
+      key: Key(document.webResource.url.toString()),
+      isPrimary: isPrimary,
       webResource: document.webResource,
     );
+    final child = isPrimary ? _buildSwipeWidget(child: card) : card;
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: R.dimen.unit,
@@ -127,9 +146,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        child: _buildSwipeWidget(
-          child: card,
-        ),
+        child: child,
       ),
     );
   }

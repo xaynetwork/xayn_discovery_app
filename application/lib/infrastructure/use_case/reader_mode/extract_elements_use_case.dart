@@ -31,7 +31,7 @@ _ProcessHtmlResult _processHtml(final String html) {
   return _ProcessHtmlResult(
     paragraphs: list
         .where((it) => it.text.isNotEmpty)
-        .map((it) => it.outerHtml)
+        .map((it) => it.text)
         .toList(growable: false),
     images: document
         .querySelectorAll('img')
