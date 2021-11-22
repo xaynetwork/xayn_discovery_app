@@ -54,4 +54,5 @@ private_lane :ios_create_ipa do
             skip_profile_detection: true,
             output_directory: "../build/",
             output_name: "discovery-app.ipa")
+            delete_keychain(name: "fastlane_tmp_keychain-db")
 end
