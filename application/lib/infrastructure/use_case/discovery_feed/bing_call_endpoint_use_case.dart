@@ -62,6 +62,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
           datePublished: DateTime.parse(it['datePublished'] as String),
           provider: getProvider(it),
         ),
+        documentFeedback: DocumentFeedback.neutral,
         nonPersonalizedRank: 0,
         personalizedRank: 0,
       );

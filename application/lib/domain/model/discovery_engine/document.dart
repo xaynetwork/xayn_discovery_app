@@ -14,6 +14,7 @@ class Document with _$Document implements xayn.Document {
 
   const factory Document({
     required DocumentId documentId,
+    required DocumentFeedback documentFeedback,
     required WebResource webResource,
     required int nonPersonalizedRank,
     required int personalizedRank,
@@ -29,18 +30,22 @@ class Document with _$Document implements xayn.Document {
   }
 
   @override
-  // TODO: implement isNeutral
-  bool get isNeutral => throw UnimplementedError();
+  bool get isNeutral => documentFeedback == DocumentFeedback.neutral;
 
   @override
-  // TODO: implement isNotRelevant
-  bool get isNotRelevant => throw UnimplementedError();
+  bool get isNotRelevant => documentFeedback == DocumentFeedback.negative;
 
   @override
-  // TODO: implement isRelevant
-  bool get isRelevant => throw UnimplementedError();
+  bool get isRelevant => documentFeedback == DocumentFeedback.positive;
 
   @override
   // TODO: implement wasOpened
   bool get wasOpened => throw UnimplementedError();
+}
+
+/// Mock implementation which implements [xayn.DocumentFeedback].
+enum DocumentFeedback {
+  neutral,
+  positive,
+  negative,
 }

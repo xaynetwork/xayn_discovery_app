@@ -8,16 +8,11 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engin
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
-import 'package:xayn_swipe_it/xayn_swipe_it.dart';
-
-enum SwipeOption { like, dislike }
-
-const kSwipeOpenToPosition = 0.35;
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -91,7 +86,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           List<Document> results, bool isPrimary) =>
       (BuildContext context, int index) {
         final document = results[index];
-        return _buildResultCard(document, isPrimary);
+        return SwipeableDiscoveryCard(
+          document: document,
+          isPrimary: isPrimary,
+        );
       };
 
   Widget _buildFeedView() =>
@@ -114,50 +112,4 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           );
         },
       );
-
-  Widget _buildSwipeWidget({required Widget child}) => Swipe(
-        optionsLeft: const [SwipeOption.like],
-        optionsRight: const [SwipeOption.dislike],
-        onFling: (options) => options.first,
-        opensToPosition: kSwipeOpenToPosition,
-        child: child,
-        optionBuilder: (context, option, index, selected) =>
-            SwipeOptionContainer(
-          option: option,
-          color: option == SwipeOption.dislike
-              ? R.colors.swipeBackgroundDelete
-              : R.colors.swipeBackgroundRelevant,
-          child: option == SwipeOption.dislike
-              ? SvgPicture.asset(
-                  R.assets.icons.thumbsDown,
-                  fit: BoxFit.none,
-                  color: R.colors.brightIcon,
-                )
-              : SvgPicture.asset(
-                  R.assets.icons.thumbsUp,
-                  fit: BoxFit.none,
-                  color: R.colors.brightIcon,
-                ),
-        ),
-      );
-
-  Widget _buildResultCard(Document document, bool isPrimary) {
-    final card = DiscoveryCard(
-      key: Key(document.webResource.url.toString()),
-      isPrimary: isPrimary,
-      webResource: document.webResource,
-    );
-    final child = isPrimary ? _buildSwipeWidget(child: card) : card;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: R.dimen.unit,
-        vertical: R.dimen.unit0_5,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        child: child,
-      ),
-    );
-  }
 }

@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 
 import 'discovery_card_footer.dart';
@@ -14,14 +15,13 @@ import 'discovery_card_footer.dart';
 /// A widget which displays a discovery card.
 class DiscoveryCard extends AutomaticKeepAlive {
   final bool isPrimary;
+  final Document document;
 
   const DiscoveryCard({
     Key? key,
     required this.isPrimary,
-    required this.webResource,
+    required this.document,
   }) : super(key: key);
-
-  final WebResource webResource;
 
   @override
   State<AutomaticKeepAlive> createState() => _DiscoveryCardState();
@@ -31,9 +31,10 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     with AutomaticKeepAliveClientMixin {
   late final DiscoveryCardManager _discoveryCardManager;
 
-  Uri get url => widget.webResource.url;
-  String get imageUrl => widget.webResource.displayUrl.toString();
-  String get snippet => widget.webResource.snippet;
+  WebResource get webResource => widget.document.webResource;
+  Uri get url => webResource.url;
+  String get imageUrl => webResource.displayUrl.toString();
+  String get snippet => webResource.snippet;
 
   @override
   void initState() {
@@ -63,8 +64,8 @@ class _DiscoveryCardState extends State<DiscoveryCard>
   @override
   void didUpdateWidget(DiscoveryCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldUrl = oldWidget.webResource.url;
-    final oldImageUrl = oldWidget.webResource.displayUrl.toString();
+    final oldUrl = oldWidget.document.webResource.url;
+    final oldImageUrl = oldWidget.document.webResource.displayUrl.toString();
 
     if (widget.isPrimary && oldUrl != url) {
       _discoveryCardManager.updateUri(url);
@@ -101,16 +102,33 @@ class _DiscoveryCardState extends State<DiscoveryCard>
     required bool isPrimary,
     PaletteGenerator? palette,
   }) {
+    final DiscoveryCardActionsManager actionsManager = di.get();
+
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
 
     final footer = DiscoveryCardFooter(
-      title: widget.webResource.title,
-      url: widget.webResource.url,
-      provider: widget.webResource.provider,
-      datePublished: widget.webResource.datePublished,
+      title: webResource.title,
+      url: webResource.url,
+      provider: webResource.provider,
+      datePublished: webResource.datePublished,
       onFooterPressed: () => debugPrint('Open article'),
+      onLikePressed: () => actionsManager.likeDocument(widget.document),
+      onDislikePressed: () => actionsManager.dislikeDocument(widget.document),
     );
 
+    final cardWithFooter = Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: DiscoveryCardBody(
+            snippets: allSnippets,
+            palette: palette,
+          ),
+        ),
+        footer,
+      ],
+    );
     return Stack(
       children: [
         Positioned.fill(
@@ -121,19 +139,7 @@ class _DiscoveryCardState extends State<DiscoveryCard>
           constraints: constraints,
           dominantColor: palette?.dominantColor?.color,
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: DiscoveryCardBody(
-                snippets: allSnippets,
-                palette: palette,
-              ),
-            ),
-            footer,
-          ],
-        ),
+        cardWithFooter,
       ],
     );
   }
