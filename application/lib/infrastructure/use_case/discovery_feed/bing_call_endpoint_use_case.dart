@@ -39,8 +39,9 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
     const emptyNewsMap = <String, dynamic>{'value': []};
     final newsMap = data['news'] as Map<String, dynamic>?;
     final news = (newsMap ?? emptyNewsMap)['value'] as List;
+    final documents = <Document>[];
 
-    return news.cast<Map>().map((it) {
+    for (var it in news.cast<Map>()) {
       String? imageUrl;
 
       if (it.containsKey('image')) {
@@ -51,7 +52,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
         }
       }
 
-      return Document(
+      final document = Document(
         documentId: const DocumentId(key: ''),
         webResource: WebResource(
           displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
@@ -64,7 +65,11 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
         nonPersonalizedRank: 0,
         personalizedRank: 0,
       );
-    }).toList(growable: false);
+
+      documents.add(document);
+    }
+
+    return documents;
   }
 }
 
