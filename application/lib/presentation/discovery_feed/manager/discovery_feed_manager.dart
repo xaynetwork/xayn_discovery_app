@@ -61,14 +61,19 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         }
 
         if (engineState != null) {
-          return state.copyWith(
-            results: [
-              ...state.results ?? const <Document>[],
-              ...engineState.results
-            ],
-            isComplete: engineState.isComplete,
-            isInErrorState: false,
-          );
+          if (engineState.results.isNotEmpty) {
+            return state.copyWith(
+              results: [
+                ...state.results ?? const <Document>[],
+                ...engineState.results
+              ],
+              isComplete: engineState.isComplete,
+              isInErrorState: false,
+            );
+          }
+
+          // no new results, trigger again
+          handleLoadMore();
         }
       });
 }
