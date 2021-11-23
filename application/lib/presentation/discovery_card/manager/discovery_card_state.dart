@@ -12,6 +12,7 @@ class DiscoveryCardState with _$DiscoveryCardState {
 
   const factory DiscoveryCardState({
     @Default(false) bool isComplete,
+    @Default(false) bool isInReaderMode,
     ProcessHtmlResult? result,
     @Default([]) List<String> paragraphs,
     @Default([]) List<String> images,
