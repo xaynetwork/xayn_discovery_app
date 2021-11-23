@@ -33,6 +33,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   bool _isLoading = false;
 
+  late bool _isInReaderMode;
+
   DiscoveryCardManager(
     this._connectivityUseCase,
     this._loadHtmlUseCase,
@@ -49,7 +51,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   /// Update the uri which contains the news article's background image
   void updateImageUri(Uri uri) => _updateImageUri(uri);
 
+  void toggleReaderMode() {
+    scheduleComputeState(() => _isInReaderMode = !_isInReaderMode);
+  }
+
   Future<void> _init() async {
+    _isInReaderMode = state.isInReaderMode;
+
     /// html reader mode elements:
     ///
     /// - loads the source html
@@ -58,6 +66,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     /// - extracts lists of html elements from the html tree, to display in story mode
     _updateUri = pipe(_connectivityUseCase).transform(
       (out) => out
+          .distinct()
           .followedBy(_loadHtmlUseCase)
           .scheduleComputeState(
             consumeEvent: (it) => !it.isCompleted,
@@ -71,26 +80,28 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     /// background image color palette:
     /// - invokes the palette use case and grabs the color palette
     _updateImageUri = pipe(_connectivityUseCase)
-        .transform((out) => out.followedBy(_imagePaletteUseCase));
+        .transform((out) => out.distinct().followedBy(_imagePaletteUseCase));
   }
 
   @override
   Future<DiscoveryCardState?> computeState() async =>
-      fold2(_updateUri, _updateImageUri).foldAll((a, b, errorReport) {
+      fold2(_updateUri, _updateImageUri)
+          .foldAll((elements, paletteGenerator, errorReport) {
         if (errorReport.isNotEmpty) {
           return DiscoveryCardState.error();
         }
 
         var nextState = state.copyWith(
-          paletteGenerator: b,
+          paletteGenerator: paletteGenerator,
           isComplete: !_isLoading,
+          isInReaderMode: _isInReaderMode,
         );
 
-        if (a != null) {
+        if (elements != null) {
           nextState = nextState.copyWith(
-            result: a.processHtmlResult,
-            paragraphs: a.paragraphs,
-            images: a.images,
+            result: elements.processHtmlResult,
+            paragraphs: elements.paragraphs,
+            images: elements.images,
           );
         }
 

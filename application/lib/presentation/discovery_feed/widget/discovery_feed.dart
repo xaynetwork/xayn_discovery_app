@@ -8,11 +8,15 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engin
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
+
+enum SwipeOption { like, dislike }
+
+const kSwipeOpenToPosition = 0.35;
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -57,7 +61,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
       child: TempSearchButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ActiveSearch()),
+          MaterialPageRoute(
+            builder: (context) => const ActiveSearch(),
+          ),
         ),
       ),
     );
@@ -83,10 +89,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   }
 
   Widget Function(BuildContext, int) _itemBuilder(
-          List<Document> results, bool isPrimary) =>
+    List<Document> results,
+    bool isPrimary,
+  ) =>
       (BuildContext context, int index) {
         final document = results[index];
-        return SwipeableDiscoveryCard(
+
+        return _ResultCard(
           document: document,
           isPrimary: isPrimary,
         );
@@ -99,7 +108,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           final results = state.results;
 
           if (results == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           _totalResults = results.length;
@@ -112,4 +123,34 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           );
         },
       );
+}
+
+class _ResultCard extends StatelessWidget {
+  final bool isPrimary;
+  final Document document;
+
+  const _ResultCard({
+    Key? key,
+    required this.isPrimary,
+    required this.document,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final card = DiscoveryCard(
+      isPrimary: isPrimary,
+      webResource: document.webResource,
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: R.dimen.unit,
+        vertical: R.dimen.unit0_5,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
+        child: card,
+      ),
+    );
+  }
 }

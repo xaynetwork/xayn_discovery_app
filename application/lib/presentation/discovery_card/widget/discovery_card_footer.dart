@@ -7,24 +7,26 @@ import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/di
 import 'favicon_bar.dart';
 import 'package:xayn_design/xayn_design.dart';
 
+typedef ReaderModeBuilder = Widget Function();
+
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
     Key? key,
     required this.title,
     required this.url,
-    required this.provider,
     required this.datePublished,
-    required this.onFooterPressed,
-    required this.onLikePressed,
-    required this.onDislikePressed,
+    this.provider,
+    this.onFooterPressed,
+    this.onLikePressed,
+    this.onDislikePressed,
   }) : super(key: key);
   final String title;
   final Uri url;
   final WebResourceProvider? provider;
   final DateTime datePublished;
   final VoidCallback? onFooterPressed;
-  final VoidCallback onLikePressed;
-  final VoidCallback onDislikePressed;
+  final VoidCallback? onLikePressed;
+  final VoidCallback? onDislikePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +42,8 @@ class DiscoveryCardFooter extends StatelessWidget {
 
     final actionButtonRow = _ButtonRowFooter(
       onSharePressed: () => _actionsManager.shareUri(url),
-      onLikePressed: onLikePressed,
-      onDislikePressed: onDislikePressed,
+      onLikePressed: onLikePressed ?? (){},
+      onDislikePressed: onDislikePressed ?? (){},
     );
 
     final faviconRow = FaviconBar(
