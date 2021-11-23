@@ -31,16 +31,16 @@ class SwipeableDiscoveryCard extends StatelessWidget {
       document: document,
     );
 
-    return isPrimary ? _buildSwipeWidget(card) : card;
+    return _buildSwipeWidget(card);
   }
 
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
-        optionsLeft: const [SwipeOption.like],
-        optionsRight: const [SwipeOption.dislike],
-        onFling: (options) => options.first,
+        optionsLeft: isPrimary ? const [SwipeOption.like] : const [],
+        optionsRight: isPrimary ? const [SwipeOption.dislike] : const [],
+        onFling: isPrimary ? (options) => options.first : null,
         opensToPosition: kSwipeOpenToPosition,
         child: child,
-        onOptionTap: (option) => onOptionsTap(option),
+        onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
         optionBuilder: optionsBuilder,
       );
 
