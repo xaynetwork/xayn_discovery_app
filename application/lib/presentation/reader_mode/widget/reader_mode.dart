@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
@@ -84,7 +87,7 @@ class _ReaderModeState extends State<ReaderMode> {
           final uri = state.uri;
 
           if (uri == null) {
-            return Container();
+            return _createShimmer();
           }
 
           _readerModeController.loadUri(uri);
@@ -96,6 +99,7 @@ class _ReaderModeState extends State<ReaderMode> {
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
             factoryBuilder: () => _ReaderModeWidgetFactory(),
+            loadingBuilder: () => _createShimmer(),
           );
         });
   }
@@ -111,6 +115,50 @@ class _ReaderModeState extends State<ReaderMode> {
         processHtmlResult: processHtmlResult,
       );
     }
+  }
+
+  /// creates shimmer which resembles paragraphs
+  Widget _createShimmer() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final random = Random(0x80);
+
+        // random break every 1/4 times
+        isParagraphBreak() => random.nextDouble() > .75;
+        // [35%, 100%] of width
+        textLineWidth() =>
+            (.35 + random.nextDouble() * .65) * constraints.maxWidth;
+
+        buildTextLine() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: isParagraphBreak() ? R.dimen.unit3 : R.dimen.unit / 2,
+                  ),
+                  child: Container(
+                    width: textLineWidth(),
+                    height: R.dimen.unit,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            );
+
+        return Shimmer.fromColors(
+          baseColor: R.colors.primaryText.withAlpha(50),
+          highlightColor: R.colors.primaryText.withAlpha(20),
+          enabled: true,
+          child: ListView.builder(
+            itemBuilder: (_, __) => Padding(
+              padding: EdgeInsets.only(bottom: R.dimen.unit),
+              child: buildTextLine(),
+            ),
+            itemCount: 32,
+          ),
+        );
+      },
+    );
   }
 }
 
