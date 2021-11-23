@@ -17,16 +17,16 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.datePublished,
     this.provider,
     this.onFooterPressed,
-    this.onLikePressed,
-    this.onDislikePressed,
+    required this.onLikePressed,
+    required this.onDislikePressed,
   }) : super(key: key);
   final String title;
   final Uri url;
   final WebResourceProvider? provider;
   final DateTime datePublished;
   final VoidCallback? onFooterPressed;
-  final VoidCallback? onLikePressed;
-  final VoidCallback? onDislikePressed;
+  final VoidCallback onLikePressed;
+  final VoidCallback onDislikePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class DiscoveryCardFooter extends StatelessWidget {
 
     final actionButtonRow = _ButtonRowFooter(
       onSharePressed: () => _actionsManager.shareUri(url),
-      onLikePressed: onLikePressed ?? (){},
-      onDislikePressed: onDislikePressed ?? (){},
+      onLikePressed: onLikePressed,
+      onDislikePressed: onDislikePressed,
     );
 
     final faviconRow = FaviconBar(
