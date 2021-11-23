@@ -41,8 +41,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   String get snippet => widget.webResource.snippet;
   String get title => widget.webResource.title;
 
-  bool _shouldShowReaderMode = false;
-
   @override
   void initState() {
     super.initState();
@@ -60,39 +58,20 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
+  Widget build(BuildContext context) {
     if (widget.isPrimary) {
       _discoveryCardManager.updateUri(url);
     }
 
     _discoveryCardManager.updateImageUri(Uri.parse(imageUrl));
-  }
 
-  @override
-  void didUpdateWidget(DiscoveryCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final oldUrl = oldWidget.webResource.url;
-    final oldImageUrl = oldWidget.webResource.displayUrl.toString();
-
-    if (widget.isPrimary && oldUrl != url) {
-      _discoveryCardManager.updateUri(url);
-    }
-
-    if (oldImageUrl != imageUrl) {
-      _discoveryCardManager.updateImageUri(Uri.parse(imageUrl));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
           return LayoutBuilder(
             builder: (context, constraints) => _buildCardDisplayStack(
               isPrimary: widget.isPrimary,
+              isInReaderMode: state.isInReaderMode,
               imageUrl: imageUrl,
               snippets: state.paragraphs,
               palette: state.paletteGenerator,
@@ -108,6 +87,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     required List<String> snippets,
     required BoxConstraints constraints,
     required bool isPrimary,
+    required bool isInReaderMode,
     ProcessHtmlResult? processHtmlResult,
     PaletteGenerator? palette,
   }) {
@@ -120,11 +100,11 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       imageUrl: imageUrl,
       constraints: constraints,
       dominantColor: palette?.dominantColor?.color,
-      isDocked: _shouldShowReaderMode,
+      isDocked: isInReaderMode,
       transitionDuration: _transitionDuration,
     );
     final readerMode = Visibility(
-      visible: _shouldShowReaderMode,
+      visible: isInReaderMode,
       maintainState: true,
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -132,7 +112,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
           vertical: R.dimen.unit2,
         ),
         child: AnimatedOpacity(
-          opacity: _shouldShowReaderMode ? 1.0 : .0,
+          opacity: isInReaderMode ? 1.0 : .0,
           duration: _transitionDuration * 2,
           child: ReaderMode(
             title: title,
@@ -148,9 +128,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       url: widget.webResource.url,
       provider: widget.webResource.provider,
       datePublished: widget.webResource.datePublished,
-      onFooterPressed: () => setState(
-        () => setState(() => _shouldShowReaderMode = !_shouldShowReaderMode),
-      ),
+      onFooterPressed: _discoveryCardManager.toggleReaderMode,
     );
     final bodyAndFooter = Column(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -165,13 +143,13 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         footer,
       ],
     );
-    final primaryChildren = [
+    final children = [
       Positioned.fill(
         top: imageAsHeaderSize,
         child: _buildAnimatedGrowing(
           maxHeight: expandedReaderModeSize,
-          height: _shouldShowReaderMode ? expandedReaderModeSize : .0,
-          opacity: _shouldShowReaderMode ? 1.0 : .0,
+          height: isInReaderMode ? expandedReaderModeSize : .0,
+          opacity: isInReaderMode ? 1.0 : .0,
           alignment: Alignment.bottomCenter,
           child: ColoredBox(
             color: R.colors.cardBackground,
@@ -180,28 +158,22 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         ),
       ),
       InkWell(
-        onTap: () =>
-            setState(() => _shouldShowReaderMode = !_shouldShowReaderMode),
+        onTap: _discoveryCardManager.toggleReaderMode,
         child: cardBackground,
       ),
       _buildAnimatedGrowing(
         maxHeight: fullSize,
-        height: _shouldShowReaderMode ? .0 : fullSize,
-        opacity: _shouldShowReaderMode ? .0 : 1.0,
+        height: isInReaderMode ? .0 : fullSize,
+        opacity: isInReaderMode ? .0 : 1.0,
         alignment: Alignment.topCenter,
         child: bodyAndFooter,
       ),
-    ];
-    final secondaryChildren = [
-      ColoredBox(color: R.colors.swipeCardBackground),
-      cardBackground,
-      bodyAndFooter,
     ];
 
     return ColoredBox(
       color: R.colors.swipeCardBackground,
       child: Stack(
-        children: isPrimary ? primaryChildren : secondaryChildren,
+        children: children,
       ),
     );
   }

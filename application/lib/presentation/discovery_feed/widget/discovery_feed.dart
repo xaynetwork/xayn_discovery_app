@@ -13,7 +13,6 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
-import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 
 enum SwipeOption { like, dislike }
 
@@ -97,7 +96,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         final document = results[index];
 
         return _ResultCard(
-          key: Key('card_$index'),
           document: document,
           isPrimary: isPrimary,
         );
@@ -127,7 +125,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
       );
 }
 
-class _ResultCard extends StatefulWidget {
+class _ResultCard extends StatelessWidget {
   final bool isPrimary;
   final Document document;
 
@@ -138,20 +136,11 @@ class _ResultCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ResultCardState();
-}
-
-class _ResultCardState extends State<_ResultCard>
-    with AutomaticKeepAliveClientMixin {
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     final card = DiscoveryCard(
-      isPrimary: widget.isPrimary,
-      webResource: widget.document.webResource,
+      isPrimary: isPrimary,
+      webResource: document.webResource,
     );
-    final child = widget.isPrimary ? _buildSwipeWidget(child: card) : card;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -160,37 +149,8 @@ class _ResultCardState extends State<_ResultCard>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        child: child,
+        child: card,
       ),
     );
   }
-
-  Widget _buildSwipeWidget({required Widget child}) => Swipe(
-        optionsLeft: const [SwipeOption.like],
-        optionsRight: const [SwipeOption.dislike],
-        onFling: (options) => options.first,
-        opensToPosition: kSwipeOpenToPosition,
-        child: child,
-        optionBuilder: (context, option, index, selected) =>
-            SwipeOptionContainer(
-          option: option,
-          color: option == SwipeOption.dislike
-              ? R.colors.swipeBackgroundDelete
-              : R.colors.swipeBackgroundRelevant,
-          child: option == SwipeOption.dislike
-              ? SvgPicture.asset(
-                  R.assets.icons.thumbsDown,
-                  fit: BoxFit.none,
-                  color: R.colors.brightIcon,
-                )
-              : SvgPicture.asset(
-                  R.assets.icons.thumbsUp,
-                  fit: BoxFit.none,
-                  color: R.colors.brightIcon,
-                ),
-        ),
-      );
-
-  @override
-  bool get wantKeepAlive => true;
 }
