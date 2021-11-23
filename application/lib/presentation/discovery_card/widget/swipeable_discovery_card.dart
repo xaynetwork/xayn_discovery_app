@@ -70,7 +70,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
       );
 }
 
-extension on SwipeOption {
+extension _SwipeOptionExtensions on SwipeOption {
   Color get color => this == SwipeOption.dislike
       ? R.colors.swipeBackgroundDelete
       : R.colors.swipeBackgroundRelevant;

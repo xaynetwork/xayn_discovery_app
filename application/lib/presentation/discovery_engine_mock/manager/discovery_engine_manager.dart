@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 // ignore: implementation_imports
@@ -14,7 +15,6 @@ import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:share/share.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
@@ -119,11 +119,13 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
 ///
 /// [DiscoveryCardActionsManager] is used to call public functions inside
 /// [DocumentFeedbackUseCase]
-@injectable
+@lazySingleton
 class DiscoveryCardActionsManager {
   final DocumentFeedbackUseCase _documentFeedbackUseCase;
+  final ShareUriUseCase _shareUriUseCase;
   DiscoveryCardActionsManager(
     this._documentFeedbackUseCase,
+    this._shareUriUseCase,
   );
 
   void likeDocument(Document document) {
@@ -150,5 +152,5 @@ class DiscoveryCardActionsManager {
     );
   }
 
-  void shareUri(Uri uri) => Share.share(uri.toString());
+  void shareUri(Uri uri) => _shareUriUseCase.call(uri);
 }

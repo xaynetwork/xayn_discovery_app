@@ -20,7 +20,7 @@ const Duration kDebounceDuration = Duration(milliseconds: 400);
 ///
 /// A [UseCase] which sends a like event of a [DocumentId] to the [DiscoveryEngineManager].
 
-@Injectable()
+@injectable
 class DocumentFeedbackUseCase
     extends UseCase<DocumentFeedbackChanged, EngineEvent> {
   final DiscoveryEngineManager _discoveryApi;

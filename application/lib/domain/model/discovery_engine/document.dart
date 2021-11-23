@@ -3,6 +3,8 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/document_id.dar
 import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 
+import 'document_feedback.dart';
+
 part 'document.freezed.dart';
 part 'document.g.dart';
 
@@ -41,11 +43,4 @@ class Document with _$Document implements xayn.Document {
   @override
   // TODO: implement wasOpened
   bool get wasOpened => throw UnimplementedError();
-}
-
-/// Mock implementation which should be replaced with [xayn.DocumentFeedback].
-enum DocumentFeedback {
-  neutral,
-  positive,
-  negative,
 }
