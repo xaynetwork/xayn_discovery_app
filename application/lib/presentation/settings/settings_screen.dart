@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
+import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -18,9 +23,26 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  late final SettingsScreenManager _manager;
+  late final Future<SettingsScreenManager> initManagerFuture;
+
   Linden get linden => UnterDenLinden.getLinden(context);
 
-  var appTheme = AppTheme.system;
+  @override
+  void initState() {
+    initManagerFuture = di.getAsync<SettingsScreenManager>();
+    initManagerFuture.then((manager) {
+      _manager = manager;
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // SettingsScreenManager is lazySingleton, so we should NOT `close` it
+    // _manager.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -29,16 +51,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
   Widget _buildBody() {
+    Widget buildBloc() =>
+        BlocBuilder<SettingsScreenManager, SettingsScreenState>(
+          bloc: _manager,
+          builder: _buildBlockState,
+        );
+    return FutureBuilder(
+      future: initManagerFuture,
+      builder: (_, snapshot) {
+        final child = snapshot.data == null ? const Center() : buildBloc();
+        return ScreenStateSwitcher(child: child);
+      },
+    );
+  }
+
+  Widget _buildBlockState(BuildContext context, SettingsScreenState state) {
+    final child = state.map(
+      initial: (_) => const Center(),
+      ready: _buildStateReady,
+    );
+    return ScreenStateSwitcher(child: child);
+  }
+
+  Widget _buildStateReady(SettingsScreenStateReady state) {
     Widget withPadding(Widget child) => Padding(
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
           child: child,
         );
     final children = [
-      _buildAppThemeSection(appTheme),
+      _buildAppThemeSection(state.theme),
       _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
-      _buildAppVersion(const AppVersion(version: '1.2.3', build: '321')),
+      _buildAppVersion(state.appVersion),
       _buildBottomSpace(),
     ];
 
@@ -51,28 +96,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
         theme: appTheme,
-        onSelected: (AppTheme newTheme) {
-          setState(() {
-            this.appTheme = newTheme;
-          });
-        },
+        onSelected: _manager.changeTheme,
       );
 
   Widget _buildGeneralSection() => SettingsGeneralInfoSection(
-        onAboutPressed: () {},
-        onCarbonNeutralPressed: () {},
-        onImprintPressed: () {},
-        onPrivacyPressed: () {},
-        onTermsPressed: () {},
+        onAboutPressed: () => _manager.openUrl('https://about.com'),
+        onCarbonNeutralPressed: () =>
+            _manager.openUrl('https://carbonNeutral.com'),
+        onImprintPressed: () => _manager.openUrl('https://imprint.com'),
+        onPrivacyPressed: () => _manager.openUrl('https://pp.com'),
+        onTermsPressed: () => _manager.openUrl('https://tc.com'),
       );
 
-  Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
-        onFindBugPressed: () {},
-      );
+  Widget _buildHelpImproveSection() =>
+      SettingsHelpImproveSection(onFindBugPressed: _manager.reportBug);
 
-  Widget _buildShareAppSection() => ShareAppSection(
-        onShareAppPressed: () {},
-      );
+  Widget _buildShareAppSection() =>
+      ShareAppSection(onShareAppPressed: _manager.shareApp);
 
   Widget _buildAppVersion(AppVersion appVersion) => Padding(
         padding: EdgeInsets.symmetric(vertical: R.dimen.unit4),
