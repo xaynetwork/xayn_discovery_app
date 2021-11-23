@@ -43,7 +43,7 @@ class Document with _$Document implements xayn.Document {
   bool get wasOpened => throw UnimplementedError();
 }
 
-/// Mock implementation which implements [xayn.DocumentFeedback].
+/// Mock implementation which should be replaced with [xayn.DocumentFeedback].
 enum DocumentFeedback {
   neutral,
   positive,

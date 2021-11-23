@@ -27,23 +27,11 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final card = DiscoveryCard(
-      key: Key(document.webResource.url.toString()),
       isPrimary: isPrimary,
       document: document,
     );
 
-    final child = isPrimary ? _buildSwipeWidget(card) : card;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: R.dimen.unit,
-        vertical: R.dimen.unit0_5,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        child: child,
-      ),
-    );
+    return isPrimary ? _buildSwipeWidget(card) : card;
   }
 
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
