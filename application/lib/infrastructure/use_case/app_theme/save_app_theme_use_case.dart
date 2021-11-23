@@ -13,5 +13,6 @@ class SaveAppThemeUseCase extends UseCase<AppTheme, void> {
   Stream<void> transaction(AppTheme param) async* {
     await Future.delayed(const Duration(milliseconds: 42));
     _storage.value = param;
+    yield null;
   }
 }
