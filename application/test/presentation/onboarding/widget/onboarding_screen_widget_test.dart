@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 import 'package:xayn_discovery_app/presentation/util/keys.dart';
 
-final kWidgetToPump = UnterDenLinden(
-  child: const MaterialApp(home: OnBoardingScreen()),
-  initialLinden: Linden(),
-);
+import '../../app_wrapper.dart';
+
 void main() {
-  setUpAll(() => configureDependencies());
+  setUpAll(() {
+    configureDependencies();
+  });
   testWidgets(
     'WHEN opening onboarding screen THEN show first page',
     (
       WidgetTester tester,
     ) async {
-      await tester.pumpWidget(
-        kWidgetToPump,
-      );
+      await tester.pumpAppWrapped(const OnBoardingScreen());
 
       final onBoardingPageOne = find.byKey(const Key(Keys.onBoardingPageOne));
 
@@ -29,9 +26,7 @@ void main() {
   testWidgets('WHEN tapping on first page THEN show the second one', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(
-      kWidgetToPump,
-    );
+    await tester.pumpAppWrapped(const OnBoardingScreen());
 
     final onBoardingPageTapDetector =
         find.byKey(const Key(Keys.onBoardingPageTapDetector));
@@ -50,9 +45,8 @@ void main() {
     final onBoardingPageTapDetector =
         find.byKey(const Key(Keys.onBoardingPageTapDetector));
 
-    await tester.pumpWidget(
-      kWidgetToPump,
-    );
+    await tester.pumpAppWrapped(const OnBoardingScreen());
+
     await tester.tap(onBoardingPageTapDetector);
     await tester.pumpAndSettle(kPageSwitchAnimationDuration);
     await tester.tap(onBoardingPageTapDetector);
