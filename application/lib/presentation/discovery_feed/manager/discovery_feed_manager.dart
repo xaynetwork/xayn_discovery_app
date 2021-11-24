@@ -72,8 +72,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
             );
           }
 
-          // no new results, trigger again
-          handleLoadMore();
+          if (engineState.isComplete && engineState.results.isEmpty) {
+            handleLoadMore();
+          }
         }
       });
 }
