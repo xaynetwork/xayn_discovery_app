@@ -33,12 +33,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
     _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
 
-    _cardViewController.addListener(() {
-      if (_cardViewController.index == _totalResults - 1) {
-        _discoveryFeedManager.handleLoadMore();
-      }
-    });
-
     super.initState();
   }
 
@@ -116,6 +110,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
             itemBuilder: _itemBuilder(results, true),
             secondaryItemBuilder: _itemBuilder(results, false),
             itemCount: _totalResults,
+            onFinalIndex: _discoveryFeedManager.handleLoadMore,
           );
         },
       );
