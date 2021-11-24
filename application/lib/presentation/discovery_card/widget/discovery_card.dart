@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
@@ -18,15 +19,14 @@ import 'discovery_card_footer.dart';
 class DiscoveryCard extends StatefulWidget {
   final bool isPrimary;
   final Duration? transitionDuration;
+  final Document document;
 
   const DiscoveryCard({
     Key? key,
     required this.isPrimary,
-    required this.webResource,
+    required this.document,
     this.transitionDuration,
   }) : super(key: key);
-
-  final WebResource webResource;
 
   @override
   State<StatefulWidget> createState() => _DiscoveryCardState();
@@ -36,10 +36,11 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   late final DiscoveryCardManager _discoveryCardManager;
   late final Duration _transitionDuration;
 
-  Uri get url => widget.webResource.url;
-  String get imageUrl => widget.webResource.displayUrl.toString();
-  String get snippet => widget.webResource.snippet;
-  String get title => widget.webResource.title;
+  WebResource get webResource => widget.document.webResource;
+  Uri get url => webResource.url;
+  String get imageUrl => webResource.displayUrl.toString();
+  String get snippet => webResource.snippet;
+  String get title => webResource.title;
 
   @override
   void initState() {
@@ -91,6 +92,8 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     ProcessHtmlResult? processHtmlResult,
     PaletteGenerator? palette,
   }) {
+    final DiscoveryCardActionsManager _actionsManager = di.get();
+
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
     final fullSize = constraints.maxHeight;
     final imageAsHeaderSize = fullSize / 4;
@@ -124,11 +127,13 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ),
     );
     final footer = DiscoveryCardFooter(
-      title: widget.webResource.title,
-      url: widget.webResource.url,
-      provider: widget.webResource.provider,
-      datePublished: widget.webResource.datePublished,
+      title: webResource.title,
+      url: webResource.url,
+      provider: webResource.provider,
+      datePublished: webResource.datePublished,
       onFooterPressed: _discoveryCardManager.toggleReaderMode,
+      onLikePressed: () => _actionsManager.likeDocument(widget.document),
+      onDislikePressed: () => _actionsManager.dislikeDocument(widget.document),
     );
     final bodyAndFooter = Column(
       mainAxisAlignment: MainAxisAlignment.end,

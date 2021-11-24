@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 
 import 'favicon_bar.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -17,16 +17,20 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.datePublished,
     this.provider,
     this.onFooterPressed,
+    required this.onLikePressed,
+    required this.onDislikePressed,
   }) : super(key: key);
   final String title;
   final Uri url;
   final WebResourceProvider? provider;
   final DateTime datePublished;
   final VoidCallback? onFooterPressed;
+  final VoidCallback onLikePressed;
+  final VoidCallback onDislikePressed;
 
   @override
   Widget build(BuildContext context) {
-    final DiscoveryCardManager _discoveryCardManager = di.get();
+    final DiscoveryCardActionsManager _actionsManager = di.get();
 
     final titleWidget = Text(
       title,
@@ -37,9 +41,9 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final actionButtonRow = _ButtonRowFooter(
-      onSharePressed: () => _discoveryCardManager.shareUri(url),
-      onLikePressed: () => debugPrint('Like is pressed'),
-      onDislikePressed: () => debugPrint('Dislike is pressed'),
+      onSharePressed: () => _actionsManager.shareUri(url),
+      onLikePressed: onLikePressed,
+      onDislikePressed: onDislikePressed,
     );
 
     final faviconRow = FaviconBar(
@@ -77,38 +81,47 @@ class _ButtonRowFooter extends StatelessWidget {
     required this.onLikePressed,
     required this.onDislikePressed,
   }) : super(key: key);
+
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
 
   @override
-  Widget build(BuildContext context) => Wrap(
-        spacing: R.dimen.unit4,
-        children: [
-          IconButton(
-            onPressed: onLikePressed,
-            icon: SvgPicture.asset(
-              R.assets.icons.thumbsUp,
-              fit: BoxFit.none,
-              color: R.colors.brightIcon,
-            ),
-          ),
-          IconButton(
-            onPressed: onSharePressed,
-            icon: SvgPicture.asset(
-              R.assets.icons.share,
-              fit: BoxFit.none,
-              color: R.colors.brightIcon,
-            ),
-          ),
-          IconButton(
-            onPressed: onDislikePressed,
-            icon: SvgPicture.asset(
-              R.assets.icons.thumbsDown,
-              fit: BoxFit.none,
-              color: R.colors.brightIcon,
-            ),
-          ),
-        ],
-      );
+  Widget build(BuildContext context) {
+    final likeButton = IconButton(
+      onPressed: onLikePressed,
+      icon: SvgPicture.asset(
+        R.assets.icons.thumbsUp,
+        fit: BoxFit.none,
+        color: R.colors.brightIcon,
+      ),
+    );
+
+    final shareButton = IconButton(
+      onPressed: onSharePressed,
+      icon: SvgPicture.asset(
+        R.assets.icons.share,
+        fit: BoxFit.none,
+        color: R.colors.brightIcon,
+      ),
+    );
+
+    final dislikeButton = IconButton(
+      onPressed: onDislikePressed,
+      icon: SvgPicture.asset(
+        R.assets.icons.thumbsDown,
+        fit: BoxFit.none,
+        color: R.colors.brightIcon,
+      ),
+    );
+
+    return Wrap(
+      spacing: R.dimen.unit4,
+      children: [
+        likeButton,
+        shareButton,
+        dislikeButton,
+      ],
+    );
+  }
 }

@@ -94,7 +94,7 @@ class _ActiveSearchState extends State<ActiveSearch> {
         ),
         child: DiscoveryCard(
           isPrimary: isPrimary,
-          webResource: document.webResource,
+          document: document,
         ),
       );
 }

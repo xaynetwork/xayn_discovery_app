@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
-//TODO: Use POEditor strings
 String timeAgo(DateTime dateTime, DateFormat dateFormat) {
   final moment = DateTime.now();
   final elapsed = moment.difference(dateTime);
@@ -9,15 +9,14 @@ String timeAgo(DateTime dateTime, DateFormat dateFormat) {
   final daysAgo = elapsed.inDays;
 
   if (minutesAgo < 5) {
-    return 'moments ago';
+    return Strings.momentsAgo;
   } else if (minutesAgo < 60) {
-    final indicator = minutesAgo > 1 ? 'min ago' : 'min ago';
-    return '$minutesAgo $indicator';
+    return '$minutesAgo ${Strings.minAgo}';
   } else if (hoursAgo < 24) {
-    final indicator = hoursAgo > 1 ? 'hours ago' : 'hour ago';
+    final indicator = hoursAgo > 1 ? Strings.hoursAgo : Strings.hourAgo;
     return '$hoursAgo $indicator';
   } else if (daysAgo < 31) {
-    final indicator = daysAgo > 1 ? 'days ago' : 'day ago';
+    final indicator = daysAgo > 1 ? Strings.daysAgo : Strings.dayAgo;
     return '$daysAgo $indicator';
   }
 
