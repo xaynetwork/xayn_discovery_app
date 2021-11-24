@@ -34,7 +34,7 @@ dependencies:
   story:
     git:
       url: git@github.com:xaynetwork/story.git
-      ref: 8d747504b5f71f5b9269b6430be65ead43890700
+      ref: cd93531ce08e4afd4490d8bc5f436432a8c0bacd
   uuid: ^3.0.5
   xayn_architecture:
     git:

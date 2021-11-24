@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/document_feedback.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
@@ -62,6 +63,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
           datePublished: DateTime.parse(it['datePublished'] as String),
           provider: getProvider(it),
         ),
+        documentFeedback: DocumentFeedback.neutral,
         nonPersonalizedRank: 0,
         personalizedRank: 0,
       );

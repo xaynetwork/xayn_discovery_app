@@ -3,6 +3,8 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/document_id.dar
 import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 
+import 'document_feedback.dart';
+
 part 'document.freezed.dart';
 part 'document.g.dart';
 
@@ -14,6 +16,7 @@ class Document with _$Document implements xayn.Document {
 
   const factory Document({
     required DocumentId documentId,
+    required DocumentFeedback documentFeedback,
     required WebResource webResource,
     required int nonPersonalizedRank,
     required int personalizedRank,
@@ -29,16 +32,13 @@ class Document with _$Document implements xayn.Document {
   }
 
   @override
-  // TODO: implement isNeutral
-  bool get isNeutral => throw UnimplementedError();
+  bool get isNeutral => documentFeedback == DocumentFeedback.neutral;
 
   @override
-  // TODO: implement isNotRelevant
-  bool get isNotRelevant => throw UnimplementedError();
+  bool get isNotRelevant => documentFeedback == DocumentFeedback.negative;
 
   @override
-  // TODO: implement isRelevant
-  bool get isRelevant => throw UnimplementedError();
+  bool get isRelevant => documentFeedback == DocumentFeedback.positive;
 
   @override
   // TODO: implement wasOpened

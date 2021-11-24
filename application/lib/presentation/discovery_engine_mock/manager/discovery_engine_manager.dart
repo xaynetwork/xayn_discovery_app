@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 // ignore: implementation_imports
@@ -15,13 +18,14 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
-@singleton
+@lazySingleton
 class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
     with UseCaseBlocHelper<DiscoveryEngineState>
     implements xayn.DiscoveryEngine {
   final ConnectivityUriUseCase _connectivityUseCase;
   final CreateHttpRequestUseCase _createHttpRequestUseCase;
   final InvokeApiEndpointUseCase _invokeApiEndpointUseCase;
+
   final StreamController<ClientEvent> _onClientEvent =
       StreamController<ClientEvent>();
   late final StreamSubscription<ClientEvent> _clientEventSubscription;
@@ -94,10 +98,59 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
       });
 
   void _handleClientEvent(ClientEvent event) {
-    if (event is SearchRequested) _handleSearchEvent(event);
+    if (event is SearchRequested) {
+      _handleSearchEvent(event);
+    } else if (event is xayn.DocumentFeedbackChanged) {
+      _handleDocumentFeedbackChanged(event);
+    }
   }
 
-  void _handleSearchEvent(SearchRequested event) {
-    _handleQuery(event.term);
+  void _handleSearchEvent(SearchRequested event) => _handleQuery(event.term);
+
+  void _handleDocumentFeedbackChanged(xayn.DocumentFeedbackChanged event) {
+    // ignore: avoid_print
+    print('DocumentFeedbackChanged has been called: ${event.feedback}');
   }
+}
+
+/// Since [DocumentFeedbackUseCase] depends on [DiscoveryEngineManager]
+/// We can't use it inside [DiscoveryEngineManager] since it creates
+/// circular dependency issue
+///
+/// [DiscoveryCardActionsManager] is used to call public functions inside
+/// [DocumentFeedbackUseCase]
+@lazySingleton
+class DiscoveryCardActionsManager {
+  final DocumentFeedbackUseCase _documentFeedbackUseCase;
+  final ShareUriUseCase _shareUriUseCase;
+  DiscoveryCardActionsManager(
+    this._documentFeedbackUseCase,
+    this._shareUriUseCase,
+  );
+
+  void likeDocument(Document document) {
+    final feedback = document.isNotRelevant
+        ? xayn.DocumentFeedback.neutral
+        : xayn.DocumentFeedback.positive;
+    _documentFeedbackUseCase.call(
+      xayn.DocumentFeedbackChanged(
+        document.documentId,
+        feedback,
+      ),
+    );
+  }
+
+  void dislikeDocument(Document document) {
+    final feedback = document.isRelevant
+        ? xayn.DocumentFeedback.neutral
+        : xayn.DocumentFeedback.negative;
+    _documentFeedbackUseCase.call(
+      xayn.DocumentFeedbackChanged(
+        document.documentId,
+        feedback,
+      ),
+    );
+  }
+
+  void shareUri(Uri uri) => _shareUriUseCase.call(uri);
 }

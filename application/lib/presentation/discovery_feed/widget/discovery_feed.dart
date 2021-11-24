@@ -8,15 +8,11 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engin
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
-
-enum SwipeOption { like, dislike }
-
-const kSwipeOpenToPosition = 0.35;
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -137,9 +133,9 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = DiscoveryCard(
+    final card = SwipeableDiscoveryCard(
       isPrimary: isPrimary,
-      webResource: document.webResource,
+      document: document,
     );
 
     return Padding(
