@@ -65,17 +65,15 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   ) =>
       SwipeOptionContainer(
         option: option,
-        color: option.color,
-        child: option.asset,
+        color: getColor(option),
+        child: getAsset(option),
       );
-}
 
-extension _SwipeOptionExtensions on SwipeOption {
-  Color get color => this == SwipeOption.dislike
+  Color getColor(SwipeOption option) => option == SwipeOption.dislike
       ? R.colors.swipeBackgroundDelete
       : R.colors.swipeBackgroundRelevant;
 
-  Widget get asset => this == SwipeOption.dislike
+  Widget getAsset(SwipeOption option) => option == SwipeOption.dislike
       ? SvgPicture.asset(
           R.assets.icons.thumbsDown,
           fit: BoxFit.none,
