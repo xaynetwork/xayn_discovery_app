@@ -35,11 +35,11 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void _init() async {
     scheduleComputeState(() async {
       // read values
-      _appVersion = (await _getAppVersionUseCase.call(null)).singleValue;
-      _theme = (await _getAppThemeUseCase.call(null)).singleValue;
+      _appVersion = (await _getAppVersionUseCase.call(none)).singleValue;
+      _theme = (await _getAppThemeUseCase.call(none)).singleValue;
 
       // attach listeners
-      _appThemeHandler = consume(_listenAppThemeUseCase, initialData: null);
+      _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
 
       _initDone = true;
     });
