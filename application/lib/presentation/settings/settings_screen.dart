@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: YourToolbar(yourTitle: Strings.settingsTitle),
+        appBar: const YourToolbar(yourTitle: Strings.settingsTitle),
         body: _buildBody(),
       );
 

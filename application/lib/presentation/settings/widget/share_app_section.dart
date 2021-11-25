@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
@@ -21,6 +22,7 @@ class ShareAppSection extends StatelessWidget {
       );
 
   AppRaisedButton _buildShareBtn() => AppRaisedButton.textWithIcon(
+        key: Keys.settingsShareBtn,
         onPressed: onShareAppPressed,
         text: Strings.settingsShareBtn,
         svgIconPath: R.assets.icons.heart,
