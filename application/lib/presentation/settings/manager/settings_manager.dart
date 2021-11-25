@@ -33,16 +33,16 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   void _init() async {
-    // read values
-    _appVersion = (await _getAppVersionUseCase.call(null)).singleValue;
-    _theme = (await _getAppThemeUseCase.call(null)).singleValue;
+    scheduleComputeState(() async {
+      // read values
+      _appVersion = (await _getAppVersionUseCase.call(null)).singleValue;
+      _theme = (await _getAppThemeUseCase.call(null)).singleValue;
 
-    // attach listeners
-    _appThemeHandler = consume(_listenAppThemeUseCase, initialData: null);
+      // attach listeners
+      _appThemeHandler = consume(_listenAppThemeUseCase, initialData: null);
 
-    _initDone = true;
-
-    scheduleComputeState(() => null);
+      _initDone = true;
+    });
   }
 
   void changeTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
