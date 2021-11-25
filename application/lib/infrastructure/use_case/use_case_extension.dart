@@ -14,3 +14,9 @@ extension UseCaseResultExtension<T> on List<UseCaseResult<T>> {
     return value;
   }
 }
+
+class None {
+  const None._();
+}
+
+const none = None._();
