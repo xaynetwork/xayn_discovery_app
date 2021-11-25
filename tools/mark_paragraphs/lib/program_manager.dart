@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
@@ -76,9 +75,6 @@ class ProgramState {
 
 class RandomizerUseCase extends UseCase<List<String>, List<String>> {
   @override
-  Stream<List<String>> transaction(List<String> param) {
-    final random = Random();
-
-    return Stream.value(param.toList()..sort((a, b) => random.nextInt(3) - 1));
-  }
+  Stream<List<String>> transaction(List<String> param) =>
+      Stream.value(param.toList()..sort((a, b) => a.compareTo(b)));
 }
