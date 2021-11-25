@@ -28,10 +28,13 @@ _ProcessHtmlResult _processHtml(final String html) {
   final document = dom.Document.html(html);
   final list = document.querySelectorAll('p');
 
+  trimIt(String text) => text.trim().replaceAll(r'[\r\n]', '');
+
   return _ProcessHtmlResult(
     paragraphs: list
-        .where((it) => it.text.isNotEmpty)
         .map((it) => it.text)
+        .map(trimIt)
+        .where((it) => it.isNotEmpty)
         .toList(growable: false),
     images: document
         .querySelectorAll('img')

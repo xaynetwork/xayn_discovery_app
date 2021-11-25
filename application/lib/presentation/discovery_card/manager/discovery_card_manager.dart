@@ -7,6 +7,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/heuristic_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -27,6 +28,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final ReadabilityUseCase _readabilityUseCase;
   final ExtractElementsUseCase _extractElementsUseCase;
   final ImagePaletteUseCase _imagePaletteUseCase;
+  final HeuristicFilterUseCase _heuristicFilterUseCase;
 
   late final UseCaseSink<Uri, Elements> _updateUri;
   late final UseCaseSink<Uri, PaletteGenerator> _updateImageUri;
@@ -41,6 +43,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._readabilityUseCase,
     this._extractElementsUseCase,
     this._imagePaletteUseCase,
+    this._heuristicFilterUseCase,
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
@@ -74,7 +77,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           )
           .map(_createReadabilityConfig)
           .followedBy(_readabilityUseCase)
-          .followedBy(_extractElementsUseCase),
+          .followedBy(_extractElementsUseCase)
+          .followedBy(_heuristicFilterUseCase),
     );
 
     /// background image color palette:
