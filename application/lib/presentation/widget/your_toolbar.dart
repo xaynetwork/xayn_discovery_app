@@ -16,7 +16,7 @@ class YourToolbar extends StatelessWidget implements PreferredSizeWidget {
     final text = TextSpan(
       style: style,
       children: [
-        TextSpan(text: Strings.your),
+        const TextSpan(text: Strings.your),
         const TextSpan(text: ' '),
         TextSpan(
           text: yourTitle,
