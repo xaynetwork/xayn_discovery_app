@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
@@ -15,15 +15,29 @@ const Duration kScrollUpdateUseCaseDebounceTime = Duration(milliseconds: 600);
 /// request for usage with the Bing news api.
 @Injectable(as: CreateHttpRequestUseCase)
 class CreateBingRequestUseCase extends CreateHttpRequestUseCase {
-  CreateBingRequestUseCase();
+  final int resultCount;
+  final String locale;
+  final String filter;
+
+  CreateBingRequestUseCase(
+    this.resultCount,
+    this.locale,
+    this.filter,
+  );
+
+  @factoryMethod
+  CreateBingRequestUseCase.standard()
+      : resultCount = 5,
+        locale = 'en-US',
+        filter = 'News';
 
   @override
   Stream<Uri> transaction(String param) async* {
     yield Uri.https(Env.searchApiBaseUrl, '_d/search', {
       'q': param.trim(),
-      'count': '5',
-      'mkt': 'en-US',
-      'responseFilter': 'News',
+      'count': resultCount.toString(),
+      'mkt': locale,
+      'responseFilter': filter,
     });
   }
 
