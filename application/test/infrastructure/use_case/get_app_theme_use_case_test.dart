@@ -19,7 +19,7 @@ void main() {
   test(
     'WHEN call useCase as Future THEN verify correct return',
     () async {
-      final result = (await useCase.call(null)).singleValue;
+      final result = (await useCase.call(none)).singleValue;
 
       expect(result, AppTheme.system);
       verify(storage.value);

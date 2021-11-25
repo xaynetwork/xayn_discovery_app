@@ -21,7 +21,7 @@ void main() {
   test(
     'WHEN call useCase as Future THEN verify correct order',
     () async {
-      await useCase.call(null);
+      await useCase.call(none);
 
       verifyInOrder([
         info.version,
@@ -33,8 +33,8 @@ void main() {
   test(
     'WHEN call useCase as Future twice THEN verify return previously calculated value',
     () async {
-      final result0 = (await useCase.call(null)).singleValue;
-      final result1 = (await useCase.call(null)).singleValue;
+      final result0 = (await useCase.call(none)).singleValue;
+      final result1 = (await useCase.call(none)).singleValue;
 
       expect(result0, equals(result1));
 
