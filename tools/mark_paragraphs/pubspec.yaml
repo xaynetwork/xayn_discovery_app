@@ -1,0 +1,37 @@
+name: mark_paragraphs
+description: Xayn discovery app paragraph rating tool
+publish_to: 'none'
+version: 0.0.1
+
+environment:
+  sdk: '>=2.14.0 <3.0.0'
+  flutter: '>=2.5.0'
+
+# Please list dependencies alphabetically!
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^1.10.0
+  xayn_discovery_app:
+    path: ../../application
+
+# Please list dependencies alphabetically!
+dev_dependencies:
+  flutter_lints: ^1.0.4
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: packages/xayn_design/assets/fonts/NotoSans-Regular.ttf
+          weight: 400
+        - asset: packages/xayn_design/assets/fonts/NotoSans-Bold.ttf
+          weight: 700
+    - family: Roboto
+      fonts:
+        - asset: packages/xayn_design/assets/fonts/KFOmCnqEu92Fr1Me5WZLCzYlKw.ttf
+          weight: 400
+
+  uses-material-design: true
