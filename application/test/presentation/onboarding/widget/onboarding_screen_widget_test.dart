@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
-import 'package:xayn_discovery_app/presentation/util/keys.dart';
+import 'package:xayn_discovery_app/presentation/utils/keys.dart';
 
 import '../../app_wrapper.dart';
 

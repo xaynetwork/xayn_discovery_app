@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
-import 'package:xayn_discovery_app/presentation/util/keys.dart';
+import 'package:xayn_discovery_app/presentation/utils/keys.dart';
 
 import '../model/onboarding_page_data.dart';
 import 'onboarding_page_builder.dart';
