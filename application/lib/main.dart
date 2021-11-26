@@ -3,6 +3,10 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
+import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
 void main() {
   configureDependencies();
@@ -13,7 +17,11 @@ void main() {
     child: const App(),
   );
 
-  runApp(unterDenLinden);
+  final app = FeatureManager.shouldShowFeaturesScreen
+      ? SelectFeatureScreen(child: unterDenLinden)
+      : unterDenLinden;
+
+  runApp(app);
 }
 
 class App extends StatefulWidget {
@@ -27,7 +35,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Xayn test app',
+      title: 'Xayn Discovery App',
       theme: UnterDenLinden.getLinden(context).themeData,
       home: const MainScreen(),
     );
@@ -53,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (Feature.onBoarding.isEnabled) return const OnBoardingScreen();
     return const DiscoveryFeed();
   }
 }
