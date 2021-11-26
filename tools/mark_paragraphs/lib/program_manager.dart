@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_stream.dart';
-import 'package:xayn_architecture/concepts/use_case/handlers/fold.dart';
+import 'package:mark_paragraphs/auth_use_case.dart';
+import 'package:mark_paragraphs/submit_paragraph_use_case.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_call_endpoint_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_request_builder_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
@@ -15,47 +15,79 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readabili
 class ProgramManager extends Cubit<ProgramState>
     with UseCaseBlocHelper<ProgramState> {
   late final UseCaseValueStream<List<String>> _apiConsumer;
+  late final UseCaseSink<String, Map<String, String>> _paragraphHandler;
 
-  ProgramManager() : super(const ProgramState([])) {
+  ProgramManager() : super(const ProgramState({}, {})) {
     _init();
   }
 
   @override
-  Future<ProgramState?> computeState() async =>
-      fold(_apiConsumer).foldAll((paragraphs, errorReport) {
+  Future<ProgramState?> computeState() async => fold2(
+        _apiConsumer,
+        _paragraphHandler,
+      ).foldAll((
+        paragraphs,
+        badParagraph,
+        errorReport,
+      ) {
         if (errorReport.isNotEmpty) {
-          stdout.writeln(errorReport.of(_apiConsumer)!.error);
+          final reportA = errorReport.of(_apiConsumer);
+          final reportB = errorReport.of(_paragraphHandler);
+
+          if (reportA != null) {
+            stdout.writeln(reportA.error);
+          }
+
+          if (reportB != null) {
+            stdout.writeln(reportB.error);
+          }
         }
+
+        final nextParagraphs = state.paragraphs.toSet();
+        final nextBadParagraphs = state.badParagraphs.toSet();
 
         if (paragraphs != null) {
-          return ProgramState(state.pages.toList()..add(paragraphs));
+          nextParagraphs.addAll(paragraphs);
         }
+
+        if (badParagraph != null) {
+          nextBadParagraphs.add(badParagraph['text']!);
+        }
+
+        return ProgramState(nextParagraphs, nextBadParagraphs);
       });
 
-  void handleMarkIrrelevant(String paragraph) {}
+  void handleMarkIrrelevant(String paragraph) => _paragraphHandler(paragraph);
 
   void _init() {
+    final random = Random();
+    final index = random.nextInt(words.length);
+    final word = words[index];
+
     _apiConsumer = consume(
-            CreateBingRequestUseCase(
-              50,
-              'en-US',
-              'News',
-            ),
-            initialData: 'today')
-        .transform(
+      CreateBingRequestUseCase(
+        50,
+        'en-US',
+        'News',
+      ),
+      initialData: word,
+    ).transform(
       (out) => out
-          .followedByEvery(InvokeBingUseCase())
+          .followedBy(InvokeBingUseCase())
           .where((it) => it.results.isNotEmpty)
           .expand((it) => it.results)
           .map((it) => it.webResource.url)
-          .followedByEvery(LoadHtmlUseCase(client: Client()))
+          .followedBy(LoadHtmlUseCase(client: Client()))
           .where((it) => it.isCompleted)
           .map(_createReadabilityConfig)
-          .followedByEvery(ReadabilityUseCase())
-          .followedByEvery(ExtractElementsUseCase())
+          .followedBy(ReadabilityUseCase())
+          .followedBy(ExtractElementsUseCase())
           .map((it) => it.paragraphs)
-          .followedByEvery(RandomizerUseCase()),
+          .followedBy(RandomizerUseCase()),
     );
+
+    _paragraphHandler = pipe(AuthUseCase())
+        .transform((out) => out.followedBy(SubmitParagraphUseCase()));
   }
 
   ReadabilityConfig _createReadabilityConfig(Progress progress) =>
@@ -68,9 +100,13 @@ class ProgramManager extends Cubit<ProgramState>
 }
 
 class ProgramState {
-  final List<List<String>> pages;
+  final Set<String> paragraphs;
+  final Set<String> badParagraphs;
 
-  const ProgramState(this.pages);
+  const ProgramState(
+    this.paragraphs,
+    this.badParagraphs,
+  );
 }
 
 class RandomizerUseCase extends UseCase<List<String>, List<String>> {
@@ -78,3 +114,15 @@ class RandomizerUseCase extends UseCase<List<String>, List<String>> {
   Stream<List<String>> transaction(List<String> param) =>
       Stream.value(param.toList()..sort((a, b) => a.compareTo(b)));
 }
+
+const words = [
+  'today',
+  'politics',
+  'football',
+  'tennis',
+  'golf',
+  'europe',
+  'Germany',
+  'war',
+  'covid',
+];
