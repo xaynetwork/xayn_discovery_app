@@ -41,7 +41,11 @@ dependencies:
   xayn_architecture:
     git:
       url: git@github.com:xaynetwork/xayn_architecture.git
+<<<<<<< HEAD
       ref: f2a50a5665c9b5087709ee441c6c77aa2bfd1fb2
+=======
+      ref: a0d229ad76ad5cf51d08f3218486d3ce5b682009
+>>>>>>> save bad paragraphs via FireBase
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
