@@ -47,15 +47,15 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-  late final ProgramManager _manager;
+  ProgramManager? _manager;
   late String _currentParagraph;
   int _currentPage = 0;
 
   @override
-  void initState() {
-    _manager = ProgramManager();
+  void dispose() {
+    _manager?.close();
 
-    super.initState();
+    super.dispose();
   }
 
   @override
@@ -70,11 +70,14 @@ class _MainScreenState extends State<MainScreen> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
+            _manager ??= ProgramManager();
+
             return BlocBuilder<ProgramManager, ProgramState>(
               bloc: _manager,
               builder: (context, state) {
-                final dataset =
-                    state.pages.expand((it) => it).toList(growable: false);
+                isBadData(String text) => state.badParagraphs.contains(text);
+
+                final dataset = state.paragraphs;
                 final pages = dataset
                     .map(
                       (it) => Center(
@@ -83,13 +86,27 @@ class _MainScreenState extends State<MainScreen> {
                           child: SingleChildScrollView(
                             child: Text(
                               it,
-                              style: R.styles.appBodyText,
+                              style: isBadData(it)
+                                  ? R.styles.appBodyText?.copyWith(
+                                      color: R.colors.swipeBackgroundIrrelevant,
+                                      fontStyle: FontStyle.italic,
+                                      decoration: TextDecoration.lineThrough,
+                                    )
+                                  : R.styles.appBodyText,
                             ),
                           ),
                         ),
                       ),
                     )
                     .toList(growable: false);
+
+                if (dataset.isNotEmpty) {
+                  _currentParagraph = dataset.elementAt(_currentPage);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
 
                 return Scaffold(
                   appBar: AppBar(
@@ -101,7 +118,7 @@ class _MainScreenState extends State<MainScreen> {
                   body: PageView(
                     onPageChanged: (index) => setState(() {
                       _currentPage = index;
-                      _currentParagraph = dataset[index];
+                      _currentParagraph = dataset.elementAt(index);
                     }),
                     children: pages,
                   ),
@@ -110,7 +127,7 @@ class _MainScreenState extends State<MainScreen> {
                   /// Should be removed once we have a settings page
                   floatingActionButton: FloatingActionButton(
                     onPressed: () =>
-                        _manager.handleMarkIrrelevant(_currentParagraph),
+                        _manager!.handleMarkIrrelevant(_currentParagraph),
                     tooltip: 'Toggle Theme',
                     backgroundColor: R.colors.swipeBackgroundDelete,
                     child: const Icon(Icons.delete),
