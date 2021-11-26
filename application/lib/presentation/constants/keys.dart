@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 class Keys {
   Keys._();
 
+  static const Key onBoardingPageOne = Key('onBoardingPageOne');
+  static const Key onBoardingPageTwo = Key('onBoardingPageTwo');
+  static const Key onBoardingPageThree = Key('onBoardingPageThree');
+  static const Key onBoardingPageTapDetector = Key('onBoardingPageTapDetector');
+
   static const Key settingsThemeSystem = Key('settings_theme_item_system');
   static const Key settingsThemeLight = Key('settings_theme_item_light');
   static const Key settingsThemeDark = Key('settings_theme_item_dark');
