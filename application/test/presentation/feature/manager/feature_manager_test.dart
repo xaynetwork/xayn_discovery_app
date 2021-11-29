@@ -19,16 +19,17 @@ void main() {
     overrideFeatureUseCase = MockOverrideFeatureUseCase();
 
     when(overrideFeatureUseCase.transform(any)).thenAnswer(
-      (x) => const Stream<OverrideFeatureParam>.empty(),
+      (_) => const Stream.empty(),
     );
 
     initialState = FeatureManagerState.initial(kInitialFeatureMap);
     featureManager = FeatureManager(overrideFeatureUseCase);
   });
 
-  setUpUseCaseResponse(FeatureMap map) {
-    when(overrideFeatureUseCase.call(any))
-        .thenAnswer((_) async => [UseCaseResult.success(map)]);
+  setUpUseCaseResponse({required Feature feature, required bool isEnabled}) {
+    when(overrideFeatureUseCase.transform(any)).thenAnswer(
+      (it) => Stream.value(it.positionalArguments[0]),
+    );
   }
 
   blocTest<FeatureManager, FeatureManagerState>(
@@ -44,27 +45,31 @@ void main() {
 
   blocTest<FeatureManager, FeatureManagerState>(
     'Setting featureScreen feature to true',
-    setUp: () => setUpUseCaseResponse({Feature.featuresScreen: true}),
+    setUp: () =>
+        setUpUseCaseResponse(feature: Feature.featuresScreen, isEnabled: true),
     build: () => featureManager,
     act: (manager) => manager.overrideFeature(Feature.featuresScreen, true),
     verify: (manager) {
-      expect(manager.state.featureMap[Feature.featuresScreen], isTrue);
-      expect(manager.isEnabled(Feature.featuresScreen), isTrue);
       verify(overrideFeatureUseCase.transform(any));
       verifyNoMoreInteractions(overrideFeatureUseCase);
+      expect(manager.state.featureMap[Feature.featuresScreen], isTrue);
+      expect(manager.isEnabled(Feature.featuresScreen), isTrue);
     },
   );
 
-  // blocTest<FeatureManager, FeatureManagerState>(
-  //   'Setting featureScreen feature to false',
-  //   setUp: () => setUpUseCaseResponse({Feature.featuresScreen: false}),
-  //   build: () => featureManager,
-  //   act: (manager) => manager.overrideFeature(Feature.featuresScreen, false),
-  //   verify: (manager) {
-  //     expect(manager.state.featureMap[Feature.featuresScreen], isFalse);
-  //     expect(manager.isEnabled(Feature.featuresScreen), isFalse);
-  //     verify(overrideFeatureUseCase.transform(any));
-  //     verifyNoMoreInteractions(overrideFeatureUseCase);
-  //   },
-  // );
+  blocTest<FeatureManager, FeatureManagerState>(
+    'Setting featureScreen feature to false',
+    setUp: () => setUpUseCaseResponse(
+      feature: Feature.featuresScreen,
+      isEnabled: false,
+    ),
+    build: () => featureManager,
+    act: (manager) => manager.overrideFeature(Feature.featuresScreen, false),
+    verify: (manager) {
+      verify(overrideFeatureUseCase.transform(any));
+      verifyNoMoreInteractions(overrideFeatureUseCase);
+      // expect(manager.state.featureMap[Feature.featuresScreen], isFalse);
+      // expect(manager.isEnabled(Feature.featuresScreen), isFalse);
+    },
+  );
 }
