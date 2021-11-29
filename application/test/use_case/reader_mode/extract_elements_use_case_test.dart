@@ -27,7 +27,7 @@ void main() {
   );
 
   group('ReadabilityUseCase: ', () {
-    useCaseTest(
+    useCaseTest<ExtractElementsUseCase, ProcessHtmlResult, Elements>(
       'Converts into readable html: ',
       build: () => ExtractElementsUseCase(),
       input: [result],

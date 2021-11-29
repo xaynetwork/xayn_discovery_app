@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/use_case_extension.dart';
 
 import 'get_app_version_use_case_test.mocks.dart';
 
@@ -33,8 +33,8 @@ void main() {
   test(
     'WHEN call useCase as Future twice THEN verify return previously calculated value',
     () async {
-      final result0 = (await useCase.call(none)).singleValue;
-      final result1 = (await useCase.call(none)).singleValue;
+      final result0 = (await useCase.singleOutput(none));
+      final result1 = (await useCase.singleOutput(none));
 
       expect(result0, equals(result1));
 

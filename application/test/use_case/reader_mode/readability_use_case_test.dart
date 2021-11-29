@@ -41,7 +41,7 @@ void main() {
   setUp(() {});
 
   group('ReadabilityUseCase: ', () {
-    useCaseTest(
+    useCaseTest<ReadabilityUseCase, ReadabilityConfig, ProcessHtmlResult>(
       'Converts into readable html: ',
       build: () => ReadabilityUseCase(),
       input: [
