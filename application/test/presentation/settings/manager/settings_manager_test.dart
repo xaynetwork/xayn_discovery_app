@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
@@ -11,7 +12,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_the
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/use_case_extension.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
@@ -53,6 +53,12 @@ void main() {
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
+
+    when(getAppVersionUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(appVersion));
+
+    when(getAppThemeUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(appTheme));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -67,8 +73,8 @@ void main() {
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
-        getAppVersionUseCase.call(none),
-        getAppThemeUseCase.call(none),
+        getAppVersionUseCase.singleOutput(none),
+        getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
@@ -90,10 +96,10 @@ void main() {
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
-        getAppVersionUseCase.call(none),
+        getAppVersionUseCase.singleOutput(none),
         // this placed here inside, cos it will be called exactly after
         saveAppThemeUseCase.call(AppTheme.dark),
-        getAppThemeUseCase.call(none),
+        getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
@@ -111,8 +117,8 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         //default calls here,
-        getAppVersionUseCase.call(none),
-        getAppThemeUseCase.call(none),
+        getAppVersionUseCase.singleOutput(none),
+        getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
@@ -130,8 +136,8 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         //default calls here,
-        getAppVersionUseCase.call(none),
-        getAppThemeUseCase.call(none),
+        getAppVersionUseCase.singleOutput(none),
+        getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
@@ -178,8 +184,8 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         //default calls here,
-        getAppVersionUseCase.call(none),
-        getAppThemeUseCase.call(none),
+        getAppVersionUseCase.singleOutput(none),
+        getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
