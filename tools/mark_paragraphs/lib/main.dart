@@ -75,7 +75,14 @@ class _MainScreenState extends State<MainScreen> {
             return BlocBuilder<ProgramManager, ProgramState>(
               bloc: _manager,
               builder: (context, state) {
-                isBadData(String text) => state.badParagraphs.contains(text);
+                isGoodData(String text) => state.persistedParagraphs
+                    .where((it) => it.isRelevant)
+                    .map((it) => it.paragraph)
+                    .contains(text);
+                isBadData(String text) => state.persistedParagraphs
+                    .where((it) => !it.isRelevant)
+                    .map((it) => it.paragraph)
+                    .contains(text);
 
                 final dataset = state.paragraphs;
                 final pages = dataset
@@ -92,7 +99,13 @@ class _MainScreenState extends State<MainScreen> {
                                       fontStyle: FontStyle.italic,
                                       decoration: TextDecoration.lineThrough,
                                     )
-                                  : R.styles.appBodyText,
+                                  : isGoodData(it)
+                                      ? R.styles.appBodyText?.copyWith(
+                                          color:
+                                              R.colors.swipeBackgroundRelevant,
+                                          fontStyle: FontStyle.italic,
+                                        )
+                                      : R.styles.appBodyText,
                             ),
                           ),
                         ),
@@ -122,16 +135,25 @@ class _MainScreenState extends State<MainScreen> {
                     }),
                     children: pages,
                   ),
-
-                  /// This is for testing purposes only
-                  /// Should be removed once we have a settings page
-                  floatingActionButton: FloatingActionButton(
-                    onPressed: () =>
-                        _manager!.handleMarkIrrelevant(_currentParagraph),
-                    tooltip: 'Toggle Theme',
-                    backgroundColor: R.colors.swipeBackgroundDelete,
-                    child: const Icon(Icons.delete),
-                  ),
+                  persistentFooterButtons: [
+                    Row(
+                      children: [
+                        IconButton(
+                          color: R.colors.swipeBackgroundIrrelevant,
+                          onPressed: () =>
+                              _manager!.handleMarkIrrelevant(_currentParagraph),
+                          icon: const Icon(Icons.delete),
+                        ),
+                        const Expanded(child: SizedBox()),
+                        IconButton(
+                          color: R.colors.swipeBackgroundRelevant,
+                          onPressed: () =>
+                              _manager!.handleMarkRelevant(_currentParagraph),
+                          icon: const Icon(Icons.check),
+                        ),
+                      ],
+                    )
+                  ],
                 );
               },
             );

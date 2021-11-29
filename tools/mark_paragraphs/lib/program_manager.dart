@@ -15,7 +15,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readabili
 class ProgramManager extends Cubit<ProgramState>
     with UseCaseBlocHelper<ProgramState> {
   late final UseCaseValueStream<List<String>> _apiConsumer;
-  late final UseCaseSink<String, Map<String, String>> _paragraphHandler;
+  late final UseCaseSink<ParagraphData, PersistedParagraphData>
+      _paragraphHandler;
 
   ProgramManager() : super(const ProgramState({}, {})) {
     _init();
@@ -27,7 +28,7 @@ class ProgramManager extends Cubit<ProgramState>
         _paragraphHandler,
       ).foldAll((
         paragraphs,
-        badParagraph,
+        persistedParagraph,
         errorReport,
       ) {
         if (errorReport.isNotEmpty) {
@@ -44,20 +45,24 @@ class ProgramManager extends Cubit<ProgramState>
         }
 
         final nextParagraphs = state.paragraphs.toSet();
-        final nextBadParagraphs = state.badParagraphs.toSet();
+        final nextPersistedParagraphs = state.persistedParagraphs.toSet();
 
         if (paragraphs != null) {
           nextParagraphs.addAll(paragraphs);
         }
 
-        if (badParagraph != null) {
-          nextBadParagraphs.add(badParagraph['text']!);
+        if (persistedParagraph != null) {
+          nextPersistedParagraphs.add(persistedParagraph);
         }
 
-        return ProgramState(nextParagraphs, nextBadParagraphs);
+        return ProgramState(nextParagraphs, nextPersistedParagraphs);
       });
 
-  void handleMarkIrrelevant(String paragraph) => _paragraphHandler(paragraph);
+  void handleMarkRelevant(String paragraph) =>
+      _paragraphHandler(ParagraphData(paragraph, isRelevant: true));
+
+  void handleMarkIrrelevant(String paragraph) =>
+      _paragraphHandler(ParagraphData(paragraph, isRelevant: false));
 
   void _init() {
     final random = Random();
@@ -101,11 +106,11 @@ class ProgramManager extends Cubit<ProgramState>
 
 class ProgramState {
   final Set<String> paragraphs;
-  final Set<String> badParagraphs;
+  final Set<PersistedParagraphData> persistedParagraphs;
 
   const ProgramState(
     this.paragraphs,
-    this.badParagraphs,
+    this.persistedParagraphs,
   );
 }
 
@@ -121,8 +126,14 @@ const words = [
   'football',
   'tennis',
   'golf',
-  'europe',
+  'Europe',
   'Germany',
   'war',
   'covid',
+  'technology',
+  'art',
+  'Canada',
+  'USA',
+  'Hollywood',
+  'fashion',
 ];
