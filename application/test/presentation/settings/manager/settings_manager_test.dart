@@ -42,14 +42,6 @@ void main() {
     saveAppThemeUseCase = MockSaveAppThemeUseCase();
     listenAppThemeUseCase = MockListenAppThemeUseCase();
 
-    when(getAppVersionUseCase.call(none)).thenAnswer(
-      (_) async => [const UseCaseResult.success(appVersion)],
-    );
-
-    when(getAppThemeUseCase.call(none)).thenAnswer(
-      (_) async => [const UseCaseResult.success(appTheme)],
-    );
-
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
