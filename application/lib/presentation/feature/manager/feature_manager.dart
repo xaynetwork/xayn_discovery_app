@@ -44,9 +44,9 @@ class FeatureManager extends Cubit<FeatureManagerState>
         return state;
       });
 
-  bool _isEnabled(Feature feature) => state.featureMap[feature] ?? false;
+  bool isEnabled(Feature feature) => state.featureMap[feature] ?? false;
 
-  void _overrideFeature(Feature feature, bool isEnabled) =>
+  void overrideFeature(Feature feature, bool isEnabled) =>
       _overrideFeatureHandler(OverrideFeatureParam(
         feature: feature,
         isEnabled: isEnabled,
@@ -55,10 +55,10 @@ class FeatureManager extends Cubit<FeatureManagerState>
 }
 
 extension FeatureHelperExtension on Feature {
-  bool get isEnabled => di.get<FeatureManager>()._isEnabled(this);
+  bool get isEnabled => di.get<FeatureManager>().isEnabled(this);
   bool get isDisabled => !isEnabled;
   void overrideFeature(bool isEnabled) =>
-      di.get<FeatureManager>()._overrideFeature(this, isEnabled);
+      di.get<FeatureManager>().overrideFeature(this, isEnabled);
 
   void invert() => overrideFeature(!isEnabled);
 }

@@ -2,6 +2,8 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 
+const Duration kDebounceDuration = Duration(milliseconds: 400);
+
 @injectable
 class OverrideFeatureUseCase extends UseCase<OverrideFeatureParam, FeatureMap> {
   OverrideFeatureUseCase();
@@ -12,6 +14,11 @@ class OverrideFeatureUseCase extends UseCase<OverrideFeatureParam, FeatureMap> {
     result[param.feature] = param.isEnabled;
     yield result;
   }
+
+  @override
+  Stream<OverrideFeatureParam> transform(
+          Stream<OverrideFeatureParam> incoming) =>
+      incoming.distinct();
 }
 
 class OverrideFeatureParam {
