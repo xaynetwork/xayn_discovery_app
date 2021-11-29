@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/keys.dart';
 
 import '../model/onboarding_page_data.dart';
 import 'onboarding_page_builder.dart';
@@ -72,7 +72,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     final pageView = PageView.builder(
       controller: _pageController,
       itemBuilder: (_, index) => OnBoardingPageBuilder(
-        key: Key(kOnBoardingPagesKeys[index]),
+        key: kOnBoardingPagesKeys[index],
         onBoardingPageData: _onBoardingPagesData[index],
       ),
       itemCount: _onBoardingPagesData.length,
@@ -92,7 +92,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     final stack = Stack(
       children: [
         GestureDetector(
-          key: const Key(Keys.onBoardingPageTapDetector),
+          key: Keys.onBoardingPageTapDetector,
           onTap: () => _onPageTap(
             pageController: _pageController,
           ),

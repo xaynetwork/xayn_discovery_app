@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
-import 'package:xayn_discovery_app/presentation/utils/keys.dart';
 
 import '../../app_wrapper.dart';
 
@@ -17,7 +16,7 @@ void main() {
     ) async {
       await tester.pumpAppWrapped(const OnBoardingScreen());
 
-      final onBoardingPageOne = find.byKey(const Key(Keys.onBoardingPageOne));
+      final onBoardingPageOne = find.byKey(Keys.onBoardingPageOne);
 
       expect(onBoardingPageOne, findsOneWidget);
     },
@@ -29,12 +28,12 @@ void main() {
     await tester.pumpAppWrapped(const OnBoardingScreen());
 
     final onBoardingPageTapDetector =
-        find.byKey(const Key(Keys.onBoardingPageTapDetector));
+        find.byKey(Keys.onBoardingPageTapDetector);
 
     await tester.tap(onBoardingPageTapDetector);
     await tester.pumpAndSettle(kPageSwitchAnimationDuration);
 
-    final onBoardingPageTwo = find.byKey(const Key(Keys.onBoardingPageTwo));
+    final onBoardingPageTwo = find.byKey(Keys.onBoardingPageTwo);
 
     expect(onBoardingPageTwo, findsOneWidget);
   });
@@ -43,7 +42,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final onBoardingPageTapDetector =
-        find.byKey(const Key(Keys.onBoardingPageTapDetector));
+        find.byKey(Keys.onBoardingPageTapDetector);
 
     await tester.pumpAppWrapped(const OnBoardingScreen());
 
@@ -52,7 +51,7 @@ void main() {
     await tester.tap(onBoardingPageTapDetector);
     await tester.pumpAndSettle(kPageSwitchAnimationDuration);
 
-    final onBoardingPageThree = find.byKey(const Key(Keys.onBoardingPageThree));
+    final onBoardingPageThree = find.byKey(Keys.onBoardingPageThree);
 
     expect(onBoardingPageThree, findsOneWidget);
   });

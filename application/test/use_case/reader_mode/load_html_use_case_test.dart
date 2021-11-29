@@ -27,7 +27,7 @@ void main() {
   });
 
   group('LoadHtmlUseCase: ', () {
-    useCaseTest(
+    useCaseTest<LoadHtmlUseCase, Uri, Progress>(
       'Can log incoming events: ',
       build: () => LoadHtmlUseCase(client: client),
       input: [uri],
