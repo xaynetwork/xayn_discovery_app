@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature.dart';
+import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 import '../../utils/enum_utils.dart';
@@ -94,7 +94,7 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
 
   Widget _buildItem(Feature feature) => MaterialButton(
         color: feature.isEnabled ? Colors.green : Colors.grey,
-        onPressed: () => setState(() => feature.circle()),
+        onPressed: () => setState(() => feature.invert()),
         child: Text(describeEnum(feature)),
       );
 
