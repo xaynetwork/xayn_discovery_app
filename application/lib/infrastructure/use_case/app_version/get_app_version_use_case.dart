@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/use_case_extension.dart';
 
 const _gitTagEnv = String.fromEnvironment('GIT_TAG');
 

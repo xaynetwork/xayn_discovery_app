@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_the
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/use_case_extension.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
 @lazySingleton
@@ -35,8 +34,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void _init() async {
     scheduleComputeState(() async {
       // read values
-      _appVersion = (await _getAppVersionUseCase.call(none)).singleValue;
-      _theme = (await _getAppThemeUseCase.call(none)).singleValue;
+      _appVersion = (await _getAppVersionUseCase.singleOutput(none));
+      _theme = (await _getAppThemeUseCase.singleOutput(none));
 
       // attach listeners
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
