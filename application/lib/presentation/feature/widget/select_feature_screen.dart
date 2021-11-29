@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 import '../../utils/enum_utils.dart';
@@ -30,10 +32,12 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
   var state = _OverrideState.overrideButton;
   Widget? _child;
   late Timer timer;
+  late FeatureManager _manager;
 
   @override
   void initState() {
     timer = Timer(widget.delay, onTimerEnd);
+    _manager = di.get();
     super.initState();
   }
 
@@ -57,18 +61,29 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
     }
   }
 
-  Widget _buildOverrideButton() => MaterialApp(
-        home: Center(
-          child: MaterialButton(
-            padding: const EdgeInsets.all(24),
-            color: Colors.white,
-            child: const Text('Select Features'),
-            onPressed: () => setState(() {
-              state = _OverrideState.overrideList;
-            }),
-          ),
-        ),
-      );
+  Widget _buildOverrideButton() {
+    final button = MaterialButton(
+      padding: const EdgeInsets.all(24),
+      color: Colors.white,
+      child: const Text('Select Features'),
+      onPressed: () => setState(() {
+        state = _OverrideState.overrideList;
+      }),
+    );
+
+    final app = MaterialApp(
+      home: Center(
+        child: button,
+      ),
+    );
+
+    /// [FeatureManager] needs at least one listener for its [computeState]
+    /// function to be triggered
+    return BlocBuilder(
+      bloc: _manager,
+      builder: (_, __) => app,
+    );
+  }
 
   Widget _overrideList({required Function() onContinue}) {
     final featureList = ListView.builder(
