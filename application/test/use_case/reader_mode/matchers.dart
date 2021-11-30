@@ -74,7 +74,6 @@ class _ElementsSuccess extends Matcher {
           defaultOnError: (e, s) {},
           onValue: (it) =>
               isMatched = listEquals(_expected.paragraphs, it.paragraphs) &&
-                  listEquals(_expected.images, it.images) &&
                   processHtmlSuccess(_expected.processHtmlResult).matches(
                     UseCaseResult.success(it.processHtmlResult),
                     matchState,

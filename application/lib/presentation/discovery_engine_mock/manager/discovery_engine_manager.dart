@@ -64,7 +64,7 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
           .followedBy(LogUseCase((it) => 'will fetch $it'))
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
-            consumeEvent: (data) => !data.isComplete || data.results.isEmpty,
+            consumeEvent: (data) => !data.isComplete,
             run: (data) => _isLoading = !data.isComplete,
           )
           .followedBy(
