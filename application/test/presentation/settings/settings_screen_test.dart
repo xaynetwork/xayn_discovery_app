@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction_section.dart';
 
 import 'settings_screen_test.mocks.dart';
 
@@ -60,6 +61,7 @@ void main() {
       await openScreen(tester);
 
       expect(find.byType(SettingsAppThemeSection), findsOneWidget);
+      expect(find.byType(SettingsScrollDirectionSection), findsOneWidget);
       expect(find.byType(SettingsGeneralInfoSection), findsOneWidget);
       expect(find.byType(SettingsHelpImproveSection), findsOneWidget);
 
@@ -158,6 +160,7 @@ void main() {
       await openScreen(tester);
 
       final btnFinder = find.byKey(btnKey);
+      await tester.scrollUntilVisible(btnFinder, 10);
       await tester.tap(btnFinder);
 
       verifyInOrder([

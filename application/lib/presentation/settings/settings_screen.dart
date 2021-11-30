@@ -104,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildScrollDirectionSection(
           DiscoveryFeedScrollDirection scrollDirection) =>
-      ScrollDirectionSection(
+      SettingsScrollDirectionSection(
         scrollDirection: scrollDirection,
         onSelected: _manager.changeScrollDirection,
       );

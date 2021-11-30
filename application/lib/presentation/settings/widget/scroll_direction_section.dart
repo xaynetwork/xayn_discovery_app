@@ -8,11 +8,11 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 typedef OnScrollDirectionSelected = Function(
     DiscoveryFeedScrollDirection scrollDirection);
 
-class ScrollDirectionSection extends StatelessWidget {
+class SettingsScrollDirectionSection extends StatelessWidget {
   final DiscoveryFeedScrollDirection scrollDirection;
   final OnScrollDirectionSelected onSelected;
 
-  const ScrollDirectionSection({
+  const SettingsScrollDirectionSection({
     Key? key,
     required this.scrollDirection,
     required this.onSelected,
