@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_scroll_direction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_scroll_direction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_scroll_direction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -27,6 +28,7 @@ import 'settings_manager_test.mocks.dart';
   ListenAppThemeUseCase,
   GetDiscoveryFeedScrollDirectionUseCase,
   SaveDiscoveryFeedScrollDirectionCase,
+  ListenDiscoveryFeedScrollDirectionUseCase,
 ])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
@@ -46,6 +48,8 @@ void main() {
       getDiscoveryFeedScrollDirectionUseCase;
   late MockSaveDiscoveryFeedScrollDirectionCase
       saveDiscoveryFeedScrollDirectionCase;
+  late MockListenDiscoveryFeedScrollDirectionUseCase
+      listenDiscoveryFeedScrollDirectionUseCase;
 
   setUp(() {
     getAppVersionUseCase = MockGetAppVersionUseCase();
@@ -56,6 +60,8 @@ void main() {
         MockGetDiscoveryFeedScrollDirectionUseCase();
     saveDiscoveryFeedScrollDirectionCase =
         MockSaveDiscoveryFeedScrollDirectionCase();
+    listenDiscoveryFeedScrollDirectionUseCase =
+        MockListenDiscoveryFeedScrollDirectionUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
@@ -75,6 +81,7 @@ void main() {
         listenAppThemeUseCase,
         getDiscoveryFeedScrollDirectionUseCase,
         saveDiscoveryFeedScrollDirectionCase,
+        listenDiscoveryFeedScrollDirectionUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

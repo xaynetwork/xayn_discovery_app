@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_scroll_direction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_scroll_direction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_scroll_direction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
@@ -23,6 +24,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       _getDiscoveryFeedScrollDirectionUseCase;
   final SaveDiscoveryFeedScrollDirectionCase
       _saveDiscoveryFeedScrollDirectionCase;
+  final ListenDiscoveryFeedScrollDirectionUseCase
+      _listenDiscoveryFeedScrollDirectionUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -31,6 +34,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._listenAppThemeUseCase,
     this._getDiscoveryFeedScrollDirectionUseCase,
     this._saveDiscoveryFeedScrollDirectionCase,
+    this._listenDiscoveryFeedScrollDirectionUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -38,8 +42,10 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   bool _initDone = false;
   late AppTheme _theme;
   late final AppVersion _appVersion;
-  late final DiscoveryFeedScrollDirection _discoveryFeedScrollDirection;
+  late DiscoveryFeedScrollDirection _discoveryFeedScrollDirection;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
+  late final UseCaseValueStream<DiscoveryFeedScrollDirection>
+      _discoveryFeedScrollDirectionHandler;
 
   void _init() async {
     scheduleComputeState(() async {
@@ -51,7 +57,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
       // attach listeners
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
-
+      _discoveryFeedScrollDirectionHandler = consume(
+          _listenDiscoveryFeedScrollDirectionUseCase,
+          initialData: none);
       _initDone = true;
     });
   }
@@ -92,13 +100,15 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           appVersion: _appVersion,
           discoveryFeedScrollDirection: _discoveryFeedScrollDirection,
         );
-    return fold(_appThemeHandler).foldAll((final appTheme, _) async {
-      if (appTheme == _theme) {
-        return null;
-      }
+    return fold2(_appThemeHandler, _discoveryFeedScrollDirectionHandler)
+        .foldAll((final appTheme, final scrollDirection, _) async {
       if (appTheme != null) {
         _theme = appTheme;
       }
+      if (scrollDirection != null) {
+        _discoveryFeedScrollDirection = scrollDirection;
+      }
+
       return buildReady();
     });
   }

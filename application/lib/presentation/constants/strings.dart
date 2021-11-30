@@ -5,6 +5,8 @@ class Strings {
 
   static const String settingsTitle = 'Settings';
   static const String settingsSectionTitleAppTheme = 'Your App Theme';
+  static const String settingsSectionScrollDirection =
+      'Discovery feed scroll direction';
   static const String settingsSectionTitleGeneralInfo = 'General information';
   static const String settingsSectionTitleHelpImprove = 'Help Us Improve!';
   static const String settingsSectionTitleSpreadTheWord = 'Spread the Word';
@@ -12,6 +14,9 @@ class Strings {
   static const String settingsAppThemeSystem = 'System default';
   static const String settingsAppThemeLight = 'Light mode';
   static const String settingsAppThemeDark = 'Dark mode';
+
+  static const String settingsScrollDirectionVertical = 'Vertical';
+  static const String settingsScrollDirectionHorizontal = 'Horizontal';
 
   static const String settingsAboutXayn = 'About Xayn';
   static const String settingsCarbonNeutral = 'We\'re carbon neutral!';
