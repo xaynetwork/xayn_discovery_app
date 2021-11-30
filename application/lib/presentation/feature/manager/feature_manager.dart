@@ -1,8 +1,6 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case/handlers/fold.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_stream.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feature/override_feature_use_case.dart';
@@ -25,11 +23,10 @@ class FeatureManager extends Cubit<FeatureManagerState>
   }
 
   final OverrideFeatureUseCase _overrideFeatureUseCase;
-  late final UseCaseSink<OverrideFeatureParam, FeatureMap>
-      _overrideFeatureHandler;
+  late FeatureMap featureMap;
 
   void _init() {
-    _overrideFeatureHandler = pipe(_overrideFeatureUseCase);
+    featureMap = state.featureMap;
   }
 
   static bool get shouldShowFeaturesScreen =>
@@ -37,21 +34,20 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   @override
   Future<FeatureManagerState?> computeState() async =>
-      fold(_overrideFeatureHandler).foldAll((featureMap, errorReport) {
-        if (errorReport.isEmpty && featureMap != null) {
-          return state.copyWith(featureMap: featureMap);
-        }
-        return state;
-      });
+      state.copyWith(featureMap: featureMap);
 
   bool isEnabled(Feature feature) => state.featureMap[feature] ?? false;
 
   void overrideFeature(Feature feature, bool isEnabled) =>
-      _overrideFeatureHandler(OverrideFeatureParam(
-        feature: feature,
-        isEnabled: isEnabled,
-        featureMap: state.featureMap,
-      ));
+      scheduleComputeState(() async {
+        featureMap = await _overrideFeatureUseCase.singleOutput(
+          OverrideFeatureParam(
+            feature: feature,
+            isEnabled: isEnabled,
+            featureMap: state.featureMap,
+          ),
+        );
+      });
 }
 
 extension FeatureHelperExtension on Feature {
@@ -60,5 +56,5 @@ extension FeatureHelperExtension on Feature {
   void overrideFeature(bool isEnabled) =>
       di.get<FeatureManager>().overrideFeature(this, isEnabled);
 
-  void invert() => overrideFeature(!isEnabled);
+  void flipFlop() => overrideFeature(!isEnabled);
 }

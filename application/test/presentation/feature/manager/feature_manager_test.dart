@@ -17,9 +17,6 @@ void main() {
   setUp(() {
     initialState = FeatureManagerState.initial(kInitialFeatureMap);
     overrideFeatureUseCase = MockOverrideFeatureUseCase();
-    when(overrideFeatureUseCase.transform(any)).thenAnswer(
-      (it) => it.positionalArguments[0],
-    );
     featureManager = FeatureManager(overrideFeatureUseCase);
   });
 
@@ -28,8 +25,6 @@ void main() {
     build: () => featureManager,
     verify: (manager) {
       expect(manager.state, equals(initialState));
-      verifyNever(overrideFeatureUseCase.call(any));
-      verify(overrideFeatureUseCase.transform(any));
       verifyNoMoreInteractions(overrideFeatureUseCase);
     },
   );
@@ -37,15 +32,14 @@ void main() {
   blocTest<FeatureManager, FeatureManagerState>(
     'WHEN overrideFeature method called to set featureScreen feature to true THEN expect  featureScreen feature to be equal to true',
     setUp: () {
-      when(overrideFeatureUseCase.transaction(any)).thenAnswer(
-        (_) => Stream.value({Feature.featuresScreen: true}),
+      when(overrideFeatureUseCase.singleOutput(any)).thenAnswer(
+        (_) async => {Feature.featuresScreen: true},
       );
     },
     build: () => featureManager,
     act: (manager) => manager.overrideFeature(Feature.featuresScreen, true),
     verify: (manager) {
-      verify(overrideFeatureUseCase.transform(any));
-      verify(overrideFeatureUseCase.transaction(any));
+      verify(overrideFeatureUseCase.singleOutput(any));
       verifyNoMoreInteractions(overrideFeatureUseCase);
       expect(manager.state.featureMap[Feature.featuresScreen], isTrue);
       expect(manager.isEnabled(Feature.featuresScreen), isTrue);
@@ -55,15 +49,14 @@ void main() {
   blocTest<FeatureManager, FeatureManagerState>(
     'WHEN overrideFeature method called to set featureScreen feature to false THEN expect  featureScreen feature to be equal to false',
     setUp: () {
-      when(overrideFeatureUseCase.transaction(any)).thenAnswer(
-        (_) => Stream.value({Feature.featuresScreen: false}),
+      when(overrideFeatureUseCase.singleOutput(any)).thenAnswer(
+        (_) async => {Feature.featuresScreen: false},
       );
     },
     build: () => featureManager,
     act: (manager) => manager.overrideFeature(Feature.featuresScreen, false),
     verify: (manager) {
-      verify(overrideFeatureUseCase.transform(any));
-      verify(overrideFeatureUseCase.transaction(any));
+      verify(overrideFeatureUseCase.singleOutput(any));
       verifyNoMoreInteractions(overrideFeatureUseCase);
       expect(manager.state.featureMap[Feature.featuresScreen], isFalse);
       expect(manager.isEnabled(Feature.featuresScreen), isFalse);

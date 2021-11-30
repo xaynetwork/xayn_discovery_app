@@ -109,7 +109,10 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
 
   Widget _buildItem(Feature feature) => MaterialButton(
         color: feature.isEnabled ? Colors.green : Colors.grey,
-        onPressed: () => setState(() => feature.invert()),
+        onPressed: () {
+          feature.flipFlop();
+          setState(() {});
+        },
         child: Text(describeEnum(feature)),
       );
 
