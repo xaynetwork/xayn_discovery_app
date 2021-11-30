@@ -35,7 +35,6 @@ void main() {
         elementsSuccess(
           const Elements(
             paragraphs: ['1', '2'],
-            images: ['https://www.xayn.com'],
             processHtmlResult: result,
           ),
         ),
