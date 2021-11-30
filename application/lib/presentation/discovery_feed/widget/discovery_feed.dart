@@ -93,16 +93,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
     );
   }
 
-  Widget Function(BuildContext, int) _itemBuilder(
-    List<Document> results,
-    bool isPrimary,
-  ) =>
+  Widget Function(BuildContext, int) _itemBuilder({
+    required List<Document> results,
+    required bool isPrimary,
+    required bool isSwipingEnabled,
+  }) =>
       (BuildContext context, int index) {
         final document = results[index];
 
         return _ResultCard(
           document: document,
           isPrimary: isPrimary,
+          isSwipingEnabled: isSwipingEnabled,
         );
       };
 
@@ -111,6 +113,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         bloc: _discoveryFeedManager,
         builder: (context, state) {
           final results = state.results;
+          final scrollDirection = state.scrollDirection.axis;
+          final isSwipingEnabled = scrollDirection == Axis.vertical;
 
           if (results == null) {
             return const Center(
@@ -121,10 +125,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           _totalResults = results.length;
 
           return FeedView(
-            scrollDirection: state.scrollDirection.axis,
+            scrollDirection: scrollDirection,
             cardViewController: _cardViewController,
-            itemBuilder: _itemBuilder(results, true),
-            secondaryItemBuilder: _itemBuilder(results, false),
+            itemBuilder: _itemBuilder(
+              results: results,
+              isPrimary: true,
+              isSwipingEnabled: isSwipingEnabled,
+            ),
+            secondaryItemBuilder: _itemBuilder(
+              results: results,
+              isPrimary: false,
+              isSwipingEnabled: isSwipingEnabled,
+            ),
             itemCount: _totalResults,
             onFinalIndex: _discoveryFeedManager.handleLoadMore,
           );
@@ -135,11 +147,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 class _ResultCard extends StatelessWidget {
   final bool isPrimary;
   final Document document;
+  final bool isSwipingEnabled;
 
   const _ResultCard({
     Key? key,
     required this.isPrimary,
     required this.document,
+    required this.isSwipingEnabled,
   }) : super(key: key);
 
   @override
@@ -147,6 +161,7 @@ class _ResultCard extends StatelessWidget {
     final card = SwipeableDiscoveryCard(
       isPrimary: isPrimary,
       document: document,
+      isSwipingEnabled: isSwipingEnabled,
     );
 
     return Padding(
