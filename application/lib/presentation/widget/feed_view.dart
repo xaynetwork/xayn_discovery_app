@@ -37,7 +37,7 @@ class FeedView extends StatelessWidget {
             animateToSnapDuration: R.animations.unit2,
             scrollDirection: scrollDirection,
             controller: cardViewController,
-            size: .947,
+            size: scrollDirection == Axis.vertical ? .947 : 1,
             itemBuilder: itemBuilder,
             secondaryItemBuilder: secondaryItemBuilder,
             itemCount: itemCount ?? 0,
