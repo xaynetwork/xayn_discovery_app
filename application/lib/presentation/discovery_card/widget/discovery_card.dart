@@ -168,14 +168,12 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ),
     ];
 
-    return ColoredBox(
+    return Container(
+      width: constraints.maxWidth,
+      height: fullSize,
       color: R.colors.swipeCardBackground,
-      child: SizedBox(
-        width: constraints.maxWidth,
-        height: fullSize,
-        child: Stack(
-          children: children,
-        ),
+      child: Stack(
+        children: children,
       ),
     );
   }
