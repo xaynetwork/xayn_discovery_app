@@ -8,6 +8,7 @@ class FeedView extends StatelessWidget {
   const FeedView({
     Key? key,
     required this.itemBuilder,
+    this.scrollDirection = Axis.vertical,
     this.onFinalIndex,
     this.cardViewController,
     this.secondaryItemBuilder,
@@ -15,6 +16,7 @@ class FeedView extends StatelessWidget {
   }) : super(key: key);
 
   final CardViewController? cardViewController;
+  final Axis scrollDirection;
   final Widget Function(BuildContext, int) itemBuilder;
   final Widget Function(BuildContext, int)? secondaryItemBuilder;
   final VoidCallback? onFinalIndex;
@@ -32,7 +34,7 @@ class FeedView extends StatelessWidget {
           removeTop: true,
           child: CardView(
             animateToSnapDuration: R.animations.unit2,
-            scrollDirection: Axis.vertical,
+            scrollDirection: scrollDirection,
             controller: cardViewController,
             size: .947,
             itemBuilder: itemBuilder,

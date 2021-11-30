@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
+import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/button/temp_button.dart';
 
@@ -120,6 +121,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           _totalResults = results.length;
 
           return FeedView(
+            scrollDirection: state.scrollDirection.axis,
             cardViewController: _cardViewController,
             itemBuilder: _itemBuilder(results, true),
             secondaryItemBuilder: _itemBuilder(results, false),

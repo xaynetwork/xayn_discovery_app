@@ -2,7 +2,9 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_scroll_direction.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_scroll_direction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
@@ -21,14 +23,19 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   DiscoveryFeedManager(
     this._discoveryEngineResultsUseCase,
     this._randomKeyWordsUseCase,
+    this._listenDiscoveryFeedScrollDirectionUseCase,
   ) : super(DiscoveryFeedState.empty()) {
     _initHandlers();
   }
 
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final RandomKeyWordsUseCase _randomKeyWordsUseCase;
+  final ListenDiscoveryFeedScrollDirectionUseCase
+      _listenDiscoveryFeedScrollDirectionUseCase;
 
   late final UseCaseSink<List<Document>, DiscoveryEngineState> _searchHandler;
+  late final UseCaseValueStream<DiscoveryFeedScrollDirection>
+      _discoveryFeedScrollDirectionHandler;
 
   void handleLoadMore() async {
     _searchHandler(state.results ?? const <Document>[]);
@@ -49,11 +56,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     );
 
     _searchHandler.call(const <Document>[]);
+
+    _discoveryFeedScrollDirectionHandler =
+        consume(_listenDiscoveryFeedScrollDirectionUseCase, initialData: none);
   }
 
   @override
   Future<DiscoveryFeedState?> computeState() async =>
-      fold(_searchHandler).foldAll((engineState, errorReport) {
+      fold2(_searchHandler, _discoveryFeedScrollDirectionHandler)
+          .foldAll((engineState, scrollDirection, errorReport) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,
@@ -69,6 +80,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               ],
               isComplete: engineState.isComplete,
               isInErrorState: false,
+              scrollDirection:
+                  scrollDirection ?? DiscoveryFeedScrollDirection.vertical,
             );
           }
 
