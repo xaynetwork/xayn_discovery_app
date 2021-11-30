@@ -67,11 +67,18 @@ void main() {
       (_) => const Stream.empty(),
     );
 
+    when(listenDiscoveryFeedScrollDirectionUseCase.transform(any)).thenAnswer(
+      (_) => const Stream.empty(),
+    );
+
     when(getAppVersionUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appVersion));
 
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
+
+    when(getDiscoveryFeedScrollDirectionUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(discoveryFeedScrollDirection));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -93,6 +100,7 @@ void main() {
         getAppThemeUseCase.singleOutput(none),
         getDiscoveryFeedScrollDirectionUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
+        listenDiscoveryFeedScrollDirectionUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
       verifyNoMoreInteractions(getAppVersionUseCase);
@@ -100,6 +108,7 @@ void main() {
       verifyNoMoreInteractions(listenAppThemeUseCase);
       verifyNoMoreInteractions(getDiscoveryFeedScrollDirectionUseCase);
       verifyNoMoreInteractions(saveDiscoveryFeedScrollDirectionCase);
+      verifyNoMoreInteractions(listenDiscoveryFeedScrollDirectionUseCase);
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
@@ -125,6 +134,31 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
+    },
+  );
+  blocTest<SettingsScreenManager, SettingsScreenState>(
+    'GIVEN app theme WHEN changeScrollDirection method called THEN call saveDiscoveryFeedScrollDirection useCase',
+    setUp: () {
+      when(saveDiscoveryFeedScrollDirectionCase
+              .call(discoveryFeedScrollDirection))
+          .thenAnswer(
+        (_) async => const [UseCaseResult.success(none)],
+      );
+    },
+    build: () => create(),
+    act: (manager) =>
+        manager.changeScrollDirection(discoveryFeedScrollDirection),
+    expect: () => [stateReady],
+    verify: (manager) {
+      verifyInOrder([
+        saveDiscoveryFeedScrollDirectionCase
+            .call(DiscoveryFeedScrollDirection.vertical),
+        getDiscoveryFeedScrollDirectionUseCase.singleOutput(none),
+        listenDiscoveryFeedScrollDirectionUseCase.transform(any),
+      ]);
+      verifyNoMoreInteractions(listenDiscoveryFeedScrollDirectionUseCase);
+      verifyNoMoreInteractions(getDiscoveryFeedScrollDirectionUseCase);
+      verifyNoMoreInteractions(saveDiscoveryFeedScrollDirectionCase);
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
