@@ -5,13 +5,11 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 
-import '../../app_wrapper.dart';
-
 void main() {
   testWidgets(
     'GIVEN section THEN verify all widgets present',
     (final WidgetTester tester) async {
-      await tester.pumpAppWrapped(ShareAppSection(
+      await tester.pumpLindenApp(ShareAppSection(
         onShareAppPressed: () {},
       ));
 
@@ -35,7 +33,7 @@ void main() {
     'GIVEN section WHEN clicked btn THEN proper callbacks are called',
     (final WidgetTester tester) async {
       var clicked = false;
-      await tester.pumpAppWrapped(ShareAppSection(
+      await tester.pumpLindenApp(ShareAppSection(
         onShareAppPressed: () => clicked = true,
       ));
 
