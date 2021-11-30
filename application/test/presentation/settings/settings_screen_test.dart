@@ -6,6 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_scroll_direction.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -27,7 +28,11 @@ void main() {
   late StreamController<SettingsScreenState> streamController;
   const stateReady = SettingsScreenState.ready(
     theme: AppTheme.system,
-    appVersion: AppVersion(version: '1.2.3', build: '321'),
+    appVersion: AppVersion(
+      version: '1.2.3',
+      build: '321',
+    ),
+    discoveryFeedScrollDirection: DiscoveryFeedScrollDirection.vertical,
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 

@@ -1,0 +1,4 @@
+enum DiscoveryFeedScrollDirection {
+  vertical,
+  horizontal,
+}
