@@ -11,8 +11,9 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
-import 'package:xayn_discovery_app/presentation/widget/button/temp_search_button.dart';
+import 'package:xayn_discovery_app/presentation/widget/button/temp_button.dart';
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -48,13 +49,26 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   Widget build(BuildContext context) {
     final bottomNav = Positioned(
       bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
-      child: TempSearchButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ActiveSearch(),
+      child: Row(
+        children: [
+          TempButton(
+            iconName: R.assets.icons.search,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ActiveSearch(),
+              ),
+            ),
           ),
-        ),
+          SizedBox(width: R.dimen.unit),
+          TempButton(
+            iconName: R.assets.icons.gear,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            ),
+          ),
+        ],
       ),
     );
 
