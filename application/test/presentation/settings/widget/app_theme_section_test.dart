@@ -6,8 +6,6 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 
-import '../../app_wrapper.dart';
-
 void main() {
   const theme = AppTheme.system;
   testWidgets(
@@ -15,7 +13,7 @@ void main() {
     (final WidgetTester tester) async {
       final widget = SettingsAppThemeSection(
           theme: theme, onSelected: (AppTheme theme) {});
-      await tester.pumpAppWrapped(widget);
+      await tester.pumpLindenApp(widget);
 
       expect(find.byType(SettingsSection), findsOneWidget);
       expect(find.byType(SettingsSelectable), findsOneWidget);
@@ -36,7 +34,7 @@ void main() {
           expectedTheme = theme;
         },
       );
-      await tester.pumpAppWrapped(widget);
+      await tester.pumpLindenApp(widget);
       final btnFinder = find.byKey(Keys.settingsThemeDark);
       await tester.tap(btnFinder);
 
