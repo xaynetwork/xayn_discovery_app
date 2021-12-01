@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -64,8 +63,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       _discoveryCardManager.updateUri(url);
     }
 
-    _discoveryCardManager.updateImageUri(Uri.parse(imageUrl));
-
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
@@ -75,7 +72,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
               isInReaderMode: state.isInReaderMode,
               imageUrl: imageUrl,
               snippets: state.paragraphs,
-              palette: state.paletteGenerator,
               constraints: constraints,
               processHtmlResult: state.result,
             ),
@@ -90,7 +86,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     required bool isPrimary,
     required bool isInReaderMode,
     ProcessHtmlResult? processHtmlResult,
-    PaletteGenerator? palette,
   }) {
     final DiscoveryCardActionsManager _actionsManager = di.get();
 
@@ -102,7 +97,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     final cardBackground = _CardBackground(
       imageUrl: imageUrl,
       constraints: constraints,
-      dominantColor: palette?.dominantColor?.color,
       isDocked: isInReaderMode,
       transitionDuration: _transitionDuration,
     );
@@ -142,7 +136,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         Expanded(
           child: DiscoveryCardBody(
             snippets: allSnippets,
-            palette: palette,
           ),
         ),
         footer,
@@ -214,18 +207,16 @@ class _CardBackground extends StatelessWidget {
     required this.constraints,
     required this.isDocked,
     required this.transitionDuration,
-    this.dominantColor,
   }) : super(key: key);
   final String imageUrl;
   final BoxConstraints constraints;
-  final Color? dominantColor;
   final bool isDocked;
   final Duration transitionDuration;
 
   @override
   Widget build(BuildContext context) {
     final backgroundPane = ColoredBox(
-      color: dominantColor ?? R.colors.swipeCardBackground,
+      color: R.colors.swipeCardBackground,
     );
 
     final isImageNotAvailable = !imageUrl.startsWith('http');

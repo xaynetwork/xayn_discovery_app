@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
@@ -16,7 +15,6 @@ class DiscoveryCardState with _$DiscoveryCardState {
     ProcessHtmlResult? result,
     @Default([]) List<String> paragraphs,
     @Default([]) List<String> images,
-    PaletteGenerator? paletteGenerator,
   }) = _DiscoveryCardState;
 
   factory DiscoveryCardState.initial() => const DiscoveryCardState();
