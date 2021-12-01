@@ -55,4 +55,3 @@ class FeatureManager extends Cubit<FeatureManagerState>
         isDisabled(feature),
       );
 }
-

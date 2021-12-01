@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
 
 import '../../utils/enum_utils.dart';
 
@@ -33,12 +35,12 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
   var state = _OverrideState.overrideButton;
   Widget? _child;
   late Timer timer;
-  late FeatureManager _manager;
+  late FeatureManager _featureManager;
 
   @override
   void initState() {
     timer = Timer(widget.delay, onTimerEnd);
-    _manager = di.get();
+    _featureManager = di.get();
     super.initState();
   }
 
@@ -79,35 +81,16 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
     );
   }
 
-  Widget _overrideList({required Function() onContinue}) {
-    final featureList = ListView.builder(
-      itemBuilder: (c, i) => _buildItem(Feature.values[i]),
-      itemCount: Feature.values.length,
-    );
-
-    final continueButton = MaterialButton(
-      color: Colors.white,
-      onPressed: onContinue,
-      child: const Text('Continue'),
-    );
-
-    return MaterialApp(
-      home: Column(
-        children: [
-          Expanded(child: featureList),
-          continueButton,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildItem(Feature feature) => MaterialButton(
-        color: _manager.isEnabled(feature) ? Colors.green : Colors.grey,
-        onPressed: () {
-          _manager.flipFlopFeature(feature);
-          setState(() {});
+  Widget _overrideList({required Function() onContinue}) =>
+      BlocBuilder<FeatureManager, FeatureManagerState>(
+        bloc: _featureManager,
+        builder: (context, state) {
+          return _FeaturesList(
+            featureManager: _featureManager,
+            featureMap: state.featureMap,
+            onContinue: onContinue,
+          );
         },
-        child: Text(describeEnum(feature)),
       );
 
   void onTimerEnd() =>
@@ -115,5 +98,51 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
 
   void continueToNextScreen() => setState(
         () => state = _OverrideState.showChild,
+      );
+}
+
+class _FeaturesList extends StatelessWidget {
+  const _FeaturesList({
+    Key? key,
+    required this.onContinue,
+    required this.featureMap,
+    required this.featureManager,
+  }) : super(key: key);
+
+  final Function() onContinue;
+  final FeatureMap featureMap;
+  final FeatureManager featureManager;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Column(
+        children: [
+          Expanded(child: _buildFeaturesList(featureMap)),
+          continueButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturesList(FeatureMap features) => ListView.builder(
+        itemBuilder: (_, i) {
+          final feature = Feature.values[i];
+          final isEnabled = features[feature] ?? false;
+          return _buildItem(feature, isEnabled);
+        },
+        itemCount: Feature.values.length,
+      );
+
+  Widget _buildItem(Feature feature, bool isEnabled) => MaterialButton(
+        color: isEnabled ? Colors.green : Colors.grey,
+        onPressed: () => featureManager.flipFlopFeature(feature),
+        child: Text(describeEnum(feature)),
+      );
+
+  Widget continueButton() => MaterialButton(
+        color: Colors.white,
+        onPressed: onContinue,
+        child: const Text('Continue'),
       );
 }
