@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 import '../../utils/enum_utils.dart';
+
+const kFeatureScreenWaitDuration = Duration(seconds: 3);
 
 class SelectFeatureScreen extends StatefulWidget {
   final Widget child;
@@ -15,7 +16,7 @@ class SelectFeatureScreen extends StatefulWidget {
   const SelectFeatureScreen({
     Key? key,
     required this.child,
-    this.delay = const Duration(seconds: 3),
+    this.delay = kFeatureScreenWaitDuration,
   }) : super(key: key);
 
   @override
@@ -71,17 +72,10 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
       }),
     );
 
-    final app = MaterialApp(
+    return MaterialApp(
       home: Center(
         child: button,
       ),
-    );
-
-    /// [FeatureManager] needs at least one listener for its [computeState]
-    /// function to be triggered
-    return BlocBuilder(
-      bloc: _manager,
-      builder: (_, __) => app,
     );
   }
 
@@ -108,9 +102,9 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
   }
 
   Widget _buildItem(Feature feature) => MaterialButton(
-        color: feature.isEnabled ? Colors.green : Colors.grey,
+        color: _manager.isEnabled(feature) ? Colors.green : Colors.grey,
         onPressed: () {
-          feature.flipFlop();
+          _manager.flipFlopFeature(feature);
           setState(() {});
         },
         child: Text(describeEnum(feature)),
