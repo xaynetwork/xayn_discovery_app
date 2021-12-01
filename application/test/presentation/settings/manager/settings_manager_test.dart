@@ -134,7 +134,7 @@ void main() {
     'GIVEN app theme WHEN changeScrollDirection method called THEN call saveDiscoveryFeedScrollDirection useCase',
     setUp: () {
       when(saveDiscoveryFeedAxisUseCase.call(axis)).thenAnswer(
-        (_) async => const [UseCaseResult.success(none)],
+        (_) async => const [UseCaseResult.success(axis)],
       );
     },
     build: () => create(),

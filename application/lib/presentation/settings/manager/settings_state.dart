@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 part 'settings_state.freezed.dart';
 
 @freezed
-abstract class SettingsScreenState with _$SettingsScreenState {
+class SettingsScreenState with _$SettingsScreenState {
   const factory SettingsScreenState.initial() = _Initial;
 
   const factory SettingsScreenState.ready({
