@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:story/story.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
@@ -8,17 +7,8 @@ const kSnippetCountToDisplayAnimation = 2;
 
 /// The story page of a discovery card.
 class DiscoveryCardBody extends StatelessWidget {
-  final PaletteGenerator? palette;
-
-  Color? get dominantColor => palette?.colors.first;
-
-  Color get textColor => (dominantColor?.computeLuminance() ?? .0) <= .5
-      ? const Color(0xFFF8F8F8)
-      : const Color(0xFF303030);
-
   const DiscoveryCardBody({
     Key? key,
-    this.palette,
     required this.snippets,
   }) : super(key: key);
   final List<String> snippets;
