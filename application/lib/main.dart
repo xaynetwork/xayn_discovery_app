@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bug_reporting/report_a_bug_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 void main() {
   configureDependencies();
+  ReportABugUseCase.init();
 
   final unterDenLinden = UnterDenLinden(
     initialLinden: R.linden,
