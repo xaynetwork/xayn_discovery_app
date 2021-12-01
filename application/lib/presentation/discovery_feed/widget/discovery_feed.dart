@@ -113,7 +113,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
         bloc: _discoveryFeedManager,
         builder: (context, state) {
           final results = state.results;
-          final scrollDirection = state.scrollDirection.axis;
+          final scrollDirection = state.axis.axis;
           final isSwipingEnabled = scrollDirection == Axis.vertical;
 
           if (results == null) {

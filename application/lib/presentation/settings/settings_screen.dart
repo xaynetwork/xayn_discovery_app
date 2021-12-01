@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_scroll_direction.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
@@ -82,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
     final children = [
       _buildAppThemeSection(state.theme),
-      _buildScrollDirectionSection(state.discoveryFeedScrollDirection),
+      _buildScrollDirectionSection(state.axis),
       _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -102,11 +102,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onSelected: _manager.changeTheme,
       );
 
-  Widget _buildScrollDirectionSection(
-          DiscoveryFeedScrollDirection scrollDirection) =>
+  Widget _buildScrollDirectionSection(DiscoveryFeedAxis axis) =>
       SettingsScrollDirectionSection(
-        scrollDirection: scrollDirection,
-        onSelected: _manager.changeScrollDirection,
+        axis: axis,
+        onSelected: _manager.changeAxis,
       );
 
   Widget _buildGeneralSection() => SettingsGeneralInfoSection(

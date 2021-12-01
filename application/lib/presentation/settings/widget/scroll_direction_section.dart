@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_scroll_direction.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
-typedef OnScrollDirectionSelected = Function(
-    DiscoveryFeedScrollDirection scrollDirection);
+typedef OnScrollDirectionSelected = Function(DiscoveryFeedAxis axis);
 
 class SettingsScrollDirectionSection extends StatelessWidget {
-  final DiscoveryFeedScrollDirection scrollDirection;
+  final DiscoveryFeedAxis axis;
   final OnScrollDirectionSelected onSelected;
 
   const SettingsScrollDirectionSection({
     Key? key,
-    required this.scrollDirection,
+    required this.axis,
     required this.onSelected,
   }) : super(key: key);
 
@@ -23,42 +22,41 @@ class SettingsScrollDirectionSection extends StatelessWidget {
         title: Strings.settingsSectionScrollDirection,
         topPadding: R.dimen.unit,
         child: SettingsSelectable.icons(
-            items: DiscoveryFeedScrollDirection.values.map(_getItem).toList()),
+            items: DiscoveryFeedAxis.values.map(_getItem).toList()),
       );
 
-  SettingsSelectableData _getItem(
-          DiscoveryFeedScrollDirection scrollDirection) =>
+  SettingsSelectableData _getItem(DiscoveryFeedAxis axis) =>
       SettingsSelectableData(
-        key: _getKey(scrollDirection),
-        title: _getTitle(scrollDirection),
-        svgIconPath: _getIcon(scrollDirection),
-        isSelected: scrollDirection == this.scrollDirection,
-        onPressed: () => onSelected(scrollDirection),
+        key: _getKey(axis),
+        title: _getTitle(axis),
+        svgIconPath: _getIcon(axis),
+        isSelected: axis == this.axis,
+        onPressed: () => onSelected(axis),
       );
 
-  Key _getKey(DiscoveryFeedScrollDirection scrollDirection) {
+  Key _getKey(DiscoveryFeedAxis scrollDirection) {
     switch (scrollDirection) {
-      case DiscoveryFeedScrollDirection.vertical:
+      case DiscoveryFeedAxis.vertical:
         return Keys.settingsScrollDirectionVertical;
-      case DiscoveryFeedScrollDirection.horizontal:
+      case DiscoveryFeedAxis.horizontal:
         return Keys.settingsScrollDirectionHorizontal;
     }
   }
 
-  String _getTitle(DiscoveryFeedScrollDirection scrollDirection) {
+  String _getTitle(DiscoveryFeedAxis scrollDirection) {
     switch (scrollDirection) {
-      case DiscoveryFeedScrollDirection.vertical:
+      case DiscoveryFeedAxis.vertical:
         return Strings.settingsScrollDirectionVertical;
-      case DiscoveryFeedScrollDirection.horizontal:
+      case DiscoveryFeedAxis.horizontal:
         return Strings.settingsScrollDirectionHorizontal;
     }
   }
 
-  String _getIcon(DiscoveryFeedScrollDirection scrollDirection) {
+  String _getIcon(DiscoveryFeedAxis scrollDirection) {
     switch (scrollDirection) {
-      case DiscoveryFeedScrollDirection.vertical:
+      case DiscoveryFeedAxis.vertical:
         return R.assets.icons.arrowDown;
-      case DiscoveryFeedScrollDirection.horizontal:
+      case DiscoveryFeedAxis.horizontal:
         return R.assets.icons.arrowRight;
     }
   }

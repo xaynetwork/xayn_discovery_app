@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_scroll_direction.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 
 part 'discovery_feed_state.freezed.dart';
@@ -15,13 +15,13 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     required int resultIndex,
     required bool isComplete,
     required bool isInErrorState,
-    required DiscoveryFeedScrollDirection scrollDirection,
+    required DiscoveryFeedAxis axis,
   }) = _DiscoveryFeedState;
 
   factory DiscoveryFeedState.empty() => const DiscoveryFeedState(
         resultIndex: 0,
         isComplete: false,
         isInErrorState: false,
-        scrollDirection: DiscoveryFeedScrollDirection.vertical,
+        axis: DiscoveryFeedAxis.vertical,
       );
 }

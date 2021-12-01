@@ -8,14 +8,14 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_scroll_direction.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_scroll_direction_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_scroll_direction_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_scroll_direction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
@@ -26,48 +26,42 @@ import 'settings_manager_test.mocks.dart';
   GetAppThemeUseCase,
   SaveAppThemeUseCase,
   ListenAppThemeUseCase,
-  GetDiscoveryFeedScrollDirectionUseCase,
-  SaveDiscoveryFeedScrollDirectionCase,
-  ListenDiscoveryFeedScrollDirectionUseCase,
+  GetDiscoveryFeedAxisUseCase,
+  SaveDiscoveryFeedAxisUseCase,
+  ListenDiscoveryFeedAxisUseCase,
 ])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
-  const discoveryFeedScrollDirection = DiscoveryFeedScrollDirection.vertical;
+  const axis = DiscoveryFeedAxis.vertical;
   const stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
-    discoveryFeedScrollDirection: discoveryFeedScrollDirection,
+    axis: axis,
   );
 
   late MockGetAppVersionUseCase getAppVersionUseCase;
   late MockGetAppThemeUseCase getAppThemeUseCase;
   late MockSaveAppThemeUseCase saveAppThemeUseCase;
   late MockListenAppThemeUseCase listenAppThemeUseCase;
-  late MockGetDiscoveryFeedScrollDirectionUseCase
-      getDiscoveryFeedScrollDirectionUseCase;
-  late MockSaveDiscoveryFeedScrollDirectionCase
-      saveDiscoveryFeedScrollDirectionCase;
-  late MockListenDiscoveryFeedScrollDirectionUseCase
-      listenDiscoveryFeedScrollDirectionUseCase;
+  late MockGetDiscoveryFeedAxisUseCase getDiscoveryFeedAxisUseCase;
+  late MockSaveDiscoveryFeedAxisUseCase saveDiscoveryFeedAxisUseCase;
+  late MockListenDiscoveryFeedAxisUseCase listenDiscoveryFeedAxisUseCase;
 
   setUp(() {
     getAppVersionUseCase = MockGetAppVersionUseCase();
     getAppThemeUseCase = MockGetAppThemeUseCase();
     saveAppThemeUseCase = MockSaveAppThemeUseCase();
     listenAppThemeUseCase = MockListenAppThemeUseCase();
-    getDiscoveryFeedScrollDirectionUseCase =
-        MockGetDiscoveryFeedScrollDirectionUseCase();
-    saveDiscoveryFeedScrollDirectionCase =
-        MockSaveDiscoveryFeedScrollDirectionCase();
-    listenDiscoveryFeedScrollDirectionUseCase =
-        MockListenDiscoveryFeedScrollDirectionUseCase();
+    getDiscoveryFeedAxisUseCase = MockGetDiscoveryFeedAxisUseCase();
+    saveDiscoveryFeedAxisUseCase = MockSaveDiscoveryFeedAxisUseCase();
+    listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
 
-    when(listenDiscoveryFeedScrollDirectionUseCase.transform(any)).thenAnswer(
+    when(listenDiscoveryFeedAxisUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
 
@@ -77,8 +71,8 @@ void main() {
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
 
-    when(getDiscoveryFeedScrollDirectionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(discoveryFeedScrollDirection));
+    when(getDiscoveryFeedAxisUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(axis));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -86,9 +80,9 @@ void main() {
         getAppThemeUseCase,
         saveAppThemeUseCase,
         listenAppThemeUseCase,
-        getDiscoveryFeedScrollDirectionUseCase,
-        saveDiscoveryFeedScrollDirectionCase,
-        listenDiscoveryFeedScrollDirectionUseCase,
+        getDiscoveryFeedAxisUseCase,
+        saveDiscoveryFeedAxisUseCase,
+        listenDiscoveryFeedAxisUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -98,17 +92,17 @@ void main() {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
         getAppThemeUseCase.singleOutput(none),
-        getDiscoveryFeedScrollDirectionUseCase.singleOutput(none),
+        getDiscoveryFeedAxisUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
-        listenDiscoveryFeedScrollDirectionUseCase.transform(any),
+        listenDiscoveryFeedAxisUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
-      verifyNoMoreInteractions(getDiscoveryFeedScrollDirectionUseCase);
-      verifyNoMoreInteractions(saveDiscoveryFeedScrollDirectionCase);
-      verifyNoMoreInteractions(listenDiscoveryFeedScrollDirectionUseCase);
+      verifyNoMoreInteractions(getDiscoveryFeedAxisUseCase);
+      verifyNoMoreInteractions(saveDiscoveryFeedAxisUseCase);
+      verifyNoMoreInteractions(listenDiscoveryFeedAxisUseCase);
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
@@ -139,26 +133,22 @@ void main() {
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'GIVEN app theme WHEN changeScrollDirection method called THEN call saveDiscoveryFeedScrollDirection useCase',
     setUp: () {
-      when(saveDiscoveryFeedScrollDirectionCase
-              .call(discoveryFeedScrollDirection))
-          .thenAnswer(
+      when(saveDiscoveryFeedAxisUseCase.call(axis)).thenAnswer(
         (_) async => const [UseCaseResult.success(none)],
       );
     },
     build: () => create(),
-    act: (manager) =>
-        manager.changeScrollDirection(discoveryFeedScrollDirection),
+    act: (manager) => manager.changeAxis(axis),
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
-        saveDiscoveryFeedScrollDirectionCase
-            .call(DiscoveryFeedScrollDirection.vertical),
-        getDiscoveryFeedScrollDirectionUseCase.singleOutput(none),
-        listenDiscoveryFeedScrollDirectionUseCase.transform(any),
+        saveDiscoveryFeedAxisUseCase.call(DiscoveryFeedAxis.vertical),
+        getDiscoveryFeedAxisUseCase.singleOutput(none),
+        listenDiscoveryFeedAxisUseCase.transform(any),
       ]);
-      verifyNoMoreInteractions(listenDiscoveryFeedScrollDirectionUseCase);
-      verifyNoMoreInteractions(getDiscoveryFeedScrollDirectionUseCase);
-      verifyNoMoreInteractions(saveDiscoveryFeedScrollDirectionCase);
+      verifyNoMoreInteractions(listenDiscoveryFeedAxisUseCase);
+      verifyNoMoreInteractions(getDiscoveryFeedAxisUseCase);
+      verifyNoMoreInteractions(saveDiscoveryFeedAxisUseCase);
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
