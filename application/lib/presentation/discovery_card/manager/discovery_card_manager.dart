@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/image_palette_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
@@ -26,10 +24,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
   final ExtractElementsUseCase _extractElementsUseCase;
-  final ImagePaletteUseCase _imagePaletteUseCase;
 
   late final UseCaseSink<Uri, Elements> _updateUri;
-  late final UseCaseSink<Uri, PaletteGenerator> _updateImageUri;
 
   bool _isLoading = false;
 
@@ -40,16 +36,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._loadHtmlUseCase,
     this._readabilityUseCase,
     this._extractElementsUseCase,
-    this._imagePaletteUseCase,
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
 
   /// Update the uri which contains the news article
   void updateUri(Uri uri) => _updateUri(uri);
-
-  /// Update the uri which contains the news article's background image
-  void updateImageUri(Uri uri) => _updateImageUri(uri);
 
   void toggleReaderMode() {
     scheduleComputeState(() => _isInReaderMode = !_isInReaderMode);
@@ -76,23 +68,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           .followedBy(_readabilityUseCase)
           .followedBy(_extractElementsUseCase),
     );
-
-    /// background image color palette:
-    /// - invokes the palette use case and grabs the color palette
-    _updateImageUri = pipe(_connectivityUseCase)
-        .transform((out) => out.distinct().followedBy(_imagePaletteUseCase));
   }
 
   @override
   Future<DiscoveryCardState?> computeState() async =>
-      fold2(_updateUri, _updateImageUri)
-          .foldAll((elements, paletteGenerator, errorReport) {
+      fold(_updateUri).foldAll((elements, errorReport) {
         if (errorReport.isNotEmpty) {
           return DiscoveryCardState.error();
         }
 
         var nextState = state.copyWith(
-          paletteGenerator: paletteGenerator,
           isComplete: !_isLoading,
           isInReaderMode: _isInReaderMode,
         );
