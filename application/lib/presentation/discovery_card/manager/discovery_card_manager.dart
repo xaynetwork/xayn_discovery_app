@@ -101,7 +101,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           nextState = nextState.copyWith(
             result: elements.processHtmlResult,
             paragraphs: elements.paragraphs,
-            images: elements.images,
           );
         }
 

@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:xayn_design/src/utils/design_testing_utils.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
-
-import '../../app_wrapper.dart';
 
 void main() {
   setUpAll(() {
@@ -14,7 +13,7 @@ void main() {
     (
       WidgetTester tester,
     ) async {
-      await tester.pumpAppWrapped(const OnBoardingScreen());
+      await tester.pumpLindenApp(const OnBoardingScreen());
 
       final onBoardingPageOne = find.byKey(Keys.onBoardingPageOne);
 
@@ -25,7 +24,7 @@ void main() {
   testWidgets('WHEN tapping on first page THEN show the second one', (
     WidgetTester tester,
   ) async {
-    await tester.pumpAppWrapped(const OnBoardingScreen());
+    await tester.pumpLindenApp(const OnBoardingScreen());
 
     final onBoardingPageTapDetector =
         find.byKey(Keys.onBoardingPageTapDetector);
@@ -44,7 +43,7 @@ void main() {
     final onBoardingPageTapDetector =
         find.byKey(Keys.onBoardingPageTapDetector);
 
-    await tester.pumpAppWrapped(const OnBoardingScreen());
+    await tester.pumpLindenApp(const OnBoardingScreen());
 
     await tester.tap(onBoardingPageTapDetector);
     await tester.pumpAndSettle(kPageSwitchAnimationDuration);

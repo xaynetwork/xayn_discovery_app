@@ -16,8 +16,7 @@ import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
-
-import '../app_wrapper.dart';
+import 'package:xayn_design/xayn_design.dart';
 
 import 'settings_screen_test.mocks.dart';
 
@@ -46,7 +45,7 @@ void main() {
   });
 
   Future<void> openScreen(WidgetTester tester) async {
-    await tester.pumpAppWrapped(const SettingsScreen());
+    await tester.pumpLindenApp(const SettingsScreen());
     await tester.pumpAndSettle(R.durations.screenStateChangeDuration);
   }
 
