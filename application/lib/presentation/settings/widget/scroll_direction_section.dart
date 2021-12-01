@@ -20,7 +20,6 @@ class SettingsScrollDirectionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SettingsSection.custom(
         title: Strings.settingsSectionScrollDirection,
-        topPadding: R.dimen.unit,
         child: SettingsSelectable.icons(
             items: DiscoveryFeedAxis.values.map(_getItem).toList()),
       );
