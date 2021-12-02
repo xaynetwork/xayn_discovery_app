@@ -9,6 +9,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_call_endpoint_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_request_builder_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/heuristic_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 
@@ -86,7 +87,8 @@ class ProgramManager extends Cubit<ProgramState>
           .where((it) => it.isCompleted)
           .map(_createReadabilityConfig)
           .followedBy(ReadabilityUseCase())
-          .followedBy(ExtractElementsUseCase())
+          .followedBy(ExtractElementsUseCase.standard())
+          .followedBy(HeuristicFilterUseCase.standard())
           .map((it) => it.paragraphs)
           .followedBy(RandomizerUseCase()),
     );
