@@ -23,6 +23,7 @@ dependencies:
   http: ^0.13.4
   html_unescape: 2.0.0
   injectable: ^1.2.2
+  instabug_flutter: ^10.9.1
   intl: ^0.17.0
   json_annotation: ^4.3.0
   json_serializable: ^6.0.0

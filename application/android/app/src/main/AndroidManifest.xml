@@ -2,7 +2,6 @@
     package="com.example.xayn_discovery_app">
 
     <application
-        android:name=".CustomFlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="xayn_discovery_app">
 
