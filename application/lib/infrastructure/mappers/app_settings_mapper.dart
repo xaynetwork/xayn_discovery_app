@@ -17,7 +17,7 @@ class AppSettingsMapper extends BaseMapper<AppSettings> {
         map[AppSettingsFields.discoveryFeedAxis] as int? ??
             DiscoveryFeedAxisFields.vertical;
 
-    return AppSettings(
+    return AppSettings.global(
       isOnboardingDone:
           map[AppSettingsFields.isOnboardingDone] as bool? ?? false,
       appTheme: appThemeValue.toAppThemeEnum(),

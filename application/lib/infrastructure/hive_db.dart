@@ -2,8 +2,10 @@ import 'dart:typed_data';
 
 import 'package:crdt/crdt.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_crdt/hive_adapters.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/box_names.dart';
+import 'package:xayn_discovery_app/infrastructure/hive_constants.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migrations.dart';
 
 class HiveDB {
@@ -22,6 +24,7 @@ class HiveDB {
     if (isPersistedOnDisk) {
       Hive.init(path!);
     }
+    registerHiveAdapters();
 
     // Open this box only for migration info
     await _openBox<Map>(BoxNames.migrationInfo, inMemory: !isPersistedOnDisk);
@@ -33,6 +36,20 @@ class HiveDB {
     await _openBoxes(inMemory: !isPersistedOnDisk);
 
     return HiveDB._(status);
+  }
+
+//Safely registers adapters, and checks if they have been registered before, which can happen during testing
+  static void registerHiveAdapters() {
+    // for some weird reason, has to be called individually, e.g. https://github.com/hivedb/hive/issues/499#issuecomment-757554658
+    if (!Hive.isAdapterRegistered(hlcAdapterTypeId)) {
+      Hive.registerAdapter(HlcAdapter(hlcAdapterTypeId));
+    }
+    if (!Hive.isAdapterRegistered(hlcCompactAdapterTypeId)) {
+      Hive.registerAdapter(HlcCompatAdapter(hlcCompactAdapterTypeId, nodeId));
+    }
+    if (!Hive.isAdapterRegistered(recordAdapterTypeId)) {
+      Hive.registerAdapter(RecordAdapter(recordAdapterTypeId));
+    }
   }
 
   static Future<void> _openBoxes({bool inMemory = false}) async {

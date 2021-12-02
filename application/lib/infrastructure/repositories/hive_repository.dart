@@ -75,7 +75,9 @@ abstract class HiveRepository<T extends Entity> extends BaseHiveRepository<T> {
   }
 
   Future<void> removeAll(Iterable<UniqueId> ids) async {
-    ids.forEach((id) => recordBox.delete(id.value));
+    for (var id in ids) {
+      recordBox.delete(id.value);
+    }
   }
 
   /// Alias for removeAll

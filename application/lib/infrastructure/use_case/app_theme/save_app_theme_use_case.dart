@@ -1,18 +1,19 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
+import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 
 @injectable
 class SaveAppThemeUseCase extends UseCase<AppTheme, None> {
-  final FakeAppThemeStorage _storage;
+  final AppSettingsRepository _repository;
 
-  SaveAppThemeUseCase(this._storage);
+  SaveAppThemeUseCase(this._repository);
 
   @override
   Stream<None> transaction(AppTheme param) async* {
-    await Future.delayed(const Duration(milliseconds: 42));
-    _storage.value = param;
+    final settings = await _repository.getSettings();
+    final updatedSettings = settings.copyWith(appTheme: param);
+    await _repository.save(updatedSettings);
     yield none;
   }
 }

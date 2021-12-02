@@ -12,12 +12,24 @@ class AppSettings with _$AppSettings implements Entity {
     required bool isOnboardingDone,
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
-    @Default(AppSettings.globalId) UniqueId id,
+    required UniqueId id,
   }) = _AppSettings;
 
-  factory AppSettings.initial() => AppSettings(
-        appTheme: AppTheme.system,
+  factory AppSettings.global({
+    required bool isOnboardingDone,
+    required AppTheme appTheme,
+    required DiscoveryFeedAxis discoveryFeedAxis,
+  }) =>
+      AppSettings(
+        isOnboardingDone: isOnboardingDone,
+        appTheme: appTheme,
+        discoveryFeedAxis: DiscoveryFeedAxis.vertical,
+        id: AppSettings.globalId(),
+      );
+
+  factory AppSettings.initial() => AppSettings.global(
         isOnboardingDone: false,
+        appTheme: AppTheme.system,
         discoveryFeedAxis: DiscoveryFeedAxis.vertical,
       );
 
