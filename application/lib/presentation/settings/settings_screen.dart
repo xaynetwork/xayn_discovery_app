@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
@@ -24,9 +25,14 @@ class SettingsScreen extends StatefulWidget {
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen>
+    with NavBarConfigMixin {
   late final SettingsScreenManager _manager;
   late final Future<SettingsScreenManager> initManagerFuture;
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+      buildNavBarItemBack(onPressed: _manager.onBackNavPressed));
 
   Linden get linden => UnterDenLinden.getLinden(context);
 

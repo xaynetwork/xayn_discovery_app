@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_scr
 
 import 'onboarding_screen_widget_test.mocks.dart';
 
+/// TODO move this to configure dependencies / investigate why getit need the package_info
 void packageInfoMock() {
   const MethodChannel('dev.fluttercommunity.plus/package_info')
       .setMockMethodCallHandler((MethodCall methodCall) async {

@@ -4,10 +4,11 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
-import 'package:xayn_discovery_app/presentation/app/widget/app.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
+import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
+import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
 
 void main() async {
   await setup();
@@ -38,4 +39,31 @@ Widget getApp() {
   return di.get<FeatureManager>().showFeaturesScreen
       ? SelectFeatureScreen(child: unterDenLinden)
       : unterDenLinden;
+}
+
+class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  late AppNavigationManager _navigatorManager;
+
+  @override
+  void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
+    _navigatorManager = di.get();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      theme: UnterDenLinden.getLinden(context).themeData,
+      routeInformationParser: _navigatorManager.routeInformationParser,
+      routerDelegate: AppRouter(_navigatorManager),
+    );
+  }
 }
