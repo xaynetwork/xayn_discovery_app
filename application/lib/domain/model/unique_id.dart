@@ -9,7 +9,7 @@ class UniqueId with _$UniqueId {
     required String value,
   }) = _UniqueId;
 
-  factory UniqueId.generated() => UniqueId(value: const Uuid().v4());
+  static UniqueId generated() => UniqueId(value: const Uuid().v4());
 
   factory UniqueId.fromTrustedString(String uniqueId) =>
       UniqueId(value: uniqueId);
