@@ -168,7 +168,9 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ),
     ];
 
-    return ColoredBox(
+    return Container(
+      width: constraints.maxWidth,
+      height: fullSize,
       color: R.colors.swipeCardBackground,
       child: Stack(
         children: children,
