@@ -35,6 +35,13 @@ extension StringExtension on String {
     final index = length ~/ 2;
     var offset = 0;
 
+    maybeAppendIndicator(final String value) => '$value$indicator';
+    maybePrependIndicator(final String value) => '$indicator$value';
+    toTuple({required String left, required String right}) => [
+          maybeAppendIndicator(left),
+          maybePrependIndicator(right),
+        ];
+
     while (offset <= index) {
       final leftSplitIndex = index - offset;
       final rightSplitIndex = index + offset;
@@ -42,27 +49,25 @@ extension StringExtension on String {
       final rightChar = rightSplitIndex < length ? this[rightSplitIndex] : null;
 
       hasMatch(final String value) => pattern.matchAsPrefix(value) != null;
-      maybeAppendIndicator(final String value) => '$value$indicator';
-      maybePrependIndicator(final String value) => '$indicator$value';
 
       if (leftChar != null && hasMatch(leftChar)) {
-        return [
-          maybeAppendIndicator(substring(0, leftSplitIndex)),
-          maybePrependIndicator(substring(leftSplitIndex + 1, length)),
-        ];
+        return toTuple(
+          left: substring(0, leftSplitIndex),
+          right: substring(leftSplitIndex + 1, length),
+        );
       } else if (rightChar != null && hasMatch(rightChar)) {
-        return [
-          maybeAppendIndicator(substring(0, rightSplitIndex)),
-          maybePrependIndicator(substring(rightSplitIndex + 1, length)),
-        ];
+        return toTuple(
+          left: substring(0, rightSplitIndex),
+          right: substring(rightSplitIndex + 1, length),
+        );
       }
 
       offset++;
     }
 
-    return [
-      substring(0, index),
-      substring(index, length),
-    ];
+    return toTuple(
+      left: substring(0, index),
+      right: substring(index, length),
+    );
   }
 }
