@@ -18,9 +18,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_d
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
+abstract class SettingsNavActions {
+  void onBackNavPressed();
+}
+
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
-    with UseCaseBlocHelper<SettingsScreenState> {
+    with UseCaseBlocHelper<SettingsScreenState>
+    implements SettingsNavActions {
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetAppThemeUseCase _getAppThemeUseCase;
   final SaveAppThemeUseCase _saveAppThemeUseCase;
@@ -30,6 +35,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
   final BugReportingService _bugReportingService;
   final ExtractLogUseCase _extractLogUseCase;
+  final SettingsNavActions _settingsNavActions;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -41,6 +47,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._listenDiscoveryFeedAxisUseCase,
     this._bugReportingService,
     this._extractLogUseCase,
+    this._settingsNavActions,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -120,4 +127,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       return buildReady();
     });
   }
+
+  @override
+  void onBackNavPressed() => _settingsNavActions.onBackNavPressed();
 }

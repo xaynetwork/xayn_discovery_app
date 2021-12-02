@@ -3,6 +3,7 @@ class Strings {
 
   static const String your = 'Your';
 
+  static const String activeSearchSearchHint = 'Search';
   static const String settingsTitle = 'Settings';
   static const String settingsSectionTitleAppTheme = 'Your App Theme';
   static const String settingsSectionScrollDirection =

@@ -25,4 +25,13 @@ class Keys {
       Key('settings_terms_and_conditions');
   static const Key settingsHaveFoundBug = Key('settings_have_found_bug');
   static const Key settingsShareBtn = Key('settings_share');
+
+  static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
+  static const Key navBarItemHome = Key('nav_bar_item_home');
+  static const Key navBarItemSearch = Key('nav_bar_item_search');
+  static const Key navBarItemAccount = Key('nav_bar_item_account');
+  static const Key navBarItemArrowLeft = Key('nav_bar_item_arrow_left');
+  static const Key navBarItemLike = Key('nav_bar_item_like');
+  static const Key navBarItemDisLike = Key('nav_bar_item_dis_like');
+  static const Key navBarItemShare = Key('nav_bar_item_share');
 }
