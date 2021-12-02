@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
@@ -11,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
@@ -80,6 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
     final children = [
       _buildAppThemeSection(state.theme),
+      _buildScrollDirectionSection(state.axis),
       _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -97,6 +100,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
         theme: appTheme,
         onSelected: _manager.changeTheme,
+      );
+
+  Widget _buildScrollDirectionSection(DiscoveryFeedAxis axis) =>
+      SettingsScrollDirectionSection(
+        axis: axis,
+        onSelected: _manager.changeAxis,
       );
 
   Widget _buildGeneralSection() => SettingsGeneralInfoSection(

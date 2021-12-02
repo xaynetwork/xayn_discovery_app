@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-/// A temporary widget which displays a search icon.
+/// A temporary widget used for navigation.
 /// Should be removed once the bottom navigation is ready.
-class TempSearchButton extends StatelessWidget {
-  const TempSearchButton({
+class TempButton extends StatelessWidget {
+  const TempButton({
     Key? key,
+    required this.iconName,
     required this.onPressed,
   }) : super(key: key);
 
+  final String iconName;
   final VoidCallback onPressed;
 
   @override
@@ -17,7 +19,7 @@ class TempSearchButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       child: SvgPicture.asset(
-        R.assets.icons.search,
+        iconName,
         color: R.colors.iconBackground,
       ),
     );
