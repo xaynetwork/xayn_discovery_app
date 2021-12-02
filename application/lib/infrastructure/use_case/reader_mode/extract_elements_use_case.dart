@@ -20,6 +20,11 @@ class ExtractElementsUseCase extends UseCase<ProcessHtmlResult, Elements> {
     this.maxParagraphSize = kMaxParagraphSizeInChars,
   });
 
+  @factoryMethod
+  ExtractElementsUseCase.standard()
+      : splitIndicator = kSplitIndicator,
+        maxParagraphSize = kMaxParagraphSizeInChars;
+
   @override
   Stream<Elements> transaction(ProcessHtmlResult param) async* {
     final html = param.contents;
