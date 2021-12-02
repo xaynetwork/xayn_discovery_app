@@ -35,10 +35,26 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final materialApp = MaterialApp(
       title: 'Xayn Discovery App',
       theme: UnterDenLinden.getLinden(context).themeData,
+      navigatorObservers: [
+        NavBarObserver(),
+      ],
       home: const MainScreen(),
+    );
+
+    final stack = Stack(
+      children: [
+        materialApp,
+        const Positioned.fill(top: null, child: NavBar()),
+      ],
+    );
+    // this one used to style properly NavBar components
+    // it should be the same as your App class
+    return MaterialApp(
+      home: NavBarContainer(child: stack),
+      theme: materialApp.theme,
     );
   }
 }
@@ -59,13 +75,19 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
     _featureManager = di.get();
+    if (_featureManager.isEnabled(Feature.onBoarding)) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const OnBoardingScreen()),
+        );
+      });
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isOnBoardingEnabled = _featureManager.isEnabled(Feature.onBoarding);
-    if (isOnBoardingEnabled) return const OnBoardingScreen();
     return const DiscoveryFeed();
   }
 }

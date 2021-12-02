@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'feature_manager_state.dart';
 
 const FeatureMap kInitialFeatureMap = {
-  Feature.onBoarding: false,
+  Feature.onBoarding: EnvironmentHelper.kIsDebug,
   Feature.featuresScreen: EnvironmentHelper.kIsInternal,
 };
 

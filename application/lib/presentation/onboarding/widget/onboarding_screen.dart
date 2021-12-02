@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
+import 'package:xayn_discovery_app/presentation/widget/nav_bar_items.dart';
 
 import '../model/onboarding_page_data.dart';
 import 'onboarding_page_builder.dart';
@@ -26,10 +27,20 @@ class OnBoardingScreen extends StatefulWidget {
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _OnBoardingScreenState extends State<OnBoardingScreen>
+    with NavBarConfigMixin {
   late final OnBoardingManager _onBoardingManager;
   late final PageController _pageController;
   late final List<OnBoardingPageData> _onBoardingPagesData;
+
+  var isCompleted = false;
+
+  @override
+  NavBarConfig get navBarConfig => isCompleted
+      ? NavBarConfig.backBtn(buildNavBarItemBack(onPressed: () {
+          Navigator.pop(context);
+        }))
+      : NavBarConfig.hide();
 
   @override
   void initState() {
@@ -117,7 +128,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   bool _dotsIndicatorBuildWhen(OnBoardingState state) => state.map(
         started: (_) => true,
-        onPageChanged: (_) => true,
+        onPageChanged: (state) {
+          if (!isCompleted &&
+              state.currentPageIndex == _onBoardingPagesData.length - 1) {
+            isCompleted = true;
+            NavBarContainer.updateNavBar(context);
+          }
+          return true;
+        },
         completed: (_) => false,
         error: (_) => false,
       );

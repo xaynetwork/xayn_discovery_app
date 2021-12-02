@@ -36,9 +36,13 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   late final Duration _transitionDuration;
 
   WebResource get webResource => widget.document.webResource;
+
   Uri get url => webResource.url;
+
   String get imageUrl => webResource.displayUrl.toString();
+
   String get snippet => webResource.snippet;
+
   String get title => webResource.title;
 
   @override

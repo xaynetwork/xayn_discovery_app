@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
-import 'package:xayn_discovery_app/presentation/widget/button/temp_button.dart';
+import 'package:xayn_discovery_app/presentation/widget/nav_bar_items.dart';
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -24,11 +24,25 @@ class DiscoveryFeed extends StatefulWidget {
   State<StatefulWidget> createState() => _DiscoveryFeedState();
 }
 
-class _DiscoveryFeedState extends State<DiscoveryFeed> {
+class _DiscoveryFeedState extends State<DiscoveryFeed> with NavBarConfigMixin {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
 
   int _totalResults = 0;
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig([
+        buildNavBarItemHome(
+          isActive: true,
+          onPressed: () {},
+        ),
+        buildNavBarItemSearch(
+          onPressed: () => _openScreen(const ActiveSearch(), true),
+        ),
+        buildNavBarItemAccount(
+          onPressed: () => _openScreen(const SettingsScreen(), false),
+        )
+      ]);
 
   @override
   void initState() {
@@ -47,51 +61,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final bottomNav = Positioned(
-      bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
-      child: Row(
-        children: [
-          TempButton(
-            iconName: R.assets.icons.search,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ActiveSearch(),
-              ),
-            ),
-          ),
-          SizedBox(width: R.dimen.unit),
-          TempButton(
-            iconName: R.assets.icons.gear,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            ),
-          ),
-        ],
-      ),
-    );
+  Widget build(BuildContext context) => Scaffold(
+        body: _buildFeedView(),
 
-    return Scaffold(
-      body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
-        children: [
-          _buildFeedView(),
-          bottomNav,
-        ],
-      ),
-
-      /// This is for testing purposes only
-      /// Should be removed once we have a settings page
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            UnterDenLinden.of(context).changeBrightness(R.invertedBrightness),
-        tooltip: 'Toggle Theme',
-        child: const Icon(Icons.theater_comedy),
-      ),
-    );
-  }
+        /// This is for testing purposes only
+        /// Should be removed once we have a settings page
+        floatingActionButton: FloatingActionButton(
+          onPressed: () =>
+              UnterDenLinden.of(context).changeBrightness(R.invertedBrightness),
+          tooltip: 'Toggle Theme',
+          child: const Icon(Icons.theater_comedy),
+        ),
+      );
 
   Widget Function(BuildContext, int) _itemBuilder({
     required List<Document> results,
@@ -142,6 +123,21 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
           );
         },
       );
+
+  void _openScreen(Widget screen, bool replace) {
+    final route = MaterialPageRoute(builder: (context) => screen);
+    if (replace) {
+      Navigator.pushReplacement(
+        context,
+        route,
+      );
+    } else {
+      Navigator.push(
+        context,
+        route,
+      );
+    }
+  }
 }
 
 class _ResultCard extends StatelessWidget {

@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/nav_bar_items.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -24,11 +25,18 @@ class SettingsScreen extends StatefulWidget {
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen>
+    with NavBarConfigMixin {
   late final SettingsScreenManager _manager;
   late final Future<SettingsScreenManager> initManagerFuture;
 
   Linden get linden => UnterDenLinden.getLinden(context);
+
+  @override
+  NavBarConfig get navBarConfig =>
+      NavBarConfig.backBtn(buildNavBarItemBack(onPressed: () {
+        Navigator.of(context).pop();
+      }));
 
   @override
   void initState() {
