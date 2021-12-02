@@ -5,13 +5,11 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 
-import '../../app_wrapper.dart';
-
 void main() {
   testWidgets(
     'GIVEN section THEN verify all widgets present',
     (final WidgetTester tester) async {
-      await tester.pumpAppWrapped(SettingsGeneralInfoSection(
+      await tester.pumpLindenApp(SettingsGeneralInfoSection(
         onAboutPressed: () {},
         onImprintPressed: () {},
         onCarbonNeutralPressed: () {},
@@ -55,7 +53,7 @@ void main() {
         onTermsPressed: () => callbacks[Keys.settingsTermsAndConditions] = true,
         onPrivacyPressed: () => callbacks[Keys.settingsPrivacyPolicy] = true,
       );
-      await tester.pumpAppWrapped(widget);
+      await tester.pumpLindenApp(widget);
 
       for (final key in callbacks.keys) {
         final btnFinder = find.byKey(key);

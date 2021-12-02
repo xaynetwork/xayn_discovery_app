@@ -12,6 +12,11 @@ class Keys {
   static const Key settingsThemeLight = Key('settings_theme_item_light');
   static const Key settingsThemeDark = Key('settings_theme_item_dark');
 
+  static const Key settingsScrollDirectionVertical =
+      Key('settings_scroll_direction_vertical');
+  static const Key settingsScrollDirectionHorizontal =
+      Key('settings_scroll_direction_horizontal');
+
   static const Key settingsAboutXayn = Key('settings_about_xayn');
   static const Key settingsCarbonNeutral = Key('settings_carbon_neutral');
   static const Key settingsImprint = Key('settings_imprint');

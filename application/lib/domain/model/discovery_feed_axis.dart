@@ -1,0 +1,4 @@
+enum DiscoveryFeedAxis {
+  vertical,
+  horizontal,
+}
