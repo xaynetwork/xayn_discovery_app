@@ -25,7 +25,7 @@ class HeuristicFilterUseCase extends UseCase<Elements, Elements> {
   HeuristicFilterUseCase.standard() : minWordCount = kMinWordCount;
 
   @override
-  Stream<Elements> transaction(Elements param) {
+  Stream<Elements> transaction(Elements param) async* {
     final validParagraphs = <String>[];
 
     for (var paragraph in param.paragraphs) {
@@ -41,10 +41,10 @@ class HeuristicFilterUseCase extends UseCase<Elements, Elements> {
       throw const FilterAggregateException();
     }
 
-    return Stream.value(Elements(
+    yield Elements(
       processHtmlResult: param.processHtmlResult,
       paragraphs: validParagraphs,
-    ));
+    );
   }
 
   bool isTooShort(String text) =>
