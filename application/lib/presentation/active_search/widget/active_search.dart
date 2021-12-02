@@ -7,8 +7,6 @@ import 'package:xayn_discovery_app/presentation/active_search/manager/active_sea
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
-import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/nav_bar_items.dart';
 
@@ -27,13 +25,13 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
   @override
   NavBarConfig get navBarConfig => NavBarConfig([
         buildNavBarItemHome(
-          onPressed: () => _openScreen(const DiscoveryFeed(), true),
+          onPressed: _activeSearchManager.onHomeClicked,
         ),
         buildNavBarItemSearchActive(
           onSearchPressed: _activeSearchManager.handleSearch,
         ),
         buildNavBarItemAccount(
-          onPressed: () => _openScreen(const SettingsScreen(), false),
+          onPressed: _activeSearchManager.onAccountClicked,
         )
       ]);
 
@@ -96,19 +94,4 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
           document: document,
         ),
       );
-
-  void _openScreen(Widget screen, bool replace) {
-    final route = MaterialPageRoute(builder: (context) => screen);
-    if (replace) {
-      Navigator.pushReplacement(
-        context,
-        route,
-      );
-    } else {
-      Navigator.push(
-        context,
-        route,
-      );
-    }
-  }
 }

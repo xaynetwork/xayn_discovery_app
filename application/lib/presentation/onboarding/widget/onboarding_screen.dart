@@ -37,9 +37,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
 
   @override
   NavBarConfig get navBarConfig => isCompleted
-      ? NavBarConfig.backBtn(buildNavBarItemBack(onPressed: () {
-          Navigator.pop(context);
-        }))
+      ? NavBarConfig.backBtn(
+          buildNavBarItemBack(onPressed: _onBoardingManager.onCloseClicked))
       : NavBarConfig.hide();
 
   @override

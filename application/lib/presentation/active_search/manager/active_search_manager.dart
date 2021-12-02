@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/active_search/manager/active_sea
 import 'package:injectable/injectable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
+import 'package:xayn_discovery_app/presentation/navigation/screen/controller.dart';
 
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
@@ -19,11 +20,13 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 class ActiveSearchManager extends Cubit<ActiveSearchState>
     with UseCaseBlocHelper<ActiveSearchState> {
   ActiveSearchManager(
+    this._screenController,
     this._discoveryEngineResultsUseCase,
   ) : super(ActiveSearchState.empty()) {
     _init();
   }
 
+  final ScreenController _screenController;
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   late final UseCaseSink<DiscoveryEngineResultsParam, DiscoveryEngineState>
       _searchHandler;
@@ -38,6 +41,10 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
   void _init() {
     _searchHandler = pipe(_discoveryEngineResultsUseCase);
   }
+
+  void onAccountClicked() => _screenController.openAccount(param: true);
+
+  void onHomeClicked() => _screenController.openHome();
 
   @override
   Future<ActiveSearchState?> computeState() async =>

@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/domain/model/fake_model.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
@@ -11,11 +12,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/presentation/navigation/dialog/controller.dart';
+import 'package:xayn_discovery_app/presentation/navigation/screen/controller.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
     with UseCaseBlocHelper<SettingsScreenState> {
+  final ScreenController _screenController;
+  final DialogController _dialogController;
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetAppThemeUseCase _getAppThemeUseCase;
   final SaveAppThemeUseCase _saveAppThemeUseCase;
@@ -25,6 +30,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
 
   SettingsScreenManager(
+    this._screenController,
+    this._dialogController,
     this._getAppVersionUseCase,
     this._getAppThemeUseCase,
     this._saveAppThemeUseCase,
@@ -68,12 +75,25 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     // todo: handle report bug
     //ignore: avoid_print
     print('report bug clicked');
+    _dialogController.showReportBug(
+      onReportPressed: () {
+        // do something
+      },
+      onCancelPressed: () {
+        // or do not
+      },
+    );
   }
 
   void shareApp() {
     // todo: handle share app url/etc action
     //ignore: avoid_print
     print('shareApp clicked');
+  }
+
+  void onCloseClicked() {
+    final result = ResultModel(true);
+    _screenController.pop(result: result);
   }
 
   void openUrl(String url) {

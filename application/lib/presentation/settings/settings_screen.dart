@@ -19,7 +19,12 @@ import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/nav_bar_items.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  final bool exampleParam;
+
+  const SettingsScreen({
+    required this.exampleParam,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -33,10 +38,8 @@ class _SettingsScreenState extends State<SettingsScreen>
   Linden get linden => UnterDenLinden.getLinden(context);
 
   @override
-  NavBarConfig get navBarConfig =>
-      NavBarConfig.backBtn(buildNavBarItemBack(onPressed: () {
-        Navigator.of(context).pop();
-      }));
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+      buildNavBarItemBack(onPressed: _manager.onCloseClicked));
 
   @override
   void initState() {

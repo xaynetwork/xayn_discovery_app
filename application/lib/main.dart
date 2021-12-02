@@ -1,3 +1,4 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -6,6 +7,8 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
+import 'package:xayn_discovery_app/presentation/navigation/screen/controller.dart';
+import 'package:xayn_discovery_app/presentation/navigation/screen/router/app_router.gr.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
 void main() {
@@ -33,15 +36,18 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final _appRouter = AppRouter();
+
   @override
   Widget build(BuildContext context) {
-    final materialApp = MaterialApp(
+    final materialApp = MaterialApp.router(
       title: 'Xayn Discovery App',
       theme: UnterDenLinden.getLinden(context).themeData,
-      navigatorObservers: [
-        NavBarObserver(),
-      ],
-      home: const MainScreen(),
+      routerDelegate: _appRouter.delegate(
+          navigatorObservers: () => [
+                NavBarObserver(),
+              ]),
+      routeInformationParser: _appRouter.defaultRouteParser(),
     );
 
     final stack = Stack(
@@ -75,14 +81,18 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
     _featureManager = di.get();
+    final screenController = di.get<ScreenController>();
+
+    // should be done once, when first screen init
+    (screenController as ScreenControllerImpl).setRouter(context.router);
+
+    // ideally this should happen inside screen manager, but not here
     if (_featureManager.isEnabled(Feature.onBoarding)) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const OnBoardingScreen()),
-        );
+        screenController.openOnboarding();
       });
     }
+
     super.initState();
   }
 

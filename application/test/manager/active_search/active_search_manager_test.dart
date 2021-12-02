@@ -11,7 +11,7 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 import 'active_search_manager_test.mocks.dart';
 
-@GenerateMocks([DiscoveryEngineResultsUseCase, Document])
+@GenerateMocks([DiscoveryEngineResultsUseCase, Document,])
 void main() {
   late MockDiscoveryEngineResultsUseCase useCase;
 

@@ -3,11 +3,13 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/domain/model/fake_model.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/navigation/screen/controller.dart';
 
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
@@ -21,6 +23,7 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     with UseCaseBlocHelper<DiscoveryFeedState> {
   DiscoveryFeedManager(
+    this._screenController,
     this._discoveryEngineResultsUseCase,
     this._randomKeyWordsUseCase,
     this._listenDiscoveryFeedAxisUseCase,
@@ -28,6 +31,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     _initHandlers();
   }
 
+  final ScreenController _screenController;
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final RandomKeyWordsUseCase _randomKeyWordsUseCase;
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
@@ -38,6 +42,17 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   void handleLoadMore() async {
     _searchHandler(state.results ?? const <Document>[]);
   }
+
+  void onAccountClicked() =>
+      _screenController.openAccount(param: false).then((ResultModel? model) {
+        if (model != null) {
+          // live with it
+        }
+      });
+
+  void onSearchClicked() => _screenController.openSearch();
+
+  void onHomeClicked() {}
 
   void _initHandlers() {
     /// Consumes the discovery engine's results output,

@@ -2,6 +2,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/onboarding_completed_use_case.dart';
+import 'package:xayn_discovery_app/presentation/navigation/screen/controller.dart';
 
 import 'onboarding_state.dart';
 
@@ -9,7 +10,10 @@ import 'onboarding_state.dart';
 class OnBoardingManager extends Cubit<OnBoardingState>
     with UseCaseBlocHelper<OnBoardingState> {
   final OnBoardingCompletedUseCase _onBoardingCompletedUseCase;
+  final ScreenController _screenController;
+
   OnBoardingManager(
+    this._screenController,
     this._onBoardingCompletedUseCase,
   ) : super(const OnBoardingState.started());
 
@@ -22,6 +26,8 @@ class OnBoardingManager extends Cubit<OnBoardingState>
         _isPageChanged = true;
         _hasError = false;
       });
+
+  void onCloseClicked() => _screenController.pop();
 
   Future<void> onOnBoardingCompleted(int currentPageIndex) async {
     final result = await _onBoardingCompletedUseCase(currentPageIndex);
