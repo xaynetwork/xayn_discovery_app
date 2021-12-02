@@ -9,6 +9,7 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
@@ -29,6 +30,7 @@ import 'settings_manager_test.mocks.dart';
   GetDiscoveryFeedAxisUseCase,
   SaveDiscoveryFeedAxisUseCase,
   ListenDiscoveryFeedAxisUseCase,
+  BugReportingService,
 ])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
@@ -47,6 +49,7 @@ void main() {
   late MockGetDiscoveryFeedAxisUseCase getDiscoveryFeedAxisUseCase;
   late MockSaveDiscoveryFeedAxisUseCase saveDiscoveryFeedAxisUseCase;
   late MockListenDiscoveryFeedAxisUseCase listenDiscoveryFeedAxisUseCase;
+  late MockBugReportingService bugReportingService;
 
   setUp(() {
     getAppVersionUseCase = MockGetAppVersionUseCase();
@@ -56,6 +59,8 @@ void main() {
     getDiscoveryFeedAxisUseCase = MockGetDiscoveryFeedAxisUseCase();
     saveDiscoveryFeedAxisUseCase = MockSaveDiscoveryFeedAxisUseCase();
     listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
+    listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
+    bugReportingService = MockBugReportingService();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
@@ -83,6 +88,7 @@ void main() {
         getDiscoveryFeedAxisUseCase,
         saveDiscoveryFeedAxisUseCase,
         listenDiscoveryFeedAxisUseCase,
+        bugReportingService,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -228,6 +234,25 @@ void main() {
       verifyInOrder([
         //default calls here,
         getAppVersionUseCase.singleOutput(none),
+        getAppThemeUseCase.singleOutput(none),
+        listenAppThemeUseCase.transform(any),
+      ]);
+      verifyNoMoreInteractions(saveAppThemeUseCase);
+      verifyNoMoreInteractions(getAppVersionUseCase);
+      verifyNoMoreInteractions(getAppThemeUseCase);
+      verifyNoMoreInteractions(listenAppThemeUseCase);
+    },
+  );
+  blocTest<SettingsScreenManager, SettingsScreenState>(
+    'INVOKE showDialog for bug reporting THEN call bug Reporting Service',
+    build: () => create(),
+    act: (manager) => manager.reportBug(),
+    //default one, emitted when manager created
+    expect: () => [stateReady],
+    verify: (manager) {
+      verifyInOrder([
+        getAppVersionUseCase.singleOutput(none),
+        bugReportingService.showDialog(),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);

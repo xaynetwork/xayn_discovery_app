@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 import 'package:instabug_flutter/Instabug.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
@@ -8,13 +9,18 @@ const kInstabugAndroidStartMethod = 'startInstabug';
 const kInstabugTokenParam = 'token';
 const kInstabugInvocationEventParam = 'invocationEvents';
 
-class ReportABugUseCase {
-  static init() {
+@lazySingleton
+class BugReportingService {
+  BugReportingService() {
+    _init();
+  }
+
+  _init() {
     final token = Env.instabugToken;
     final invocationEvents = [InvocationEvent.none];
 
     if (SafePlatform.isAndroid) {
-      _initAndroidWithoutCrashReporting(token, invocationEvents);
+      _initAndroid(token, invocationEvents);
     } else {
       _initiOS(token, invocationEvents);
     }
@@ -22,7 +28,13 @@ class ReportABugUseCase {
     Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
   }
 
-  static _initAndroidWithoutCrashReporting(
+  /// Since we are not using Crash Analytics from Instabug, there is no reason
+  /// to start instabug in onCreate method for the Android Application as
+  /// stated in their documentation.
+  ///
+  /// Invoking a channel method async is much preferred since we can easily pass
+  /// the token and won't need to pass from BuildConfig
+  _initAndroid(
     String token,
     List<InvocationEvent> invocationEvents,
   ) async {
@@ -36,11 +48,11 @@ class ReportABugUseCase {
     await _channel.invokeMethod<Object>(kInstabugAndroidStartMethod, params);
   }
 
-  static _initiOS(
+  _initiOS(
     String token,
     List<InvocationEvent> invocationEvents,
   ) =>
       Instabug.start(token, invocationEvents);
 
-  static showDialog() => Instabug.show();
+  showDialog() => Instabug.show();
 }

@@ -6,7 +6,6 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bug_reporting/report_a_bug_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
@@ -85,24 +84,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 
       /// This is for testing purposes only
       /// Should be removed once we have a settings page
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: R.dimen.unit4),
-            child: FloatingActionButton(
-              child: const Icon(Icons.bug_report),
-              tooltip: 'Report a bug',
-              onPressed: () => ReportABugUseCase.showDialog(),
-            ),
-          ),
-          FloatingActionButton(
-            onPressed: () => UnterDenLinden.of(context)
-                .changeBrightness(R.invertedBrightness),
-            tooltip: 'Toggle Theme',
-            child: const Icon(Icons.theater_comedy),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            UnterDenLinden.of(context).changeBrightness(R.invertedBrightness),
+        tooltip: 'Toggle Theme',
+        child: const Icon(Icons.theater_comedy),
       ),
     );
   }

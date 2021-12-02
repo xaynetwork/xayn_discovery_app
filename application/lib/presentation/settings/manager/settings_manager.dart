@@ -13,6 +13,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
+import '../../../infrastructure/service/bug_reporting/bug_reporting_service.dart';
+
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
     with UseCaseBlocHelper<SettingsScreenState> {
@@ -23,6 +25,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetDiscoveryFeedAxisUseCase _getDiscoveryFeedAxisUseCase;
   final SaveDiscoveryFeedAxisUseCase _saveDiscoveryFeedAxisUseCase;
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
+  final BugReportingService _bugReportingService;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -32,6 +35,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._getDiscoveryFeedAxisUseCase,
     this._saveDiscoveryFeedAxisUseCase,
     this._listenDiscoveryFeedAxisUseCase,
+    this._bugReportingService,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -64,11 +68,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
 
-  void reportBug() {
-    // todo: handle report bug
-    //ignore: avoid_print
-    print('report bug clicked');
-  }
+  void reportBug() => _bugReportingService.showDialog();
 
   void shareApp() {
     // todo: handle share app url/etc action
