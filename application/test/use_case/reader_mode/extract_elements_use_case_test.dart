@@ -9,10 +9,10 @@ void main() {
   const html = '''<div id="readability-page-1">
         <section>
           <h2>This is a test!</h2>
-          <p>1</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In at.</p>
         </section>
         <div>
-          <p>2</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a.</p>
           <div>
             <img src="https://www.xayn.com">
           </div>
@@ -34,8 +34,10 @@ void main() {
       expect: [
         elementsSuccess(
           const Elements(
-            paragraphs: ['1', '2'],
-            images: ['https://www.xayn.com'],
+            paragraphs: [
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In at.',
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a.',
+            ],
             processHtmlResult: result,
           ),
         ),

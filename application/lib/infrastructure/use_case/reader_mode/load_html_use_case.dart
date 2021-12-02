@@ -9,6 +9,16 @@ import 'package:xayn_readability/xayn_readability.dart';
 const String kRequestMethod = 'GET';
 const String kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
+const Map<String, String> kHeaders = {
+  'accept':
+      'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+  'accept-encoding': 'gzip, deflate, br',
+  'cache-control': 'no-cache',
+  'pragma': 'no-cache',
+  'upgrade-insecure-requests': '1',
+};
+const Duration kTimeout = Duration(seconds: 8);
+const int kMaxRedirects = 5;
 
 /// A [UseCase] which uses a Platform-specific client to fetch the html
 /// contents at the Uri that was provided as input.
@@ -25,7 +35,16 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     yield Progress.start(uri: param);
 
     final url = param.toString();
-    final response = await client.send(http.Request(kRequestMethod, url));
+    final response = await client.send(
+      http.Request(
+        kRequestMethod,
+        url,
+        followRedirects: true,
+        maxRedirects: kMaxRedirects,
+        headers: kHeaders,
+        timeout: kTimeout,
+      ),
+    );
     final body = await _extractResponseBody(response);
 
     yield Progress.finish(html: body, uri: param);
