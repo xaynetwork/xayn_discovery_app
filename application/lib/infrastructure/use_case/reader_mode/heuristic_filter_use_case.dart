@@ -1,14 +1,9 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/story_mode/paragraph_rejected_reason.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
 
 const int kMinWordCount = 10;
-
-enum FailureReason {
-  notEnoughWords,
-  allUppercase,
-  containsMostlyLinks,
-}
 
 @injectable
 class HeuristicFilterUseCase extends UseCase<Elements, Elements> {
@@ -64,40 +59,41 @@ class HeuristicFilterUseCase extends UseCase<Elements, Elements> {
     test({
       required bool Function(String text) predicate,
       required String text,
-      required FailureReason failureReason,
+      required ParagraphRejectedReason reasonWhenRejected,
     }) {
       if (predicate(text)) {
-        throw FilterException(text, failureReason);
+        throw FilterException(text, reasonWhenRejected);
       }
     }
 
     test(
       predicate: isTooShort,
       text: paragraph,
-      failureReason: FailureReason.notEnoughWords,
+      reasonWhenRejected: ParagraphRejectedReason.notEnoughWords,
     );
 
     test(
       predicate: isScreaming,
       text: paragraph,
-      failureReason: FailureReason.allUppercase,
+      reasonWhenRejected: ParagraphRejectedReason.allUppercase,
     );
 
     test(
       predicate: containsMostlyLinks,
       text: paragraph,
-      failureReason: FailureReason.containsMostlyLinks,
+      reasonWhenRejected: ParagraphRejectedReason.containsMostlyLinks,
     );
   }
 }
 
 class FilterException extends Error {
   final String paragraph;
-  final FailureReason reason;
+  final ParagraphRejectedReason rejectionReason;
 
-  String get message => '$paragraph did not pass the test because $reason';
+  String get message =>
+      '$paragraph did not pass the test because $rejectionReason';
 
-  FilterException(this.paragraph, this.reason);
+  FilterException(this.paragraph, this.rejectionReason);
 
   @override
   String toString() => message;
