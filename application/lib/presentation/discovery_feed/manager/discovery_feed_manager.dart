@@ -11,8 +11,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
@@ -29,13 +29,15 @@ typedef ObservedViewTypes = Map<Document, DocumentViewType>;
 /// in a list format by widgets.
 @injectable
 class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
-    with UseCaseBlocHelper<DiscoveryFeedState> {
+    with UseCaseBlocHelper<DiscoveryFeedState>
+    implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._discoveryEngineResultsUseCase,
     this._randomKeyWordsUseCase,
     this._listenDiscoveryFeedAxisUseCase,
     this._discoveryCardObservationUseCase,
     this._discoveryCardMeasuredObservationUseCase,
+    this._discoveryFeedNavActions,
   ) : super(DiscoveryFeedState.empty()) {
     _initHandlers();
   }
@@ -46,6 +48,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final DiscoveryCardObservationUseCase _discoveryCardObservationUseCase;
   final DiscoveryCardMeasuredObservationUseCase
       _discoveryCardMeasuredObservationUseCase;
+  final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   final LogUseCase<DiscoveryCardMeasuredObservation>
       _measuredObservationLogger = LogUseCase(
@@ -284,4 +287,14 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           }
         }
       });
+
+  @override
+  void onSearchNavPressed() => _discoveryFeedNavActions.onSearchNavPressed();
+
+  @override
+  void onAccountNavPressed() => _discoveryFeedNavActions.onAccountNavPressed();
+
+  void onHomeNavPressed() {
+    // TODO probably go to the top of the feed
+  }
 }

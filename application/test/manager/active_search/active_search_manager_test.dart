@@ -11,7 +11,13 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 import 'active_search_manager_test.mocks.dart';
 
-@GenerateMocks([DiscoveryEngineResultsUseCase, Document])
+/// FIXME: Should be all moved to a single class Mocks so that we don't have to maintain
+/// GenerateMocks configs across all those files.
+@GenerateMocks([
+  DiscoveryEngineResultsUseCase,
+  Document,
+  ActiveSearchNavActions,
+])
 void main() {
   late MockDiscoveryEngineResultsUseCase useCase;
 
@@ -24,7 +30,8 @@ void main() {
     isComplete: true,
   );
 
-  ActiveSearchManager buildManager() => ActiveSearchManager(useCase);
+  ActiveSearchManager buildManager() =>
+      ActiveSearchManager(useCase, MockActiveSearchNavActions());
 
   setUp(() {
     useCase = MockDiscoveryEngineResultsUseCase();
