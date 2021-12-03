@@ -65,6 +65,8 @@ jobs:
           APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
+          INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build:release
@@ -82,6 +84,8 @@ jobs:
           APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
+          INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release
