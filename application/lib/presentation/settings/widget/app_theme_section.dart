@@ -22,7 +22,8 @@ class SettingsAppThemeSection extends StatelessWidget {
         title: Strings.settingsSectionTitleAppTheme,
         topPadding: R.dimen.unit,
         child: SettingsSelectable.icons(
-            items: AppTheme.values.map(_getItem).toList()),
+          items: AppTheme.values.map(_getItem).toList(),
+        ),
       );
 
   SettingsSelectableData _getItem(AppTheme theme) => SettingsSelectableData(
