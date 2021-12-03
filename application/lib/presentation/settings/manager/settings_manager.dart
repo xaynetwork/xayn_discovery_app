@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -67,7 +69,14 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
 
-  void reportBug() => _bugReportingService.showDialog();
+  Future<void> reportBug({
+    Brightness? brightness,
+    Color? primaryColor,
+  }) async =>
+      _bugReportingService.showDialog(
+        brightness: brightness,
+        primaryColor: primaryColor,
+      );
 
   void shareApp() {
     // todo: handle share app url/etc action

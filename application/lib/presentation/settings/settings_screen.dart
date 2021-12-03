@@ -117,8 +117,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTermsPressed: () => _manager.openUrl('https://tc.com'),
       );
 
-  Widget _buildHelpImproveSection() =>
-      SettingsHelpImproveSection(onFindBugPressed: _manager.reportBug);
+  Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
+        onFindBugPressed: () async => await _manager.reportBug(
+          brightness: R.brightness,
+          primaryColor: R.colors.primary,
+        ),
+      );
 
   Widget _buildShareAppSection() =>
       ShareAppSection(onShareAppPressed: _manager.shareApp);

@@ -158,25 +158,6 @@ void main() {
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
-    'WHEN reportBug method called THEN call ___ useCase',
-    build: () => create(),
-    act: (manager) => manager.reportBug(),
-    //default one, emitted when manager created
-    expect: () => [stateReady],
-    verify: (manager) {
-      verifyInOrder([
-        //default calls here,
-        getAppVersionUseCase.singleOutput(none),
-        getAppThemeUseCase.singleOutput(none),
-        listenAppThemeUseCase.transform(any),
-      ]);
-      verifyNoMoreInteractions(saveAppThemeUseCase);
-      verifyNoMoreInteractions(getAppVersionUseCase);
-      verifyNoMoreInteractions(getAppThemeUseCase);
-      verifyNoMoreInteractions(listenAppThemeUseCase);
-    },
-  );
-  blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN shareApp method called THEN call ___ useCase',
     build: () => create(),
     act: (manager) => manager.shareApp(),
@@ -245,6 +226,9 @@ void main() {
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'INVOKE showDialog for bug reporting THEN call bug Reporting Service',
+    setUp: () {
+      when(bugReportingService.showDialog()).thenAnswer((_) async {});
+    },
     build: () => create(),
     act: (manager) => manager.reportBug(),
     //default one, emitted when manager created
@@ -260,6 +244,7 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
+      verifyNoMoreInteractions(bugReportingService);
     },
   );
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:instabug_flutter/Instabug.dart';
@@ -53,5 +55,15 @@ class BugReportingService {
   ) =>
       Instabug.start(token, invocationEvents);
 
-  showDialog() => Instabug.show();
+  Future<void> showDialog({
+    Brightness? brightness,
+    Color? primaryColor,
+  }) async {
+    if (brightness != null) await Instabug.setColorTheme(_getTheme(brightness));
+    if (primaryColor != null) await Instabug.setPrimaryColor(primaryColor);
+    await Instabug.show();
+  }
+
+  ColorTheme _getTheme(Brightness brightness) =>
+      brightness == Brightness.dark ? ColorTheme.dark : ColorTheme.light;
 }

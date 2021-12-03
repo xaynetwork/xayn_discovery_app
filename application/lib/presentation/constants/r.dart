@@ -29,6 +29,9 @@ class R {
   static Brightness get invertedBrightness =>
       R.isDarkMode ? Brightness.light : Brightness.dark;
 
+  static Brightness get brightness =>
+      R.isDarkMode ? Brightness.dark : Brightness.light;
+
   static void updateLinden(Linden linden) {
     _linden = linden;
   }
