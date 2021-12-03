@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
@@ -12,8 +13,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_di
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
-
-import '../../../infrastructure/service/bug_reporting/bug_reporting_service.dart';
 
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
