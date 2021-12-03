@@ -28,7 +28,7 @@ class HiveMigrations implements Migrations {
 
   @override
   Future<MigrationStatus> migrate({int? toVersion}) async {
-    var currentVersion;
+    int? currentVersion;
 
     final versionToMigrate = toVersion ?? MigrationInfo.dbVersion;
 
