@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
-import 'package:xayn_discovery_app/infrastructure/box_names.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/utils/box_names.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 enum MigrationStatus { completed, failed }

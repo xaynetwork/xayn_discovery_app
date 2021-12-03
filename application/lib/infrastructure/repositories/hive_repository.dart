@@ -4,8 +4,8 @@ import 'package:meta/meta.dart';
 import 'package:xayn_discovery_app/domain/model/entity.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/hive_db.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/utils/hive_db.dart';
 
 abstract class BaseHiveRepository<T> {
   final Map<dynamic, T> _mapperCache = <dynamic, T>{};
