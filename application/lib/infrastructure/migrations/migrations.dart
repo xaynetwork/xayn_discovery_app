@@ -16,7 +16,7 @@ abstract class Migrations {
 /// This table defines all the migrations from version X to any other version.
 /// Those migrations will be executed in sequence.
 final _migrations = <int, BaseMigration Function()>{
-  // 0: () => Migration_0_To_1(),
+  // Add migrations here. Follow the same process as in xayn_search.
 };
 
 typedef BoxOpener<T> = Box<T> Function(String name);

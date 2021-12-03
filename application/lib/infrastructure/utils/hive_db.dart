@@ -87,17 +87,6 @@ class HiveDB {
     return status;
   }
 
-  /// compact boxes to actually free up space in storage
-  Future<void> compactBoxes() async {
-    await Future.wait([
-      // Hive.box<Record>(BoxNames.queries).compact(),
-      // Hive.box<Record>(BoxNames.results).compact(),
-      // Hive.box<Record>(BoxNames.collections).compact(),
-      // Hive.box<Record>(BoxNames.bookmarks).compact(),
-      // Hive.box<Record>(BoxNames.newsFeedHistory).compact(),
-    ]);
-  }
-
   /// Deletes all currently open Hive boxes from disk.
   /// The home directory will not be deleted.
   Future<void> destroy() async {
