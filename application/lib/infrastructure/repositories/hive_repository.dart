@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:meta/meta.dart';
 import 'package:xayn_discovery_app/domain/model/entity.dart';
+import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/hive_db.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
@@ -95,6 +96,26 @@ abstract class HiveRepository<T extends Entity> extends BaseHiveRepository<T> {
         .where((element) => element != null)
         .cast<T>()
         .toList(growable: false);
+  }
+
+  /// Returns a broadcast stream of change events.
+  ///
+  /// If the [key] parameter is provided, only events for the specified key are
+  /// broadcasted.
+  Stream<RepositoryEvent<T>> watch({UniqueId? id}) {
+    return recordBox.watch().map((event) {
+      final obj = mapper.fromMap(event.value);
+      final uniqueId =
+          obj is Entity ? obj.id : UniqueId.fromTrustedString(event.key);
+
+      return RepositoryEvent.from(obj, uniqueId);
+    }).where((event) {
+      if (id != null) {
+        return event.id == id;
+      } else {
+        return true;
+      }
+    }).cast();
   }
 
   Future<void> merge(Map<String, Record<dynamic>> remoteRecords) async {

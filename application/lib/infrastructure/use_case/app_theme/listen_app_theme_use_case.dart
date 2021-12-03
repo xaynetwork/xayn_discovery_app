@@ -11,15 +11,13 @@ class ListenAppThemeUseCase extends UseCase<None, AppTheme> {
 
   ListenAppThemeUseCase(this._repository);
 
-  // @factoryMethod
-  // static ListenAppThemeUseCase create(FakeAppThemeStorage storage) {
-  //   return ListenAppThemeUseCase(storage);
-  // }
-
-  // @override
-  // Stream<AppTheme> transaction(None param) =>
-  //     _storage.asStream(() => _storage.value);
-
   @override
-  Stream<AppTheme> transaction(None param) => Stream.value(AppTheme.system);
+  Stream<AppTheme> transaction(None param) async* {
+    final controller = StreamController<AppTheme>();
+    _repository.watch().listen((_) async {
+      final settings = await _repository.getSettings();
+      controller.add(settings.appTheme);
+    });
+    yield* controller.stream;
+  }
 }

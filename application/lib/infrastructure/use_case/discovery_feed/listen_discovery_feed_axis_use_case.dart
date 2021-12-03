@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
@@ -11,17 +13,13 @@ class ListenDiscoveryFeedAxisUseCase extends UseCase<None, DiscoveryFeedAxis> {
 
   ListenDiscoveryFeedAxisUseCase(this._repository);
 
-  // @factoryMethod
-  // static ListenDiscoveryFeedAxisUseCase create(
-  //     FakeDiscoveryFeedAxisStorage storage) {
-  //   return ListenDiscoveryFeedAxisUseCase(storage);
-  // }
-
-  // @override
-  // Stream<DiscoveryFeedAxis> transaction(None param) =>
-  //     _storage.asStream(() => _storage.value);
-
   @override
-  Stream<DiscoveryFeedAxis> transaction(None param) =>
-      Stream.value(DiscoveryFeedAxis.horizontal);
+  Stream<DiscoveryFeedAxis> transaction(None param) async* {
+    final controller = StreamController<DiscoveryFeedAxis>();
+    _repository.watch().listen((_) async {
+      final settings = await _repository.getSettings();
+      controller.add(settings.discoveryFeedAxis);
+    });
+    yield* controller.stream;
+  }
 }
