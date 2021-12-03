@@ -3,21 +3,25 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
+import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
+import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 
 import 'listen_app_theme_use_case_test.mocks.dart';
 
-@GenerateMocks([FakeAppThemeStorage])
+@GenerateMocks([AppSettingsRepository])
 void main() {
-  late MockFakeAppThemeStorage storage;
+  late MockAppSettingsRepository repository;
   late ListenAppThemeUseCase useCase;
   setUp(() {
-    storage = MockFakeAppThemeStorage();
-    useCase = ListenAppThemeUseCase(storage);
+    repository = MockAppSettingsRepository();
+    useCase = ListenAppThemeUseCase(repository);
 
-    when(storage.value).thenAnswer((_) => AppTheme.dark);
+    // final settingsWithDarkTheme =
+    //     AppSettings.initial().copyWith(appTheme: AppTheme.dark);
+    // when(repository.watch())
+    //     .thenAnswer((_) => Future.value(settingsWithDarkTheme));
   });
   useCaseTest<ListenAppThemeUseCase, None, AppTheme>(
     'WHEN storage emit new value THEN useCase emit it as well',
