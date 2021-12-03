@@ -6,8 +6,10 @@ import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
 const kInstabugAndroidMethodChannel = 'instabug_android';
 const kInstabugAndroidStartMethod = 'startInstabug';
-const kInstabugTokenParam = 'token';
-const kInstabugInvocationEventParam = 'invocationEvents';
+const kInstabugTokenParamName = 'token';
+const kInstabugInvocationEventsParamName = 'invocationEvents';
+const kInstabugToken = Env.instabugToken;
+const kInstabugInvocationEvents = [InvocationEvent.none];
 
 @lazySingleton
 class BugReportingService {
@@ -16,13 +18,10 @@ class BugReportingService {
   }
 
   _init() {
-    final token = Env.instabugToken;
-    final invocationEvents = [InvocationEvent.none];
-
     if (SafePlatform.isAndroid) {
-      _initAndroid(token, invocationEvents);
+      _initAndroid(kInstabugToken, kInstabugInvocationEvents);
     } else {
-      _initiOS(token, invocationEvents);
+      _initiOS(kInstabugToken, kInstabugInvocationEvents);
     }
 
     Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
@@ -42,8 +41,8 @@ class BugReportingService {
     final List<String> invocationEventsStrings =
         invocationEvents.map((e) => e.toString()).toList(growable: false);
     final params = {
-      kInstabugTokenParam: token,
-      kInstabugInvocationEventParam: invocationEventsStrings
+      kInstabugTokenParamName: token,
+      kInstabugInvocationEventsParamName: invocationEventsStrings
     };
     await _channel.invokeMethod<Object>(kInstabugAndroidStartMethod, params);
   }
