@@ -113,7 +113,7 @@ void main() {
       );
     },
     build: () => create(),
-    act: (manager) => manager.changeTheme(appTheme),
+    act: (manager) => manager.saveTheme(appTheme),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {
