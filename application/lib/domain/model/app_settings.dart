@@ -23,7 +23,7 @@ class AppSettings with _$AppSettings implements Entity {
       AppSettings(
         isOnboardingDone: isOnboardingDone,
         appTheme: appTheme,
-        discoveryFeedAxis: DiscoveryFeedAxis.vertical,
+        discoveryFeedAxis: discoveryFeedAxis,
         id: AppSettings.globalId(),
       );
 

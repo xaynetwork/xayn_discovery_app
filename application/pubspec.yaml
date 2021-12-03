@@ -42,7 +42,7 @@ dependencies:
   xayn_architecture:
     git:
       url: git@github.com:xaynetwork/xayn_architecture.git
-      ref: f2a50a5665c9b5087709ee441c6c77aa2bfd1fb2
+      ref: 167e9c5c6aa3802a9063c5940e5f7481e6981fe7
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
