@@ -13,7 +13,6 @@ class DiscoveryCardObservationUseCase extends UseCase<DiscoveryCardObservation,
   @override
   Stream<Timestamped<DiscoveryCardObservation>> transaction(
       DiscoveryCardObservation param) {
-
     return Stream.value(param).timestamp();
   }
 }
