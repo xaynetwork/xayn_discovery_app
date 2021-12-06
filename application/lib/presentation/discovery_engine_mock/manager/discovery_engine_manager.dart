@@ -69,7 +69,9 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
             consumeEvent: (data) => !data.isComplete,
-            run: (data) => _isLoading = !data.isComplete,
+            run: (data) {
+              _isLoading = !data.isComplete;
+            },
           )
           .followedBy(
             LogUseCase(
@@ -94,7 +96,8 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
         }
 
         if (_isLoading) {
-          return const DiscoveryEngineState.loading();
+          return DiscoveryEngineState(
+              results: state.results, isComplete: false);
         }
 
         if (a != null) {
