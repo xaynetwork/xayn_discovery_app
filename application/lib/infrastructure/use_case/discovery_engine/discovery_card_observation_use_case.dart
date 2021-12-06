@@ -25,7 +25,7 @@ class DiscoveryCardMeasuredObservationUseCase extends UseCase<
       DiscoveryCardObservationPair param) async* {
     final duration = param.last.timestamp.difference(param.first.timestamp);
 
-    if (param.first.value.document != null && duration.inSeconds > 0) {
+    if (param.first.value.document != null) {
       yield DiscoveryCardMeasuredObservation.fromObservable(
         observable: param.first.value,
         duration: duration,
