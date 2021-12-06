@@ -13,7 +13,7 @@ class DiscoveryCardObservationUseCase extends UseCase<DiscoveryCardObservation,
   @override
   Stream<Timestamped<DiscoveryCardObservation>> transaction(
       DiscoveryCardObservation param) {
-    print('timestamp');
+
     return Stream.value(param).timestamp();
   }
 }
@@ -25,7 +25,7 @@ class DiscoveryCardMeasuredObservationUseCase extends UseCase<
   Stream<DiscoveryCardMeasuredObservation> transaction(
       DiscoveryCardObservationPair param) async* {
     final duration = param.last.timestamp.difference(param.first.timestamp);
-    print('duration');
+
     yield DiscoveryCardMeasuredObservation.fromObservable(
       observable: param.first.value,
       duration: duration,
