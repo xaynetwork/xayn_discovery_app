@@ -92,6 +92,30 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   void _initHandlers() {
+    /// accumulates all past results with the latest results.
+    /// this way, `_searchHandler` will always emit a `List` containing
+    /// all results of the feed, making `computeState` deterministic.
+    combineAllResults(DiscoveryEngineState accumulatedState, value, index) =>
+        DiscoveryEngineState(
+            isComplete: value.isComplete,
+            results: [...accumulatedState.results, ...value.results]);
+
+    /// this is invoked when the discovery engine returns with results from
+    /// the last submitted query.
+    /// in some cases, no results are returned, and then we need to trigger
+    /// the discovery engine again with a different query.
+    /// todo: this all becomes obsolete once we have the real discovery engine
+    maybeLoadMore(DiscoveryEngineState state) {
+      if (!state.isLoading && state.results.isEmpty) {
+        // if not loading, and the current batch has 0 results,
+        // then we need to fire a new query.
+        // this repeats within this chain, until new results
+        // are indeed available, so that the user can finally scroll
+        // to the next card(s).
+        handleLoadMore();
+      }
+    }
+
     /// Consumes the discovery engine's results output,
     /// emits a managed list of max 15 results to subscribers.
     _searchHandler = pipe(_randomKeyWordsUseCase).transform(
@@ -103,19 +127,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
             ),
           )
           .followedBy(_discoveryEngineResultsUseCase)
-          .scheduleComputeState(
-            consumeEvent: (it) => it.isLoading || it.results.isEmpty,
-            run: (it) {
-              if (!it.isLoading && it.results.isEmpty) {
-                handleLoadMore();
-              }
-            },
-          )
+          .doOnData(maybeLoadMore)
           .scan(
-            (DiscoveryEngineState accumulated, value, index) =>
-                DiscoveryEngineState(
-                    isComplete: value.isComplete,
-                    results: [...accumulated.results, ...value.results]),
+            combineAllResults,
             const DiscoveryEngineState.initial(),
           ),
     );
