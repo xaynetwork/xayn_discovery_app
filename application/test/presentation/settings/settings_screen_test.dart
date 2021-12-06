@@ -92,7 +92,7 @@ void main() {
         manager.stream,
 
         // actual click happened here
-        manager.changeTheme(AppTheme.dark),
+        manager.saveTheme(AppTheme.dark),
       ]);
       verifyNoMoreInteractions(manager);
     },
