@@ -10,6 +10,7 @@ class FeedView extends StatelessWidget {
     required this.itemBuilder,
     this.scrollDirection = Axis.vertical,
     this.onFinalIndex,
+    this.onIndexChanged,
     this.cardViewController,
     this.secondaryItemBuilder,
     this.itemCount,
@@ -20,6 +21,7 @@ class FeedView extends StatelessWidget {
   final Widget Function(BuildContext, int) itemBuilder;
   final Widget Function(BuildContext, int)? secondaryItemBuilder;
   final VoidCallback? onFinalIndex;
+  final IndexChangedCallback? onIndexChanged;
   final int? itemCount;
 
   @override
@@ -44,6 +46,7 @@ class FeedView extends StatelessWidget {
             itemSpacing: .0,
             clipBorderRadius: const BorderRadius.all(Radius.zero),
             onFinalIndex: onFinalIndex,
+            onIndexChanged: onIndexChanged,
           ),
         );
       }),

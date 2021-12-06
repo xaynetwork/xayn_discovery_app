@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
@@ -33,7 +34,9 @@ class CreateBingRequestUseCase extends CreateHttpRequestUseCase {
 
   @override
   Stream<Uri> transaction(String param) async* {
-    yield Uri.https(Env.searchApiBaseUrl, '_d/search', {
+    const path = kReleaseMode ? '_p' : '_d';
+
+    yield Uri.https(Env.searchApiBaseUrl, '$path/search', {
       'q': param.trim(),
       'count': resultCount.toString(),
       'mkt': locale,

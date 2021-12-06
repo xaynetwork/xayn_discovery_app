@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engin
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
@@ -93,6 +94,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 
         return _ResultCard(
           document: document,
+          card: DiscoveryCard(
+            isPrimary: isPrimary,
+            document: document,
+            onViewTypeChanged: (viewType) =>
+                _discoveryFeedManager.handleViewType(document, viewType),
+          ),
           isPrimary: isPrimary,
           isSwipingEnabled: isSwipingEnabled,
         );
@@ -129,6 +136,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
             ),
             itemCount: _totalResults,
             onFinalIndex: _discoveryFeedManager.handleLoadMore,
+            onIndexChanged: _discoveryFeedManager.handleIndexChanged,
           );
         },
       );
@@ -137,20 +145,23 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
 class _ResultCard extends StatelessWidget {
   final bool isPrimary;
   final Document document;
+  final DiscoveryCard card;
   final bool isSwipingEnabled;
 
   const _ResultCard({
     Key? key,
     required this.isPrimary,
     required this.document,
+    required this.card,
     required this.isSwipingEnabled,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final card = SwipeableDiscoveryCard(
+    final swipeCard = SwipeableDiscoveryCard(
       isPrimary: isPrimary,
       document: document,
+      card: card,
       isSwipingEnabled: isSwipingEnabled,
     );
 
@@ -161,7 +172,7 @@ class _ResultCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        child: card,
+        child: swipeCard,
       ),
     );
   }
