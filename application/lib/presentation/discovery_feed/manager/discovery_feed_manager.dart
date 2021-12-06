@@ -170,6 +170,19 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     _discoveryFeedAxisHandler =
         consume(_listenDiscoveryFeedAxisUseCase, initialData: none);
 
+    /// This flow observes individual cards,
+    /// - first, it adds a timestamp when an observation occurs via `_discoveryCardObservationUseCase`
+    /// - then it uses `pairWise` so that it bundles the previous and the current events, see [pairwise](https://rxmarbles.com/#pairwise)
+    /// - then, it logs the measured observation using the logger, todo: this will be submitted to the real discovery engine
+    /// - then, it buffers the last `kBufferCount` observations, see [buffer](https://rxmarbles.com/#buffer)
+    /// - when the buffer reaches its count, it then folds its observations into a single, accumulated time spent over all observations.
+    /// - should this total duration not reach a certain value, then we consider the buffered batch as 'user-skipped cards'
+    ///
+    /// So, if finally we get `true` from this flow, then the buffered cards were
+    /// not very interesting to the user, as they were skipped fast enough one-by-one.
+    ///
+    /// In that case, we can decide to show an in-between card where the user can
+    /// maybe enter a custom keyword, or select a topic from a predefined list.
     _discoveryCardObservationHandler =
         pipe(_discoveryCardObservationUseCase).transform(
       (out) => out
@@ -182,7 +195,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               (Duration previousValue, element) =>
                   previousValue + element.duration))
           .map((timeSpent) =>
-              timeSpent > kResolveCardAsSkippedDuration * kBufferCount),
+              timeSpent <= kResolveCardAsSkippedDuration * kBufferCount),
     );
   }
 
