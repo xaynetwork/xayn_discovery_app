@@ -48,5 +48,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Xayn Discovery needs access to the microphone to be able to attach voice notes.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Xayn Discovery needs access to your photo library for you to be able to attach images.</string>
 </dict>
 </plist>

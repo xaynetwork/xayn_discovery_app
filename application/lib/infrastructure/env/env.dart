@@ -9,4 +9,5 @@ abstract class Env {
   static const String searchApiBaseUrl = _Env.searchApiBaseUrl;
   static const String searchApiSecretKey = _Env.searchApiSecretKey;
   static const String imageFetcherUrl = _Env.imageFetcherUrl;
+  static const String instabugToken = _Env.instabugToken;
 }
