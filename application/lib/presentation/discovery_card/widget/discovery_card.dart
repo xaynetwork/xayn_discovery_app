@@ -14,17 +14,21 @@ import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
 
+typedef ViewTypeCallback = void Function(DocumentViewType viewType);
+
 /// A widget which displays a discovery card.
 class DiscoveryCard extends StatefulWidget {
   final bool isPrimary;
   final Duration? transitionDuration;
   final Document document;
+  final ViewTypeCallback? onViewTypeChanged;
 
   const DiscoveryCard({
     Key? key,
     required this.isPrimary,
     required this.document,
     this.transitionDuration,
+    this.onViewTypeChanged,
   }) : super(key: key);
 
   @override
@@ -48,6 +52,12 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     _discoveryCardManager = di.get();
     _transitionDuration =
         widget.transitionDuration ?? R.animations.cardTransitionDuration;
+
+    widget.onViewTypeChanged?.call(
+      _discoveryCardManager.state.isInReaderMode
+          ? DocumentViewType.readerMode
+          : DocumentViewType.story,
+    );
   }
 
   @override
@@ -63,8 +73,14 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       _discoveryCardManager.updateUri(url);
     }
 
-    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+    return BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
+        listenWhen: (a, b) => a.isInReaderMode != b.isInReaderMode,
+        listener: (context, state) => widget.onViewTypeChanged?.call(
+              state.isInReaderMode
+                  ? DocumentViewType.readerMode
+                  : DocumentViewType.story,
+            ),
         builder: (context, state) {
           return LayoutBuilder(
             builder: (context, constraints) => _buildCardDisplayStack(

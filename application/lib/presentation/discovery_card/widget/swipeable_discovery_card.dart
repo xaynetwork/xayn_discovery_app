@@ -18,21 +18,18 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   const SwipeableDiscoveryCard({
     Key? key,
     required this.document,
+    required this.card,
     required this.isPrimary,
     this.isSwipingEnabled = true,
   }) : super(key: key);
 
   final Document document;
+  final DiscoveryCard card;
   final bool isPrimary;
   final bool isSwipingEnabled;
 
   @override
   Widget build(BuildContext context) {
-    final card = DiscoveryCard(
-      isPrimary: isPrimary,
-      document: document,
-    );
-
     return isSwipingEnabled ? _buildSwipeWidget(card) : card;
   }
 

@@ -10,7 +10,7 @@ class DiscoveryEngineState {
   final Object? error;
   final StackTrace? stackTrace;
 
-  bool get isLoading => !isComplete && results.isEmpty && !hasError;
+  bool get isLoading => !isComplete && !hasError;
 
   bool get hasError => error != null;
 
@@ -26,11 +26,13 @@ class DiscoveryEngineState {
         error = null,
         stackTrace = null;
 
-  const DiscoveryEngineState.loading()
-      : results = const [],
-        isComplete = false,
-        error = null,
-        stackTrace = null;
+  DiscoveryEngineState.combine({
+    required DiscoveryEngineState previous,
+    required DiscoveryEngineState next,
+  })  : results = [...previous.results, ...next.results],
+        isComplete = next.isComplete,
+        error = next.error,
+        stackTrace = next.stackTrace;
 
   DiscoveryEngineState.error({
     required this.error,
