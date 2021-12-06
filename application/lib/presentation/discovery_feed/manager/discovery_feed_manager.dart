@@ -48,10 +48,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       _measuredObservationLogger = LogUseCase(
     (it) => {
       'todo': 'submit this data to the discovery engine',
-      'url': it.document.webResource.url,
+      'url': it.document?.webResource.url,
       'view type': it.viewType,
       'time spent': '${it.duration.inSeconds} seconds',
     }.toString(),
+    when: (it) => it.document != null,
   );
 
   late final UseCaseSink<List<Document>, DiscoveryEngineState> _searchHandler;
@@ -60,11 +61,14 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       _discoveryCardObservationHandler;
 
   Document? _observedDocument;
+  DocumentViewType? _observedViewType;
 
   void handleIndexChanged(int index) {
     final document = _observedDocument = state.results?[index];
 
     if (document != null) {
+      _observedViewType = DocumentViewType.story;
+
       _discoveryCardObservationHandler(
         DiscoveryCardObservation(
           document: document,
@@ -76,6 +80,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void handleViewType(Document document, DocumentViewType viewType) {
     if (document == _observedDocument) {
+      _observedViewType = viewType;
+
       _discoveryCardObservationHandler(
         DiscoveryCardObservation(
           document: document,
@@ -83,6 +89,17 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         ),
       );
     }
+  }
+
+  void handleActivityStatus(bool isAppInForeground) {
+    final observation = isAppInForeground
+        ? DiscoveryCardObservation(
+            document: _observedDocument,
+            viewType: _observedViewType,
+          )
+        : const DiscoveryCardObservation.none();
+
+    _discoveryCardObservationHandler(observation);
   }
 
   void handleLoadMore() async {
