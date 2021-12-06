@@ -82,11 +82,13 @@ extension NavBarStateExtension on State {
   NavBarItemEdit buildNavBarItemSearchActive({
     required OnSearchPressed onSearchPressed,
     bool isActive = false,
+    String? hint,
   }) =>
       NavBarItemEdit(
         svgIconPath: UnterDenLinden.getLinden(context).assets.icons.search,
         isHighlighted: isActive,
         onSearchPressed: onSearchPressed,
+        hint: hint,
         key: Keys.navBarItemSearch,
       );
 

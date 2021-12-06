@@ -28,6 +28,8 @@ class Strings {
   static const String settingsVersion = 'Version:';
   static const String settingsBuild = 'Build:';
 
+  static const String activeSearchSearchHint = 'Search';
+
   static const String minAgo = 'min ago';
   static const String momentsAgo = 'moments ago';
   static const String hourAgo = 'hour ago';
