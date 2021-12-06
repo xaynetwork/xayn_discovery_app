@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -99,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
         theme: appTheme,
-        onSelected: _manager.changeTheme,
+        onSelected: _changeTheme,
       );
 
   Widget _buildScrollDirectionSection(DiscoveryFeedAxis axis) =>
@@ -139,5 +140,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildBottomSpace() {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     return SizedBox(height: R.dimen.buttonMinHeight + bottomPadding);
+  }
+
+  void _changeTheme(AppTheme appTheme) {
+    _manager.saveTheme(appTheme);
+    UnterDenLinden.of(context).changeBrightness(appTheme.brightness);
   }
 }

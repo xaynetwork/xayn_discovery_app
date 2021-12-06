@@ -64,7 +64,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     });
   }
 
-  void changeTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
+  void saveTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
 
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
