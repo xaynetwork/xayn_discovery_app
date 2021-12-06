@@ -21,6 +21,8 @@ const int kBufferCount = 4;
 const Duration kResolveCardAsSkippedDuration = Duration(seconds: 3);
 Duration kBatchSkippedThreshold = kResolveCardAsSkippedDuration * kBufferCount;
 
+typedef ObservedViewTypes = Map<Document, DocumentViewType>;
+
 /// Manages the state for the main, or home discovery feed screen.
 ///
 /// It consumes events from the discovery engine and emits a state
@@ -68,28 +70,31 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   late final UseCaseSink<DiscoveryCardObservation, int>
       _discoveryCardObservationHandler;
 
+  final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
-  DocumentViewType? _observedViewType;
 
+  /// Trigger this handler whenever the primary card changes.
+  /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) {
     final document = _observedDocument = state.results?[index];
 
     if (document != null) {
-      _observedViewType = DocumentViewType.story;
-
       _discoveryCardObservationHandler(
         DiscoveryCardObservation(
           document: document,
-          viewType: DocumentViewType.story,
+          viewType: _observedViewTypes[document],
         ),
       );
     }
   }
 
+  /// Triggers a new observation for [document], if that document matches
+  /// the last known inner document (secondary cards may also trigger).
+  /// Use [viewType] to indicate the current view of that same document.
   void handleViewType(Document document, DocumentViewType viewType) {
-    if (document == _observedDocument) {
-      _observedViewType = viewType;
+    _observedViewTypes[document] = viewType;
 
+    if (document == _observedDocument) {
       _discoveryCardObservationHandler(
         DiscoveryCardObservation(
           document: document,
@@ -99,17 +104,26 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     }
   }
 
+  /// Handles moving the app between foreground and background.
+  ///
+  /// When the app moves into the background
+  /// - we stop observing the last known card
+  ///
+  /// When the app moves into the foreground
+  /// - we trigger a new observation with the last known card details
   void handleActivityStatus(bool isAppInForeground) {
     final observation = isAppInForeground
         ? DiscoveryCardObservation(
             document: _observedDocument,
-            viewType: _observedViewType,
+            viewType: _observedViewTypes[_observedDocument],
           )
         : const DiscoveryCardObservation.none();
 
     _discoveryCardObservationHandler(observation);
   }
 
+  /// Triggers the fake discovery engine to load more results, using a random
+  /// keyword which is derived from the current result set.
   void handleLoadMore() async {
     _searchHandler(state.results ?? const <Document>[]);
   }
@@ -120,8 +134,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     /// all results of the feed, making `computeState` deterministic.
     combineAllResults(DiscoveryEngineState accumulatedState, value, index) =>
         DiscoveryEngineState(
-            isComplete: value.isComplete,
-            results: [...accumulatedState.results, ...value.results]);
+          isComplete: value.isComplete,
+          results: [...accumulatedState.results, ...value.results],
+        );
 
     /// this is invoked when the discovery engine returns with results from
     /// the last submitted query.
@@ -173,8 +188,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     // trigger an initial random keyword to show the initial results.
     _searchHandler.call(const <Document>[]);
 
-    _discoveryFeedAxisHandler =
-        consume(_listenDiscoveryFeedAxisUseCase, initialData: none);
+    _discoveryFeedAxisHandler = consume(
+      _listenDiscoveryFeedAxisUseCase,
+      initialData: none,
+    );
 
     /// This flow observes individual cards,
     /// - first, it adds a timestamp when an observation occurs via `_discoveryCardObservationUseCase`
@@ -202,8 +219,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
             kBufferCount,
           ) // observe the last kBufferCount card durations in one batch
           .map(
-            (batch) => batch.fold(Duration.zero,
-                (Duration totalDuration, it) => totalDuration + it.duration),
+            (batch) => batch.fold(
+              Duration.zero,
+              (Duration totalDuration, it) => totalDuration + it.duration,
+            ),
           ) // accumulate into a total duration over all cards in the batch
           .map(
             (timeSpent) => timeSpent <= kBatchSkippedThreshold,
