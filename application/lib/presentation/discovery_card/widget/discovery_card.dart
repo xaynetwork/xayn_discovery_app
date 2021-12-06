@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -10,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/widget/nav_bar_items.dart';
 import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
@@ -31,7 +33,7 @@ class DiscoveryCard extends StatefulWidget {
   State<StatefulWidget> createState() => _DiscoveryCardState();
 }
 
-class _DiscoveryCardState extends State<DiscoveryCard> {
+class _DiscoveryCardState extends State<DiscoveryCard> with NavBarConfigMixin {
   late final DiscoveryCardManager _discoveryCardManager;
   late final Duration _transitionDuration;
 
@@ -44,6 +46,38 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   String get snippet => webResource.snippet;
 
   String get title => webResource.title;
+
+  DiscoveryCardState? _currentState;
+
+  @override
+  void didUpdateWidget(covariant DiscoveryCard oldWidget) {
+    if (oldWidget.isPrimary != widget.isPrimary) {
+      NavBarContainer.updateNavBar(context);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  NavBarConfig? get navBarConfig {
+    final ignoreConfig = !widget.isPrimary ||
+        _currentState == null ||
+        _currentState?.isInReaderMode == false;
+
+
+    return ignoreConfig
+        ? null
+        : NavBarConfig(
+            [
+              buildNavBarItemArrowLeft(
+                onPressed: _discoveryCardManager.toggleReaderMode,
+              ),
+              buildNavBarItemLike(onPressed: () {}, isLiked: false),
+              buildNavBarItemDisLike(onPressed: () {}, isDisLiked: false),
+              buildNavBarItemShare(onPressed: () {})
+            ],
+            isWidthExpanded: true,
+          );
+  }
 
   @override
   void initState() {
@@ -70,6 +104,13 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) {
+          if (widget.isPrimary &&
+              (_currentState == null ||
+                  _currentState!.isInReaderMode != state.isInReaderMode)) {
+            _currentState = state;
+            NavBarContainer.updateNavBar(context);
+          }
+
           return LayoutBuilder(
             builder: (context, constraints) => _buildCardDisplayStack(
               isPrimary: widget.isPrimary,
