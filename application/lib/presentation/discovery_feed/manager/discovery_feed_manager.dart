@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
@@ -53,6 +54,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       'time spent': '${it.duration.inSeconds} seconds',
     }.toString(),
     when: (it) => it.document != null,
+    logger: logger,
   );
 
   late final UseCaseSink<List<Document>, DiscoveryEngineState> _searchHandler;
