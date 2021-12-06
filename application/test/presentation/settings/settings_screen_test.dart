@@ -102,6 +102,9 @@ void main() {
   testWidgets(
     'WHEN "report bug" clicked THEN call manager reportBug method',
     (final WidgetTester tester) async {
+      const defaultPrimaryColor = Color(0xff233564);
+      const defaultBrightness = Brightness.light;
+
       await openScreen(tester);
 
       final btnFinder = find.byKey(Keys.settingsHaveFoundBug);
@@ -116,12 +119,14 @@ void main() {
 
       verifyInOrder([
         manager.state,
-
-        // actual click happened here
-        manager.reportBug(),
-
         manager.state,
         manager.stream,
+
+        // actual click happened here
+        manager.reportBug(
+          brightness: defaultBrightness,
+          primaryColor: defaultPrimaryColor,
+        ),
       ]);
       verifyNoMoreInteractions(manager);
     },
