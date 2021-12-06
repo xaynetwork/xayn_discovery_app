@@ -26,14 +26,6 @@ class DiscoveryEngineState {
         error = null,
         stackTrace = null;
 
-  DiscoveryEngineState.combine({
-    required DiscoveryEngineState previous,
-    required DiscoveryEngineState next,
-  })  : results = [...previous.results, ...next.results],
-        isComplete = next.isComplete,
-        error = next.error,
-        stackTrace = next.stackTrace;
-
   DiscoveryEngineState.error({
     required this.error,
     required this.stackTrace,
