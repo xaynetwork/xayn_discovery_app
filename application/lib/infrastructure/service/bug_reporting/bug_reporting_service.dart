@@ -27,6 +27,7 @@ class BugReportingService {
     }
 
     Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
+    Instabug.setSdkDebugLogsLevel(IBGSDKDebugLogsLevel.error);
   }
 
   /// Since we are not using Crash Analytics from Instabug, there is no reason

@@ -24,10 +24,9 @@ class R {
 
   static XDurations get durations => _durations;
 
-  static bool get isDarkMode => _linden.brightness == Brightness.dark;
+  static Brightness get brightness => _linden.brightness;
 
-  static Brightness get brightness =>
-      R.isDarkMode ? Brightness.dark : Brightness.light;
+  static bool get isDarkMode => brightness == Brightness.dark;
 
   static void updateLinden(Linden linden) {
     _linden = linden;

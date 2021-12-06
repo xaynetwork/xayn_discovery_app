@@ -44,6 +44,7 @@ void main() {
     when(manager.state).thenReturn(stateReady);
     streamController = StreamController<SettingsScreenState>();
     when(manager.stream).thenAnswer((_) => streamController.stream);
+    when(manager.reportBug()).thenAnswer((_) async {});
   });
 
   tearDown(() {
@@ -115,11 +116,12 @@ void main() {
 
       verifyInOrder([
         manager.state,
-        manager.state,
-        manager.stream,
 
         // actual click happened here
         manager.reportBug(),
+
+        manager.state,
+        manager.stream,
       ]);
       verifyNoMoreInteractions(manager);
     },
