@@ -49,7 +49,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 03034ac994b1ee4113a5fceb03cb90bd5222999c
+      ref: 5490aede4d61caedb65940d8903a087fc3accb7e
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine.git
