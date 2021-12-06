@@ -131,8 +131,21 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       }
     }
 
-    /// Consumes the discovery engine's results output,
-    /// emits a managed list of max 15 results to subscribers.
+    /// Invokes the fake discovery engine with a random search query.
+    /// Should the random keyword come up with 0 results,
+    /// then `maybeLoadMore` will attempt another call with a newly
+    /// generated random keyword, until we finally do get results.
+    ///
+    /// `scan` is part of rxdart, it basically accumulates all results
+    /// from all past events, including the newest one, into a single
+    /// combined result set.
+    ///
+    /// This makes `computeState` run deterministic, see also `combineAllResults`.
+    /// (see [scan](https://rxmarbles.com/#scan))
+    ///
+    /// `deterministic` implies that `computeState` can be run _at any given time_,
+    /// and just needs to take the latest event's results as the next results,
+    /// it avoids having to do inner state-management inside this manager.
     _searchHandler = pipe(_randomKeyWordsUseCase).transform(
       (out) => out
           .map(
@@ -149,6 +162,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           ),
     );
 
+    // trigger an initial random keyword to show the initial results.
     _searchHandler.call(const <Document>[]);
 
     _discoveryFeedAxisHandler =
