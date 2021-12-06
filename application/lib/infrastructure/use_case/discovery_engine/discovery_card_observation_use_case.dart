@@ -25,21 +25,27 @@ class DiscoveryCardMeasuredObservationUseCase extends UseCase<
       DiscoveryCardObservationPair param) async* {
     final duration = param.last.timestamp.difference(param.first.timestamp);
 
-    yield DiscoveryCardMeasuredObservation.fromObservable(
-      observable: param.first.value,
-      duration: duration,
-    );
+    if (param.first.value.document != null && duration.inSeconds > 0) {
+      yield DiscoveryCardMeasuredObservation.fromObservable(
+        observable: param.first.value,
+        duration: duration,
+      );
+    }
   }
 }
 
 class DiscoveryCardObservation {
-  final Document document;
-  final DocumentViewType viewType;
+  final Document? document;
+  final DocumentViewType? viewType;
 
   const DiscoveryCardObservation({
     required this.document,
     required this.viewType,
   });
+
+  const DiscoveryCardObservation.none()
+      : document = null,
+        viewType = null;
 }
 
 class DiscoveryCardMeasuredObservation extends DiscoveryCardObservation {
