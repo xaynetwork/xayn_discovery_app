@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
@@ -23,6 +24,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetDiscoveryFeedAxisUseCase _getDiscoveryFeedAxisUseCase;
   final SaveDiscoveryFeedAxisUseCase _saveDiscoveryFeedAxisUseCase;
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
+  final BugReportingService _bugReportingService;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -32,6 +34,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._getDiscoveryFeedAxisUseCase,
     this._saveDiscoveryFeedAxisUseCase,
     this._listenDiscoveryFeedAxisUseCase,
+    this._bugReportingService,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -64,11 +67,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
 
-  void reportBug() {
-    // todo: handle report bug
-    //ignore: avoid_print
-    print('report bug clicked');
-  }
+  void reportBug() => _bugReportingService.showDialog();
 
   void shareApp() {
     // todo: handle share app url/etc action
