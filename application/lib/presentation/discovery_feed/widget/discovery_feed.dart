@@ -24,7 +24,8 @@ class DiscoveryFeed extends StatefulWidget {
   State<StatefulWidget> createState() => _DiscoveryFeedState();
 }
 
-class _DiscoveryFeedState extends State<DiscoveryFeed> {
+class _DiscoveryFeedState extends State<DiscoveryFeed>
+    with WidgetsBindingObserver {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
 
@@ -35,6 +36,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
     _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
 
+    WidgetsBinding.instance!.addObserver(this);
+
     super.initState();
   }
 
@@ -43,7 +46,19 @@ class _DiscoveryFeedState extends State<DiscoveryFeed> {
     _cardViewController.dispose();
     _discoveryFeedManager.close();
 
+    WidgetsBinding.instance!.removeObserver(this);
+
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        return _discoveryFeedManager.handleActivityStatus(true);
+      default:
+        return _discoveryFeedManager.handleActivityStatus(false);
+    }
   }
 
   @override
