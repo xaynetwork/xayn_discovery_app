@@ -53,13 +53,18 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       'view type': it.viewType,
       'time spent': '${it.duration.inSeconds} seconds',
     }.toString(),
-    when: (it) => it.document != null,
+    when: (it) => it.document != null && it.duration.inSeconds > 0,
+    logger: logger,
+  );
+  final LogUseCase<int> _suggestTopicsAtIndexLogger = LogUseCase(
+    (it) =>
+        'the last $kBufferCount cards were skipped fast!\nshow a topics card after card index $it',
     logger: logger,
   );
 
   late final UseCaseSink<List<Document>, DiscoveryEngineState> _searchHandler;
   late final UseCaseValueStream<DiscoveryFeedAxis> _discoveryFeedAxisHandler;
-  late final UseCaseSink<DiscoveryCardObservation, bool>
+  late final UseCaseSink<DiscoveryCardObservation, int>
       _discoveryCardObservationHandler;
 
   Document? _observedDocument;
@@ -183,19 +188,34 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     ///
     /// In that case, we can decide to show an in-between card where the user can
     /// maybe enter a custom keyword, or select a topic from a predefined list.
+    ///
+    /// To know in a deterministic way which card index the user was at when
+    /// the dismiss flow triggered, we map it to the last known document index.
     _discoveryCardObservationHandler =
         pipe(_discoveryCardObservationUseCase).transform(
       (out) => out
-          .pairwise()
+          .pairwise() // combine last card and current card
           .followedBy(_discoveryCardMeasuredObservationUseCase)
           .followedBy(_measuredObservationLogger)
-          .bufferCount(kBufferCount)
+          .bufferCount(
+              kBufferCount) // observe the last kBufferCount card durations in one batch
           .map((list) => list.fold(
               Duration.zero,
               (Duration previousValue, element) =>
-                  previousValue + element.duration))
+                  previousValue +
+                  element
+                      .duration)) // accumulate into a total duration over all cards in the batch
           .map((timeSpent) =>
-              timeSpent <= kResolveCardAsSkippedDuration * kBufferCount),
+              timeSpent <=
+              kResolveCardAsSkippedDuration *
+                  kBufferCount) // resolve if swiped fast enough to mark the batch as dismissed
+          .where((didDismissLastCards) =>
+              didDismissLastCards) // we only care for dismissed batches
+          .map((_) => state.results!
+              .indexOf(_observedDocument!)) // resolve the current card index
+          .scan((int max, value, index) => value > max ? value : max,
+              0) // keep only the maximum index
+          .followedBy(_suggestTopicsAtIndexLogger),
     );
   }
 
@@ -204,7 +224,12 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         _searchHandler,
         _discoveryFeedAxisHandler,
         _discoveryCardObservationHandler,
-      ).foldAll((engineState, axis, didDismissAll, errorReport) {
+      ).foldAll((
+        engineState,
+        axis,
+        suggestTopicsAtIndex,
+        errorReport,
+      ) {
         if (errorReport.isNotEmpty) {
           return state.copyWith(
             isInErrorState: true,
@@ -218,6 +243,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               isComplete: engineState.isComplete,
               isInErrorState: false,
               axis: axis ?? DiscoveryFeedAxis.vertical,
+              suggestTopicsAtIndex: suggestTopicsAtIndex,
             );
           }
         }
