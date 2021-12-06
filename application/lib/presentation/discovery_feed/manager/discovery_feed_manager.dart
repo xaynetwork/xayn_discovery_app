@@ -19,6 +19,7 @@ import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 const int kBufferCount = 4;
 const Duration kResolveCardAsSkippedDuration = Duration(seconds: 3);
+Duration kBatchSkippedThreshold = kResolveCardAsSkippedDuration * kBufferCount;
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -198,23 +199,25 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           .followedBy(_discoveryCardMeasuredObservationUseCase)
           .followedBy(_measuredObservationLogger)
           .bufferCount(
-              kBufferCount) // observe the last kBufferCount card durations in one batch
-          .map((list) => list.fold(
-              Duration.zero,
-              (Duration previousValue, element) =>
-                  previousValue +
-                  element
-                      .duration)) // accumulate into a total duration over all cards in the batch
-          .map((timeSpent) =>
-              timeSpent <=
-              kResolveCardAsSkippedDuration *
-                  kBufferCount) // resolve if swiped fast enough to mark the batch as dismissed
-          .where((didDismissLastCards) =>
-              didDismissLastCards) // we only care for dismissed batches
-          .map((_) => state.results!
-              .indexOf(_observedDocument!)) // resolve the current card index
-          .scan((int max, value, index) => value > max ? value : max,
-              0) // keep only the maximum index
+            kBufferCount,
+          ) // observe the last kBufferCount card durations in one batch
+          .map(
+            (batch) => batch.fold(Duration.zero,
+                (Duration totalDuration, it) => totalDuration + it.duration),
+          ) // accumulate into a total duration over all cards in the batch
+          .map(
+            (timeSpent) => timeSpent <= kBatchSkippedThreshold,
+          ) // resolve if swiped fast enough to mark the batch as dismissed
+          .where(
+            (didDismissLastCards) => didDismissLastCards,
+          ) // we only care for dismissed batches
+          .map(
+            (_) => state.results!.indexOf(_observedDocument!),
+          ) // resolve the current card index
+          .scan(
+            (int max, value, index) => value > max ? value : max,
+            0,
+          ) // keep only the maximum index
           .followedBy(_suggestTopicsAtIndexLogger),
     );
   }
