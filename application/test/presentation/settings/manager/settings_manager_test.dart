@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_the
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
@@ -32,6 +33,7 @@ import 'settings_manager_test.mocks.dart';
   SaveDiscoveryFeedAxisUseCase,
   ListenDiscoveryFeedAxisUseCase,
   BugReportingService,
+  ExtractLogUseCase,
 ])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
@@ -51,6 +53,7 @@ void main() {
   late MockSaveDiscoveryFeedAxisUseCase saveDiscoveryFeedAxisUseCase;
   late MockListenDiscoveryFeedAxisUseCase listenDiscoveryFeedAxisUseCase;
   late MockBugReportingService bugReportingService;
+  late MockExtractLogUseCase extractLogUseCase;
 
   setUp(() {
     getAppVersionUseCase = MockGetAppVersionUseCase();
@@ -62,6 +65,7 @@ void main() {
     listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
     listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
     bugReportingService = MockBugReportingService();
+    extractLogUseCase = MockExtractLogUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
@@ -90,6 +94,7 @@ void main() {
         saveDiscoveryFeedAxisUseCase,
         listenDiscoveryFeedAxisUseCase,
         bugReportingService,
+        extractLogUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -158,6 +163,35 @@ void main() {
       verifyNoMoreInteractions(saveDiscoveryFeedAxisUseCase);
     },
   );
+
+  blocTest<SettingsScreenManager, SettingsScreenState>(
+    'WHEN extractLog method called THEN call ExtractLogUseCase',
+    setUp: () => when(extractLogUseCase.call(none)).thenAnswer(
+      (_) async => const [
+        UseCaseResult.success(
+          ExtractLogUseCaseResult.shareDialogOpened,
+        ),
+      ],
+    ),
+    build: () => create(),
+    act: (manager) => manager.extractLogs(),
+    //default one, emitted when manager created
+    expect: () => [stateReady],
+    verify: (manager) {
+      verifyInOrder([
+        getAppVersionUseCase.singleOutput(none),
+        extractLogUseCase.call(none),
+        getAppThemeUseCase.singleOutput(none),
+        listenAppThemeUseCase.transform(any),
+      ]);
+      verifyNoMoreInteractions(extractLogUseCase);
+      verifyNoMoreInteractions(saveAppThemeUseCase);
+      verifyNoMoreInteractions(getAppVersionUseCase);
+      verifyNoMoreInteractions(getAppThemeUseCase);
+      verifyNoMoreInteractions(listenAppThemeUseCase);
+    },
+  );
+
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN shareApp method called THEN call ___ useCase',
     build: () => create(),
