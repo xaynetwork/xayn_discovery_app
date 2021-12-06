@@ -14,9 +14,9 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
+import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
-import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -125,13 +125,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildShareAppSection() =>
       ShareAppSection(onShareAppPressed: _manager.shareApp);
 
-  Widget _buildAppVersion(AppVersion appVersion) => Padding(
-        padding: EdgeInsets.symmetric(vertical: R.dimen.unit4),
-        child: Text(
-          '${Strings.settingsVersion} ${appVersion.version}\n'
-          '${Strings.settingsBuild} ${appVersion.build}',
-          style: R.styles.appBodyText,
+  Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: R.dimen.unit4),
+          child: Text(
+            '${Strings.settingsVersion} ${appVersion.version}\n'
+            '${Strings.settingsBuild} ${appVersion.build}',
+            style: R.styles.appBodyText,
+          ),
         ),
+        onLongPress: () => _manager.extractLogs(),
       );
 
   Widget _buildBottomSpace() {
