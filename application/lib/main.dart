@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -9,13 +7,10 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/file_logger.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
-  _setupLogToFile();
   runApp(getApp());
 }
 
@@ -74,17 +69,4 @@ class _MainScreenState extends State<MainScreen> {
     if (isOnBoardingEnabled) return const OnBoardingScreen();
     return const DiscoveryFeed();
   }
-}
-
-Future<void> _setupLogToFile() async {
-  final directory = await getApplicationDocumentsDirectory();
-
-  final path = directory.path;
-
-  initLogger(
-    output: ConsoleAndFileOutput(
-      '$path/$kLogFileName',
-    ),
-    filter: ProductionFilter(),
-  );
 }

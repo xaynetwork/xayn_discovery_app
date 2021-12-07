@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+
+import 'handlers.dart';
 
 @injectable
 class ExtractLogUseCase extends UseCase<None, ExtractLogUseCaseResult> {
@@ -47,38 +45,9 @@ class ExtractLogUseCase extends UseCase<None, ExtractLogUseCaseResult> {
   }
 }
 
+@visibleForTesting
 enum ExtractLogUseCaseResult {
   shareDialogOpened,
   exceptionOccurred,
   fileNotExisting,
-}
-
-@Injectable()
-class FileHandler {
-  FileHandler();
-
-  /// Throws a [MissingPlatformDirectoryException] if the system is unable to provide the directory.
-  Future<Directory> getAppDirectory() => getApplicationDocumentsDirectory();
-
-  File createFileObject({
-    required String fileName,
-    required String path,
-  }) =>
-      File('$path/$fileName');
-
-  Future<bool> exists(File file) => file.exists();
-
-  /// Throws a [FileSystemException] if the operation fails.
-  String readAsStringSync(
-    File file, {
-    Encoding encoding = utf8,
-  }) =>
-      file.readAsStringSync(
-        encoding: encoding,
-      );
-}
-
-@Injectable()
-class ShareHandler {
-  Future<void> shareFiles(List<String> paths) => Share.shareFiles(paths);
 }

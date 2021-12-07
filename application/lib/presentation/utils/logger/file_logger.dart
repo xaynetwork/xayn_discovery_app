@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:logger/logger.dart';
@@ -24,8 +25,7 @@ class ConsoleAndFileOutput extends LogOutput {
       if (!logsToFileOnly) {
         // prints to console on dev builds only
         assert(() {
-          // ignore: avoid_print
-          print(it);
+          dev.log(it);
           return true;
         }());
       }
