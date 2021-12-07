@@ -38,7 +38,9 @@ class OnBoardingManager extends Cubit<OnBoardingState>
   }
 
   @override
-  Future<OnBoardingState> computeState() async {
+  Future<OnBoardingState?> computeState() async {
+    if (_currentPageIndex == -1) return null;
+
     if (_hasError) {
       return OnBoardingState.error(
         currentPageIndex: _currentPageIndex,

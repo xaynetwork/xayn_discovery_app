@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
@@ -8,23 +7,34 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.
 
 import 'log_use_case_test.mocks.dart';
 
-@GenerateMocks([Log])
+@GenerateMocks([Logger])
 void main() {
-  late MockLog logger;
+  late MockLogger logger;
 
   setUp(() {
-    logger = MockLog();
+    logger = MockLogger();
   });
 
   group('LogUseCase: ', () {
     useCaseTest(
-      'Can log incoming events: ',
+      'WHEN level is null THEN log with the default Level.info ',
       build: () => LogUseCase(
         (String param) => 'logged $param',
-        log: logger.log,
+        logger: logger,
       ),
       input: const ['hi!'],
-      verify: (_) => verify(logger.log('logged hi!')).called(1),
+      verify: (_) => verify(logger.log(Level.info, 'logged hi!')).called(1),
+      expect: [useCaseSuccess('hi!')],
+    );
+    useCaseTest(
+      'WHEN level is not null THEN log with the level passed',
+      build: () => LogUseCase(
+        (String param) => 'logged $param',
+        logger: logger,
+        level: Level.debug,
+      ),
+      input: const ['hi!'],
+      verify: (_) => verify(logger.log(Level.debug, 'logged hi!')).called(1),
       expect: [useCaseSuccess('hi!')],
     );
 
@@ -33,10 +43,10 @@ void main() {
       build: () => LogUseCase(
         (int param) => 'logged $param',
         when: (int param) => param >= 2,
-        log: logger.log,
+        logger: logger,
       ),
       input: const [0, 1, 2, 3],
-      verify: (_) => verify(logger.log(any)).called(2),
+      verify: (_) => verify(logger.log(Level.info, any)).called(2),
       expect: [
         useCaseSuccess(0),
         useCaseSuccess(1),
@@ -45,28 +55,4 @@ void main() {
       ],
     );
   });
-}
-
-class Log {
-  void log(
-    String message, {
-    DateTime? time,
-    int? sequenceNumber,
-    int level = 0,
-    String name = '',
-    Zone? zone,
-    Object? error,
-    StackTrace? stackTrace,
-  }) {
-    log(
-      message,
-      time: time,
-      sequenceNumber: sequenceNumber,
-      level: level,
-      name: name,
-      zone: zone,
-      error: error,
-      stackTrace: stackTrace,
-    );
-  }
 }

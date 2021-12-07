@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
@@ -7,14 +10,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/api/events/base_events.dart';
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
@@ -61,16 +62,22 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
     _handleQuery = pipe(_createHttpRequestUseCase).transform(
       (out) => out
           .followedBy(_connectivityUseCase)
-          .followedBy(LogUseCase((it) => 'will fetch $it'))
+          .followedBy(LogUseCase(
+            (it) => 'will fetch $it',
+            logger: logger,
+          ))
           .followedBy(_invokeApiEndpointUseCase)
           .scheduleComputeState(
             consumeEvent: (data) => !data.isComplete,
-            run: (data) => _isLoading = !data.isComplete,
+            run: (data) {
+              _isLoading = !data.isComplete;
+            },
           )
           .followedBy(
             LogUseCase(
               (it) => 'did fetch ${it.results.length} results',
               when: (it) => it.isComplete,
+              logger: logger,
             ),
           ),
     );
@@ -89,7 +96,8 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
         }
 
         if (_isLoading) {
-          return const DiscoveryEngineState.loading();
+          return DiscoveryEngineState(
+              results: state.results, isComplete: false);
         }
 
         if (a != null) {
