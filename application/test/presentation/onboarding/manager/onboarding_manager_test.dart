@@ -43,7 +43,6 @@ void main() {
     build: () => onBoardingManager,
     act: (manager) => manager.onPageChanged(2),
     expect: () => [
-      initialState,
       onPageChangedState,
     ],
     verify: (manager) {
@@ -62,7 +61,6 @@ void main() {
     },
     act: (manager) => manager.onOnBoardingCompleted(3),
     expect: () => [
-      initialState,
       completedState,
     ],
     verify: (manager) {
@@ -87,7 +85,6 @@ void main() {
     },
     act: (manager) => manager.onOnBoardingCompleted(3),
     expect: () => [
-      initialState,
       errorState,
     ],
     verify: (manager) {
