@@ -1,19 +1,7 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 
+import 'package:logger/logger.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-
-/// The log method signature
-typedef Log = void Function(
-  String message, {
-  DateTime? time,
-  int? sequenceNumber,
-  int level,
-  String name,
-  Zone? zone,
-  Object? error,
-  StackTrace? stackTrace,
-});
 
 /// Log builder definition
 typedef LogBuilder<T> = String Function(T data);
@@ -33,23 +21,30 @@ class LogUseCase<T> extends UseCase<T, T> {
   /// If omitted, a log will always take place, for every input value.
   final LogWhen<T>? when;
 
-  /// The handler which will be invoked when logging takes place.
-  /// Defaults to [dev.log].
-  final Log? log;
+  /// The logger instance to use
+  final Logger logger;
+
+  /// The level to use for the logger
+  /// Defaults to [Level.info]
+  final Level? level;
 
   LogUseCase(
     this.builder, {
+    required this.logger,
     this.when,
-    this.log,
+    this.level,
   });
 
   @override
   Stream<T> transaction(T param) async* {
-    final logHandler = log ?? dev.log;
+    final logLevel = level ?? Level.info;
     final predicate = when ?? (_) => true;
 
     if (predicate(param)) {
-      logHandler(builder(param));
+      logger.log(
+        logLevel,
+        builder(param),
+      );
     }
 
     yield param;
