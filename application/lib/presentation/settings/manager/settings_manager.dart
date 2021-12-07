@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
 @lazySingleton
@@ -69,13 +70,13 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
 
-  Future<void> reportBug({
+  void reportBug({
     Brightness? brightness,
     Color? primaryColor,
-  }) async =>
+  }) =>
       _bugReportingService.showDialog(
-        brightness: brightness,
-        primaryColor: primaryColor,
+        brightness: R.brightness,
+        primaryColor: R.colors.primary,
       );
 
   void shareApp() {

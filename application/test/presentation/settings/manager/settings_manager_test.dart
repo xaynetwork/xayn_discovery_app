@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
@@ -230,13 +231,19 @@ void main() {
       when(bugReportingService.showDialog()).thenAnswer((_) async {});
     },
     build: () => create(),
-    act: (manager) => manager.reportBug(),
+    act: (manager) => manager.reportBug(
+      brightness: R.brightness,
+      primaryColor: R.colors.primary,
+    ),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
-        bugReportingService.showDialog(),
+        bugReportingService.showDialog(
+          brightness: R.brightness,
+          primaryColor: R.colors.primary,
+        ),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);

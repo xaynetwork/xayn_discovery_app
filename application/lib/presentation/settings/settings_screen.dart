@@ -119,10 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
-        onFindBugPressed: () async => await _manager.reportBug(
-          brightness: R.brightness,
-          primaryColor: R.colors.primary,
-        ),
+        onFindBugPressed: _manager.reportBug,
       );
 
   Widget _buildShareAppSection() =>

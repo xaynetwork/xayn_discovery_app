@@ -56,13 +56,13 @@ class BugReportingService {
   ) =>
       Instabug.start(token, invocationEvents);
 
-  Future<void> showDialog({
+  void showDialog({
     Brightness? brightness,
     Color? primaryColor,
-  }) async {
-    if (brightness != null) await Instabug.setColorTheme(_getTheme(brightness));
-    if (primaryColor != null) await Instabug.setPrimaryColor(primaryColor);
-    await Instabug.show();
+  }) {
+    if (brightness != null) Instabug.setColorTheme(_getTheme(brightness));
+    if (primaryColor != null) Instabug.setPrimaryColor(primaryColor);
+    Instabug.show();
   }
 
   ColorTheme _getTheme(Brightness brightness) =>
