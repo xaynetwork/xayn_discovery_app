@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'extract_log_use_case_test.mocks.dart';
@@ -18,10 +19,10 @@ void main() {
   late Directory directory;
   late File file;
 
-  setUp(() {
+  setUp(() async {
     fileHandler = MockFileHandler();
     shareHandler = MockShareHandler();
-    directory = Directory('directory/path');
+    directory = await Directory.systemTemp.createTemp();
     file = File('${directory.path}/$kLogFileName');
   });
 

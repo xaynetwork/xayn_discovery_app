@@ -1,0 +1,53 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/file_logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+
+@Injectable()
+class FileHandler {
+  FileHandler();
+
+  /// Throws a [MissingPlatformDirectoryException] if the system is unable to provide the directory.
+  Future<Directory> getAppDirectory() => getApplicationDocumentsDirectory();
+
+  File createFileObject({
+    required String fileName,
+    required String path,
+  }) =>
+      File('$path/$fileName');
+
+  Future<bool> exists(File file) => file.exists();
+
+  /// Throws a [FileSystemException] if the operation fails.
+  String readAsStringSync(
+    File file, {
+    Encoding encoding = utf8,
+  }) =>
+      file.readAsStringSync(
+        encoding: encoding,
+      );
+}
+
+@Injectable()
+class ShareHandler {
+  Future<void> shareFiles(List<String> paths) => Share.shareFiles(paths);
+}
+
+@Injectable()
+class LoggerHandler {
+  void initialiseLogger(
+    String pathToFile,
+  ) {
+    initLogger(
+      output: ConsoleAndFileOutput(
+        pathToFile,
+      ),
+      filter: ProductionFilter(),
+    );
+  }
+}
