@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:instabug_flutter/Instabug.dart';
@@ -25,6 +27,7 @@ class BugReportingService {
     }
 
     Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
+    Instabug.setSdkDebugLogsLevel(IBGSDKDebugLogsLevel.error);
   }
 
   /// Since we are not using Crash Analytics from Instabug, there is no reason
@@ -53,5 +56,15 @@ class BugReportingService {
   ) =>
       Instabug.start(token, invocationEvents);
 
-  showDialog() => Instabug.show();
+  void showDialog({
+    Brightness? brightness,
+    Color? primaryColor,
+  }) {
+    if (brightness != null) Instabug.setColorTheme(_getTheme(brightness));
+    if (primaryColor != null) Instabug.setPrimaryColor(primaryColor);
+    Instabug.show();
+  }
+
+  ColorTheme _getTheme(Brightness brightness) =>
+      brightness == Brightness.dark ? ColorTheme.dark : ColorTheme.light;
 }
