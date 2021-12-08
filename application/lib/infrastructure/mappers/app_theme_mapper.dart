@@ -8,7 +8,7 @@ abstract class AppThemeFields {
   static const int dark = 2;
 }
 
-extension AppThemeToInt on AppTheme {
+extension AppThemeEnumExtension on AppTheme {
   int toInt() {
     switch (this) {
       case AppTheme.light:
@@ -22,7 +22,7 @@ extension AppThemeToInt on AppTheme {
   }
 }
 
-extension IntToAppTheme on int {
+extension AppThemeIntExtension on int {
   AppTheme toAppThemeEnum() {
     switch (this) {
       case AppThemeFields.light:

@@ -11,7 +11,7 @@ class HiveDB {
   static String? _nodeId;
 
   // workaround for testing, can't be null in productive context
-  static String get nodeId => _nodeId ?? UniqueId.generated().value;
+  static String get nodeId => _nodeId ?? UniqueId().value;
 
   HiveDB._();
 

@@ -7,7 +7,7 @@ abstract class DiscoveryFeedAxisFields {
   static const int horizontal = 1;
 }
 
-extension DiscoveryFeedAxisToInt on DiscoveryFeedAxis {
+extension DiscoveryFeedAxisEnumExtension on DiscoveryFeedAxis {
   int toInt() {
     switch (this) {
       case DiscoveryFeedAxis.horizontal:
@@ -19,7 +19,7 @@ extension DiscoveryFeedAxisToInt on DiscoveryFeedAxis {
   }
 }
 
-extension IntToDiscoveryFeedAxis on int {
+extension DiscoveryFeedAxisIntExtension on int {
   DiscoveryFeedAxis toDiscoveryFeedAxisEnum() {
     switch (this) {
       case DiscoveryFeedAxisFields.horizontal:
