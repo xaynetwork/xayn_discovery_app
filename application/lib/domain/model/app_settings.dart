@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 part 'app_settings.freezed.dart';
 
 @freezed
-class AppSettings with _$AppSettings implements Entity {
+class AppSettings with _$AppSettings implements DbEntity {
   factory AppSettings({
     required bool isOnboardingDone,
     required AppTheme appTheme,

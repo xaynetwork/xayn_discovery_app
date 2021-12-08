@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'repository_event.freezed.dart';
 
-abstract class RepositoryEvent<T extends Entity> {
+abstract class RepositoryEvent<T extends DbEntity> {
   RepositoryEvent();
 
   abstract final UniqueId id;
@@ -19,7 +19,7 @@ abstract class RepositoryEvent<T extends Entity> {
 }
 
 @freezed
-class ChangedEvent<T extends Entity>
+class ChangedEvent<T extends DbEntity>
     with _$ChangedEvent<T>
     implements RepositoryEvent<T> {
   factory ChangedEvent({
@@ -29,7 +29,7 @@ class ChangedEvent<T extends Entity>
 }
 
 @freezed
-class DeletedEvent<T extends Entity>
+class DeletedEvent<T extends DbEntity>
     with _$DeletedEvent<T>
     implements RepositoryEvent<T> {
   factory DeletedEvent({

@@ -12,7 +12,7 @@ class SaveDiscoveryFeedAxisUseCase
 
   @override
   Stream<DiscoveryFeedAxis> transaction(DiscoveryFeedAxis param) async* {
-    final settings = await _repository.getSettings();
+    final settings = await _repository.settings;
     final updatedSettings = settings.copyWith(discoveryFeedAxis: param);
     await _repository.save(updatedSettings);
     yield param;

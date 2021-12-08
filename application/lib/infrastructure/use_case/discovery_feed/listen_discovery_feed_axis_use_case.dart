@@ -17,7 +17,7 @@ class ListenDiscoveryFeedAxisUseCase extends UseCase<None, DiscoveryFeedAxis> {
   Stream<DiscoveryFeedAxis> transaction(None param) async* {
     final controller = StreamController<DiscoveryFeedAxis>();
     _repository.watch().listen((_) async {
-      final settings = await _repository.getSettings();
+      final settings = await _repository.settings;
       controller.add(settings.discoveryFeedAxis);
     });
     yield* controller.stream;

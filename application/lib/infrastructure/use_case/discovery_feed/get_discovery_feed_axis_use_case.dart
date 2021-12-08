@@ -12,7 +12,7 @@ class GetDiscoveryFeedAxisUseCase extends UseCase<None, DiscoveryFeedAxis> {
 
   @override
   Stream<DiscoveryFeedAxis> transaction(None param) async* {
-    final settings = await _repository.getSettings();
+    final settings = await _repository.settings;
     yield settings.discoveryFeedAxis;
   }
 }

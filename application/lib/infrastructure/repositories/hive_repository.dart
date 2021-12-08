@@ -7,9 +7,9 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/utils/hive_db.dart';
 
-abstract class BaseHiveRepository<T> {
+abstract class BaseHiveRepository<T extends DbEntity> {
   final Map<dynamic, T> _mapperCache = <dynamic, T>{};
-  BaseMapper<T> get mapper;
+  BaseDbEntityMapper<T> get mapper;
 
   HiveCrdt<String, dynamic> get recordBox;
 
@@ -31,7 +31,8 @@ abstract class BaseHiveRepository<T> {
   Future<void> clear() async => recordBox.clear();
 }
 
-abstract class HiveRepository<T extends Entity> extends BaseHiveRepository<T> {
+abstract class HiveRepository<T extends DbEntity>
+    extends BaseHiveRepository<T> {
   HiveCrdt<String, dynamic>? _recordBox;
 
   @override
@@ -106,7 +107,7 @@ abstract class HiveRepository<T extends Entity> extends BaseHiveRepository<T> {
     return recordBox.watch().map((event) {
       final obj = mapper.fromMap(event.value);
       final uniqueId =
-          obj is Entity ? obj.id : UniqueId.fromTrustedString(event.key);
+          obj is DbEntity ? obj.id : UniqueId.fromTrustedString(event.key);
 
       return RepositoryEvent.from(obj, uniqueId);
     }).where((event) {

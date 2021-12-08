@@ -19,7 +19,7 @@ void main() {
     repository = MockAppSettingsRepository();
     useCase = SaveAppThemeUseCase(repository);
 
-    when(repository.getSettings())
+    when(repository.settings)
         .thenAnswer((_) => Future.value(AppSettings.initial()));
   });
 
@@ -29,7 +29,7 @@ void main() {
       await useCase.call(appTheme);
 
       verifyInOrder([
-        repository.getSettings(),
+        repository.settings,
         repository.save(any),
       ]);
       verifyNoMoreInteractions(repository);

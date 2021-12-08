@@ -18,12 +18,12 @@ class HiveAppSettingsRepository extends HiveRepository<AppSettings>
   HiveAppSettingsRepository() : _mapper = const AppSettingsMapper();
 
   @override
-  BaseMapper<AppSettings> get mapper => _mapper;
+  BaseDbEntityMapper<AppSettings> get mapper => _mapper;
 
   @override
   Box<Record> get box => Hive.box<Record>(BoxNames.appSettings);
 
   @override
-  Future<AppSettings> getSettings() async =>
+  Future<AppSettings> get settings async =>
       await getById(AppSettings.globalId()) ?? AppSettings.initial();
 }

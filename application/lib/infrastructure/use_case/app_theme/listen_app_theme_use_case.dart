@@ -15,7 +15,7 @@ class ListenAppThemeUseCase extends UseCase<None, AppTheme> {
   Stream<AppTheme> transaction(None param) async* {
     final controller = StreamController<AppTheme>();
     _repository.watch().listen((_) async {
-      final settings = await _repository.getSettings();
+      final settings = await _repository.settings;
       controller.add(settings.appTheme);
     });
     yield* controller.stream;

@@ -11,7 +11,7 @@ class SaveAppThemeUseCase extends UseCase<AppTheme, None> {
 
   @override
   Stream<None> transaction(AppTheme param) async* {
-    final settings = await _repository.getSettings();
+    final settings = await _repository.settings;
     final updatedSettings = settings.copyWith(appTheme: param);
     await _repository.save(updatedSettings);
     yield none;

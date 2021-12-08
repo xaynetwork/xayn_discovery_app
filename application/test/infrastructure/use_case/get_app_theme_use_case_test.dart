@@ -16,7 +16,7 @@ void main() {
   setUp(() {
     repository = MockAppSettingsRepository();
     useCase = GetAppThemeUseCase(repository);
-    when(repository.getSettings())
+    when(repository.settings)
         .thenAnswer((_) => Future.value(AppSettings.initial()));
   });
   test(
@@ -25,7 +25,7 @@ void main() {
       final result = (await useCase.singleOutput(none));
 
       expect(result, AppTheme.system);
-      verify(repository.getSettings());
+      verify(repository.settings);
       verifyNoMoreInteractions(repository);
     },
   );

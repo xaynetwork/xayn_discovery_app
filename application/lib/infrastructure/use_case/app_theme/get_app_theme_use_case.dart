@@ -11,7 +11,7 @@ class GetAppThemeUseCase extends UseCase<None, AppTheme> {
 
   @override
   Stream<AppTheme> transaction(None param) async* {
-    final settings = await _repository.getSettings();
+    final settings = await _repository.settings;
     yield settings.appTheme;
   }
 }

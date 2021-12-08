@@ -4,11 +4,11 @@ import 'package:xayn_discovery_app/infrastructure/mappers/discovery_feed_axis_ma
 
 import 'app_theme_mapper.dart';
 
-class AppSettingsMapper extends BaseMapper<AppSettings> {
+class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
   const AppSettingsMapper();
 
   @override
-  AppSettings? fromMap(Map? map) {
+  AppSettings? fromMap(DbEntityMap? map) {
     if (map == null) return null;
 
     final appThemeValue =
@@ -26,7 +26,7 @@ class AppSettingsMapper extends BaseMapper<AppSettings> {
   }
 
   @override
-  Map toMap(AppSettings entity) {
+  DbEntityMap toMap(AppSettings entity) {
     return {
       AppSettingsFields.isOnboardingDone: entity.isOnboardingDone,
       AppSettingsFields.appTheme: entity.appTheme.toInt(),

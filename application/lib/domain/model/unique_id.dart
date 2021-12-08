@@ -1,16 +1,11 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
-part 'unique_id.freezed.dart';
+class UniqueId {
+  final String value;
 
-@freezed
-class UniqueId with _$UniqueId {
-  factory UniqueId({
-    required String value,
-  }) = _UniqueId;
+  const UniqueId._(this.value);
 
-  static UniqueId generated() => UniqueId(value: const Uuid().v4());
+  factory UniqueId.generated() => UniqueId._(const Uuid().v4());
 
-  factory UniqueId.fromTrustedString(String uniqueId) =>
-      UniqueId(value: uniqueId);
+  factory UniqueId.fromTrustedString(String uniqueId) => UniqueId._(uniqueId);
 }
