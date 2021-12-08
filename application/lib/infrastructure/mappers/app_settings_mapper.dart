@@ -36,7 +36,7 @@ class AppSettingsMapper extends BaseMapper<AppSettings> {
 }
 
 class AppSettingsFields {
-  static const int isOnboardingDone = 1;
-  static const int appTheme = 2;
-  static const int discoveryFeedAxis = 3;
+  static const int isOnboardingDone = 0;
+  static const int appTheme = 1;
+  static const int discoveryFeedAxis = 2;
 }
