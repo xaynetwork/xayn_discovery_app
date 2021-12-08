@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path;
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/utils/hive_db.dart';
@@ -8,7 +9,6 @@ import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
-import 'package:xayn_discovery_app/presentation/utils/safe_path_provider.dart';
 
 void main() async {
   await setup();
@@ -17,13 +17,12 @@ void main() async {
 
 Future<void> setup() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final absoluteAppDirFuture = getAbsoluteApplicationDocumentsDirectory();
-  final hiveDb = absoluteAppDirFuture.then(
-    (path) => HiveDB.init(path).catchError(
-      /// Some browsers (ie. Firefox) are not allowing the use of IndexedDB
-      /// in `Private Mode`, so we need to use Hive in-memory instead
-      (_) => HiveDB.init(null),
-    ),
+  final directory = await path.getApplicationDocumentsDirectory();
+  final absoluteAppDir = directory.absolute.path;
+  final hiveDb = HiveDB.init(absoluteAppDir).catchError(
+    /// Some browsers (ie. Firefox) are not allowing the use of IndexedDB
+    /// in `Private Mode`, so we need to use Hive in-memory instead
+    (_) => HiveDB.init(null),
   );
   await hiveDb;
   configureDependencies();

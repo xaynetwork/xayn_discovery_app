@@ -48,8 +48,10 @@ class HiveDB {
     ]);
   }
 
-  static Future<Box<T>> _openBox<T>(String name,
-      {bool inMemory = false}) async {
+  static Future<Box<T>> _openBox<T>(
+    String name, {
+    bool inMemory = false,
+  }) async {
     if (Hive.isBoxOpen(name)) {
       return Hive.box<T>(name);
     } else {
@@ -59,12 +61,8 @@ class HiveDB {
 
   /// Deletes all currently open Hive boxes from disk.
   /// The home directory will not be deleted.
-  Future<void> destroy() async {
-    await Hive.deleteFromDisk();
-  }
+  Future<void> destroy() => Hive.deleteFromDisk();
 
   /// Closes all open Hive boxes.
-  Future<void> dispose() async {
-    await Hive.close();
-  }
+  Future<void> dispose() => Hive.close();
 }

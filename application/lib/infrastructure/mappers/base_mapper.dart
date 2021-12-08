@@ -4,6 +4,6 @@ typedef DbEntityMap = Map<int, dynamic>;
 
 abstract class BaseDbEntityMapper<T extends DbEntity> {
   const BaseDbEntityMapper();
-  T? fromMap(DbEntityMap? map);
+  T? fromMap(Map? map);
   DbEntityMap toMap(T entity);
 }

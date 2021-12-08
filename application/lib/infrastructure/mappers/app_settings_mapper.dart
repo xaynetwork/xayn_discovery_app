@@ -12,7 +12,7 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
   const AppSettingsMapper();
 
   @override
-  AppSettings? fromMap(DbEntityMap? map) {
+  AppSettings? fromMap(Map? map) {
     if (map == null) return null;
 
     final isOnboardingDone = map[AppSettingsFields.isOnboardingDone] as bool?;
