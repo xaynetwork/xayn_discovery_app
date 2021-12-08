@@ -1,6 +1,8 @@
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 
-class DiscoveryFeedAxisFields {
+abstract class DiscoveryFeedAxisFields {
+  DiscoveryFeedAxisFields._();
+
   static const int vertical = 0;
   static const int horizontal = 1;
 }

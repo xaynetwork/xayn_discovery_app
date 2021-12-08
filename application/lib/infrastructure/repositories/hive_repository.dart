@@ -25,10 +25,10 @@ abstract class BaseHiveRepository<T extends DbEntity> {
 
   bool get isNotEmpty => values.isNotEmpty;
 
-  Future<List<T>> getAll() async => values;
+  List<T> getAll() => values;
 
   @mustCallSuper
-  Future<void> clear() async => recordBox.clear();
+  void clear() => recordBox.clear();
 }
 
 abstract class HiveRepository<T extends DbEntity>
@@ -39,65 +39,51 @@ abstract class HiveRepository<T extends DbEntity>
   HiveCrdt<String, dynamic> get recordBox =>
       _recordBox ??= HiveCrdt(box, HiveDB.nodeId);
 
-  String id(T entity) => entity.id.value;
+  UniqueId id(T entity) => entity.id;
 
-  @override
-  Future<void> clear() {
-    return super.clear();
-  }
-
-  Future<T?> getById(UniqueId id) async {
-    return mapper.fromMap(recordBox.get(id.value));
-  }
+  T? getById(UniqueId id) => mapper.fromMap(recordBox.get(id.value));
 
   /// Saves a value to the database.
   ///
   /// Note there is no guarantee that the original entity was not manipulated in the meanwhile.
   /// To avoid issues follow the [WhiteListRepository.saveAndUpdate] method pattern.
-  Future<void> save(T entity) async {
+  void save(T entity) {
     final map = mapper.toMap(entity);
 
-    recordBox.put(id(entity), map);
+    recordBox.put(id(entity).value, map);
   }
 
-  @override
-  Future<List<T>> getAll() async => values;
-
   // saves all entries in the order
-  Future<void> saveAll(Iterable<T> entities) async {
-    for (var value in entities) {
-      recordBox.put(id(value), mapper.toMap(value));
+  void saveAll(Iterable<T> entities) {
+    for (final entity in entities) {
+      recordBox.put(id(entity).value, mapper.toMap(entity));
     }
   }
 
-  Future<void> remove(T entity) async {
+  void remove(T entity) {
     final id = entity.id.value;
 
     recordBox.delete(id);
   }
 
-  Future<void> removeAll(Iterable<UniqueId> ids) async {
-    for (var id in ids) {
+  void removeAll(Iterable<UniqueId> ids) {
+    for (final id in ids) {
       recordBox.delete(id.value);
     }
   }
 
   /// Alias for removeAll
-  Future<void> removeAllByIds(Iterable<UniqueId> ids) => removeAll(ids);
+  void removeAllByIds(Iterable<UniqueId> ids) => removeAll(ids);
 
   /// Actually purges all elements including null/ tombstone values, should only be used for testing purposes
   @visibleForTesting
-  Future<void> purgeAll() async {
-    recordBox.clear(purge: true);
-  }
+  void purgeAll() => recordBox.clear(purge: true);
 
-  Future<List<T>> getAllByIds(Iterable<UniqueId> ids) async {
-    return ids
-        .map((id) => mapper.fromMap(recordBox.get(id.value)))
-        .where((element) => element != null)
-        .cast<T>()
-        .toList(growable: false);
-  }
+  List<T> getAllByIds(Iterable<UniqueId> ids) => ids
+      .map((id) => mapper.fromMap(recordBox.get(id.value)))
+      .where((element) => element != null)
+      .cast<T>()
+      .toList(growable: false);
 
   /// Returns a broadcast stream of change events.
   ///
@@ -119,13 +105,11 @@ abstract class HiveRepository<T extends DbEntity>
     }).cast();
   }
 
-  Future<void> merge(Map<String, Record<dynamic>> remoteRecords) async {
-    recordBox.merge(remoteRecords);
-  }
+  void merge(Map<String, Record<dynamic>> remoteRecords) =>
+      recordBox.merge(remoteRecords);
 
-  Map<String, Record<dynamic>> getRecordsForSync({Hlc? modifiedSince}) {
-    return recordBox.recordMap(modifiedSince: modifiedSince);
-  }
+  Map<String, Record<dynamic>> getRecordsForSync({Hlc? modifiedSince}) =>
+      recordBox.recordMap(modifiedSince: modifiedSince);
 }
 
 extension _BoxExtension<V> on Box<Record<V>> {

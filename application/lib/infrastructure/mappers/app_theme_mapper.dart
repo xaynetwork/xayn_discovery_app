@@ -1,6 +1,8 @@
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 
-class AppThemeFields {
+abstract class AppThemeFields {
+  AppThemeFields._();
+
   static const int system = 0;
   static const int light = 1;
   static const int dark = 2;

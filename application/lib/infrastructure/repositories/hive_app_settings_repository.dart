@@ -10,12 +10,12 @@ import 'package:xayn_discovery_app/infrastructure/utils/box_names.dart';
 
 const kSettingsKey = 0;
 
-@Injectable(as: AppSettingsRepository)
+@Singleton(as: AppSettingsRepository)
 class HiveAppSettingsRepository extends HiveRepository<AppSettings>
     implements AppSettingsRepository {
   final AppSettingsMapper _mapper;
 
-  HiveAppSettingsRepository() : _mapper = const AppSettingsMapper();
+  HiveAppSettingsRepository(this._mapper);
 
   @override
   BaseDbEntityMapper<AppSettings> get mapper => _mapper;
@@ -24,6 +24,6 @@ class HiveAppSettingsRepository extends HiveRepository<AppSettings>
   Box<Record> get box => Hive.box<Record>(BoxNames.appSettings);
 
   @override
-  Future<AppSettings> get settings async =>
-      await getById(AppSettings.globalId()) ?? AppSettings.initial();
+  AppSettings get settings =>
+      getById(AppSettings.globalId()) ?? AppSettings.initial();
 }
