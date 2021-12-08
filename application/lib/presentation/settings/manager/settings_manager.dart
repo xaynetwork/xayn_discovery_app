@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -12,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
 @lazySingleton
@@ -67,7 +70,14 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
 
-  void reportBug() => _bugReportingService.showDialog();
+  void reportBug({
+    Brightness? brightness,
+    Color? primaryColor,
+  }) =>
+      _bugReportingService.showDialog(
+        brightness: R.brightness,
+        primaryColor: R.colors.primary,
+      );
 
   void shareApp() {
     // todo: handle share app url/etc action

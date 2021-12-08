@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 
@@ -158,25 +159,6 @@ void main() {
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
-    'WHEN reportBug method called THEN call ___ useCase',
-    build: () => create(),
-    act: (manager) => manager.reportBug(),
-    //default one, emitted when manager created
-    expect: () => [stateReady],
-    verify: (manager) {
-      verifyInOrder([
-        //default calls here,
-        getAppVersionUseCase.singleOutput(none),
-        getAppThemeUseCase.singleOutput(none),
-        listenAppThemeUseCase.transform(any),
-      ]);
-      verifyNoMoreInteractions(saveAppThemeUseCase);
-      verifyNoMoreInteractions(getAppVersionUseCase);
-      verifyNoMoreInteractions(getAppThemeUseCase);
-      verifyNoMoreInteractions(listenAppThemeUseCase);
-    },
-  );
-  blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN shareApp method called THEN call ___ useCase',
     build: () => create(),
     act: (manager) => manager.shareApp(),
@@ -245,14 +227,23 @@ void main() {
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'INVOKE showDialog for bug reporting THEN call bug Reporting Service',
+    setUp: () {
+      when(bugReportingService.showDialog()).thenAnswer((_) async {});
+    },
     build: () => create(),
-    act: (manager) => manager.reportBug(),
+    act: (manager) => manager.reportBug(
+      brightness: R.brightness,
+      primaryColor: R.colors.primary,
+    ),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
-        bugReportingService.showDialog(),
+        bugReportingService.showDialog(
+          brightness: R.brightness,
+          primaryColor: R.colors.primary,
+        ),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
@@ -260,6 +251,7 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
+      verifyNoMoreInteractions(bugReportingService);
     },
   );
 }

@@ -44,6 +44,7 @@ void main() {
     when(manager.state).thenReturn(stateReady);
     streamController = StreamController<SettingsScreenState>();
     when(manager.stream).thenAnswer((_) => streamController.stream);
+    when(manager.reportBug()).thenAnswer((_) async {});
   });
 
   tearDown(() {
