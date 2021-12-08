@@ -80,12 +80,14 @@ class _ActiveSearchState extends State<ActiveSearch> {
         return _buildResultCard(
           document,
           isPrimary,
+          index,
         );
       };
 
   Widget _buildResultCard(
     Document document,
     bool isPrimary,
+    int cardIndex,
   ) =>
       Padding(
         padding: EdgeInsets.symmetric(
@@ -95,6 +97,7 @@ class _ActiveSearchState extends State<ActiveSearch> {
         child: DiscoveryCard(
           isPrimary: isPrimary,
           document: document,
+          cardIndex: cardIndex,
         ),
       );
 }

@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
@@ -14,16 +12,8 @@ class PostProcessUseCase extends UseCase<ProcessHtmlResult, Uri> {
 
     if (contents != null) {
       yield Uri.dataFromBytes(
-        const Utf8Encoder().convert(
-          await compute(_processHtml, contents),
-        ),
+        const Utf8Encoder().convert(contents),
       );
     }
   }
-}
-
-String _processHtml(final String html) {
-  final document = dom.Document.html(html);
-
-  return document.outerHtml;
 }

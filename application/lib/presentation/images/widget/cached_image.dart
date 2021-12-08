@@ -18,6 +18,7 @@ class CachedImage extends StatefulWidget {
   final int? width;
   final int? height;
   final BoxFit? fit;
+  final ImageManager? imageManager;
 
   const CachedImage({
     Key? key,
@@ -27,6 +28,7 @@ class CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.fit,
+    this.imageManager,
   }) : super(key: key);
 
   @override
@@ -38,13 +40,19 @@ class _CachedImageState extends State<CachedImage> {
 
   @override
   void initState() {
-    _imageManager = di.get();
-    _imageManager.getImage(
-      widget.uri,
-      width: widget.width,
-      height: widget.height,
-      fit: widget.fit,
-    );
+    final imageManager = widget.imageManager;
+
+    if (imageManager == null) {
+      _imageManager = widget.imageManager ?? di.get()
+        ..getImage(
+          widget.uri,
+          width: widget.width,
+          height: widget.height,
+          fit: widget.fit,
+        );
+    } else {
+      _imageManager = imageManager;
+    }
 
     super.initState();
   }
@@ -68,7 +76,9 @@ class _CachedImageState extends State<CachedImage> {
 
   @override
   void dispose() {
-    _imageManager.close();
+    if (widget.imageManager == null) {
+      _imageManager.close();
+    }
 
     super.dispose();
   }
@@ -109,7 +119,6 @@ class _CachedImageState extends State<CachedImage> {
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),
               fit: widget.fit,
-              gaplessPlayback: true,
             );
           }
 

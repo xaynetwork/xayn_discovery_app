@@ -1,15 +1,21 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/heroes.dart'
+    as heroes;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/shared_card_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_body.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
+import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode_screen.dart';
 import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
@@ -19,15 +25,15 @@ typedef ViewTypeCallback = void Function(DocumentViewType viewType);
 /// A widget which displays a discovery card.
 class DiscoveryCard extends StatefulWidget {
   final bool isPrimary;
-  final Duration? transitionDuration;
   final Document document;
+  final int cardIndex;
   final ViewTypeCallback? onViewTypeChanged;
 
   const DiscoveryCard({
     Key? key,
     required this.isPrimary,
     required this.document,
-    this.transitionDuration,
+    required this.cardIndex,
     this.onViewTypeChanged,
   }) : super(key: key);
 
@@ -37,27 +43,34 @@ class DiscoveryCard extends StatefulWidget {
 
 class _DiscoveryCardState extends State<DiscoveryCard> {
   late final DiscoveryCardManager _discoveryCardManager;
-  late final Duration _transitionDuration;
+  late final ImageManager _imageManager;
+  late final NavigatorState _navigator;
+  late final SharedCardImageController _sharedCardImageController;
 
   WebResource get webResource => widget.document.webResource;
   Uri get url => webResource.url;
   String get imageUrl => webResource.displayUrl.toString();
   String get snippet => webResource.snippet;
-  String get title => webResource.title;
 
   @override
   void initState() {
     super.initState();
 
     _discoveryCardManager = di.get();
-    _transitionDuration =
-        widget.transitionDuration ?? R.animations.cardTransitionDuration;
+    _imageManager = di.get()..getImage(Uri.parse(imageUrl));
+    _sharedCardImageController = SharedCardImageController(1.0);
+    _navigator = Navigator.of(context);
 
-    widget.onViewTypeChanged?.call(
-      _discoveryCardManager.state.isInReaderMode
-          ? DocumentViewType.readerMode
-          : DocumentViewType.story,
-    );
+    widget.onViewTypeChanged?.call(DocumentViewType.story);
+  }
+
+  @override
+  void didUpdateWidget(DiscoveryCard oldWidget) {
+    if (oldWidget.document != widget.document) {
+      _imageManager = di.get()..getImage(Uri.parse(imageUrl));
+    }
+
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -65,6 +78,8 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     super.dispose();
 
     _discoveryCardManager.close();
+    _imageManager.close();
+    _sharedCardImageController.dispose();
   }
 
   @override
@@ -73,19 +88,12 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       _discoveryCardManager.updateUri(url);
     }
 
-    return BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
+    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
-        listenWhen: (a, b) => a.isInReaderMode != b.isInReaderMode,
-        listener: (context, state) => widget.onViewTypeChanged?.call(
-              state.isInReaderMode
-                  ? DocumentViewType.readerMode
-                  : DocumentViewType.story,
-            ),
         builder: (context, state) {
           return LayoutBuilder(
             builder: (context, constraints) => _buildCardDisplayStack(
               isPrimary: widget.isPrimary,
-              isInReaderMode: state.isInReaderMode,
               imageUrl: imageUrl,
               snippets: state.paragraphs,
               constraints: constraints,
@@ -100,48 +108,61 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     required List<String> snippets,
     required BoxConstraints constraints,
     required bool isPrimary,
-    required bool isInReaderMode,
     ProcessHtmlResult? processHtmlResult,
   }) {
     final DiscoveryCardActionsManager _actionsManager = di.get();
 
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
     final fullSize = constraints.maxHeight;
-    final imageAsHeaderSize = fullSize / 4;
-    final expandedReaderModeSize = 3 * imageAsHeaderSize;
+    final heroTag = '${heroes.cardImageTag}_${widget.cardIndex}';
+
+    // todo: swap for the real navigation later on
+    final route = PageRouteBuilder(
+      transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+      ) =>
+          AnimatedBuilder(
+        animation: animation,
+        child: child,
+        builder: (context, child) {
+          _sharedCardImageController.value = 1.0 - animation.value;
+
+          return Opacity(opacity: sqrt(animation.value), child: child);
+        },
+      ),
+      transitionDuration: R.durations.tweenIntoReaderModeDuration,
+      reverseTransitionDuration: R.durations.tweenIntoReaderModeDuration,
+      pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        _,
+      ) =>
+          ReaderModeScreen(
+        document: widget.document,
+        heroTag: heroTag,
+        animation: animation,
+        discoveryCardManager: _discoveryCardManager,
+        imageManager: _imageManager,
+        sharedCardImageController: _sharedCardImageController,
+      ),
+    );
 
     final cardBackground = _CardBackground(
       imageUrl: imageUrl,
+      imageManager: _imageManager,
+      heroTag: heroTag,
       constraints: constraints,
-      isDocked: isInReaderMode,
-      transitionDuration: _transitionDuration,
-    );
-    final readerMode = Visibility(
-      visible: isInReaderMode,
-      maintainState: true,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: R.dimen.unit3,
-          vertical: R.dimen.unit2,
-        ),
-        child: AnimatedOpacity(
-          opacity: isInReaderMode ? 1.0 : .0,
-          duration: _transitionDuration * 2,
-          child: ReaderMode(
-            title: title,
-            snippet: snippet,
-            imageUri: Uri.parse(imageUrl),
-            processHtmlResult: processHtmlResult,
-          ),
-        ),
-      ),
+      sharedCardImageController: _sharedCardImageController,
     );
     final footer = DiscoveryCardFooter(
       title: webResource.title,
       url: webResource.url,
       provider: webResource.provider,
       datePublished: webResource.datePublished,
-      onFooterPressed: _discoveryCardManager.toggleReaderMode,
+      onFooterPressed: () => _navigator.push(route),
       onLikePressed: () => _actionsManager.likeDocument(widget.document),
       onDislikePressed: () => _actionsManager.dislikeDocument(widget.document),
     );
@@ -158,30 +179,8 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ],
     );
     final children = [
-      Positioned.fill(
-        top: imageAsHeaderSize,
-        child: _buildAnimatedGrowing(
-          maxHeight: expandedReaderModeSize,
-          height: isInReaderMode ? expandedReaderModeSize : .0,
-          opacity: isInReaderMode ? 1.0 : .0,
-          alignment: Alignment.bottomCenter,
-          child: ColoredBox(
-            color: R.colors.cardBackground,
-            child: readerMode,
-          ),
-        ),
-      ),
-      InkWell(
-        onTap: _discoveryCardManager.toggleReaderMode,
-        child: cardBackground,
-      ),
-      _buildAnimatedGrowing(
-        maxHeight: fullSize,
-        height: isInReaderMode ? .0 : fullSize,
-        opacity: isInReaderMode ? .0 : 1.0,
-        alignment: Alignment.topCenter,
-        child: bodyAndFooter,
-      ),
+      cardBackground,
+      bodyAndFooter,
     ];
 
     return Container(
@@ -193,43 +192,22 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       ),
     );
   }
-
-  Widget _buildAnimatedGrowing({
-    required Widget child,
-    required Alignment alignment,
-    required double opacity,
-    required double maxHeight,
-    required double height,
-  }) =>
-      AnimatedContainer(
-        height: height,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(),
-        duration: _transitionDuration,
-        child: OverflowBox(
-          maxHeight: maxHeight,
-          alignment: alignment,
-          child: AnimatedOpacity(
-            opacity: opacity,
-            duration: _transitionDuration,
-            child: child,
-          ),
-        ),
-      );
 }
 
 class _CardBackground extends StatelessWidget {
   const _CardBackground({
     Key? key,
     required this.imageUrl,
+    required this.heroTag,
     required this.constraints,
-    required this.isDocked,
-    required this.transitionDuration,
+    required this.imageManager,
+    required this.sharedCardImageController,
   }) : super(key: key);
   final String imageUrl;
+  final String heroTag;
   final BoxConstraints constraints;
-  final bool isDocked;
-  final Duration transitionDuration;
+  final ImageManager imageManager;
+  final SharedCardImageController sharedCardImageController;
 
   @override
   Widget build(BuildContext context) {
@@ -241,39 +219,15 @@ class _CardBackground extends StatelessWidget {
 
     final backgroundImage = isImageNotAvailable
         ? backgroundPane
-        : CachedImage(
-            uri: Uri.parse(imageUrl),
-            fit: BoxFit.cover,
-            loadingBuilder: (context, progress) => backgroundPane,
-            errorBuilder: (context) =>
-                Text('Unable to load image with url: $imageUrl'),
+        : Hero(
+            tag: heroTag,
+            child: SharedCardImage(
+              uri: Uri.parse(imageUrl),
+              imageManager: imageManager,
+              controller: sharedCardImageController,
+            ),
           );
 
-    final shadedBackgroundImage = AnimatedContainer(
-      duration: transitionDuration,
-      width: constraints.maxWidth,
-      height:
-          isDocked ? constraints.maxHeight / 4 : 2 * constraints.maxHeight / 3,
-      decoration: const BoxDecoration(),
-      clipBehavior: Clip.antiAlias,
-      foregroundDecoration: isDocked
-          ? const BoxDecoration()
-          : BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  R.colors.swipeCardBackground,
-                  R.colors.swipeCardBackground.withAlpha(40),
-                  R.colors.swipeCardBackground.withAlpha(120),
-                  R.colors.swipeCardBackground,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0, 0.15, 0.8, 1],
-              ),
-            ),
-      child: backgroundImage,
-    );
-
-    return isImageNotAvailable ? backgroundPane : shadedBackgroundImage;
+    return isImageNotAvailable ? backgroundPane : backgroundImage;
   }
 }

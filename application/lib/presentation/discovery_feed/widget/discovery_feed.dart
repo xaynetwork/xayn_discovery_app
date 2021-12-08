@@ -112,6 +112,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           card: DiscoveryCard(
             isPrimary: isPrimary,
             document: document,
+            cardIndex: index,
             onViewTypeChanged: (viewType) =>
                 _discoveryFeedManager.handleViewType(document, viewType),
           ),
