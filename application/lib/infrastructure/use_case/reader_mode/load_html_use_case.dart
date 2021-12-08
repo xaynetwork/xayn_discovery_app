@@ -12,14 +12,15 @@ const String kUserAgent =
 const Map<String, String> kHeaders = {
   'accept': '*/*',
   'accept-encoding': 'gzip, deflate, br',
-  'accept-language': 'en-GB,en;q=0.9,en-US;q=0.8,nl;q=0.7',
+  'accept-language': '*',
   'cache-control': 'no-cache',
   'pragma': 'no-cache',
   'upgrade-insecure-requests': '1',
   'sec-ch-ua':
       '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
   'sec-ch-ua-mobile': '?0',
-  'sec-ch-ua-platform': 'Windows',
+  'sec-ch-ua-platform':
+      'Windows', // we just want the host to think we're a real browser, the value just needs to pass checks on their side, nothing more
   'sec-fetch-dest': 'empty',
   'sec-fetch-mode': 'cors',
   'sec-fetch-site': 'cross-site',
