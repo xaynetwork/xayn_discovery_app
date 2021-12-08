@@ -31,8 +31,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   bool _isLoading = false;
 
-  late bool _isInReaderMode;
-
   DiscoveryCardManager(
     this._connectivityUseCase,
     this._loadHtmlUseCase,
@@ -44,15 +42,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   /// Update the uri which contains the news article
-  void updateUri(Uri uri) => _updateUri(uri);
-
-  void toggleReaderMode() {
-    scheduleComputeState(() => _isInReaderMode = !_isInReaderMode);
+  void updateUri(Uri uri) {
+    _updateUri(uri);
   }
 
   Future<void> _init() async {
-    _isInReaderMode = state.isInReaderMode;
-
     /// html reader mode elements:
     ///
     /// - loads the source html
@@ -83,7 +77,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         var nextState = state.copyWith(
           isComplete: !_isLoading,
-          isInReaderMode: _isInReaderMode,
         );
 
         if (elements != null) {

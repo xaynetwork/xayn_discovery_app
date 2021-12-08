@@ -16,12 +16,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
     _initHandlers();
   }
 
-  void handleCardData({
-    required String title,
-    required String snippet,
-    required Uri imageUri,
-    required ProcessHtmlResult processHtmlResult,
-  }) =>
+  void handleCardData(ProcessHtmlResult processHtmlResult) =>
       _postProcessHandler(processHtmlResult);
 
   @override
