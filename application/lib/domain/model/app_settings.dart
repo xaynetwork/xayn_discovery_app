@@ -33,5 +33,5 @@ class AppSettings with _$AppSettings implements DbEntity {
         discoveryFeedAxis: DiscoveryFeedAxis.vertical,
       );
 
-  static UniqueId globalId() => UniqueId.fromTrustedString('global');
+  static UniqueId globalId() => const UniqueId.fromTrustedString('global');
 }
