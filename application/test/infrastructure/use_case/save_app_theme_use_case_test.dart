@@ -18,9 +18,7 @@ void main() {
   setUp(() {
     repository = MockAppSettingsRepository();
     useCase = SaveAppThemeUseCase(repository);
-
-    when(repository.settings)
-        .thenAnswer((_) => Future.value(AppSettings.initial()));
+    when(repository.settings).thenAnswer((_) => AppSettings.initial());
   });
 
   test(

@@ -16,8 +16,7 @@ void main() {
   setUp(() {
     repository = MockAppSettingsRepository();
     useCase = GetAppThemeUseCase(repository);
-    when(repository.settings)
-        .thenAnswer((_) => Future.value(AppSettings.initial()));
+    when(repository.settings).thenAnswer((_) => AppSettings.initial());
   });
   test(
     'WHEN call useCase as Future THEN verify correct return',
