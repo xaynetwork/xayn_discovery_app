@@ -10,12 +10,19 @@ const String kRequestMethod = 'GET';
 const String kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
 const Map<String, String> kHeaders = {
-  'accept':
-      'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+  'accept': '*/*',
   'accept-encoding': 'gzip, deflate, br',
+  'accept-language': 'en-GB,en;q=0.9,en-US;q=0.8,nl;q=0.7',
   'cache-control': 'no-cache',
   'pragma': 'no-cache',
   'upgrade-insecure-requests': '1',
+  'sec-ch-ua':
+      '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': 'Windows',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'cross-site',
 };
 const Duration kTimeout = Duration(seconds: 8);
 const int kMaxRedirects = 5;
