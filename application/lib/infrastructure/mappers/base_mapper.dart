@@ -1,4 +1,4 @@
-import 'package:xayn_discovery_app/domain/model/entity.dart';
+import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 
 typedef DbEntityMap = Map<int, dynamic>;
 

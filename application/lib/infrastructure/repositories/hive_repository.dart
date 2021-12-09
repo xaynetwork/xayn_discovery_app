@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:meta/meta.dart';
-import 'package:xayn_discovery_app/domain/model/entity.dart';
+import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
