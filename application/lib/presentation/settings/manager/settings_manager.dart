@@ -117,7 +117,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       if (axis != null) {
         _discoveryFeedAxis = axis;
       }
-
       return buildReady();
     });
   }

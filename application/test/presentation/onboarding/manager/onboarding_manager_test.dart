@@ -42,7 +42,9 @@ void main() {
     'WHEN page changes THEN state is OnBoardingStatePageChanged with page index set to the index passed',
     build: () => onBoardingManager,
     act: (manager) => manager.onPageChanged(2),
-    expect: () => [onPageChangedState],
+    expect: () => [
+      onPageChangedState,
+    ],
     verify: (manager) {
       expect(
           manager.state.currentPageIndex, onPageChangedState.currentPageIndex);
@@ -58,7 +60,9 @@ void main() {
           .thenAnswer((_) async => [const UseCaseResult.success(true)]);
     },
     act: (manager) => manager.onOnBoardingCompleted(3),
-    expect: () => [completedState],
+    expect: () => [
+      completedState,
+    ],
     verify: (manager) {
       expect(manager.state.currentPageIndex, completedState.currentPageIndex);
       verifyInOrder([
@@ -80,7 +84,9 @@ void main() {
           ]);
     },
     act: (manager) => manager.onOnBoardingCompleted(3),
-    expect: () => [errorState],
+    expect: () => [
+      errorState,
+    ],
     verify: (manager) {
       expect(manager.state.currentPageIndex, errorState.currentPageIndex);
       verifyInOrder([
