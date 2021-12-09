@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart' as path;
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/utils/hive_db.dart';
+import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';

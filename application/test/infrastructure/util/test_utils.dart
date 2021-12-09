@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_adapters.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/utils/hive_constants.dart';
+import 'package:xayn_discovery_app/infrastructure/util/hive_constants.dart';
 
 // registers adapters if they are not already registered
 void initHiveAdapters() {

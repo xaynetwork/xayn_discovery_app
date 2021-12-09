@@ -9,8 +9,8 @@ import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/discovery_feed_axis_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/repositories/hive_app_settings_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/utils/box_names.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 import '../util/test_utils.dart';
 
