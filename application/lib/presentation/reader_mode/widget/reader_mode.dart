@@ -1,12 +1,15 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/reading_time_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
@@ -99,7 +102,12 @@ class _ReaderModeState extends State<ReaderMode> {
     final processHtmlResult = widget.processHtmlResult;
 
     if (processHtmlResult != null) {
-      _readerModeManager.handleCardData(processHtmlResult);
+      _readerModeManager.handleCardData(ReadingTimeInput(
+        processHtmlResult: processHtmlResult,
+        lang: 'en', // todo: fetch from app settings
+        singleUnit: Strings.timeUnitM,
+        pluralUnit: Strings.timeUnitMM,
+      ));
     }
   }
 
@@ -151,6 +159,23 @@ class _ReaderModeState extends State<ReaderMode> {
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
   _ReaderModeWidgetFactory();
+
+  @override
+  Widget buildBodyWidget(BuildContext context, Widget child) {
+    final builtChild = super.buildBodyWidget(
+      context,
+      Padding(
+        padding: EdgeInsets.only(
+          left: R.dimen.unit2,
+          right: R.dimen.unit2,
+          top: R.dimen.unit2,
+        ),
+        child: child,
+      ),
+    );
+
+    return builtChild;
+  }
 
   @override
   Widget? buildImageWidget(

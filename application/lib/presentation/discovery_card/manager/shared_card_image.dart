@@ -32,24 +32,14 @@ class _SharedCardImageState extends State<SharedCardImage> {
 
     effectFraction = _controller.value;
 
-    _controller.addListener(
-      () {
-        // here be dragons!
-        // side-effect of this being inside a Hero widget.
-        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-          if (mounted) {
-            setState(() {
-              effectFraction = _controller.value;
-            });
-          }
-        });
-      },
-    );
+    _controller.addListener(_onControllerUpdate);
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    _controller.removeListener(_onControllerUpdate);
 
     if (widget.controller == null) {
       _controller.dispose();
@@ -63,31 +53,31 @@ class _SharedCardImageState extends State<SharedCardImage> {
     );
     final bgColor = R.colors.swipeCardBackground.withOpacity(effectFraction);
     final borderRadius =
-        Radius.circular(R.dimen.unit4 * (1.0 - effectFraction));
+        Radius.circular(R.dimen.unit2 * (1.0 - effectFraction));
 
     return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        width: constraints.maxWidth,
-        height: 2 * constraints.maxHeight / 3,
-        decoration: const BoxDecoration(),
-        clipBehavior: Clip.antiAlias,
-        foregroundDecoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              bgColor,
-              bgColor.withAlpha(40),
-              bgColor.withAlpha(120),
-              bgColor,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, 0.15, 0.8, 1],
-          ),
+      return ClipRRect(
+        borderRadius: BorderRadius.only(
+          bottomLeft: borderRadius,
+          bottomRight: borderRadius,
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            bottomLeft: borderRadius,
-            bottomRight: borderRadius,
+        child: Container(
+          width: constraints.maxWidth,
+          height: 2 * constraints.maxHeight / 3,
+          decoration: const BoxDecoration(),
+          clipBehavior: Clip.antiAlias,
+          foregroundDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                bgColor,
+                bgColor.withAlpha(40),
+                bgColor.withAlpha(120),
+                bgColor,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0, 0.15, 0.8, 1],
+            ),
           ),
           child: CachedImage(
             uri: widget.uri,
@@ -99,6 +89,16 @@ class _SharedCardImageState extends State<SharedCardImage> {
           ),
         ),
       );
+    });
+  }
+
+  void _onControllerUpdate() {
+    // no way around addPostFrameCallback unfortunately,
+    // this is the only way to invoke a setState on an animating Hero
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() => effectFraction = _controller.value);
+      }
     });
   }
 }
