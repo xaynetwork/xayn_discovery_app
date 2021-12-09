@@ -189,4 +189,36 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
       ),
     );
   }
+
+  @override
+  Widget? buildVideoPlayer(
+    readability.BuildMetadata meta,
+    String url, {
+    required bool autoplay,
+    required bool controls,
+    double? height,
+    required bool loop,
+    String? posterUrl,
+    double? width,
+  }) {
+    var actualUrl = url;
+    final uri = Uri.parse(url);
+    final maybeFile = uri.pathSegments.last;
+
+    if (maybeFile.toLowerCase().startsWith('manifest')) {
+      // common with Bing/MSN
+      actualUrl = '$url.m3u8';
+    }
+
+    return super.buildVideoPlayer(
+      meta,
+      actualUrl,
+      autoplay: false,
+      controls: true,
+      loop: false,
+      height: height,
+      posterUrl: posterUrl,
+      width: width,
+    );
+  }
 }
