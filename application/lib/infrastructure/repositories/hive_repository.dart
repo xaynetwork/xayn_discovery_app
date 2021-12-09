@@ -15,7 +15,7 @@ abstract class BaseHiveRepository<T extends DbEntity> {
 
   Box<Record> get box;
 
-  /// Date sorted values of the map
+  /// Date sorted values of the map.
   List<T> get values => box.fastRecordMap().map(_unwrap).toList();
 
   T _unwrap(Record record) => _mapperCache.putIfAbsent(
@@ -44,38 +44,35 @@ abstract class HiveRepository<T extends DbEntity>
   T? getById(UniqueId id) => mapper.fromMap(recordBox.get(id.value));
 
   /// Saves a value to the database.
-  ///
-  /// Note there is no guarantee that the original entity was not manipulated in the meanwhile.
-  /// To avoid issues follow the [WhiteListRepository.saveAndUpdate] method pattern.
   void save(T entity) {
     final map = mapper.toMap(entity);
-
     recordBox.put(id(entity).value, map);
   }
 
-  // saves all entries in the order
+  /// Saves all entities in the order.
   void saveAll(Iterable<T> entities) {
     for (final entity in entities) {
       recordBox.put(id(entity).value, mapper.toMap(entity));
     }
   }
 
+  /// Removes an entity from the database.
   void remove(T entity) {
     final id = entity.id.value;
-
     recordBox.delete(id);
   }
 
+  /// Removes all entities from the database for a given [ids].
   void removeAll(Iterable<UniqueId> ids) {
     for (final id in ids) {
       recordBox.delete(id.value);
     }
   }
 
-  /// Alias for removeAll
+  /// Alias for removeAll.
   void removeAllByIds(Iterable<UniqueId> ids) => removeAll(ids);
 
-  /// Actually purges all elements including null/ tombstone values, should only be used for testing purposes
+  /// Actually purges all elements including null/ tombstone values, should only be used for testing purposes.
   @visibleForTesting
   void purgeAll() => recordBox.clear(purge: true);
 
@@ -87,7 +84,7 @@ abstract class HiveRepository<T extends DbEntity>
 
   /// Returns a broadcast stream of change events.
   ///
-  /// If the [key] parameter is provided, only events for the specified key are
+  /// If the [id] parameter is provided, only events for the specified id are
   /// broadcasted.
   Stream<RepositoryEvent<T>> watch({UniqueId? id}) {
     return recordBox.watch().map((event) {
