@@ -28,7 +28,7 @@ void main() {
 
       verifyInOrder([
         repository.settings,
-        repository.save(any),
+        repository.settings = any,
       ]);
       verifyNoMoreInteractions(repository);
     },
