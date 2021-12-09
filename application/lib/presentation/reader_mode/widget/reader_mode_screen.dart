@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/shared_card_image.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 
@@ -16,6 +17,7 @@ class ReaderModeScreen extends StatefulWidget {
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
   final SharedCardImageController? sharedCardImageController;
+  final ViewTypeCallback? onViewTypeChanged;
 
   const ReaderModeScreen({
     Key? key,
@@ -25,6 +27,7 @@ class ReaderModeScreen extends StatefulWidget {
     this.discoveryCardManager,
     this.imageManager,
     this.sharedCardImageController,
+    this.onViewTypeChanged,
   }) : super(key: key);
 
   @override
@@ -55,11 +58,15 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
     widget.animation.addListener(
       () => setState(() => _opacity = widget.animation.value),
     );
+
+    widget.onViewTypeChanged?.call(DocumentViewType.readerMode);
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    widget.onViewTypeChanged?.call(DocumentViewType.story);
 
     if (widget.discoveryCardManager == null) {
       _discoveryCardManager.close();
