@@ -44,7 +44,7 @@ abstract class HiveRepository<T extends DbEntity>
   T? getById(UniqueId id) => mapper.fromMap(recordBox.get(id.value));
 
   /// Saves a value to the database.
-  void save(T entity) {
+  set entity(T entity) {
     final map = mapper.toMap(entity);
     recordBox.put(id(entity).value, map);
   }

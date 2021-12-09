@@ -13,7 +13,7 @@ class SaveAppThemeUseCase extends UseCase<AppTheme, None> {
   Stream<None> transaction(AppTheme param) async* {
     final settings = _repository.settings;
     final updatedSettings = settings.copyWith(appTheme: param);
-    _repository.save(updatedSettings);
+    _repository.settings = updatedSettings;
     yield none;
   }
 }

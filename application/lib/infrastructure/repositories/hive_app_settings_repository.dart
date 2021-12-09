@@ -24,6 +24,9 @@ class HiveAppSettingsRepository extends HiveRepository<AppSettings>
   Box<Record> get box => Hive.box<Record>(BoxNames.appSettings);
 
   @override
+  set settings(AppSettings appSettings) => entity = appSettings;
+
+  @override
   AppSettings get settings =>
       getById(AppSettings.globalId()) ?? AppSettings.initial();
 }

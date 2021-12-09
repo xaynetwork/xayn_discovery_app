@@ -14,7 +14,7 @@ class SaveDiscoveryFeedAxisUseCase
   Stream<DiscoveryFeedAxis> transaction(DiscoveryFeedAxis param) async* {
     final settings = _repository.settings;
     final updatedSettings = settings.copyWith(discoveryFeedAxis: param);
-    _repository.save(updatedSettings);
+    _repository.settings = updatedSettings;
     yield param;
   }
 }
