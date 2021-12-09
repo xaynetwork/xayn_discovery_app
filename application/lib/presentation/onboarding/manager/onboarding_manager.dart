@@ -53,6 +53,10 @@ class OnBoardingManager extends Cubit<OnBoardingState>
       );
     }
 
+    if (_currentPageIndex == -1) {
+      return const OnBoardingState.started();
+    }
+
     return OnBoardingState.completed(
       currentPageIndex: _currentPageIndex,
     );
