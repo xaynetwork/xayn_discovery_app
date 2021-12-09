@@ -28,5 +28,5 @@ class HiveAppSettingsRepository extends HiveRepository<AppSettings>
 
   @override
   AppSettings get settings =>
-      getById(AppSettings.globalId()) ?? AppSettings.initial();
+      getById(AppSettings.globalId) ?? AppSettings.initial();
 }

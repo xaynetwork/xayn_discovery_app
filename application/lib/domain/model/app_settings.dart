@@ -7,8 +7,8 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 part 'app_settings.freezed.dart';
 
 @freezed
-class AppSettings with _$AppSettings implements DbEntity {
-  factory AppSettings({
+class AppSettings extends DbEntity with _$AppSettings {
+  factory AppSettings._({
     required bool isOnboardingDone,
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
@@ -20,11 +20,11 @@ class AppSettings with _$AppSettings implements DbEntity {
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
   }) =>
-      AppSettings(
+      AppSettings._(
         isOnboardingDone: isOnboardingDone,
         appTheme: appTheme,
         discoveryFeedAxis: discoveryFeedAxis,
-        id: AppSettings.globalId(),
+        id: AppSettings.globalId,
       );
 
   factory AppSettings.initial() => AppSettings.global(
@@ -33,6 +33,6 @@ class AppSettings with _$AppSettings implements DbEntity {
         discoveryFeedAxis: DiscoveryFeedAxis.vertical,
       );
 
-  static UniqueId globalId() =>
+  static UniqueId globalId =
       const UniqueId.fromTrustedString('app_settings_id');
 }
