@@ -130,7 +130,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         builder: (context, child) {
           _sharedCardImageController.value = 1.0 - animation.value;
 
-          return Opacity(opacity: sqrt(animation.value), child: child);
+          return child!;
         },
       ),
       transitionDuration: R.durations.tweenIntoReaderModeDuration,
