@@ -1,5 +1,6 @@
 import 'package:logger/logger.dart';
 
+const kLogFileName = 'app_log.txt';
 final _defaultLogger = Logger();
 Logger? _logger;
 Logger get logger => _logger ?? _defaultLogger;
