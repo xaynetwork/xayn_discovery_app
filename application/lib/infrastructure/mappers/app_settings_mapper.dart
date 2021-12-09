@@ -1,7 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
-import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/discovery_feed_axis_mapper.dart';
 
@@ -9,30 +7,40 @@ import 'app_theme_mapper.dart';
 
 @singleton
 class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
-  const AppSettingsMapper();
+  final IntToAppThemeMapper _intToAppThemeMapper;
+  final AppThemeToIntMapper _appThemeToIntMapper;
+  final IntToDiscoveryFeedAxisMapper _intToDiscoveryFeedAxisMapper;
+  final DiscoveryFeedAxisToIntMapper _discoveryFeedAxisToIntMapper;
+
+  const AppSettingsMapper(
+    this._intToAppThemeMapper,
+    this._appThemeToIntMapper,
+    this._intToDiscoveryFeedAxisMapper,
+    this._discoveryFeedAxisToIntMapper,
+  );
 
   @override
   AppSettings? fromMap(Map? map) {
     if (map == null) return null;
 
     final isOnboardingDone = map[AppSettingsFields.isOnboardingDone] as bool?;
-    final appThemeValue = map[AppSettingsFields.appTheme] as int?;
-    final discoveryFeedAxisValue =
-        map[AppSettingsFields.discoveryFeedAxis] as int?;
+    final appTheme = _intToAppThemeMapper.map(map[AppSettingsFields.appTheme]);
+    final discoveryFeedAxis = _intToDiscoveryFeedAxisMapper
+        .map(map[AppSettingsFields.discoveryFeedAxis]);
 
     return AppSettings.global(
       isOnboardingDone: isOnboardingDone ?? false,
-      appTheme: appThemeValue?.toAppThemeEnum() ?? AppTheme.system,
-      discoveryFeedAxis: discoveryFeedAxisValue?.toDiscoveryFeedAxisEnum() ??
-          DiscoveryFeedAxis.vertical,
+      appTheme: appTheme,
+      discoveryFeedAxis: discoveryFeedAxis,
     );
   }
 
   @override
   DbEntityMap toMap(AppSettings entity) => {
         AppSettingsFields.isOnboardingDone: entity.isOnboardingDone,
-        AppSettingsFields.appTheme: entity.appTheme.toInt(),
-        AppSettingsFields.discoveryFeedAxis: entity.discoveryFeedAxis.toInt(),
+        AppSettingsFields.appTheme: _appThemeToIntMapper.map(entity.appTheme),
+        AppSettingsFields.discoveryFeedAxis:
+            _discoveryFeedAxisToIntMapper.map(entity.discoveryFeedAxis),
       };
 }
 

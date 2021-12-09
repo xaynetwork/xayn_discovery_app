@@ -1,32 +1,38 @@
+import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
 
-abstract class DiscoveryFeedAxisFields {
-  DiscoveryFeedAxisFields._();
+const int _vertical = 0;
+const int _horizontal = 1;
 
-  static const int vertical = 0;
-  static const int horizontal = 1;
-}
+@singleton
+class IntToDiscoveryFeedAxisMapper implements Mapper<int?, DiscoveryFeedAxis> {
+  const IntToDiscoveryFeedAxisMapper();
 
-extension DiscoveryFeedAxisEnumExtension on DiscoveryFeedAxis {
-  int toInt() {
-    switch (this) {
-      case DiscoveryFeedAxis.horizontal:
-        return DiscoveryFeedAxisFields.horizontal;
-      case DiscoveryFeedAxis.vertical:
+  @override
+  DiscoveryFeedAxis map(int? input) {
+    switch (input) {
+      case _vertical:
+        return DiscoveryFeedAxis.vertical;
+      case _horizontal:
       default:
-        return DiscoveryFeedAxisFields.vertical;
+        return DiscoveryFeedAxis.horizontal;
     }
   }
 }
 
-extension DiscoveryFeedAxisIntExtension on int {
-  DiscoveryFeedAxis toDiscoveryFeedAxisEnum() {
-    switch (this) {
-      case DiscoveryFeedAxisFields.horizontal:
-        return DiscoveryFeedAxis.horizontal;
-      case DiscoveryFeedAxisFields.vertical:
+@singleton
+class DiscoveryFeedAxisToIntMapper implements Mapper<DiscoveryFeedAxis, int> {
+  const DiscoveryFeedAxisToIntMapper();
+
+  @override
+  int map(DiscoveryFeedAxis input) {
+    switch (input) {
+      case DiscoveryFeedAxis.horizontal:
+        return _horizontal;
+      case DiscoveryFeedAxis.vertical:
       default:
-        return DiscoveryFeedAxis.vertical;
+        return _vertical;
     }
   }
 }
