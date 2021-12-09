@@ -145,6 +145,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         discoveryCardManager: _discoveryCardManager,
         imageManager: _imageManager,
         sharedCardImageController: _sharedCardImageController,
+        onViewTypeChanged: widget.onViewTypeChanged,
       ),
     );
 
