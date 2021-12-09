@@ -15,8 +15,7 @@ abstract class BaseHiveRepository<T extends DbEntity> {
 
   Box<Record> get box;
 
-  /// Date sorted values of the map.
-  List<T> get values => box.fastRecordMap().map(_unwrap).toList();
+  List<T> get values => box.values.map(_unwrap).toList();
 
   T _unwrap(Record record) => _mapperCache.putIfAbsent(
       record.value, () => mapper.fromMap(record.value)!);
@@ -107,23 +106,4 @@ abstract class HiveRepository<T extends DbEntity>
 
   Map<String, Record<dynamic>> getRecordsForSync({Hlc? modifiedSince}) =>
       recordBox.recordMap(modifiedSince: modifiedSince);
-}
-
-extension _BoxExtension<V> on Box<Record<V>> {
-  List<Record<V>> fastRecordMap({Hlc? modifiedSince}) {
-    final v = values.toList(growable: false);
-    final list = <Record<V>>[];
-
-    for (var i = 0, len = v.length, t = modifiedSince?.logicalTime ?? 0;
-        i < len;
-        i++) {
-      final record = v[i];
-
-      if (record.value != null && record.modified.logicalTime >= t) {
-        list.add(record);
-      }
-    }
-
-    return list..sort((recordA, recordB) => recordA.hlc.compareTo(recordB.hlc));
-  }
 }
