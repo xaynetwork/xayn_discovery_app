@@ -1,6 +1,5 @@
 import 'package:html/dom.dart' as dom;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_readability/xayn_readability.dart';
