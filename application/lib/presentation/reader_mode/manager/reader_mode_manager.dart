@@ -2,22 +2,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/reading_time_use_case.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
-import 'package:xayn_readability/xayn_readability.dart';
 
 @injectable
 class ReaderModeManager extends Cubit<ReaderModeState>
     with UseCaseBlocHelper<ReaderModeState> {
   final PostProcessUseCase _postProcessUseCase;
+  final ReadingTimeUseCase _readingTimeUseCase;
 
-  late final UseCaseSink<ProcessHtmlResult, Uri> _postProcessHandler;
+  late final UseCaseSink<ReadingTimeInput, Uri> _postProcessHandler;
 
-  ReaderModeManager(this._postProcessUseCase) : super(ReaderModeState.empty()) {
+  ReaderModeManager(
+    this._postProcessUseCase,
+    this._readingTimeUseCase,
+  ) : super(ReaderModeState.empty()) {
     _initHandlers();
   }
 
-  void handleCardData(ProcessHtmlResult processHtmlResult) =>
-      _postProcessHandler(processHtmlResult);
+  void handleCardData(ReadingTimeInput input) => _postProcessHandler(input);
 
   @override
   Future<ReaderModeState?> computeState() async =>
@@ -30,6 +33,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
       });
 
   void _initHandlers() {
-    _postProcessHandler = pipe(_postProcessUseCase);
+    _postProcessHandler = pipe(_readingTimeUseCase)
+        .transform((out) => out.followedBy(_postProcessUseCase));
   }
 }

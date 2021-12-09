@@ -34,4 +34,7 @@ class Strings {
   static const String hoursAgo = 'hours ago';
   static const String dayAgo = 'day ago';
   static const String daysAgo = 'days ago';
+
+  static const String timeUnitM = 'minute';
+  static const String timeUnitMM = 'minutes';
 }
