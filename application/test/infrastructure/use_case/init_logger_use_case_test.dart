@@ -18,11 +18,13 @@ void main() {
   late MockLoggerHandler loggerHandler;
   late Directory directory;
   late File file;
+  late InitLoggerUseCase initLoggerUseCase;
 
   setUp(() async {
     fileHandler = MockFileHandler();
     loggerHandler = MockLoggerHandler();
     directory = await Directory.systemTemp.createTemp();
+    initLoggerUseCase = InitLoggerUseCase(fileHandler, loggerHandler);
     file = File('${directory.path}/$kLogFileName');
   });
 
@@ -42,14 +44,28 @@ void main() {
       useCaseTest(
         'WHEN getting the app directory throws an Exception THEN dont call initLogger method ',
         setUp: () => _setUpGetAppDirectoryThrowsException(),
-        build: () => InitLoggerUseCase(fileHandler, loggerHandler),
+        build: () => initLoggerUseCase,
         input: [none],
         verify: (_) => verifyZeroInteractions(loggerHandler),
       );
       useCaseTest(
         'WHEN getting the app directory returns properly THEN initialise the logger with the correct path ',
         setUp: () => _setUpGetAppDirectory(),
-        build: () => InitLoggerUseCase(fileHandler, loggerHandler),
+        build: () => initLoggerUseCase,
+        input: [none],
+        verify: (_) => verify(
+          loggerHandler.initialiseLogger(file.path),
+        ).called(1),
+      );
+
+      useCaseTest(
+        'WHEN transaction method has been already called THEN dont call the initLogger method ',
+        setUp: () => _setUpGetAppDirectory(),
+        build: () => initLoggerUseCase,
+        act: () {
+          initLoggerUseCase.call(none);
+          initLoggerUseCase.call(none);
+        },
         input: [none],
         verify: (_) => verify(
           loggerHandler.initialiseLogger(file.path),
