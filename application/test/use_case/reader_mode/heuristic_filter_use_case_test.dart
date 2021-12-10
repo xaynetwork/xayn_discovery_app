@@ -91,25 +91,5 @@ void main() {
         ),
       ],
     );
-
-    useCaseTest<HeuristicFilterUseCase, Elements, Elements>(
-      'throws if not a single paragraph passed the tests: ',
-      build: () => HeuristicFilterUseCase(),
-      input: [
-        const Elements(
-          paragraphs: [
-            spammy,
-            tooShort,
-            screaming,
-          ],
-          processHtmlResult: result,
-        ),
-      ],
-      expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<FilterAggregateException>()),
-        )
-      ],
-    );
   });
 }
