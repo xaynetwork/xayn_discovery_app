@@ -30,10 +30,12 @@ const List<String> kClassesToPreserve = [
 
 class ReaderMode extends StatefulWidget {
   final readability.ProcessHtmlResult? processHtmlResult;
+  final readability.ScrollHandler? onScroll;
 
   const ReaderMode({
     Key? key,
     this.processHtmlResult,
+    this.onScroll,
   }) : super(key: key);
 
   @override
@@ -92,6 +94,7 @@ class _ReaderModeState extends State<ReaderMode> {
             classesToPreserve: kClassesToPreserve,
             factoryBuilder: () => _ReaderModeWidgetFactory(),
             loadingBuilder: () => _createShimmer(),
+            onScroll: widget.onScroll,
           );
         });
   }

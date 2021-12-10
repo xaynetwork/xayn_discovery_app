@@ -61,7 +61,7 @@ dependencies:
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
-      ref: b1c53eb8013d654dc92798f534471da3c4a01dd8
+      ref: 5a8a4f98124f4beece685e1efd3a268f1bdeadfa
   xayn_swipe_it:
     git:
       url: git@github.com:xaynetwork/xayn_swipe_it.git
