@@ -9,7 +9,7 @@ import 'analytics_events.dart';
 // https://developers.amplitude.com/docs/flutter-setup#eu-data-residency
 const kEuServerZone = 'EU';
 
-@lazySingleton
+@singleton
 class AnalyticsService {
   AnalyticsService();
 
