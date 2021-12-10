@@ -9,15 +9,13 @@ import 'analytics_events.dart';
 // https://developers.amplitude.com/docs/flutter-setup#eu-data-residency
 const kEuServerZone = 'EU';
 
-@singleton
+@lazySingleton
 class AnalyticsService {
-  AnalyticsService() {
-    _init();
-  }
+  AnalyticsService();
 
   Amplitude get _analytics => Amplitude.getInstance();
 
-  _init() {
+  init() {
     _analytics
       ..init(Env.amplitudeApiKey)
       ..trackingSessionEvents(true)
