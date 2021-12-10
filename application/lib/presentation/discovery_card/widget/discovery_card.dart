@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode_screen.dart';
+import 'package:xayn_discovery_app/presentation/transitions/back_gesture_detector.dart';
 import 'package:xayn_readability/xayn_readability.dart' hide ReaderMode;
 
 import 'discovery_card_footer.dart';
@@ -101,6 +102,48 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         });
   }
 
+  PageRoute _createPageRoute({required String heroTag}) {
+    late final PageRoute route;
+
+    transitionsBuilder(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+    ) =>
+        AnimatedBuilder(
+          animation: animation,
+          child: child,
+          builder: (_, child) {
+            _sharedCardImageController.value = 1.0 - animation.value;
+
+            return BackGestureDetector(
+              navigator: route.navigator!,
+              child: child!,
+            );
+          },
+        );
+
+    pageBuilder(_, Animation<double> animation, __) => ReaderModeScreen(
+          document: widget.document,
+          heroTag: heroTag,
+          animation: animation,
+          discoveryCardManager: _discoveryCardManager,
+          imageManager: _imageManager,
+          sharedCardImageController: _sharedCardImageController,
+          onViewTypeChanged: widget.onViewTypeChanged,
+        );
+
+    route = PageRouteBuilder(
+      transitionsBuilder: transitionsBuilder,
+      transitionDuration: R.durations.tweenIntoReaderModeDuration,
+      reverseTransitionDuration: R.durations.tweenIntoReaderModeDuration,
+      pageBuilder: pageBuilder,
+    );
+
+    return route;
+  }
+
   Widget _buildCardDisplayStack({
     required String imageUrl,
     required List<String> snippets,
@@ -113,41 +156,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     final allSnippets = isPrimary ? [snippet, ...snippets] : [snippet];
     final fullSize = constraints.maxHeight;
     final heroTag = '${heroes.cardImageTag}_${widget.cardIndex}';
-
-    // todo: swap for the real navigation later on
-    final route = PageRouteBuilder(
-      transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-      ) =>
-          AnimatedBuilder(
-        animation: animation,
-        child: child,
-        builder: (context, child) {
-          _sharedCardImageController.value = 1.0 - animation.value;
-
-          return child!;
-        },
-      ),
-      transitionDuration: R.durations.tweenIntoReaderModeDuration,
-      reverseTransitionDuration: R.durations.tweenIntoReaderModeDuration,
-      pageBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        _,
-      ) =>
-          ReaderModeScreen(
-        document: widget.document,
-        heroTag: heroTag,
-        animation: animation,
-        discoveryCardManager: _discoveryCardManager,
-        imageManager: _imageManager,
-        sharedCardImageController: _sharedCardImageController,
-        onViewTypeChanged: widget.onViewTypeChanged,
-      ),
-    );
+    final route = _createPageRoute(heroTag: heroTag);
 
     final cardBackground = _CardBackground(
       imageUrl: imageUrl,
