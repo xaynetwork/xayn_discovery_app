@@ -20,10 +20,11 @@ class AnalyticsService {
   _init() {
     _analytics
       ..init(Env.amplitudeApiKey)
-
-      // Todo: We should first detect if the user is in Europe
-      ..setServerZone(kEuServerZone)
+      ..trackingSessionEvents(true)
       ..setUseDynamicConfig(true)
+
+      // TODO: We should first detect if the user is in Europe
+      ..setServerZone(kEuServerZone)
 
       // Enable COPPA privacy guard. This is useful when you choose not to report sensitive user information.
       ..enableCoppaControl();
