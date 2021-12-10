@@ -205,7 +205,10 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
     final uri = Uri.parse(url);
     final maybeFile = uri.pathSegments.last;
 
-    if (maybeFile.toLowerCase().startsWith('manifest')) {
+    if (maybeFile.startsWith(RegExp(
+      r'manifest\([^\)]+\)',
+      caseSensitive: false,
+    ))) {
       // common with Bing/MSN
       actualUrl = '$url.m3u8';
     }
