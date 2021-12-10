@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_the
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
@@ -28,6 +29,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final SaveDiscoveryFeedAxisUseCase _saveDiscoveryFeedAxisUseCase;
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
   final BugReportingService _bugReportingService;
+  final ExtractLogUseCase _extractLogUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -38,6 +40,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._saveDiscoveryFeedAxisUseCase,
     this._listenDiscoveryFeedAxisUseCase,
     this._bugReportingService,
+    this._extractLogUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -66,6 +69,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   }
 
   void saveTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
+
+  Future<void> extractLogs() => _extractLogUseCase.call(none);
 
   void changeAxis(DiscoveryFeedAxis axis) =>
       _saveDiscoveryFeedAxisUseCase.call(axis);
@@ -112,7 +117,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       if (axis != null) {
         _discoveryFeedAxis = axis;
       }
-
       return buildReady();
     });
   }
