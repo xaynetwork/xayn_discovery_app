@@ -70,8 +70,8 @@ end
 
 desc "Flutter build runner"
 lane :build_runner do
-  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "INSTABUG_TOKEN_DEBUG", "api-gw.xaynet.dev", "https://img-fetcher.xaynet.dev")
-  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "INSTABUG_TOKEN_PRODUCTION", "api-gw.xayn.com", "https://img-fetcher.xayn.com")
+  checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "INSTABUG_TOKEN_DEBUG", "AMPLITUDE_API_KEY_DEBUG", "api-gw.xaynet.dev", "https://img-fetcher.xaynet.dev")
+  checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "INSTABUG_TOKEN_PRODUCTION", "AMPLITUDE_API_KEY_PRODUCTION", "api-gw.xayn.com", "https://img-fetcher.xayn.com")
 
   flutter("pub  run build_runner build --delete-conflicting-outputs")
 end
@@ -162,7 +162,7 @@ def uploadToAppCenter(token, appName, path, version)
   )
 end
 
-def checkAndCreateEnv(file, searchApiEnvKey, instabugEnvToken, searchApiUrl, imageFetcherUrl)
+def checkAndCreateEnv(file, searchApiEnvKey, instabugEnvToken, amplitudeEnvApiKey, searchApiUrl, imageFetcherUrl)
   if !File.file?(file)
     searchApiSecret = ENV[searchApiEnvKey]
     if !ENV.key?(searchApiEnvKey)
@@ -174,16 +174,22 @@ def checkAndCreateEnv(file, searchApiEnvKey, instabugEnvToken, searchApiUrl, ima
       instabugToken = UI.input("#{instabugEnvToken}: ")
     end
 
-    writeEnvFile(file, searchApiSecret, instabugToken, searchApiUrl, imageFetcherUrl)
+    amplitudeApiKey = ENV[amplitudeEnvApiKey]
+    if !ENV.key?(amplitudeEnvApiKey)
+      amplitudeApiKey = UI.input("#{amplitudeEnvApiKey}: ")
+    end
+
+    writeEnvFile(file, searchApiSecret, instabugToken, amplitudeApiKey, searchApiUrl, imageFetcherUrl)
   end
 end
 
-def writeEnvFile(file, searchApiKey, instabugToken, searchApiUrl, imageFetcherUrl)
+def writeEnvFile(file, searchApiKey, instabugToken, amplitudeApiKey, searchApiUrl, imageFetcherUrl)
   writeProperties(file, {
     :SEARCH_API_BASE_URL => searchApiUrl,
     :SEARCH_API_SECRET_KEY => searchApiKey,
     :IMAGE_FETCHER_URL => imageFetcherUrl,
     :INSTABUG_TOKEN => instabugToken,
+    :AMPLITUDE_API_KEY => amplitudeApiKey,
   })
 end
 

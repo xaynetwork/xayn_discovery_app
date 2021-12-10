@@ -67,6 +67,8 @@ jobs:
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
+          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
+          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build:release
@@ -86,6 +88,8 @@ jobs:
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
+          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
+          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release

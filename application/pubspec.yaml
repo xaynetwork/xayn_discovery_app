@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  amplitude_flutter: ^3.8.0
   connectivity_plus: ^2.0.3
   envify: ^2.0.0
   get_it: ^7.0.0

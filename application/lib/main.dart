@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_sc
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   runApp(getApp());
 }
