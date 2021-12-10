@@ -42,6 +42,7 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
   String get imageUrl => webResource.displayUrl.toString();
 
   double _opacity = .0;
+  double _scrollPosition = .0;
 
   @override
   void initState() {
@@ -105,6 +106,8 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
           )
         : backgroundPane;
 
+    onScroll(double position) => setState(() => _scrollPosition = position);
+
     return Stack(
       children: [
         Opacity(
@@ -112,21 +115,31 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
           child: Container(color: R.colors.swipeCardBackground),
         ),
         LayoutBuilder(
-          builder: (context, constraints) => Column(
-            children: [
-              SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight / 5,
-                child: image,
-              ),
-              Expanded(
-                child: Opacity(
-                  opacity: _opacity,
-                  child: ReaderMode(processHtmlResult: state.result),
+          builder: (context, constraints) {
+            final maxImageSize = constraints.maxHeight / 5;
+            final topImageSize =
+                (maxImageSize - _scrollPosition / 100.0 * maxImageSize)
+                    .clamp(.0, maxImageSize);
+
+            return Column(
+              children: [
+                SizedBox(
+                  width: constraints.maxWidth,
+                  height: topImageSize,
+                  child: image,
                 ),
-              )
-            ],
-          ),
+                Expanded(
+                  child: Opacity(
+                    opacity: _opacity,
+                    child: ReaderMode(
+                      processHtmlResult: state.result,
+                      onScroll: onScroll,
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
         ),
       ],
     );
