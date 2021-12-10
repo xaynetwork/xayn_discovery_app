@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 const String kRequestMethod = 'GET';
@@ -45,6 +46,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         timeout: kTimeout,
       ),
     );
+
     final body = await _extractResponseBody(response);
 
     yield Progress.finish(html: body, uri: param);
@@ -59,7 +61,10 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
 
     final buffer = await response.bodyAsStream!
         .transform(const Utf8Decoder())
-        .fold(StringBuffer(), writeToBuffer);
+        .fold(StringBuffer(), writeToBuffer)
+        .catchError((e, s) {
+      logger.e('Error while decoding HTML reply stream: $e');
+    });
 
     return buffer.toString();
   }
