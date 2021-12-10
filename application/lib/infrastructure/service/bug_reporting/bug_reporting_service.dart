@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:instabug_flutter/Instabug.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
 const kInstabugAndroidMethodChannel = 'instabug_android';
@@ -20,7 +20,7 @@ class BugReportingService {
   }
 
   _init() {
-    if (Platform.isAndroid) {
+    if (SafePlatform.isAndroid) {
       _initAndroid(kInstabugToken, kInstabugInvocationEvents);
     } else {
       _initiOS(kInstabugToken, kInstabugInvocationEvents);
