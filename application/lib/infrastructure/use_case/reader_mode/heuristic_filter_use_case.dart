@@ -32,10 +32,6 @@ class HeuristicFilterUseCase extends UseCase<Elements, Elements> {
       }
     }
 
-    if (validParagraphs.isEmpty) {
-      throw const FilterAggregateException();
-    }
-
     yield Elements(
       processHtmlResult: param.processHtmlResult,
       paragraphs: validParagraphs,
@@ -94,15 +90,6 @@ class FilterException extends Error {
       '$paragraph did not pass the test because $rejectionReason';
 
   FilterException(this.paragraph, this.rejectionReason);
-
-  @override
-  String toString() => message;
-}
-
-class FilterAggregateException {
-  String get message => 'not a single paragraph passed the filter';
-
-  const FilterAggregateException();
 
   @override
   String toString() => message;
