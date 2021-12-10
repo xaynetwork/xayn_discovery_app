@@ -1,9 +1,9 @@
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 
-const _kSessionStartEvent = 'Session start';
+const _kClickedCardEvent = 'Clicked a card';
 
 class AnalyticsEvents {
   AnalyticsEvents._();
 
-  static const sessionStartEvent = AnalyticsEvent(_kSessionStartEvent);
+  static const clickedCardEvent = AnalyticsEvent(_kClickedCardEvent);
 }

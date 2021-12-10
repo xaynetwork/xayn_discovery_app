@@ -19,7 +19,9 @@ class AnalyticsService {
       // Enable COPPA privacy guard. This is useful when you choose not to report sensitive user information.
       ..enableCoppaControl();
 
-    logEvent(AnalyticsEvents.sessionStartEvent);
+    //Toggle Event for testing purposes only
+    //TODO: remove later
+    logEvent(AnalyticsEvents.clickedCardEvent);
   }
 
   logEvent(AnalyticsEvent event) => _analytics.logEvent(
