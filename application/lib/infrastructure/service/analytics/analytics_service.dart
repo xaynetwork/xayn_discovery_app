@@ -5,10 +5,6 @@ import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
 import 'analytics_events.dart';
 
-// Configuration for users in Europe
-// https://developers.amplitude.com/docs/flutter-setup#eu-data-residency
-const kEuServerZone = 'EU';
-
 @singleton
 class AnalyticsService {
   AnalyticsService();
@@ -20,10 +16,6 @@ class AnalyticsService {
       ..init(Env.amplitudeApiKey)
       ..trackingSessionEvents(true)
       ..setUseDynamicConfig(true)
-
-      // TODO: We should first detect if the user is in Europe
-      ..setServerZone(kEuServerZone)
-
       // Enable COPPA privacy guard. This is useful when you choose not to report sensitive user information.
       ..enableCoppaControl();
 
