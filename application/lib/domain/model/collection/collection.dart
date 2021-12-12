@@ -1,29 +1,30 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 
 import '../unique_id.dart';
 
-part 'collection_three.freezed.dart';
+part 'collection.freezed.dart';
 
 const kDefaultCollectionId = 'defaultCollectionId';
 
 @freezed
-class CollectionThree with _$CollectionThree {
-  const CollectionThree._();
+class Collection with _$Collection {
+  const Collection._();
 
-  factory CollectionThree({
+  @Implements<DbEntity>()
+  factory Collection({
     required UniqueId id,
     required String name,
-    required DateTime updatedAt,
-  }) = _CollectionThree;
+    required int index,
+  }) = _Collection;
 
-  factory CollectionThree.readLater({
+  factory Collection.readLater({
     required String name,
-    DateTime? updatedAt,
   }) =>
-      CollectionThree(
-        id: readLaterId,
+      Collection(
+        index: 0,
+        id: Collection.readLaterId,
         name: name,
-        updatedAt: updatedAt ?? DateTime.now(),
       );
 
   bool get isDefault => id.value == kDefaultCollectionId;
