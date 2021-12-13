@@ -1,11 +1,21 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_crdt/hive_crdt.dart';
 import 'package:xayn_design/src/utils/design_testing_utils.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
+import '../../../infrastructure/util/test_utils.dart';
+
 void main() {
+  Hive.openBox<Record>(BoxNames.appSettings, bytes: Uint8List(0));
+
   setUpAll(() {
+    initHiveAdapters();
     configureDependencies();
   });
   testWidgets(
