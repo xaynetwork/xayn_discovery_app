@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
@@ -14,14 +15,19 @@ const kSettingsKey = 0;
 class HiveAppSettingsRepository extends HiveRepository<AppSettings>
     implements AppSettingsRepository {
   final AppSettingsMapper _mapper;
+  final Box<Record> _box;
 
-  HiveAppSettingsRepository(this._mapper);
+  HiveAppSettingsRepository(this._mapper)
+      : _box = Hive.box<Record>(BoxNames.appSettings);
+
+  @visibleForTesting
+  HiveAppSettingsRepository.test(this._mapper, this._box);
 
   @override
   BaseDbEntityMapper<AppSettings> get mapper => _mapper;
 
   @override
-  Box<Record> get box => Hive.box<Record>(BoxNames.appSettings);
+  Box<Record> get box => _box;
 
   @override
   set settings(AppSettings appSettings) => entity = appSettings;
