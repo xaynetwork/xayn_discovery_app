@@ -108,7 +108,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     transitionsBuilder(
       BuildContext context,
       Animation<double> animation,
-      Animation<double> secondaryAnimation,
+      _,
       Widget child,
     ) =>
         AnimatedBuilder(
@@ -135,9 +135,10 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
         );
 
     route = PageRouteBuilder(
+      opaque: false,
       transitionsBuilder: transitionsBuilder,
-      transitionDuration: R.durations.tweenIntoReaderModeDuration,
-      reverseTransitionDuration: R.durations.tweenIntoReaderModeDuration,
+      transitionDuration: R.durations.tweenInReaderModeDuration,
+      reverseTransitionDuration: R.durations.tweenOutReaderModeDuration,
       pageBuilder: pageBuilder,
     );
 
@@ -231,6 +232,7 @@ class _CardBackground extends StatelessWidget {
             tag: heroTag,
             child: SharedCardImage(
               uri: Uri.parse(imageUrl),
+              height: 2 * constraints.maxHeight / 3,
               imageManager: imageManager,
               controller: sharedCardImageController,
             ),

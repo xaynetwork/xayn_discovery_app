@@ -7,12 +7,16 @@ class SharedCardImage extends StatefulWidget {
   final Uri uri;
   final ImageManager? imageManager;
   final SharedCardImageController? controller;
+  final BoxFit fit;
+  final double height;
 
   const SharedCardImage({
     Key? key,
     required this.uri,
+    required this.height,
     this.controller,
     this.imageManager,
+    this.fit = BoxFit.cover,
   }) : super(key: key);
 
   @override
@@ -51,45 +55,46 @@ class _SharedCardImageState extends State<SharedCardImage> {
     final backgroundPane = ColoredBox(
       color: R.colors.swipeCardBackground,
     );
-    final bgColor = R.colors.swipeCardBackground.withOpacity(effectFraction);
-    final borderRadius =
+    final bgColor =
+        R.colors.swipeCardBackground.withOpacity(effectFraction.clamp(.0, 1.0));
+    final topBorderRadius = Radius.circular(R.dimen.unit2);
+    final bottomBorderRadius =
         Radius.circular(R.dimen.unit2 * (1.0 - effectFraction));
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: borderRadius,
-          bottomRight: borderRadius,
-        ),
-        child: Container(
-          width: constraints.maxWidth,
-          height: 2 * constraints.maxHeight / 3,
-          decoration: const BoxDecoration(),
-          clipBehavior: Clip.antiAlias,
-          foregroundDecoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                bgColor,
-                bgColor.withAlpha(40),
-                bgColor.withAlpha(120),
-                bgColor,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: const [0, 0.15, 0.8, 1],
-            ),
-          ),
-          child: CachedImage(
-            uri: widget.uri,
-            fit: BoxFit.cover,
-            imageManager: widget.imageManager,
-            loadingBuilder: (context, progress) => backgroundPane,
-            errorBuilder: (context) =>
-                Text('Unable to load image with uri: ${widget.uri}'),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: topBorderRadius,
+        topRight: topBorderRadius,
+        bottomLeft: bottomBorderRadius,
+        bottomRight: bottomBorderRadius,
+      ),
+      child: Container(
+        height: widget.height,
+        decoration: const BoxDecoration(),
+        clipBehavior: Clip.antiAlias,
+        foregroundDecoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              bgColor,
+              bgColor.withAlpha(40),
+              bgColor.withAlpha(120),
+              bgColor,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0, 0.15, 0.8, 1],
           ),
         ),
-      );
-    });
+        child: CachedImage(
+          uri: widget.uri,
+          fit: widget.fit,
+          imageManager: widget.imageManager,
+          loadingBuilder: (context, progress) => backgroundPane,
+          errorBuilder: (context) =>
+              Text('Unable to load image with uri: ${widget.uri}'),
+        ),
+      ),
+    );
   }
 
   void _onControllerUpdate() {

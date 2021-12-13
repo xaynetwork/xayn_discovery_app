@@ -78,12 +78,9 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: R.dimen.unit),
-          child: BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-            bloc: _discoveryCardManager,
-            builder: _buildBody,
-          ),
+        child: BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+          bloc: _discoveryCardManager,
+          builder: _buildBody,
         ),
       ),
     );
@@ -95,53 +92,71 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
     final backgroundPane = ColoredBox(
       color: R.colors.swipeCardBackground,
     );
-    final image = hasValidImage
+    buildImage(double height) => hasValidImage
         ? Hero(
             tag: widget.heroTag,
             child: SharedCardImage(
               uri: Uri.parse(imageUrl),
+              height: height,
               imageManager: widget.imageManager,
               controller: widget.sharedCardImageController,
+              fit: BoxFit.cover,
             ),
           )
         : backgroundPane;
 
     onScroll(double position) => setState(() => _scrollPosition = position);
 
-    return Stack(
-      children: [
-        Opacity(
-          opacity: 1.0 - _opacity,
-          child: Container(color: R.colors.swipeCardBackground),
-        ),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final maxImageSize = constraints.maxHeight / 5;
-            final topImageSize =
-                (maxImageSize - _scrollPosition / 100.0 * maxImageSize)
-                    .clamp(.0, maxImageSize);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxImageSize = 2 * constraints.maxHeight / 3 + R.dimen.unit;
+        final maxTweenUp = constraints.maxHeight - maxImageSize;
+        final inverseOpacity = 1.0 - _opacity;
+        final processHtmlResult = _opacity == 1.0 ? state.result : null;
 
-            return Column(
-              children: [
-                SizedBox(
-                  width: constraints.maxWidth,
-                  height: topImageSize,
-                  child: image,
-                ),
-                Expanded(
-                  child: Opacity(
-                    opacity: _opacity,
-                    child: ReaderMode(
-                      processHtmlResult: state.result,
-                      onScroll: onScroll,
-                    ),
+        return Stack(
+          children: [
+            Positioned(
+              top: .0,
+              bottom: .0,
+              left: .0,
+              right: .0,
+              child: Opacity(
+                opacity: _opacity,
+                child: ReaderMode(
+                  padding: EdgeInsets.only(
+                    left: R.dimen.unit2,
+                    right: R.dimen.unit2,
+                    top: maxImageSize,
                   ),
-                )
-              ],
-            );
-          },
-        ),
-      ],
+                  processHtmlResult: processHtmlResult,
+                  onScroll: onScroll,
+                ),
+              ),
+            ),
+            Positioned(
+              top: inverseOpacity * R.dimen.unit,
+              bottom: _opacity * maxTweenUp + _scrollPosition,
+              left: inverseOpacity * R.dimen.unit,
+              right: inverseOpacity * R.dimen.unit,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: R.colors.swipeCardBackground,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(R.dimen.unit2),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: -_scrollPosition,
+              left: .0,
+              right: .0,
+              child: buildImage(maxImageSize),
+            ),
+          ],
+        );
+      },
     );
   }
 }
