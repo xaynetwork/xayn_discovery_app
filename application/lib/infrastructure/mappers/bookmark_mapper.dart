@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
+import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
+@singleton
 class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
   @override
   Bookmark? fromMap(Map? map) {
