@@ -31,9 +31,11 @@ const List<String> kClassesToPreserve = [
 class ReaderMode extends StatefulWidget {
   final readability.ProcessHtmlResult? processHtmlResult;
   final readability.ScrollHandler? onScroll;
+  final EdgeInsets padding;
 
   const ReaderMode({
     Key? key,
+    required this.padding,
     this.processHtmlResult,
     this.onScroll,
   }) : super(key: key);
@@ -75,25 +77,41 @@ class _ReaderModeState extends State<ReaderMode> {
 
   @override
   Widget build(BuildContext context) {
+    final loading = LayoutBuilder(
+      builder: (context, constraints) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            width: double.maxFinite,
+            height: constraints.maxHeight / 3 - R.dimen.unit,
+            child: Padding(
+              padding: EdgeInsets.all(R.dimen.unit2),
+              child: _createShimmer(),
+            ),
+          ),
+        );
+      },
+    );
+
     return BlocBuilder<ReaderModeManager, ReaderModeState>(
         bloc: _readerModeManager,
         builder: (context, state) {
           final uri = state.uri;
 
           if (uri == null) {
-            return _createShimmer();
+            return loading;
           }
 
           _readerModeController.loadUri(uri);
 
           return readability.ReaderMode(
             controller: _readerModeController,
-            // todo: move into xayn_design
             textStyle: R.styles.readerModeTextStyle,
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
-            factoryBuilder: () => _ReaderModeWidgetFactory(),
-            loadingBuilder: () => _createShimmer(),
+            factoryBuilder: () =>
+                _ReaderModeWidgetFactory(padding: widget.padding),
+            loadingBuilder: () => loading,
             onScroll: widget.onScroll,
           );
         });
@@ -103,17 +121,21 @@ class _ReaderModeState extends State<ReaderMode> {
     final processHtmlResult = widget.processHtmlResult;
 
     if (processHtmlResult != null) {
-      _readerModeManager.handleCardData(ReadingTimeInput(
-        processHtmlResult: processHtmlResult,
-        lang: 'en', // todo: fetch from app settings
-        singleUnit: Strings.timeUnitM,
-        pluralUnit: Strings.timeUnitMM,
-      ));
+      _readerModeManager.handleCardData(
+        ReadingTimeInput(
+          processHtmlResult: processHtmlResult,
+          lang: 'en', // todo: fetch from app settings
+          singleUnit: Strings.timeUnitM,
+          pluralUnit: Strings.timeUnitMM,
+        ),
+      );
     }
   }
 
   /// creates shimmer which resembles paragraphs
   Widget _createShimmer() {
+    if (1 == 1) return Container();
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final random = Random(0x80);
@@ -149,7 +171,7 @@ class _ReaderModeState extends State<ReaderMode> {
               padding: EdgeInsets.only(bottom: R.dimen.unit),
               child: buildTextLine(),
             ),
-            itemCount: 32,
+            itemCount: 16,
           ),
         );
       },
@@ -159,18 +181,16 @@ class _ReaderModeState extends State<ReaderMode> {
 
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
-  _ReaderModeWidgetFactory();
+  final EdgeInsets padding;
+
+  _ReaderModeWidgetFactory({required this.padding});
 
   @override
   Widget buildBodyWidget(BuildContext context, Widget child) {
     final builtChild = super.buildBodyWidget(
       context,
       Padding(
-        padding: EdgeInsets.only(
-          left: R.dimen.unit2,
-          right: R.dimen.unit2,
-          top: R.dimen.unit2,
-        ),
+        padding: padding,
         child: child,
       ),
     );

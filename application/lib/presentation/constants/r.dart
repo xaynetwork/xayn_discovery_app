@@ -38,6 +38,7 @@ class XDurations {
 
   final Duration _unit = const Duration(milliseconds: 200);
 
-  Duration get screenStateChangeDuration => _unit;
-  Duration get tweenIntoReaderModeDuration => _unit * 5;
+  Duration get screenStateChangeDuration => _unit * 2;
+  Duration get tweenInReaderModeDuration => _unit * 3;
+  Duration get tweenOutReaderModeDuration => _unit * 2;
 }
