@@ -1,3 +1,5 @@
+import 'string_utils.dart';
+
 String describeEnum(Object enumEntry) {
   final description = enumEntry.toString();
   final indexOfDot = description.indexOf('.');
@@ -8,4 +10,10 @@ String describeEnum(Object enumEntry) {
   );
 
   return description.substring(indexOfDot + 1);
+}
+
+String enumToSpacedString(Object enumEntry, {bool isCapitalized = true}) {
+  final enumStr = describeEnum(enumEntry);
+  final enumStrSpaced = enumStr.camelCaseToLowerCaseSeparatedBy(' ');
+  return isCapitalized ? enumStrSpaced.capitalize() : enumStrSpaced;
 }
