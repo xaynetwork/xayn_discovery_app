@@ -15,10 +15,9 @@ const kSettingsKey = 0;
 class HiveAppSettingsRepository extends HiveRepository<AppSettings>
     implements AppSettingsRepository {
   final AppSettingsMapper _mapper;
-  final Box<Record> _box;
+  Box<Record>? _box;
 
-  HiveAppSettingsRepository(this._mapper)
-      : _box = Hive.box<Record>(BoxNames.appSettings);
+  HiveAppSettingsRepository(this._mapper);
 
   @visibleForTesting
   HiveAppSettingsRepository.test(this._mapper, this._box);
@@ -27,7 +26,7 @@ class HiveAppSettingsRepository extends HiveRepository<AppSettings>
   BaseDbEntityMapper<AppSettings> get mapper => _mapper;
 
   @override
-  Box<Record> get box => _box;
+  Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.appSettings);
 
   @override
   set settings(AppSettings appSettings) => entity = appSettings;
