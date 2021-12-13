@@ -9,6 +9,8 @@ const kDefaultCollectionId = 'defaultCollectionId';
 
 @freezed
 class Collection extends DbEntity with _$Collection {
+  @Assert('name.isNotEmpty', 'name cannot be empty')
+  @Assert('index >= 0', 'index cannot be smaller than 0')
   factory Collection({
     required UniqueId id,
     required String name,
@@ -24,6 +26,8 @@ class Collection extends DbEntity with _$Collection {
         name: name,
       );
 
+  /// This is the id of the default collection.
+  /// The default collection cannot be deleted or renamed.
   static UniqueId readLaterId =
       const UniqueId.fromTrustedString('defaultCollectionId');
 }
