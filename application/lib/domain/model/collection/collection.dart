@@ -8,10 +8,7 @@ part 'collection.freezed.dart';
 const kDefaultCollectionId = 'defaultCollectionId';
 
 @freezed
-class Collection with _$Collection {
-  const Collection._();
-
-  @Implements<DbEntity>()
+class Collection extends DbEntity with _$Collection {
   factory Collection({
     required UniqueId id,
     required String name,
@@ -26,8 +23,6 @@ class Collection with _$Collection {
         id: Collection.readLaterId,
         name: name,
       );
-
-  bool get isDefault => id.value == kDefaultCollectionId;
 
   static UniqueId readLaterId =
       const UniqueId.fromTrustedString('defaultCollectionId');
