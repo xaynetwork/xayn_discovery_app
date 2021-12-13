@@ -27,3 +27,13 @@ class Collection extends DbEntity with _$Collection {
   static UniqueId readLaterId =
       const UniqueId.fromTrustedString('defaultCollectionId');
 }
+
+/// Why this extension is needed ?
+/// Getters of classes decorated with @freezed require a MyClass._() constructor
+/// Classes decorated with @freezed can only have a single non-factory, without parameters, and named MyClass._()
+/// In our case we would need a const Collection._(Unique id):super(id) constructor, but it's not possible
+/// to have parameter in that constructor, as mentioned above.
+/// Therefore we need extension
+extension CollectionExtension on Collection {
+  bool get isDefault => id.value == kDefaultCollectionId;
+}
