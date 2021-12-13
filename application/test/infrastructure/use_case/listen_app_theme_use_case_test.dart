@@ -15,26 +15,57 @@ import 'listen_app_theme_use_case_test.mocks.dart';
 void main() {
   late MockAppSettingsRepository repository;
   late ListenAppThemeUseCase useCase;
+
+  final settingsWithDarkTheme =
+      AppSettings.initial().copyWith(appTheme: AppTheme.dark);
+  final settingsWithLightTheme =
+      AppSettings.initial().copyWith(appTheme: AppTheme.light);
+
   setUp(() {
     repository = MockAppSettingsRepository();
     useCase = ListenAppThemeUseCase(repository);
 
-    final settingsWithDarkTheme =
-        AppSettings.initial().copyWith(appTheme: AppTheme.dark);
     when(repository.settings).thenAnswer((_) => settingsWithDarkTheme);
-    when(repository.watch()).thenAnswer(
-      (_) => Stream.value(
-        ChangedEvent(
-          newObject: settingsWithDarkTheme,
-          id: settingsWithDarkTheme.id,
-        ),
-      ),
-    );
   });
+
   useCaseTest<ListenAppThemeUseCase, None, AppTheme>(
-    'WHEN repository emit new value THEN useCase emit it as well',
+    'WHEN repository emit single value THEN useCase emit it as well',
+    setUp: () {
+      when(repository.watch()).thenAnswer(
+        (_) => Stream.value(
+          ChangedEvent(
+            newObject: settingsWithDarkTheme,
+            id: settingsWithDarkTheme.id,
+          ),
+        ),
+      );
+    },
     build: () => useCase,
     input: [none],
     expect: [useCaseSuccess(AppTheme.dark)],
+  );
+
+  useCaseTest<ListenAppThemeUseCase, None, AppTheme>(
+    'WHEN repository emit multiple values THEN useCase emit them as well',
+    setUp: () {
+      when(repository.watch()).thenAnswer(
+        (_) => Stream.fromIterable([
+          ChangedEvent(
+            newObject: settingsWithDarkTheme,
+            id: settingsWithDarkTheme.id,
+          ),
+          ChangedEvent(
+            newObject: settingsWithLightTheme,
+            id: settingsWithLightTheme.id,
+          ),
+        ]),
+      );
+    },
+    build: () => useCase,
+    input: [none],
+    expect: [
+      useCaseSuccess(AppTheme.dark),
+      useCaseSuccess(AppTheme.light),
+    ],
   );
 }

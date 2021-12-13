@@ -15,26 +15,56 @@ import 'listen_discovery_feed_axis_use_case_test.mocks.dart';
 void main() {
   late MockAppSettingsRepository repository;
   late ListenDiscoveryFeedAxisUseCase useCase;
+
+  final settingsWithHorizontalAxis = AppSettings.initial()
+      .copyWith(discoveryFeedAxis: DiscoveryFeedAxis.horizontal);
+  final settingsWithVerticalAxis = AppSettings.initial();
+
   setUp(() {
     repository = MockAppSettingsRepository();
     useCase = ListenDiscoveryFeedAxisUseCase(repository);
 
-    final settingsWithHorizontalAxis = AppSettings.initial()
-        .copyWith(discoveryFeedAxis: DiscoveryFeedAxis.horizontal);
     when(repository.settings).thenAnswer((_) => settingsWithHorizontalAxis);
-    when(repository.watch()).thenAnswer(
-      (_) => Stream.value(
-        ChangedEvent(
-          newObject: settingsWithHorizontalAxis,
-          id: settingsWithHorizontalAxis.id,
-        ),
-      ),
-    );
   });
+
   useCaseTest<ListenDiscoveryFeedAxisUseCase, None, DiscoveryFeedAxis>(
-    'WHEN repository emit new value THEN useCase emit it as well',
+    'WHEN repository emit single value THEN useCase emit it as well',
+    setUp: () {
+      when(repository.watch()).thenAnswer(
+        (_) => Stream.value(
+          ChangedEvent(
+            newObject: settingsWithHorizontalAxis,
+            id: settingsWithHorizontalAxis.id,
+          ),
+        ),
+      );
+    },
     build: () => useCase,
     input: [none],
     expect: [useCaseSuccess(DiscoveryFeedAxis.horizontal)],
+  );
+
+  useCaseTest<ListenDiscoveryFeedAxisUseCase, None, DiscoveryFeedAxis>(
+    'WHEN repository emit multiple values THEN useCase emit them as well',
+    setUp: () {
+      when(repository.watch()).thenAnswer(
+        (_) => Stream.fromIterable([
+          ChangedEvent(
+            newObject: settingsWithHorizontalAxis,
+            id: settingsWithHorizontalAxis.id,
+          ),
+          ChangedEvent(
+            newObject: settingsWithVerticalAxis,
+            id: settingsWithVerticalAxis.id,
+          ),
+        ]),
+      );
+    },
+    build: () => useCase,
+    input: [none],
+    expect: [
+      useCaseSuccess(DiscoveryFeedAxis.horizontal),
+      useCaseSuccess(DiscoveryFeedAxis.vertical),
+    ],
   );
 }

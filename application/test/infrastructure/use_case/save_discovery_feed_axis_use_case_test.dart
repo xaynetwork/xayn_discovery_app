@@ -28,7 +28,8 @@ void main() {
 
       verifyInOrder([
         repository.settings,
-        repository.settings = any,
+        repository.settings =
+            AppSettings.initial().copyWith(discoveryFeedAxis: axis),
       ]);
       verifyNoMoreInteractions(repository);
     },

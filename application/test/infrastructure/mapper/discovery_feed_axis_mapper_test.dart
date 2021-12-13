@@ -11,39 +11,26 @@ void main() {
     discoveryFeedAxisToIntMapper = const DiscoveryFeedAxisToIntMapper();
   });
 
-  group('IntToDiscoveryFeedAxisMapper tests: ', () {
-    test('0 maps to DiscoveryFeedAxis.vertical', () {
-      final value = intToDiscoveryFeedAxisMapper.map(0);
-      expect(value, DiscoveryFeedAxis.vertical);
-    });
-
-    test('1 maps to DiscoveryFeedAxis.horizontal', () {
-      final value = intToDiscoveryFeedAxisMapper.map(1);
-      expect(value, DiscoveryFeedAxis.horizontal);
-    });
-
-    test('2 maps to DiscoveryFeedAxis.vertical', () {
-      final value = intToDiscoveryFeedAxisMapper.map(2);
-      expect(value, DiscoveryFeedAxis.vertical);
-    });
-
-    test('null maps to DiscoveryFeedAxis.vertical', () {
-      final value = intToDiscoveryFeedAxisMapper.map(null);
-      expect(value, DiscoveryFeedAxis.vertical);
-    });
+  test('IntToDiscoveryFeedAxisMapper tests', () {
+    final data = <int?, DiscoveryFeedAxis>{
+      0: DiscoveryFeedAxis.vertical,
+      1: DiscoveryFeedAxis.horizontal,
+      2: DiscoveryFeedAxis.vertical,
+      666: DiscoveryFeedAxis.vertical,
+      null: DiscoveryFeedAxis.vertical,
+    };
+    final results = <DiscoveryFeedAxis>[];
+    for (final value in data.keys) {
+      results.add(intToDiscoveryFeedAxisMapper.map(value));
+    }
+    expect(results, equals(data.values));
   });
 
-  group('DiscoveryFeedAxisToIntMapper tests: ', () {
-    test('DiscoveryFeedAxis.vertical maps to 0', () {
-      final value =
-          discoveryFeedAxisToIntMapper.map(DiscoveryFeedAxis.vertical);
-      expect(value, 0);
-    });
-
-    test('DiscoveryFeedAxis.horizontal maps to 1', () {
-      final value =
-          discoveryFeedAxisToIntMapper.map(DiscoveryFeedAxis.horizontal);
-      expect(value, 1);
-    });
+  test('DiscoveryFeedAxisToIntMapper tests', () {
+    final results = <int>[];
+    for (final axis in DiscoveryFeedAxis.values) {
+      results.add(discoveryFeedAxisToIntMapper.map(axis));
+    }
+    expect(results, [0, 1]);
   });
 }
