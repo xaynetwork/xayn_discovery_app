@@ -14,7 +14,6 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
-import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
 
@@ -100,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
         theme: appTheme,
-        onSelected: _changeTheme,
+        onSelected: _manager.saveTheme,
       );
 
   Widget _buildScrollDirectionSection(DiscoveryFeedAxis axis) =>
@@ -140,10 +139,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildBottomSpace() {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     return SizedBox(height: R.dimen.buttonMinHeight + bottomPadding);
-  }
-
-  void _changeTheme(AppTheme appTheme) {
-    _manager.saveTheme(appTheme);
-    UnterDenLinden.of(context).changeBrightness(appTheme.brightness);
   }
 }
