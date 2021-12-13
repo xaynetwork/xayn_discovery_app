@@ -42,6 +42,11 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
         AppSettingsFields.discoveryFeedAxis:
             _discoveryFeedAxisToIntMapper.map(entity.discoveryFeedAxis),
       };
+
+  @override
+  void throwMapperException() => throw DbEntityMapperException(
+        'AppSettingsMapper:error occurred while mapping the object',
+      );
 }
 
 abstract class AppSettingsFields {
