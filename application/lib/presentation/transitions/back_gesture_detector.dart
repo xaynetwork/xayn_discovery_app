@@ -10,10 +10,12 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 class BackGestureDetector<T> extends StatefulWidget {
   final Widget child;
   final NavigatorState navigator;
+  final AnimationController navigatorAnimationController;
 
   const BackGestureDetector({
     Key? key,
     required this.navigator,
+    required this.navigatorAnimationController,
     required this.child,
   }) : super(key: key);
 
@@ -66,7 +68,10 @@ class _BackGestureDetectorState<T> extends State<BackGestureDetector<T>>
     widget.navigator.didStartUserGesture();
 
     _backGestureController = _BackGestureController(
-        navigator: widget.navigator, controller: _animationController);
+      navigator: widget.navigator,
+      navigatorAnimationController: widget.navigatorAnimationController,
+      controller: _animationController,
+    );
   }
 
   void _handleDragUpdate(DragUpdateDetails details) async {
@@ -142,10 +147,12 @@ class _BackGestureDetectorState<T> extends State<BackGestureDetector<T>>
 class _BackGestureController<T> {
   _BackGestureController({
     required this.navigator,
+    required this.navigatorAnimationController,
     required this.controller,
   });
 
   final NavigatorState navigator;
+  final AnimationController navigatorAnimationController;
   final AnimationController controller;
   bool _acceptPointers = true;
 
@@ -162,6 +169,7 @@ class _BackGestureController<T> {
       HapticFeedback.mediumImpact();
 
       await _easeBackOut();
+      await navigatorAnimationController.animateBack(.0);
 
       navigator.pop();
 
