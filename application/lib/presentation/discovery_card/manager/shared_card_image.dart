@@ -55,7 +55,7 @@ class _SharedCardImageState extends State<SharedCardImage> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundPane = ColoredBox(
+    final backgroundPane = Container(
       color: R.colors.swipeCardBackground,
     );
     final bgColor =
@@ -64,6 +64,7 @@ class _SharedCardImageState extends State<SharedCardImage> {
     final bottomBorderRadius =
         Radius.circular(R.dimen.unit2 * (1.0 - effectFraction));
     final scaleFraction = (widget.scale - 1.0) * (1.0 - effectFraction);
+    final deviceHeight = MediaQuery.of(context).size.height * .9;
 
     return ClipRRect(
       borderRadius: BorderRadius.only(
@@ -74,8 +75,9 @@ class _SharedCardImageState extends State<SharedCardImage> {
       ),
       child: Stack(
         children: [
-          Container(
-            color: R.colors.swipeCardBackground,
+          SizedBox(
+            height: (effectFraction * deviceHeight).clamp(.0, deviceHeight),
+            child: backgroundPane,
           ),
           Container(
             height: widget.height,
