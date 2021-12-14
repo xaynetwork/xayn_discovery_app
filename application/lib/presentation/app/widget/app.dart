@@ -26,7 +26,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
 
-    WidgetsFlutterBinding.ensureInitialized();
     _featureManager = di.get();
     _appManager = di.get();
   }
