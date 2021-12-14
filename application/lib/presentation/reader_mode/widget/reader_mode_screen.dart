@@ -34,7 +34,8 @@ class ReaderModeScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _ReaderModeScreenState();
 }
 
-class _ReaderModeScreenState extends State<ReaderModeScreen> {
+class _ReaderModeScreenState extends State<ReaderModeScreen>
+    with TickerProviderStateMixin {
   late final DiscoveryCardManager _discoveryCardManager;
 
   WebResource get webResource => widget.document.webResource;
@@ -130,6 +131,8 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
                   ),
                   processHtmlResult: processHtmlResult,
                   onScroll: onScroll,
+                  onPageLoaded: (position) =>
+                      setState(() => _scrollPosition = .0),
                 ),
               ),
             ),
