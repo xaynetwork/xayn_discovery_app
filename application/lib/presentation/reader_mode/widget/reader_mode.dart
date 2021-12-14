@@ -13,6 +13,8 @@ import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
+typedef OnPageLoaded = void Function(double);
+
 const String kUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36';
 const List<String> kClassesToPreserve = [
@@ -31,6 +33,7 @@ const List<String> kClassesToPreserve = [
 class ReaderMode extends StatefulWidget {
   final readability.ProcessHtmlResult? processHtmlResult;
   final readability.ScrollHandler? onScroll;
+  final OnPageLoaded? onPageLoaded;
   final EdgeInsets padding;
 
   const ReaderMode({
@@ -38,6 +41,7 @@ class ReaderMode extends StatefulWidget {
     required this.padding,
     this.processHtmlResult,
     this.onScroll,
+    this.onPageLoaded,
   }) : super(key: key);
 
   @override
@@ -94,27 +98,37 @@ class _ReaderModeState extends State<ReaderMode> {
     );
 
     return BlocBuilder<ReaderModeManager, ReaderModeState>(
-        bloc: _readerModeManager,
-        builder: (context, state) {
-          final uri = state.uri;
+      bloc: _readerModeManager,
+      builder: (context, state) {
+        final uri = state.uri;
 
-          if (uri == null) {
-            return loading;
-          }
+        if (uri == null) {
+          return loading;
+        }
 
+        if (_readerModeController.uri == null) {
           _readerModeController.loadUri(uri);
+        }
 
-          return readability.ReaderMode(
-            controller: _readerModeController,
-            textStyle: R.styles.readerModeTextStyle,
-            userAgent: kUserAgent,
-            classesToPreserve: kClassesToPreserve,
-            factoryBuilder: () =>
-                _ReaderModeWidgetFactory(padding: widget.padding),
-            loadingBuilder: () => loading,
-            onScroll: widget.onScroll,
-          );
-        });
+        return readability.ReaderMode(
+          controller: _readerModeController,
+          textStyle: R.styles.readerModeTextStyle,
+          userAgent: kUserAgent,
+          classesToPreserve: kClassesToPreserve,
+          factoryBuilder: () =>
+              _ReaderModeWidgetFactory(padding: widget.padding),
+          loadingBuilder: () => loading,
+          onProcessedHtml: (result) async {
+            widget.onPageLoaded?.call(
+              _readerModeController.position,
+            );
+
+            return result;
+          },
+          onScroll: widget.onScroll,
+        );
+      },
+    );
   }
 
   void _updateCardData() {
@@ -134,8 +148,6 @@ class _ReaderModeState extends State<ReaderMode> {
 
   /// creates shimmer which resembles paragraphs
   Widget _createShimmer() {
-    if (1 == 1) return Container();
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final random = Random(0x80);
