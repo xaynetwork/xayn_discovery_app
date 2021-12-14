@@ -103,19 +103,25 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }
 
   PageRoute _createPageRoute({required String heroTag}) {
+    const animationCurve = Curves.easeOutBack;
     late final PageRoute route;
+
+    buildTween(Animation<double> animation) =>
+        animation.drive(CurveTween(curve: animationCurve));
 
     transitionsBuilder(
       BuildContext context,
       Animation<double> animation,
-      _,
+      Animation<double> secondaryAnimation,
       Widget child,
     ) =>
         AnimatedBuilder(
           animation: animation,
           child: child,
           builder: (_, child) {
-            _sharedCardImageController.value = 1.0 - animation.value;
+            final tweenAnimation = buildTween(animation);
+
+            _sharedCardImageController.value = 1.0 - tweenAnimation.value;
 
             return BackGestureDetector(
               navigator: route.navigator!,
@@ -124,15 +130,19 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
           },
         );
 
-    pageBuilder(_, Animation<double> animation, __) => ReaderModeScreen(
-          document: widget.document,
-          heroTag: heroTag,
-          animation: animation,
-          discoveryCardManager: _discoveryCardManager,
-          imageManager: _imageManager,
-          sharedCardImageController: _sharedCardImageController,
-          onViewTypeChanged: widget.onViewTypeChanged,
-        );
+    pageBuilder(_, Animation<double> animation, __) {
+      final tweenAnimation = buildTween(animation);
+
+      return ReaderModeScreen(
+        document: widget.document,
+        heroTag: heroTag,
+        animation: tweenAnimation,
+        discoveryCardManager: _discoveryCardManager,
+        imageManager: _imageManager,
+        sharedCardImageController: _sharedCardImageController,
+        onViewTypeChanged: widget.onViewTypeChanged,
+      );
+    }
 
     route = PageRouteBuilder(
       opaque: false,

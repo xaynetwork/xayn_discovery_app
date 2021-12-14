@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
@@ -38,8 +39,10 @@ class _BackGestureDetectorState<T> extends State<BackGestureDetector<T>>
       ..onEnd = _handleDragEnd
       ..onCancel = _handleDragCancel;
 
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationController = AnimationController(
+      vsync: this,
+      duration: R.durations.tweenInReaderModeDuration,
+    );
 
     _animationController.addListener(() {
       setState(() {
@@ -68,7 +71,8 @@ class _BackGestureDetectorState<T> extends State<BackGestureDetector<T>>
 
   void _handleDragUpdate(DragUpdateDetails details) async {
     final didPop = await _backGestureController!.dragUpdate(
-        _convertToLogical(details.primaryDelta! / context.size!.width));
+      _convertToLogical(details.primaryDelta! / context.size!.width),
+    );
 
     if (didPop) _backGestureController = null;
   }
@@ -84,10 +88,6 @@ class _BackGestureDetectorState<T> extends State<BackGestureDetector<T>>
 
   void _handleDragCancel() {
     assert(mounted);
-    // This can be called even if start is not called, paired with the "down" event
-    // that we don't consider here.
-    //_backGestureController?.dragEnd(0.0);
-    //_backGestureController = null;
   }
 
   void _handlePointerDown(PointerDownEvent event) {
@@ -157,9 +157,12 @@ class _BackGestureController<T> {
     if (controller.value > .3) {
       _acceptPointers = false;
 
+      navigator.didStopUserGesture();
+
+      HapticFeedback.mediumImpact();
+
       await _easeBackOut();
 
-      navigator.didStopUserGesture();
       navigator.pop();
 
       return true;
@@ -171,9 +174,9 @@ class _BackGestureController<T> {
   void dragEnd(double velocity) async {
     if (!_acceptPointers) return;
 
-    await _easeBackOut();
-
     navigator.didStopUserGesture();
+
+    await _easeBackOut();
   }
 
   Future<void> _easeBackOut({double end = .0}) => controller.animateTo(
