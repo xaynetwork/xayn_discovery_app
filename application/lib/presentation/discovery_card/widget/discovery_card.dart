@@ -103,7 +103,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }
 
   PageRoute _createPageRoute({required String heroTag}) {
-    const animationCurve = Curves.easeOutBack;
+    const animationCurve = Curves.easeInOutBack;
     late final PageRoute route;
 
     buildTween(Animation<double> animation) =>
