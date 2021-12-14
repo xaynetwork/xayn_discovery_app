@@ -103,7 +103,7 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
   }
 
   PageRoute _createPageRoute({required String heroTag}) {
-    const animationCurve = Curves.easeInOutBack;
+    const animationCurve = Curves.easeInBack;
     late final PageRoute route;
 
     buildTween(Animation<double> animation) =>
@@ -125,6 +125,8 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
 
             return BackGestureDetector(
               navigator: route.navigator!,
+              // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+              navigatorAnimationController: route.controller!,
               child: child!,
             );
           },
