@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
 void main() {
-  setUpAll(() {
+  setUpAll(() async {
     configureDependencies();
   });
   testWidgets(
