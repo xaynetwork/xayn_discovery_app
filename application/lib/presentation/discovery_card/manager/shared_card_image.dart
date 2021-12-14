@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -9,6 +10,7 @@ class SharedCardImage extends StatefulWidget {
   final SharedCardImageController? controller;
   final BoxFit fit;
   final double height;
+  final double scale;
 
   const SharedCardImage({
     Key? key,
@@ -17,6 +19,7 @@ class SharedCardImage extends StatefulWidget {
     this.controller,
     this.imageManager,
     this.fit = BoxFit.cover,
+    this.scale = 1.0,
   }) : super(key: key);
 
   @override
@@ -60,6 +63,7 @@ class _SharedCardImageState extends State<SharedCardImage> {
     final topBorderRadius = Radius.circular(R.dimen.unit2);
     final bottomBorderRadius =
         Radius.circular(R.dimen.unit2 * (1.0 - effectFraction));
+    final scaleFraction = (widget.scale - 1.0) * (1.0 - effectFraction);
 
     return ClipRRect(
       borderRadius: BorderRadius.only(
@@ -68,31 +72,41 @@ class _SharedCardImageState extends State<SharedCardImage> {
         bottomLeft: bottomBorderRadius,
         bottomRight: bottomBorderRadius,
       ),
-      child: Container(
-        height: widget.height,
-        decoration: const BoxDecoration(),
-        clipBehavior: Clip.antiAlias,
-        foregroundDecoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              bgColor,
-              bgColor.withAlpha(40),
-              bgColor.withAlpha(120),
-              bgColor,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, 0.15, 0.8, 1],
+      child: Stack(
+        children: [
+          Container(
+            color: R.colors.swipeCardBackground,
           ),
-        ),
-        child: CachedImage(
-          uri: widget.uri,
-          fit: widget.fit,
-          imageManager: widget.imageManager,
-          loadingBuilder: (context, progress) => backgroundPane,
-          errorBuilder: (context) =>
-              Text('Unable to load image with uri: ${widget.uri}'),
-        ),
+          Container(
+            height: widget.height,
+            decoration: const BoxDecoration(),
+            clipBehavior: Clip.antiAlias,
+            foregroundDecoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  bgColor,
+                  bgColor.withAlpha(40),
+                  bgColor.withAlpha(120),
+                  bgColor,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0, 0.15, 0.8, 1],
+              ),
+            ),
+            child: Transform.scale(
+              scale: scaleFraction + scaleFraction + 1.0,
+              child: CachedImage(
+                uri: widget.uri,
+                fit: widget.fit,
+                imageManager: widget.imageManager,
+                loadingBuilder: (context, progress) => backgroundPane,
+                errorBuilder: (context) =>
+                    Text('Unable to load image with uri: ${widget.uri}'),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

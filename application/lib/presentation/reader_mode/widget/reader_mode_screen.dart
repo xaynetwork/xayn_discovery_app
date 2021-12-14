@@ -101,6 +101,7 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
               imageManager: widget.imageManager,
               controller: widget.sharedCardImageController,
               fit: BoxFit.cover,
+              scale: 1.35,
             ),
           )
         : backgroundPane;
@@ -110,8 +111,6 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxImageSize = 2 * constraints.maxHeight / 3 + R.dimen.unit;
-        final maxTweenUp = constraints.maxHeight - maxImageSize;
-        final inverseOpacity = 1.0 - _opacity;
         final processHtmlResult = _opacity == 1.0 ? state.result : null;
 
         return Stack(
@@ -122,7 +121,7 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
               left: .0,
               right: .0,
               child: Opacity(
-                opacity: _opacity,
+                opacity: _opacity.clamp(.0, 1.0),
                 child: ReaderMode(
                   padding: EdgeInsets.only(
                     left: R.dimen.unit2,
@@ -131,20 +130,6 @@ class _ReaderModeScreenState extends State<ReaderModeScreen> {
                   ),
                   processHtmlResult: processHtmlResult,
                   onScroll: onScroll,
-                ),
-              ),
-            ),
-            Positioned(
-              top: inverseOpacity * R.dimen.unit,
-              bottom: _opacity * maxTweenUp + _scrollPosition,
-              left: inverseOpacity * R.dimen.unit,
-              right: inverseOpacity * R.dimen.unit,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: R.colors.swipeCardBackground,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(R.dimen.unit2),
-                  ),
                 ),
               ),
             ),
