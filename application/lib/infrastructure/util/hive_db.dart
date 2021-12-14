@@ -4,8 +4,8 @@ import 'package:crdt/crdt.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_adapters.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/utils/box_names.dart';
-import 'package:xayn_discovery_app/infrastructure/utils/hive_constants.dart';
+import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
+import 'package:xayn_discovery_app/infrastructure/util/hive_constants.dart';
 
 class HiveDB {
   static String? _nodeId;
