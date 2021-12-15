@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/extract_elements_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/heuristic_filter_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_readability/xayn_readability.dart';
 
 typedef UriHandler = void Function(Uri uri);
 
@@ -25,21 +25,17 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
-  final ExtractElementsUseCase _extractElementsUseCase;
-  final HeuristicFilterUseCase _heuristicFilterUseCase;
+  final InjectReaderMetaDataUseCase _injectReaderMetaDataUseCase;
 
-  late final UseCaseSink<Uri, Elements> _updateUri;
+  late final UseCaseSink<Uri, ProcessHtmlResult> _updateUri;
 
   bool _isLoading = false;
-
-  late bool _isInReaderMode;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
     this._loadHtmlUseCase,
     this._readabilityUseCase,
-    this._extractElementsUseCase,
-    this._heuristicFilterUseCase,
+    this._injectReaderMetaDataUseCase,
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
@@ -47,13 +43,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   /// Update the uri which contains the news article
   void updateUri(Uri uri) => _updateUri(uri);
 
-  void toggleReaderMode() {
-    scheduleComputeState(() => _isInReaderMode = !_isInReaderMode);
-  }
-
   Future<void> _init() async {
-    _isInReaderMode = state.isInReaderMode;
-
     /// html reader mode elements:
     ///
     /// - loads the source html
@@ -68,16 +58,30 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
             consumeEvent: (it) => !it.isCompleted,
             run: (it) => _isLoading = !it.isCompleted,
           )
-          .map(_createReadabilityConfig)
+          .map(
+            (it) => ReadabilityConfig(
+              uri: it.uri,
+              html: it.html,
+              disableJsonLd: true,
+              classesToPreserve: const [],
+            ),
+          )
           .followedBy(_readabilityUseCase)
-          .followedBy(_extractElementsUseCase)
-          .followedBy(_heuristicFilterUseCase),
+          .map(
+            (it) => ReadingTimeInput(
+              processHtmlResult: it,
+              lang: 'en-US',
+              singleUnit: 'minute',
+              pluralUnit: 'minutes',
+            ),
+          )
+          .followedBy(_injectReaderMetaDataUseCase),
     );
   }
 
   @override
   Future<DiscoveryCardState?> computeState() async =>
-      fold(_updateUri).foldAll((elements, errorReport) {
+      fold(_updateUri).foldAll((result, errorReport) {
         if (errorReport.isNotEmpty) {
           logger.e(errorReport.of(_updateUri)!.error);
 
@@ -86,24 +90,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         var nextState = state.copyWith(
           isComplete: !_isLoading,
-          isInReaderMode: _isInReaderMode,
         );
 
-        if (elements != null) {
+        if (result != null) {
           nextState = nextState.copyWith(
-            result: elements.processHtmlResult,
-            paragraphs: elements.paragraphs,
+            result: result,
           );
         }
 
         return nextState;
       });
-
-  ReadabilityConfig _createReadabilityConfig(Progress progress) =>
-      ReadabilityConfig(
-        uri: progress.uri,
-        html: progress.html,
-        disableJsonLd: true,
-        classesToPreserve: const [],
-      );
 }
