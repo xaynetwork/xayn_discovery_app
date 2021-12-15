@@ -1,3 +1,20 @@
+def keyProperties = new Properties()
+def keyPropertiesFile = rootProject.file('key.properties')
+if (keyPropertiesFile.exists()) {
+    project.logger.info('Load maps properties from key.properties')
+    keyPropertiesFile.withReader('UTF-8') { reader ->
+        keyProperties.load(reader)
+    }
+} else {
+  project.logger.warn('Failed to load keys from key.properties.', e)
+}
+
+def instabugToken = keyProperties.getProperty('INSTABUG_TOKEN')
+if(instabugToken == null){
+    instabugToken = "";
+    project.logger.error('Instabug Api Key is not configured. Set it in `key.properties` or in the environment variable `INSTABUG_TOKEN`')
+}
+
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -84,6 +101,9 @@ android {
         }
     }
 
+    buildTypes.each {
+        it.buildConfigField 'String', 'INSTABUG_TOKEN', instabugToken
+    }
 }
 
 flutter {

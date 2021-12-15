@@ -1,8 +1,11 @@
+import 'dart:async' show Zone, runZonedGuarded;
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import 'package:xayn_discovery_app/presentation/app/widget/app.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -11,10 +14,14 @@ import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_sc
 
 void main() async {
   await setup();
-  runApp(getApp());
+  runZonedGuarded(
+    () async => runApp(getApp()),
+    di.get<BugReportingService>().reportCrash,
+  );
 }
 
 Future<void> setup() async {
+  FlutterError.onError = onError;
   WidgetsFlutterBinding.ensureInitialized();
   final directory = await path.getApplicationDocumentsDirectory();
   final absoluteAppDir = directory.absolute.path;
@@ -38,4 +45,11 @@ Widget getApp() {
   return di.get<FeatureManager>().showFeaturesScreen
       ? SelectFeatureScreen(child: unterDenLinden)
       : unterDenLinden;
+}
+
+void onError(FlutterErrorDetails details) {
+  Zone.current.handleUncaughtError(
+    details.exception,
+    details.stack ?? StackTrace.empty,
+  );
 }

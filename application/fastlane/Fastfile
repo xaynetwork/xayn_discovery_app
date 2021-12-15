@@ -172,6 +172,9 @@ def checkAndCreateEnv(file, searchApiEnvKey, instabugEnvToken, amplitudeEnvApiKe
     instabugToken = ENV[instabugEnvToken]
     if !ENV.key?(instabugEnvToken)
       instabugToken = UI.input("#{instabugEnvToken}: ")
+      writeProperties("../android/key.properties", {
+        :INSTABUG_TOKEN => instabugToken,
+      })
     end
 
     amplitudeApiKey = ENV[amplitudeEnvApiKey]
