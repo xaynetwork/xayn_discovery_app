@@ -11,7 +11,7 @@ const String kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
 const Map<String, String> kHeaders = {
   'accept': '*/*',
-  'accept-encoding': 'gzip, deflate, br',
+  'accept-encoding': 'gzip',
   'accept-language': '*',
   'cache-control': 'no-cache',
   'pragma': 'no-cache',
@@ -36,6 +36,9 @@ const int kMaxRedirects = 5;
 class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   final Client client;
   final Map<String, String> headers;
+  // do allow malformed here, as some sites may have encoding errors,
+  // but we still want to get their response in.
+  final decoder = const Utf8Codec(allowMalformed: true);
 
   @visibleForTesting
   LoadHtmlUseCase({
@@ -67,17 +70,19 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   }
 
   Future<String> _extractResponseBody(http.Response response) async {
-    if (response.body is String) {
-      return response.body as String;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw RangeError(
+          'response.statusCode is not within the range of [200, 300[');
     }
 
-    writeToBuffer(StringBuffer buffer, String part) => buffer..write(part);
+    final body = response.body;
+    final bytes = await response.readAsBytes();
 
-    final buffer = await response.bodyAsStream!
-        .transform(const Utf8Decoder())
-        .fold(StringBuffer(), writeToBuffer);
+    if (body is String) {
+      return body;
+    }
 
-    return buffer.toString();
+    return decoder.decode(bytes);
   }
 }
 
