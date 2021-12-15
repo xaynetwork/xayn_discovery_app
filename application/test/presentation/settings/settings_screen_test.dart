@@ -24,8 +24,6 @@ import 'settings_screen_test.mocks.dart';
 
 @GenerateMocks([SettingsScreenManager])
 void main() {
-  setUpAll(configureDependencies);
-
   late StreamController<SettingsScreenState> streamController;
   const stateReady = SettingsScreenState.ready(
     theme: AppTheme.system,

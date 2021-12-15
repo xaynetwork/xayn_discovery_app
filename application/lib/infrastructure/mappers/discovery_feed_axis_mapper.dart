@@ -12,11 +12,11 @@ class IntToDiscoveryFeedAxisMapper implements Mapper<int?, DiscoveryFeedAxis> {
   @override
   DiscoveryFeedAxis map(int? input) {
     switch (input) {
-      case _vertical:
-        return DiscoveryFeedAxis.vertical;
       case _horizontal:
-      default:
         return DiscoveryFeedAxis.horizontal;
+      case _vertical:
+      default:
+        return DiscoveryFeedAxis.vertical;
     }
   }
 }
