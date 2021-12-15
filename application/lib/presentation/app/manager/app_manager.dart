@@ -1,6 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case/none.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
