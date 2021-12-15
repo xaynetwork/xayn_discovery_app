@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
@@ -36,9 +37,6 @@ const int kMaxRedirects = 5;
 class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   final Client client;
   final Map<String, String> headers;
-  // do allow malformed here, as some sites may have encoding errors,
-  // but we still want to get their response in.
-  final decoder = const Utf8Codec(allowMalformed: true);
 
   @visibleForTesting
   LoadHtmlUseCase({
@@ -64,25 +62,33 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         timeout: kTimeout,
       ),
     );
-    final body = await _extractResponseBody(response);
 
-    yield Progress.finish(html: body, uri: param);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw StateError(
+          'response status code: ${response.statusCode}: ${response.reasonPhrase}');
+    }
+
+    final body = _extractResponseBody(await response.readAsBytes());
+
+    yield Progress.finish(
+      html: body,
+      uri: param,
+    );
   }
 
-  Future<String> _extractResponseBody(http.Response response) async {
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw RangeError(
-          'response.statusCode is not within the range of [200, 300[');
-    }
-
-    final body = response.body;
-    final bytes = await response.readAsBytes();
-
+  String _extractResponseBody(Object body) {
     if (body is String) {
       return body;
+    } else if (body is List<int>) {
+      // do allow malformed here, as some sites may have encoding errors,
+      // but we still want to get their response in.
+      const decoder = Utf8Codec(allowMalformed: true);
+
+      return decoder.decode(body);
     }
 
-    return decoder.decode(bytes);
+    throw StateError(
+        'body is neither String or List<int>, unable to decode into String');
   }
 }
 
