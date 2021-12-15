@@ -1,3 +1,4 @@
+import 'package:html/dom.dart' as dom;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:mockito/annotations.dart';
@@ -10,12 +11,26 @@ import 'matchers.dart';
 
 @GenerateMocks([Client])
 void main() {
-  late MockClient client;
+  late MockClient client = MockClient();
   final uri = Uri.dataFromString('<p>hi!</p>');
+  final yahooWebLink = Uri.parse(
+      'https://finance.yahoo.com/news/mike-morales-joins-vector-laboratories-110000153.html');
+
+  /// these are the "old" headers, see [LoadHtmlUseCase.kHeaders] for the newest ones
+  const basicHeaders = {
+    'accept':
+        'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'accept-encoding': 'gzip, deflate, br',
+    'cache-control': 'no-cache',
+    'pragma': 'no-cache',
+    'upgrade-insecure-requests': '1',
+  };
+
+  /// this String is the first line returned from "captcha" responses
+  const captchaResponseSignature =
+      'Yahoo is part of the Yahoo family of brands.';
 
   setUp(() {
-    client = MockClient();
-
     when(client.send(any)).thenAnswer(
       (_) async => http.Response(
         200,
@@ -28,12 +43,55 @@ void main() {
 
   group('LoadHtmlUseCase: ', () {
     useCaseTest<LoadHtmlUseCase, Uri, Progress>(
-      'Can log incoming events: ',
-      build: () => LoadHtmlUseCase(client: client),
+      'Loads website data: ',
+      build: () => LoadHtmlUseCase(
+        client: client,
+        headers: kHeaders,
+      ),
       input: [uri],
       expect: [
         progressSuccess(Progress.start(uri: uri)),
         progressSuccess(Progress.finish(uri: uri, html: '<p>hi!</p>')),
+      ],
+    );
+
+    useCaseTest<LoadHtmlUseCase, Uri, Progress>(
+      'Loads Yahoo data: ',
+      build: () => LoadHtmlUseCase(
+        client: Client(),
+        headers: kHeaders,
+      ),
+      input: [yahooWebLink],
+      expect: [
+        progressSuccess(Progress.start(uri: yahooWebLink)),
+        testHtmlSuccess(Progress.finish(uri: yahooWebLink, html: ''),
+            (String html) {
+          final doc = dom.Document.html(html);
+          final paragraphs = doc.querySelectorAll('p');
+          final list = paragraphs.map((it) => it.text).join(', ');
+          // we do not expect a captcha response
+          return !list.contains(captchaResponseSignature);
+        }),
+      ],
+    );
+
+    useCaseTest<LoadHtmlUseCase, Uri, Progress>(
+      'Fails to load Yahoo data with basic headers: ',
+      build: () => LoadHtmlUseCase(
+        client: Client(),
+        headers: basicHeaders,
+      ),
+      input: [yahooWebLink],
+      expect: [
+        progressSuccess(Progress.start(uri: yahooWebLink)),
+        testHtmlSuccess(Progress.finish(uri: yahooWebLink, html: ''),
+            (String html) {
+          final doc = dom.Document.html(html);
+          final paragraphs = doc.querySelectorAll('p');
+          final list = paragraphs.map((it) => it.text).join(', ');
+          // we do expect a captcha response
+          return list.contains(captchaResponseSignature);
+        }),
       ],
     );
   });

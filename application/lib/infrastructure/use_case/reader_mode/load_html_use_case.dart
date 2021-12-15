@@ -35,8 +35,16 @@ const int kMaxRedirects = 5;
 @injectable
 class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   final Client client;
+  final Map<String, String> headers;
 
-  LoadHtmlUseCase({required this.client});
+  @visibleForTesting
+  LoadHtmlUseCase({
+    required this.client,
+    required this.headers,
+  });
+
+  @factoryMethod
+  LoadHtmlUseCase.standard({required this.client}) : headers = kHeaders;
 
   @override
   Stream<Progress> transaction(Uri param) async* {
@@ -49,7 +57,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         url,
         followRedirects: true,
         maxRedirects: kMaxRedirects,
-        headers: kHeaders,
+        headers: headers,
         timeout: kTimeout,
       ),
     );
