@@ -1,4 +1,130 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
+import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
+
+const double kDragThreshold = 200.0;
+const Duration kSnapBackDuration = Duration(milliseconds: 450);
+const Curve kSnapBackCurve = Curves.elasticOut;
+
+typedef DragCallback = void Function(double);
+
+class DiscoveryCard extends DiscoveryCardBase {
+  final DragCallback? onDrag;
+  final VoidCallback? onDiscard;
+
+  const DiscoveryCard({
+    Key? key,
+    required bool isPrimary,
+    required Document document,
+    DiscoveryCardManager? discoveryCardManager,
+    ImageManager? imageManager,
+    this.onDiscard,
+    this.onDrag,
+  }) : super(
+          key: key,
+          isPrimary: isPrimary,
+          document: document,
+          discoveryCardManager: discoveryCardManager,
+          imageManager: imageManager,
+        );
+
+  @override
+  State<StatefulWidget> createState() => _DiscoveryCardState();
+}
+
+class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
+    with TickerProviderStateMixin {
+  double _dragDistance = .0;
+  AnimationController? _animationController;
+
+  @override
+  void dispose() {
+    _animationController?.stop(canceled: true);
+    _animationController?.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget buildFromState(
+      BuildContext context, DiscoveryCardState state, Widget image) {
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          foregroundDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                R.colors.swipeCardBackground.withAlpha(120),
+                R.colors.swipeCardBackground.withAlpha(40),
+                R.colors.swipeCardBackground.withAlpha(40),
+                R.colors.swipeCardBackground.withAlpha(120),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0, 0.15, 0.8, 1],
+            ),
+          ),
+          child: GestureDetector(
+            onHorizontalDragStart: _onDragStart,
+            onHorizontalDragUpdate: _onDragUpdate,
+            onHorizontalDragEnd: _onDragEnd,
+            child: image,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onDragStart(DragStartDetails details) {
+    _dragDistance = .0;
+
+    widget.onDrag?.call(_dragDistance);
+
+    _animationController?.stop(canceled: true);
+    _animationController?.dispose();
+  }
+
+  void _onDragUpdate(DragUpdateDetails details) {
+    _dragDistance += details.delta.dx;
+
+    if (_dragDistance > kDragThreshold) {
+      _dragDistance = 0;
+
+      HapticFeedback.heavyImpact();
+
+      widget.onDiscard?.call();
+    }
+
+    widget.onDrag?.call(_dragDistance);
+  }
+
+  void _onDragEnd(DragEndDetails details) async {
+    if (!mounted) return;
+
+    if (_dragDistance <= kDragThreshold) {
+      final controller = _animationController =
+          AnimationController(vsync: this, duration: kSnapBackDuration);
+
+      controller.addListener(() {
+        widget.onDrag?.call(_dragDistance * (1.0 - controller.value));
+      });
+
+      await controller.animateTo(1.0, curve: kSnapBackCurve);
+
+      controller.dispose();
+
+      _animationController = null;
+    }
+  }
+}
+
+/*
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
@@ -21,14 +147,12 @@ class DiscoveryCard extends StatefulWidget {
   final bool isPrimary;
   final Duration? transitionDuration;
   final Document document;
-  final ViewTypeCallback? onViewTypeChanged;
 
   const DiscoveryCard({
     Key? key,
     required this.isPrimary,
     required this.document,
     this.transitionDuration,
-    this.onViewTypeChanged,
   }) : super(key: key);
 
   @override
@@ -52,12 +176,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     _discoveryCardManager = di.get();
     _transitionDuration =
         widget.transitionDuration ?? R.animations.cardTransitionDuration;
-
-    widget.onViewTypeChanged?.call(
-      _discoveryCardManager.state.isInReaderMode
-          ? DocumentViewType.readerMode
-          : DocumentViewType.story,
-    );
   }
 
   @override
@@ -73,19 +191,12 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
       _discoveryCardManager.updateUri(url);
     }
 
-    return BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
+    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
-        listenWhen: (a, b) => a.isInReaderMode != b.isInReaderMode,
-        listener: (context, state) => widget.onViewTypeChanged?.call(
-              state.isInReaderMode
-                  ? DocumentViewType.readerMode
-                  : DocumentViewType.story,
-            ),
         builder: (context, state) {
           return LayoutBuilder(
             builder: (context, constraints) => _buildCardDisplayStack(
               isPrimary: widget.isPrimary,
-              isInReaderMode: state.isInReaderMode,
               imageUrl: imageUrl,
               snippets: state.paragraphs,
               constraints: constraints,
@@ -100,7 +211,6 @@ class _DiscoveryCardState extends State<DiscoveryCard> {
     required List<String> snippets,
     required BoxConstraints constraints,
     required bool isPrimary,
-    required bool isInReaderMode,
     ProcessHtmlResult? processHtmlResult,
   }) {
     final DiscoveryCardActionsManager _actionsManager = di.get();
@@ -242,38 +352,40 @@ class _CardBackground extends StatelessWidget {
     final backgroundImage = isImageNotAvailable
         ? backgroundPane
         : CachedImage(
-            uri: Uri.parse(imageUrl),
-            fit: BoxFit.cover,
-            loadingBuilder: (context, progress) => backgroundPane,
-            errorBuilder: (context) =>
-                Text('Unable to load image with url: $imageUrl'),
-          );
+      uri: Uri.parse(imageUrl),
+      fit: BoxFit.cover,
+      loadingBuilder: (context, progress) => backgroundPane,
+      errorBuilder: (context) =>
+          Text('Unable to load image with url: $imageUrl'),
+    );
 
     final shadedBackgroundImage = AnimatedContainer(
       duration: transitionDuration,
       width: constraints.maxWidth,
       height:
-          isDocked ? constraints.maxHeight / 4 : 2 * constraints.maxHeight / 3,
+      isDocked ? constraints.maxHeight / 4 : 2 * constraints.maxHeight / 3,
       decoration: const BoxDecoration(),
       clipBehavior: Clip.antiAlias,
       foregroundDecoration: isDocked
           ? const BoxDecoration()
           : BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  R.colors.swipeCardBackground,
-                  R.colors.swipeCardBackground.withAlpha(40),
-                  R.colors.swipeCardBackground.withAlpha(120),
-                  R.colors.swipeCardBackground,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0, 0.15, 0.8, 1],
-              ),
-            ),
+        gradient: LinearGradient(
+          colors: [
+            R.colors.swipeCardBackground,
+            R.colors.swipeCardBackground.withAlpha(40),
+            R.colors.swipeCardBackground.withAlpha(120),
+            R.colors.swipeCardBackground,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: const [0, 0.15, 0.8, 1],
+        ),
+      ),
       child: backgroundImage,
     );
 
     return isImageNotAvailable ? backgroundPane : shadedBackgroundImage;
   }
 }
+
+ */

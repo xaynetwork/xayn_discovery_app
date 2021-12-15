@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
@@ -72,6 +71,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
+  bool _isFullScreen = false;
+
+  void handleNavigateIntoCard(Document document) {
+    scheduleComputeState(() => _isFullScreen = true);
+  }
+
+  void handleNavigateOutOfCard() {
+    scheduleComputeState(() => _isFullScreen = false);
+  }
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
@@ -263,6 +271,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
             return state.copyWith(
               results: engineState.results,
               isComplete: engineState.isComplete,
+              isFullScreen: _isFullScreen,
               isInErrorState: false,
               axis: axis ?? DiscoveryFeedAxis.vertical,
               suggestTopicsAtIndex: suggestTopicsAtIndex,
