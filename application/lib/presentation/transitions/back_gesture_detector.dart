@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -168,8 +169,8 @@ class _BackGestureController<T> {
 
       HapticFeedback.mediumImpact();
 
-      await _easeBackOut();
-      await navigatorAnimationController.animateBack(.0);
+      _easeBackOut();
+      navigatorAnimationController.animateBack(.0);
 
       navigator.pop();
 

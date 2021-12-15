@@ -102,7 +102,7 @@ class _ReaderModeScreenState extends State<ReaderModeScreen>
               imageManager: widget.imageManager,
               controller: widget.sharedCardImageController,
               fit: BoxFit.cover,
-              scale: 1.35,
+              scale: 1.2,
             ),
           )
         : backgroundPane;
@@ -111,7 +111,7 @@ class _ReaderModeScreenState extends State<ReaderModeScreen>
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final maxImageSize = 2 * constraints.maxHeight / 3 + R.dimen.unit;
+        final maxImageSize = constraints.maxHeight / 2;
         final processHtmlResult = _opacity == 1.0 ? state.result : null;
 
         return Stack(
