@@ -10,12 +10,20 @@ const String kRequestMethod = 'GET';
 const String kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
 const Map<String, String> kHeaders = {
-  'accept':
-      'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+  'accept': '*/*',
   'accept-encoding': 'gzip, deflate, br',
+  'accept-language': '*',
   'cache-control': 'no-cache',
   'pragma': 'no-cache',
   'upgrade-insecure-requests': '1',
+  'sec-ch-ua':
+      '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform':
+      'Windows', // we just want the host to think we're a real browser, the value just needs to pass checks on their side, nothing more
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'cross-site',
 };
 const Duration kTimeout = Duration(seconds: 8);
 const int kMaxRedirects = 5;
@@ -27,8 +35,16 @@ const int kMaxRedirects = 5;
 @injectable
 class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   final Client client;
+  final Map<String, String> headers;
 
-  LoadHtmlUseCase({required this.client});
+  @visibleForTesting
+  LoadHtmlUseCase({
+    required this.client,
+    required this.headers,
+  });
+
+  @factoryMethod
+  LoadHtmlUseCase.standard({required this.client}) : headers = kHeaders;
 
   @override
   Stream<Progress> transaction(Uri param) async* {
@@ -41,7 +57,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         url,
         followRedirects: true,
         maxRedirects: kMaxRedirects,
-        headers: kHeaders,
+        headers: headers,
         timeout: kTimeout,
       ),
     );
