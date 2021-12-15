@@ -54,45 +54,51 @@ void main() {
         progressSuccess(Progress.finish(uri: uri, html: '<p>hi!</p>')),
       ],
     );
-
-    useCaseTest<LoadHtmlUseCase, Uri, Progress>(
-      'Loads Yahoo data: ',
-      build: () => LoadHtmlUseCase(
-        client: Client(),
-        headers: kHeaders,
-      ),
-      input: [yahooWebLink],
-      expect: [
-        progressSuccess(Progress.start(uri: yahooWebLink)),
-        testHtmlSuccess(Progress.finish(uri: yahooWebLink, html: ''),
-            (String html) {
-          final doc = dom.Document.html(html);
-          final paragraphs = doc.querySelectorAll('p');
-          final list = paragraphs.map((it) => it.text).join(', ');
-          // we do not expect a captcha response
-          return !list.contains(captchaResponseSignature);
-        }),
-      ],
-    );
-
-    useCaseTest<LoadHtmlUseCase, Uri, Progress>(
-      'Fails to load Yahoo data with basic headers: ',
-      build: () => LoadHtmlUseCase(
-        client: Client(),
-        headers: basicHeaders,
-      ),
-      input: [yahooWebLink],
-      expect: [
-        progressSuccess(Progress.start(uri: yahooWebLink)),
-        testHtmlSuccess(Progress.finish(uri: yahooWebLink, html: ''),
-            (String html) {
-          final doc = dom.Document.html(html);
-          final paragraphs = doc.querySelectorAll('p');
-          final list = paragraphs.map((it) => it.text).join(', ');
-          // we do expect a captcha response
-          return list.contains(captchaResponseSignature);
-        }),
-      ],
-    );
   });
+
+  group(
+    'Headers test (does not run on the CI!): ',
+    () {
+      useCaseTest<LoadHtmlUseCase, Uri, Progress>(
+        'Loads Yahoo data: ',
+        build: () => LoadHtmlUseCase(
+          client: Client(),
+          headers: kHeaders,
+        ),
+        input: [yahooWebLink],
+        expect: [
+          progressSuccess(Progress.start(uri: yahooWebLink)),
+          testHtmlSuccess(Progress.finish(uri: yahooWebLink, html: ''),
+              (String html) {
+            final doc = dom.Document.html(html);
+            final paragraphs = doc.querySelectorAll('p');
+            final list = paragraphs.map((it) => it.text).join(', ');
+            // we do not expect a captcha response
+            return !list.contains(captchaResponseSignature);
+          }),
+        ],
+      );
+
+      useCaseTest<LoadHtmlUseCase, Uri, Progress>(
+        'Fails to load Yahoo data with basic headers: ',
+        build: () => LoadHtmlUseCase(
+          client: Client(),
+          headers: basicHeaders,
+        ),
+        input: [yahooWebLink],
+        expect: [
+          progressSuccess(Progress.start(uri: yahooWebLink)),
+          testHtmlSuccess(Progress.finish(uri: yahooWebLink, html: ''),
+              (String html) {
+            final doc = dom.Document.html(html);
+            final paragraphs = doc.querySelectorAll('p');
+            final list = paragraphs.map((it) => it.text).join(', ');
+            // we do expect a captcha response
+            return list.contains(captchaResponseSignature);
+          }),
+        ],
+      );
+    },
+    skip: true,
+  );
 }
