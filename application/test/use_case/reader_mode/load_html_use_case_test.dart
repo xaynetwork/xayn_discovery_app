@@ -14,7 +14,7 @@ void main() {
   late MockClient client = MockClient();
   final uri = Uri.dataFromString('<p>hi!</p>');
   final yahooWebLink = Uri.parse(
-      'https://tulsaworld.com/news/national/govt-and-politics/german-court-verdict-in-berlin-killing-poses-policy-problem/article_40c075b7-2aa8-528d-bfab-c3fd7cb2c100.html');
+      'https://finance.yahoo.com/news/mike-morales-joins-vector-laboratories-110000153.html');
 
   /// these are the "old" headers, see [LoadHtmlUseCase.kHeaders] for the newest ones
   const basicHeaders = {
@@ -99,6 +99,6 @@ void main() {
         ],
       );
     },
-    skip: false,
+    skip: true,
   );
 }
