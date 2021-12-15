@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_architecture/concepts/use_case/none.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
