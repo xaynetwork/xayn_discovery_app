@@ -1,10 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
@@ -32,6 +28,7 @@ class ReaderMode extends StatefulWidget {
   final String snippet;
   final Uri imageUri;
   final readability.ProcessHtmlResult? processHtmlResult;
+  final VoidCallback? onProcessedHtml;
 
   const ReaderMode({
     Key? key,
@@ -39,6 +36,7 @@ class ReaderMode extends StatefulWidget {
     required this.snippet,
     required this.imageUri,
     this.processHtmlResult,
+    this.onProcessedHtml,
   }) : super(key: key);
 
   @override
@@ -81,27 +79,45 @@ class _ReaderModeState extends State<ReaderMode> {
 
   @override
   Widget build(BuildContext context) {
+    final loading = LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          width: double.maxFinite,
+          height: constraints.maxHeight / 3 - R.dimen.unit,
+          child: Padding(
+            padding: EdgeInsets.all(R.dimen.unit2),
+            child: Container(),
+          ),
+        );
+      },
+    );
+
     return BlocBuilder<ReaderModeManager, ReaderModeState>(
-        bloc: _readerModeManager,
-        builder: (context, state) {
-          final uri = state.uri;
+      bloc: _readerModeManager,
+      builder: (context, state) {
+        final uri = state.uri;
 
-          if (uri == null) {
-            return _createShimmer();
-          }
+        if (uri == null) {
+          return loading;
+        }
 
-          _readerModeController.loadUri(uri);
+        _readerModeController.loadUri(uri);
 
-          return readability.ReaderMode(
+        return readability.ReaderMode(
             controller: _readerModeController,
-            // todo: move into xayn_design
             textStyle: R.styles.readerModeTextStyle,
             userAgent: kUserAgent,
             classesToPreserve: kClassesToPreserve,
-            factoryBuilder: () => _ReaderModeWidgetFactory(),
-            loadingBuilder: () => _createShimmer(),
-          );
-        });
+            factoryBuilder: () => _ReaderModeWidgetFactory(
+                padding: EdgeInsets.symmetric(horizontal: R.dimen.unit2)),
+            loadingBuilder: () => loading,
+            onProcessedHtml: (result) async {
+              widget.onProcessedHtml?.call();
+
+              return result;
+            });
+      },
+    );
   }
 
   void _updateCardData() {
@@ -116,55 +132,26 @@ class _ReaderModeState extends State<ReaderMode> {
       );
     }
   }
-
-  /// creates shimmer which resembles paragraphs
-  Widget _createShimmer() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final random = Random(0x80);
-
-        // random break every 1/4 times
-        isParagraphBreak() => random.nextDouble() > .75;
-        // [35%, 100%] of width
-        textLineWidth() =>
-            (.35 + random.nextDouble() * .65) * constraints.maxWidth;
-
-        buildTextLine() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: isParagraphBreak() ? R.dimen.unit3 : R.dimen.unit / 2,
-                  ),
-                  child: Container(
-                    width: textLineWidth(),
-                    height: R.dimen.unit,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            );
-
-        return Shimmer.fromColors(
-          baseColor: R.colors.primaryText.withAlpha(50),
-          highlightColor: R.colors.primaryText.withAlpha(20),
-          enabled: true,
-          child: ListView.builder(
-            itemBuilder: (_, __) => Padding(
-              padding: EdgeInsets.only(bottom: R.dimen.unit),
-              child: buildTextLine(),
-            ),
-            itemCount: 32,
-          ),
-        );
-      },
-    );
-  }
 }
 
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
-  _ReaderModeWidgetFactory();
+  final EdgeInsets padding;
+
+  _ReaderModeWidgetFactory({required this.padding});
+
+  @override
+  Widget buildBodyWidget(BuildContext context, Widget child) {
+    final builtChild = super.buildBodyWidget(
+      context,
+      Padding(
+        padding: padding,
+        child: child,
+      ),
+    );
+
+    return builtChild;
+  }
 
   @override
   Widget? buildImageWidget(
@@ -178,6 +165,41 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
         height: (src.height ?? R.dimen.unit8).floor(),
         fit: BoxFit.fitWidth,
       ),
+    );
+  }
+
+  @override
+  Widget? buildVideoPlayer(
+    readability.BuildMetadata meta,
+    String url, {
+    required bool autoplay,
+    required bool controls,
+    double? height,
+    required bool loop,
+    String? posterUrl,
+    double? width,
+  }) {
+    var actualUrl = url;
+    final uri = Uri.parse(url);
+    final maybeFile = uri.pathSegments.last;
+
+    if (maybeFile.startsWith(RegExp(
+      r'manifest\([^\)]+\)',
+      caseSensitive: false,
+    ))) {
+      // common with Bing/MSN
+      actualUrl = '$url.m3u8';
+    }
+
+    return super.buildVideoPlayer(
+      meta,
+      actualUrl,
+      autoplay: false,
+      controls: true,
+      loop: false,
+      height: height,
+      posterUrl: posterUrl,
+      width: width,
     );
   }
 }

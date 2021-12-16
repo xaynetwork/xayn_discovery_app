@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 
 typedef TapCallback = void Function(Document);
@@ -50,23 +50,26 @@ class _DiscoveryFeedCardState
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    return Container(
-      foregroundDecoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            R.colors.swipeCardBackground.withAlpha(120),
-            R.colors.swipeCardBackground.withAlpha(40),
-            R.colors.swipeCardBackground.withAlpha(40),
-            R.colors.swipeCardBackground.withAlpha(120),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: const [0, 0.15, 0.8, 1],
-        ),
-      ),
-      child: GestureDetector(
-        onTap: () => widget.onTap?.call(widget.document),
-        child: image,
+    final footer = DiscoveryCardFooter(
+      title: webResource.title,
+      url: webResource.url,
+      provider: webResource.provider,
+      datePublished: webResource.datePublished,
+      onLikePressed: () => actionsManager.likeDocument(widget.document),
+      onDislikePressed: () => actionsManager.dislikeDocument(widget.document),
+    );
+
+    return GestureDetector(
+      onTap: () => widget.onTap?.call(widget.document),
+      child: Stack(
+        children: [
+          Container(
+              foregroundDecoration: BoxDecoration(
+                gradient: buildGradient(),
+              ),
+              child: image),
+          footer
+        ],
       ),
     );
   }
