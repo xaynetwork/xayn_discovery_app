@@ -23,7 +23,7 @@ class OnBoardingManager extends Cubit<OnBoardingState>
         _hasError = false;
       });
 
-  Future<void> onOnBoardingCompleted(int currentPageIndex) async {
+  void onOnBoardingCompleted(int currentPageIndex) async {
     final result = await _onBoardingCompletedUseCase(currentPageIndex);
 
     scheduleComputeState(() {

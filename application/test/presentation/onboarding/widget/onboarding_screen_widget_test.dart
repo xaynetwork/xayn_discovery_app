@@ -1,12 +1,33 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:xayn_design/src/utils/design_testing_utils.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
+import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
+import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
+import 'onboarding_screen_widget_test.mocks.dart';
+
+@GenerateMocks([OnBoardingManager])
 void main() {
+  late MockOnBoardingManager manager;
+
+  Finder getPageOne() => find.byKey(Keys.onBoardingPageOne);
+  Finder getPageTwo() => find.byKey(Keys.onBoardingPageTwo);
+  Finder getPageThree() => find.byKey(Keys.onBoardingPageThree);
+  Finder getTapDetector() => find.byKey(Keys.onBoardingPageTapDetector);
+
   setUpAll(() async {
+    manager = MockOnBoardingManager();
     configureDependencies();
+    di
+      ..unregister<OnBoardingManager>()
+      ..registerSingleton<OnBoardingManager>(manager);
+
+    when(manager.stream).thenAnswer((_) => const Stream.empty());
+    when(manager.state).thenAnswer((_) => const OnBoardingState.started());
   });
   testWidgets(
     'WHEN opening onboarding screen THEN show first page',
@@ -15,9 +36,11 @@ void main() {
     ) async {
       await tester.pumpLindenApp(const OnBoardingScreen());
 
-      final onBoardingPageOne = find.byKey(Keys.onBoardingPageOne);
+      expect(getPageOne(), findsOneWidget);
+      expect(getPageTwo(), findsNothing);
+      expect(getPageThree(), findsNothing);
 
-      expect(onBoardingPageOne, findsOneWidget);
+      verifyNever(manager.onPageChanged(any));
     },
   );
 
@@ -26,32 +49,34 @@ void main() {
   ) async {
     await tester.pumpLindenApp(const OnBoardingScreen());
 
-    final onBoardingPageTapDetector =
-        find.byKey(Keys.onBoardingPageTapDetector);
-
-    await tester.tap(onBoardingPageTapDetector);
+    await tester.tap(getTapDetector());
     await tester.pumpAndSettle(kPageSwitchAnimationDuration);
 
-    final onBoardingPageTwo = find.byKey(Keys.onBoardingPageTwo);
-
-    expect(onBoardingPageTwo, findsOneWidget);
+    expect(getPageOne(), findsNothing);
+    expect(getPageTwo(), findsOneWidget);
+    expect(getPageThree(), findsNothing);
+    verify(manager.onPageChanged(1));
   });
 
   testWidgets('WHEN tapping on second page THEN show the third one', (
     WidgetTester tester,
   ) async {
-    final onBoardingPageTapDetector =
-        find.byKey(Keys.onBoardingPageTapDetector);
-
     await tester.pumpLindenApp(const OnBoardingScreen());
+    final tapDetector = getTapDetector();
 
-    await tester.tap(onBoardingPageTapDetector);
-    await tester.pumpAndSettle(kPageSwitchAnimationDuration);
-    await tester.tap(onBoardingPageTapDetector);
-    await tester.pumpAndSettle(kPageSwitchAnimationDuration);
+    for (int i = 0; i < 2; i++) {
+      await tester.tap(tapDetector);
+      await tester.pumpAndSettle(kPageSwitchAnimationDuration);
+    }
 
-    final onBoardingPageThree = find.byKey(Keys.onBoardingPageThree);
+    expect(getPageOne(), findsNothing);
+    expect(getPageTwo(), findsNothing);
+    expect(getPageThree(), findsOneWidget);
 
-    expect(onBoardingPageThree, findsOneWidget);
+    verifyInOrder([
+      manager.onPageChanged(1),
+      manager.onPageChanged(2),
+      manager.onOnBoardingCompleted(2),
+    ]);
   });
 }
