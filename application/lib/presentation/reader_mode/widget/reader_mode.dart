@@ -81,9 +81,11 @@ class _ReaderModeState extends State<ReaderMode> {
   Widget build(BuildContext context) {
     final loading = LayoutBuilder(
       builder: (context, constraints) {
+        final height = constraints.maxHeight / 3 - R.dimen.unit;
+
         return SizedBox(
           width: double.maxFinite,
-          height: constraints.maxHeight / 3 - R.dimen.unit,
+          height: height.clamp(.0, double.maxFinite),
           child: Padding(
             padding: EdgeInsets.all(R.dimen.unit2),
             child: Container(),
