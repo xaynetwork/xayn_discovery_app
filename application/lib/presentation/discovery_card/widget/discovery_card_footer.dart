@@ -16,7 +16,6 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.url,
     required this.datePublished,
     this.provider,
-    this.onFooterPressed,
     required this.onLikePressed,
     required this.onDislikePressed,
   }) : super(key: key);
@@ -24,7 +23,6 @@ class DiscoveryCardFooter extends StatelessWidget {
   final Uri url;
   final WebResourceProvider? provider;
   final DateTime datePublished;
-  final VoidCallback? onFooterPressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
 
@@ -64,12 +62,9 @@ class DiscoveryCardFooter extends StatelessWidget {
       ],
     );
 
-    return InkWell(
-      onTap: onFooterPressed,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
-        child: footerColumn,
-      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+      child: footerColumn,
     );
   }
 }
