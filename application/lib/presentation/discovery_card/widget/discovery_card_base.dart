@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 
@@ -29,10 +30,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> {
   late final DiscoveryCardManager _discoveryCardManager;
   late final ImageManager _imageManager;
+  late final DiscoveryCardActionsManager _actionsManager;
   late final Size _mediaSize;
 
   DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
   ImageManager get imageManager => _imageManager;
+  DiscoveryCardActionsManager get actionsManager => _actionsManager;
 
   WebResource get webResource => widget.document.webResource;
   Uri get url => webResource.url;
@@ -50,7 +53,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     final imageManager = widget.imageManager;
 
     if (discoveryCardManager == null) {
-      _discoveryCardManager = di.get();
+      _discoveryCardManager = di.get()..updateUri(url);
     } else {
       _discoveryCardManager = discoveryCardManager;
     }
@@ -60,6 +63,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     } else {
       _imageManager = imageManager;
     }
+
+    _actionsManager = di.get();
   }
 
   @override
@@ -120,6 +125,18 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image);
+
+  Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
+        colors: [
+          R.colors.swipeCardBackground.withAlpha((120.0 * opacity).floor()),
+          R.colors.swipeCardBackground.withAlpha((40.0 * opacity).floor()),
+          R.colors.swipeCardBackground.withAlpha((255.0 * opacity).floor()),
+          R.colors.swipeCardBackground.withAlpha((255.0 * opacity).floor()),
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: const [0, 0.15, 0.8, 1],
+      );
 
   Widget _buildImage() {
     final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);
