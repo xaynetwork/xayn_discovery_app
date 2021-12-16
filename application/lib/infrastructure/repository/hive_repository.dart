@@ -7,29 +7,41 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 
+/// Repository interface for storing Hive entities.
 abstract class BaseHiveRepository<T extends DbEntity> {
   final Map<dynamic, T> _mapperCache = <dynamic, T>{};
+
+  /// The mapper used to serialize and deserialize entity object to and from [Map].
   BaseDbEntityMapper<T> get mapper;
 
+  /// The CRDT version of Hive box.
   HiveCrdt<String, dynamic> get recordBox;
 
+  /// The Hive box.
   Box<Record> get box;
 
-  List<T> get values => box.values.map(_unwrap).toList();
+  /// All unwrapped items in the box.
+  List<T> get _values => box.values.map(_unwrap).toList();
 
+  /// The helper mapper method to ensure that [Record] always has a corresponding value.
   T _unwrap(Record record) => _mapperCache.putIfAbsent(
       record.value, () => mapper.fromMap(record.value)!);
 
-  bool get isEmpty => values.isEmpty;
+  /// Checks if the box is empty.
+  bool get isEmpty => _values.isEmpty;
 
-  bool get isNotEmpty => values.isNotEmpty;
+  /// Checks if the box is not empty.
+  bool get isNotEmpty => _values.isNotEmpty;
 
-  List<T> getAll() => values;
+  /// Gets all items from the box.
+  List<T> getAll() => _values;
 
+  /// Removes all items from the box.
   @mustCallSuper
   void clear() => recordBox.clear();
 }
 
+/// A CRUD interface for Hive repository.
 abstract class HiveRepository<T extends DbEntity>
     extends BaseHiveRepository<T> {
   HiveCrdt<String, dynamic>? _recordBox;
@@ -38,20 +50,22 @@ abstract class HiveRepository<T extends DbEntity>
   HiveCrdt<String, dynamic> get recordBox =>
       _recordBox ??= HiveCrdt(box, HiveDB.nodeId);
 
-  UniqueId id(T entity) => entity.id;
+  /// The helper method that returns an id from a given entity.
+  UniqueId _id(T entity) => entity.id;
 
+  /// Fetches an entity from the database by a given id.
   T? getById(UniqueId id) => mapper.fromMap(recordBox.get(id.value));
 
   /// Saves a value to the database.
   set entity(T entity) {
     final map = mapper.toMap(entity);
-    recordBox.put(id(entity).value, map);
+    recordBox.put(_id(entity).value, map);
   }
 
   /// Saves all entities in the order.
   void saveAll(Iterable<T> entities) {
     for (final entity in entities) {
-      recordBox.put(id(entity).value, mapper.toMap(entity));
+      recordBox.put(_id(entity).value, mapper.toMap(entity));
     }
   }
 
@@ -100,10 +114,4 @@ abstract class HiveRepository<T extends DbEntity>
       }
     }).cast();
   }
-
-  void merge(Map<String, Record<dynamic>> remoteRecords) =>
-      recordBox.merge(remoteRecords);
-
-  Map<String, Record<dynamic>> getRecordsForSync({Hlc? modifiedSince}) =>
-      recordBox.recordMap(modifiedSince: modifiedSince);
 }
