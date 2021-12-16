@@ -220,6 +220,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     _discoveryCardObservationHandler =
         pipe(_discoveryCardObservationUseCase).transform(
       (out) => out
+          .distinct(
+            (a, b) =>
+                a.value.document == b.value.document &&
+                a.value.viewType == b.value.viewType,
+          )
           .pairwise() // combine last card and current card
           .followedBy(_discoveryCardMeasuredObservationUseCase)
           .followedBy(_measuredObservationLogger)

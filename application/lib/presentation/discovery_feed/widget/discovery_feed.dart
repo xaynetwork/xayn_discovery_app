@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
@@ -158,6 +157,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final discoveryCardManager = managers?.discoveryCardManager;
         final imageManager = managers?.imageManager;
 
+        if (isPrimary) {
+          _discoveryFeedManager.handleViewType(
+            document,
+            isFullScreen ? DocumentViewType.readerMode : DocumentViewType.story,
+          );
+        }
+
         final card = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
@@ -204,7 +210,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 class _ResultCard extends StatelessWidget {
   final bool isPrimary;
   final Document document;
-  final DiscoveryCardBase card;
+  final Widget card;
   final bool isSwipingEnabled;
 
   const _ResultCard({
