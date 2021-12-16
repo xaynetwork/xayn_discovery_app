@@ -119,15 +119,15 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           child: OverflowBox(
             alignment: Alignment.topCenter,
             maxWidth: mediaQuery.size.width,
-            maxHeight: mediaQuery.size.height,
             child: ReaderMode(
               title: title,
               snippet: snippet,
               imageUri: Uri.parse(imageUrl),
               processHtmlResult: state.result,
               onProcessedHtml: () => _openingAnimation.animateTo(
-                  kMinImageFractionSize,
-                  curve: Curves.fastOutSlowIn),
+                kMinImageFractionSize,
+                curve: Curves.fastOutSlowIn,
+              ),
             ),
           ),
         );
@@ -174,7 +174,19 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         child: Listener(
           onPointerDown: _recognizer.addPointer,
           behavior: HitTestBehavior.translucent,
-          child: body,
+          child: WillPopScope(
+            onWillPop: () async {
+              await _openingAnimation.animateTo(
+                1.0,
+                curve: Curves.fastOutSlowIn,
+              );
+
+              widget.onDiscard?.call();
+
+              return false;
+            },
+            child: body,
+          ),
         ),
       ),
     );
