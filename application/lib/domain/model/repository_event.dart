@@ -4,11 +4,19 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'repository_event.freezed.dart';
 
+/// An interface used for observing changes in Hive box.
+/// Implemented only by [ChangedEvent] and [DeletedEvent].
 abstract class RepositoryEvent<T extends DbEntity> {
   RepositoryEvent();
 
+  /// The id of the observed object.
   abstract final UniqueId id;
 
+  /// The factory helper method for creating [DeletedEvent] or [ChangedEvent].
+  ///
+  /// If [obj] is null, returns a [DeletedEvent].
+  ///
+  /// If [obj] is not null, return a [ChangedEvent].
   factory RepositoryEvent.from(T? obj, UniqueId id) {
     if (obj == null) {
       return DeletedEvent<T>(id: id);
