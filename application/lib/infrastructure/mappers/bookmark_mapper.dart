@@ -52,9 +52,11 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
       };
 
   @override
-  void throwMapperException() => throw DbEntityMapperException(
+  void throwMapperException([
+    String exceptionText =
         'BookmarkMapper: error occurred while mapping the object',
-      );
+  ]) =>
+      super.throwMapperException(exceptionText);
 }
 
 abstract class BookmarkMapperFields {

@@ -31,9 +31,11 @@ class CollectionMapper extends BaseDbEntityMapper<Collection> {
       };
 
   @override
-  void throwMapperException() => throw DbEntityMapperException(
+  void throwMapperException([
+    String exceptionText =
         'CollectionMapper: error occurred while mapping the object',
-      );
+  ]) =>
+      super.throwMapperException(exceptionText);
 }
 
 abstract class CollectionMapperFields {
