@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connecti
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
@@ -70,9 +71,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           .map(
             (it) => ReadingTimeInput(
               processHtmlResult: it,
-              lang: 'en-US',
-              singleUnit: 'minute',
-              pluralUnit: 'minutes',
+              lang: 'en-US', // todo: must come from settings
+              singleUnit: Strings.readingTimeUnitSingular,
+              pluralUnit: Strings.readingTimeUnitPlural,
             ),
           )
           .followedBy(_injectReaderMetaDataUseCase),
