@@ -7,9 +7,12 @@ abstract class BaseDbEntityMapper<T extends DbEntity> {
   T? fromMap(Map? map);
   DbEntityMap toMap(T entity);
 
-  /// Should be used to throw a [DbEntityMapperException] in case of error
+  /// Used to throw a [DbEntityMapperException] in case of error
   /// while mapping an object
-  void throwMapperException();
+  void throwMapperException([
+    String exceptionText = 'error occurred while mapping the object',
+  ]) =>
+      throw DbEntityMapperException(exceptionText);
 }
 
 class DbEntityMapperException implements Exception {
