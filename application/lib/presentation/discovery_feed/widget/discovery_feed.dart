@@ -164,6 +164,15 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           );
         }
 
+        receiveManager(
+          DiscoveryCardManager discoveryCardManager,
+          ImageManager imageManager,
+        ) =>
+            _cardManagers[document] = _CardManagers(
+              discoveryCardManager: discoveryCardManager,
+              imageManager: imageManager,
+            );
+
         final card = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
@@ -179,17 +188,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 discoveryCardManager: discoveryCardManager,
                 imageManager: imageManager,
                 onTap: _discoveryFeedManager.handleNavigateIntoCard,
-                onCardManager: (manager) =>
-                    _cardManagers[document] = _CardManagers(
-                  discoveryCardManager: manager,
-                  imageManager: _cardManagers[document]?.imageManager,
-                ),
-                onImageManager: (manager) =>
-                    _cardManagers[document] = _CardManagers(
-                  discoveryCardManager:
-                      _cardManagers[document]?.discoveryCardManager,
-                  imageManager: manager,
-                ),
+                onManagers: receiveManager,
               );
 
         return _ResultCard(

@@ -73,7 +73,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   Document? _observedDocument;
   bool _isFullScreen = false;
 
-  void handleNavigateIntoCard(Document document) {
+  void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
   }
 
