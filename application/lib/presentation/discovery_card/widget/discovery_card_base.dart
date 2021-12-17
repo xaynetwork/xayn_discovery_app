@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 
-const BoxFit kBoxFit = BoxFit.cover;
+const BoxFit _kBoxFit = BoxFit.cover;
 
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
@@ -31,7 +32,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   late final DiscoveryCardManager _discoveryCardManager;
   late final ImageManager _imageManager;
   late final DiscoveryCardActionsManager _actionsManager;
-  late final Size _mediaSize;
 
   DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
   ImageManager get imageManager => _imageManager;
@@ -43,7 +43,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   String get snippet => webResource.snippet;
   String get title => webResource.title;
 
-  bool _didFetchImage = false;
+  late bool _didFetchImage;
 
   @override
   void initState() {
@@ -51,6 +51,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     final discoveryCardManager = widget.discoveryCardManager;
     final imageManager = widget.imageManager;
+
+    _didFetchImage = widget.imageManager != null;
 
     if (discoveryCardManager == null) {
       _discoveryCardManager = di.get()..updateUri(url);
@@ -71,22 +73,18 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (!_didFetchImage) {
-      _didFetchImage = true;
+    if (_didFetchImage) return;
 
-      final mediaQuery = MediaQuery.of(context);
+    _didFetchImage = true;
 
-      _mediaSize = mediaQuery.size;
+    final mediaQuery = MediaQuery.of(context);
 
-      if (widget.imageManager == null) {
-        _imageManager.getImage(
-          Uri.parse(imageUrl),
-          width: _mediaSize.width.ceil(),
-          height: _mediaSize.height.ceil(),
-          fit: kBoxFit,
-        );
-      }
-    }
+    _imageManager.getImage(
+      Uri.parse(imageUrl),
+      width: mediaQuery.size.width.ceil(),
+      height: mediaQuery.size.height.ceil(),
+      fit: _kBoxFit,
+    );
   }
 
   @override
@@ -112,19 +110,21 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-      bloc: _discoveryCardManager,
-      builder: (context, state) => buildFromState(
-        context,
-        state,
-        _buildImage(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+        bloc: _discoveryCardManager,
+        builder: (context, state) => buildFromState(
+          context,
+          state,
+          _buildImage(),
+        ),
+      );
 
   Widget buildFromState(
-      BuildContext context, DiscoveryCardState state, Widget image);
+    BuildContext context,
+    DiscoveryCardState state,
+    Widget image,
+  );
 
   Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
         colors: [
@@ -139,17 +139,17 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       );
 
   Widget _buildImage() {
+    final mediaQuery = MediaQuery.of(context);
     final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);
 
     return CachedImage(
       imageManager: _imageManager,
       uri: Uri.parse(imageUrl),
-      width: _mediaSize.width.ceil(),
-      height: _mediaSize.height.ceil(),
-      fit: kBoxFit,
+      width: mediaQuery.size.width.ceil(),
+      height: mediaQuery.size.height.ceil(),
+      fit: _kBoxFit,
       loadingBuilder: (context, progress) => backgroundPane,
-      errorBuilder: (context) =>
-          Text('Unable to load image with url: $imageUrl'),
+      errorBuilder: (context) => Text('${Strings.cannotLoadUrlError}$imageUrl'),
     );
   }
 }
