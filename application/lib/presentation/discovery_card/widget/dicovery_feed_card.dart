@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dar
 typedef ManagersCallback = void Function(DiscoveryCardManager, ImageManager);
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
-  final VoidCallback? onTap;
   final ManagersCallback? onManagers;
 
   const DiscoveryFeedCard({
@@ -19,7 +18,6 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
     required Document document,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
-    this.onTap,
     this.onManagers,
   }) : super(
           key: key,
@@ -54,18 +52,15 @@ class _DiscoveryFeedCardState
       onDislikePressed: () => actionsManager.dislikeDocument(widget.document),
     );
 
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Stack(
-        children: [
-          Container(
-              foregroundDecoration: BoxDecoration(
-                gradient: buildGradient(),
-              ),
-              child: image),
-          footer
-        ],
-      ),
+    return Stack(
+      children: [
+        Container(
+            foregroundDecoration: BoxDecoration(
+              gradient: buildGradient(),
+            ),
+            child: image),
+        footer
+      ],
     );
   }
 }
