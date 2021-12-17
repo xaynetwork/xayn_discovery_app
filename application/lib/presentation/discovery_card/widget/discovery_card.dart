@@ -12,12 +12,14 @@ import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.d
 
 const double kDragThreshold = 200.0;
 const Duration kSnapBackDuration = Duration(milliseconds: 450);
+const Duration kOpenCardDuration = Duration(milliseconds: 1000);
 const Curve kSnapBackCurve = Curves.elasticOut;
 const double kMinImageFractionSize = .2;
 
 typedef DragCallback = void Function(double);
 typedef AnimationControllerBuilder = AnimationController Function();
 
+/// Implementation of [DiscoveryCardBase] which is used inside the feed view.
 class DiscoveryCard extends DiscoveryCardBase {
   final DragCallback? onDrag;
   final VoidCallback? onDiscard;
@@ -42,6 +44,22 @@ class DiscoveryCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryCardState();
 }
 
+/// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
+class DiscoveryCardScreen extends DiscoveryCard {
+  const DiscoveryCardScreen({
+    Key? key,
+    required bool isPrimary,
+    required Document document,
+  }) : super(
+          key: key,
+          isPrimary: isPrimary,
+          document: document,
+        );
+
+  @override
+  State<StatefulWidget> createState() => _DiscoveryCardPageState();
+}
+
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     with TickerProviderStateMixin {
   late final AnimationController _openingAnimation;
@@ -62,11 +80,13 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     _openingAnimation = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: kOpenCardDuration,
     )..value = 1.0;
 
     _openingAnimation.addListener(() {
-      setState(() {});
+      setState(() {
+        // we rebuild so that the value from _openingAnimation is preocessed
+      });
     });
 
     _recognizer = DragBackRecognizer(
@@ -169,28 +189,35 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       },
     );
 
-    return Scaffold(
-      body: SafeArea(
-        child: Listener(
-          onPointerDown: _recognizer.addPointer,
-          behavior: HitTestBehavior.translucent,
-          child: WillPopScope(
-            onWillPop: () async {
-              await _openingAnimation.animateTo(
-                1.0,
-                curve: Curves.fastOutSlowIn,
-              );
+    return Listener(
+      onPointerDown: _recognizer.addPointer,
+      behavior: HitTestBehavior.translucent,
+      child: WillPopScope(
+        onWillPop: () async {
+          await _openingAnimation.animateTo(
+            1.0,
+            curve: Curves.fastOutSlowIn,
+          );
 
-              widget.onDiscard?.call();
+          widget.onDiscard?.call();
 
-              return false;
-            },
-            child: body,
-          ),
-        ),
+          return false;
+        },
+        child: body,
       ),
     );
   }
+}
+
+class _DiscoveryCardPageState extends _DiscoveryCardState {
+  @override
+  Widget buildFromState(
+          BuildContext context, DiscoveryCardState state, Widget image) =>
+      Scaffold(
+        body: SafeArea(
+          child: super.buildFromState(context, state, image),
+        ),
+      );
 }
 
 class DragBackRecognizer extends HorizontalDragGestureRecognizer {
