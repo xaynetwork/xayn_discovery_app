@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
+@singleton
 class CollectionMapper extends BaseDbEntityMapper<Collection> {
   @override
   Collection? fromMap(Map? map) {

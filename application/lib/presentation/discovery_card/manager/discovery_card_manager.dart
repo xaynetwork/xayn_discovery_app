@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 typedef UriHandler = void Function(Uri uri);
 
@@ -78,6 +79,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   Future<DiscoveryCardState?> computeState() async =>
       fold(_updateUri).foldAll((elements, errorReport) {
         if (errorReport.isNotEmpty) {
+          logger.e(errorReport.of(_updateUri)!.error);
+
           return DiscoveryCardState.error();
         }
 
