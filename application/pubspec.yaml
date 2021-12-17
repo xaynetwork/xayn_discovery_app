@@ -26,6 +26,7 @@ dependencies:
   http: ^0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
+  in_app_review: 2.0.3
   injectable: ^1.2.2
   instabug_flutter: ^10.9.1
   intl: ^0.17.0
