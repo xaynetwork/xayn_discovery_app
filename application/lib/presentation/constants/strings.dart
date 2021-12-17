@@ -37,4 +37,6 @@ class Strings {
 
   static const String readingTimeUnitSingular = 'minute';
   static const String readingTimeUnitPlural = 'minutes';
+
+  static const String cannotLoadUrlError = 'Unable to load image with url: ';
 }

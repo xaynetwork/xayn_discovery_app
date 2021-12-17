@@ -8,9 +8,9 @@ import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
-const String kUserAgent =
+const String _kUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36';
-const List<String> kClassesToPreserve = [
+const List<String> _kClassesToPreserve = [
   'caption',
   'emoji',
   'hidden',
@@ -22,6 +22,10 @@ const List<String> kClassesToPreserve = [
   'wp-caption-text',
   'wp-smiley',
 ];
+final RegExp _kMatchManifestRegExp = RegExp(
+  r'manifest\([^\)]+\)',
+  caseSensitive: false,
+);
 
 class ReaderMode extends StatefulWidget {
   final String title;
@@ -108,8 +112,8 @@ class _ReaderModeState extends State<ReaderMode> {
         return readability.ReaderMode(
             controller: _readerModeController,
             textStyle: R.styles.readerModeTextStyle,
-            userAgent: kUserAgent,
-            classesToPreserve: kClassesToPreserve,
+            userAgent: _kUserAgent,
+            classesToPreserve: _kClassesToPreserve,
             factoryBuilder: () => _ReaderModeWidgetFactory(
                 padding: EdgeInsets.symmetric(horizontal: R.dimen.unit2)),
             loadingBuilder: () => loading,
@@ -143,17 +147,14 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   _ReaderModeWidgetFactory({required this.padding});
 
   @override
-  Widget buildBodyWidget(BuildContext context, Widget child) {
-    final builtChild = super.buildBodyWidget(
-      context,
-      Padding(
-        padding: padding,
-        child: child,
-      ),
-    );
-
-    return builtChild;
-  }
+  Widget buildBodyWidget(BuildContext context, Widget child) =>
+      super.buildBodyWidget(
+        context,
+        Padding(
+          padding: padding,
+          child: child,
+        ),
+      );
 
   @override
   Widget? buildImageWidget(
@@ -185,10 +186,7 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
     final uri = Uri.parse(url);
     final maybeFile = uri.pathSegments.last;
 
-    if (maybeFile.startsWith(RegExp(
-      r'manifest\([^\)]+\)',
-      caseSensitive: false,
-    ))) {
+    if (maybeFile.startsWith(_kMatchManifestRegExp)) {
       // common with Bing/MSN
       actualUrl = '$url.m3u8';
     }

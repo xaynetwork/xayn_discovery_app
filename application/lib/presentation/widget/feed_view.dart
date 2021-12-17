@@ -2,15 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-const Duration kAnimationDuration = Duration(milliseconds: 800);
-const Curve kAnimationCurve = Curves.elasticOut;
-const double kCardNotchSize = .947;
-const double kFullScreenConstant = 100.0;
-final BorderRadius kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
-final double kItemSpacing = R.dimen.unit1_5;
-final EdgeInsets kPadding = EdgeInsets.symmetric(
-  horizontal: R.dimen.unit2,
-);
+const Duration _kAnimationDuration = Duration(milliseconds: 800);
+const Curve _kAnimationCurve = Curves.elasticOut;
+const double _kCardNotchSize = .947;
+final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
+final double _kItemSpacing = R.dimen.unit1_5;
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
 /// All items are displayed full screen with vertical scrolling.
@@ -30,18 +26,18 @@ class FeedView extends StatelessWidget {
     this.itemCount,
   })  : mainCardSize = isFullScreen
             ? 1.0 - .15 * fullScreenOffsetFraction
-            : kCardNotchSize,
+            : _kCardNotchSize,
         padding = isFullScreen
             ? EdgeInsets.symmetric(
                 horizontal: R.dimen.unit3 * fullScreenOffsetFraction)
             : kPadding,
         itemSpacing = isFullScreen
             ? R.dimen.unit3 * fullScreenOffsetFraction
-            : kItemSpacing,
+            : _kItemSpacing,
         borderRadius = isFullScreen
             ? BorderRadius.all(
                 Radius.circular(fullScreenOffsetFraction * R.dimen.unit1_5))
-            : kBorderRadius,
+            : _kBorderRadius,
         super(key: key);
 
   final CardViewController? cardViewController;
@@ -58,23 +54,21 @@ class FeedView extends StatelessWidget {
   final BorderRadius borderRadius;
 
   @override
-  Widget build(BuildContext context) {
-    return CardView(
-      animationDuration: kAnimationDuration,
-      animationCurve: kAnimationCurve,
-      animateToSnapDuration: R.animations.unit2,
-      scrollDirection: scrollDirection,
-      controller: cardViewController,
-      size: mainCardSize,
-      padding: padding,
-      itemBuilder: itemBuilder,
-      secondaryItemBuilder: secondaryItemBuilder,
-      itemCount: itemCount ?? 0,
-      itemSpacing: itemSpacing,
-      clipBorderRadius: borderRadius,
-      onFinalIndex: onFinalIndex,
-      onIndexChanged: onIndexChanged,
-      disableGestures: isFullScreen,
-    );
-  }
+  Widget build(BuildContext context) => CardView(
+        animationDuration: _kAnimationDuration,
+        animationCurve: _kAnimationCurve,
+        animateToSnapDuration: R.animations.unit2,
+        scrollDirection: scrollDirection,
+        controller: cardViewController,
+        size: mainCardSize,
+        padding: padding,
+        itemBuilder: itemBuilder,
+        secondaryItemBuilder: secondaryItemBuilder,
+        itemCount: itemCount ?? 0,
+        itemSpacing: itemSpacing,
+        clipBorderRadius: borderRadius,
+        onFinalIndex: onFinalIndex,
+        onIndexChanged: onIndexChanged,
+        disableGestures: isFullScreen,
+      );
 }

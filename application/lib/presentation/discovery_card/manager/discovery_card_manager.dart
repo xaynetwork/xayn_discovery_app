@@ -15,6 +15,9 @@ import 'package:xayn_readability/xayn_readability.dart';
 
 typedef UriHandler = void Function(Uri uri);
 
+// todo: must come from settings!
+const String _kReadingTimeLanguage = 'en-US';
+
 /// The state manager of a [DiscoveryCard] widget.
 ///
 /// Currently has 2 goals:
@@ -71,7 +74,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           .map(
             (it) => ReadingTimeInput(
               processHtmlResult: it,
-              lang: 'en-US', // todo: must come from settings
+              lang: _kReadingTimeLanguage,
               singleUnit: Strings.readingTimeUnitSingular,
               pluralUnit: Strings.readingTimeUnitPlural,
             ),

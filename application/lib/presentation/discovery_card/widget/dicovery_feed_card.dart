@@ -7,14 +7,11 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 
-typedef TapCallback = void Function(Document);
-typedef CardManagerCallback = void Function(DiscoveryCardManager);
-typedef ImageManagerCallback = void Function(ImageManager);
+typedef ManagersCallback = void Function(DiscoveryCardManager, ImageManager);
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
-  final TapCallback? onTap;
-  final CardManagerCallback? onCardManager;
-  final ImageManagerCallback? onImageManager;
+  final VoidCallback? onTap;
+  final ManagersCallback? onManagers;
 
   const DiscoveryFeedCard({
     Key? key,
@@ -23,8 +20,7 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
     this.onTap,
-    this.onCardManager,
-    this.onImageManager,
+    this.onManagers,
   }) : super(
           key: key,
           isPrimary: isPrimary,
@@ -43,8 +39,7 @@ class _DiscoveryFeedCardState
   void initState() {
     super.initState();
 
-    widget.onCardManager?.call(discoveryCardManager);
-    widget.onImageManager?.call(imageManager);
+    widget.onManagers?.call(discoveryCardManager, imageManager);
   }
 
   @override
@@ -60,7 +55,7 @@ class _DiscoveryFeedCardState
     );
 
     return GestureDetector(
-      onTap: () => widget.onTap?.call(widget.document),
+      onTap: widget.onTap,
       child: Stack(
         children: [
           Container(
