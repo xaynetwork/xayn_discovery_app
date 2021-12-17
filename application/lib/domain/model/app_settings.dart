@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -12,6 +13,8 @@ class AppSettings extends DbEntity with _$AppSettings {
     required bool isOnboardingDone,
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
+    required int numberOfSessions,
+    required AppVersion? appVersion,
     required UniqueId id,
   }) = _AppSettings;
 
@@ -19,11 +22,15 @@ class AppSettings extends DbEntity with _$AppSettings {
     required bool isOnboardingDone,
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
+    required int numberOfSessions,
+    required AppVersion? appVersion,
   }) =>
       AppSettings._(
         isOnboardingDone: isOnboardingDone,
         appTheme: appTheme,
         discoveryFeedAxis: discoveryFeedAxis,
+        numberOfSessions: numberOfSessions,
+        appVersion: appVersion,
         id: AppSettings.globalId,
       );
 
@@ -31,6 +38,8 @@ class AppSettings extends DbEntity with _$AppSettings {
         isOnboardingDone: false,
         appTheme: AppTheme.system,
         discoveryFeedAxis: DiscoveryFeedAxis.vertical,
+        numberOfSessions: 0,
+        appVersion: null,
       );
 
   static UniqueId globalId =
