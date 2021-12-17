@@ -7,6 +7,9 @@ const Curve _kAnimationCurve = Curves.elasticOut;
 const double _kCardNotchSize = .947;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit1_5;
+final EdgeInsets _kPadding = EdgeInsets.symmetric(
+  horizontal: R.dimen.unit2,
+);
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
 /// All items are displayed full screen with vertical scrolling.
@@ -30,7 +33,7 @@ class FeedView extends StatelessWidget {
         padding = isFullScreen
             ? EdgeInsets.symmetric(
                 horizontal: R.dimen.unit3 * fullScreenOffsetFraction)
-            : kPadding,
+            : _kPadding,
         itemSpacing = isFullScreen
             ? R.dimen.unit3 * fullScreenOffsetFraction
             : _kItemSpacing,
