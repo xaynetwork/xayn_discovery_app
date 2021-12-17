@@ -55,14 +55,25 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     _didFetchImage = widget.imageManager != null;
 
     if (discoveryCardManager == null) {
+      // here, the manager was _not_ passed via the Widget itself
+      // in this case, we request an instance from the DI,
+      // and we trigger the url change to load the underlying site
       _discoveryCardManager = di.get()..updateUri(url);
     } else {
+      // here, the manager was passed via the Widget itself.
+      // it already did load the underlying site, we just want that same
+      // state and have no need to call updateUri like above.
       _discoveryCardManager = discoveryCardManager;
     }
 
     if (imageManager == null) {
+      // here, the manager was _not_ passed via the Widget itself
+      // so we create a new instance from the DI
       _imageManager = di.get();
     } else {
+      // here, the manager was passed via the Widget itself and already
+      // has the underlying image preloaded.
+      // we point to it so we can then just use its state here.
       _imageManager = imageManager;
     }
 

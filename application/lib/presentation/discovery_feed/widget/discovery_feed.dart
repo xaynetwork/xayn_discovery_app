@@ -182,13 +182,15 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 onDiscard: _discoveryFeedManager.handleNavigateOutOfCard,
                 onDrag: _onFullScreenDrag,
               )
-            : DiscoveryFeedCard(
-                isPrimary: isPrimary,
-                document: document,
-                discoveryCardManager: discoveryCardManager,
-                imageManager: imageManager,
+            : InkWell(
                 onTap: _discoveryFeedManager.handleNavigateIntoCard,
-                onManagers: receiveManager,
+                child: DiscoveryFeedCard(
+                  isPrimary: isPrimary,
+                  document: document,
+                  discoveryCardManager: discoveryCardManager,
+                  imageManager: imageManager,
+                  onManagers: receiveManager,
+                ),
               );
 
         return _ResultCard(
