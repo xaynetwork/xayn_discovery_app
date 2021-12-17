@@ -213,6 +213,7 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
     onStart = onDragStart;
     onUpdate = onDragUpdate;
     onEnd = onDragEnd;
+    onCancel = onDragCancel;
   }
 
   @override
@@ -255,7 +256,7 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
     onDrag(_distance);
   }
 
-  void onDragEnd(DragEndDetails event) async {
+  void onDragEnd(DragEndDetails? event) async {
     if (_distance <= kDragThreshold) {
       final controller = _animationController = animationControllerBuilder();
 
@@ -272,4 +273,6 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
       _animationController = null;
     }
   }
+
+  void onDragCancel() => onDragEnd(null);
 }
