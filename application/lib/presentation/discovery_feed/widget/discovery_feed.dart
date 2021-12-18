@@ -201,24 +201,21 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     });
   }
 
-  _CardManagers managersOf(Document document) {
-    if (_cardManagers[document] == null) {
-      final mediaQuery = MediaQuery.of(context);
+  _CardManagers managersOf(Document document) =>
+      _cardManagers.putIfAbsent(document, () {
+        final mediaQuery = MediaQuery.of(context);
 
-      _cardManagers[document] = _CardManagers(
-        imageManager: di.get()
-          ..getImage(
-            Uri.parse(document.webResource.displayUrl.toString()),
-            width: mediaQuery.size.width.ceil(),
-            height: mediaQuery.size.height.ceil(),
-            fit: _kImageBoxFit,
-          ),
-        discoveryCardManager: di.get()..updateUri(document.webResource.url),
-      );
-    }
-
-    return _cardManagers[document]!;
-  }
+        return _CardManagers(
+          imageManager: di.get()
+            ..getImage(
+              Uri.parse(document.webResource.displayUrl.toString()),
+              width: mediaQuery.size.width.ceil(),
+              height: mediaQuery.size.height.ceil(),
+              fit: _kImageBoxFit,
+            ),
+          discoveryCardManager: di.get()..updateUri(document.webResource.url),
+        );
+      });
 }
 
 class _ResultCard extends StatelessWidget {
