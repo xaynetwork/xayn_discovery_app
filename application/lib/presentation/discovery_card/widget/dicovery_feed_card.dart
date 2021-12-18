@@ -7,18 +7,13 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 
-typedef ManagersCallback = void Function(DiscoveryCardManager, ImageManager);
-
 class DiscoveryFeedCard extends DiscoveryCardBase {
-  final ManagersCallback? onManagers;
-
   const DiscoveryFeedCard({
     Key? key,
     required bool isPrimary,
     required Document document,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
-    this.onManagers,
   }) : super(
           key: key,
           isPrimary: isPrimary,
@@ -33,13 +28,6 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
 
 class _DiscoveryFeedCardState
     extends DiscoveryCardBaseState<DiscoveryFeedCard> {
-  @override
-  void initState() {
-    super.initState();
-
-    widget.onManagers?.call(discoveryCardManager, imageManager);
-  }
-
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
