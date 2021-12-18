@@ -17,6 +17,8 @@ import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_dire
 import 'package:xayn_discovery_app/presentation/widget/button/temp_button.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 
+const BoxFit _kImageBoxFit = BoxFit.cover;
+
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
   const DiscoveryFeed({Key? key}) : super(key: key);
@@ -29,7 +31,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
-  late final Expando<_CardManagers> _cardManagers;
+  late final Map<Document, _CardManagers> _cardManagers;
 
   int _totalResults = 0;
   double _dragDistance = .0;
@@ -91,6 +93,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
     WidgetsBinding.instance!.removeObserver(this);
 
+    _cardManagers
+      ..forEach((_, managers) => managers.closeAll())
+      ..clear();
+
     super.dispose();
   }
 
@@ -98,7 +104,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
-    _cardManagers = Expando<_CardManagers>();
+    _cardManagers = <Document, _CardManagers>{};
 
     WidgetsBinding.instance!.addObserver(this);
 
@@ -153,9 +159,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   }) =>
       (BuildContext context, int index) {
         final document = results[index];
-        final managers = _cardManagers[document];
-        final discoveryCardManager = managers?.discoveryCardManager;
-        final imageManager = managers?.imageManager;
+        final managers = managersOf(document);
 
         if (isPrimary) {
           _discoveryFeedManager.handleViewType(
@@ -164,21 +168,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           );
         }
 
-        receiveManager(
-          DiscoveryCardManager discoveryCardManager,
-          ImageManager imageManager,
-        ) =>
-            _cardManagers[document] = _CardManagers(
-              discoveryCardManager: discoveryCardManager,
-              imageManager: imageManager,
-            );
-
         final card = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
                 document: document,
-                discoveryCardManager: discoveryCardManager,
-                imageManager: imageManager,
+                discoveryCardManager: managers.discoveryCardManager,
+                imageManager: managers.imageManager,
                 onDiscard: _discoveryFeedManager.handleNavigateOutOfCard,
                 onDrag: _onFullScreenDrag,
               )
@@ -187,9 +182,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,
-                  discoveryCardManager: discoveryCardManager,
-                  imageManager: imageManager,
-                  onManagers: receiveManager,
+                  discoveryCardManager: managers.discoveryCardManager,
+                  imageManager: managers.imageManager,
                 ),
               );
 
@@ -205,6 +199,25 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     setState(() {
       _dragDistance = distance;
     });
+  }
+
+  _CardManagers managersOf(Document document) {
+    if (_cardManagers[document] == null) {
+      final mediaQuery = MediaQuery.of(context);
+
+      _cardManagers[document] = _CardManagers(
+        imageManager: di.get()
+          ..getImage(
+            Uri.parse(document.webResource.displayUrl.toString()),
+            width: mediaQuery.size.width.ceil(),
+            height: mediaQuery.size.height.ceil(),
+            fit: _kImageBoxFit,
+          ),
+        discoveryCardManager: di.get()..updateUri(document.webResource.url),
+      );
+    }
+
+    return _cardManagers[document]!;
   }
 }
 
@@ -237,11 +250,16 @@ class _ResultCard extends StatelessWidget {
 
 @immutable
 class _CardManagers {
-  final DiscoveryCardManager? discoveryCardManager;
-  final ImageManager? imageManager;
+  final DiscoveryCardManager discoveryCardManager;
+  final ImageManager imageManager;
 
   const _CardManagers({
-    this.imageManager,
-    this.discoveryCardManager,
+    required this.imageManager,
+    required this.discoveryCardManager,
   });
+
+  void closeAll() {
+    imageManager.close();
+    discoveryCardManager.close();
+  }
 }

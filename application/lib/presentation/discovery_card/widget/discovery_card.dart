@@ -153,32 +153,40 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         );
       },
     );
+
     final body = LayoutBuilder(
       builder: (context, constraints) {
+        final maskedImage = ClipRect(
+          child: OverflowBox(
+            maxWidth: constraints.maxWidth,
+            maxHeight: constraints.maxHeight,
+            alignment: Alignment.topCenter,
+            child: Container(
+              foregroundDecoration: BoxDecoration(
+                gradient: buildGradient(opacity: _openingAnimation.value),
+              ),
+              child: image,
+            ),
+          ),
+        );
+        final maskedReaderMode = ClipRect(
+          child: OverflowBox(
+            maxWidth: mediaQuery.size.width,
+            maxHeight: constraints.maxHeight,
+            child: Opacity(
+              opacity: opacity,
+              child: buildFooter(constraints.maxHeight),
+            ),
+          ),
+        );
+
         return Column(
           children: [
             Container(
               height: constraints.maxHeight * _openingAnimation.value,
               alignment: Alignment.topCenter,
               child: Stack(
-                children: [
-                  Container(
-                      foregroundDecoration: BoxDecoration(
-                        gradient:
-                            buildGradient(opacity: _openingAnimation.value),
-                      ),
-                      child: image),
-                  ClipRect(
-                    child: OverflowBox(
-                      maxWidth: mediaQuery.size.width,
-                      maxHeight: constraints.maxHeight,
-                      child: Opacity(
-                        opacity: opacity,
-                        child: buildFooter(constraints.maxHeight),
-                      ),
-                    ),
-                  ),
-                ],
+                children: [maskedImage, maskedReaderMode],
               ),
             ),
             Expanded(

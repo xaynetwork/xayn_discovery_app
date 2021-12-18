@@ -10,13 +10,14 @@ import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/di
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 
-const BoxFit _kBoxFit = BoxFit.cover;
+const BoxFit _kImageBoxFit = BoxFit.cover;
 
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
   final Document document;
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
+  final BoxFit imageBoxFit;
 
   const DiscoveryCardBase({
     Key? key,
@@ -24,6 +25,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     required this.document,
     this.discoveryCardManager,
     this.imageManager,
+    this.imageBoxFit = _kImageBoxFit,
   }) : super(key: key);
 }
 
@@ -43,59 +45,13 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   String get snippet => webResource.snippet;
   String get title => webResource.title;
 
-  late bool _didFetchImage;
-
   @override
   void initState() {
     super.initState();
 
-    final discoveryCardManager = widget.discoveryCardManager;
-    final imageManager = widget.imageManager;
-
-    _didFetchImage = widget.imageManager != null;
-
-    if (discoveryCardManager == null) {
-      // here, the manager was _not_ passed via the Widget itself
-      // in this case, we request an instance from the DI,
-      // and we trigger the url change to load the underlying site
-      _discoveryCardManager = di.get()..updateUri(url);
-    } else {
-      // here, the manager was passed via the Widget itself.
-      // it already did load the underlying site, we just want that same
-      // state and have no need to call updateUri like above.
-      _discoveryCardManager = discoveryCardManager;
-    }
-
-    if (imageManager == null) {
-      // here, the manager was _not_ passed via the Widget itself
-      // so we create a new instance from the DI
-      _imageManager = di.get();
-    } else {
-      // here, the manager was passed via the Widget itself and already
-      // has the underlying image preloaded.
-      // we point to it so we can then just use its state here.
-      _imageManager = imageManager;
-    }
-
+    _discoveryCardManager = widget.discoveryCardManager ?? di.get();
+    _imageManager = widget.imageManager ?? di.get();
     _actionsManager = di.get();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (_didFetchImage) return;
-
-    _didFetchImage = true;
-
-    final mediaQuery = MediaQuery.of(context);
-
-    _imageManager.getImage(
-      Uri.parse(imageUrl),
-      width: mediaQuery.size.width.ceil(),
-      height: mediaQuery.size.height.ceil(),
-      fit: _kBoxFit,
-    );
   }
 
   @override
@@ -158,7 +114,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),
-      fit: _kBoxFit,
+      fit: widget.imageBoxFit,
       loadingBuilder: (context, progress) => backgroundPane,
       errorBuilder: (context) => Text('${Strings.cannotLoadUrlError}$imageUrl'),
     );
