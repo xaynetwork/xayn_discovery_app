@@ -32,14 +32,15 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     yield Progress.start(uri: param);
 
     final url = param.toString();
+    final redirectParams = await _detectRedirect(param);
     final response = await client.send(
       http.Request(
         CommonHttpRequestParams.httpRequestGet,
-        url,
+        redirectParams?.location ?? url,
         followRedirects: true,
         maxRedirects: CommonHttpRequestParams.httpRequestMaxRedirects,
         headers: headers,
-        cookies: await _detectCookies(param),
+        cookies: redirectParams?.cookies,
         timeout: CommonHttpRequestParams.httpRequestTimeout,
       ),
     );
@@ -57,8 +58,8 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     );
   }
 
-  Future<Map<String, String>?> _detectCookies(Uri param) async {
-    final url = param.toString();
+  Future<_LocationAndCookiesTuple?> _detectRedirect(Uri uri) async {
+    final url = uri.toString();
     final response = await client.send(
       http.Request(
         CommonHttpRequestParams.httpRequestOptions,
@@ -70,16 +71,23 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
       ),
     );
 
-    if (response.headers.containsKey('set-cookie')) {
+    if (response.statusCode == 302 &&
+        response.headers.containsKey('set-cookie')) {
       final serverCookies = response.headers['set-cookie']!;
-      final cookies = Map.fromEntries(serverCookies
-          .map((it) => it.split(';'))
-          .expand((it) => it)
-          .map((it) => it.split('='))
-          .where((it) => it.length == 2)
-          .map((it) => MapEntry(it.first, it.last)));
+      final location = response.headers['location'] ?? const <String>[];
+      final cookies = Map.fromEntries(
+        serverCookies
+            .map((it) => it.split(';'))
+            .expand((it) => it)
+            .map((it) => it.split('='))
+            .where((it) => it.length == 2)
+            .map((it) => MapEntry(it.first, it.last)),
+      );
 
-      return cookies;
+      return _LocationAndCookiesTuple(
+        location: location.isNotEmpty ? Uri.parse(location.last) : uri,
+        cookies: cookies,
+      );
     }
   }
 
@@ -117,4 +125,14 @@ class Progress {
     required this.uri,
     required this.html,
   }) : isCompleted = true;
+}
+
+class _LocationAndCookiesTuple {
+  final Uri location;
+  final Map<String, String> cookies;
+
+  const _LocationAndCookiesTuple({
+    required this.location,
+    required this.cookies,
+  });
 }

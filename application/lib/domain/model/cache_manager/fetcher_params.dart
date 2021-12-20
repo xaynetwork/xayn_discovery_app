@@ -35,25 +35,24 @@ class FetcherParams {
     this.cookies,
   });
 
-  FetcherParams copyWithUri(Uri uri) => FetcherParams(
-        uri: uri,
-        width: width,
-        height: height,
-        fit: fit,
-        blur: blur,
-        rotation: rotation,
-        tint: tint,
-        cookies: cookies,
-      );
-
-  FetcherParams copyWithCookies(Map<String, String> cookies) => FetcherParams(
-        uri: uri,
-        width: width,
-        height: height,
-        fit: fit,
-        blur: blur,
-        rotation: rotation,
-        tint: tint,
-        cookies: cookies,
+  FetcherParams copyWith({
+    Uri? uri,
+    int? width,
+    int? height,
+    String? fit,
+    int? blur,
+    int? rotation,
+    String? tint,
+    Map<String, String>? cookies,
+  }) =>
+      FetcherParams(
+        uri: uri ?? this.uri,
+        width: width ?? this.width,
+        height: height ?? this.height,
+        fit: fit ?? this.fit,
+        blur: blur ?? this.blur,
+        rotation: rotation ?? this.rotation,
+        tint: tint ?? this.tint,
+        cookies: cookies ?? this.cookies,
       );
 }
