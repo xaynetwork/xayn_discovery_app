@@ -1,18 +1,17 @@
 def keysProperties = new Properties()
 def keyPropertiesFile = rootProject.file('keys.properties')
 if (keyPropertiesFile.exists()) {
-    project.logger.info('Load maps properties from keys.properties')
     keyPropertiesFile.withReader('UTF-8') { reader ->
         keysProperties.load(reader)
     }
 } else {
-  project.logger.warn('Failed to load keys from keys.properties.', e)
+    throw new GradleException('Could not find keys.properties file.')
 }
 
 def instabugToken = keysProperties.getProperty('INSTABUG_TOKEN')
 if(instabugToken == null){
     instabugToken = "";
-    project.logger.error('Instabug Api Key is not configured. Set it in `keys.properties` or in the environment variable `INSTABUG_TOKEN`')
+    throw new GradleException('Instabug Api Key is not configured. Set it in `keys.properties` or in the environment variable `INSTABUG_TOKEN`')
 }
 
 def keystoreProperties = new Properties()
