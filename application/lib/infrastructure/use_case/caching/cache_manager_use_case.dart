@@ -1,15 +1,15 @@
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/cache_manager/cache_manager_event.dart';
+import 'package:xayn_discovery_app/domain/model/cache_manager/fetcher_params.dart';
 
-const Duration kStalePeriod = Duration(days: 1);
-const int kMaxNrOfCacheObjects = 200;
+const Duration _kStalePeriod = Duration(days: 1);
+const int _kMaxNrOfCacheObjects = 200;
 
 @injectable
-class CacheManagerUseCase extends UseCase<Uri, CacheManagerEvent> {
+class CacheManagerUseCase extends UseCase<FetcherParams, CacheManagerEvent> {
   final ImageCacheManager _cacheManager;
 
   @visibleForTesting
@@ -20,38 +20,21 @@ class CacheManagerUseCase extends UseCase<Uri, CacheManagerEvent> {
       : _cacheManager = AppImageCacheManager();
 
   @override
-  Stream<CacheManagerEvent> transaction(Uri param) async* {
-    yield* _cacheManager.getImageFile(param.toString()).asyncMap((it) async {
+  Stream<CacheManagerEvent> transaction(FetcherParams param) async* {
+    yield* _cacheManager
+        .getImageFile(param.uri.toString(), withProgress: true)
+        .asyncMap((it) async {
       if (it is FileInfo) {
-        return CacheManagerEvent.completed(param, await it.file.readAsBytes());
+        return CacheManagerEvent.completed(
+            param.uri, await it.file.readAsBytes());
       } else if (it is DownloadProgress) {
-        return CacheManagerEvent.progress(param, it.progress ?? .0);
+        return CacheManagerEvent.progress(param.uri, it.progress ?? .0);
       }
 
       throw CacheManagerError();
     });
   }
 }
-
-class CacheManagerEvent {
-  final Uri originalUri;
-  final double progress;
-  final Uint8List? bytes;
-
-  const CacheManagerEvent({
-    required this.originalUri,
-    required this.progress,
-    required this.bytes,
-  });
-
-  const CacheManagerEvent.progress(this.originalUri, this.progress)
-      : bytes = null;
-
-  const CacheManagerEvent.completed(this.originalUri, this.bytes)
-      : progress = 1.0;
-}
-
-class CacheManagerError extends Error {}
 
 class AppImageCacheManager extends CacheManager with ImageCacheManager {
   static const key = 'libAppCachedImageData';
@@ -64,7 +47,7 @@ class AppImageCacheManager extends CacheManager with ImageCacheManager {
   AppImageCacheManager._()
       : super(Config(
           key,
-          stalePeriod: kStalePeriod,
-          maxNrOfCacheObjects: kMaxNrOfCacheObjects,
+          stalePeriod: _kStalePeriod,
+          maxNrOfCacheObjects: _kMaxNrOfCacheObjects,
         ));
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
+import 'package:xayn_discovery_app/domain/model/cache_manager/fetcher_params.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/proxy_uri_use_case.dart';
 
 void main() {

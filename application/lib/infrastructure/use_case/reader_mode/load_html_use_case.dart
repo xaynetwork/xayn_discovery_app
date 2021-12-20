@@ -5,29 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_readability/xayn_readability.dart';
-
-const String kRequestMethod = 'GET';
-const String kUserAgent =
-    'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
-const Map<String, String> kHeaders = {
-  'accept': '*/*',
-  'accept-encoding': 'gzip',
-  'accept-language': '*',
-  'cache-control': 'no-cache',
-  'pragma': 'no-cache',
-  'upgrade-insecure-requests': '1',
-  'sec-ch-ua':
-      '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
-  'sec-ch-ua-mobile': '?0',
-  'sec-ch-ua-platform':
-      'Windows', // we just want the host to think we're a real browser, the value just needs to pass checks on their side, nothing more
-  'sec-fetch-dest': 'empty',
-  'sec-fetch-mode': 'cors',
-  'sec-fetch-site': 'cross-site',
-};
-const Duration kTimeout = Duration(seconds: 8);
-const int kMaxRedirects = 5;
+import 'package:xayn_discovery_app/domain/http_requests/common_params.dart';
+import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 
 /// A [UseCase] which uses a Platform-specific client to fetch the html
 /// contents at the Uri that was provided as input.
@@ -45,7 +24,8 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   });
 
   @factoryMethod
-  LoadHtmlUseCase.standard({required this.client}) : headers = kHeaders;
+  LoadHtmlUseCase.standard({required this.client})
+      : headers = CommonHttpRequestParams.httpRequestHeaders;
 
   @override
   Stream<Progress> transaction(Uri param) async* {
@@ -54,12 +34,13 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     final url = param.toString();
     final response = await client.send(
       http.Request(
-        kRequestMethod,
+        CommonHttpRequestParams.httpRequestGet,
         url,
         followRedirects: true,
-        maxRedirects: kMaxRedirects,
+        maxRedirects: CommonHttpRequestParams.httpRequestMaxRedirects,
         headers: headers,
-        timeout: kTimeout,
+        cookies: await _detectCookies(param),
+        timeout: CommonHttpRequestParams.httpRequestTimeout,
       ),
     );
 
@@ -74,6 +55,32 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
       html: body,
       uri: param,
     );
+  }
+
+  Future<Map<String, String>?> _detectCookies(Uri param) async {
+    final url = param.toString();
+    final response = await client.send(
+      http.Request(
+        CommonHttpRequestParams.httpRequestOptions,
+        url,
+        followRedirects: false,
+        maxRedirects: CommonHttpRequestParams.httpRequestMaxRedirects,
+        headers: headers,
+        timeout: CommonHttpRequestParams.httpRequestTimeout,
+      ),
+    );
+
+    if (response.headers.containsKey('set-cookie')) {
+      final serverCookies = response.headers['set-cookie']!;
+      final cookies = Map.fromEntries(serverCookies
+          .map((it) => it.split(';'))
+          .expand((it) => it)
+          .map((it) => it.split('='))
+          .where((it) => it.length == 2)
+          .map((it) => MapEntry(it.first, it.last)));
+
+      return cookies;
+    }
   }
 
   String _extractResponseBody(Object body) {
@@ -110,17 +117,4 @@ class Progress {
     required this.uri,
     required this.html,
   }) : isCompleted = true;
-}
-
-@injectable
-class Client implements http.Client {
-  final http.Client _client;
-
-  Client() : _client = createHttpClient(userAgent: kUserAgent);
-
-  @override
-  Future close({bool force = false}) => _client.close(force: force);
-
-  @override
-  Future<http.Response> send(http.Request request) => _client.send(request);
 }
