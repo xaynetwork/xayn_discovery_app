@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
@@ -24,21 +26,27 @@ class ResolveRedirectsUseCase extends UseCase<FetcherParams, FetcherParams> {
   @override
   Stream<FetcherParams> transaction(FetcherParams param) async* {
     final url = param.uri.toString();
-    final response = await client.send(
-      http.Request(
-        CommonHttpRequestParams.httpRequestOptions,
-        url,
-        followRedirects: false,
-        headers: headers,
-        timeout: CommonHttpRequestParams.httpRequestTimeout,
-      ),
-    );
+    var nextParam = param;
 
-    if (response.statusCode == 302 &&
-        response.headers.containsKey('set-cookie')) {
-      yield param.copyWith(canUseProxy: false);
-    } else {
-      yield param;
+    try {
+      final response = await client.send(
+        http.Request(
+          CommonHttpRequestParams.httpRequestOptions,
+          url,
+          followRedirects: true,
+          maxRedirects: CommonHttpRequestParams.httpRequestMaxRedirects,
+          headers: headers,
+          timeout: CommonHttpRequestParams.httpRequestTimeout,
+        ),
+      );
+
+      if (response.statusCode >= 300 && response.statusCode < 400) {
+        throw Exception('Redirection detected');
+      }
+    } catch (e) {
+      nextParam = param.copyWith(canUseProxy: false);
     }
+
+    yield nextParam;
   }
 }
