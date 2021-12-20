@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
@@ -21,7 +22,7 @@ class BugReportingService {
 
   _init() {
     //init method for Andriod is called natively from CustomFlutterApplication class
-    _initiOS(kInstabugToken, kInstabugInvocationEvents);
+    if (Platform.isIOS) _initiOS(kInstabugToken, kInstabugInvocationEvents);
     Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
     Instabug.setSdkDebugLogsLevel(IBGSDKDebugLogsLevel.error);
   }
