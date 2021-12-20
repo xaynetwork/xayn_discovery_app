@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/temp_search_bar.dart';
@@ -66,6 +66,7 @@ class _ActiveSearchState extends State<ActiveSearch> {
           itemBuilder: _itemBuilder(results, true),
           secondaryItemBuilder: _itemBuilder(results, false),
           itemCount: results.length,
+          isFullScreen: false,
         );
       },
     );
@@ -92,7 +93,7 @@ class _ActiveSearchState extends State<ActiveSearch> {
           horizontal: R.dimen.unit,
           vertical: R.dimen.unit0_5,
         ),
-        child: DiscoveryCard(
+        child: DiscoveryFeedCard(
           isPrimary: isPrimary,
           document: document,
         ),

@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'app_settings.freezed.dart';

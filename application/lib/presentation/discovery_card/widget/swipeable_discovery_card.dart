@@ -3,12 +3,10 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 
 const kSwipeOpenToPosition = 0.35;
 
@@ -24,7 +22,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   }) : super(key: key);
 
   final Document document;
-  final DiscoveryCard card;
+  final Widget card;
   final bool isPrimary;
   final bool isSwipingEnabled;
 

@@ -76,7 +76,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         onBoardingPageData: _onBoardingPagesData[index],
       ),
       itemCount: _onBoardingPagesData.length,
-      onPageChanged: _onBoardingManager.onPageChanged,
+      onPageChanged: _onPageChanged,
       physics: const NeverScrollableScrollPhysics(),
     );
 
@@ -93,9 +93,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       children: [
         GestureDetector(
           key: Keys.onBoardingPageTapDetector,
-          onTap: () => _onPageTap(
-            pageController: _pageController,
-          ),
+          onTap: _onPageTap,
           child: pageView,
         ),
         Positioned(
@@ -122,24 +120,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         error: (_) => false,
       );
 
-  void _onPageTap({
-    required PageController pageController,
-  }) async {
+  void _onPageTap() async {
+    final nextPageIndex = _pageController.page!.toInt() + 1;
+    _pageController.animateToPage(
+      nextPageIndex,
+      duration: kPageSwitchAnimationDuration,
+      curve: kPageSwitchAnimationCurve,
+    );
+  }
+
+  void _onPageChanged(int newIndex) async {
+    _onBoardingManager.onPageChanged(newIndex);
     final lastPageIndex = _onBoardingPagesData.last.index;
 
-    if (pageController.hasClients) {
-      final currentPageIndex = pageController.page?.toInt() ?? 0;
-      if (currentPageIndex == lastPageIndex) {
-        await _onBoardingManager.onOnBoardingCompleted(currentPageIndex);
-        return;
-      }
-
-      final nextPageIndex = currentPageIndex + 1;
-      pageController.animateToPage(
-        nextPageIndex,
-        duration: kPageSwitchAnimationDuration,
-        curve: kPageSwitchAnimationCurve,
-      );
+    if (newIndex == lastPageIndex) {
+      _onBoardingManager.onOnBoardingCompleted(newIndex);
     }
   }
 }

@@ -14,6 +14,7 @@ dependencies:
 
   amplitude_flutter: ^3.8.0
   connectivity_plus: ^2.0.3
+  equatable: 2.0.3
   envify: ^2.0.0
   get_it: ^7.0.0
   flutter_bloc: ^7.3.1
@@ -48,7 +49,7 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: ae0a714239d4e6d3a9d13071e380c2bd0498fde4
+      ref: c3e1d643ac6110c9ac3fe8220d0e1102281fc6ab
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
@@ -62,10 +63,7 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
       ref: b1c53eb8013d654dc92798f534471da3c4a01dd8
-  xayn_swipe_it:
-    git:
-      url: git@github.com:xaynetwork/xayn_swipe_it.git
-      ref: 671a8a74a8df20066f05048c4f156780fe8b4f52
+  xayn_swipe_it: ^1.0.0
 
 # Please list dependencies alphabetically!
 dev_dependencies:

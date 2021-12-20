@@ -18,6 +18,7 @@ class CachedImage extends StatefulWidget {
   final int? width;
   final int? height;
   final BoxFit? fit;
+  final ImageManager? imageManager;
 
   const CachedImage({
     Key? key,
@@ -27,6 +28,7 @@ class CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.fit,
+    this.imageManager,
   }) : super(key: key);
 
   @override
@@ -38,15 +40,32 @@ class _CachedImageState extends State<CachedImage> {
 
   @override
   void initState() {
-    _imageManager = di.get();
-    _imageManager.getImage(
-      widget.uri,
-      width: widget.width,
-      height: widget.height,
-      fit: widget.fit,
-    );
-
     super.initState();
+
+    final imageManager = widget.imageManager;
+
+    if (imageManager == null) {
+      _imageManager = di.get()
+        ..getImage(
+          widget.uri,
+          width: widget.width,
+          height: widget.height,
+          fit: widget.fit,
+        );
+    } else {
+      _imageManager = imageManager;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // if the imageManager was created locally, then close it,
+    // otherwise let the owner take care of it.
+    if (widget.imageManager != null) {
+      _imageManager.close();
+    }
   }
 
   @override
@@ -64,13 +83,6 @@ class _CachedImageState extends State<CachedImage> {
     }
 
     super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    _imageManager.close();
-
-    super.dispose();
   }
 
   @override
