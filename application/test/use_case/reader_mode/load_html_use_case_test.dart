@@ -32,7 +32,7 @@ void main() {
       'Yahoo is part of the Yahoo family of brands.';
 
   setUp(() {
-    when(client.send(any)).thenAnswer(
+    when(client.sendWithRedirectGuard(any)).thenAnswer(
       (_) async => http.Response(
         200,
         '',
