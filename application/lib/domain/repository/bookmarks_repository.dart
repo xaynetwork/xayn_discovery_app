@@ -5,6 +5,8 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 abstract class BookmarksRepository {
   set bookmark(Bookmark bookmark);
   List<Bookmark> getAll();
+  Bookmark? getById(UniqueId id);
+  List<Bookmark> getByCollectionId(UniqueId collectionId);
   void remove(Bookmark bookmark);
   void removeAllByCollectionId(UniqueId collectionId);
   Stream<RepositoryEvent> watch({UniqueId id});

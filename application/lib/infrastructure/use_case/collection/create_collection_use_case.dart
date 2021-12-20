@@ -12,9 +12,13 @@ class CreateCollectionUseCase extends UseCase<String, Collection> {
 
   @override
   Stream<Collection> transaction(String param) async* {
-    final collectionIndex = _collectionsRepository.getAll().last.index + 1;
-    final collection =
-        Collection(id: UniqueId(), name: param, index: collectionIndex);
+    final collectionIndex = _collectionsRepository.getLastCollectionIndex() + 1;
+    final collection = Collection(
+      id: UniqueId(),
+      name: param,
+      index: collectionIndex,
+    );
+
     _collectionsRepository.collection = collection;
     yield collection;
   }
