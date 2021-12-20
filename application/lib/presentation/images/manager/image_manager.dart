@@ -91,9 +91,9 @@ class ImageManager extends Cubit<ImageManagerState>
   void _initHandlers() {
     _imageFromCacheHandler = pipe(_resolveRedirectsUseCase).transform(
       (out) => out.switchMap(
-        (it) => it.cookies != null
-            ? _directUriUseCase.transaction(it)
-            : _proxyUriUseCase.transaction(it).followedBy(_cacheManagerUseCase),
+        (it) => it.canUseProxy
+            ? _proxyUriUseCase.transaction(it).followedBy(_cacheManagerUseCase)
+            : _directUriUseCase.transaction(it),
       ),
     );
   }

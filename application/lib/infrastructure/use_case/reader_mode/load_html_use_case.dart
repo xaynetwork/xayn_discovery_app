@@ -32,15 +32,12 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     yield Progress.start(uri: param);
 
     final url = param.toString();
-    final redirectParams = await _detectRedirect(param);
-    final response = await client.send(
+    final response = await client.sendWithRedirectGuard(
       http.Request(
         CommonHttpRequestParams.httpRequestGet,
-        redirectParams?.location ?? url,
-        followRedirects: true,
-        maxRedirects: CommonHttpRequestParams.httpRequestMaxRedirects,
+        url,
+        followRedirects: false,
         headers: headers,
-        cookies: redirectParams?.cookies,
         timeout: CommonHttpRequestParams.httpRequestTimeout,
       ),
     );
@@ -56,39 +53,6 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
       html: body,
       uri: param,
     );
-  }
-
-  Future<_LocationAndCookiesTuple?> _detectRedirect(Uri uri) async {
-    final url = uri.toString();
-    final response = await client.send(
-      http.Request(
-        CommonHttpRequestParams.httpRequestOptions,
-        url,
-        followRedirects: false,
-        maxRedirects: CommonHttpRequestParams.httpRequestMaxRedirects,
-        headers: headers,
-        timeout: CommonHttpRequestParams.httpRequestTimeout,
-      ),
-    );
-
-    if (response.statusCode == 302 &&
-        response.headers.containsKey('set-cookie')) {
-      final serverCookies = response.headers['set-cookie']!;
-      final location = response.headers['location'] ?? const <String>[];
-      final cookies = Map.fromEntries(
-        serverCookies
-            .map((it) => it.split(';'))
-            .expand((it) => it)
-            .map((it) => it.split('='))
-            .where((it) => it.length == 2)
-            .map((it) => MapEntry(it.first, it.last)),
-      );
-
-      return _LocationAndCookiesTuple(
-        location: location.isNotEmpty ? Uri.parse(location.last) : uri,
-        cookies: cookies,
-      );
-    }
   }
 
   String _extractResponseBody(Object body) {
@@ -125,14 +89,4 @@ class Progress {
     required this.uri,
     required this.html,
   }) : isCompleted = true;
-}
-
-class _LocationAndCookiesTuple {
-  final Uri location;
-  final Map<String, String> cookies;
-
-  const _LocationAndCookiesTuple({
-    required this.location,
-    required this.cookies,
-  });
 }
