@@ -44,7 +44,6 @@ class BugReportingService {
   ColorTheme _getTheme(Brightness brightness) =>
       brightness == Brightness.dark ? ColorTheme.dark : ColorTheme.light;
 
-  void reportCrash(Object error, StackTrace stackTrace) {
-    CrashReporting.reportCrash(error, stackTrace);
-  }
+  void reportCrash(Object error, StackTrace stackTrace) =>
+      CrashReporting.reportCrash(error, stackTrace);
 }
