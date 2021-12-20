@@ -4,7 +4,7 @@ gradle-wrapper.jar
 /gradlew
 /gradlew.bat
 /local.properties
-/key.properties
+/keys.properties
 GeneratedPluginRegistrant.java
 
 # Remember to never publicly share your keystore.

@@ -1,18 +1,18 @@
-def keyProperties = new Properties()
-def keyPropertiesFile = rootProject.file('key.properties')
+def keysProperties = new Properties()
+def keyPropertiesFile = rootProject.file('keys.properties')
 if (keyPropertiesFile.exists()) {
-    project.logger.info('Load maps properties from key.properties')
+    project.logger.info('Load maps properties from keys.properties')
     keyPropertiesFile.withReader('UTF-8') { reader ->
-        keyProperties.load(reader)
+        keysProperties.load(reader)
     }
 } else {
-  project.logger.warn('Failed to load keys from key.properties.', e)
+  project.logger.warn('Failed to load keys from keys.properties.', e)
 }
 
-def instabugToken = keyProperties.getProperty('INSTABUG_TOKEN')
+def instabugToken = keysProperties.getProperty('INSTABUG_TOKEN')
 if(instabugToken == null){
     instabugToken = "";
-    project.logger.error('Instabug Api Key is not configured. Set it in `key.properties` or in the environment variable `INSTABUG_TOKEN`')
+    project.logger.error('Instabug Api Key is not configured. Set it in `keys.properties` or in the environment variable `INSTABUG_TOKEN`')
 }
 
 def keystoreProperties = new Properties()

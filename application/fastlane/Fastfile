@@ -191,7 +191,7 @@ def writeEnvFile(file, searchApiKey, instabugToken, amplitudeApiKey, searchApiUr
     :INSTABUG_TOKEN => instabugToken,
     :AMPLITUDE_API_KEY => amplitudeApiKey,
   })
-  writeProperties("../android/key.properties", {
+  writeProperties("../android/keys.properties", {
     :INSTABUG_TOKEN => instabugToken,
   })
 end
