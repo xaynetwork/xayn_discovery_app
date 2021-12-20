@@ -53,8 +53,8 @@ class ProxyUriUseCase extends UseCase<FetcherParams, FetcherParams> {
         queryParameters.putIfAbsent('tint', () => param.tint.toString());
       }
 
-      yield param.copyWithUri(
-          fetcherUri.replace(path: '/', queryParameters: queryParameters));
+      yield param.copyWith(
+          uri: fetcherUri.replace(path: '/', queryParameters: queryParameters));
     }
   }
 }
