@@ -27,13 +27,12 @@ class DirectUriUseCase extends UseCase<FetcherParams, CacheManagerEvent> {
   @override
   Stream<CacheManagerEvent> transaction(FetcherParams param) async* {
     final url = param.uri.toString();
-    final response = await client.send(
+    final response = await client.sendWithRedirectGuard(
       http.Request(
         CommonHttpRequestParams.httpRequestGet,
         url,
         followRedirects: false,
         headers: headers,
-        cookies: param.cookies,
         timeout: CommonHttpRequestParams.httpRequestTimeout,
       ),
     );

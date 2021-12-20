@@ -21,7 +21,8 @@ class FetcherParams {
   /// image tint overlay eg: red
   final String? tint;
 
-  final Map<String, String>? cookies;
+  /// whether or not we can use our image fetcher proxy
+  final bool canUseProxy;
 
   /// Creates new parameters for fetching an image via a proxy.
   const FetcherParams({
@@ -32,7 +33,7 @@ class FetcherParams {
     this.blur,
     this.rotation,
     this.tint,
-    this.cookies,
+    this.canUseProxy = true,
   });
 
   FetcherParams copyWith({
@@ -43,7 +44,7 @@ class FetcherParams {
     int? blur,
     int? rotation,
     String? tint,
-    Map<String, String>? cookies,
+    bool? canUseProxy,
   }) =>
       FetcherParams(
         uri: uri ?? this.uri,
@@ -53,6 +54,6 @@ class FetcherParams {
         blur: blur ?? this.blur,
         rotation: rotation ?? this.rotation,
         tint: tint ?? this.tint,
-        cookies: cookies ?? this.cookies,
+        canUseProxy: canUseProxy ?? this.canUseProxy,
       );
 }

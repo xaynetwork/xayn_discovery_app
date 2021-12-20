@@ -36,20 +36,7 @@ class ResolveRedirectsUseCase extends UseCase<FetcherParams, FetcherParams> {
 
     if (response.statusCode == 302 &&
         response.headers.containsKey('set-cookie')) {
-      final serverCookies = response.headers['set-cookie']!;
-      final location = response.headers['location'] ?? const <String>[];
-      final cookies = Map.fromEntries(
-        serverCookies
-            .map((it) => it.split(';'))
-            .expand((it) => it)
-            .map((it) => it.split('='))
-            .where((it) => it.length == 2)
-            .map((it) => MapEntry(it.first, it.last)),
-      );
-
-      yield param.copyWith(
-          uri: location.isNotEmpty ? Uri.parse(location.last) : param.uri,
-          cookies: cookies);
+      yield param.copyWith(canUseProxy: false);
     } else {
       yield param;
     }
