@@ -93,13 +93,15 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            buildConfigField 'String', 'INSTABUG_TOKEN', "\"${instabugToken}\""
         }
 
         debug {
             signingConfig signingConfigs.debug
-            buildConfigField 'String', 'INSTABUG_TOKEN', instabugToken
         }
+    }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'INSTABUG_TOKEN', "\"${instabugToken}\""
     }
 }
 
