@@ -1,9 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/cache_manager/cache_manager_event.dart';
+import 'package:xayn_discovery_app/domain/model/cache_manager/fetcher_params.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/caching/cache_manager_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/proxy_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/resolve_redirects_use_case.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
 
 @injectable
@@ -11,14 +16,20 @@ class ImageManager extends Cubit<ImageManagerState>
     with UseCaseBlocHelper<ImageManagerState> {
   final ProxyUriUseCase _proxyUriUseCase;
   final CacheManagerUseCase _cacheManagerUseCase;
+  final ResolveRedirectsUseCase _resolveRedirectsUseCase;
+  final DirectUriUseCase _directUriUseCase;
 
   late final UseCaseSink<FetcherParams, CacheManagerEvent>
       _imageFromCacheHandler;
 
   Uri? _lastUri;
 
-  ImageManager(this._proxyUriUseCase, this._cacheManagerUseCase)
-      : super(ImageManagerState.initial()) {
+  ImageManager(
+    this._proxyUriUseCase,
+    this._cacheManagerUseCase,
+    this._resolveRedirectsUseCase,
+    this._directUriUseCase,
+  ) : super(ImageManagerState.initial()) {
     _initHandlers();
   }
 
@@ -78,7 +89,12 @@ class ImageManager extends Cubit<ImageManagerState>
       });
 
   void _initHandlers() {
-    _imageFromCacheHandler = pipe(_proxyUriUseCase)
-        .transform((out) => out.followedBy(_cacheManagerUseCase));
+    _imageFromCacheHandler = pipe(_resolveRedirectsUseCase).transform(
+      (out) => out.switchMap(
+        (it) => it.cookies != null
+            ? _directUriUseCase.transaction(it)
+            : _proxyUriUseCase.transaction(it).followedBy(_cacheManagerUseCase),
+      ),
+    );
   }
 }
