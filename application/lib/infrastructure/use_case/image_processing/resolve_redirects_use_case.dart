@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
