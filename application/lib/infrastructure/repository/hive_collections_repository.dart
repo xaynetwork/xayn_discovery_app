@@ -24,4 +24,14 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
 
   @override
   set collection(Collection collection) => entity = collection;
+
+  @override
+  List<Collection> getAll() {
+    final values = super.getAll();
+    values.sort((a, b) => a.index.compareTo(b.index));
+    return values;
+  }
+
+  @override
+  int getLastCollectionIndex() => getAll().last.index;
 }
