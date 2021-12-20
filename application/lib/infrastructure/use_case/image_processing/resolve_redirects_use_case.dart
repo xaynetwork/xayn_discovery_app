@@ -34,8 +34,10 @@ class ResolveRedirectsUseCase extends UseCase<FetcherParams, FetcherParams> {
       ),
     );
 
-    if (response.headers.containsKey('set-cookie')) {
+    if (response.statusCode == 302 &&
+        response.headers.containsKey('set-cookie')) {
       final serverCookies = response.headers['set-cookie']!;
+      final location = response.headers['location'] ?? const <String>[];
       final cookies = Map.fromEntries(
         serverCookies
             .map((it) => it.split(';'))
@@ -45,7 +47,9 @@ class ResolveRedirectsUseCase extends UseCase<FetcherParams, FetcherParams> {
             .map((it) => MapEntry(it.first, it.last)),
       );
 
-      yield param.copyWithCookies(cookies);
+      yield param.copyWith(
+          uri: location.isNotEmpty ? Uri.parse(location.last) : param.uri,
+          cookies: cookies);
     } else {
       yield param;
     }
