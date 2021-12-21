@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -14,7 +15,7 @@ const double kDragThreshold = 200.0;
 const Duration kSnapBackDuration = Duration(milliseconds: 450);
 const Duration kOpenCardDuration = Duration(milliseconds: 1000);
 const Curve kSnapBackCurve = Curves.elasticOut;
-const double kMinImageFractionSize = .2;
+const double kMinImageFractionSize = .4;
 
 typedef DragCallback = void Function(double);
 typedef AnimationControllerBuilder = AnimationController Function();
@@ -65,6 +66,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final AnimationController _openingAnimation;
   late final DragBackRecognizer _recognizer;
   late final DragCallback _onDrag;
+  double _scrollOffset = .0;
 
   @override
   void initState() {
@@ -84,9 +86,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     )..value = 1.0;
 
     _openingAnimation.addListener(() {
-      setState(() {
-        // we rebuild so that the value from _openingAnimation is preocessed
-      });
+      setState(() {});
     });
 
     _recognizer = DragBackRecognizer(
@@ -112,25 +112,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
     final mediaQuery = MediaQuery.of(context);
-    final opacity = (_openingAnimation.value - kMinImageFractionSize) /
+    // normalize the animation value to [0.0, 1.0]
+    final normalizedValue = (_openingAnimation.value - kMinImageFractionSize) /
         (1.0 - kMinImageFractionSize);
-
-    buildFooter(double? maxHeight) => OverflowBox(
-          maxWidth: mediaQuery.size.width,
-          maxHeight: maxHeight,
-          child: Opacity(
-              opacity: opacity,
-              child: DiscoveryCardFooter(
-                title: webResource.title,
-                url: webResource.url,
-                provider: webResource.provider,
-                datePublished: webResource.datePublished,
-                onLikePressed: () =>
-                    actionsManager.likeDocument(widget.document),
-                onDislikePressed: () =>
-                    actionsManager.dislikeDocument(widget.document),
-              )),
-        );
 
     final readerMode = BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
       bloc: discoveryCardManager,
@@ -144,10 +128,17 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
               snippet: snippet,
               imageUri: Uri.parse(imageUrl),
               processHtmlResult: state.result,
+              padding: EdgeInsets.only(
+                left: R.dimen.unit2,
+                right: R.dimen.unit2,
+                bottom: R.dimen.unit2,
+                top: mediaQuery.size.height * kMinImageFractionSize,
+              ),
               onProcessedHtml: () => _openingAnimation.animateTo(
                 kMinImageFractionSize,
                 curve: Curves.fastOutSlowIn,
               ),
+              onScroll: (position) => setState(() => _scrollOffset = position),
             ),
           ),
         );
@@ -156,41 +147,37 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
-        final maskedImage = ClipRect(
-          child: OverflowBox(
-            maxWidth: constraints.maxWidth,
-            maxHeight: constraints.maxHeight,
-            alignment: Alignment.topCenter,
-            child: Container(
-              foregroundDecoration: BoxDecoration(
-                gradient: buildGradient(opacity: _openingAnimation.value),
-              ),
-              child: image,
-            ),
+        final maskedImage = Container(
+          foregroundDecoration: BoxDecoration(
+            gradient: buildGradient(opacity: _openingAnimation.value),
           ),
+          child: image,
         );
-        final maskedReaderMode = ClipRect(
-          child: OverflowBox(
-            maxWidth: mediaQuery.size.width,
-            maxHeight: constraints.maxHeight,
-            child: Opacity(
-              opacity: opacity,
-              child: buildFooter(constraints.maxHeight),
-            ),
-          ),
+        final maskedReaderMode = DiscoveryCardFooter(
+          title: webResource.title,
+          url: webResource.url,
+          provider: webResource.provider,
+          datePublished: webResource.datePublished,
+          onLikePressed: () => actionsManager.likeDocument(widget.document),
+          onDislikePressed: () =>
+              actionsManager.dislikeDocument(widget.document),
+          fractionSize: normalizedValue,
         );
 
-        return Column(
+        return Stack(
           children: [
-            Container(
-              height: constraints.maxHeight * _openingAnimation.value,
-              alignment: Alignment.topCenter,
-              child: Stack(
-                children: [maskedImage, maskedReaderMode],
+            Positioned.fill(child: readerMode),
+            Positioned(
+              top: -_scrollOffset * (1.0 - normalizedValue),
+              left: 0,
+              right: 0,
+              child: Container(
+                height: constraints.maxHeight * _openingAnimation.value,
+                alignment: Alignment.topCenter,
+                child: Stack(
+                  children: [maskedImage, maskedReaderMode],
+                ),
               ),
-            ),
-            Expanded(
-              child: readerMode,
             ),
           ],
         );
