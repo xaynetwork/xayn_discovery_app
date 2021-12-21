@@ -1,8 +1,12 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+
+import 'collection_exception.dart';
 
 @injectable
 class RemoveCollectionUseCase
@@ -17,11 +21,22 @@ class RemoveCollectionUseCase
 
   @override
   Stream<None> transaction(RemoveCollectionUseCaseParam param) async* {
+    /// Check if we're trying to delete the default collection
+    if (param.collectionIdToRemove == Collection.readLaterId) {
+      logger.e(errorMessageRemovingExistingDefaultCollection);
+      throw CollectionUseCaseException(
+        errorMessageRemovingExistingDefaultCollection,
+      );
+    }
+
+    /// Check that the collection exists
     final collection =
         _collectionsRepository.getById(param.collectionIdToRemove);
     if (collection == null) {
-      yield none;
-      return;
+      logger.e(errorMessageRemovingNotExistingCollection);
+      throw CollectionUseCaseException(
+        errorMessageRemovingNotExistingCollection,
+      );
     }
 
     /// Check if the bookmarks must be deleted or moved to a different collection
