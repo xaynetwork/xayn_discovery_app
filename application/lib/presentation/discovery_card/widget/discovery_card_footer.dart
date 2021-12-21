@@ -18,6 +18,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     this.provider,
     required this.onLikePressed,
     required this.onDislikePressed,
+    this.fractionSize = 1.0,
   }) : super(key: key);
   final String title;
   final Uri url;
@@ -25,6 +26,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final DateTime datePublished;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
+  final double fractionSize;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     final titleWidget = Text(
       title,
       style: R.styles.appScreenHeadline?.copyWith(color: Colors.white),
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
     );
@@ -49,23 +51,27 @@ class DiscoveryCardFooter extends StatelessWidget {
       datePublished: datePublished,
     );
 
-    final footerColumn = Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        titleWidget,
-        SizedBox(height: R.dimen.unit2),
-        if (provider != null) faviconRow,
-        SizedBox(height: R.dimen.unit2),
-        actionButtonRow,
-        SizedBox(height: R.dimen.unit7),
-      ],
+    final footerColumn = Padding(
+      padding: EdgeInsets.all(R.dimen.unit3),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (provider != null) faviconRow,
+          Expanded(child: Container()),
+          titleWidget,
+          ClipRRect(
+            child: SizedBox(
+              width: double.infinity,
+              height: R.dimen.unit5 * fractionSize,
+              child: actionButtonRow,
+            ),
+          ),
+        ],
+      ),
     );
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
-      child: footerColumn,
-    );
+    return footerColumn;
   }
 }
 
@@ -111,6 +117,8 @@ class _ButtonRowFooter extends StatelessWidget {
     );
 
     return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
       spacing: R.dimen.unit4,
       children: [
         likeButton,

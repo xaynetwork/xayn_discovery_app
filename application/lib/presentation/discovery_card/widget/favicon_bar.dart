@@ -20,35 +20,35 @@ class FaviconBar extends StatelessWidget {
         ? Icon(Icons.web, color: R.colors.iconNew)
         : Image.network(
             provider.thumbnail!,
-            width: R.dimen.iconSize,
-            height: R.dimen.iconSize,
+            width: R.dimen.unit3,
+            height: R.dimen.unit3,
           );
 
-    return Center(
-      child: Wrap(
-        spacing: R.dimen.unit0_75,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(R.dimen.unit0_5),
-            child: favicon,
-          ),
-          Text(
-            provider.name,
-            style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
-          ),
-          Text(
-            '•',
-            style:
-                R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
-          ),
-          Text(
-            timeAgo(datePublished, DateFormat.yMMMMd()),
-            style:
-                R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(R.dimen.unit0_5),
+          child: favicon,
+        ),
+        SizedBox(
+          width: R.dimen.unit,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              provider.name,
+              style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
+            ),
+            Text(
+              timeAgo(datePublished, DateFormat.yMMMMd()),
+              style:
+                  R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
+            ),
+          ],
+        )
+      ],
     );
   }
 }

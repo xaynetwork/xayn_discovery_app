@@ -95,10 +95,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
         colors: [
-          R.colors.swipeCardBackground.withAlpha((120.0 * opacity).floor()),
-          R.colors.swipeCardBackground.withAlpha((40.0 * opacity).floor()),
-          R.colors.swipeCardBackground.withAlpha((255.0 * opacity).floor()),
-          R.colors.swipeCardBackground.withAlpha((255.0 * opacity).floor()),
+          R.colors.swipeCardBackground.withAlpha(120),
+          R.colors.swipeCardBackground.withAlpha(40),
+          R.colors.swipeCardBackground
+              .withAlpha(127 + (128.0 * opacity).floor()),
+          R.colors.swipeCardBackground
+              .withAlpha(127 + (128.0 * opacity).floor()),
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
