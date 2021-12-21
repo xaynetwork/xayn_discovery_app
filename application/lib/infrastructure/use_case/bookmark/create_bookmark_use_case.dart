@@ -7,12 +7,13 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 
 @injectable
-class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseParam, None> {
+class CreateBookmarkUseCase
+    extends UseCase<CreateBookmarkUseCaseParam, Bookmark> {
   final BookmarksRepository _bookmarksRepository;
 
   CreateBookmarkUseCase(this._bookmarksRepository);
   @override
-  Stream<None> transaction(CreateBookmarkUseCaseParam param) async* {
+  Stream<Bookmark> transaction(CreateBookmarkUseCaseParam param) async* {
     final bookmark = Bookmark(
       id: UniqueId(),
       collectionId: param.collectionId,
@@ -23,7 +24,7 @@ class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseParam, None> {
       createdAt: DateTime.now().toUtc().toString(),
     );
     _bookmarksRepository.bookmark = bookmark;
-    yield none;
+    yield bookmark;
   }
 }
 

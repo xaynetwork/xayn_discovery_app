@@ -5,6 +5,9 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+
+import 'bookmark_exception.dart';
 
 @injectable
 class ListenBookmarksUseCase extends UseCase<UniqueId, List<Bookmark>> {
@@ -19,6 +22,7 @@ class ListenBookmarksUseCase extends UseCase<UniqueId, List<Bookmark>> {
         StreamTransformer.fromHandlers(
           handleData: (final Bookmark? bookmark, EventSink sink) {
             if (bookmark == null || bookmark.collectionId != param) {
+              logger.e(errorMessageListeningNullOrWrongBookmark);
               return;
             }
             final bookmarks = _bookmarksRepository.getByCollectionId(param);
