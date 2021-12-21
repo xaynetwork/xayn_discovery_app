@@ -2,28 +2,39 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+
+import 'collection_exception.dart';
 
 @injectable
-class CreateDefaultCollectionUseCase extends UseCase<String, None> {
+class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
   final CollectionsRepository _collectionsRepository;
 
   CreateDefaultCollectionUseCase(this._collectionsRepository);
   @override
-  Stream<None> transaction(String param) async* {
+  Stream<Collection> transaction(String param) async* {
     assert(
-        param.isNotEmpty, 'The name of the default collection cannot be empty');
+      param.isNotEmpty,
+      errorMessageCollectionNameEmpty,
+    );
 
     final collections = _collectionsRepository.getAll();
 
-    /// Check that the default collection doesn't already exist.
+    /// Check if the default collection already exists.
     if (collections
         .where(
           (element) => element.id == Collection.readLaterId,
         )
-        .isEmpty) {
-      final collection = Collection.readLater(name: param);
-      _collectionsRepository.collection = collection;
+        .isNotEmpty) {
+      logger.e(errorMessageCreatingExistingDefaultCollection);
+      throw CollectionUseCaseException(
+        errorMessageCreatingExistingDefaultCollection,
+      );
     }
-    yield none;
+
+    final collection = Collection.readLater(name: param);
+    _collectionsRepository.collection = collection;
+
+    yield collection;
   }
 }
