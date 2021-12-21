@@ -22,7 +22,7 @@ class Client implements http.Client {
     final response = await send(request);
 
     // test if in redirect status code range
-    if (response.statusCode >= 300 && response.statusCode < 400) {
+    if (response.isRedirect) {
       final location = _getNextLocation(response, request.uri);
 
       logger.i(
@@ -37,7 +37,7 @@ class Client implements http.Client {
 
         return await send(request.change(
           uri: location,
-          cookies: _getCookiesToSet(response),
+          cookies: _getCookiesToSet(response.headers['set-cookie']!),
         ));
       }
 
@@ -54,19 +54,21 @@ class Client implements http.Client {
             .toList() ??
         const <String>[];
     final locations = response.headers['location'] ?? redirects;
+
     return locations.isNotEmpty ? Uri.parse(locations.last) : originalUri;
   }
 
-  Map<String, String> _getCookiesToSet(http.Response response) {
-    final cookies = response.headers['set-cookie']!;
+  Map<String, String> _getCookiesToSet(List<String> rawCookies) =>
+      Map.fromEntries(
+        rawCookies
+            .map((it) => it.split(';'))
+            .expand((it) => it)
+            .map((it) => it.split('='))
+            .where((it) => it.length == 2)
+            .map((it) => MapEntry(it.first, it.last)),
+      );
+}
 
-    return Map.fromEntries(
-      cookies
-          .map((it) => it.split(';'))
-          .expand((it) => it)
-          .map((it) => it.split('='))
-          .where((it) => it.length == 2)
-          .map((it) => MapEntry(it.first, it.last)),
-    );
-  }
+extension _IsRedirectExtension on http.Response {
+  bool get isRedirect => statusCode >= 300 && statusCode < 400;
 }
