@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -10,6 +11,21 @@ import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_scr
 
 import 'onboarding_screen_widget_test.mocks.dart';
 
+void packageInfoMock() {
+  const MethodChannel('dev.fluttercommunity.plus/package_info')
+      .setMockMethodCallHandler((MethodCall methodCall) async {
+    if (methodCall.method == 'getAll') {
+      return <String, dynamic>{
+        // 'appName': 'ABC',
+        // 'packageName': 'A.B.C', // <--- set initial values here
+        // 'version': '1.0.0', // <--- set initial values here
+        // 'buildNumber': '' // <--- set initial values here
+      };
+    }
+    return null;
+  });
+}
+
 @GenerateMocks([OnBoardingManager])
 void main() {
   late MockOnBoardingManager manager;
@@ -19,7 +35,8 @@ void main() {
   Finder getPageThree() => find.byKey(Keys.onBoardingPageThree);
   Finder getTapDetector() => find.byKey(Keys.onBoardingPageTapDetector);
 
-  setUpAll(() async {
+  setUpAll(() {
+    packageInfoMock();
     manager = MockOnBoardingManager();
     configureDependencies();
     di
