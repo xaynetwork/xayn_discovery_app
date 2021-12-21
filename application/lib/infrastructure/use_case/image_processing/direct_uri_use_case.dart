@@ -9,6 +9,8 @@ import 'package:xayn_discovery_app/domain/model/cache_manager/cache_manager_even
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/domain/model/cache_manager/fetcher_params.dart';
 
+/// A use case which calls an endpoint directly,
+/// as opposed to calling it via a proxy, such as the image fetcher for example.
 @injectable
 class DirectUriUseCase extends UseCase<FetcherParams, CacheManagerEvent> {
   final Client client;
