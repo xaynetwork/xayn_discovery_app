@@ -25,13 +25,9 @@ class HiveBookmarksRepository extends HiveRepository<Bookmark>
 
   @override
   void removeAllByCollectionId(UniqueId collectionId) {
-    final values = getAll();
-    final idsToRemove =
-        values.where((it) => it.collectionId == collectionId).map(
-              (it) => it.id,
-            );
+    final idsToRemove = getByCollectionId(collectionId).map((it) => it.id);
 
-    return removeAll(idsToRemove);
+    removeAll(idsToRemove);
   }
 
   @override
