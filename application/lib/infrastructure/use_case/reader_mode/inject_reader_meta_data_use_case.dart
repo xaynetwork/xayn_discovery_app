@@ -1,7 +1,7 @@
-import 'package:html/dom.dart' as dom;
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 const _Speed kDefaultSpeed = _Speed(cpm: 987, variance: 118);
@@ -27,76 +27,37 @@ const Map<String, _Speed> kReadingSpeed = {
 
 @singleton
 class InjectReaderMetaDataUseCase
-    extends UseCase<ReadingTimeInput, ProcessHtmlResult> {
+    extends UseCase<ReadingTimeInput, ProcessedDocument> {
   InjectReaderMetaDataUseCase();
 
   @override
-  Stream<ProcessHtmlResult> transaction(ReadingTimeInput param) async* {
+  Stream<ProcessedDocument> transaction(ReadingTimeInput param) async* {
     final readingSpeed = kReadingSpeed[param.lang] ?? kDefaultSpeed;
     final size = param.processHtmlResult.textSize;
     final slow = (size / readingSpeed.charactersPerMinuteLow).ceil();
     final fast = (size / readingSpeed.charactersPerMinuteHigh).ceil();
-    late final ReadingTimeOutput output;
+    late final ProcessedDocument output;
 
     if (slow == fast) {
       switch (slow) {
         case 1:
-          output = ReadingTimeOutput(
+          output = ProcessedDocument(
               processHtmlResult: param.processHtmlResult,
               timeToRead: '1 ${param.singleUnit}');
           break;
         default:
-          output = ReadingTimeOutput(
+          output = ProcessedDocument(
               processHtmlResult: param.processHtmlResult,
               timeToRead: '$slow ${param.pluralUnit}');
       }
     } else {
-      output = ReadingTimeOutput(
+      output = ProcessedDocument(
           processHtmlResult: param.processHtmlResult,
           timeToRead: '$fast - $slow ${param.pluralUnit}');
     }
 
-    yield await compute(_injectMetadataIntoProcessedHtml, output);
+    yield output;
   }
-}
-
-ProcessHtmlResult _injectMetadataIntoProcessedHtml(ReadingTimeOutput output) {
-  final document =
-      dom.Document.html(output.processHtmlResult.contents ?? '''<div></div>''');
-  final byline = output.processHtmlResult.metadata?.byline;
-  var element = document.querySelector('article') ??
-      document.querySelector('div,section') ??
-      document.body!.children.first;
-
-  while (element.children.length == 1) {
-    element = element.children.first;
-  }
-
-  document.querySelectorAll('h1,h2').forEach((element) {
-    element.replaceWith(dom.Element.tag('h3')..innerHtml = element.innerHtml);
-  });
-
-  final parts = [
-    if (output.processHtmlResult.title != null)
-      '''
-          <p style="font-size:150%">
-            <h2>${output.processHtmlResult.title}</h2>
-          </p>
-        ''',
-    if (byline != null)
-      '''
-          <p>$byline</p>
-        ''',
-    '''
-        <p style="color:#666">
-          <i>${output.timeToRead}</i>
-        </p>
-      ''',
-  ];
-
-  element.innerHtml = '${parts.join('\r\n')}${element.innerHtml}';
-
-  return output.processHtmlResult.withOtherContent(element.outerHtml);
 }
 
 @immutable
@@ -111,17 +72,6 @@ class ReadingTimeInput {
     required this.lang,
     required this.singleUnit,
     required this.pluralUnit,
-  });
-}
-
-@immutable
-class ReadingTimeOutput {
-  final ProcessHtmlResult processHtmlResult;
-  final String timeToRead;
-
-  const ReadingTimeOutput({
-    required this.processHtmlResult,
-    required this.timeToRead,
   });
 }
 
