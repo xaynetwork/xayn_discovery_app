@@ -11,11 +11,11 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 
-const double kDragThreshold = 200.0;
-const Duration kSnapBackDuration = Duration(milliseconds: 450);
-const Duration kOpenCardDuration = Duration(milliseconds: 1000);
-const Curve kSnapBackCurve = Curves.elasticOut;
-const double kMinImageFractionSize = .4;
+const Duration _kSnapBackDuration = Duration(milliseconds: 450);
+const Duration _kOpenCardDuration = Duration(milliseconds: 1000);
+const Curve _kSnapBackCurve = Curves.elasticOut;
+const double _kMinImageFractionSize = .4;
+const double _kFlingVelocity = 2000.0;
 
 typedef DragCallback = void Function(double);
 typedef AnimationControllerBuilder = AnimationController Function();
@@ -26,6 +26,8 @@ class DiscoveryCard extends DiscoveryCardBase {
   final DragCallback? onDrag;
   final VoidCallback? onDiscard;
   final ControllerCallback? onController;
+
+  static const double dragThreshold = 200.0;
 
   const DiscoveryCard({
     Key? key,
@@ -42,6 +44,7 @@ class DiscoveryCard extends DiscoveryCardBase {
           document: document,
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
+          imageBoxFit: BoxFit.fitWidth,
         );
 
   @override
@@ -77,16 +80,17 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     super.initState();
 
     _onDrag = (distance) {
-      _openingAnimation.value =
-          (1.0 - (kDragThreshold - distance) / kDragThreshold)
-              .clamp(kMinImageFractionSize, 1.0);
+      _openingAnimation.value = (1.0 -
+              (DiscoveryCard.dragThreshold - distance) /
+                  DiscoveryCard.dragThreshold)
+          .clamp(_kMinImageFractionSize, 1.0);
 
       widget.onDrag?.call(distance);
     };
 
     _openingAnimation = AnimationController(
       vsync: this,
-      duration: kOpenCardDuration,
+      duration: _kOpenCardDuration,
     )..value = 1.0;
 
     _openingAnimation.addListener(() {
@@ -98,7 +102,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       onDrag: _onDrag,
       onDiscard: widget.onDiscard,
       animationControllerBuilder: () =>
-          AnimationController(vsync: this, duration: kSnapBackDuration),
+          AnimationController(vsync: this, duration: _kSnapBackDuration),
     );
 
     _controller = DiscoveryCardController(_openingAnimation);
@@ -121,8 +125,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       BuildContext context, DiscoveryCardState state, Widget image) {
     final mediaQuery = MediaQuery.of(context);
     // normalize the animation value to [0.0, 1.0]
-    final normalizedValue = (_openingAnimation.value - kMinImageFractionSize) /
-        (1.0 - kMinImageFractionSize);
+    final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
+        (1.0 - _kMinImageFractionSize);
 
     final readerMode = BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
       bloc: discoveryCardManager,
@@ -140,10 +144,10 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 left: R.dimen.unit2,
                 right: R.dimen.unit2,
                 bottom: R.dimen.unit2,
-                top: mediaQuery.size.height * kMinImageFractionSize,
+                top: mediaQuery.size.height * _kMinImageFractionSize,
               ),
               onProcessedHtml: () => _openingAnimation.animateTo(
-                kMinImageFractionSize,
+                _kMinImageFractionSize,
                 curve: Curves.fastOutSlowIn,
               ),
               onScroll: (position) => setState(() => _scrollOffset = position),
@@ -274,7 +278,7 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
   void onDragUpdate(DragUpdateDetails event) {
     _distance += event.delta.dx;
 
-    if (_distance > kDragThreshold) {
+    if (_distance > DiscoveryCard.dragThreshold) {
       _distance = 0;
 
       HapticFeedback.mediumImpact();
@@ -288,16 +292,24 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
   }
 
   void onDragEnd(DragEndDetails? event) async {
-    if (_distance <= kDragThreshold) {
-      final controller = _animationController = animationControllerBuilder();
+    final velocity = event?.primaryVelocity ?? .0;
 
-      stopTrackingPointer(_lastPointer!);
+    stopTrackingPointer(_lastPointer!);
+
+    if (velocity >= _kFlingVelocity) {
+      _distance = 0;
+
+      return onDiscard?.call();
+    }
+
+    if (_distance <= DiscoveryCard.dragThreshold) {
+      final controller = _animationController = animationControllerBuilder();
 
       controller.addListener(() {
         onDrag(_distance * (1.0 - controller.value));
       });
 
-      await controller.animateTo(1.0, curve: kSnapBackCurve);
+      await controller.animateTo(1.0, curve: _kSnapBackCurve);
 
       controller.dispose();
 
