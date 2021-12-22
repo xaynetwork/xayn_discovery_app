@@ -15,6 +15,7 @@ final EdgeInsets _kPadding = EdgeInsets.symmetric(
 /// All items are displayed full screen with vertical scrolling.
 class FeedView extends StatelessWidget {
   final bool isFullScreen;
+  final double notchSize;
 
   FeedView({
     Key? key,
@@ -27,6 +28,7 @@ class FeedView extends StatelessWidget {
     this.cardViewController,
     this.secondaryItemBuilder,
     this.itemCount,
+    this.notchSize = _kCardNotchSize,
   })  : mainCardSize = isFullScreen
             ? 1.0 - .15 * fullScreenOffsetFraction
             : _kCardNotchSize,
