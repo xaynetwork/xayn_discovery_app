@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 const Duration _kAnimationDuration = Duration(milliseconds: 800);
 const Curve _kAnimationCurve = Curves.elasticOut;
-const double _kCardNotchSize = .947;
+const double _kCardNotchSize = .93;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit1_5;
 final EdgeInsets _kPadding = EdgeInsets.symmetric(
