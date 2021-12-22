@@ -19,11 +19,13 @@ const double kMinImageFractionSize = .4;
 
 typedef DragCallback = void Function(double);
 typedef AnimationControllerBuilder = AnimationController Function();
+typedef ControllerCallback = void Function(DiscoveryCardController);
 
 /// Implementation of [DiscoveryCardBase] which is used inside the feed view.
 class DiscoveryCard extends DiscoveryCardBase {
   final DragCallback? onDrag;
   final VoidCallback? onDiscard;
+  final ControllerCallback? onController;
 
   const DiscoveryCard({
     Key? key,
@@ -33,6 +35,7 @@ class DiscoveryCard extends DiscoveryCardBase {
     ImageManager? imageManager,
     this.onDiscard,
     this.onDrag,
+    this.onController,
   }) : super(
           key: key,
           isPrimary: isPrimary,
@@ -66,6 +69,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final AnimationController _openingAnimation;
   late final DragBackRecognizer _recognizer;
   late final DragCallback _onDrag;
+  late final DiscoveryCardController _controller;
   double _scrollOffset = .0;
 
   @override
@@ -96,6 +100,10 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       animationControllerBuilder: () =>
           AnimationController(vsync: this, duration: kSnapBackDuration),
     );
+
+    _controller = DiscoveryCardController(_openingAnimation);
+
+    widget.onController?.call(_controller);
   }
 
   @override
@@ -298,4 +306,17 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
   }
 
   void onDragCancel() => onDragEnd(null);
+}
+
+class DiscoveryCardController extends ChangeNotifier {
+  final AnimationController _animationController;
+
+  DiscoveryCardController(this._animationController);
+
+  Future<void> animateToClose() async {
+    await _animationController.animateTo(
+      1.0,
+      curve: Curves.fastOutSlowIn,
+    );
+  }
 }
