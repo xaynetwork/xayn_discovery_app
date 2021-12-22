@@ -14,8 +14,10 @@ class AppRouter extends xayn.NavigatorDelegate {
     );
 
     return MaterialApp(
-        theme: R.linden.themeData,
-        home: NavBarContainer(
+      theme: R.linden.themeData,
+      home: SafeArea(
+        bottom: false,
+        child: NavBarContainer(
           child: Stack(
             alignment: AlignmentDirectional.bottomCenter,
             children: [
@@ -23,6 +25,8 @@ class AppRouter extends xayn.NavigatorDelegate {
               const NavBar(),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
