@@ -7,8 +7,10 @@ const Curve _kAnimationCurve = Curves.elasticOut;
 const double _kCardNotchSize = .93;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit;
-final EdgeInsets _kPadding = EdgeInsets.symmetric(
-  horizontal: R.dimen.unit,
+final EdgeInsets _kPadding = EdgeInsets.only(
+  left: R.dimen.unit,
+  right: R.dimen.unit,
+  top: R.dimen.unit / 2,
 );
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
