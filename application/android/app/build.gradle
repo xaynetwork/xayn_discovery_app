@@ -1,19 +1,3 @@
-def customProperties = new Properties()
-def customPropertiesFile = rootProject.file('custom.properties')
-if (customPropertiesFile.exists()) {
-    customPropertiesFile.withReader('UTF-8') { reader ->
-        customProperties.load(reader)
-    }
-} else {
-    throw new GradleException('Could not find custom.properties file.')
-}
-
-def instabugToken = customProperties.getProperty('INSTABUG_TOKEN')
-if(instabugToken == null){
-    instabugToken = "";
-    throw new GradleException('Instabug Api Key is not configured. Set it in `custom.properties` or in the environment variable `INSTABUG_TOKEN`')
-}
-
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -101,7 +85,7 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'INSTABUG_TOKEN', "\"${instabugToken}\""
+        it.buildConfigField 'java.util.Hashtable<String, String>', 'CustomKeys', makePropertyHashTable('custom.properties')
     }
 }
 
@@ -112,4 +96,24 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:multidex:2.0.1"
+}
+
+def makePropertyHashTable(filename) {
+    def properties = new Properties()
+    def propertiesFile = rootProject.file(filename)
+    if (propertiesFile.exists()) {
+        properties.load(new FileInputStream(propertiesFile))
+    } else {
+        throw new GradleException("Could not find ${filename} file.")
+    }
+
+    def prefix = 'new java.util.Hashtable<String, String>(){{ '
+    def suffix = '}}'
+    def value = ''
+    if (properties != null) {
+        for (d in properties) {
+            value += String.format('put("%s",%s); ', d.key, "\"${d.value}\"")
+        }
+    }
+    return String.format('%s%s%s', prefix, value, suffix)
 }

@@ -13,7 +13,8 @@ public class CustomFlutterApplication extends FlutterApplication {
         ArrayList<String> invocation_events = new ArrayList<>();
         invocation_events.add(InstabugFlutterPlugin.INVOCATION_EVENT_NONE);
         InstabugFlutterPlugin instabug = new InstabugFlutterPlugin();
-        instabug.start(CustomFlutterApplication.this, BuildConfig.INSTABUG_TOKEN, invocation_events);
+        String instabugToken = BuildConfig.CustomKeys.get("INSTABUG_TOKEN");
+        instabug.start(CustomFlutterApplication.this, instabugToken, invocation_events);
         instabug.setWelcomeMessageMode("WelcomeMessageMode.disabled");
     }
 }
