@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 
 import 'favicon_bar.dart';
@@ -37,7 +38,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     final DiscoveryCardActionsManager _actionsManager = di.get();
     final mediaQuery = MediaQuery.of(context);
     final timeToReadWidget = Text(
-      timeToRead,
+      '$timeToRead ${Strings.readingTimeSuffix}',
       style: R.styles.appBodyText?.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
       maxLines: 5,
