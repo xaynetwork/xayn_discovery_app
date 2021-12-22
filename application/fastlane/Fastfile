@@ -73,6 +73,8 @@ lane :build_runner do |options|
   checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "INSTABUG_TOKEN_DEBUG", "AMPLITUDE_API_KEY_DEBUG", "api-gw.xaynet.dev", "https://img-fetcher.xaynet.dev")
   checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "INSTABUG_TOKEN_PRODUCTION", "AMPLITUDE_API_KEY_PRODUCTION", "api-gw.xayn.com", "https://img-fetcher.xayn.com")
 
+  options[:build] == "release" ? writeAndroidProdEnvFile("INSTABUG_TOKEN_PRODUCTION") : writeAndroidDebugEnvFile("INSTABUG_TOKEN_DEBUG")
+
   command = "pub  run build_runner build --delete-conflicting-outputs";
   begin
     flutter(command)
@@ -197,9 +199,28 @@ def writeEnvFile(file, searchApiKey, instabugToken, amplitudeApiKey, searchApiUr
     :INSTABUG_TOKEN => instabugToken,
     :AMPLITUDE_API_KEY => amplitudeApiKey,
   })
-  writeProperties("../android/keys.properties", {
-    :INSTABUG_TOKEN => instabugToken,
-  })
+end
+
+def writeAndroidDebugEnvFile(instabugTokenDebug)
+    instabugEnvTokenDebug = ENV[instabugTokenDebug]
+    if !ENV.key?(instabugTokenDebug)
+      instabugEnvTokenDebug = UI.input("#{instabugTokenDebug}: ")
+    end
+
+    writeProperties("../android/keys.properties", {
+      :INSTABUG_TOKEN => instabugEnvTokenDebug
+    })
+end
+
+def writeAndroidProdEnvFile(instabugTokenProduction)
+    instabugEnvTokenProd = ENV[instabugTokenProduction]
+    if !ENV.key?(instabugTokenProduction)
+      instabugEnvTokenProd = UI.input("#{instabugTokenProduction}: ")
+    end
+
+    writeProperties("../android/keys.properties", {
+      :INSTABUG_TOKEN => instabugEnvTokenProd
+    })
 end
 
 # Clears and rewrites a properties file
