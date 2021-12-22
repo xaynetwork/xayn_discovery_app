@@ -73,7 +73,11 @@ lane :build_runner do |options|
   checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "INSTABUG_TOKEN_DEBUG", "AMPLITUDE_API_KEY_DEBUG", "api-gw.xaynet.dev", "https://img-fetcher.xaynet.dev")
   checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "INSTABUG_TOKEN_PRODUCTION", "AMPLITUDE_API_KEY_PRODUCTION", "api-gw.xayn.com", "https://img-fetcher.xayn.com")
 
-  options[:build] == "release" ? writeAndroidProdEnvFile("INSTABUG_TOKEN_PRODUCTION") : writeAndroidDebugEnvFile("INSTABUG_TOKEN_DEBUG")
+  if options[:flavor] != "internal" && options[:release] != "debug"
+    writeAndroidProdEnvFile("INSTABUG_TOKEN_PRODUCTION")
+  else
+    writeAndroidDebugEnvFile("INSTABUG_TOKEN_DEBUG")
+  end
 
   command = "pub  run build_runner build --delete-conflicting-outputs";
   begin
