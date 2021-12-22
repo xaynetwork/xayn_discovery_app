@@ -100,6 +100,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: _buildFeedView(),
       ),
     );
