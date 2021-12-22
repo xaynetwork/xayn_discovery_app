@@ -98,6 +98,11 @@ dependencies {
     implementation "com.android.support:multidex:2.0.1"
 }
 
+// A function that makes it easy to generate buildConfigField and thus having less boilerplate
+// when adding custom keys/tokens
+//
+// INPUT: filename containing key value pairs of keys
+// OUTPUT: a string format of HashMap<String, String>
 def makePropertyHashTable(filename) {
     def properties = new Properties()
     def propertiesFile = rootProject.file(filename)
