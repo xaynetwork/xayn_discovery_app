@@ -67,6 +67,18 @@ class DiscoveryCardFooter extends StatelessWidget {
       datePublished: datePublished,
     );
 
+    final titleAndTimeToRead = Wrap(
+      runAlignment: WrapAlignment.end,
+      runSpacing: R.dimen.unit,
+      children: [
+        timeToReadWidget,
+        SizedBox(
+          width: mediaQuery.size.width * _kMaxTitleFraction,
+          child: titleWidget,
+        ),
+      ],
+    );
+
     final footerColumn = Padding(
       padding: EdgeInsets.all(R.dimen.unit3),
       child: Column(
@@ -74,19 +86,11 @@ class DiscoveryCardFooter extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (provider != null) faviconRow,
-          Expanded(child: Container()),
-          timeToReadWidget,
-          SizedBox(
-            height: R.dimen.unit,
-          ),
-          SizedBox(
-            width: mediaQuery.size.width * _kMaxTitleFraction,
-            child: titleWidget,
-          ),
+          Expanded(child: titleAndTimeToRead),
           ClipRRect(
             child: SizedBox(
               width: double.infinity,
-              height: R.dimen.unit11 * fractionSize,
+              height: R.dimen.unit12 * fractionSize,
               child: actionButtonRow,
             ),
           ),

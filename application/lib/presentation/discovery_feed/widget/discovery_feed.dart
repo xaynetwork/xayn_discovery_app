@@ -4,11 +4,11 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -34,24 +34,57 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver, NavBarConfigMixin {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
+  late final DiscoveryCardActionsManager _discoveryCardActionsManager;
   late final Map<Document, _CardManagers> _cardManagers;
+  DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
   double _dragDistance = .0;
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig([
-        buildNavBarItemHome(
-          isActive: true,
-          onPressed: _discoveryFeedManager.onHomeNavPressed,
-        ),
-        buildNavBarItemSearch(
-          onPressed: _discoveryFeedManager.onSearchNavPressed,
-        ),
-        buildNavBarItemAccount(
-          onPressed: _discoveryFeedManager.onAccountNavPressed,
-        ),
-      ]);
+  NavBarConfig get navBarConfig {
+    if (_discoveryFeedManager.state.results == null) {
+      return NavBarConfig.hidden();
+    }
+
+    final document = _discoveryFeedManager
+        .state.results![_discoveryFeedManager.state.resultIndex];
+    final defaultNavBarConfig = NavBarConfig([
+      buildNavBarItemHome(
+        isActive: true,
+        onPressed: _discoveryFeedManager.onHomeNavPressed,
+      ),
+      buildNavBarItemSearch(
+        onPressed: _discoveryFeedManager.onSearchNavPressed,
+      ),
+      buildNavBarItemAccount(
+        onPressed: _discoveryFeedManager.onAccountNavPressed,
+      ),
+    ]);
+    final readerModeNavBarConfig = NavBarConfig([
+      buildNavBarItemArrowLeft(onPressed: () async {
+        await _currentCardController?.animateToClose();
+
+        _discoveryFeedManager.handleNavigateOutOfCard();
+      }),
+      buildNavBarItemLike(
+        isLiked: document.isRelevant,
+        onPressed: () => _discoveryCardActionsManager.likeDocument(document),
+      ),
+      buildNavBarItemShare(
+        onPressed: () =>
+            _discoveryCardActionsManager.shareUri(document.webResource.url),
+      ),
+      buildNavBarItemDisLike(
+        isDisLiked: document.isNotRelevant,
+        onPressed: () => _discoveryCardActionsManager.dislikeDocument(document),
+      ),
+    ]);
+
+    return _discoveryFeedManager.state.isFullScreen
+        ? readerModeNavBarConfig
+        : defaultNavBarConfig;
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -66,17 +99,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildFeedView(),
-
-      /// This is for testing purposes only
-      /// Should be removed once we have a settings page
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => UnterDenLinden.of(context).changeBrightness(
-            R.linden.brightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light),
-        tooltip: 'Toggle Theme',
-        child: const Icon(Icons.theater_comedy),
+      body: SafeArea(
+        child: _buildFeedView(),
       ),
     );
   }
@@ -99,6 +123,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
+    _discoveryCardActionsManager = di.get();
     _cardManagers = <Document, _CardManagers>{};
 
     WidgetsBinding.instance!.addObserver(this);
@@ -113,6 +138,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           final results = state.results;
           final scrollDirection = state.axis.axis;
           final isSwipingEnabled = scrollDirection == Axis.vertical;
+
+          NavBarContainer.updateNavBar(context);
 
           if (results == null) {
             return const Center(
@@ -171,6 +198,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 imageManager: managers.imageManager,
                 onDiscard: _discoveryFeedManager.handleNavigateOutOfCard,
                 onDrag: _onFullScreenDrag,
+                onController: (controller) =>
+                    _currentCardController = controller,
               )
             : InkWell(
                 onTap: _discoveryFeedManager.handleNavigateIntoCard,
