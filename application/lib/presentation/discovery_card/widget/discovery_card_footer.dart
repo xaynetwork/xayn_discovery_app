@@ -9,10 +9,13 @@ import 'package:xayn_design/xayn_design.dart';
 
 typedef ReaderModeBuilder = Widget Function();
 
+const double _kMaxTitleFraction = .75;
+
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
     Key? key,
     required this.title,
+    required this.timeToRead,
     required this.url,
     required this.datePublished,
     this.provider,
@@ -21,6 +24,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     this.fractionSize = 1.0,
   }) : super(key: key);
   final String title;
+  final String timeToRead;
   final Uri url;
   final WebResourceProvider? provider;
   final DateTime datePublished;
@@ -31,7 +35,14 @@ class DiscoveryCardFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DiscoveryCardActionsManager _actionsManager = di.get();
-
+    final mediaQuery = MediaQuery.of(context);
+    final timeToReadWidget = Text(
+      timeToRead,
+      style: R.styles.appBodyText?.copyWith(color: Colors.white),
+      textAlign: TextAlign.left,
+      maxLines: 5,
+      overflow: TextOverflow.ellipsis,
+    );
     final titleWidget = Text(
       title,
       style: R.styles.appScreenHeadline?.copyWith(color: Colors.white),
@@ -40,10 +51,15 @@ class DiscoveryCardFooter extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
     );
 
-    final actionButtonRow = _ButtonRowFooter(
-      onSharePressed: () => _actionsManager.shareUri(url),
-      onLikePressed: onLikePressed,
-      onDislikePressed: onDislikePressed,
+    final actionButtonRow = Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: R.dimen.unit3,
+      ),
+      child: _ButtonRowFooter(
+        onSharePressed: () => _actionsManager.shareUri(url),
+        onLikePressed: onLikePressed,
+        onDislikePressed: onDislikePressed,
+      ),
     );
 
     final faviconRow = FaviconBar(
@@ -59,11 +75,18 @@ class DiscoveryCardFooter extends StatelessWidget {
         children: [
           if (provider != null) faviconRow,
           Expanded(child: Container()),
-          titleWidget,
+          timeToReadWidget,
+          SizedBox(
+            height: R.dimen.unit,
+          ),
+          SizedBox(
+            width: mediaQuery.size.width * _kMaxTitleFraction,
+            child: titleWidget,
+          ),
           ClipRRect(
             child: SizedBox(
               width: double.infinity,
-              height: R.dimen.unit5 * fractionSize,
+              height: R.dimen.unit11 * fractionSize,
               child: actionButtonRow,
             ),
           ),

@@ -56,7 +56,7 @@ class _CachedImageState extends State<CachedImage> {
 
     // if the imageManager was created locally, then close it,
     // otherwise let the owner take care of it.
-    if (widget.imageManager != null) {
+    if (widget.imageManager == null) {
       _imageManager.close();
     }
   }

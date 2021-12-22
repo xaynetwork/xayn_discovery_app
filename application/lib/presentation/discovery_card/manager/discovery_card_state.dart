@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
-import 'package:xayn_readability/xayn_readability.dart';
 
 part 'discovery_card_state.freezed.dart';
 
@@ -11,7 +11,7 @@ class DiscoveryCardState with _$DiscoveryCardState {
 
   const factory DiscoveryCardState({
     @Default(false) bool isComplete,
-    ProcessHtmlResult? result,
+    ProcessedDocument? output,
   }) = _DiscoveryCardState;
 
   factory DiscoveryCardState.initial() => const DiscoveryCardState();
