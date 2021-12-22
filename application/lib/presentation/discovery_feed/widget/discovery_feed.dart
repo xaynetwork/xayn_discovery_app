@@ -171,7 +171,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               onFinalIndex: _discoveryFeedManager.handleLoadMore,
               onIndexChanged: _discoveryFeedManager.handleIndexChanged,
               isFullScreen: state.isFullScreen,
-              fullScreenOffsetFraction: _dragDistance / kDragThreshold,
+              fullScreenOffsetFraction:
+                  _dragDistance / DiscoveryCard.dragThreshold,
               notchSize: notchSize,
             );
           },
