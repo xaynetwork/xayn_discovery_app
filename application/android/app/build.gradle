@@ -2,7 +2,7 @@ def customProperties = new Properties()
 def customPropertiesFile = rootProject.file('custom.properties')
 if (customPropertiesFile.exists()) {
     customPropertiesFile.withReader('UTF-8') { reader ->
-        ````customProperties````.load(reader)
+        customProperties.load(reader)
     }
 } else {
     throw new GradleException('Could not find custom.properties file.')
