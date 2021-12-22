@@ -16,11 +16,7 @@ import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
 void main() async {
   await setup();
   runZonedGuarded(
-    () {
-      runApp(getApp());
-      //this line of code will be removed once tested
-      throw 'triggered crash on opening the application';
-    },
+    () => runApp(getApp()),
     di.get<BugReportingService>().reportCrash,
   );
 }
