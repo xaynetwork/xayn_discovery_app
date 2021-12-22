@@ -1,17 +1,17 @@
-def keysProperties = new Properties()
-def keyPropertiesFile = rootProject.file('keys.properties')
-if (keyPropertiesFile.exists()) {
-    keyPropertiesFile.withReader('UTF-8') { reader ->
-        keysProperties.load(reader)
+def customProperties = new Properties()
+def customPropertiesFile = rootProject.file('custom.properties')
+if (customPropertiesFile.exists()) {
+    customPropertiesFile.withReader('UTF-8') { reader ->
+        ````customProperties````.load(reader)
     }
 } else {
-    throw new GradleException('Could not find keys.properties file.')
+    throw new GradleException('Could not find custom.properties file.')
 }
 
-def instabugToken = keysProperties.getProperty('INSTABUG_TOKEN')
+def instabugToken = customProperties.getProperty('INSTABUG_TOKEN')
 if(instabugToken == null){
     instabugToken = "";
-    throw new GradleException('Instabug Api Key is not configured. Set it in `keys.properties` or in the environment variable `INSTABUG_TOKEN`')
+    throw new GradleException('Instabug Api Key is not configured. Set it in `custom.properties` or in the environment variable `INSTABUG_TOKEN`')
 }
 
 def keystoreProperties = new Properties()

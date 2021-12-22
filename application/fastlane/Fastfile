@@ -211,7 +211,7 @@ def writeAndroidDebugEnvFile(instabugTokenDebug)
       instabugEnvTokenDebug = UI.input("#{instabugTokenDebug}: ")
     end
 
-    writeProperties("../android/keys.properties", {
+    writeProperties("../android/custom.properties", {
       :INSTABUG_TOKEN => instabugEnvTokenDebug
     })
 end
@@ -222,7 +222,7 @@ def writeAndroidProdEnvFile(instabugTokenProduction)
       instabugEnvTokenProd = UI.input("#{instabugTokenProduction}: ")
     end
 
-    writeProperties("../android/keys.properties", {
+    writeProperties("../android/custom.properties", {
       :INSTABUG_TOKEN => instabugEnvTokenProd
     })
 end
