@@ -33,6 +33,7 @@ class _DiscoveryFeedCardState
       BuildContext context, DiscoveryCardState state, Widget image) {
     final footer = DiscoveryCardFooter(
       title: webResource.title,
+      timeToRead: state.output?.timeToRead ?? '',
       url: webResource.url,
       provider: webResource.provider,
       datePublished: webResource.datePublished,

@@ -127,7 +127,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
               title: title,
               snippet: snippet,
               imageUri: Uri.parse(imageUrl),
-              processHtmlResult: state.result,
+              processHtmlResult: state.output?.processHtmlResult,
               padding: EdgeInsets.only(
                 left: R.dimen.unit2,
                 right: R.dimen.unit2,
@@ -155,6 +155,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         );
         final maskedReaderMode = DiscoveryCardFooter(
           title: webResource.title,
+          timeToRead: state.output?.timeToRead ?? '',
           url: webResource.url,
           provider: webResource.provider,
           datePublished: webResource.datePublished,
