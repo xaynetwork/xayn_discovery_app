@@ -44,7 +44,6 @@ class DiscoveryCard extends DiscoveryCardBase {
           document: document,
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
-          imageBoxFit: BoxFit.fitWidth,
         );
 
   @override
