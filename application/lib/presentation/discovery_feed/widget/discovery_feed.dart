@@ -132,50 +132,51 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     super.initState();
   }
 
-  Widget _buildFeedView() =>
-      BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
-        bloc: _discoveryFeedManager,
-        builder: (context, state) {
-          final mediaQuery = MediaQuery.of(context);
-          final results = state.results;
-          final scrollDirection = state.axis.axis;
-          final isSwipingEnabled = scrollDirection == Axis.vertical;
-          final notchSize = 1.0 - 40.0 / mediaQuery.size.height;
+  Widget _buildFeedView() => LayoutBuilder(builder: (context, constraints) {
+        final notchSize = 1.0 - 40.0 / constraints.maxHeight;
 
-          NavBarContainer.updateNavBar(context);
+        return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
+          bloc: _discoveryFeedManager,
+          builder: (context, state) {
+            final results = state.results;
+            final scrollDirection = state.axis.axis;
+            final isSwipingEnabled = scrollDirection == Axis.vertical;
 
-          if (results == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+            NavBarContainer.updateNavBar(context);
 
-          _totalResults = results.length;
+            if (results == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-          return FeedView(
-            scrollDirection: scrollDirection,
-            cardViewController: _cardViewController,
-            itemBuilder: _itemBuilder(
-              results: results,
-              isPrimary: true,
-              isSwipingEnabled: state.isFullScreen ? false : isSwipingEnabled,
+            _totalResults = results.length;
+
+            return FeedView(
+              scrollDirection: scrollDirection,
+              cardViewController: _cardViewController,
+              itemBuilder: _itemBuilder(
+                results: results,
+                isPrimary: true,
+                isSwipingEnabled: state.isFullScreen ? false : isSwipingEnabled,
+                isFullScreen: state.isFullScreen,
+              ),
+              secondaryItemBuilder: _itemBuilder(
+                results: results,
+                isPrimary: false,
+                isSwipingEnabled: isSwipingEnabled,
+                isFullScreen: false,
+              ),
+              itemCount: _totalResults,
+              onFinalIndex: _discoveryFeedManager.handleLoadMore,
+              onIndexChanged: _discoveryFeedManager.handleIndexChanged,
               isFullScreen: state.isFullScreen,
-            ),
-            secondaryItemBuilder: _itemBuilder(
-              results: results,
-              isPrimary: false,
-              isSwipingEnabled: isSwipingEnabled,
-              isFullScreen: false,
-            ),
-            itemCount: _totalResults,
-            onFinalIndex: _discoveryFeedManager.handleLoadMore,
-            onIndexChanged: _discoveryFeedManager.handleIndexChanged,
-            isFullScreen: state.isFullScreen,
-            fullScreenOffsetFraction: _dragDistance / kDragThreshold,
-            notchSize: notchSize,
-          );
-        },
-      );
+              fullScreenOffsetFraction: _dragDistance / kDragThreshold,
+              notchSize: notchSize,
+            );
+          },
+        );
+      });
 
   Widget Function(BuildContext, int) _itemBuilder({
     required List<Document> results,
