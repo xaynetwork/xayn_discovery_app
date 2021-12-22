@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:instabug_flutter/CrashReporting.dart';
 import 'package:instabug_flutter/Instabug.dart';
@@ -22,9 +21,10 @@ class BugReportingService {
 
   _init() {
     //init method for Andriod is called natively from CustomFlutterApplication class
-    if (Platform.isIOS) _initiOS(kInstabugToken, kInstabugInvocationEvents);
-    Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
-    Instabug.setSdkDebugLogsLevel(IBGSDKDebugLogsLevel.error);
+    if (Platform.isIOS) {
+      _initiOS(kInstabugToken, kInstabugInvocationEvents);
+      Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
+    }
   }
 
   _initiOS(
