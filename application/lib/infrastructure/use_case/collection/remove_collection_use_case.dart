@@ -29,9 +29,9 @@ class RemoveCollectionUseCase
       );
     }
 
-    /// Check that the collection exists
     final collection =
         _collectionsRepository.getById(param.collectionIdToRemove);
+
     if (collection == null) {
       logger.e(errorMessageRemovingNotExistingCollection);
       throw CollectionUseCaseException(
