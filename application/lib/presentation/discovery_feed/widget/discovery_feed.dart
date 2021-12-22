@@ -135,9 +135,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
         bloc: _discoveryFeedManager,
         builder: (context, state) {
+          final mediaQuery = MediaQuery.of(context);
           final results = state.results;
           final scrollDirection = state.axis.axis;
           final isSwipingEnabled = scrollDirection == Axis.vertical;
+          final notchSize = 1.0 - 40.0 / mediaQuery.size.height;
 
           NavBarContainer.updateNavBar(context);
 
@@ -169,6 +171,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onIndexChanged: _discoveryFeedManager.handleIndexChanged,
             isFullScreen: state.isFullScreen,
             fullScreenOffsetFraction: _dragDistance / kDragThreshold,
+            notchSize: notchSize,
           );
         },
       );
