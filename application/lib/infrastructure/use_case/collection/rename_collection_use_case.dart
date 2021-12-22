@@ -26,7 +26,6 @@ class RenameCollectionUseCase
 
     final collection = _collectionsRepository.getById(param.collectionId);
 
-    /// Check if collection exists
     if (collection == null) {
       logger.e(errorMessageRenamingNotExistingCollection);
       throw CollectionUseCaseException(
