@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
@@ -12,12 +12,17 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
-import 'package:xayn_discovery_app/presentation/widget/button/temp_button.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
+
+abstract class DiscoveryFeedNavActions {
+  void onSearchNavPressed();
+
+  void onAccountNavPressed();
+}
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
@@ -28,7 +33,7 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, NavBarConfigMixin {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
   late final Map<Document, _CardManagers> _cardManagers;
@@ -37,44 +42,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   double _dragDistance = .0;
 
   @override
-  Widget build(BuildContext context) {
-    final bottomNav = Positioned(
-      bottom: MediaQuery.of(context).padding.bottom + R.dimen.unit2,
-      child: Row(
-        children: [
-          TempButton(
-            iconName: R.assets.icons.search,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ActiveSearch(),
-              ),
-            ),
-          ),
-          SizedBox(width: R.dimen.unit),
-          TempButton(
-            iconName: R.assets.icons.gear,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            _buildFeedView(),
-            bottomNav,
-          ],
+  NavBarConfig get navBarConfig => NavBarConfig([
+        buildNavBarItemHome(
+          isActive: true,
+          onPressed: _discoveryFeedManager.onHomeNavPressed,
         ),
-      ),
-    );
-  }
+        buildNavBarItemSearch(
+          onPressed: _discoveryFeedManager.onSearchNavPressed,
+        ),
+        buildNavBarItemAccount(
+          onPressed: _discoveryFeedManager.onAccountNavPressed,
+        ),
+      ]);
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -84,6 +63,24 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       default:
         return _discoveryFeedManager.handleActivityStatus(false);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _buildFeedView(),
+
+      /// This is for testing purposes only
+      /// Should be removed once we have a settings page
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => UnterDenLinden.of(context).changeBrightness(
+            R.linden.brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light),
+        tooltip: 'Toggle Theme',
+        child: const Icon(Icons.theater_comedy),
+      ),
+    );
   }
 
   @override

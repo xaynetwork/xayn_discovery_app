@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_st
 
 import 'onboarding_manager_test.mocks.dart';
 
-@GenerateMocks([OnBoardingCompletedUseCase])
+@GenerateMocks([OnBoardingCompletedUseCase, OnBoardingNavActions])
 void main() {
   late OnBoardingManager onBoardingManager;
   late OnBoardingState initialState;
@@ -25,7 +25,8 @@ void main() {
     completedState = const OnBoardingState.completed(currentPageIndex: 3);
     errorState = const OnBoardingState.error(currentPageIndex: 3);
     onBoardingCompletedUseCase = MockOnBoardingCompletedUseCase();
-    onBoardingManager = OnBoardingManager(onBoardingCompletedUseCase);
+    onBoardingManager = OnBoardingManager(
+        onBoardingCompletedUseCase, MockOnBoardingNavActions());
   });
 
   blocTest<OnBoardingManager, OnBoardingState>(

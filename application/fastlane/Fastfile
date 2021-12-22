@@ -69,11 +69,17 @@ end
 ####
 
 desc "Flutter build runner"
-lane :build_runner do
+lane :build_runner do |options|
   checkAndCreateEnv("../.env.dev", "SEARCH_API_SECRET_DEBUG", "INSTABUG_TOKEN_DEBUG", "AMPLITUDE_API_KEY_DEBUG", "api-gw.xaynet.dev", "https://img-fetcher.xaynet.dev")
   checkAndCreateEnv("../.env.prod", "SEARCH_API_SECRET_PRODUCTION", "INSTABUG_TOKEN_PRODUCTION", "AMPLITUDE_API_KEY_PRODUCTION", "api-gw.xayn.com", "https://img-fetcher.xayn.com")
 
-  flutter("pub  run build_runner build --delete-conflicting-outputs")
+  command = "pub  run build_runner build --delete-conflicting-outputs";
+  begin
+    flutter(command)
+  rescue => ex
+    pub_get(options)
+    flutter(command)
+  end
 end
 
 desc "Flutter pub get"

@@ -5,12 +5,20 @@ import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/onboarding
 
 import 'onboarding_state.dart';
 
+abstract class OnBoardingNavActions {
+  void onClosePressed();
+}
+
 @injectable
 class OnBoardingManager extends Cubit<OnBoardingState>
-    with UseCaseBlocHelper<OnBoardingState> {
+    with UseCaseBlocHelper<OnBoardingState>
+    implements OnBoardingNavActions {
   final OnBoardingCompletedUseCase _onBoardingCompletedUseCase;
+  final OnBoardingNavActions _onboardingNavActions;
+
   OnBoardingManager(
     this._onBoardingCompletedUseCase,
+    this._onboardingNavActions,
   ) : super(const OnBoardingState.started());
 
   int _currentPageIndex = -1;
@@ -61,4 +69,7 @@ class OnBoardingManager extends Cubit<OnBoardingState>
       currentPageIndex: _currentPageIndex,
     );
   }
+
+  @override
+  void onClosePressed() => _onboardingNavActions.onClosePressed();
 }

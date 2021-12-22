@@ -30,6 +30,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get showFeaturesScreen =>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
+  bool get showOnboardingScreen => isEnabled(Feature.onBoarding);
 
   @override
   Future<FeatureManagerState?> computeState() async =>

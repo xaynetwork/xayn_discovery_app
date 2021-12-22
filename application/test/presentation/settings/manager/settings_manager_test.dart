@@ -34,6 +34,7 @@ import 'settings_manager_test.mocks.dart';
   ListenDiscoveryFeedAxisUseCase,
   BugReportingService,
   ExtractLogUseCase,
+  SettingsNavActions,
 ])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
@@ -95,6 +96,7 @@ void main() {
         listenDiscoveryFeedAxisUseCase,
         bugReportingService,
         extractLogUseCase,
+        MockSettingsNavActions(),
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

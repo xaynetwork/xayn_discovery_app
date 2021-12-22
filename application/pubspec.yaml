@@ -5,7 +5,7 @@ version: 0.0.1
 
 environment:
   sdk: '>=2.14.0 <3.0.0'
-  flutter: '>=2.5.0'
+  flutter: '>=2.8.0'
 
 # Please list dependencies alphabetically!
 dependencies:
@@ -45,7 +45,7 @@ dependencies:
   xayn_architecture:
     git:
       url: git@github.com:xaynetwork/xayn_architecture.git
-      ref: 0c56db8d7a2c1b27d77354f2698aa3f26bd3cbc6
+      ref: 91357b47b546e3448a8d437501ecdc7dced9cafd
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
@@ -53,7 +53,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 47f60dfc6f80e258477e5b1eb4b78a0972e95416
+      ref: e17b94c104d16d31afe4d6f202364efaaebe74f8
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine.git

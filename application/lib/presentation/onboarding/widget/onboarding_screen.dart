@@ -4,6 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
 
@@ -26,15 +27,22 @@ class OnBoardingScreen extends StatefulWidget {
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _OnBoardingScreenState extends State<OnBoardingScreen>
+    with NavBarConfigMixin {
   late final OnBoardingManager _onBoardingManager;
   late final PageController _pageController;
   late final List<OnBoardingPageData> _onBoardingPagesData;
 
   @override
+  late NavBarConfig navBarConfig;
+
+  @override
   void initState() {
     _onBoardingManager = di.get();
     _pageController = PageController(initialPage: 0);
+    navBarConfig = NavBarConfig.backBtn(buildNavBarItemBack(
+      onPressed: _onBoardingManager.onClosePressed,
+    ));
     _initValues();
     super.initState();
   }
