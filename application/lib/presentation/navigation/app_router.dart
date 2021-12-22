@@ -15,16 +15,13 @@ class AppRouter extends xayn.NavigatorDelegate {
 
     return MaterialApp(
       theme: R.linden.themeData,
-      home: SafeArea(
-        bottom: false,
-        child: NavBarContainer(
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              navigator,
-              const NavBar(),
-            ],
-          ),
+      home: NavBarContainer(
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            navigator,
+            const NavBar(),
+          ],
         ),
       ),
     );
