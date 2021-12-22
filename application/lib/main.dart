@@ -16,7 +16,11 @@ import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
 void main() async {
   await setup();
   runZonedGuarded(
-        () async => runApp(getApp()),
+    () {
+      runApp(getApp());
+      //this line of code will be removed once tested
+      throw 'triggered crash on opening the application';
+    },
     di.get<BugReportingService>().reportCrash,
   );
 }
@@ -29,7 +33,7 @@ Future<void> setup() async {
   final hiveDb = HiveDB.init(absoluteAppDir).catchError(
     /// Some browsers (ie. Firefox) are not allowing the use of IndexedDB
     /// in `Private Mode`, so we need to use Hive in-memory instead
-        (_) => HiveDB.init(null),
+    (_) => HiveDB.init(null),
   );
   await hiveDb;
   configureDependencies();
