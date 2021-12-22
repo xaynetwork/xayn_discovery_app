@@ -44,13 +44,7 @@ class _CachedImageState extends State<CachedImage> {
     final imageManager = widget.imageManager;
 
     if (imageManager == null) {
-      _imageManager = di.get()
-        ..getImage(
-          widget.uri,
-          width: widget.width,
-          height: widget.height,
-          fit: widget.fit,
-        );
+      _imageManager = di.get()..getImage(widget.uri);
     } else {
       _imageManager = imageManager;
     }
@@ -73,12 +67,7 @@ class _CachedImageState extends State<CachedImage> {
         oldWidget.width != widget.width ||
         oldWidget.height != widget.height ||
         oldWidget.fit != widget.fit) {
-      _imageManager.getImage(
-        widget.uri,
-        width: widget.width,
-        height: widget.height,
-        fit: widget.fit,
-      );
+      _imageManager.getImage(widget.uri);
     }
 
     super.didUpdateWidget(oldWidget);
