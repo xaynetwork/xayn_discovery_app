@@ -44,25 +44,25 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
         param,
         await cachedVersion.file.readAsBytes(),
       );
+    } else {
+      final response = await client.sendWithRedirectGuard(
+        http.Request(
+          CommonHttpRequestParams.httpRequestGet,
+          url,
+          followRedirects: false,
+          headers: headers,
+          timeout: CommonHttpRequestParams.httpRequestTimeout,
+        ),
+      );
+
+      final bytes = Uint8List.fromList(
+        await response.readAsBytes(),
+      );
+
+      await cacheManager.putFile(url, bytes);
+
+      yield CacheManagerEvent.completed(param, bytes);
     }
-
-    final response = await client.sendWithRedirectGuard(
-      http.Request(
-        CommonHttpRequestParams.httpRequestGet,
-        url,
-        followRedirects: false,
-        headers: headers,
-        timeout: CommonHttpRequestParams.httpRequestTimeout,
-      ),
-    );
-
-    final bytes = Uint8List.fromList(
-      await response.readAsBytes(),
-    );
-
-    await cacheManager.putFile(url, bytes);
-
-    yield CacheManagerEvent.completed(param, bytes);
   }
 }
 
