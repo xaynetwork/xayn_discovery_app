@@ -16,8 +16,6 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 
-const BoxFit _kImageBoxFit = BoxFit.cover;
-
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
@@ -198,21 +196,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     });
   }
 
-  _CardManagers managersOf(Document document) =>
-      _cardManagers.putIfAbsent(document, () {
-        final mediaQuery = MediaQuery.of(context);
-
-        return _CardManagers(
-          imageManager: di.get()
-            ..getImage(
-              Uri.parse(document.webResource.displayUrl.toString()),
-              width: mediaQuery.size.width.ceil(),
-              height: mediaQuery.size.height.ceil(),
-              fit: _kImageBoxFit,
-            ),
-          discoveryCardManager: di.get()..updateUri(document.webResource.url),
-        );
-      });
+  _CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
+      document,
+      () => _CardManagers(
+            imageManager: di.get()
+              ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
+            discoveryCardManager: di.get()..updateUri(document.webResource.url),
+          ));
 }
 
 class _ResultCard extends StatelessWidget {
