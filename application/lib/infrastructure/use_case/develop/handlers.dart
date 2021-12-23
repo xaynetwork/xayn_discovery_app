@@ -9,6 +9,8 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/file_logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
+/// This file contains handlers that help to implement proper tests
+
 @Injectable()
 class FileHandler {
   FileHandler();
@@ -59,4 +61,12 @@ class LoggerHandler {
 @injectable
 class UniqueIdHandler {
   UniqueId generateUniqueId() => UniqueId();
+}
+
+/// Used for testing properly the generation of a datetime.
+/// For example, check how it is used in the [CreateBookmarkUseCase] and
+/// in the corresponding [create_bookmark_use_case_test.dart] file.
+@injectable
+class DateTimeHandler {
+  DateTime getDateTimeNow() => DateTime.now();
 }
