@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -166,7 +166,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           ),
           child: image,
         );
-        final footer = DiscoveryCardFooter(
+        final elements = DiscoveryCardElements(
           title: webResource.title,
           timeToRead: state.output?.timeToRead ?? '',
           url: webResource.url,
@@ -195,7 +195,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 child: Stack(
                   children: [
                     maskedImage,
-                    footer,
+                    elements,
                   ],
                 ),
               ),
@@ -245,15 +245,13 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
       bloc: discoveryCardManager,
-      builder: (context, state) {
-        return ClipRRect(
-          child: OverflowBox(
-            alignment: Alignment.topCenter,
-            maxWidth: size.width,
-            child: readerMode,
-          ),
-        );
-      },
+      builder: (context, state) => ClipRRect(
+        child: OverflowBox(
+          alignment: Alignment.topCenter,
+          maxWidth: size.width,
+          child: readerMode,
+        ),
+      ),
     );
   }
 }
