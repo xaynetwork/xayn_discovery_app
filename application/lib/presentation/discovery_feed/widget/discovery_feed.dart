@@ -4,6 +4,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -133,7 +134,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   }
 
   Widget _buildFeedView() => LayoutBuilder(builder: (context, constraints) {
-        final notchSize = 1.0 - 40.0 / constraints.maxHeight;
+        // transform the cardNotchSize to a fractional value between [0.0, 1.0]
+        final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
 
         return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
           bloc: _discoveryFeedManager,
@@ -207,7 +209,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 onController: (controller) =>
                     _currentCardController = controller,
               )
-            : InkWell(
+            : GestureDetector(
                 onTap: _discoveryFeedManager.handleNavigateIntoCard,
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,

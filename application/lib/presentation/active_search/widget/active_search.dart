@@ -56,25 +56,31 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
   }
 
   Widget _buildFeedView() {
-    return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
-      bloc: _activeSearchManager,
-      builder: (context, state) {
-        final results = state.results ?? [];
+    return LayoutBuilder(builder: (context, constraints) {
+      // transform the cardNotchSize to a fractional value between [0.0, 1.0]
+      final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
 
-        if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (results.isEmpty) {
-          return Container();
-        }
+      return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
+        bloc: _activeSearchManager,
+        builder: (context, state) {
+          final results = state.results ?? [];
 
-        return FeedView(
-          itemBuilder: _itemBuilder(results, true),
-          secondaryItemBuilder: _itemBuilder(results, false),
-          itemCount: results.length,
-          isFullScreen: false,
-        );
-      },
-    );
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (results.isEmpty) {
+            return Container();
+          }
+
+          return FeedView(
+            itemBuilder: _itemBuilder(results, true),
+            secondaryItemBuilder: _itemBuilder(results, false),
+            itemCount: results.length,
+            isFullScreen: false,
+            notchSize: notchSize,
+          );
+        },
+      );
+    });
   }
 
   Widget Function(BuildContext, int) _itemBuilder(

@@ -12,7 +12,7 @@ class ScreenStateSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AnimatedSwitcher(
-        duration: R.durations.screenStateChangeDuration,
+        duration: R.animations.screenStateChangeDuration,
         child: child,
       );
 }
