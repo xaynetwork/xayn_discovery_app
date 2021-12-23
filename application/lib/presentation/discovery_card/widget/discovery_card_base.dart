@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
 
+/// The base class for the different feed cards.
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
   final Document document;
@@ -29,6 +30,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   }) : super(key: key);
 }
 
+/// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> {
   late final DiscoveryCardManager _discoveryCardManager;
@@ -95,10 +97,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
         colors: [
-          R.colors.swipeCardBackground.withAlpha((120.0 * opacity).floor()),
-          R.colors.swipeCardBackground.withAlpha((40.0 * opacity).floor()),
-          R.colors.swipeCardBackground.withAlpha((255.0 * opacity).floor()),
-          R.colors.swipeCardBackground.withAlpha((255.0 * opacity).floor()),
+          R.colors.swipeCardBackground.withAlpha(120),
+          R.colors.swipeCardBackground.withAlpha(40),
+          R.colors.swipeCardBackground
+              .withAlpha(127 + (128.0 * opacity).floor()),
+          R.colors.swipeCardBackground
+              .withAlpha(127 + (128.0 * opacity).floor()),
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,

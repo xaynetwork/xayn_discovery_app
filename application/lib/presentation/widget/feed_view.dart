@@ -2,24 +2,37 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-const Duration _kAnimationDuration = Duration(milliseconds: 800);
 const Curve _kAnimationCurve = Curves.elasticOut;
-const double _kCardNotchSize = .947;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
-final double _kItemSpacing = R.dimen.unit1_5;
-final EdgeInsets _kPadding = EdgeInsets.symmetric(
-  horizontal: R.dimen.unit2,
+final double _kItemSpacing = R.dimen.unit;
+final EdgeInsets _kPadding = EdgeInsets.only(
+  left: R.dimen.unit,
+  right: R.dimen.unit,
+  top: R.dimen.unit / 2,
 );
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
 /// All items are displayed full screen with vertical scrolling.
 class FeedView extends StatelessWidget {
   final bool isFullScreen;
+  final double notchSize;
+  final CardViewController? cardViewController;
+  final Axis scrollDirection;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Widget Function(BuildContext, int)? secondaryItemBuilder;
+  final VoidCallback? onFinalIndex;
+  final IndexChangedCallback? onIndexChanged;
+  final int? itemCount;
+  final double mainCardSize;
+  final double itemSpacing;
+  final EdgeInsets padding;
+  final BorderRadius borderRadius;
 
   FeedView({
     Key? key,
     required this.itemBuilder,
     required this.isFullScreen,
+    required this.notchSize,
     double fullScreenOffsetFraction = .0,
     this.scrollDirection = Axis.vertical,
     this.onFinalIndex,
@@ -27,9 +40,8 @@ class FeedView extends StatelessWidget {
     this.cardViewController,
     this.secondaryItemBuilder,
     this.itemCount,
-  })  : mainCardSize = isFullScreen
-            ? 1.0 - .15 * fullScreenOffsetFraction
-            : _kCardNotchSize,
+  })  : mainCardSize =
+            isFullScreen ? 1.0 - .15 * fullScreenOffsetFraction : notchSize,
         padding = isFullScreen
             ? EdgeInsets.symmetric(
                 horizontal: R.dimen.unit3 * fullScreenOffsetFraction)
@@ -43,22 +55,9 @@ class FeedView extends StatelessWidget {
             : _kBorderRadius,
         super(key: key);
 
-  final CardViewController? cardViewController;
-  final Axis scrollDirection;
-  final Widget Function(BuildContext, int) itemBuilder;
-  final Widget Function(BuildContext, int)? secondaryItemBuilder;
-  final VoidCallback? onFinalIndex;
-  final IndexChangedCallback? onIndexChanged;
-  final int? itemCount;
-
-  final double mainCardSize;
-  final double itemSpacing;
-  final EdgeInsets padding;
-  final BorderRadius borderRadius;
-
   @override
   Widget build(BuildContext context) => CardView(
-        animationDuration: _kAnimationDuration,
+        animationDuration: R.animations.feedTransitionDuration,
         animationCurve: _kAnimationCurve,
         animateToSnapDuration: R.animations.unit2,
         scrollDirection: scrollDirection,

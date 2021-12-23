@@ -1,28 +1,32 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
-const double kDragThreshold = 200.0;
-const Duration kSnapBackDuration = Duration(milliseconds: 450);
-const Duration kOpenCardDuration = Duration(milliseconds: 1000);
-const Curve kSnapBackCurve = Curves.elasticOut;
-const double kMinImageFractionSize = .2;
+/// the minimum fraction height of the card image.
+/// This value must be in the range of [0.0, 1.0], where 1.0 is the
+/// maximum context height.
+const double _kMinImageFractionSize = .4;
 
-typedef DragCallback = void Function(double);
-typedef AnimationControllerBuilder = AnimationController Function();
+/// signature for passing down a [DiscoveryCardController]
+typedef ControllerCallback = void Function(DiscoveryCardController);
 
 /// Implementation of [DiscoveryCardBase] which is used inside the feed view.
 class DiscoveryCard extends DiscoveryCardBase {
   final DragCallback? onDrag;
   final VoidCallback? onDiscard;
+  final ControllerCallback? onController;
+
+  /// In pixels, how far must be dragged, before snapping back into feed view
+  static const double dragThreshold = 200.0;
 
   const DiscoveryCard({
     Key? key,
@@ -32,6 +36,7 @@ class DiscoveryCard extends DiscoveryCardBase {
     ImageManager? imageManager,
     this.onDiscard,
     this.onDrag,
+    this.onController,
   }) : super(
           key: key,
           isPrimary: isPrimary,
@@ -60,42 +65,77 @@ class DiscoveryCardScreen extends DiscoveryCard {
   State<StatefulWidget> createState() => _DiscoveryCardPageState();
 }
 
+/// A controller which allows to programmatically close this widget
+class DiscoveryCardController extends ChangeNotifier {
+  /// the animation controller which controls the animation of [DiscoveryCard]
+  final AnimationController _controller;
+
+  DiscoveryCardController(this._controller);
+
+  /// close the card, using an animation effect
+  Future<void> animateToClose() async {
+    // play out the animation...
+    await _controller.animateTo(
+      1.0,
+      curve: Curves.easeIn,
+    );
+
+    // finally, reset the controller
+    _controller.value = .0;
+  }
+}
+
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     with TickerProviderStateMixin {
   late final AnimationController _openingAnimation;
+  late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
   late final DragCallback _onDrag;
+  late final DiscoveryCardController _controller;
+  double _scrollOffset = .0;
 
   @override
   void initState() {
     super.initState();
 
     _onDrag = (distance) {
-      _openingAnimation.value =
-          (1.0 - (kDragThreshold - distance) / kDragThreshold)
-              .clamp(kMinImageFractionSize, 1.0);
+      _openingAnimation.value = (1.0 -
+              (DiscoveryCard.dragThreshold - distance) /
+                  DiscoveryCard.dragThreshold)
+          .clamp(_kMinImageFractionSize, 1.0);
 
       widget.onDrag?.call(distance);
     };
 
     _openingAnimation = AnimationController(
       vsync: this,
-      duration: kOpenCardDuration,
+      duration: R.animations.cardOpenTransitionDuration,
     )..value = 1.0;
 
+    _dragToCloseAnimation = AnimationController(
+      vsync: this,
+      duration: R.animations.cardCloseTransitionDuration,
+    )..value = .0;
+
     _openingAnimation.addListener(() {
-      setState(() {
-        // we rebuild so that the value from _openingAnimation is preocessed
-      });
+      setState(() {});
     });
+
+    _dragToCloseAnimation.addListener(() =>
+        _onDrag(_dragToCloseAnimation.value * DiscoveryCard.dragThreshold));
 
     _recognizer = DragBackRecognizer(
       debugOwner: this,
+      threshold: DiscoveryCard.dragThreshold,
       onDrag: _onDrag,
       onDiscard: widget.onDiscard,
-      animationControllerBuilder: () =>
-          AnimationController(vsync: this, duration: kSnapBackDuration),
+      animationControllerBuilder: () => AnimationController(
+          vsync: this, duration: R.animations.cardSnapBackDuration),
     );
+
+    _controller = DiscoveryCardController(_dragToCloseAnimation);
+
+    widget.onController?.call(_controller);
   }
 
   @override
@@ -104,6 +144,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     _openingAnimation.stop(canceled: true);
     _openingAnimation.dispose();
+    _dragToCloseAnimation.dispose();
+    _controller.dispose();
 
     super.dispose();
   }
@@ -112,85 +154,51 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
     final mediaQuery = MediaQuery.of(context);
-    final opacity = (_openingAnimation.value - kMinImageFractionSize) /
-        (1.0 - kMinImageFractionSize);
-
-    buildFooter(double? maxHeight) => OverflowBox(
-          maxWidth: mediaQuery.size.width,
-          maxHeight: maxHeight,
-          child: Opacity(
-              opacity: opacity,
-              child: DiscoveryCardFooter(
-                title: webResource.title,
-                url: webResource.url,
-                provider: webResource.provider,
-                datePublished: webResource.datePublished,
-                onLikePressed: () =>
-                    actionsManager.likeDocument(widget.document),
-                onDislikePressed: () =>
-                    actionsManager.dislikeDocument(widget.document),
-              )),
-        );
-
-    final readerMode = BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-      bloc: discoveryCardManager,
-      builder: (context, state) {
-        return ClipRRect(
-          child: OverflowBox(
-            alignment: Alignment.topCenter,
-            maxWidth: mediaQuery.size.width,
-            child: ReaderMode(
-              title: title,
-              snippet: snippet,
-              imageUri: Uri.parse(imageUrl),
-              processHtmlResult: state.result,
-              onProcessedHtml: () => _openingAnimation.animateTo(
-                kMinImageFractionSize,
-                curve: Curves.fastOutSlowIn,
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    // normalize the animation value to [0.0, 1.0]
+    final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
+        (1.0 - _kMinImageFractionSize);
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
-        final maskedImage = ClipRect(
-          child: OverflowBox(
-            maxWidth: constraints.maxWidth,
-            maxHeight: constraints.maxHeight,
-            alignment: Alignment.topCenter,
-            child: Container(
-              foregroundDecoration: BoxDecoration(
-                gradient: buildGradient(opacity: _openingAnimation.value),
-              ),
-              child: image,
-            ),
+        final maskedImage = Container(
+          foregroundDecoration: BoxDecoration(
+            gradient: buildGradient(opacity: _openingAnimation.value),
           ),
+          child: image,
         );
-        final maskedReaderMode = ClipRect(
-          child: OverflowBox(
-            maxWidth: mediaQuery.size.width,
-            maxHeight: constraints.maxHeight,
-            child: Opacity(
-              opacity: opacity,
-              child: buildFooter(constraints.maxHeight),
-            ),
-          ),
+        final elements = DiscoveryCardElements(
+          title: webResource.title,
+          timeToRead: state.output?.timeToRead ?? '',
+          url: webResource.url,
+          provider: webResource.provider,
+          datePublished: webResource.datePublished,
+          onLikePressed: () => actionsManager.likeDocument(widget.document),
+          onDislikePressed: () =>
+              actionsManager.dislikeDocument(widget.document),
+          fractionSize: normalizedValue,
         );
 
-        return Column(
+        return Stack(
           children: [
-            Container(
-              height: constraints.maxHeight * _openingAnimation.value,
-              alignment: Alignment.topCenter,
-              child: Stack(
-                children: [maskedImage, maskedReaderMode],
+            Positioned.fill(
+                child: _buildReaderMode(
+              mediaQuery.size,
+              state.output?.processHtmlResult,
+            )),
+            Positioned(
+              top: -_scrollOffset * (1.0 - normalizedValue),
+              left: 0,
+              right: 0,
+              child: Container(
+                height: constraints.maxHeight * _openingAnimation.value,
+                alignment: Alignment.topCenter,
+                child: Stack(
+                  children: [
+                    maskedImage,
+                    elements,
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: readerMode,
             ),
           ],
         );
@@ -201,17 +209,48 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       onPointerDown: _recognizer.addPointer,
       behavior: HitTestBehavior.translucent,
       child: WillPopScope(
-        onWillPop: () async {
-          await _openingAnimation.animateTo(
-            1.0,
-            curve: Curves.fastOutSlowIn,
-          );
-
-          widget.onDiscard?.call();
-
-          return false;
-        },
+        onWillPop: _onWillPopScope,
         child: body,
+      ),
+    );
+  }
+
+  Future<bool> _onWillPopScope() async {
+    await _controller.animateToClose();
+
+    widget.onDiscard?.call();
+
+    return false;
+  }
+
+  Widget _buildReaderMode(Size size, ProcessHtmlResult? processHtmlResult) {
+    final readerMode = ReaderMode(
+      title: title,
+      snippet: snippet,
+      imageUri: Uri.parse(imageUrl),
+      processHtmlResult: processHtmlResult,
+      padding: EdgeInsets.only(
+        left: R.dimen.unit2,
+        right: R.dimen.unit2,
+        // todo: bottom offset should compensate for the NavBar, so we need to calculate it
+        bottom: R.dimen.unit12,
+        top: size.height * _kMinImageFractionSize,
+      ),
+      onProcessedHtml: () => _openingAnimation.animateTo(
+        _kMinImageFractionSize,
+        curve: Curves.fastOutSlowIn,
+      ),
+      onScroll: (position) => setState(() => _scrollOffset = position),
+    );
+
+    return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+      bloc: discoveryCardManager,
+      builder: (context, state) => ClipRRect(
+        child: OverflowBox(
+          alignment: Alignment.topCenter,
+          maxWidth: size.width,
+          child: readerMode,
+        ),
       ),
     );
   }
@@ -223,91 +262,8 @@ class _DiscoveryCardPageState extends _DiscoveryCardState {
           BuildContext context, DiscoveryCardState state, Widget image) =>
       Scaffold(
         body: SafeArea(
+          bottom: false,
           child: super.buildFromState(context, state, image),
         ),
       );
-}
-
-class DragBackRecognizer extends HorizontalDragGestureRecognizer {
-  final AnimationControllerBuilder animationControllerBuilder;
-  final DragCallback onDrag;
-  final VoidCallback? onDiscard;
-
-  AnimationController? _animationController;
-  double _distance = .0;
-  int? _lastPointer;
-
-  double get distance => _distance;
-
-  DragBackRecognizer({
-    required this.animationControllerBuilder,
-    required this.onDrag,
-    this.onDiscard,
-    Object? debugOwner,
-  }) : super(debugOwner: debugOwner) {
-    onStart = onDragStart;
-    onUpdate = onDragUpdate;
-    onEnd = onDragEnd;
-    onCancel = onDragCancel;
-  }
-
-  @override
-  void dispose() {
-    _animationController?.stop(canceled: true);
-    _animationController?.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  void addPointer(PointerDownEvent event) {
-    _lastPointer = event.pointer;
-
-    super.addPointer(event);
-  }
-
-  void onDragStart(DragStartDetails event) {
-    _distance = .0;
-
-    onDrag(_distance);
-
-    _animationController?.stop(canceled: true);
-    _animationController?.dispose();
-  }
-
-  void onDragUpdate(DragUpdateDetails event) {
-    _distance += event.delta.dx;
-
-    if (_distance > kDragThreshold) {
-      _distance = 0;
-
-      HapticFeedback.mediumImpact();
-
-      stopTrackingPointer(_lastPointer!);
-
-      onDiscard?.call();
-    }
-
-    onDrag(_distance);
-  }
-
-  void onDragEnd(DragEndDetails? event) async {
-    if (_distance <= kDragThreshold) {
-      final controller = _animationController = animationControllerBuilder();
-
-      stopTrackingPointer(_lastPointer!);
-
-      controller.addListener(() {
-        onDrag(_distance * (1.0 - controller.value));
-      });
-
-      await controller.animateTo(1.0, curve: kSnapBackCurve);
-
-      controller.dispose();
-
-      _animationController = null;
-    }
-  }
-
-  void onDragCancel() => onDragEnd(null);
 }

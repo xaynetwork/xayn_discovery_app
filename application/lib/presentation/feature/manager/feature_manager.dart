@@ -2,7 +2,6 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/feature/override_feature_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 import 'feature_manager_state.dart';
@@ -15,40 +14,35 @@ const FeatureMap kInitialFeatureMap = {
 @lazySingleton
 class FeatureManager extends Cubit<FeatureManagerState>
     with UseCaseBlocHelper<FeatureManagerState> {
-  FeatureManager(
-    this._overrideFeatureUseCase,
-  ) : super(FeatureManagerState.initial(kInitialFeatureMap)) {
+  FeatureManager() : super(FeatureManagerState.initial(kInitialFeatureMap)) {
     _init();
   }
 
-  final OverrideFeatureUseCase _overrideFeatureUseCase;
-  late FeatureMap featureMap;
+  late FeatureMap _featureMap;
 
   void _init() {
-    featureMap = state.featureMap;
+    _featureMap = state.featureMap;
   }
 
   bool get showFeaturesScreen =>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
+
   bool get showOnboardingScreen => isEnabled(Feature.onBoarding);
 
   @override
-  Future<FeatureManagerState?> computeState() async =>
-      state.copyWith(featureMap: featureMap);
+  Future<FeatureManagerState?> computeState() async => FeatureManagerState(
+        featureMap: Map.from(_featureMap),
+      );
 
   bool isEnabled(Feature feature) => state.featureMap[feature] ?? false;
 
   bool isDisabled(Feature feature) => !isEnabled(feature);
 
   void overrideFeature(Feature feature, bool isEnabled) =>
-      scheduleComputeState(() async {
-        featureMap = await _overrideFeatureUseCase.singleOutput(
-          OverrideFeatureParam(
-            feature: feature,
-            isEnabled: isEnabled,
-            featureMap: state.featureMap,
-          ),
-        );
+      scheduleComputeState(() {
+        final FeatureMap modifiedFeatureMap = Map.from(_featureMap);
+        modifiedFeatureMap[feature] = isEnabled;
+        _featureMap = modifiedFeatureMap;
       });
 
   void flipFlopFeature(Feature feature) => overrideFeature(

@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engin
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
@@ -31,8 +31,11 @@ class _DiscoveryFeedCardState
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    final footer = DiscoveryCardFooter(
+    final timeToRead = state.output?.timeToRead ?? '';
+
+    final elements = DiscoveryCardElements(
       title: webResource.title,
+      timeToRead: timeToRead,
       url: webResource.url,
       provider: webResource.provider,
       datePublished: webResource.datePublished,
@@ -47,7 +50,7 @@ class _DiscoveryFeedCardState
               gradient: buildGradient(),
             ),
             child: image),
-        footer
+        elements
       ],
     );
   }

@@ -8,6 +8,8 @@ import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
+typedef ScrollHandler = void Function(double position);
+
 const String _kUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36';
 const List<String> _kClassesToPreserve = [
@@ -22,6 +24,7 @@ const List<String> _kClassesToPreserve = [
   'wp-caption-text',
   'wp-smiley',
 ];
+const EdgeInsets _kPadding = EdgeInsets.zero;
 final RegExp _kMatchManifestRegExp = RegExp(
   r'manifest\([^\)]+\)',
   caseSensitive: false,
@@ -33,6 +36,8 @@ class ReaderMode extends StatefulWidget {
   final Uri imageUri;
   final readability.ProcessHtmlResult? processHtmlResult;
   final VoidCallback? onProcessedHtml;
+  final ScrollHandler? onScroll;
+  final EdgeInsets padding;
 
   const ReaderMode({
     Key? key,
@@ -40,7 +45,9 @@ class ReaderMode extends StatefulWidget {
     required this.snippet,
     required this.imageUri,
     this.processHtmlResult,
+    this.padding = _kPadding,
     this.onProcessedHtml,
+    this.onScroll,
   }) : super(key: key);
 
   @override
@@ -110,18 +117,21 @@ class _ReaderModeState extends State<ReaderMode> {
         _readerModeController.loadUri(uri);
 
         return readability.ReaderMode(
-            controller: _readerModeController,
-            textStyle: R.styles.readerModeTextStyle,
-            userAgent: _kUserAgent,
-            classesToPreserve: _kClassesToPreserve,
-            factoryBuilder: () => _ReaderModeWidgetFactory(
-                padding: EdgeInsets.symmetric(horizontal: R.dimen.unit2)),
-            loadingBuilder: () => loading,
-            onProcessedHtml: (result) async {
-              widget.onProcessedHtml?.call();
+          controller: _readerModeController,
+          textStyle: R.styles.readerModeTextStyle,
+          userAgent: _kUserAgent,
+          classesToPreserve: _kClassesToPreserve,
+          factoryBuilder: () => _ReaderModeWidgetFactory(
+            padding: widget.padding,
+          ),
+          loadingBuilder: () => loading,
+          onProcessedHtml: (result) async {
+            widget.onProcessedHtml?.call();
 
-              return result;
-            });
+            return result;
+          },
+          onScroll: widget.onScroll,
+        );
       },
     );
   }
