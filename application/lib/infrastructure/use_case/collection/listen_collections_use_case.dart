@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
 class ListenCollectionsUseCase extends UseCase<None, List<Collection>> {
@@ -11,12 +10,7 @@ class ListenCollectionsUseCase extends UseCase<None, List<Collection>> {
   ListenCollectionsUseCase(this._collectionsRepository);
   @override
   Stream<List<Collection>> transaction(None param) =>
-      _collectionsRepository.watch().transform(
-        StreamTransformer.fromHandlers(
-          handleData: (RepositoryEvent event, EventSink sink) {
-            final collections = _collectionsRepository.getAll();
-            sink.add(collections);
-          },
-        ),
-      );
+      _collectionsRepository.watch().map(
+            (_) => _collectionsRepository.getAll(),
+          );
 }
