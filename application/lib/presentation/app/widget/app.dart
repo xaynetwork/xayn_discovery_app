@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
-import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
+import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
+import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 
 class App extends StatefulWidget {
@@ -20,26 +18,22 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   late final AppManager _appManager;
-  late FeatureManager _featureManager;
+  late AppNavigationManager _navigatorManager;
 
   @override
   void initState() {
     super.initState();
 
-    _featureManager = di.get();
     _appManager = di.get();
+    _navigatorManager = di.get();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isOnBoardingEnabled = _featureManager.isEnabled(Feature.onBoarding);
-    final screen =
-        isOnBoardingEnabled ? const OnBoardingScreen() : const DiscoveryFeed();
-
-    final materialApp = MaterialApp(
-      title: 'Xayn Discovery App',
+    final materialApp = MaterialApp.router(
       theme: UnterDenLinden.getLinden(context).themeData,
-      home: screen,
+      routeInformationParser: _navigatorManager.routeInformationParser,
+      routerDelegate: AppRouter(_navigatorManager),
     );
 
     return BlocConsumer<AppManager, AppState>(
