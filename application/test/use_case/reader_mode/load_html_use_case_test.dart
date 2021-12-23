@@ -4,6 +4,7 @@ import 'package:http_client/http_client.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
+import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 
 import 'load_html_use_case_test.mocks.dart';
@@ -31,7 +32,7 @@ void main() {
       'Yahoo is part of the Yahoo family of brands.';
 
   setUp(() {
-    when(client.send(any)).thenAnswer(
+    when(client.sendWithRedirectGuard(any)).thenAnswer(
       (_) async => http.Response(
         200,
         '',
@@ -44,9 +45,8 @@ void main() {
   group('LoadHtmlUseCase: ', () {
     useCaseTest<LoadHtmlUseCase, Uri, Progress>(
       'Loads website data: ',
-      build: () => LoadHtmlUseCase(
+      build: () => LoadHtmlUseCase.standard(
         client: client,
-        headers: kHeaders,
       ),
       input: [uri],
       expect: [
@@ -61,9 +61,8 @@ void main() {
     () {
       useCaseTest<LoadHtmlUseCase, Uri, Progress>(
         'Loads Yahoo data: ',
-        build: () => LoadHtmlUseCase(
+        build: () => LoadHtmlUseCase.standard(
           client: Client(),
-          headers: kHeaders,
         ),
         input: [yahooWebLink],
         expect: [
