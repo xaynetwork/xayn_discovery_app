@@ -17,8 +17,8 @@ import 'package:xayn_design/xayn_design.dart';
 /// card's width.
 const double _kMaxTitleFraction = .75;
 
-class DiscoveryCardFooter extends StatelessWidget {
-  const DiscoveryCardFooter({
+class DiscoveryCardElements extends StatelessWidget {
+  const DiscoveryCardElements({
     Key? key,
     required this.title,
     required this.timeToRead,
@@ -85,7 +85,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       ],
     );
 
-    final footerColumn = Padding(
+    final elements = Padding(
       padding: EdgeInsets.all(R.dimen.unit3),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -104,7 +104,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       ),
     );
 
-    return footerColumn;
+    return elements;
   }
 }
 
