@@ -84,6 +84,9 @@ android {
         }
     }
 
+    buildTypes.each {
+        it.buildConfigField 'java.util.Hashtable<String, String>', 'CustomKeys', makePropertyHashTable('custom.properties')
+    }
 }
 
 flutter {
@@ -93,4 +96,29 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:multidex:2.0.1"
+}
+
+// A function that makes it easy to generate buildConfigField and thus having less boilerplate
+// when adding custom keys/tokens
+//
+// INPUT: filename containing key value pairs of keys
+// OUTPUT: a string format of HashMap<String, String>
+def makePropertyHashTable(filename) {
+    def properties = new Properties()
+    def propertiesFile = rootProject.file(filename)
+    if (propertiesFile.exists()) {
+        properties.load(new FileInputStream(propertiesFile))
+    } else {
+        throw new GradleException("Could not find ${filename} file.")
+    }
+
+    def prefix = 'new java.util.Hashtable<String, String>(){{ '
+    def suffix = '}}'
+    def value = ''
+    if (properties != null) {
+        for (d in properties) {
+            value += String.format('put("%s",%s); ', d.key, "\"${d.value}\"")
+        }
+    }
+    return String.format('%s%s%s', prefix, value, suffix)
 }
