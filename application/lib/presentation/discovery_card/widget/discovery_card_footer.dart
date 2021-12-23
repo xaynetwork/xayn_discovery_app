@@ -8,8 +8,13 @@ import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/di
 import 'favicon_bar.dart';
 import 'package:xayn_design/xayn_design.dart';
 
-typedef ReaderModeBuilder = Widget Function();
-
+/// Defines how wide the title may be.
+/// During animation transitions, the card itself will grow or shrink.
+/// the title needs to be "static", as in, we don't want it to grow or shrink
+/// together with the card, otherwise during animation, the text will adapt and
+/// suddenly take up less or more lines for example.
+/// Instead, the title width is static, based on the device's width and not the
+/// card's width.
 const double _kMaxTitleFraction = .75;
 
 class DiscoveryCardFooter extends StatelessWidget {
@@ -72,7 +77,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       runAlignment: WrapAlignment.end,
       runSpacing: R.dimen.unit,
       children: [
-        timeToReadWidget,
+        if (timeToRead.isNotEmpty) timeToReadWidget,
         SizedBox(
           width: mediaQuery.size.width * _kMaxTitleFraction,
           child: titleWidget,

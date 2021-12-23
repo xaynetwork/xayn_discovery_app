@@ -8,8 +8,6 @@ class R {
 
   static Linden _linden = Linden();
 
-  static const XDurations _durations = XDurations._();
-
   static Linden get linden => _linden;
 
   static XAssets get assets => _linden.assets;
@@ -22,8 +20,6 @@ class R {
 
   static XAnimations get animations => _linden.animations;
 
-  static XDurations get durations => _durations;
-
   static Brightness get brightness => _linden.brightness;
 
   static bool get isDarkMode => brightness == Brightness.dark;
@@ -31,12 +27,4 @@ class R {
   static void updateLinden(Linden linden) {
     _linden = linden;
   }
-}
-
-class XDurations {
-  const XDurations._();
-
-  final Duration _unit = const Duration(milliseconds: 200);
-
-  Duration get screenStateChangeDuration => _unit;
 }
