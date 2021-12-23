@@ -1,5 +1,6 @@
 import 'package:envify/envify.dart';
 import 'package:flutter/foundation.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 part 'env.g.dart';
 
@@ -10,10 +11,12 @@ abstract class Env {
       kReleaseMode ? _EnvProd.searchApiSecretKey : _EnvDev.searchApiSecretKey;
   static const String imageFetcherUrl =
       kReleaseMode ? _EnvProd.imageFetcherUrl : _EnvDev.imageFetcherUrl;
-  static const String instabugToken =
-      kReleaseMode ? _EnvProd.instabugToken : _EnvDev.instabugToken;
-  static const String amplitudeApiKey =
-      kReleaseMode ? _EnvProd.amplitudeApiKey : _EnvDev.amplitudeApiKey;
+  static const String instabugToken = EnvironmentHelper.kIsInternal
+      ? _EnvDev.instabugToken
+      : _EnvProd.instabugToken;
+  static const String amplitudeApiKey = EnvironmentHelper.kIsInternal
+      ? _EnvDev.amplitudeApiKey
+      : _EnvProd.amplitudeApiKey;
 }
 
 /// Standard Env config.
