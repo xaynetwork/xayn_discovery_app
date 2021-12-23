@@ -31,9 +31,11 @@ class _DiscoveryFeedCardState
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
+    final timeToRead = state.output?.timeToRead ?? '';
+
     final footer = DiscoveryCardFooter(
       title: webResource.title,
-      timeToRead: state.output?.timeToRead ?? '',
+      timeToRead: timeToRead,
       url: webResource.url,
       provider: webResource.provider,
       datePublished: webResource.datePublished,

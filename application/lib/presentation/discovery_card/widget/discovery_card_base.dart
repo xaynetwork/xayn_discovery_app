@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
 
+/// The base class for the different feed cards.
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
   final Document document;
@@ -29,6 +30,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   }) : super(key: key);
 }
 
+/// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> {
   late final DiscoveryCardManager _discoveryCardManager;
