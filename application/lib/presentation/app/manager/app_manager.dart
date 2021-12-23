@@ -10,7 +10,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 ///
 /// It it used to initialise the App with initial data like AppTheme.
 /// And also listen for changes to AppTheme.
-@injectable
+@lazySingleton
 class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   AppManager(
     this._getAppThemeUseCase,
