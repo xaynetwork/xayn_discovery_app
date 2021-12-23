@@ -7,7 +7,23 @@ import 'package:injectable/injectable.dart';
 /// These are random keywords, real keywords are to be provided by the
 /// real discovery engine.
 const List<String> randomKeywords = [
-  'yahoo',
+  'german',
+  'french',
+  'english',
+  'american',
+  'hollywood',
+  'music',
+  'broadway',
+  'football',
+  'tennis',
+  'covid',
+  'trump',
+  'merkel',
+  'cars',
+  'sports',
+  'market',
+  'economy',
+  'financial',
 ];
 
 @injectable
