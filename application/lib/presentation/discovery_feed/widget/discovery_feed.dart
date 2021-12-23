@@ -50,37 +50,43 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
     final document = _discoveryFeedManager
         .state.results![_discoveryFeedManager.state.resultIndex];
-    final defaultNavBarConfig = NavBarConfig([
-      buildNavBarItemHome(
-        isActive: true,
-        onPressed: _discoveryFeedManager.onHomeNavPressed,
-      ),
-      buildNavBarItemSearch(
-        onPressed: _discoveryFeedManager.onSearchNavPressed,
-      ),
-      buildNavBarItemAccount(
-        onPressed: _discoveryFeedManager.onAccountNavPressed,
-      ),
-    ]);
-    final readerModeNavBarConfig = NavBarConfig([
-      buildNavBarItemArrowLeft(onPressed: () async {
-        await _currentCardController?.animateToClose();
+    final defaultNavBarConfig = NavBarConfig(
+      [
+        buildNavBarItemHome(
+          isActive: true,
+          onPressed: _discoveryFeedManager.onHomeNavPressed,
+        ),
+        buildNavBarItemSearch(
+          onPressed: _discoveryFeedManager.onSearchNavPressed,
+        ),
+        buildNavBarItemAccount(
+          onPressed: _discoveryFeedManager.onAccountNavPressed,
+        ),
+      ],
+    );
+    final readerModeNavBarConfig = NavBarConfig(
+      [
+        buildNavBarItemArrowLeft(onPressed: () async {
+          await _currentCardController?.animateToClose();
 
-        _discoveryFeedManager.handleNavigateOutOfCard();
-      }),
-      buildNavBarItemLike(
-        isLiked: document.isRelevant,
-        onPressed: () => _discoveryCardActionsManager.likeDocument(document),
-      ),
-      buildNavBarItemShare(
-        onPressed: () =>
-            _discoveryCardActionsManager.shareUri(document.webResource.url),
-      ),
-      buildNavBarItemDisLike(
-        isDisLiked: document.isNotRelevant,
-        onPressed: () => _discoveryCardActionsManager.dislikeDocument(document),
-      ),
-    ]);
+          _discoveryFeedManager.handleNavigateOutOfCard();
+        }),
+        buildNavBarItemLike(
+          isLiked: document.isRelevant,
+          onPressed: () => _discoveryCardActionsManager.likeDocument(document),
+        ),
+        buildNavBarItemShare(
+          onPressed: () =>
+              _discoveryCardActionsManager.shareUri(document.webResource.url),
+        ),
+        buildNavBarItemDisLike(
+          isDisLiked: document.isNotRelevant,
+          onPressed: () =>
+              _discoveryCardActionsManager.dislikeDocument(document),
+        ),
+      ],
+      isWidthExpanded: true,
+    );
 
     return _discoveryFeedManager.state.isFullScreen
         ? readerModeNavBarConfig
