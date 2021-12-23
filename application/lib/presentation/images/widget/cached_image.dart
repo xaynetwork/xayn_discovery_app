@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -80,9 +81,11 @@ class _CachedImageState extends State<CachedImage> {
           BuildContext context,
           double progress,
         ) =>
-            const CircularProgressIndicator.adaptive();
-    final errorBuilder =
-        widget.errorBuilder ?? (BuildContext context) => const Text('oops!');
+            const CircularProgressIndicator();
+    final errorBuilder = widget.errorBuilder ??
+        (BuildContext context) => kReleaseMode
+            ? Container()
+            : const Text('asset was not loaded here');
 
     return BlocBuilder<ImageManager, ImageManagerState>(
         bloc: _imageManager,

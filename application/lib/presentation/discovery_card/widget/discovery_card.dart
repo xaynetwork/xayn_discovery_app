@@ -232,7 +232,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       padding: EdgeInsets.only(
         left: R.dimen.unit2,
         right: R.dimen.unit2,
-        bottom: R.dimen.unit2,
+        // todo: bottom offset should compensate for the NavBar, so we need to calculate it
+        bottom: R.dimen.unit12,
         top: size.height * _kMinImageFractionSize,
       ),
       onProcessedHtml: () => _openingAnimation.animateTo(
