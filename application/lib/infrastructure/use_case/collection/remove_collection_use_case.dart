@@ -10,7 +10,7 @@ import 'collection_exception.dart';
 
 @injectable
 class RemoveCollectionUseCase
-    extends UseCase<RemoveCollectionUseCaseParam, None> {
+    extends UseCase<RemoveCollectionUseCaseParam, Collection> {
   final CollectionsRepository _collectionsRepository;
   final BookmarksRepository _bookmarksRepository;
 
@@ -20,7 +20,7 @@ class RemoveCollectionUseCase
   );
 
   @override
-  Stream<None> transaction(RemoveCollectionUseCaseParam param) async* {
+  Stream<Collection> transaction(RemoveCollectionUseCaseParam param) async* {
     /// Check if we're trying to delete the default collection
     if (param.collectionIdToRemove == Collection.readLaterId) {
       logger.e(errorMessageRemovingExistingDefaultCollection);
@@ -55,7 +55,7 @@ class RemoveCollectionUseCase
     }
 
     _collectionsRepository.remove(collection);
-    yield none;
+    yield collection;
   }
 }
 
