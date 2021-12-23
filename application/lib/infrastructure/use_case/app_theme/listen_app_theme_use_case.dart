@@ -14,16 +14,8 @@ class ListenAppThemeUseCase extends UseCase<None, AppTheme> {
   ListenAppThemeUseCase(this._repository);
 
   @override
-  Stream<AppTheme> transaction(None param) => _repository.watch().transform(
-        StreamTransformer.fromHandlers(
-          handleData:
-              (RepositoryEvent<AppSettings> event, EventSink<AppTheme> sink) {
-            if (event is ChangedEvent) {
-              final theme =
-                  (event as ChangedEvent<AppSettings>).newObject.appTheme;
-              sink.add(theme);
-            }
-          },
-        ),
-      );
+  Stream<AppTheme> transaction(None param) => _repository
+      .watch()
+      .map((event) => (event as ChangedEvent<AppSettings>).newObject.appTheme)
+      .distinct();
 }

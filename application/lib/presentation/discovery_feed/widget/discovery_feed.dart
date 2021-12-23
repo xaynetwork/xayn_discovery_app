@@ -4,7 +4,6 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -67,17 +66,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildFeedView(),
-
-      /// This is for testing purposes only
-      /// Should be removed once we have a settings page
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => UnterDenLinden.of(context).changeBrightness(
-            R.linden.brightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light),
-        tooltip: 'Toggle Theme',
-        child: const Icon(Icons.theater_comedy),
-      ),
     );
   }
 
