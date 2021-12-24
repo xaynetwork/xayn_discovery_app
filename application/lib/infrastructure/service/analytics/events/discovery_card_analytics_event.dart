@@ -18,7 +18,7 @@ class ChangeCardViewTypeAnalyticsEvent extends _DiscoveryCardAnalyticsEvent {
       : super(card);
 
   @override
-  String get name =>'Open Discovery Card in $viewType';
+  String get name => 'Open Discovery Card in $viewType';
 }
 
 class _DiscoveryCardAnalyticsEvent implements AnalyticsEvent {

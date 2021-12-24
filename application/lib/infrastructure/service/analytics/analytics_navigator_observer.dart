@@ -1,34 +1,31 @@
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_screen_analytics_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/log_open_route_analytics_use_case.dart';
 
 class AnalyticsNavigatorObserver extends NavigatorObserver {
-  late final AnalyticsService _analyticsService;
+  late final LogOpenRouteAnalyticsUseCase _logOpenRouteUseCase;
 
-  AnalyticsNavigatorObserver(this._analyticsService);
-
-  void _observeNewRoute(Route route) {
-    final event = OpenScreenAnalyticsEvent(route);
-    _analyticsService.logEvent(event);
+  AnalyticsNavigatorObserver() {
+    _logOpenRouteUseCase = di.get();
   }
 
   @override
   void didPush(Route route, Route? previousRoute) {
-    _observeNewRoute(route);
+    _logOpenRouteUseCase.call(route);
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    if (newRoute != null) _observeNewRoute(newRoute);
+    if (newRoute != null) _logOpenRouteUseCase.call(newRoute);
   }
 
   @override
   void didRemove(Route route, Route? previousRoute) {
-    if (previousRoute != null) _observeNewRoute(previousRoute);
+    if (previousRoute != null) _logOpenRouteUseCase.call(previousRoute);
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
-    if (previousRoute != null) _observeNewRoute(previousRoute);
+    if (previousRoute != null) _logOpenRouteUseCase.call(previousRoute);
   }
 }
