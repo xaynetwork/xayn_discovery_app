@@ -11,7 +11,7 @@ class AnalyticsEvents {
   static AnalyticsEvent openScreenEvent(Route route) => AnalyticsEvent(
         _openScreenEvent(route.settings.name!),
         properties: route.settings.arguments == null
-            ? {}
+            ? null
             : {_kArgumentsProperty: route.settings.arguments},
       );
 }
