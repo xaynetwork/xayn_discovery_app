@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-
-@immutable
-class AnalyticsEvent {
+abstract class AnalyticsEvent {
   final String name;
   final Map<String, dynamic>? properties;
 

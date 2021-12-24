@@ -18,6 +18,7 @@ class PageRegistry {
     onboarding,
   };
 
+  // Make sure to add the page names in camel case
   static final discovery = xayn.PageData(
     name: "discovery",
     isInitial: true,

@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_events.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_screen_analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 class AnalyticsNavigatorObserver extends NavigatorObserver {
   late final AnalyticsService _analyticsService;
@@ -9,13 +8,7 @@ class AnalyticsNavigatorObserver extends NavigatorObserver {
   AnalyticsNavigatorObserver(this._analyticsService);
 
   void _observeNewRoute(Route route) {
-    if (route.settings.name == null) {
-      logger.e(
-        'A route with `name = null` has been tracked by analytics navigator observer',
-      );
-      return;
-    }
-    final event = AnalyticsEvents.openScreenEvent(route);
+    final event = OpenScreenAnalyticsEvent(route);
     _analyticsService.logEvent(event);
   }
 

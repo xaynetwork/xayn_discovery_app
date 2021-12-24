@@ -4,8 +4,6 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-const kLoggingServiceName = 'Analytics event has been fired: ';
-
 @lazySingleton
 class AnalyticsService {
   AnalyticsService() {
@@ -27,6 +25,6 @@ class AnalyticsService {
       eventProperties: event.properties,
     );
 
-    logger.i(kLoggingServiceName + event.name);
+    logger.i('Analytics event has been fired: ' + event.name);
   }
 }
