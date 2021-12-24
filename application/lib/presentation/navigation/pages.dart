@@ -35,6 +35,7 @@ class PageRegistry {
     name: "onboarding",
     builder: (_, args) => const OnBoardingScreen(),
     pageBuilder: (_, widget) => xayn.CustomTransitionPage(
+      name: "onboarding",
       child: widget,
       opaque: false,
       transitionsBuilder: (_, a1, a2, widget) => FadeTransition(
