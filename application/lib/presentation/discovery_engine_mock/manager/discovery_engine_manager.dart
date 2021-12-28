@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
@@ -11,11 +10,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/docu
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/base_events.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.
@@ -27,15 +23,15 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
   final CreateHttpRequestUseCase _createHttpRequestUseCase;
   final InvokeApiEndpointUseCase _invokeApiEndpointUseCase;
 
-  final StreamController<ClientEvent> _onClientEvent =
-      StreamController<ClientEvent>();
-  late final StreamSubscription<ClientEvent> _clientEventSubscription;
+  final StreamController<xayn.ClientEvent> _onClientEvent =
+      StreamController<xayn.ClientEvent>();
+  late final StreamSubscription<xayn.ClientEvent> _clientEventSubscription;
 
   late final UseCaseSink<String, ApiEndpointResponse> _handleQuery;
 
   bool _isLoading = false;
 
-  Sink<ClientEvent> get onClientEvent => _onClientEvent.sink;
+  Sink<xayn.ClientEvent> get onClientEvent => _onClientEvent.sink;
 
   DiscoveryEngineManager(
     this._connectivityUseCase,
@@ -105,19 +101,71 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
         }
       });
 
-  void _handleClientEvent(ClientEvent event) {
-    if (event is SearchRequested) {
-      _handleSearchEvent(event);
+  void _handleClientEvent(xayn.ClientEvent event) {
+    if (event is xayn.FeedRequested) {
+      requestFeed();
     } else if (event is xayn.DocumentFeedbackChanged) {
       _handleDocumentFeedbackChanged(event);
     }
   }
 
-  void _handleSearchEvent(SearchRequested event) => _handleQuery(event.term);
-
   void _handleDocumentFeedbackChanged(xayn.DocumentFeedbackChanged event) {
     // ignore: avoid_print
     print('DocumentFeedbackChanged has been called: ${event.feedback}');
+  }
+
+  @override
+  Future<xayn.EngineEvent> changeConfiguration(
+      {String? feedMarket, int? maxItemsPerFeedBatch}) {
+    // TODO: implement changeConfiguration
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<xayn.EngineEvent> changeDocumentFeedback(
+      {required xayn.DocumentId documentId,
+      required xayn.DocumentFeedback feedback}) {
+    // TODO: implement changeDocumentFeedback
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<xayn.EngineEvent> closeFeedDocuments(
+      Set<xayn.DocumentId> documentIds) {
+    // TODO: implement closeFeedDocuments
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement engineEvents
+  Stream<xayn.EngineEvent> get engineEvents => throw UnimplementedError();
+
+  @override
+  Future<xayn.EngineEvent> logDocumentTime(
+      {required xayn.DocumentId documentId,
+      required xayn.DocumentViewMode mode,
+      required int seconds}) {
+    // TODO: implement logDocumentTime
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<xayn.EngineEvent> requestFeed() async {
+    _handleQuery('today');
+
+    return const xayn.EngineEvent.feedRequestSucceeded([]);
+  }
+
+  @override
+  Future<xayn.EngineEvent> requestNextFeedBatch() {
+    // TODO: implement requestNextFeedBatch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<xayn.EngineEvent> resetEngine() {
+    // TODO: implement resetEngine
+    throw UnimplementedError();
   }
 }
 
@@ -136,8 +184,8 @@ class DiscoveryCardActionsManager {
     this._shareUriUseCase,
   );
 
-  void likeDocument(Document document) {
-    final feedback = document.isNotRelevant
+  void likeDocument(xayn.Document document) {
+    final feedback = document.isIrrelevant
         ? xayn.DocumentFeedback.neutral
         : xayn.DocumentFeedback.positive;
     _documentFeedbackUseCase.call(
@@ -148,7 +196,7 @@ class DiscoveryCardActionsManager {
     );
   }
 
-  void dislikeDocument(Document document) {
+  void dislikeDocument(xayn.Document document) {
     final feedback = document.isRelevant
         ? xayn.DocumentFeedback.neutral
         : xayn.DocumentFeedback.negative;

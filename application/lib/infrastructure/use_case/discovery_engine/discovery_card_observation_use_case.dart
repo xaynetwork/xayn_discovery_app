@@ -1,7 +1,8 @@
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/document_view_type.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef DiscoveryCardObservationPair
     = Iterable<Timestamped<DiscoveryCardObservation>>;

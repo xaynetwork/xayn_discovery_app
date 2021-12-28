@@ -4,9 +4,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/search_events.dart';
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
@@ -29,10 +28,7 @@ class DiscoveryEngineResultsUseCase
     final searchTerm = param.searchTerm;
 
     if (searchTerm != null) {
-      _discoveryApi.onClientEvent.add(SearchRequested(
-        searchTerm,
-        param.searchTypes,
-      ));
+      _discoveryApi.onClientEvent.add(const FeedRequested());
     }
 
     yield* _discoveryApi.stream;

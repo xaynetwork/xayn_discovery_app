@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/document_view_type.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -16,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dar
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
@@ -80,7 +82,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               _discoveryCardActionsManager.shareUri(document.webResource.url),
         ),
         buildNavBarItemDisLike(
-          isDisLiked: document.isNotRelevant,
+          isDisLiked: document.isIrrelevant,
           onPressed: () =>
               _discoveryCardActionsManager.dislikeDocument(document),
         ),

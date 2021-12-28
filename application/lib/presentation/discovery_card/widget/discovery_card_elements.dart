@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
 import 'package:xayn_design/xayn_design.dart';
