@@ -11,6 +11,8 @@
 #
 
 import("../ios/fastlane/Fastfile")
+import("lib/properties.rb")
+import("lib/git.rb")
 
 #ios, android, web
 platform = "android"
@@ -37,14 +39,14 @@ before_all do |lane, options|
   options[:flavor] = options[:flavor] || flavor
   options[:build] = options[:build] || build
 
-  version_name = `git describe --tags | tr -d '\n'`
-  build_number = `git rev-list --count HEAD | tr -d '\n'`
+  version_name = gitVersionName()
+  build_number = gitVersionNumber()
   options[:build_number] = options[:build_number] || build_number
   options[:version_name] = options[:version_name] || version_name
   puts options
 end
 
-# Private lanes, that we only call internaly, they are nice because they have an own description
+# Private lanes, that we only call internally, they are nice because they have an own description
 desc "Flutter build"
 private_lane :flutter_build do |options|
   clean(options)
@@ -178,15 +180,9 @@ def flutter(args)
   end
 end
 
-def createChangelog(version)
-  Dir.chdir("../") do
-    gitlog = sh "git log | head -n50"
-    return "Version: #{version}\n\n#{gitlog}"
-  end
-end
 
 def uploadToAppCenter(token, appName, path, version)
-  changelog = createChangelog(version)
+  changelog = gitChangeLog(version)
   appcenter_upload(
     api_token: token,
     owner_name: "XAIN_AG",
@@ -197,65 +193,4 @@ def uploadToAppCenter(token, appName, path, version)
     destinations: "Collaborators",
     notify_testers: true,
   )
-end
-
-# Checks for a map of {envKey : propertyKey} if either of those is set and then tries to read it from the user
-def askAndSetProperties(propertiesPath, hash)
-  resultingProps = {}
-  loadedProperties = loadProperties(propertiesPath)
-  hash.each do |envKey, propertyKey|
-    prop = ENV[envKey]
-    propertyIsAlreadtSet = loadedProperties.key?(propertyKey)
-
-    if propertyIsAlreadtSet && !prop
-      puts("Already set #{propertyKey} in #{propertiesPath} and no alternative #{envKey} provided.")
-      next
-    end
-
-    if ENV_DEFAULTS.key?(envKey)
-      prop = ENV_DEFAULTS[envKey]
-    end
-
-    if !prop
-      prop = UI.input("Please input #{envKey} (for #{propertiesPath} : #{propertyKey}) : ")
-    end
-
-    resultingProps[propertyKey] = prop
-  end
-
-  setProperties(propertiesPath, resultingProps)
-end
-
-# Reads and sets properties in a file
-def setProperties(path, hash)
-  if File.file?(path)
-    loadedProperties = loadProperties(path)
-    hash = loadedProperties.merge(hash)
-  end
-  File.delete(path) if File.exist?(path)
-  File.open(path, "w") do |fo|
-    hash.each do |key, value|
-      fo.write("#{key}=#{value}\n")
-    end
-  end
-end
-
-def loadProperties(propertiesFilename)
-  properties = {}
-  if File.file?(propertiesFilename)
-    File.open(propertiesFilename, "r") do |properties_file|
-      properties_file.read.each_line do |line|
-        line.strip!
-        if (line[0] != ?# and line[0] != ?=)
-          i = line.index("=")
-          if (i)
-            properties[line[0..i - 1].strip] = line[i + 1..-1].strip
-          else
-            properties[line] = ""
-          end
-        end
-      end
-    end
-  end
-  properties
 end
