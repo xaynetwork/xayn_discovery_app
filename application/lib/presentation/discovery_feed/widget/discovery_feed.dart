@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -37,7 +36,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver, NavBarConfigMixin {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
-  late final DiscoveryCardActionsManager _discoveryCardActionsManager;
   late final Map<Document, _CardManagers> _cardManagers;
   DiscoveryCardController? _currentCardController;
 
@@ -52,6 +50,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
     final document = _discoveryFeedManager
         .state.results![_discoveryFeedManager.state.resultIndex];
+    final managers = managersOf(document);
     final defaultNavBarConfig = NavBarConfig(
       [
         buildNavBarItemHome(
@@ -75,16 +74,21 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         }),
         buildNavBarItemLike(
           isLiked: document.isRelevant,
-          onPressed: () => _discoveryCardActionsManager.likeDocument(document),
+          onPressed: () => managers.discoveryCardManager.changeDocumentFeedback(
+            documentId: document.documentId,
+            feedback: DocumentFeedback.positive,
+          ),
         ),
         buildNavBarItemShare(
           onPressed: () =>
-              _discoveryCardActionsManager.shareUri(document.webResource.url),
+              managers.discoveryCardManager.shareUri(document.webResource.url),
         ),
         buildNavBarItemDisLike(
           isDisLiked: document.isIrrelevant,
-          onPressed: () =>
-              _discoveryCardActionsManager.dislikeDocument(document),
+          onPressed: () => managers.discoveryCardManager.changeDocumentFeedback(
+            documentId: document.documentId,
+            feedback: DocumentFeedback.negative,
+          ),
         ),
       ],
       isWidthExpanded: true,
@@ -133,7 +137,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
-    _discoveryCardActionsManager = di.get();
     _cardManagers = <Document, _CardManagers>{};
 
     WidgetsBinding.instance!.addObserver(this);
@@ -227,10 +230,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 ),
               );
 
-        return _ResultCard(
+        return SwipeableDiscoveryCard(
+          manager: managers.discoveryCardManager,
+          isPrimary: isPrimary,
           document: document,
           card: card,
-          isPrimary: isPrimary,
           isSwipingEnabled: isSwipingEnabled,
         );
       };
@@ -248,33 +252,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
             discoveryCardManager: di.get()..updateUri(document.webResource.url),
           ));
-}
-
-class _ResultCard extends StatelessWidget {
-  final bool isPrimary;
-  final Document document;
-  final Widget card;
-  final bool isSwipingEnabled;
-
-  const _ResultCard({
-    Key? key,
-    required this.isPrimary,
-    required this.document,
-    required this.card,
-    required this.isSwipingEnabled,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final swipeCard = SwipeableDiscoveryCard(
-      isPrimary: isPrimary,
-      document: document,
-      card: card,
-      isSwipingEnabled: isSwipingEnabled,
-    );
-
-    return swipeCard;
-  }
 }
 
 @immutable
