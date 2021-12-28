@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 const kSwipeOpenToPosition = 0.35;

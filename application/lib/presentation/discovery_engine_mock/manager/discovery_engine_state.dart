@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// Mock implementation.
 /// This will be deprecated once the real discovery engine is available.

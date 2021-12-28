@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 part 'active_search_state.freezed.dart';
 

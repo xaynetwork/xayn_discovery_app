@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
@@ -9,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
 
