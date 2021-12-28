@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
@@ -20,6 +19,7 @@ const double _kMaxTitleFraction = .75;
 class DiscoveryCardElements extends StatelessWidget {
   const DiscoveryCardElements({
     Key? key,
+    required this.manager,
     required this.title,
     required this.timeToRead,
     required this.url,
@@ -29,6 +29,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onDislikePressed,
     this.fractionSize = 1.0,
   }) : super(key: key);
+  final DiscoveryCardManager manager;
   final String title;
   final String timeToRead;
   final Uri url;
@@ -40,7 +41,6 @@ class DiscoveryCardElements extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DiscoveryCardActionsManager _actionsManager = di.get();
     final mediaQuery = MediaQuery.of(context);
     final timeToReadWidget = Text(
       '$timeToRead ${Strings.readingTimeSuffix}',
@@ -62,7 +62,7 @@ class DiscoveryCardElements extends StatelessWidget {
         vertical: R.dimen.unit3,
       ),
       child: _ButtonRowFooter(
-        onSharePressed: () => _actionsManager.shareUri(url),
+        onSharePressed: () => manager.shareUri(url),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
       ),

@@ -3,14 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document_view_type.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -37,7 +35,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver, NavBarConfigMixin {
   late final CardViewController _cardViewController;
   late final DiscoveryFeedManager _discoveryFeedManager;
-  late final DiscoveryCardActionsManager _discoveryCardActionsManager;
   late final Map<Document, _CardManagers> _cardManagers;
   DiscoveryCardController? _currentCardController;
 
@@ -52,6 +49,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
     final document = _discoveryFeedManager
         .state.results![_discoveryFeedManager.state.resultIndex];
+    final managers = managersOf(document);
     final defaultNavBarConfig = NavBarConfig(
       [
         buildNavBarItemHome(
@@ -75,16 +73,21 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         }),
         buildNavBarItemLike(
           isLiked: document.isRelevant,
-          onPressed: () => _discoveryCardActionsManager.likeDocument(document),
+          onPressed: () => managers.discoveryCardManager.changeDocumentFeedback(
+            documentId: document.documentId,
+            feedback: DocumentFeedback.positive,
+          ),
         ),
         buildNavBarItemShare(
           onPressed: () =>
-              _discoveryCardActionsManager.shareUri(document.webResource.url),
+              managers.discoveryCardManager.shareUri(document.webResource.url),
         ),
         buildNavBarItemDisLike(
           isDisLiked: document.isIrrelevant,
-          onPressed: () =>
-              _discoveryCardActionsManager.dislikeDocument(document),
+          onPressed: () => managers.discoveryCardManager.changeDocumentFeedback(
+            documentId: document.documentId,
+            feedback: DocumentFeedback.negative,
+          ),
         ),
       ],
       isWidthExpanded: true,
@@ -133,7 +136,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     _cardViewController = CardViewController();
     _discoveryFeedManager = di.get();
-    _discoveryCardActionsManager = di.get();
     _cardManagers = <Document, _CardManagers>{};
 
     WidgetsBinding.instance!.addObserver(this);
@@ -228,6 +230,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               );
 
         return SwipeableDiscoveryCard(
+          manager: managers.discoveryCardManager,
           isPrimary: isPrimary,
           document: document,
           card: card,

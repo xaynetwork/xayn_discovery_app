@@ -167,14 +167,20 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           child: image,
         );
         final elements = DiscoveryCardElements(
+          manager: discoveryCardManager,
           title: webResource.title,
           timeToRead: state.output?.timeToRead ?? '',
           url: webResource.url,
           provider: webResource.provider,
           datePublished: webResource.datePublished,
-          onLikePressed: () => actionsManager.likeDocument(widget.document),
-          onDislikePressed: () =>
-              actionsManager.dislikeDocument(widget.document),
+          onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
+            documentId: widget.document.documentId,
+            feedback: DocumentFeedback.positive,
+          ),
+          onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
+            documentId: widget.document.documentId,
+            feedback: DocumentFeedback.negative,
+          ),
           fractionSize: normalizedValue,
         );
 
