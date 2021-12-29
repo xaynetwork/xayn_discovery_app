@@ -17,7 +17,6 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     @Default(false) bool isFullScreen,
     required bool isInErrorState,
     required DiscoveryFeedAxis axis,
-    int? suggestTopicsAtIndex,
   }) = _DiscoveryFeedState;
 
   factory DiscoveryFeedState.empty() => const DiscoveryFeedState(

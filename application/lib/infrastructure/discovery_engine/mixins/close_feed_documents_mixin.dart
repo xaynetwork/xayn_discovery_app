@@ -6,22 +6,19 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/clos
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin CloseFeedDocumentsMixin<T> on UseCaseBlocHelper<T> {
-  UseCaseSink<Set<DocumentId>, EngineEvent>? _useCaseSink;
+  Future<UseCaseSink<Set<DocumentId>, EngineEvent>>? _useCaseSink;
 
   void closeFeedDocuments(Set<DocumentId> documents) async {
-    final useCaseSink = await _getUseCaseSink();
+    _useCaseSink ??= _getUseCaseSink();
 
-    useCaseSink(documents);
+    final useCaseSink = await _useCaseSink;
+
+    useCaseSink!(documents);
   }
 
   Future<UseCaseSink<Set<DocumentId>, EngineEvent>> _getUseCaseSink() async {
-    var sink = _useCaseSink;
-
-    if (sink == null) {
-      final useCase = await di.getAsync<CloseFeedDocumentsUseCase>();
-
-      sink = _useCaseSink = pipe(useCase);
-    }
+    final useCase = await di.getAsync<CloseFeedDocumentsUseCase>();
+    final sink = pipe(useCase);
 
     return sink;
   }
