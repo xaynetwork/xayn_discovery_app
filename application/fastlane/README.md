@@ -59,7 +59,7 @@ Flutter clean
 [bundle exec] fastlane check
 ```
 
-Sanity checks
+Sanity checks (options: coverage:[true/FALSE])
 
 ### publish
 
