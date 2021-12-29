@@ -6,13 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_engine/discovery_engine.dart' hide Configuration;
 
 mixin ChangeConfigurationMixin<T> on UseCaseBlocHelper<T> {
-  UseCaseSink<Configuration, EngineEvent>? changeConfigurationSink;
-
-  Stream<T>? _stream;
-
-  @override
-  Stream<T> get stream => _stream ??=
-      Stream.fromFuture(_getUseCaseSink()).asyncExpand((_) => super.stream);
+  UseCaseSink<Configuration, EngineEvent>? _useCaseSink;
 
   void changeConfiguration({
     String? feedMarket,
@@ -27,12 +21,12 @@ mixin ChangeConfigurationMixin<T> on UseCaseBlocHelper<T> {
   }
 
   Future<UseCaseSink<Configuration, EngineEvent>> _getUseCaseSink() async {
-    var sink = changeConfigurationSink;
+    var sink = _useCaseSink;
 
     if (sink == null) {
       final useCase = await di.getAsync<ChangeConfigurationUseCase>();
 
-      sink = changeConfigurationSink = pipe(useCase);
+      sink = _useCaseSink = pipe(useCase);
 
       fold(sink).foldAll((engineEvent, errorReport) => null);
     }
