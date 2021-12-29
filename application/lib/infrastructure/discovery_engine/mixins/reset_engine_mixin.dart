@@ -6,22 +6,19 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/rese
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin ResetEngineMixin<T> on UseCaseBlocHelper<T> {
-  UseCaseSink<None, EngineEvent>? _useCaseSink;
+  Future<UseCaseSink<None, EngineEvent>>? _useCaseSink;
 
   void resetEngine() async {
-    final useCaseSink = await _getUseCaseSink();
+    _useCaseSink ??= _getUseCaseSink();
 
-    useCaseSink(none);
+    final useCaseSink = await _useCaseSink;
+
+    useCaseSink!(none);
   }
 
   Future<UseCaseSink<None, EngineEvent>> _getUseCaseSink() async {
-    var sink = _useCaseSink;
-
-    if (sink == null) {
-      final useCase = await di.getAsync<ResetEngineUseCase>();
-
-      sink = _useCaseSink = pipe(useCase);
-    }
+    final useCase = await di.getAsync<ResetEngineUseCase>();
+    final sink = pipe(useCase);
 
     return sink;
   }

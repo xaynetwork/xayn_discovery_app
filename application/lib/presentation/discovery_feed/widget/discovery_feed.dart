@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document_view_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -204,7 +203,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         if (isPrimary) {
           _discoveryFeedManager.handleViewType(
             document,
-            isFullScreen ? DocumentViewType.readerMode : DocumentViewType.story,
+            isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
           );
         }
 
