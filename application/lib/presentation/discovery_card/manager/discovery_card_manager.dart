@@ -93,8 +93,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   @override
   Future<DiscoveryCardState?> computeState() async =>
-      fold2(_updateUri, changeDocumentFeedbackSink!)
-          .foldAll((output, changeDocumentFeedbackEvent, errorReport) {
+      fold(_updateUri).foldAll((output, errorReport) {
         if (errorReport.isNotEmpty) {
           logger.e(errorReport.of(_updateUri)!.error);
 

@@ -6,13 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
-  UseCaseSink<DocumentFeedbackChange, EngineEvent>? changeDocumentFeedbackSink;
-
-  Stream<T>? _stream;
-
-  @override
-  Stream<T> get stream => _stream ??=
-      Stream.fromFuture(_getUseCaseSink()).asyncExpand((_) => super.stream);
+  UseCaseSink<DocumentFeedbackChange, EngineEvent>? _useCaseSink;
 
   void changeDocumentFeedback({
     required DocumentId documentId,
@@ -28,12 +22,12 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
 
   Future<UseCaseSink<DocumentFeedbackChange, EngineEvent>>
       _getUseCaseSink() async {
-    var sink = changeDocumentFeedbackSink;
+    var sink = _useCaseSink;
 
     if (sink == null) {
       final useCase = await di.getAsync<ChangeDocumentFeedbackUseCase>();
 
-      sink = changeDocumentFeedbackSink = pipe(useCase);
+      sink = _useCaseSink = pipe(useCase);
     }
 
     return sink;
