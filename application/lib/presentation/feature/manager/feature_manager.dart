@@ -34,7 +34,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
         featureMap: Map.from(_featureMap),
       );
 
-  bool isEnabled(Feature feature) => state.featureMap[feature] ?? false;
+  bool isEnabled(Feature feature) => _featureMap[feature] ?? false;
 
   bool isDisabled(Feature feature) => !isEnabled(feature);
 
