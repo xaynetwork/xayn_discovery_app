@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'handlers.dart';
 
-@singleton
+@lazySingleton
 class InitLoggerUseCase extends UseCase<None, None> {
   final FileHandler _fileHandler;
   final LoggerHandler _loggerHandler;
