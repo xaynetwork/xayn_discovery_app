@@ -2,39 +2,23 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
 import 'active_search_manager_test.mocks.dart';
 
 /// FIXME: Should be all moved to a single class Mocks so that we don't have to maintain
 /// GenerateMocks configs across all those files.
 @GenerateMocks([
-  DiscoveryEngineResultsUseCase,
   Document,
   ActiveSearchNavActions,
 ])
 void main() {
-  late MockDiscoveryEngineResultsUseCase useCase;
-
-  const testParams = DiscoveryEngineResultsParam(
-    searchTerm: 'xayn',
-    searchTypes: [SearchType.web],
-  );
-  final resultState = DiscoveryEngineState(
-    results: [MockDocument()],
-    isComplete: true,
-  );
-
   ActiveSearchManager buildManager() =>
-      ActiveSearchManager(useCase, MockActiveSearchNavActions());
+      ActiveSearchManager(MockActiveSearchNavActions());
 
   setUp(() {
-    useCase = MockDiscoveryEngineResultsUseCase();
     when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
   });
 
