@@ -30,7 +30,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
             onPressed: _activeSearchManager.onHomeNavPressed,
           ),
           buildNavBarItemSearchActive(
-            onSearchPressed: _activeSearchManager.handleSearch,
+            onSearchPressed: _activeSearchManager.search,
             hint: Strings.activeSearchSearchHint,
             isActive: true,
           ),

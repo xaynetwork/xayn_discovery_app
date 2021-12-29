@@ -68,4 +68,8 @@ class AppDiscoveryEngine implements DiscoveryEngine {
 
   @override
   Future<EngineEvent> resetEngine() => _engine.resetEngine();
+
+  Future<EngineEvent> search(String searchTerm) {
+    throw UnimplementedError();
+  }
 }
