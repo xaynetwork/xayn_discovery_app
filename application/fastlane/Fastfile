@@ -38,6 +38,7 @@ before_all do |lane, options|
   options[:android_output] = options[:android_output] || android_output
   options[:flavor] = options[:flavor] || flavor
   options[:build] = options[:build] || build
+  options[:coverage] = options[:coverage] || false
 
   version_name = gitVersionName()
   build_number = gitVersionNumber()
@@ -130,7 +131,7 @@ lane :clean do |options|
   flutter("clean")
 end
 
-desc "Sanity checks"
+desc "Sanity checks (options: coverage:[true/FALSE])"
 lane :check do |options|
   pub_get(options)
   if Dir.glob("../**/env.g.dart").empty?
@@ -142,7 +143,11 @@ lane :check do |options|
   else
     flutter("format ./")
   end
-  flutter("test")
+  if options[:coverage]
+    flutter("test --coverage")
+  else
+    flutter("test")
+  end
 end
 
 desc "Build and publish (i.e fastlane publish platform:ios build:release)"
