@@ -28,6 +28,10 @@ jobs:
         with:
           version: $FLUTTER_VERSION
 
+      - name: Install lcov and jq
+        run: |
+          sudo apt install lcov jq
+
       - name: Run checks
         env:
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
@@ -41,11 +45,6 @@ jobs:
         run: |
           sudo chmod -R a+w /var/lib/gems/
           fastlane check coverage:true
-
-      - name: Install lcov and jq
-        if: (github.event_name != 'push')
-        run: |
-          sudo apt install lcov jq
 
       - name: Create coverage
         if: (github.event_name != 'push')
