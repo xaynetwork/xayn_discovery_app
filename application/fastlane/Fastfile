@@ -145,6 +145,9 @@ lane :check do |options|
   end
   if options[:coverage]
     flutter("test --coverage")
+    lcov_ignore_rules = shell("cat lcov_ignore | grep -v \\# | tr '\n' ' '")
+    shell("mv coverage/lcov.info coverage/original_lcov.info")
+    shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
   else
     flutter("test")
   end
@@ -182,6 +185,12 @@ end
 def flutter(args)
   Dir.chdir("..") do
     sh "flutter #{args}"
+  end
+end
+
+def shell(args)
+  Dir.chdir("..") do
+    sh(args)
   end
 end
 
