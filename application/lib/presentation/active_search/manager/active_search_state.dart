@@ -10,7 +10,7 @@ class ActiveSearchState with _$ActiveSearchState {
   const ActiveSearchState._();
 
   const factory ActiveSearchState({
-    List<Document>? results,
+    Set<Document>? results,
     required bool isComplete,
     required bool isLoading,
     required bool isInErrorState,

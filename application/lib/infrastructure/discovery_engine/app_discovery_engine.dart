@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine implements DiscoveryEngine {
   final DiscoveryEngine _engine;
+  final StreamController<EngineEvent> _tempEvents =
+      StreamController<EngineEvent>.broadcast();
 
   @visibleForTesting
   AppDiscoveryEngine(this._engine);
@@ -46,7 +51,10 @@ class AppDiscoveryEngine implements DiscoveryEngine {
       _engine.closeFeedDocuments(documentIds);
 
   @override
-  Stream<EngineEvent> get engineEvents => _engine.engineEvents;
+  Stream<EngineEvent> get engineEvents => Rx.merge([
+        _engine.engineEvents,
+        _tempEvents.stream,
+      ]);
 
   @override
   Future<EngineEvent> logDocumentTime({
@@ -72,4 +80,8 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   Future<EngineEvent> search(String searchTerm) {
     throw UnimplementedError();
   }
+
+  /// temporary workaround for adding events that are not yet handled
+  /// by the discovery engine.
+  void tempAddEvent(EngineEvent event) => _tempEvents.add(event);
 }

@@ -5,6 +5,7 @@ import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -39,9 +40,11 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
           );
         }
 
-        if (documents.isNotEmpty) {
+        if (engineEvent is FeedRequestSucceeded) {
+          final currentResults = state.results ?? const <Document>[];
+
           return state.copyWith(
-            results: documents,
+            results: {...currentResults, ...engineEvent.items},
             isLoading: isLoading,
             isComplete: !isLoading,
             isInErrorState: false,
