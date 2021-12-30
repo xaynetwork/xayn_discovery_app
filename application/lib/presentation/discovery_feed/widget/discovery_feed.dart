@@ -46,8 +46,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       return NavBarConfig.hidden();
     }
 
-    final document = _discoveryFeedManager
-        .state.results![_discoveryFeedManager.state.resultIndex];
+    final document = _discoveryFeedManager.state.results!
+        .elementAt(_discoveryFeedManager.state.resultIndex);
     final managers = managersOf(document);
     final defaultNavBarConfig = NavBarConfig(
       [
@@ -191,13 +191,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       });
 
   Widget Function(BuildContext, int) _itemBuilder({
-    required List<Document> results,
+    required Set<Document> results,
     required bool isPrimary,
     required bool isSwipingEnabled,
     required bool isFullScreen,
   }) =>
       (BuildContext context, int index) {
-        final document = results[index];
+        final document = results.elementAt(index);
         final managers = managersOf(document);
 
         if (isPrimary) {

@@ -63,7 +63,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
       return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
         bloc: _activeSearchManager,
         builder: (context, state) {
-          final results = state.results ?? [];
+          final results = state.results ?? {};
 
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -84,11 +84,11 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
   }
 
   Widget Function(BuildContext, int) _itemBuilder(
-    List<Document> results,
+    Set<Document> results,
     bool isPrimary,
   ) =>
       (BuildContext context, int index) {
-        final document = results[index];
+        final document = results.elementAt(index);
         return _buildResultCard(
           document,
           isPrimary,

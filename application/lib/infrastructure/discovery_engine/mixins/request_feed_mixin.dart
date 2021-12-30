@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
@@ -42,6 +43,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   }
 }
 
+/// This is just a temporary class to "fake" the engine's feed.
 mixin TempRequestFeedMixin<T> on UseCaseBlocHelper<T> {
   final List<Document> _documentCache = <Document>[];
 
@@ -49,8 +51,6 @@ mixin TempRequestFeedMixin<T> on UseCaseBlocHelper<T> {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
-
-  List<Document> get documents => _documentCache.toList(growable: false);
 
   void requestNextFeedBatch() async {
     _useCaseSink ??= _getUseCaseSink();
@@ -67,6 +67,7 @@ mixin TempRequestFeedMixin<T> on UseCaseBlocHelper<T> {
       Stream.fromFuture(_startConsuming()).asyncExpand((_) => super.stream);
 
   Future<UseCaseSink<List<Document>, EngineEvent>> _getUseCaseSink() async {
+    final engine = await di.getAsync<DiscoveryEngine>() as AppDiscoveryEngine;
     final randomKeyWordsUseCase = di.get<RandomKeyWordsUseCase>();
     final createHttpRequestUseCase = di.get<CreateHttpRequestUseCase>();
     final connectivityUseCase = di.get<ConnectivityUriUseCase>();
@@ -97,6 +98,7 @@ mixin TempRequestFeedMixin<T> on UseCaseBlocHelper<T> {
         (it) {
           if (it.results.isNotEmpty) {
             _documentCache.addAll(it.results);
+            engine.tempAddEvent(FeedRequestSucceeded(it.results));
 
             return FeedRequestSucceeded(it.results);
           }
@@ -108,7 +110,7 @@ mixin TempRequestFeedMixin<T> on UseCaseBlocHelper<T> {
       ),
     );
 
-    fold(sink).foldAll((_, errorReport) => scheduleComputeState(() {}));
+    fold(sink).foldAll((_, errorReport) {});
 
     return sink;
   }

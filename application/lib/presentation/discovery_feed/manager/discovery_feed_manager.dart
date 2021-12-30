@@ -56,7 +56,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) {
-    final document = _observedDocument = state.results?[index];
+    final document = _observedDocument = state.results?.elementAt(index);
 
     if (document != null) {
       observeDocument(
@@ -122,9 +122,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           );
         }
 
-        if (documents.isNotEmpty) {
+        if (engineEvent is FeedRequestSucceeded) {
+          final currentResults = state.results ?? const <Document>[];
+
           return state.copyWith(
-            results: documents,
+            results: {...currentResults, ...engineEvent.items},
             isComplete: !isLoading,
             isFullScreen: _isFullScreen,
             isInErrorState: false,

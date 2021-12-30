@@ -11,7 +11,7 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
   const DiscoveryFeedState._();
 
   const factory DiscoveryFeedState({
-    List<Document>? results,
+    Set<Document>? results,
     required int resultIndex,
     required bool isComplete,
     @Default(false) bool isFullScreen,
