@@ -18,23 +18,22 @@ void main() {
   late MockUniqueIdHandler uniqueIdHandler;
   late MockDateTimeHandler dateTimeHandler;
   late CreateBookmarkUseCase createBookmarkUseCase;
+
   final bookmarkId = UniqueId();
   final dateTime = DateTime.now();
-  final input = CreateBookmarkUseCaseParam(
-    collectionId: UniqueId(),
-    title: 'Bookmark title',
-    image: Uint8List.fromList([1, 2, 3]),
-    providerName: 'Provider name',
-    providerThumbnail: Uint8List.fromList([4, 5, 6]),
-  );
+  final collectionId = UniqueId();
+  const title = 'Bookmark title';
+  final image = Uint8List.fromList([1, 2, 3]);
+  const providerName = 'Provider name';
+  final providerThumbnail = Uint8List.fromList([4, 5, 6]);
 
   final createdBookmark = Bookmark(
     id: bookmarkId,
-    collectionId: input.collectionId,
-    title: input.title,
-    image: input.image,
-    providerName: input.providerName,
-    providerThumbnail: input.providerThumbnail,
+    collectionId: collectionId,
+    title: title,
+    image: image,
+    providerName: providerName,
+    providerThumbnail: providerThumbnail,
     createdAt: dateTime.toUtc().toString(),
   );
 
@@ -57,7 +56,15 @@ void main() {
         when(dateTimeHandler.getDateTimeNow()).thenReturn(dateTime);
       },
       build: () => createBookmarkUseCase,
-      input: [input],
+      input: [
+        CreateBookmarkUseCaseParam(
+          collectionId: collectionId,
+          title: title,
+          image: image,
+          providerName: providerName,
+          providerThumbnail: providerThumbnail,
+        )
+      ],
       verify: (_) {
         verifyInOrder([
           uniqueIdHandler.generateUniqueId(),
