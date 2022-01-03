@@ -21,6 +21,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Flutter build runner
 
+### check_config_files
+
+```sh
+[bundle exec] fastlane check_config_files
+```
+
+Checks alle the config (env, properties, etc) if they are correctly set
+
 ### pub_get
 
 ```sh
