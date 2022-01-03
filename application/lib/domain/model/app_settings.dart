@@ -14,7 +14,7 @@ class AppSettings extends DbEntity with _$AppSettings {
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
     required int numberOfSessions,
-    required AppVersion? appVersion,
+    required AppVersion appVersion,
     required UniqueId id,
   }) = _AppSettings;
 
@@ -23,7 +23,7 @@ class AppSettings extends DbEntity with _$AppSettings {
     required AppTheme appTheme,
     required DiscoveryFeedAxis discoveryFeedAxis,
     required int numberOfSessions,
-    required AppVersion? appVersion,
+    required AppVersion appVersion,
   }) =>
       AppSettings._(
         isOnboardingDone: isOnboardingDone,
@@ -39,7 +39,7 @@ class AppSettings extends DbEntity with _$AppSettings {
         appTheme: AppTheme.system,
         discoveryFeedAxis: DiscoveryFeedAxis.vertical,
         numberOfSessions: 0,
-        appVersion: null,
+        appVersion: AppVersion.initial(),
       );
 
   static UniqueId globalId =

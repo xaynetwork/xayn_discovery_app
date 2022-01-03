@@ -13,6 +13,9 @@ class AppVersion {
     required this.build,
   });
 
+  factory AppVersion.initial() =>
+      const AppVersion(version: '0.0.1', build: '0.0.1');
+
   @override
   String toString() => 'Version: $version, build: $build';
 

@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 
 const _gitTagEnv = String.fromEnvironment('GIT_TAG');
 
-@lazySingleton
+@injectable
 class GetAppVersionUseCase extends UseCase<None, AppVersion> {
   final PackageInfo _info;
   AppVersion? _appVersion;

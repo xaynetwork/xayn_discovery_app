@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 
@@ -37,6 +38,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   late final DiscoveryFeedManager _discoveryFeedManager;
   late final DiscoveryCardActionsManager _discoveryCardActionsManager;
   late final Map<Document, _CardManagers> _cardManagers;
+  late final RatingDialogManager _ratingDialogManager;
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -134,6 +136,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     _discoveryCardActionsManager = di.get();
     _cardManagers = <Document, _CardManagers>{};
 
+    final ratingDialogManagerFuture = di.getAsync<RatingDialogManager>();
+    ratingDialogManagerFuture.then((manager) {
+      _ratingDialogManager = manager;
+    });
+
     WidgetsBinding.instance!.addObserver(this);
 
     super.initState();
@@ -177,7 +184,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               ),
               itemCount: _totalResults,
               onFinalIndex: _discoveryFeedManager.handleLoadMore,
-              onIndexChanged: _discoveryFeedManager.handleIndexChanged,
+              onIndexChanged: (int index) {
+                _discoveryFeedManager.handleIndexChanged(index);
+                _ratingDialogManager.handleIndexChanged(index);
+              },
               isFullScreen: state.isFullScreen,
               fullScreenOffsetFraction:
                   _dragDistance / DiscoveryCard.dragThreshold,

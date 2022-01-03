@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
+import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/discovery_feed_axis_mapper.dart';
@@ -41,7 +42,7 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
       appTheme: appTheme,
       discoveryFeedAxis: discoveryFeedAxis,
       numberOfSessions: numberOfSessions ?? 0,
-      appVersion: appVersion,
+      appVersion: appVersion ?? AppVersion.initial(),
     );
   }
 
