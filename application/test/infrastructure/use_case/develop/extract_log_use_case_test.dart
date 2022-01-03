@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_u
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-import 'extract_log_use_case_test.mocks.dart';
+import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 @GenerateMocks([FileHandler, ShareHandler])
 void main() {

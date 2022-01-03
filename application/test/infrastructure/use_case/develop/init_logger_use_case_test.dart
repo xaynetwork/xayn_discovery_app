@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-import 'init_logger_use_case_test.mocks.dart';
+import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 @GenerateMocks([FileHandler, LoggerHandler])
 void main() {
