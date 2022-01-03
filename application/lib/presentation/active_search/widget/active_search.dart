@@ -21,7 +21,7 @@ class ActiveSearch extends StatefulWidget {
 }
 
 class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
-  late final ActiveSearchManager _activeSearchManager;
+  late final ActiveSearchManager _activeSearchManager = di.get();
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
@@ -42,10 +42,9 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
       );
 
   @override
-  void initState() {
-    _activeSearchManager = di.get();
-
-    super.initState();
+  void dispose() {
+    _activeSearchManager.close();
+    super.dispose();
   }
 
   @override

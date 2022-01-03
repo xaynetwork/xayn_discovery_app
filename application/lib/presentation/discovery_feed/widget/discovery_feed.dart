@@ -33,10 +33,11 @@ class DiscoveryFeed extends StatefulWidget {
 
 class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver, NavBarConfigMixin {
-  late final CardViewController _cardViewController;
-  late final DiscoveryFeedManager _discoveryFeedManager;
-  late final DiscoveryCardActionsManager _discoveryCardActionsManager;
-  late final Map<Document, _CardManagers> _cardManagers;
+  late final _cardViewController = CardViewController();
+  late final DiscoveryFeedManager _discoveryFeedManager = di.get();
+  late final DiscoveryCardActionsManager _discoveryCardActionsManager =
+      di.get();
+  late final Map<Document, _CardManagers> _cardManagers = {};
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -129,13 +130,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   void initState() {
-    _cardViewController = CardViewController();
-    _discoveryFeedManager = di.get();
-    _discoveryCardActionsManager = di.get();
-    _cardManagers = <Document, _CardManagers>{};
-
     WidgetsBinding.instance!.addObserver(this);
-
     super.initState();
   }
 

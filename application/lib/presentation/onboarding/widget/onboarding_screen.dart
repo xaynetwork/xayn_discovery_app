@@ -29,23 +29,15 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen>
     with NavBarConfigMixin {
-  late final OnBoardingManager _onBoardingManager;
-  late final PageController _pageController;
-  late final List<OnBoardingPageData> _onBoardingPagesData;
+  late final OnBoardingManager _onBoardingManager = di.get();
+  late final _pageController = PageController(initialPage: 0);
+  late final List<OnBoardingPageData> _onBoardingPagesData =
+      _getInitialPageData();
 
   @override
-  late NavBarConfig navBarConfig;
-
-  @override
-  void initState() {
-    _onBoardingManager = di.get();
-    _pageController = PageController(initialPage: 0);
-    navBarConfig = NavBarConfig.backBtn(buildNavBarItemBack(
-      onPressed: _onBoardingManager.onClosePressed,
-    ));
-    _initValues();
-    super.initState();
-  }
+  late NavBarConfig navBarConfig = NavBarConfig.backBtn(buildNavBarItemBack(
+    onPressed: _onBoardingManager.onClosePressed,
+  ));
 
   @override
   void dispose() {
@@ -54,26 +46,24 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     super.dispose();
   }
 
-  void _initValues() {
-    _onBoardingPagesData = [
-      ///TODO Please replace mocked data with proper data
-      const OnBoardingGenericPageData(
-        imageAssetUrl: '',
-        text: 'Swipe up for next article',
-        index: 0,
-      ),
-      const OnBoardingGenericPageData(
-        imageAssetUrl: '',
-        text: 'Swipe right for liking',
-        index: 1,
-      ),
-      const OnBoardingGenericPageData(
-        imageAssetUrl: '',
-        text: 'Swipe left for disliking',
-        index: 2,
-      ),
-    ];
-  }
+  List<OnBoardingPageData> _getInitialPageData() => [
+        ///TODO Please replace mocked data with proper data
+        const OnBoardingGenericPageData(
+          imageAssetUrl: '',
+          text: 'Swipe up for next article',
+          index: 0,
+        ),
+        const OnBoardingGenericPageData(
+          imageAssetUrl: '',
+          text: 'Swipe right for liking',
+          index: 1,
+        ),
+        const OnBoardingGenericPageData(
+          imageAssetUrl: '',
+          text: 'Swipe left for disliking',
+          index: 2,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
