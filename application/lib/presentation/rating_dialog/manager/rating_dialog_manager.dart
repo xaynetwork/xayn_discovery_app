@@ -1,21 +1,28 @@
 import 'package:in_app_review/in_app_review.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_stored_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_version_use_case.dart';
 
+/// Shows the rating dialog when any of the following conditions are met:
+///
+/// 1. After the second session and having scrolled over at least 8 articles.
+/// 2. When the user updates the app to a new version every time.
 @injectable
 class RatingDialogManager {
   RatingDialogManager(
     this._getAppVersionUseCase,
     this._getStoredAppVersionUseCase,
     this._saveAppVersionUseCase,
+    this._getAppSessionUseCase,
   );
 
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetStoredAppVersionUseCase _getStoredAppVersionUseCase;
   final SaveAppVersionUseCase _saveAppVersionUseCase;
+  final GetAppSessionUseCase _getAppSessionUseCase;
 
   final Set<int> _viewedCardIndices = {};
   static const _viewedCardsThreshold = 8;

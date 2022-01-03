@@ -1,6 +1,8 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
@@ -15,12 +17,16 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   AppManager(
     this._getAppThemeUseCase,
     this._listenAppThemeUseCase,
+    this._getAppSessionUseCase,
+    this._saveAppSessionUseCase,
   ) : super(AppState.empty()) {
     _init();
   }
 
   final GetAppThemeUseCase _getAppThemeUseCase;
   final ListenAppThemeUseCase _listenAppThemeUseCase;
+  final GetAppSessionUseCase _getAppSessionUseCase;
+  final SaveAppSessionUseCase _saveAppSessionUseCase;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   late AppTheme _appTheme;
