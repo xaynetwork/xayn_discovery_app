@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
@@ -17,12 +18,11 @@ import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction_section.dart';
 
 import 'settings_screen_test.mocks.dart';
 
-@GenerateMocks([SettingsScreenManager])
+@GenerateMocks([SettingsScreenManager, SettingsNavActions])
 void main() {
   late StreamController<SettingsScreenState> streamController;
   const stateReady = SettingsScreenState.ready(
@@ -51,7 +51,7 @@ void main() {
 
   Future<void> openScreen(WidgetTester tester) async {
     await tester.pumpLindenApp(const SettingsScreen());
-    await tester.pumpAndSettle(R.durations.screenStateChangeDuration);
+    await tester.pumpAndSettle(R.animations.screenStateChangeDuration);
   }
 
   testWidgets(

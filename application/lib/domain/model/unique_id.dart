@@ -4,7 +4,6 @@ import 'package:uuid/uuid.dart';
 /// A class for uniquely identifying another object.
 class UniqueId extends Equatable {
   /// The value used to identify an object.
-
   final String value;
 
   /// Default constructor which initializes the [value] with a random UUID.

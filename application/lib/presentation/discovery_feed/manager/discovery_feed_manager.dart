@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
@@ -12,8 +11,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
 
@@ -30,13 +29,15 @@ typedef ObservedViewTypes = Map<Document, DocumentViewType>;
 /// in a list format by widgets.
 @injectable
 class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
-    with UseCaseBlocHelper<DiscoveryFeedState> {
+    with UseCaseBlocHelper<DiscoveryFeedState>
+    implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._discoveryEngineResultsUseCase,
     this._randomKeyWordsUseCase,
     this._listenDiscoveryFeedAxisUseCase,
     this._discoveryCardObservationUseCase,
     this._discoveryCardMeasuredObservationUseCase,
+    this._discoveryFeedNavActions,
   ) : super(DiscoveryFeedState.empty()) {
     _initHandlers();
   }
@@ -47,6 +48,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final DiscoveryCardObservationUseCase _discoveryCardObservationUseCase;
   final DiscoveryCardMeasuredObservationUseCase
       _discoveryCardMeasuredObservationUseCase;
+  final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   final LogUseCase<DiscoveryCardMeasuredObservation>
       _measuredObservationLogger = LogUseCase(
@@ -72,6 +74,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
+  bool _isFullScreen = false;
+
+  void handleNavigateIntoCard() {
+    scheduleComputeState(() => _isFullScreen = true);
+  }
+
+  void handleNavigateOutOfCard() {
+    scheduleComputeState(() => _isFullScreen = false);
+  }
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
@@ -212,6 +223,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     _discoveryCardObservationHandler =
         pipe(_discoveryCardObservationUseCase).transform(
       (out) => out
+          .distinct(
+            (a, b) =>
+                a.value.document == b.value.document &&
+                a.value.viewType == b.value.viewType,
+          )
           .pairwise() // combine last card and current card
           .followedBy(_discoveryCardMeasuredObservationUseCase)
           .followedBy(_measuredObservationLogger)
@@ -263,6 +279,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
             return state.copyWith(
               results: engineState.results,
               isComplete: engineState.isComplete,
+              isFullScreen: _isFullScreen,
               isInErrorState: false,
               axis: axis ?? DiscoveryFeedAxis.vertical,
               suggestTopicsAtIndex: suggestTopicsAtIndex,
@@ -270,4 +287,14 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           }
         }
       });
+
+  @override
+  void onSearchNavPressed() => _discoveryFeedNavActions.onSearchNavPressed();
+
+  @override
+  void onAccountNavPressed() => _discoveryFeedNavActions.onAccountNavPressed();
+
+  void onHomeNavPressed() {
+    // TODO probably go to the top of the feed
+  }
 }

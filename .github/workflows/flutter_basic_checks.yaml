@@ -1,7 +1,7 @@
 name: Basic checks
 
 env:
-  FLUTTER_VERSION: "2.5.3"
+  FLUTTER_VERSION: '2.8.1'
 
 on:
   pull_request:
@@ -33,7 +33,7 @@ jobs:
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
-          FASTLANE_SKIP_UPDATE_CHECK: "1"
+          FASTLANE_SKIP_UPDATE_CHECK: '1'
         working-directory: ./application
         run: |
           sudo chmod -R a+w /var/lib/gems/

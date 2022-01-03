@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -18,6 +18,7 @@ class CachedImage extends StatefulWidget {
   final int? width;
   final int? height;
   final BoxFit? fit;
+  final ImageManager? imageManager;
 
   const CachedImage({
     Key? key,
@@ -27,6 +28,7 @@ class CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.fit,
+    this.imageManager,
   }) : super(key: key);
 
   @override
@@ -38,15 +40,26 @@ class _CachedImageState extends State<CachedImage> {
 
   @override
   void initState() {
-    _imageManager = di.get();
-    _imageManager.getImage(
-      widget.uri,
-      width: widget.width,
-      height: widget.height,
-      fit: widget.fit,
-    );
-
     super.initState();
+
+    final imageManager = widget.imageManager;
+
+    if (imageManager == null) {
+      _imageManager = di.get()..getImage(widget.uri);
+    } else {
+      _imageManager = imageManager;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // if the imageManager was created locally, then close it,
+    // otherwise let the owner take care of it.
+    if (widget.imageManager == null) {
+      _imageManager.close();
+    }
   }
 
   @override
@@ -55,22 +68,10 @@ class _CachedImageState extends State<CachedImage> {
         oldWidget.width != widget.width ||
         oldWidget.height != widget.height ||
         oldWidget.fit != widget.fit) {
-      _imageManager.getImage(
-        widget.uri,
-        width: widget.width,
-        height: widget.height,
-        fit: widget.fit,
-      );
+      _imageManager.getImage(widget.uri);
     }
 
     super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    _imageManager.close();
-
-    super.dispose();
   }
 
   @override
@@ -80,9 +81,11 @@ class _CachedImageState extends State<CachedImage> {
           BuildContext context,
           double progress,
         ) =>
-            const CircularProgressIndicator.adaptive();
-    final errorBuilder =
-        widget.errorBuilder ?? (BuildContext context) => const Text('oops!');
+            const CircularProgressIndicator();
+    final errorBuilder = widget.errorBuilder ??
+        (BuildContext context) => kReleaseMode
+            ? Container()
+            : const Text('asset was not loaded here');
 
     return BlocBuilder<ImageManager, ImageManagerState>(
         bloc: _imageManager,

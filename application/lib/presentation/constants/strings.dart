@@ -3,6 +3,7 @@ class Strings {
 
   static const String your = 'Your';
 
+  static const String activeSearchSearchHint = 'Search';
   static const String settingsTitle = 'Settings';
   static const String settingsSectionTitleAppTheme = 'Your App Theme';
   static const String settingsSectionScrollDirection =
@@ -34,4 +35,10 @@ class Strings {
   static const String hoursAgo = 'hours ago';
   static const String dayAgo = 'day ago';
   static const String daysAgo = 'days ago';
+
+  static const String readingTimeUnitSingular = 'minute';
+  static const String readingTimeUnitPlural = 'minutes';
+  static const String readingTimeSuffix = 'read';
+
+  static const String cannotLoadUrlError = 'Unable to load image with url: ';
 }

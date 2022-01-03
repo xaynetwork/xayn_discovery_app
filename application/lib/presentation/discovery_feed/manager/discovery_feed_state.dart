@@ -14,6 +14,7 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     List<Document>? results,
     required int resultIndex,
     required bool isComplete,
+    @Default(false) bool isFullScreen,
     required bool isInErrorState,
     required DiscoveryFeedAxis axis,
     int? suggestTopicsAtIndex,

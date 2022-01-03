@@ -2,6 +2,7 @@
     package="com.example.xayn_discovery_app">
 
     <application
+        android:name=".CustomFlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="xayn_discovery_app">
 
@@ -39,4 +40,5 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

@@ -56,7 +56,6 @@ void main() async {
         final appSettings = repository.settings;
 
         expect(appSettings, isNotNull);
-        expect(appSettings is AppSettings, isTrue);
         expect(appSettings.isOnboardingDone, isFalse);
         expect(
           appSettings.appTheme,

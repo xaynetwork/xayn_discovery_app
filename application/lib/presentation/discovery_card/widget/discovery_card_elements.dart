@@ -2,48 +2,70 @@ import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/web_resource.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 
 import 'favicon_bar.dart';
 import 'package:xayn_design/xayn_design.dart';
 
-typedef ReaderModeBuilder = Widget Function();
+/// Defines how wide the title may be.
+/// During animation transitions, the card itself will grow or shrink.
+/// the title needs to be "static", as in, we don't want it to grow or shrink
+/// together with the card, otherwise during animation, the text will adapt and
+/// suddenly take up less or more lines for example.
+/// Instead, the title width is static, based on the device's width and not the
+/// card's width.
+const double _kMaxTitleFraction = .75;
 
-class DiscoveryCardFooter extends StatelessWidget {
-  const DiscoveryCardFooter({
+class DiscoveryCardElements extends StatelessWidget {
+  const DiscoveryCardElements({
     Key? key,
     required this.title,
+    required this.timeToRead,
     required this.url,
     required this.datePublished,
     this.provider,
-    this.onFooterPressed,
     required this.onLikePressed,
     required this.onDislikePressed,
+    this.fractionSize = 1.0,
   }) : super(key: key);
   final String title;
+  final String timeToRead;
   final Uri url;
   final WebResourceProvider? provider;
   final DateTime datePublished;
-  final VoidCallback? onFooterPressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
+  final double fractionSize;
 
   @override
   Widget build(BuildContext context) {
     final DiscoveryCardActionsManager _actionsManager = di.get();
-
+    final mediaQuery = MediaQuery.of(context);
+    final timeToReadWidget = Text(
+      '$timeToRead ${Strings.readingTimeSuffix}',
+      style: R.styles.appBodyText?.copyWith(color: Colors.white),
+      textAlign: TextAlign.left,
+      maxLines: 5,
+      overflow: TextOverflow.ellipsis,
+    );
     final titleWidget = Text(
       title,
       style: R.styles.appScreenHeadline?.copyWith(color: Colors.white),
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
     );
 
-    final actionButtonRow = _ButtonRowFooter(
-      onSharePressed: () => _actionsManager.shareUri(url),
-      onLikePressed: onLikePressed,
-      onDislikePressed: onDislikePressed,
+    final actionButtonRow = Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: R.dimen.unit3,
+      ),
+      child: _ButtonRowFooter(
+        onSharePressed: () => _actionsManager.shareUri(url),
+        onLikePressed: onLikePressed,
+        onDislikePressed: onDislikePressed,
+      ),
     );
 
     final faviconRow = FaviconBar(
@@ -51,26 +73,38 @@ class DiscoveryCardFooter extends StatelessWidget {
       datePublished: datePublished,
     );
 
-    final footerColumn = Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    final titleAndTimeToRead = Wrap(
+      runAlignment: WrapAlignment.end,
+      runSpacing: R.dimen.unit,
       children: [
-        titleWidget,
-        SizedBox(height: R.dimen.unit2),
-        if (provider != null) faviconRow,
-        SizedBox(height: R.dimen.unit2),
-        actionButtonRow,
-        SizedBox(height: R.dimen.unit7),
+        if (timeToRead.isNotEmpty) timeToReadWidget,
+        SizedBox(
+          width: mediaQuery.size.width * _kMaxTitleFraction,
+          child: titleWidget,
+        ),
       ],
     );
 
-    return InkWell(
-      onTap: onFooterPressed,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
-        child: footerColumn,
+    final elements = Padding(
+      padding: EdgeInsets.all(R.dimen.unit3),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (provider != null) faviconRow,
+          Expanded(child: titleAndTimeToRead),
+          ClipRRect(
+            child: SizedBox(
+              width: double.infinity,
+              height: R.dimen.unit12 * fractionSize,
+              child: actionButtonRow,
+            ),
+          ),
+        ],
       ),
     );
+
+    return elements;
   }
 }
 
@@ -116,6 +150,8 @@ class _ButtonRowFooter extends StatelessWidget {
     );
 
     return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
       spacing: R.dimen.unit4,
       children: [
         likeButton,

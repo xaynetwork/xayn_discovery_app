@@ -1,32 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_readability/xayn_readability.dart';
-
-const String kRequestMethod = 'GET';
-const String kUserAgent =
-    'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
-const Map<String, String> kHeaders = {
-  'accept': '*/*',
-  'accept-encoding': 'gzip, deflate, br',
-  'accept-language': '*',
-  'cache-control': 'no-cache',
-  'pragma': 'no-cache',
-  'upgrade-insecure-requests': '1',
-  'sec-ch-ua':
-      '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
-  'sec-ch-ua-mobile': '?0',
-  'sec-ch-ua-platform':
-      'Windows', // we just want the host to think we're a real browser, the value just needs to pass checks on their side, nothing more
-  'sec-fetch-dest': 'empty',
-  'sec-fetch-mode': 'cors',
-  'sec-fetch-site': 'cross-site',
-};
-const Duration kTimeout = Duration(seconds: 8);
-const int kMaxRedirects = 5;
+import 'package:xayn_discovery_app/domain/http_requests/common_params.dart';
+import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 
 /// A [UseCase] which uses a Platform-specific client to fetch the html
 /// contents at the Uri that was provided as input.
@@ -44,40 +24,50 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   });
 
   @factoryMethod
-  LoadHtmlUseCase.standard({required this.client}) : headers = kHeaders;
+  LoadHtmlUseCase.standard({required this.client})
+      : headers = CommonHttpRequestParams.httpRequestHeaders;
 
   @override
   Stream<Progress> transaction(Uri param) async* {
     yield Progress.start(uri: param);
 
     final url = param.toString();
-    final response = await client.send(
+    final response = await client.sendWithRedirectGuard(
       http.Request(
-        kRequestMethod,
+        CommonHttpRequestParams.httpRequestGet,
         url,
-        followRedirects: true,
-        maxRedirects: kMaxRedirects,
+        followRedirects: false,
         headers: headers,
-        timeout: kTimeout,
+        timeout: CommonHttpRequestParams.httpRequestTimeout,
       ),
     );
-    final body = await _extractResponseBody(response);
 
-    yield Progress.finish(html: body, uri: param);
-  }
-
-  Future<String> _extractResponseBody(http.Response response) async {
-    if (response.body is String) {
-      return response.body as String;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw StateError(
+          'response status code: ${response.statusCode}: ${response.reasonPhrase}');
     }
 
-    writeToBuffer(StringBuffer buffer, String part) => buffer..write(part);
+    final body = _extractResponseBody(await response.readAsBytes());
 
-    final buffer = await response.bodyAsStream!
-        .transform(const Utf8Decoder())
-        .fold(StringBuffer(), writeToBuffer);
+    yield Progress.finish(
+      html: body,
+      uri: param,
+    );
+  }
 
-    return buffer.toString();
+  String _extractResponseBody(Object body) {
+    if (body is String) {
+      return body;
+    } else if (body is List<int>) {
+      // do allow malformed here, as some sites may have encoding errors,
+      // but we still want to get their response in.
+      const decoder = Utf8Codec(allowMalformed: true);
+
+      return decoder.decode(body);
+    }
+
+    throw StateError(
+        'body is neither String or List<int>, unable to decode into String');
   }
 }
 
@@ -99,17 +89,4 @@ class Progress {
     required this.uri,
     required this.html,
   }) : isCompleted = true;
-}
-
-@injectable
-class Client implements http.Client {
-  final http.Client _client;
-
-  Client() : _client = createHttpClient(userAgent: kUserAgent);
-
-  @override
-  Future close({bool force = false}) => _client.close(force: force);
-
-  @override
-  Future<http.Response> send(http.Request request) => _client.send(request);
 }
