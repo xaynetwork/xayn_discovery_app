@@ -1,13 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 
-import 'get_app_version_use_case_test.mocks.dart';
+import '../use_case_mocks/use_case_mocks.mocks.dart';
 
-@GenerateMocks([PackageInfo])
 void main() {
   late MockPackageInfo info;
   late GetAppVersionUseCase useCase;
