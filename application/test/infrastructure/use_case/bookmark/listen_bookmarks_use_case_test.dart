@@ -1,18 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 
-import 'listen_bookmarks_use_case_test.mocks.dart';
+import '../use_case_mocks/use_case_mocks.mocks.dart';
 
-@GenerateMocks([BookmarksRepository])
 void main() {
   late MockBookmarksRepository bookmarksRepository;
   late ListenBookmarksUseCase listenBookmarksUseCase;
