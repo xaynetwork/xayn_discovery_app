@@ -62,7 +62,10 @@ void main() {
   testWidgets('WHEN tapping on second page THEN show the third one', (
     WidgetTester tester,
   ) async {
-    await tester.pumpLindenApp(const OnBoardingScreen());
+    await tester.pumpLindenApp(
+      const OnBoardingScreen(),
+      withNavBarContainer: true,
+    );
     final tapDetector = getTapDetector();
 
     for (int i = 0; i < 2; i++) {
