@@ -33,11 +33,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
   late final _pageController = PageController(initialPage: 0);
   late final List<OnBoardingPageData> _onBoardingPagesData =
       _getInitialPageData();
+  var _isOnboardingCompleted = false;
 
   @override
-  late NavBarConfig navBarConfig = NavBarConfig.backBtn(buildNavBarItemBack(
-    onPressed: _onBoardingManager.onClosePressed,
-  ));
+  NavBarConfig get navBarConfig => _isOnboardingCompleted
+      ? NavBarConfig.backBtn(buildNavBarItemBack(
+          onPressed: _onBoardingManager.onClosePressed,
+        ))
+      : NavBarConfig.hidden();
 
   @override
   void dispose() {
@@ -133,6 +136,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
 
     if (newIndex == lastPageIndex) {
       _onBoardingManager.onOnBoardingCompleted(newIndex);
+      _isOnboardingCompleted = true;
+      NavBarContainer.updateNavBar(context);
     }
   }
 }
