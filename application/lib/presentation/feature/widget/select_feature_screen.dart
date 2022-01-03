@@ -33,21 +33,22 @@ enum _OverrideState {
 }
 
 class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
+  late final FeatureManager _featureManager = di.get();
+  late final Timer timer;
   var state = _OverrideState.overrideButton;
   Widget? _child;
-  late Timer timer;
-  late FeatureManager _featureManager;
 
   @override
   void initState() {
     timer = Timer(widget.delay, onTimerEnd);
-    _featureManager = di.get();
     super.initState();
   }
 
   @override
   void dispose() {
     timer.cancel();
+    // should not be closed, cos FeatureManager is singleton
+    // _featureManager.close();
     super.dispose();
   }
 
