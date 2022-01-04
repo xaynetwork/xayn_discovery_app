@@ -34,6 +34,9 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
 
   void _init() async {
     scheduleComputeState(() async {
+      final session = await _getAppSessionUseCase.singleOutput(none);
+      await _saveAppSessionUseCase.call(session + 1);
+
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
       _initDone = true;
