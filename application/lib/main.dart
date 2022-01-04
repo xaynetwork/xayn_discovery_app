@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/app/widget/app.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 
 void main() async {
   await setup();
@@ -31,6 +32,7 @@ Future<void> setup() async {
   );
   await hiveDb;
   configureDependencies();
+  di.get<LogManager>();
 }
 
 Widget getApp() {
