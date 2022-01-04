@@ -1,7 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 
 import 'di_config.config.dart';
@@ -20,5 +19,4 @@ void configureDependencies() {
   $initGetIt(di);
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
-  di.get<AnalyticsNavigatorObserver>();
 }
