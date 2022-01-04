@@ -23,9 +23,6 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
   Box<Record> get box => Hive.box<Record>(BoxNames.collections);
 
   @override
-  set collection(Collection collection) => entity = collection;
-
-  @override
   List<Collection> getAll() {
     final values = super.getAll();
     values.sort((a, b) => a.index.compareTo(b.index));

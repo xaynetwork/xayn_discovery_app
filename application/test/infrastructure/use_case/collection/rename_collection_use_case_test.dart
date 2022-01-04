@@ -73,7 +73,7 @@ void main() {
       verify: (_) {
         verifyInOrder([
           collectionsRepository.getById(collection.id),
-          collectionsRepository.collection = updatedCollection
+          collectionsRepository.save(updatedCollection),
         ]);
         verifyNoMoreInteractions(collectionsRepository);
       },

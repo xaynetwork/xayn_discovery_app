@@ -25,8 +25,9 @@ void main() {
 
       verifyInOrder([
         repository.settings,
-        repository.settings =
-            AppSettings.initial().copyWith(appTheme: appTheme),
+        repository.save(
+          AppSettings.initial().copyWith(appTheme: appTheme),
+        ),
       ]);
       verifyNoMoreInteractions(repository);
     },

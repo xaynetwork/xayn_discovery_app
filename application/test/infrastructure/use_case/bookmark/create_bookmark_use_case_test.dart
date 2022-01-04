@@ -64,7 +64,7 @@ void main() {
       verify: (_) {
         verifyInOrder([
           uniqueIdHandler.generateUniqueId(),
-          bookmarksRepository.bookmark = createdBookmark
+          bookmarksRepository.save(createdBookmark),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
