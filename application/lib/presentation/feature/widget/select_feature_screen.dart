@@ -7,8 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
-
-import '../../utils/enum_utils.dart';
+import 'package:xayn_discovery_app/presentation/utils/enum_utils.dart';
 
 const kFeatureScreenWaitDuration = Duration(seconds: 3);
 
@@ -47,8 +46,6 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
   @override
   void dispose() {
     timer.cancel();
-    // should not be closed, cos FeatureManager is singleton
-    // _featureManager.close();
     super.dispose();
   }
 
