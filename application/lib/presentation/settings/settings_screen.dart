@@ -45,13 +45,6 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   @override
-  void dispose() {
-    // SettingsScreenManager is lazySingleton, so we should NOT `close` it
-    // _manager.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: const YourToolbar(yourTitle: Strings.settingsTitle),
         body: _buildBody(),
