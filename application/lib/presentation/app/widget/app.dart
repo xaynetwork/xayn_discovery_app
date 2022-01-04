@@ -21,12 +21,6 @@ class _AppState extends State<App> {
   late final AppNavigationManager _navigatorManager = di.get();
 
   @override
-  void dispose() {
-    _appManager.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final materialApp = MaterialApp.router(
       theme: UnterDenLinden.getLinden(context).themeData,
