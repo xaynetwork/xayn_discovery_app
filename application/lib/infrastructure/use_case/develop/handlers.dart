@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 /// This file contains handlers that help to implement proper tests
 
-@Injectable()
+@injectable
 class FileHandler {
   FileHandler();
 
@@ -36,12 +36,12 @@ class FileHandler {
       );
 }
 
-@Injectable()
+@injectable
 class ShareHandler {
   Future<void> shareFiles(List<String> paths) => Share.shareFiles(paths);
 }
 
-@Injectable()
+@injectable
 class LoggerHandler {
   void initialiseLogger(
     String pathToFile,
