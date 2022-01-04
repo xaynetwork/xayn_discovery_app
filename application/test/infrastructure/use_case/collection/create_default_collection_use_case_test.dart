@@ -48,7 +48,7 @@ void main() {
       verify: (_) {
         verifyInOrder([
           collectionsRepository.getAll(),
-          collectionsRepository.collection = collection,
+          collectionsRepository.save(collection),
         ]);
         verifyNoMoreInteractions(collectionsRepository);
       },

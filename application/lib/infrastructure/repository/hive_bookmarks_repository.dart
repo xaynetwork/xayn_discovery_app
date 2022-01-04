@@ -31,9 +31,6 @@ class HiveBookmarksRepository extends HiveRepository<Bookmark>
   }
 
   @override
-  set bookmark(Bookmark bookmark) => entity = bookmark;
-
-  @override
   List<Bookmark> getByCollectionId(UniqueId collectionId) => getAll()
       .where((element) => element.collectionId == collectionId)
       .toList(growable: false);

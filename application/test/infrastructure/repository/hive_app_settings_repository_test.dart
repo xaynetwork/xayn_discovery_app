@@ -73,7 +73,9 @@ void main() async {
       });
 
       test('given AppSettings should persist it in Hive box', () async {
-        repository.settings = AppSettings.initial();
+        repository.save(
+          AppSettings.initial(),
+        );
 
         verify(box.toMap());
         verify(box.put('app_settings_id', any));

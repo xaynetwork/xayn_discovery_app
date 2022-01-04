@@ -34,7 +34,7 @@ class RenameCollectionUseCase
     }
 
     final updatedCollection = collection.copyWith(name: param.newName);
-    _collectionsRepository.collection = updatedCollection;
+    _collectionsRepository.save(updatedCollection);
 
     yield updatedCollection;
   }
