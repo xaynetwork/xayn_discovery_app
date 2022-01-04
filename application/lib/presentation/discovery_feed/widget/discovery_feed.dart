@@ -162,7 +162,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               itemBuilder: _itemBuilder(
                 results: results,
                 isPrimary: true,
-                isSwipingEnabled: true,
+                isSwipingEnabled: !state.isFullScreen,
                 isFullScreen: state.isFullScreen,
               ),
               secondaryItemBuilder: _itemBuilder(
