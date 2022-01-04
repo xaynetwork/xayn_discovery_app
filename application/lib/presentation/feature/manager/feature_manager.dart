@@ -9,7 +9,6 @@ import 'feature_manager_state.dart';
 const FeatureMap kInitialFeatureMap = {
   Feature.onBoarding: false,
   Feature.featuresScreen: EnvironmentHelper.kIsInternal,
-  Feature.ratingDialog: true,
 };
 
 @lazySingleton
@@ -29,9 +28,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
 
   bool get showOnboardingScreen => isEnabled(Feature.onBoarding);
-
-  bool get showRatingDialog =>
-      Feature.values.isNotEmpty && isEnabled(Feature.ratingDialog);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
