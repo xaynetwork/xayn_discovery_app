@@ -110,7 +110,7 @@ void main() {
               [
                 bookmarksRepository.getById(any),
                 collectionsRepository.getById(any),
-                bookmarksRepository.bookmark = updatedBookmark
+                bookmarksRepository.save(updatedBookmark),
               ],
             );
             verifyNoMoreInteractions(bookmarksRepository);

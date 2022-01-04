@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 /// Repository interface for storing global app settings.
 abstract class AppSettingsRepository {
   /// The [AppSettings] setter method.
-  set settings(AppSettings appSettings);
+  void save(AppSettings appSettings);
 
   /// The [AppSettings] getter method.
   AppSettings get settings;
