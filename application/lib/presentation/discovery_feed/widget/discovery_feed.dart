@@ -235,10 +235,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 ),
               );
 
-        return _ResultCard(
+        return SwipeableDiscoveryCard(
+          isPrimary: isPrimary,
           document: document,
           card: card,
-          isPrimary: isPrimary,
           isSwipingEnabled: isSwipingEnabled,
         );
       };
@@ -256,33 +256,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
             discoveryCardManager: di.get()..updateUri(document.webResource.url),
           ));
-}
-
-class _ResultCard extends StatelessWidget {
-  final bool isPrimary;
-  final Document document;
-  final Widget card;
-  final bool isSwipingEnabled;
-
-  const _ResultCard({
-    Key? key,
-    required this.isPrimary,
-    required this.document,
-    required this.card,
-    required this.isSwipingEnabled,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final swipeCard = SwipeableDiscoveryCard(
-      isPrimary: isPrimary,
-      document: document,
-      card: card,
-      isSwipingEnabled: isSwipingEnabled,
-    );
-
-    return swipeCard;
-  }
 }
 
 @immutable
