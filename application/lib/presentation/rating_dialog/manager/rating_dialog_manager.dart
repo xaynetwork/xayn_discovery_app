@@ -9,8 +9,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_
 
 /// Shows the rating dialog when any of the following conditions is met:
 ///
-/// 1. On the third session and having scrolled over at least 8 articles.
-/// 2. When the user updates the app to a new version every time.
+/// 1. When the user updates the app to a new version every time.
+/// 2. On the third session and having scrolled over at least 8 articles.
 @injectable
 class RatingDialogManager {
   RatingDialogManager(
@@ -20,6 +20,7 @@ class RatingDialogManager {
     this._getAppSessionUseCase,
   )   : _viewedCardIndices = {},
         _inAppReview = InAppReview.instance {
+    // Calling this from the constructor to handle the app update case.
     showRatingDialog();
   }
 
@@ -55,15 +56,6 @@ class RatingDialogManager {
   }
 
   Future<bool> showRatingDialog() async {
-    // Check if the current session is third session and if the user scrolled through 8 cards.
-    final numberOfSessions = await _getAppSessionUseCase.singleOutput(none);
-    if (numberOfSessions == _appSessionThreshold &&
-        _viewedCardIndices.length >= _viewedCardsThreshold &&
-        !_ratingDialogShown) {
-      _requestReview();
-      return true;
-    }
-
     // Check if the user updated the app to a new version.
     final currentAppVersion = await _getAppVersionUseCase.singleOutput(none);
     final storedAppVersion =
@@ -77,6 +69,15 @@ class RatingDialogManager {
 
     if (shouldShowDialog && !_ratingDialogShown) {
       await _requestReview();
+      return true;
+    }
+
+    // Check if the current session is third session and if the user scrolled through 8 cards.
+    final numberOfSessions = await _getAppSessionUseCase.singleOutput(none);
+    if (numberOfSessions == _appSessionThreshold &&
+        _viewedCardIndices.length >= _viewedCardsThreshold &&
+        !_ratingDialogShown) {
+      _requestReview();
       return true;
     }
 

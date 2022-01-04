@@ -39,6 +39,10 @@ void main() {
   test(
       'GIVEN 3rd session and 8 card interactions THEN should show rating dialog',
       () async {
+    when(mockGetAppVersionUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(AppVersion.initial()));
+    when(mockGetStoredAppVersionUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(AppVersion.initial()));
     when(mockGetAppSessionUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(3));
     when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
