@@ -38,7 +38,7 @@ void main() {
         verifyInOrder([
           collectionsRepository.getLastCollectionIndex(),
           uniqueIdHandler.generateUniqueId(),
-          collectionsRepository.collection = createdCollection,
+          collectionsRepository.save(createdCollection),
         ]);
         verifyNoMoreInteractions(collectionsRepository);
       },

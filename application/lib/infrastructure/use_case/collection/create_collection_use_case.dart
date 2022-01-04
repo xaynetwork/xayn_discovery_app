@@ -21,7 +21,7 @@ class CreateCollectionUseCase extends UseCase<String, Collection> {
       index: collectionIndex,
     );
 
-    _collectionsRepository.collection = collection;
+    _collectionsRepository.save(collection);
     yield collection;
   }
 }

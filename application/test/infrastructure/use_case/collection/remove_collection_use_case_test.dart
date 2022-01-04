@@ -126,10 +126,12 @@ void main() {
         verifyInOrder([
           collectionsRepository.getById(collectionIdToRemove),
           bookmarksRepository.getByCollectionId(collectionIdToRemove),
-          bookmarksRepository.bookmark =
-              bookmark1.copyWith(collectionId: collectionIdMoveBookmarksTo),
-          bookmarksRepository.bookmark =
-              bookmark2.copyWith(collectionId: collectionIdMoveBookmarksTo),
+          bookmarksRepository.save(
+            bookmark1.copyWith(collectionId: collectionIdMoveBookmarksTo),
+          ),
+          bookmarksRepository.save(
+            bookmark2.copyWith(collectionId: collectionIdMoveBookmarksTo),
+          ),
           collectionsRepository.remove(collection),
         ]);
         verifyNoMoreInteractions(collectionsRepository);

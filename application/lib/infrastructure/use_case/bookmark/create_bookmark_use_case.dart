@@ -33,7 +33,7 @@ class CreateBookmarkUseCase
       providerThumbnail: param.providerThumbnail,
       createdAt: dateTime.toUtc().toString(),
     );
-    _bookmarksRepository.bookmark = bookmark;
+    _bookmarksRepository.save(bookmark);
     yield bookmark;
   }
 }
