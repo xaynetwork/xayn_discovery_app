@@ -1,4 +1,4 @@
-name: Basic checks
+name: Code Quality
 
 env:
   FLUTTER_VERSION: '2.8.1'
