@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
@@ -19,6 +20,14 @@ class FeatureManager extends Cubit<FeatureManagerState>
   }
 
   late FeatureMap _featureMap;
+
+  /// [FeatureManager] is [lazySingleton],
+  /// so we should NOT `close` it
+  @visibleForOverriding
+  @override
+  Future<void> close() {
+    return super.close();
+  }
 
   void _init() {
     _featureMap = state.featureMap;
