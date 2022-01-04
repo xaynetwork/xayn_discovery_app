@@ -7,7 +7,6 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -18,7 +17,6 @@ import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/scroll_direction_section.dart';
 
 import 'settings_screen_test.mocks.dart';
 
@@ -31,7 +29,6 @@ void main() {
       version: '1.2.3',
       build: '321',
     ),
-    axis: DiscoveryFeedAxis.vertical,
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 
@@ -60,7 +57,6 @@ void main() {
       await openScreen(tester);
 
       expect(find.byType(SettingsAppThemeSection), findsOneWidget);
-      expect(find.byType(SettingsScrollDirectionSection), findsOneWidget);
       expect(find.byType(SettingsGeneralInfoSection), findsOneWidget);
       expect(find.byType(SettingsHelpImproveSection), findsOneWidget);
 
