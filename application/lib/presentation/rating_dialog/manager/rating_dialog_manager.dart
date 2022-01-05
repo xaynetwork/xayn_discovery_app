@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_
 ///
 /// 1. When the user updates the app to a new version every time.
 /// 2. On the third session and having scrolled over at least 8 articles.
-@injectable
+@lazySingleton
 class RatingDialogManager {
   RatingDialogManager(
     this._getAppVersionUseCase,
@@ -21,7 +21,7 @@ class RatingDialogManager {
   )   : _viewedCardIndices = {},
         _inAppReview = InAppReview.instance {
     // Calling this from the constructor to handle the app update case.
-    showRatingDialog();
+    showRatingDialogIfNeeded();
   }
 
   @visibleForTesting
@@ -55,7 +55,7 @@ class RatingDialogManager {
     }
   }
 
-  Future<bool> showRatingDialog() async {
+  Future<bool> showRatingDialogIfNeeded() async {
     // Check if the user updated the app to a new version.
     final currentAppVersion = await _getAppVersionUseCase.singleOutput(none);
     final storedAppVersion =
@@ -87,6 +87,6 @@ class RatingDialogManager {
   // Called when the user swipe through cards on the home feed.
   void handleIndexChanged(int index) {
     _viewedCardIndices.add(index);
-    showRatingDialog();
+    showRatingDialogIfNeeded();
   }
 }

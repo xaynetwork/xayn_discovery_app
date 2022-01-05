@@ -6,16 +6,20 @@ const int _version = 0;
 const int _build = 1;
 
 @singleton
-class MapToAppVersionMapper implements Mapper<Map?, AppVersion?> {
+class MapToAppVersionMapper implements Mapper<Map?, AppVersion> {
   const MapToAppVersionMapper();
 
   @override
-  AppVersion? map(Map? input) {
-    if (input == null || input is! Map<int, dynamic>) return null;
+  AppVersion map(Map? input) {
+    if (input == null || input is! Map<int, dynamic>) {
+      return AppVersion.initial();
+    }
 
     final version = input[_version] as String?;
     final build = input[_build] as String?;
-    if (version == null || build == null) return null;
+    if (version == null || build == null) {
+      return AppVersion.initial();
+    }
 
     return AppVersion(
       version: version,
@@ -25,16 +29,12 @@ class MapToAppVersionMapper implements Mapper<Map?, AppVersion?> {
 }
 
 @singleton
-class AppVersionToMapMapper implements Mapper<AppVersion?, Map?> {
+class AppVersionToMapMapper implements Mapper<AppVersion, Map> {
   const AppVersionToMapMapper();
 
   @override
-  Map? map(AppVersion? input) {
-    if (input == null) return null;
-
-    return {
-      _version: input.version,
-      _build: input.build,
-    };
-  }
+  Map map(AppVersion input) => {
+        _version: input.version,
+        _build: input.build,
+      };
 }

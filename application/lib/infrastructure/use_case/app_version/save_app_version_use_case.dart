@@ -12,7 +12,7 @@ class SaveAppVersionUseCase extends UseCase<AppVersion, None> {
   @override
   Stream<None> transaction(AppVersion param) async* {
     final appStatus = _repository.appStatus;
-    final updatedAppStatus = appStatus.copyWith(appVersion: param);
+    final updatedAppStatus = appStatus.copyWith(lastKnownAppVersion: param);
     _repository.appStatus = updatedAppStatus;
     yield none;
   }

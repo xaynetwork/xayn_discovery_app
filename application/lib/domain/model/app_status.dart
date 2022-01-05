@@ -9,23 +9,23 @@ part 'app_status.freezed.dart';
 class AppStatus extends DbEntity with _$AppStatus {
   factory AppStatus._({
     required int numberOfSessions,
-    required AppVersion appVersion,
+    required AppVersion lastKnownAppVersion,
     required UniqueId id,
   }) = _AppStatus;
 
-  factory AppStatus.global({
+  factory AppStatus({
     required int numberOfSessions,
-    required AppVersion appVersion,
+    required AppVersion lastKnownAppVersion,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
-        appVersion: appVersion,
+        lastKnownAppVersion: lastKnownAppVersion,
         id: AppStatus.globalId,
       );
 
-  factory AppStatus.initial() => AppStatus.global(
+  factory AppStatus.initial() => AppStatus(
         numberOfSessions: 0,
-        appVersion: AppVersion.initial(),
+        lastKnownAppVersion: AppVersion.initial(),
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');

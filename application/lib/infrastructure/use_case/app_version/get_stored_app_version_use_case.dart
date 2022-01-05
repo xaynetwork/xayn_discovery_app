@@ -11,6 +11,6 @@ class GetStoredAppVersionUseCase extends UseCase<None, AppVersion> {
 
   @override
   Stream<AppVersion> transaction(None param) async* {
-    yield _repository.appStatus.appVersion;
+    yield _repository.appStatus.lastKnownAppVersion;
   }
 }

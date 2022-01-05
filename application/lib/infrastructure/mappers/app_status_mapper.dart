@@ -22,9 +22,9 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
     final appVersion =
         _mapToAppVersionMapper.map(map[AppSettingsFields.appVersion]);
 
-    return AppStatus.global(
+    return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
-      appVersion: appVersion ?? AppVersion.initial(),
+      lastKnownAppVersion: appVersion,
     );
   }
 
@@ -32,7 +32,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
   DbEntityMap toMap(AppStatus entity) => {
         AppSettingsFields.numberOfSessions: entity.numberOfSessions,
         AppSettingsFields.appVersion:
-            _appVersionToMapMapper.map(entity.appVersion),
+            _appVersionToMapMapper.map(entity.lastKnownAppVersion),
       };
 }
 

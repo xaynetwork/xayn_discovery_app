@@ -41,9 +41,9 @@ void main() {
       final appStatus = mapper.fromMap(map);
       expect(
         appStatus,
-        AppStatus.global(
+        AppStatus(
           numberOfSessions: 10,
-          appVersion: const AppVersion(version: '1.0.0', build: '123'),
+          lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
         ),
       );
     });
@@ -55,9 +55,9 @@ void main() {
         (_) => {0: '1.0.0', 1: '123'},
       );
 
-      final appStatus = AppStatus.global(
+      final appStatus = AppStatus(
         numberOfSessions: 10,
-        appVersion: const AppVersion(version: '1.0.0', build: '123'),
+        lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {

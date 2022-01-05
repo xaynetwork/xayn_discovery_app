@@ -56,7 +56,7 @@ void main() {
       mockInAppReview,
     );
 
-    expect(await manager.showRatingDialog(), isTrue);
+    expect(await manager.showRatingDialogIfNeeded(), isTrue);
   });
 
   test(
@@ -79,7 +79,7 @@ void main() {
       mockInAppReview,
     );
 
-    expect(await manager.showRatingDialog(), isFalse);
+    expect(await manager.showRatingDialogIfNeeded(), isFalse);
   });
 
   test('GIVEN version update THEN should show rating dialog', () async {
@@ -102,6 +102,6 @@ void main() {
       mockInAppReview,
     );
 
-    expect(await manager.showRatingDialog(), isTrue);
+    expect(await manager.showRatingDialogIfNeeded(), isTrue);
   });
 }
