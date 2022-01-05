@@ -25,4 +25,12 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
         isInErrorState: false,
         axis: DiscoveryFeedAxis.vertical,
       );
+
+  bool equals(DiscoveryFeedState other) =>
+      isFullScreen == other.isFullScreen &&
+      resultIndex == other.resultIndex &&
+      axis == other.axis &&
+      isComplete == other.isComplete &&
+      isInErrorState == other.isInErrorState &&
+      const SetEquality().equals(results, other.results);
 }

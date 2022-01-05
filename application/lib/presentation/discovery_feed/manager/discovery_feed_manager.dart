@@ -43,6 +43,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
+  int _documentIndex = 0;
   bool _isFullScreen = false;
 
   void handleNavigateIntoCard() {
@@ -64,6 +65,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         mode: _observedViewTypes[document],
       );
     }
+
+    scheduleComputeState(() => _documentIndex = index);
   }
 
   /// Triggers a new observation for [document], if that document matches
@@ -112,27 +115,25 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         _discoveryFeedAxisHandler,
         engineEvents,
       ).foldAll((
-        axis,
+        currentAxis,
         engineEvent,
         errorReport,
       ) {
-        if (errorReport.isNotEmpty) {
-          return state.copyWith(
-            isInErrorState: true,
-          );
-        }
+        final results = engineEvent is FeedRequestSucceeded
+            ? {...state.results ?? const <Document>[], ...engineEvent.items}
+            : state.results;
 
-        if (engineEvent is FeedRequestSucceeded) {
-          final currentResults = state.results ?? const <Document>[];
+        final nextState = DiscoveryFeedState(
+          results: results,
+          axis: currentAxis ?? DiscoveryFeedAxis.vertical,
+          isComplete: !isLoading,
+          isInErrorState: errorReport.isNotEmpty,
+          isFullScreen: _isFullScreen,
+          resultIndex: _documentIndex,
+        );
 
-          return state.copyWith(
-            results: {...currentResults, ...engineEvent.items},
-            isComplete: !isLoading,
-            isFullScreen: _isFullScreen,
-            isInErrorState: false,
-            axis: axis ?? DiscoveryFeedAxis.vertical,
-          );
-        }
+        // guard against same-state emission
+        if (!nextState.equals(state)) return nextState;
       });
 
   @override
