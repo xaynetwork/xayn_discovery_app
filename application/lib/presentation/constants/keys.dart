@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class Keys {
   Keys._();
 
+  static const Key featureSelectionButton = Key('featureSelectionButton');
+
   static const Key onBoardingPageOne = Key('onBoardingPageOne');
   static const Key onBoardingPageTwo = Key('onBoardingPageTwo');
   static const Key onBoardingPageThree = Key('onBoardingPageThree');

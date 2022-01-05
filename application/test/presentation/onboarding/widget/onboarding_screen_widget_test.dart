@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -9,23 +8,8 @@ import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_ma
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
+import '../../utils/test_dependencies.dart';
 import 'onboarding_screen_widget_test.mocks.dart';
-
-/// TODO move this to configure dependencies / investigate why getit need the package_info
-void packageInfoMock() {
-  const MethodChannel('dev.fluttercommunity.plus/package_info')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
-    if (methodCall.method == 'getAll') {
-      return <String, dynamic>{
-        // 'appName': 'ABC',
-        // 'packageName': 'A.B.C', // <--- set initial values here
-        // 'version': '1.0.0', // <--- set initial values here
-        // 'buildNumber': '' // <--- set initial values here
-      };
-    }
-    return null;
-  });
-}
 
 @GenerateMocks([OnBoardingManager])
 void main() {
@@ -37,9 +21,8 @@ void main() {
   Finder getTapDetector() => find.byKey(Keys.onBoardingPageTapDetector);
 
   setUpAll(() {
-    packageInfoMock();
     manager = MockOnBoardingManager();
-    configureDependencies();
+    configureTestDependencies();
     di
       ..unregister<OnBoardingManager>()
       ..registerSingleton<OnBoardingManager>(manager);
