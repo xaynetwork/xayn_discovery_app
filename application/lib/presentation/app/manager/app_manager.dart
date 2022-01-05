@@ -1,4 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
@@ -26,14 +25,6 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
 
   late AppTheme _appTheme;
   bool _initDone = false;
-
-  /// [AppManager] is [lazySingleton],
-  /// so we should NOT `close` it
-  @visibleForOverriding
-  @override
-  Future<void> close() {
-    return super.close();
-  }
 
   void _init() async {
     scheduleComputeState(() async {
