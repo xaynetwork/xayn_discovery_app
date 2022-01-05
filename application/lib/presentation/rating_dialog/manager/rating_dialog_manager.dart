@@ -87,6 +87,8 @@ class RatingDialogManager {
   // Called when the user swipe through cards on the home feed.
   void handleIndexChanged(int index) {
     _viewedCardIndices.add(index);
-    showRatingDialogIfNeeded();
+    if (!_ratingDialogShown) {
+      showRatingDialogIfNeeded();
+    }
   }
 }
