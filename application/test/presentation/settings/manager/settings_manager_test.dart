@@ -64,7 +64,6 @@ void main() {
     getDiscoveryFeedAxisUseCase = MockGetDiscoveryFeedAxisUseCase();
     saveDiscoveryFeedAxisUseCase = MockSaveDiscoveryFeedAxisUseCase();
     listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
-    listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
     bugReportingService = MockBugReportingService();
     extractLogUseCase = MockExtractLogUseCase();
 

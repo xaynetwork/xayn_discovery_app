@@ -28,7 +28,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen>
     with NavBarConfigMixin {
   late final SettingsScreenManager _manager;
-  late final Future<SettingsScreenManager> initManagerFuture;
+  late final Future<SettingsScreenManager> initManagerFuture = di.getAsync();
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
@@ -38,18 +38,10 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   void initState() {
-    initManagerFuture = di.getAsync<SettingsScreenManager>();
     initManagerFuture.then((manager) {
       _manager = manager;
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // SettingsScreenManager is lazySingleton, so we should NOT `close` it
-    // _manager.close();
-    super.dispose();
   }
 
   @override

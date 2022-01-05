@@ -55,16 +55,12 @@ class ReaderMode extends StatefulWidget {
 }
 
 class _ReaderModeState extends State<ReaderMode> {
-  late final ReaderModeManager _readerModeManager;
-  late final readability.ReaderModeController _readerModeController;
+  late final ReaderModeManager _readerModeManager = di.get();
+  late final _readerModeController = readability.ReaderModeController();
 
   @override
   void initState() {
     super.initState();
-
-    _readerModeManager = di.get();
-    _readerModeController = readability.ReaderModeController();
-
     _updateCardData();
   }
 
