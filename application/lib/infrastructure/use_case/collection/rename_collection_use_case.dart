@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
@@ -9,13 +10,13 @@ import 'collection_exception.dart';
 
 @injectable
 class RenameCollectionUseCase
-    extends UseCase<RenameCollectionUseCaseParam, Collection> {
+    extends UseCase<RenameCollectionUseCaseParam, Collection?> {
   final CollectionsRepository _collectionsRepository;
 
   RenameCollectionUseCase(this._collectionsRepository);
 
   @override
-  Stream<Collection> transaction(RenameCollectionUseCaseParam param) async* {
+  Stream<Collection?> transaction(RenameCollectionUseCaseParam param) async* {
     final collectionNameTrimmed = param.newName.trim();
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
       logger.e(errorMessageCollectionNameUsed);
@@ -40,12 +41,15 @@ class RenameCollectionUseCase
   }
 }
 
-class RenameCollectionUseCaseParam {
+class RenameCollectionUseCaseParam extends Equatable {
   final UniqueId collectionId;
   final String newName;
 
-  RenameCollectionUseCaseParam({
+  const RenameCollectionUseCaseParam({
     required this.collectionId,
     required this.newName,
   });
+
+  @override
+  List<Object?> get props => [collectionId, newName];
 }
