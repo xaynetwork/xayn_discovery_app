@@ -31,4 +31,15 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
 
   @override
   int getLastCollectionIndex() => getAll().last.index;
+
+  @override
+  bool isCollectionNameUsed(String name) {
+    final values = getAll();
+    for (final value in values) {
+      if (value.name == name) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
