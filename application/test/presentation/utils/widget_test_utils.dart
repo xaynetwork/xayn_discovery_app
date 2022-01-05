@@ -4,7 +4,6 @@ import 'package:hive/hive.dart';
 import 'package:xayn_design/src/widget/nav_bar/widget/nav_bar_container.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_request_builder_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import 'package:xayn_discovery_app/main.dart';
@@ -36,7 +35,7 @@ extension WidgetTesterCommonActions on WidgetTester {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
     await pumpAndSettle(kScrollUpdateUseCaseDebounceTime +
-        kDebounceDuration +
+        /*kDebounceDuration +*/
         updateNabBarDebounceTimeout);
   }
 
