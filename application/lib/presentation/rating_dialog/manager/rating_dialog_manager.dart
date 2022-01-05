@@ -16,7 +16,7 @@ class RatingDialogManager {
   RatingDialogManager(
     this._getAppVersionUseCase,
     this._getStoredAppVersionUseCase,
-    this._saveAppVersionUseCase,
+    this._saveCurrentAppVersion,
     this._getAppSessionUseCase,
   )   : _viewedCardIndices = {},
         _inAppReview = InAppReview.instance {
@@ -29,14 +29,14 @@ class RatingDialogManager {
     this._viewedCardIndices,
     this._getAppVersionUseCase,
     this._getStoredAppVersionUseCase,
-    this._saveAppVersionUseCase,
+    this._saveCurrentAppVersion,
     this._getAppSessionUseCase,
     this._inAppReview,
   );
 
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetStoredAppVersionUseCase _getStoredAppVersionUseCase;
-  final SaveAppVersionUseCase _saveAppVersionUseCase;
+  final SaveCurrentAppVersion _saveCurrentAppVersion;
   final GetAppSessionUseCase _getAppSessionUseCase;
   final InAppReview _inAppReview;
 
@@ -64,7 +64,7 @@ class RatingDialogManager {
 
     // Save the current app version if there was an update.
     if (shouldShowDialog) {
-      await _saveAppVersionUseCase.call(currentAppVersion);
+      await _saveCurrentAppVersion.call(none);
     }
 
     if (shouldShowDialog && !_ratingDialogShown) {

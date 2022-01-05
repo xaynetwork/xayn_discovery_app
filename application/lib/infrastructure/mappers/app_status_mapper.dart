@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
-import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 

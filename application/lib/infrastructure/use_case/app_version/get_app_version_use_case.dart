@@ -3,8 +3,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 
-const _gitTagEnv = String.fromEnvironment('GIT_TAG');
-
 @lazySingleton
 class GetAppVersionUseCase extends UseCase<None, AppVersion> {
   final PackageInfo _info;
@@ -16,12 +14,7 @@ class GetAppVersionUseCase extends UseCase<None, AppVersion> {
 
   @override
   Stream<AppVersion> transaction(None param) async* {
-    _appVersion ??= AppVersion(
-      version: _getVersion(),
-      build: _info.buildNumber,
-    );
+    _appVersion ??= AppVersion.current(_info);
     yield _appVersion!;
   }
-
-  String _getVersion() => _gitTagEnv.isNotEmpty ? _gitTagEnv : _info.version;
 }

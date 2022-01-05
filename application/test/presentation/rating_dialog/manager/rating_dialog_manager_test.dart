@@ -15,14 +15,14 @@ import 'rating_dialog_manager_test.mocks.dart';
 @GenerateMocks([
   GetAppVersionUseCase,
   GetStoredAppVersionUseCase,
-  SaveAppVersionUseCase,
+  SaveCurrentAppVersion,
   GetAppSessionUseCase,
   InAppReview,
 ])
 void main() {
   late MockGetAppVersionUseCase mockGetAppVersionUseCase;
   late MockGetStoredAppVersionUseCase mockGetStoredAppVersionUseCase;
-  late MockSaveAppVersionUseCase mockSaveAppVersionUseCase;
+  late MockSaveCurrentAppVersion mockSaveCurrentAppVersion;
   late MockGetAppSessionUseCase mockGetAppSessionUseCase;
   late MockInAppReview mockInAppReview;
 
@@ -31,7 +31,7 @@ void main() {
   setUp(() async {
     mockGetAppVersionUseCase = MockGetAppVersionUseCase();
     mockGetStoredAppVersionUseCase = MockGetStoredAppVersionUseCase();
-    mockSaveAppVersionUseCase = MockSaveAppVersionUseCase();
+    mockSaveCurrentAppVersion = MockSaveCurrentAppVersion();
     mockGetAppSessionUseCase = MockGetAppSessionUseCase();
     mockInAppReview = MockInAppReview();
   });
@@ -51,7 +51,7 @@ void main() {
       {1, 2, 3, 4, 5, 6, 7, 8},
       mockGetAppVersionUseCase,
       mockGetStoredAppVersionUseCase,
-      mockSaveAppVersionUseCase,
+      mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
     );
@@ -74,7 +74,7 @@ void main() {
       {1, 2, 3, 4, 5, 6, 7, 8},
       mockGetAppVersionUseCase,
       mockGetStoredAppVersionUseCase,
-      mockSaveAppVersionUseCase,
+      mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
     );
@@ -89,7 +89,7 @@ void main() {
         (_) => Future.value(const AppVersion(version: '0.0.2', build: '1')));
     when(mockGetStoredAppVersionUseCase.singleOutput(none)).thenAnswer(
         (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
-    when(mockSaveAppVersionUseCase.call(any))
+    when(mockSaveCurrentAppVersion.call(any))
         .thenAnswer((_) => Future.value([]));
     when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
 
@@ -97,7 +97,7 @@ void main() {
       {},
       mockGetAppVersionUseCase,
       mockGetStoredAppVersionUseCase,
-      mockSaveAppVersionUseCase,
+      mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
     );
