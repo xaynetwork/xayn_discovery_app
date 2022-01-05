@@ -8,14 +8,14 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'collection_exception.dart';
 
 @injectable
-class CreateCollectionUseCase extends UseCase<String, Collection> {
+class CreateCollectionUseCase extends UseCase<String, Collection?> {
   final CollectionsRepository _collectionsRepository;
   final UniqueIdHandler _uniqueIdHandler;
 
   CreateCollectionUseCase(this._collectionsRepository, this._uniqueIdHandler);
 
   @override
-  Stream<Collection> transaction(String param) async* {
+  Stream<Collection?> transaction(String param) async* {
     final collectionNameTrimmed = param.trim();
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
       logger.e(errorMessageCollectionNameUsed);

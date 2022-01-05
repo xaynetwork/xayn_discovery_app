@@ -11,6 +11,8 @@ const String errorMessageRemovingNotExistingCollection =
 const String errorMessageCollectionNameEmpty =
     'The name of the default collection cannot be empty';
 const String errorMessageCollectionNameUsed = 'Collection name already exists';
+const String errorMessageGettingCardDataOfNotExistingCollection =
+    'Trying to get collection card data of a collection that doesn\'t exist';
 
 class CollectionUseCaseException implements Exception {
   final String msg;
