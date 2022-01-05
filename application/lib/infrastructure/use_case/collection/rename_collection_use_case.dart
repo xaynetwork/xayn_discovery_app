@@ -16,11 +16,10 @@ class RenameCollectionUseCase
 
   @override
   Stream<Collection> transaction(RenameCollectionUseCaseParam param) async* {
-    /// Check if we're trying to rename the default collection
-    if (param.collectionId == Collection.readLaterId) {
-      logger.e(errorMessageRenamingDefaultCollection);
+    if (_collectionsRepository.isCollectionNameUsed(param.newName)) {
+      logger.e(errorMessageCollectionNameUsed);
       throw CollectionUseCaseException(
-        errorMessageRenamingDefaultCollection,
+        errorMessageCollectionNameUsed,
       );
     }
 

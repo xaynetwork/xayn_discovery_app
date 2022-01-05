@@ -20,18 +20,26 @@ void main() {
   setUp(() {
     collectionsRepository = MockCollectionsRepository();
     renameCollectionUseCase = RenameCollectionUseCase(collectionsRepository);
+
+    when(collectionsRepository.isCollectionNameUsed(newCollectionName))
+        .thenReturn(false);
   });
 
   group('Rename collection use case', () {
     useCaseTest(
-      'WHEN the given id corresponds to the default collection one THEN throw an exception',
+      'WHEN the given name corresponds to a collection name that already exists THEN throw an exception',
+      setUp: () =>
+          when(collectionsRepository.isCollectionNameUsed(newCollectionName))
+              .thenReturn(true),
       build: () => renameCollectionUseCase,
       input: [
         RenameCollectionUseCaseParam(
             collectionId: Collection.readLaterId, newName: newCollectionName)
       ],
       verify: (_) {
-        verifyZeroInteractions(collectionsRepository);
+        verify(collectionsRepository.isCollectionNameUsed(newCollectionName))
+            .called(1);
+        verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
         useCaseFailure(
@@ -50,6 +58,7 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
+          collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.getById(collection.id),
         ]);
         verifyNoMoreInteractions(collectionsRepository);
@@ -72,6 +81,7 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
+          collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.getById(collection.id),
           collectionsRepository.save(updatedCollection),
         ]);

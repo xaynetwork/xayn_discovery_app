@@ -10,6 +10,7 @@ const String errorMessageRemovingNotExistingCollection =
     'Trying to remove a collection that doesn\'t exist';
 const String errorMessageCollectionNameEmpty =
     'The name of the default collection cannot be empty';
+const String errorMessageCollectionNameUsed = 'Collection name already exists';
 
 class CollectionUseCaseException implements Exception {
   final String msg;
