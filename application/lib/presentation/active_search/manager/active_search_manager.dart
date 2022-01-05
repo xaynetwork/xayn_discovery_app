@@ -34,7 +34,7 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
   @override
   Future<ActiveSearchState?> computeState() async =>
       fold(engineEvents).foldAll((engineEvent, errorReport) {
-        if (errorReport.isNotEmpty) {
+        if (errorReport.isNotEmpty || engineEvent is EngineExceptionRaised) {
           return state.copyWith(
             isInErrorState: true,
           );

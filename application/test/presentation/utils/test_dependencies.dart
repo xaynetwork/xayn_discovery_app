@@ -19,6 +19,7 @@ import 'test_dependencies.config.dart';
     asExtension: false,
     generateForDir: ['test'])
 void configureTestDependencies() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
   packageInfoMock();
   configureDependencies();

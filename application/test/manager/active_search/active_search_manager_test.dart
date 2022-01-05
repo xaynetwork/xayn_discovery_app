@@ -1,31 +1,31 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-import 'active_search_manager_test.mocks.dart';
+import '../../presentation/utils/fakes.dart';
+import '../../presentation/utils/utils.dart';
 
-/// FIXME: Should be all moved to a single class Mocks so that we don't have to maintain
-/// GenerateMocks configs across all those files.
-@GenerateMocks([
-  Document,
-  ActiveSearchNavActions,
-])
 void main() {
   ActiveSearchManager buildManager() =>
       ActiveSearchManager(MockActiveSearchNavActions());
+  late DiscoveryEngine engine;
 
   setUp(() {
-    when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
+    configureTestDependencies();
+    engine = MockDiscoveryEngine();
+    di
+      ..unregister<DiscoveryEngine>()
+      ..registerFactoryAsync<DiscoveryEngine>(() => Future.value(engine));
   });
 
   blocTest<ActiveSearchManager, ActiveSearchState>(
     'GIVEN fresh manager THEN the state is ActiveSearchState.empty()',
     build: () {
-      when(useCase.transform(any)).thenAnswer((_) => const Stream.empty());
+      when(engine.engineEvents).thenAnswer((_) => const Stream.empty());
       return buildManager();
     },
     verify: (bloc) {
@@ -36,9 +36,8 @@ void main() {
   blocTest<ActiveSearchManager, ActiveSearchState>(
     'GIVEN use case emits results THEN the state contains results',
     build: () {
-      when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
-      when(useCase.transaction(any))
-          .thenAnswer((_) => Stream.value(resultState));
+      when(engine.engineEvents).thenAnswer(
+          (ctx) => Stream.value(FeedRequestSucceeded([fakeDocument])));
       return buildManager();
     },
     verify: (bloc) {
@@ -52,10 +51,8 @@ void main() {
   blocTest<ActiveSearchManager, ActiveSearchState>(
     'GIVEN use case throws an error THEN the error state is true',
     build: () {
-      when(useCase.transform(any)).thenAnswer((_) => Stream.value(testParams));
-      when(useCase.transaction(any)).thenAnswer((_) async* {
-        throw ArgumentError('bad data!');
-      });
+      when(engine.engineEvents).thenAnswer((ctx) => Stream.value(
+          const EngineExceptionRaised(EngineExceptionReason.genericError)));
       return buildManager();
     },
     verify: (bloc) {
