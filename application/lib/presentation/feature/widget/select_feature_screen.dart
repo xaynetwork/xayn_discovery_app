@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
 
@@ -66,6 +67,7 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
 
   Widget _buildOverrideButton() {
     final button = MaterialButton(
+      key: Keys.featureSelectionButton,
       padding: const EdgeInsets.all(24),
       color: Colors.white,
       child: const Text('Select Features'),
