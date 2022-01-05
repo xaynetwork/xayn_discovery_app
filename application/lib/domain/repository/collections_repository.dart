@@ -11,4 +11,5 @@ abstract class CollectionsRepository {
   void remove(Collection collection);
   Stream<RepositoryEvent> watch({UniqueId id});
   int getLastCollectionIndex();
+  bool isCollectionNameUsed(String name);
 }
