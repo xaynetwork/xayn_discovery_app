@@ -56,6 +56,10 @@ class RatingDialogManager {
   }
 
   Future<bool> showRatingDialogIfNeeded() async {
+    if (_ratingDialogShown) {
+      return false;
+    }
+
     // Check if the user updated the app to a new version.
     final currentAppVersion = await _getAppVersionUseCase.singleOutput(none);
     final storedAppVersion =
@@ -87,8 +91,6 @@ class RatingDialogManager {
   // Called when the user swipe through cards on the home feed.
   void handleIndexChanged(int index) {
     _viewedCardIndices.add(index);
-    if (!_ratingDialogShown) {
-      showRatingDialogIfNeeded();
-    }
+    showRatingDialogIfNeeded();
   }
 }
