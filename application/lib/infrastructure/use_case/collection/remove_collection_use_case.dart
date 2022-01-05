@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
@@ -10,7 +11,7 @@ import 'collection_exception.dart';
 
 @injectable
 class RemoveCollectionUseCase
-    extends UseCase<RemoveCollectionUseCaseParam, Collection> {
+    extends UseCase<RemoveCollectionUseCaseParam, Collection?> {
   final CollectionsRepository _collectionsRepository;
   final BookmarksRepository _bookmarksRepository;
 
@@ -20,7 +21,7 @@ class RemoveCollectionUseCase
   );
 
   @override
-  Stream<Collection> transaction(RemoveCollectionUseCaseParam param) async* {
+  Stream<Collection?> transaction(RemoveCollectionUseCaseParam param) async* {
     /// Check if we're trying to delete the default collection
     if (param.collectionIdToRemove == Collection.readLaterId) {
       logger.e(errorMessageRemovingExistingDefaultCollection);
@@ -61,12 +62,16 @@ class RemoveCollectionUseCase
   }
 }
 
-class RemoveCollectionUseCaseParam {
+class RemoveCollectionUseCaseParam extends Equatable {
   final UniqueId collectionIdToRemove;
   final UniqueId? collectionIdMoveBookmarksTo;
 
-  RemoveCollectionUseCaseParam({
+  const RemoveCollectionUseCaseParam({
     required this.collectionIdToRemove,
     this.collectionIdMoveBookmarksTo,
   });
+
+  @override
+  List<Object?> get props =>
+      [collectionIdToRemove, collectionIdMoveBookmarksTo];
 }
