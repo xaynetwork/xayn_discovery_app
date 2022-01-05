@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
@@ -60,14 +59,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late DiscoveryFeedAxis _discoveryFeedAxis;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
   late final UseCaseValueStream<DiscoveryFeedAxis> _discoveryFeedAxisHandler;
-
-  /// [SettingsScreenManager] is lazySingleton,
-  /// so we should NOT `close` it
-  @visibleForOverriding
-  @override
-  Future<void> close() {
-    return super.close();
-  }
 
   void _init() async {
     scheduleComputeState(() async {

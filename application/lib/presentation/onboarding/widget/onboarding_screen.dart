@@ -24,15 +24,15 @@ class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
 
   @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+  State<OnBoardingScreen> createState() => OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen>
+class OnBoardingScreenState extends State<OnBoardingScreen>
     with NavBarConfigMixin {
   late final OnBoardingManager _onBoardingManager = di.get();
   late final _pageController = PageController(initialPage: 0);
   late final List<OnBoardingPageData> _onBoardingPagesData =
-      _getInitialPageData();
+      getInitialPageData();
   var _isOnboardingCompleted = false;
 
   @override
@@ -49,7 +49,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     super.dispose();
   }
 
-  List<OnBoardingPageData> _getInitialPageData() => [
+  @visibleForTesting
+  List<OnBoardingPageData> getInitialPageData() => [
         ///TODO Please replace mocked data with proper data
         const OnBoardingGenericPageData(
           imageAssetUrl: '',
