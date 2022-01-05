@@ -24,8 +24,9 @@ env:
   FASTLANE_SKIP_UPDATE_CHECK: '1'
 
 jobs:
-  test_and_publish:
-    name: iOS, Android and Web distribution
+  publish_ios:
+    name: Publish iOS
+    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_internal'))
     runs-on: macos-latest
     steps:
       - name: Install SSH key
@@ -55,25 +56,6 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
-      # - name: Analyze & unit test code
-      #   run: ./run_all_checks.sh
-
-      - name: Build and submit new internal Android version to app center
-        timeout-minutes: 20
-        env:
-          PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
-          INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
-          INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
-          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
-          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
-        working-directory: ./application
-        run: |
-          fastlane publish platform:android build:release
-        if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_internal'))
-
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -93,7 +75,47 @@ jobs:
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release
-        if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_internal'))
+
+  publish_android:
+    name: Publish Android
+    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_internal'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: ${{ env.flutter_channel }}
+          flutter-version: ${{ env.flutter_version }}
+
+      - name: Fix fastlane permissions
+        run:
+          sudo chmod -R a+w /var/lib/gems/
+
+      - name: Build and submit new internal Android version to app center
+        timeout-minutes: 20
+        env:
+          PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
+          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
+          INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
+          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
+          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+        working-directory: ./application
+        run: |
+          fastlane publish platform:android build:release
 
       # - name: Build and submit new release Android version to app center
       #   timeout-minutes: 20
