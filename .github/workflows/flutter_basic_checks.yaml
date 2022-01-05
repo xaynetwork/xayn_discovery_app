@@ -55,7 +55,7 @@ jobs:
           MIN_CHANGE: -1
         run: |
           last_lcov_url=`curl -u $USER:$TOKEN -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/xaynetwork/xayn_discovery_app/actions/artifacts | jq -r '.artifacts[0].archive_download_url'`
-          if [ -n "$last_lcov_url" ]; then
+          if [ -n "$last_lcov_url" ] && [ "$last_lcov_url" != "null" ]; then
             curl -L -H "Accept: application/vnd.github.v3+json" -o last_lcov.zip -u $USER:$TOKEN $last_lcov_url
             unzip last_lcov.zip -d last_lcov
           fi
