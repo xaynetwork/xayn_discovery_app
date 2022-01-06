@@ -22,7 +22,7 @@ typedef ObservedViewTypes = Map<Document, DocumentViewMode>;
 /// It consumes events from the discovery engine and emits a state
 /// which contains a list of discovery news items which should be displayed
 /// in a list format by widgets.
-@injectable
+@lazySingleton
 class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     with
         UseCaseBlocHelper<DiscoveryFeedState>,
