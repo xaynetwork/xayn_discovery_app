@@ -161,10 +161,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               NavBarContainer.updateNavBar(context);
             }
 
-            if (results.isEmpty) {
+            if (!state.isComplete) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
+            }
+
+            if (state.results.isEmpty) {
+              return const Center();
             }
 
             _totalResults = results.length;
