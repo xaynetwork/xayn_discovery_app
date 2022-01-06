@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 
 import 'test_dependencies.config.dart';
 
@@ -18,12 +19,16 @@ import 'test_dependencies.config.dart';
     preferRelativeImports: true,
     asExtension: false,
     generateForDir: ['test'])
-void configureTestDependencies() {
+Future<void> configureTestDependencies() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
   packageInfoMock();
   configureDependencies();
   $initTestGetIt(di);
+  // re-register as a sync singleton,
+  // because this manager is required sync later on, as the navigation is also sync-based.
+  di.registerSingleton<DiscoveryFeedManager>(
+      await di.getAsync<DiscoveryFeedManager>());
 }
 
 void packageInfoMock() {

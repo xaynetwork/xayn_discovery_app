@@ -1,10 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -22,28 +18,10 @@ class PageRegistry {
     onboarding,
   };
 
-  static Future<DiscoveryFeedManager>? _discoveryFeedManagerFuture;
-  static DiscoveryFeedManager? _discoveryFeedManager;
   static final discovery = xayn.PageData(
     name: "discovery",
     isInitial: true,
-    builder: (_, args) {
-      _discoveryFeedManagerFuture ??= di.getAsync<DiscoveryFeedManager>();
-
-      return FutureBuilder<DiscoveryFeedManager>(
-        future: _discoveryFeedManagerFuture,
-        initialData: _discoveryFeedManager,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const CircularProgressIndicator();
-
-          _discoveryFeedManager = snapshot.requireData;
-
-          return DiscoveryFeed(
-            manager: snapshot.requireData,
-          );
-        },
-      );
-    },
+    builder: (_, args) => const DiscoveryFeed(),
   );
   static final search = xayn.PageData(
     name: "search",

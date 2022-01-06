@@ -11,10 +11,10 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import '../utils/utils.dart';
 
 /// common setup for widget tests
-void setupWidgetTest() {
+Future<void> setupWidgetTest() async {
   debugSemanticsDisableAnimations = true;
   HiveDB.init(null);
-  configureTestDependencies();
+  await configureTestDependencies();
 }
 
 /// common teardown for widget tests

@@ -24,9 +24,9 @@ void main() {
   Finder getTapDetector() => find.byKey(Keys.onBoardingPageTapDetector);
   Finder navBarFinder() => find.byType(NavBar);
 
-  setUpAll(() {
+  setUpAll(() async {
     manager = MockOnBoardingManager();
-    configureTestDependencies();
+    await configureTestDependencies();
     di
       ..unregister<OnBoardingManager>()
       ..registerSingleton<OnBoardingManager>(manager);

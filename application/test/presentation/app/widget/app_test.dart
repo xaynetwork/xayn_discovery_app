@@ -10,8 +10,8 @@ import '../../utils/widget_test_utils.dart';
 
 void main() {
   late MockAppManager manager;
-  setUp(() {
-    setupWidgetTest();
+  setUp(() async {
+    await setupWidgetTest();
     manager = MockAppManager();
     di.registerLazySingleton<AppManager>(() => manager);
     when(manager.state).thenReturn(AppState.empty());
