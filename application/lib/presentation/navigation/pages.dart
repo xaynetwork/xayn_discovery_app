@@ -20,11 +20,12 @@ class PageRegistry {
     onboarding,
   };
 
+  static final discoveryFeedManager = di.getAsync<DiscoveryFeedManager>();
   static final discovery = xayn.PageData(
     name: "discovery",
     isInitial: true,
     builder: (_, args) => FutureBuilder<DiscoveryFeedManager>(
-      future: di.getAsync<DiscoveryFeedManager>(),
+      future: discoveryFeedManager,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const CircularProgressIndicator();
 
