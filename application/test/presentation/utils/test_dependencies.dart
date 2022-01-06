@@ -27,8 +27,10 @@ void configureTestDependencies() {
 }
 
 void packageInfoMock() {
-  const MethodChannel('dev.fluttercommunity.plus/package_info')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/package_info'),
+          (MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{
         // 'appName': 'ABC',
