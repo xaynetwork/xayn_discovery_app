@@ -15,7 +15,6 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/discovery_feed_scroll_direction_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -149,8 +148,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           bloc: _discoveryFeedManager,
           builder: (context, state) {
             final results = state.results;
-            final scrollDirection = state.axis.axis;
-            final isSwipingEnabled = scrollDirection == Axis.vertical;
 
             if (isInReaderMode != state.isFullScreen) {
               // we need to update NavBarConfig ONLY WHEN we change this flag
@@ -167,18 +164,17 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             _totalResults = results.length;
 
             return FeedView(
-              scrollDirection: scrollDirection,
               cardViewController: _cardViewController,
               itemBuilder: _itemBuilder(
                 results: results,
                 isPrimary: true,
-                isSwipingEnabled: state.isFullScreen ? false : isSwipingEnabled,
+                isSwipingEnabled: !state.isFullScreen,
                 isFullScreen: state.isFullScreen,
               ),
               secondaryItemBuilder: _itemBuilder(
                 results: results,
                 isPrimary: false,
-                isSwipingEnabled: isSwipingEnabled,
+                isSwipingEnabled: true,
                 isFullScreen: false,
               ),
               itemCount: _totalResults,
