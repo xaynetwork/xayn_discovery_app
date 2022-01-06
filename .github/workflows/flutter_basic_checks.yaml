@@ -54,7 +54,7 @@ jobs:
           TOKEN: ${{ secrets.GH_TOKEN }}
           MIN_CHANGE: -1
         run: |
-          last_lcov_url=`curl -u $USER:$TOKEN -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/xaynetwork/xayn_discovery_app/actions/artifacts | jq -r '.artifacts[0].archive_download_url'`
+          last_lcov_url=`curl -u $USER:$TOKEN -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/xaynetwork/xayn_discovery_app/actions/artifacts | jq -r '[.artifacts[] | select( .name == "lcov")][0] | .archive_download_url'`
           if [ -n "$last_lcov_url" ] && [ "$last_lcov_url" != "null" ]; then
             curl -L -H "Accept: application/vnd.github.v3+json" -o last_lcov.zip -u $USER:$TOKEN $last_lcov_url
             unzip last_lcov.zip -d last_lcov
@@ -72,6 +72,10 @@ jobs:
           (( $(echo "$current_cov - $last_cov > $MIN_CHANGE" | bc -l) )) && STATE=success || STATE=failure
           echo "coverage=$STATE" >> $GITHUB_ENV
           echo "coverage_description=\"coverage: $current_cov last $last_cov\"" >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage_report
+          path: application/coverage/html
 
       - name: Show coverage status
         uses: actions/github-script@v3
