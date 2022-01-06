@@ -38,7 +38,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   late final DiscoveryCardActionsManager _discoveryCardActionsManager =
       di.get();
   late final Map<Document, _CardManagers> _cardManagers = {};
-  late final RatingDialogManager _ratingDialogManager;
+  late final RatingDialogManager? _ratingDialogManager;
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -181,7 +181,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               onFinalIndex: _discoveryFeedManager.handleLoadMore,
               onIndexChanged: (int index) {
                 _discoveryFeedManager.handleIndexChanged(index);
-                _ratingDialogManager.handleIndexChanged(index);
+                _ratingDialogManager?.handleIndexChanged(index);
               },
               isFullScreen: state.isFullScreen,
               fullScreenOffsetFraction:
