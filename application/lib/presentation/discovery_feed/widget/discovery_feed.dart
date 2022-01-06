@@ -34,10 +34,11 @@ class DiscoveryFeed extends StatefulWidget {
 
 class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver, NavBarConfigMixin {
-  late final CardViewController _cardViewController;
-  late final DiscoveryFeedManager _discoveryFeedManager;
-  late final DiscoveryCardActionsManager _discoveryCardActionsManager;
-  late final Map<Document, _CardManagers> _cardManagers;
+  late final _cardViewController = CardViewController();
+  late final DiscoveryFeedManager _discoveryFeedManager = di.get();
+  late final DiscoveryCardActionsManager _discoveryCardActionsManager =
+      di.get();
+  late final Map<Document, _CardManagers> _cardManagers = {};
   late final RatingDialogManager _ratingDialogManager;
   DiscoveryCardController? _currentCardController;
 
@@ -46,53 +47,52 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   NavBarConfig get navBarConfig {
-    if (_discoveryFeedManager.state.results == null) {
-      return NavBarConfig.hidden();
+    NavBarConfig buildDefault() => NavBarConfig(
+          [
+            buildNavBarItemHome(
+              isActive: true,
+              onPressed: _discoveryFeedManager.onHomeNavPressed,
+            ),
+            buildNavBarItemSearch(
+              onPressed: _discoveryFeedManager.onSearchNavPressed,
+            ),
+            buildNavBarItemAccount(
+              onPressed: _discoveryFeedManager.onAccountNavPressed,
+            ),
+          ],
+        );
+    NavBarConfig buildReaderMode() {
+      final document = _discoveryFeedManager
+          .state.results![_discoveryFeedManager.state.resultIndex];
+      return NavBarConfig(
+        [
+          buildNavBarItemArrowLeft(onPressed: () async {
+            await _currentCardController?.animateToClose();
+
+            _discoveryFeedManager.handleNavigateOutOfCard();
+          }),
+          buildNavBarItemLike(
+            isLiked: document.isRelevant,
+            onPressed: () =>
+                _discoveryCardActionsManager.likeDocument(document),
+          ),
+          buildNavBarItemShare(
+            onPressed: () =>
+                _discoveryCardActionsManager.shareUri(document.webResource.url),
+          ),
+          buildNavBarItemDisLike(
+            isDisLiked: document.isNotRelevant,
+            onPressed: () =>
+                _discoveryCardActionsManager.dislikeDocument(document),
+          ),
+        ],
+        isWidthExpanded: true,
+      );
     }
 
-    final document = _discoveryFeedManager
-        .state.results![_discoveryFeedManager.state.resultIndex];
-    final defaultNavBarConfig = NavBarConfig(
-      [
-        buildNavBarItemHome(
-          isActive: true,
-          onPressed: _discoveryFeedManager.onHomeNavPressed,
-        ),
-        buildNavBarItemSearch(
-          onPressed: _discoveryFeedManager.onSearchNavPressed,
-        ),
-        buildNavBarItemAccount(
-          onPressed: _discoveryFeedManager.onAccountNavPressed,
-        ),
-      ],
-    );
-    final readerModeNavBarConfig = NavBarConfig(
-      [
-        buildNavBarItemArrowLeft(onPressed: () async {
-          await _currentCardController?.animateToClose();
-
-          _discoveryFeedManager.handleNavigateOutOfCard();
-        }),
-        buildNavBarItemLike(
-          isLiked: document.isRelevant,
-          onPressed: () => _discoveryCardActionsManager.likeDocument(document),
-        ),
-        buildNavBarItemShare(
-          onPressed: () =>
-              _discoveryCardActionsManager.shareUri(document.webResource.url),
-        ),
-        buildNavBarItemDisLike(
-          isDisLiked: document.isNotRelevant,
-          onPressed: () =>
-              _discoveryCardActionsManager.dislikeDocument(document),
-        ),
-      ],
-      isWidthExpanded: true,
-    );
-
     return _discoveryFeedManager.state.isFullScreen
-        ? readerModeNavBarConfig
-        : defaultNavBarConfig;
+        ? buildReaderMode()
+        : buildDefault();
   }
 
   @override
@@ -131,18 +131,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   void initState() {
-    _cardViewController = CardViewController();
-    _discoveryFeedManager = di.get();
-    _discoveryCardActionsManager = di.get();
-    _cardManagers = <Document, _CardManagers>{};
-
     final ratingDialogManagerFuture = di.getAsync<RatingDialogManager>();
     ratingDialogManagerFuture.then((manager) {
       _ratingDialogManager = manager;
     });
 
     WidgetsBinding.instance!.addObserver(this);
-
     super.initState();
   }
 
@@ -150,6 +144,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         // transform the cardNotchSize to a fractional value between [0.0, 1.0]
         final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
 
+        var isInReaderMode = _discoveryFeedManager.state.isFullScreen;
         return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
           bloc: _discoveryFeedManager,
           builder: (context, state) {
@@ -157,7 +152,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             final scrollDirection = state.axis.axis;
             final isSwipingEnabled = scrollDirection == Axis.vertical;
 
-            NavBarContainer.updateNavBar(context);
+            if (isInReaderMode != state.isFullScreen) {
+              // we need to update NavBarConfig ONLY WHEN we change this flag
+              isInReaderMode = !isInReaderMode;
+              NavBarContainer.updateNavBar(context);
+            }
 
             if (results == null) {
               return const Center(
