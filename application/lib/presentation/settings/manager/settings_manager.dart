@@ -62,8 +62,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
-  void reportBug() =>
-      _bugReportingService.showDialog(
+  void reportBug() => _bugReportingService.showDialog(
         brightness: R.brightness,
         primaryColor: R.colors.primaryAction,
       );
