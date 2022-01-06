@@ -52,26 +52,48 @@ jobs:
         env:
           USER: ${{ secrets.GH_USER }}
           TOKEN: ${{ secrets.GH_TOKEN }}
-          MIN_CHANGE: -1
+          MIN_NEW_COVERED: 0.8
         run: |
-          last_lcov_url=`curl -u $USER:$TOKEN -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/xaynetwork/xayn_discovery_app/actions/artifacts | jq -r '[.artifacts[] | select( .name == "lcov")][0] | .archive_download_url'`
+          last_lcov_url=$(curl -u $USER:$TOKEN -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/xaynetwork/xayn_discovery_app/actions/artifacts | jq -r '[.artifacts[] | select( .name == "lcov")][0] | .archive_download_url')
           if [ -n "$last_lcov_url" ] && [ "$last_lcov_url" != "null" ]; then
             curl -L -H "Accept: application/vnd.github.v3+json" -o last_lcov.zip -u $USER:$TOKEN $last_lcov_url
             unzip last_lcov.zip -d last_lcov
           fi
-          current_cov=`genhtml coverage/lcov.info -o coverage/html | grep -o '[^ ]*%' | sed 's/%//g'`
+          current_cov=($(genhtml coverage/lcov.info -o coverage/html | grep lines | grep -Eo '[0-9]{1,10}[.]{0,1}[0-9]{0,2}' | sed 's/%//g'))
           if [ -f "last_lcov/lcov.info" ]; then
-            last_cov=`genhtml last_lcov/lcov.info -o coverage/last-html | grep -o '[^ ]*%' | sed 's/%//g'`
+            last_cov=($(genhtml last_lcov/lcov.info -o coverage/last_html | grep lines | grep -Eo '[0-9]{1,10}[.]{0,1}[0-9]{0,2}' | sed 's/%//g'))
           else
-            last_cov=0
+            last_cov=(0 0 0)
           fi
-          echo "Last Coverage: $last_cov %"
-          echo "Current Coverage: $current_cov %"
-          (( $(echo "$current_cov - $last_cov > 0" | bc -l) )) && echo "Good Job, you increased the coverage."
-          (( $(echo "$current_cov - $last_cov > $MIN_CHANGE" | bc -l) )) || echo "Too bad, you decreased the coverage more than 1%"
-          (( $(echo "$current_cov - $last_cov > $MIN_CHANGE" | bc -l) )) && STATE=success || STATE=failure
+          last_cov_percent=${last_cov[0]}
+          last_cov_lines=${last_cov[1]}
+          last_cov_total=${last_cov[2]}
+          current_cov_percent=${current_cov[0]}
+          current_cov_lines=${current_cov[1]}
+          current_cov_total=${current_cov[2]}
+          newlines=$(echo "($current_cov_total - $last_cov_total)" | bc -l)
+          newtests=$(echo "($current_cov_lines - $last_cov_lines)" | bc -l)
+          new_covered=$(echo "$newtests / $newlines" | bc -l)
+          echo "Last Coverage: $last_cov_percent%"
+          DESCRIPTION="Current Coverage: $current_cov_percent% ($last_cov_percent%), covered $new_covered of new lines (added $newlines lines and $newtests lines of tests, just $new_covered covered of new lines (MIN: $MIN_NEW_COVERED))"
+          echo $DESCRIPTION
+          isIncreased=$( echo "$current_cov_percent >= $last_cov_percent" | bc -l )
+          isLinesCovered=$( echo "$new_covered > $MIN_NEW_COVERED" | bc -l )
+          if (( isIncreased ))
+          then
+            echo "Good Job, you increased the coverage."
+            STATE=success
+          elif (( isLinesCovered ))
+          then
+            echo "Good Job, you covered enough lines."
+            STATE=success
+          else
+            echo "Too bad, you decreased the coverage or have not covered enough lines."
+            STATE=failure
+          fi
           echo "coverage=$STATE" >> $GITHUB_ENV
-          echo "coverage_description=\"coverage: $current_cov last $last_cov\"" >> $GITHUB_ENV
+          echo "coverage_description=$DESCRIPTION" >> $GITHUB_ENV
+
       - uses: actions/upload-artifact@v2
         with:
           name: coverage_report
