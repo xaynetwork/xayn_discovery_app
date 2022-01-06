@@ -5,7 +5,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 
@@ -60,10 +59,6 @@ void main() async {
         expect(
           appSettings.appTheme,
           equals(AppTheme.system),
-        );
-        expect(
-          appSettings.discoveryFeedAxis,
-          equals(DiscoveryFeedAxis.vertical),
         );
 
         verify(box.toMap());
