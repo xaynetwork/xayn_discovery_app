@@ -38,7 +38,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   late final DiscoveryCardActionsManager _discoveryCardActionsManager =
       di.get();
   late final Map<Document, _CardManagers> _cardManagers = {};
-  late final RatingDialogManager? _ratingDialogManager;
+  RatingDialogManager? _ratingDialogManager;
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
