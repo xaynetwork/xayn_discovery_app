@@ -22,8 +22,9 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   Stream<T>? _stream;
 
   @override
-  Stream<T> get stream => _stream ??=
-      Stream.fromFuture(_startConsuming()).asyncExpand((_) => super.stream);
+  Stream<T> get stream => _stream ??= Stream.fromFuture(_startConsuming())
+      .asyncExpand((_) => super.stream)
+      .asBroadcastStream();
 
   Future<UseCaseSink<String, EngineEvent>> _getUseCaseSink() async {
     final useCase = await di.getAsync<SearchUseCase>();

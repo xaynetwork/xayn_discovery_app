@@ -31,8 +31,9 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   Stream<T>? _stream;
 
   @override
-  Stream<T> get stream => _stream ??=
-      Stream.fromFuture(_startConsuming()).asyncExpand((_) => super.stream);
+  Stream<T> get stream => _stream ??= Stream.fromFuture(_startConsuming())
+      .asyncExpand((_) => super.stream)
+      .asBroadcastStream();
 
   Future<UseCaseSink<List<Document>, EngineEvent>> _getUseCaseSink() async {
     final engine = await di.getAsync<DiscoveryEngine>() as AppDiscoveryEngine;

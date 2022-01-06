@@ -11,8 +11,9 @@ mixin EngineEventsMixin<T> on UseCaseBlocHelper<T> {
   Stream<T>? _stream;
 
   @override
-  Stream<T> get stream => _stream ??=
-      Stream.fromFuture(_startConsuming()).asyncExpand((_) => super.stream);
+  Stream<T> get stream => _stream ??= Stream.fromFuture(_startConsuming())
+      .asyncExpand((_) => super.stream)
+      .asBroadcastStream();
 
   Future<void> _startConsuming() async {
     final consumeUseCase = await di.getAsync<EngineEventsUseCase>();

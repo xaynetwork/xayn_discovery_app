@@ -146,8 +146,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   Widget _buildFeedView() => LayoutBuilder(builder: (context, constraints) {
         // transform the cardNotchSize to a fractional value between [0.0, 1.0]
         final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-
         var isInReaderMode = widget.manager.state.isFullScreen;
+
         return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
           bloc: widget.manager,
           builder: (context, state) {
