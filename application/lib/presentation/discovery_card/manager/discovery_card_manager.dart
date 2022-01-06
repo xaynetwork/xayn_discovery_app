@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';

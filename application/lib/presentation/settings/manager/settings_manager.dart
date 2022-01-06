@@ -7,7 +7,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/change_configuration_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_configuration_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';

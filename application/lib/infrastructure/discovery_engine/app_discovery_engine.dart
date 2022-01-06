@@ -7,11 +7,26 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
+/// A temporary wrapper for the [DiscoveryEngine].
+/// Once the engine is ready, we can remove this class.
+///
+/// What we are awaiting:
+/// - [changeDocumentFeedback] to return an EngineEvent with information about the [Document].
+/// - an implementation for [search].
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine implements DiscoveryEngine {
   final DiscoveryEngine _engine;
-  final StreamController<EngineEvent> _tempEvents =
+
+  /// temp solution:
+  /// Once search is supported, we drop this.
+  final StreamController<EngineEvent> _tempSearchEvents =
       StreamController<EngineEvent>.broadcast();
+
+  /// temp solution:
+  /// - [changeDocumentFeedback] is a fire-and-forget right now
+  /// - instead, we need an [EngineEvent] which also contains info about the changed [Document].
+  ///
+  /// for now, the expando allows us to store the missing params as a weak-key map.
   final Expando<DocumentFeedbackChange> _eventMap =
       Expando<DocumentFeedbackChange>();
 
@@ -61,10 +76,12 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) =>
       _engine.closeFeedDocuments(documentIds);
 
+  /// As we also need search events, which are not yet supported, we override
+  /// this getter so that it includes our temp search event Stream.
   @override
   Stream<EngineEvent> get engineEvents => Rx.merge([
         _engine.engineEvents,
-        _tempEvents.stream,
+        _tempSearchEvents.stream,
       ]);
 
   @override
@@ -94,8 +111,10 @@ class AppDiscoveryEngine implements DiscoveryEngine {
 
   /// temporary workaround for adding events that are not yet handled
   /// by the discovery engine.
-  void tempAddEvent(EngineEvent event) => _tempEvents.add(event);
+  void tempAddEvent(EngineEvent event) => _tempSearchEvents.add(event);
 
+  /// temporary workaround for getting info on what [Document] was changed
+  /// when [changeDocumentFeedback] was called.
   DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
           EngineEvent engineEvent) =>
       _eventMap[engineEvent];
