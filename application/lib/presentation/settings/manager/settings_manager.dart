@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';

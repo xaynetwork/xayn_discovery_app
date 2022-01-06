@@ -7,8 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
-
-import '../../utils/enum_utils.dart';
+import 'package:xayn_discovery_app/presentation/utils/enum_utils.dart';
 
 const kFeatureScreenWaitDuration = Duration(seconds: 3);
 
@@ -33,15 +32,14 @@ enum _OverrideState {
 }
 
 class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
+  late final FeatureManager _featureManager = di.get();
+  late final Timer timer;
   var state = _OverrideState.overrideButton;
   Widget? _child;
-  late Timer timer;
-  late FeatureManager _featureManager;
 
   @override
   void initState() {
     timer = Timer(widget.delay, onTimerEnd);
-    _featureManager = di.get();
     super.initState();
   }
 

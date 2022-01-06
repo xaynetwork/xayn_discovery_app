@@ -54,6 +54,11 @@ extension WidgetTesterCommonActions on WidgetTester {
     await pumpAndSettle();
   }
 
+  Future<void> navigateToSettingsScreen() async {
+    await tap(Keys.navBarItemAccount.finds());
+    await pumpAndSettle();
+  }
+
   Future<void> navigateBack() async {
     await tap(Keys.navBarItemBackBtn.finds());
     await pumpAndSettle();
