@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
@@ -18,9 +17,9 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 
-import 'settings_screen_test.mocks.dart';
+import '../utils/utils.dart';
+import '../utils/widget_test_utils.dart';
 
-@GenerateMocks([SettingsScreenManager, SettingsNavActions])
 void main() {
   late StreamController<SettingsScreenState> streamController;
   const stateReady = SettingsScreenState.ready(
@@ -33,8 +32,8 @@ void main() {
   late MockSettingsScreenManager manager;
 
   setUp(() async {
+    setupWidgetTest();
     manager = MockSettingsScreenManager();
-    await di.reset();
     di.registerFactoryAsync<SettingsScreenManager>(() => Future.value(manager));
     when(manager.state).thenReturn(stateReady);
     streamController = StreamController<SettingsScreenState>();
@@ -212,6 +211,21 @@ void main() {
         url: 'https://tc.com',
         btnKey: Keys.settingsTermsAndConditions,
       ),
+    );
+
+    testWidgets(
+      'WHEN SettingsManager disposed THEN manager.close not called',
+      (final WidgetTester tester) async {
+        when(manager.onBackNavPressed()).thenAnswer((_) {
+          di.get<SettingsNavActions>().onBackNavPressed();
+        });
+        await tester.initToDiscoveryPage();
+        await tester.navigateToSettingsScreen();
+        await tester.navigateBack();
+        expect(find.byType(SettingsScreen), findsNothing);
+
+        verifyNever(manager.close());
+      },
     );
   });
 }

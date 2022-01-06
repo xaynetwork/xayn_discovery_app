@@ -1,0 +1,5 @@
+# File and directory patterns of ignored files by the test coverage
+"lib/**/*.freezed.dart"
+"lib/**/*.config.dart"
+"lib/**/*.g.dart"
+"lib/generated_plugin_registrant.dart"

@@ -1,9 +1,12 @@
-name: Basic checks
+name: Code Quality
 
 env:
   FLUTTER_VERSION: '2.8.1'
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - '*'
@@ -25,6 +28,10 @@ jobs:
         with:
           version: $FLUTTER_VERSION
 
+      - name: Install lcov and jq
+        run: |
+          sudo apt install lcov jq
+
       - name: Run checks
         env:
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
@@ -37,4 +44,49 @@ jobs:
         working-directory: ./application
         run: |
           sudo chmod -R a+w /var/lib/gems/
-          fastlane check
+          fastlane check coverage:true
+
+      - name: Create coverage
+        if: (github.event_name != 'push')
+        working-directory: ./application
+        env:
+          USER: ${{ secrets.GH_USER }}
+          TOKEN: ${{ secrets.GH_TOKEN }}
+          MIN_CHANGE: -1
+        run: |
+          last_lcov_url=`curl -u $USER:$TOKEN -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/xaynetwork/xayn_discovery_app/actions/artifacts | jq -r '.artifacts[0].archive_download_url'`
+          if [ -n "$last_lcov_url" ] && [ "$last_lcov_url" != "null" ]; then
+            curl -L -H "Accept: application/vnd.github.v3+json" -o last_lcov.zip -u $USER:$TOKEN $last_lcov_url
+            unzip last_lcov.zip -d last_lcov
+          fi
+          current_cov=`genhtml coverage/lcov.info -o coverage/html | grep -o '[^ ]*%' | sed 's/%//g'`
+          if [ -f "last_lcov/lcov.info" ]; then
+            last_cov=`genhtml last_lcov/lcov.info -o coverage/last-html | grep -o '[^ ]*%' | sed 's/%//g'`
+          else
+            last_cov=0
+          fi
+          echo "Last Coverage: $last_cov %"
+          echo "Current Coverage: $current_cov %"
+          (( $(echo "$current_cov - $last_cov > 0" | bc -l) )) && echo "Good Job, you increased the coverage."
+          (( $(echo "$current_cov - $last_cov > $MIN_CHANGE" | bc -l) )) || echo "Too bad, you decreased the coverage more than 1%"
+          (( $(echo "$current_cov - $last_cov > $MIN_CHANGE" | bc -l) )) && STATE=success || STATE=failure
+          echo "coverage=$STATE" >> $GITHUB_ENV
+          echo "coverage_description=\"coverage: $current_cov last $last_cov\"" >> $GITHUB_ENV
+
+      - name: Show coverage status
+        uses: actions/github-script@v3
+        env:
+          COVERAGE : ${{ env.coverage }}
+          COVERAGE_DESCRIPTION : ${{ env.coverage_description }}
+        with:
+          script: |
+            const { COVERAGE, COVERAGE_DESCRIPTION } = process.env
+            if ( COVERAGE == "failure") {
+              core.setFailed(COVERAGE_DESCRIPTION)
+            }
+
+      - uses: actions/upload-artifact@v2
+        if: (github.event_name == 'push')
+        with:
+          name: lcov
+          path: application/coverage/lcov.info

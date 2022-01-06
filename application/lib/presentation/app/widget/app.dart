@@ -17,16 +17,8 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  late final AppManager _appManager;
-  late AppNavigationManager _navigatorManager;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _appManager = di.get();
-    _navigatorManager = di.get();
-  }
+  late final AppManager _appManager = di.get();
+  late final AppNavigationManager _navigatorManager = di.get();
 
   @override
   Widget build(BuildContext context) {
