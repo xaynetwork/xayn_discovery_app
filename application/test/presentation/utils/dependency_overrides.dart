@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
@@ -103,5 +104,11 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
   @override
   void tempAddEvent(EngineEvent event) {
     // TODO: implement tempAddEvent
+  }
+
+  @override
+  DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
+      EngineEvent engineEvent) {
+    // TODO: implement resolveChangeDocumentFeedbackParameters
   }
 }

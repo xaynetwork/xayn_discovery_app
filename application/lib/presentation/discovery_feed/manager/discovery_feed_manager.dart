@@ -2,9 +2,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/observe_document_mixin.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/request_feed_mixin.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/temp/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
@@ -26,16 +27,18 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     with
         UseCaseBlocHelper<DiscoveryFeedState>,
         EngineEventsMixin<DiscoveryFeedState>,
-        TempRequestFeedMixin<DiscoveryFeedState>,
+        RequestFeedMixin<DiscoveryFeedState>,
         ObserveDocumentMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
+    this._engine,
     this._listenDiscoveryFeedAxisUseCase,
     this._discoveryFeedNavActions,
   ) : super(DiscoveryFeedState.empty()) {
     _initHandlers();
   }
 
+  final DiscoveryEngine _engine;
   final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
@@ -57,14 +60,12 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) {
-    final document = _observedDocument = state.results?.elementAt(index);
+    final document = _observedDocument = state.results.elementAt(index);
 
-    if (document != null) {
-      observeDocument(
-        document: document,
-        mode: _observedViewTypes[document],
-      );
-    }
+    observeDocument(
+      document: document,
+      mode: _observedViewTypes[document],
+    );
 
     scheduleComputeState(() => _documentIndex = index);
   }
@@ -119,9 +120,24 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         engineEvent,
         errorReport,
       ) {
-        final results = engineEvent is FeedRequestSucceeded
-            ? {...state.results ?? const <Document>[], ...engineEvent.items}
+        final engine = _engine as AppDiscoveryEngine;
+        var results = engineEvent is FeedRequestSucceeded
+            ? {...state.results, ...engineEvent.items}
             : state.results;
+        final changeDocumentFeedbackParams = engineEvent != null
+            ? engine.resolveChangeDocumentFeedbackParameters(engineEvent)
+            : null;
+
+        if (changeDocumentFeedbackParams != null) {
+          results = results
+              .map(
+                (it) => it.documentId == changeDocumentFeedbackParams.documentId
+                    ? it.copyWith(
+                        feedback: changeDocumentFeedbackParams.feedback)
+                    : it,
+              )
+              .toSet();
+        }
 
         final nextState = DiscoveryFeedState(
           results: results,

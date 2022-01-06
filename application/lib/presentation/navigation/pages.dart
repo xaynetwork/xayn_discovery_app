@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -21,7 +23,16 @@ class PageRegistry {
   static final discovery = xayn.PageData(
     name: "discovery",
     isInitial: true,
-    builder: (_, args) => const DiscoveryFeed(),
+    builder: (_, args) => FutureBuilder<DiscoveryFeedManager>(
+      future: di.getAsync<DiscoveryFeedManager>(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const CircularProgressIndicator();
+
+        return DiscoveryFeed(
+          manager: snapshot.requireData,
+        );
+      },
+    ),
   );
   static final search = xayn.PageData(
     name: "search",

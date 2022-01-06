@@ -25,7 +25,12 @@ abstract class DiscoveryFeedNavActions {
 
 /// A widget which displays a list of discovery results.
 class DiscoveryFeed extends StatefulWidget {
-  const DiscoveryFeed({Key? key}) : super(key: key);
+  final DiscoveryFeedManager manager;
+
+  const DiscoveryFeed({
+    Key? key,
+    required this.manager,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DiscoveryFeedState();
@@ -34,7 +39,6 @@ class DiscoveryFeed extends StatefulWidget {
 class _DiscoveryFeedState extends State<DiscoveryFeed>
     with WidgetsBindingObserver, NavBarConfigMixin {
   late final CardViewController _cardViewController;
-  late final DiscoveryFeedManager _discoveryFeedManager;
   late final Map<Document, _CardManagers> _cardManagers;
   DiscoveryCardController? _currentCardController;
 
@@ -43,24 +47,24 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   NavBarConfig get navBarConfig {
-    if (_discoveryFeedManager.state.results == null) {
+    if (widget.manager.state.results.isEmpty) {
       return NavBarConfig.hidden();
     }
 
-    final document = _discoveryFeedManager.state.results!
-        .elementAt(_discoveryFeedManager.state.resultIndex);
+    final document = widget.manager.state.results
+        .elementAt(widget.manager.state.resultIndex);
     final managers = managersOf(document);
     final defaultNavBarConfig = NavBarConfig(
       [
         buildNavBarItemHome(
           isActive: true,
-          onPressed: _discoveryFeedManager.onHomeNavPressed,
+          onPressed: widget.manager.onHomeNavPressed,
         ),
         buildNavBarItemSearch(
-          onPressed: _discoveryFeedManager.onSearchNavPressed,
+          onPressed: widget.manager.onSearchNavPressed,
         ),
         buildNavBarItemAccount(
-          onPressed: _discoveryFeedManager.onAccountNavPressed,
+          onPressed: widget.manager.onAccountNavPressed,
         ),
       ],
     );
@@ -69,7 +73,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         buildNavBarItemArrowLeft(onPressed: () async {
           await _currentCardController?.animateToClose();
 
-          _discoveryFeedManager.handleNavigateOutOfCard();
+          widget.manager.handleNavigateOutOfCard();
         }),
         buildNavBarItemLike(
           isLiked: document.isRelevant,
@@ -93,7 +97,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       isWidthExpanded: true,
     );
 
-    return _discoveryFeedManager.state.isFullScreen
+    return widget.manager.state.isFullScreen
         ? readerModeNavBarConfig
         : defaultNavBarConfig;
   }
@@ -102,9 +106,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        return _discoveryFeedManager.handleActivityStatus(true);
+        return widget.manager.handleActivityStatus(true);
       default:
-        return _discoveryFeedManager.handleActivityStatus(false);
+        return widget.manager.handleActivityStatus(false);
     }
   }
 
@@ -121,7 +125,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   void dispose() {
     _cardViewController.dispose();
-    _discoveryFeedManager.close();
+    widget.manager.close();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -135,7 +139,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   void initState() {
     _cardViewController = CardViewController();
-    _discoveryFeedManager = di.get();
     _cardManagers = <Document, _CardManagers>{};
 
     WidgetsBinding.instance!.addObserver(this);
@@ -148,7 +151,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
 
         return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
-          bloc: _discoveryFeedManager,
+          bloc: widget.manager,
           builder: (context, state) {
             final results = state.results;
             final scrollDirection = state.axis.axis;
@@ -156,7 +159,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
             NavBarContainer.updateNavBar(context);
 
-            if (results == null) {
+            if (results.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -180,8 +183,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 isFullScreen: false,
               ),
               itemCount: _totalResults,
-              onFinalIndex: _discoveryFeedManager.handleLoadMore,
-              onIndexChanged: _discoveryFeedManager.handleIndexChanged,
+              onFinalIndex: widget.manager.handleLoadMore,
+              onIndexChanged: widget.manager.handleIndexChanged,
               isFullScreen: state.isFullScreen,
               fullScreenOffsetFraction:
                   _dragDistance / DiscoveryCard.dragThreshold,
@@ -202,7 +205,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final managers = managersOf(document);
 
         if (isPrimary) {
-          _discoveryFeedManager.handleViewType(
+          widget.manager.handleViewType(
             document,
             isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
           );
@@ -214,13 +217,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 document: document,
                 discoveryCardManager: managers.discoveryCardManager,
                 imageManager: managers.imageManager,
-                onDiscard: _discoveryFeedManager.handleNavigateOutOfCard,
+                onDiscard: widget.manager.handleNavigateOutOfCard,
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
                     _currentCardController = controller,
               )
             : GestureDetector(
-                onTap: _discoveryFeedManager.handleNavigateIntoCard,
+                onTap: widget.manager.handleNavigateIntoCard,
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,

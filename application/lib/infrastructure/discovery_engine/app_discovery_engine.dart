@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -11,6 +12,8 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   final DiscoveryEngine _engine;
   final StreamController<EngineEvent> _tempEvents =
       StreamController<EngineEvent>.broadcast();
+  final Expando<DocumentFeedbackChange> _eventMap =
+      Expando<DocumentFeedbackChange>();
 
   @visibleForTesting
   AppDiscoveryEngine(this._engine);
@@ -42,9 +45,17 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   Future<EngineEvent> changeDocumentFeedback({
     required DocumentId documentId,
     required DocumentFeedback feedback,
-  }) =>
-      _engine.changeDocumentFeedback(
-          documentId: documentId, feedback: feedback);
+  }) async {
+    final engineEvent = await _engine.changeDocumentFeedback(
+        documentId: documentId, feedback: feedback);
+
+    _eventMap[engineEvent] = DocumentFeedbackChange(
+      documentId: documentId,
+      feedback: feedback,
+    );
+
+    return engineEvent;
+  }
 
   @override
   Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) =>
@@ -84,4 +95,8 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   /// temporary workaround for adding events that are not yet handled
   /// by the discovery engine.
   void tempAddEvent(EngineEvent event) => _tempEvents.add(event);
+
+  DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
+          EngineEvent engineEvent) =>
+      _eventMap[engineEvent];
 }

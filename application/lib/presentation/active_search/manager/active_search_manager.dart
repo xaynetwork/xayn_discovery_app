@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/handlers/fold.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/engine_events_mixin.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/search_mixin.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/mixins/temp/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -23,7 +23,7 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
     with
         UseCaseBlocHelper<ActiveSearchState>,
         EngineEventsMixin<ActiveSearchState>,
-        TempSearchMixin<ActiveSearchState>
+        SearchMixin<ActiveSearchState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
