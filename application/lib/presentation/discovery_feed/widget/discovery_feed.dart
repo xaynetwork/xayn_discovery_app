@@ -47,10 +47,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   NavBarConfig get navBarConfig {
-    final document = widget.manager.state.results
-        .elementAt(widget.manager.state.resultIndex);
-    final managers = managersOf(document);
-
     NavBarConfig buildDefault() => NavBarConfig(
           [
             buildNavBarItemHome(
@@ -68,6 +64,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     NavBarConfig buildReaderMode() {
       final document = widget.manager.state.results
           .elementAt(widget.manager.state.resultIndex);
+      final managers = managersOf(document);
+
       return NavBarConfig(
         [
           buildNavBarItemArrowLeft(onPressed: () async {

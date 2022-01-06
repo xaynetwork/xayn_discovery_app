@@ -34,7 +34,7 @@ extension WidgetTesterCommonActions on WidgetTester {
   Future<void> initToDiscoveryPage() async {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
-    await pumpAndSettle(kScrollUpdateUseCaseDebounceTime +
+    await pump(kScrollUpdateUseCaseDebounceTime +
         /*kDebounceDuration +*/
         updateNabBarDebounceTimeout);
   }
