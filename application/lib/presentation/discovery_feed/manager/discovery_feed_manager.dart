@@ -1,12 +1,10 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/request_feed_mixin.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -32,17 +30,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._engine,
-    this._listenDiscoveryFeedAxisUseCase,
     this._discoveryFeedNavActions,
-  ) : super(DiscoveryFeedState.empty()) {
-    _initHandlers();
-  }
+  ) : super(DiscoveryFeedState.empty());
 
   final DiscoveryEngine _engine;
-  final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
-
-  late final UseCaseValueStream<DiscoveryFeedAxis> _discoveryFeedAxisHandler;
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
@@ -104,19 +96,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     requestNextFeedBatch();
   }
 
-  void _initHandlers() {
-    _discoveryFeedAxisHandler = consume(
-      _listenDiscoveryFeedAxisUseCase,
-      initialData: none,
-    );
-  }
-
   @override
-  Future<DiscoveryFeedState?> computeState() async => fold2(
-        _discoveryFeedAxisHandler,
+  Future<DiscoveryFeedState?> computeState() async => fold(
         engineEvents,
       ).foldAll((
-        currentAxis,
         engineEvent,
         errorReport,
       ) {
@@ -141,7 +124,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
         final nextState = DiscoveryFeedState(
           results: results,
-          axis: currentAxis ?? DiscoveryFeedAxis.vertical,
           isComplete: !isLoading,
           isInErrorState: errorReport.isNotEmpty,
           isFullScreen: _isFullScreen,
