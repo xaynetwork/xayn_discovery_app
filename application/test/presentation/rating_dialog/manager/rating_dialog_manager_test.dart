@@ -1,24 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:in_app_review/in_app_review.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_stored_app_version_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_version_use_case.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 
-import 'rating_dialog_manager_test.mocks.dart';
+import '../../utils/utils.dart';
 
-@GenerateMocks([
-  GetAppVersionUseCase,
-  GetStoredAppVersionUseCase,
-  SaveCurrentAppVersion,
-  GetAppSessionUseCase,
-  InAppReview,
-])
 void main() {
   late MockGetAppVersionUseCase mockGetAppVersionUseCase;
   late MockGetStoredAppVersionUseCase mockGetStoredAppVersionUseCase;

@@ -1,17 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 
-import 'app_status_mapper_test.mocks.dart';
+import '../../presentation/utils/utils.dart';
 
-@GenerateMocks([
-  MapToAppVersionMapper,
-  AppVersionToMapMapper,
-])
 void main() {
   late AppStatusMapper mapper;
 
