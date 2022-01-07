@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
@@ -46,7 +47,10 @@ void main() {
   });
 
   Future<void> openScreen(WidgetTester tester) async {
-    await tester.pumpLindenApp(const SettingsScreen());
+    await tester.pumpLindenApp(
+      const SettingsScreen(),
+      initialLinden: Linden(newColors: true),
+    );
     await tester.pumpAndSettle(R.animations.screenStateChangeDuration);
   }
 

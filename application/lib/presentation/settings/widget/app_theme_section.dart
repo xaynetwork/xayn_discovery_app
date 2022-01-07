@@ -20,7 +20,7 @@ class SettingsAppThemeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SettingsSection.custom(
         title: Strings.settingsSectionTitleAppTheme,
-        topPadding: R.dimen.unit,
+        topPadding: 0,
         child: SettingsSelectable.icons(
           items: AppTheme.values.map(_getItem).toList(),
         ),
