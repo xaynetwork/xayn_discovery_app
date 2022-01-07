@@ -16,7 +16,8 @@ class CreateCollectionUseCase extends UseCase<String, Collection> {
 
   @override
   Stream<Collection> transaction(String param) async* {
-    if (_collectionsRepository.isCollectionNameUsed(param)) {
+    final collectionNameTrimmed = param.trim();
+    if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
       logger.e(errorMessageCollectionNameUsed);
       throw (CollectionUseCaseException(errorMessageCollectionNameUsed));
     }
@@ -24,7 +25,7 @@ class CreateCollectionUseCase extends UseCase<String, Collection> {
     final id = _uniqueIdHandler.generateUniqueId();
     final collection = Collection(
       id: id,
-      name: param,
+      name: collectionNameTrimmed,
       index: collectionIndex,
     );
 

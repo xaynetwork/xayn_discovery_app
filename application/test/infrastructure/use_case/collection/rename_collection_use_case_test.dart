@@ -15,7 +15,7 @@ void main() {
       Collection(id: UniqueId(), name: 'Collection name', index: 1);
   const String newCollectionName = 'New collection name';
 
-  final updatedCollection = collection.copyWith(name: newCollectionName);
+  final updatedCollection = collection.copyWith(name: newCollectionName.trim());
 
   setUp(() {
     collectionsRepository = MockCollectionsRepository();
