@@ -36,7 +36,7 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
   bool isCollectionNameUsed(String name) {
     final values = getAll();
     for (final value in values) {
-      if (value.name == name) {
+      if (value.name.trim() == name.trim()) {
         return true;
       }
     }
