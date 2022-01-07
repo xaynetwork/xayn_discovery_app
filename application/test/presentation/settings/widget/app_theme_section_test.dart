@@ -9,12 +9,17 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 
 void main() {
   const theme = AppTheme.system;
+  final linden = Linden(newColors: true);
   testWidgets(
     'GIVEN section widget THEN title and selectableSettings are present',
     (final WidgetTester tester) async {
       final widget = SettingsAppThemeSection(
           theme: theme, onSelected: (AppTheme theme) {});
-      await tester.pumpLindenApp(widget);
+      await tester.pumpLindenApp(
+        widget,
+        withScaffold: true,
+        initialLinden: linden,
+      );
 
       expect(find.byType(SettingsSection), findsOneWidget);
       expect(find.byType(SettingsSelectable), findsOneWidget);
@@ -35,7 +40,11 @@ void main() {
           expectedTheme = theme;
         },
       );
-      await tester.pumpLindenApp(widget);
+      await tester.pumpLindenApp(
+        widget,
+        withScaffold: true,
+        initialLinden: linden,
+      );
       final btnFinder = find.byKey(Keys.settingsThemeDark);
       await tester.tap(btnFinder);
 
