@@ -16,7 +16,9 @@ void main() {
   final collectionId = UniqueId();
   const int lastCollectionIndex = 1;
   final createdCollection = Collection(
-      id: collectionId, name: collectionName, index: lastCollectionIndex + 1);
+      id: collectionId,
+      name: collectionName.trim(),
+      index: lastCollectionIndex + 1);
 
   setUp(() {
     collectionsRepository = MockCollectionsRepository();
