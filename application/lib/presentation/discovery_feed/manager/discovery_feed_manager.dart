@@ -138,7 +138,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   void onSearchNavPressed() => _discoveryFeedNavActions.onSearchNavPressed();
 
   @override
-  void onAccountNavPressed() => _discoveryFeedNavActions.onAccountNavPressed();
+  void onPersonalAreaNavPressed() =>
+      _discoveryFeedNavActions.onPersonalAreaNavPressed();
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed

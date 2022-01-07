@@ -31,7 +31,7 @@ class Keys {
   static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
   static const Key navBarItemHome = Key('nav_bar_item_home');
   static const Key navBarItemSearch = Key('nav_bar_item_search');
-  static const Key navBarItemAccount = Key('nav_bar_item_account');
+  static const Key navBarItemPersonalArea = Key('nav_bar_item_personal_area');
   static const Key navBarItemArrowLeft = Key('nav_bar_item_arrow_left');
   static const Key navBarItemLike = Key('nav_bar_item_like');
   static const Key navBarItemDisLike = Key('nav_bar_item_dis_like');

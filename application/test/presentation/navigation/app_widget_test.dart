@@ -56,11 +56,12 @@ void main() {
     expect(find.byType(DiscoveryFeed), findsOneWidget);
   });
 
-  testWidgets('In DiscoveryFeed clicking on Account, navigates to Settings',
+  testWidgets(
+      'In DiscoveryFeed clicking on PersonalArea, navigates to Settings',
       (driver) async {
     await driver.initToDiscoveryPage();
 
-    await driver.navigateToAccount();
+    await driver.navigateToPersonalArea();
 
     expect(find.byType(DiscoveryFeed), findsNothing);
     expect(find.byType(SettingsScreen), findsOneWidget);
@@ -71,7 +72,7 @@ void main() {
       (driver) async {
     await driver.initToDiscoveryPage();
     await driver.navigateToSearch();
-    await driver.navigateToAccount();
+    await driver.navigateToPersonalArea();
 
     await driver.navigateBack();
 
@@ -83,7 +84,7 @@ void main() {
       'In Settings (coming from discovery) clicking back, navigates to discovery',
       (driver) async {
     await driver.initToDiscoveryPage();
-    await driver.navigateToAccount();
+    await driver.navigateToPersonalArea();
 
     await driver.navigateBack();
 
