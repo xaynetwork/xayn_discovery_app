@@ -36,13 +36,8 @@ Future<void> setup() async {
   );
   await hiveDb;
   configureDependencies();
-  di.allowReassignment = true;
   di.get<LogManager>();
   di.get<AnalyticsService>().init();
-  // re-register as a sync singleton,
-  // because this manager is required sync later on, as the navigation is also sync-based.
-  di.registerSingleton<DiscoveryFeedManager>(
-      await di.getAsync<DiscoveryFeedManager>());
 }
 
 Widget getApp() {
