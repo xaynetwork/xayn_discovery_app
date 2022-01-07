@@ -17,7 +17,7 @@ class FaviconBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favicon = provider.thumbnail == null
-        ? Icon(Icons.web, color: R.colors.iconNew)
+        ? Icon(Icons.web, color: R.colors.icon)
         : Image.network(
             provider.thumbnail!.toString(),
             width: R.dimen.unit3,
