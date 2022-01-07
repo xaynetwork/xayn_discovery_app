@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 
 mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<DiscoveryCardObservation, EngineEvent>>? _useCaseSink;
@@ -31,7 +32,8 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
         di.get<DiscoveryCardObservationUseCase>();
     final discoveryCardMeasuredObservationUseCase =
         di.get<DiscoveryCardMeasuredObservationUseCase>();
-    final sink = pipe(discoveryCardObservationUseCase).transform(
+
+    return pipe(discoveryCardObservationUseCase).transform(
       (out) => out
           .distinct(
             (a, b) =>
@@ -47,10 +49,6 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
                 duration: it.duration,
               ))
           .followedBy(useCase),
-    );
-
-    fold(sink).foldAll((_, errorReport) {});
-
-    return sink;
+    )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 }

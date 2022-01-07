@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/search_use_case.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 
 mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<String, EngineEvent>>? _useCaseSink;
@@ -28,9 +29,9 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
 
   Future<UseCaseSink<String, EngineEvent>> _getUseCaseSink() async {
     final useCase = await di.getAsync<SearchUseCase>();
-    final sink = pipe(useCase);
 
-    return sink;
+    return pipe(useCase)
+      ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
   Future<void> _startConsuming() async {

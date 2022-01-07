@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 
 /// This is a temporary solution and will be removed as soon as the discovery engine
 /// is able to provide us with a feed itself.
@@ -41,14 +42,41 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     final createHttpRequestUseCase = di.get<CreateHttpRequestUseCase>();
     final connectivityUseCase = di.get<ConnectivityUriUseCase>();
     final invokeApiEndpointUseCase = di.get<InvokeApiEndpointUseCase>();
-    final sink = pipe(randomKeyWordsUseCase).transform(
+
+    // logs when the api endpoint is about to be invoked.
+    final willFetchLogUseCase = LogUseCase<Uri>(
+      (it) => 'will fetch $it',
+      logger: logger,
+    );
+
+    // logs when results were fetched.
+    final didFetchLogUseCase = LogUseCase<ApiEndpointResponse>(
+      (it) => 'did fetch ${it.results.length} results',
+      when: (it) => it.isComplete,
+      logger: logger,
+    );
+
+    // transforms the response into the expected EngineEvent type.
+    // if successful, then it maps to a FeedRequestSucceeded event.
+    // if unsuccessful, then a FeedRequestFailed event.
+    mapToFeedEvent(ApiEndpointResponse it) {
+      if (it.results.isNotEmpty) {
+        _documentCache.addAll(it.results);
+        engine.tempAddEvent(FeedRequestSucceeded(it.results));
+
+        return FeedRequestSucceeded(it.results);
+      }
+
+      requestNextFeedBatch();
+
+      return const FeedRequestFailed(FeedFailureReason.noNewsForMarket);
+    }
+
+    return pipe(randomKeyWordsUseCase).transform(
       (out) => out
           .followedBy(createHttpRequestUseCase)
           .followedBy(connectivityUseCase)
-          .followedBy(LogUseCase(
-            (it) => 'will fetch $it',
-            logger: logger,
-          ))
+          .followedBy(willFetchLogUseCase)
           .followedBy(invokeApiEndpointUseCase)
           .scheduleComputeState(
             consumeEvent: (data) => !data.isComplete,
@@ -56,32 +84,11 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
               _isLoading = !data.isComplete;
             },
           )
-          .followedBy(
-            LogUseCase(
-              (it) => 'did fetch ${it.results.length} results',
-              when: (it) => it.isComplete,
-              logger: logger,
-            ),
-          )
-          .map(
-        (it) {
-          if (it.results.isNotEmpty) {
-            _documentCache.addAll(it.results);
-            engine.tempAddEvent(FeedRequestSucceeded(it.results));
-
-            return FeedRequestSucceeded(it.results);
-          }
-
-          requestNextFeedBatch();
-
-          return const FeedRequestFailed(FeedFailureReason.noNewsForMarket);
-        },
-      ),
-    );
-
-    fold(sink).foldAll((_, errorReport) {});
-
-    return sink;
+          .followedBy(didFetchLogUseCase)
+          .map(mapToFeedEvent),
+    )..autoSubscribe(
+        onError: (e, s) => onError(e, s ?? StackTrace.current),
+      );
   }
 
   Future<void> _startConsuming() async {

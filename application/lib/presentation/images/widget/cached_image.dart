@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
 
@@ -15,6 +16,7 @@ class CachedImage extends StatefulWidget {
   final Uri uri;
   final ImageLoadingBuilder? loadingBuilder;
   final ImageErrorWidgetBuilder? errorBuilder;
+  final ImageErrorWidgetBuilder? noImageBuilder;
   final int? width;
   final int? height;
   final BoxFit? fit;
@@ -25,6 +27,7 @@ class CachedImage extends StatefulWidget {
     required this.uri,
     this.loadingBuilder,
     this.errorBuilder,
+    this.noImageBuilder,
     this.width,
     this.height,
     this.fit,
@@ -87,6 +90,11 @@ class _CachedImageState extends State<CachedImage> {
             ? Container()
             : const Text('asset was not loaded here');
 
+    final noImageBuilder = widget.noImageBuilder ??
+        (BuildContext context) => Container(
+              color: R.colors.swipeCardBackground,
+            );
+
     return BlocBuilder<ImageManager, ImageManagerState>(
         bloc: _imageManager,
         builder: (context, state) {
@@ -114,9 +122,10 @@ class _CachedImageState extends State<CachedImage> {
               fit: widget.fit,
               gaplessPlayback: true,
             );
+          } else {
+            // there is no image
+            return noImageBuilder(context);
           }
-
-          return loadingBuilder(context, .0);
         });
   }
 }

@@ -123,7 +123,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   void dispose() {
     _cardViewController.dispose();
-    _discoveryFeedManager.close();
 
     WidgetsBinding.instance!.removeObserver(this);
 
