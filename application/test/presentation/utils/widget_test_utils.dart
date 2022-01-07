@@ -45,13 +45,13 @@ extension WidgetTesterCommonActions on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> navigateToAccount() async {
-    await tap(Keys.navBarItemAccount.finds());
+  Future<void> navigateToPersonalArea() async {
+    await tap(Keys.navBarItemPersonalArea.finds());
     await pumpAndSettle();
   }
 
   Future<void> navigateToSettingsScreen() async {
-    await tap(Keys.navBarItemAccount.finds());
+    await tap(Keys.navBarItemPersonalArea.finds());
     await pumpAndSettle();
   }
 
