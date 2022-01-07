@@ -12,7 +12,7 @@ void main() {
   late CreateDefaultCollectionUseCase createDefaultCollectionUseCase;
   const String defaultCollectionName = 'Read Later';
   final collection = Collection(
-      id: Collection.readLaterId, name: defaultCollectionName, index: 0);
+      id: Collection.readLaterId, name: defaultCollectionName.trim(), index: 0);
 
   setUp(() {
     collectionsRepository = MockCollectionsRepository();
