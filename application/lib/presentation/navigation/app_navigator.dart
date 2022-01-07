@@ -33,8 +33,8 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
       changeStack((stack) => stack.push(PageRegistry.search));
 
   @override
-  void onAccountNavPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.account));
+  void onPersonalAreaNavPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.personalArea));
 }
 
 @Injectable(as: SettingsNavActions)
@@ -61,8 +61,8 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   void onHomeNavPressed() => changeStack((stack) => stack.pop());
 
   @override
-  void onAccountNavPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.account));
+  void onPersonalAreaNavPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.personalArea));
 }
 
 @Injectable(as: OnBoardingNavActions)

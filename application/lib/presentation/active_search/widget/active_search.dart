@@ -36,8 +36,8 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
             hint: Strings.activeSearchSearchHint,
             isActive: true,
           ),
-          buildNavBarItemAccount(
-            onPressed: _activeSearchManager.onAccountNavPressed,
+          buildNavBarItemPersonalArea(
+            onPressed: _activeSearchManager.onPersonalAreaNavPressed,
           )
         ],
         showAboveKeyboard: true,

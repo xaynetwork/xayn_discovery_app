@@ -14,7 +14,7 @@ class PageRegistry {
   static final Set<xayn.UntypedPageData> pages = {
     discovery,
     search,
-    account,
+    personalArea,
     onboarding,
   };
 
@@ -28,8 +28,8 @@ class PageRegistry {
     name: "search",
     builder: (_, args) => const ActiveSearch(),
   );
-  static final account = xayn.PageData(
-    name: "account",
+  static final personalArea = xayn.PageData(
+    name: "personalArea",
     builder: (_, args) => const SettingsScreen(),
   );
   static final onboarding = xayn.PageData(
