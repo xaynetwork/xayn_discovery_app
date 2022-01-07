@@ -1,0 +1,74 @@
+import 'dart:async';
+
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+import '../../utils/utils.dart';
+
+void main() {
+  late MockDiscoveryEngine engine;
+  final documentId = DocumentId();
+  final controller = StreamController<EngineEvent>();
+
+  setUp(() async {
+    engine = MockDiscoveryEngine();
+
+    di.registerSingletonAsync<EngineEventsUseCase>(
+        () => Future.value(EngineEventsUseCase(engine)));
+    di.registerSingletonAsync<ChangeDocumentFeedbackUseCase>(
+        () => Future.value(ChangeDocumentFeedbackUseCase(engine)));
+
+    when(engine.engineEvents).thenAnswer((_) => controller.stream);
+
+    when(engine.changeDocumentFeedback(
+            documentId: anyNamed('documentId'), feedback: anyNamed('feedback')))
+        .thenAnswer(
+      (_) {
+        const event = ClientEventSucceeded();
+
+        controller.add(event);
+
+        return Future.value(event);
+      },
+    );
+  });
+
+  blocTest<TestBloc, bool>(
+    'WHEN changing feedback THEN this is passed to the engine and finally the engine emits an engine event ',
+    build: () => TestBloc(),
+    act: (bloc) => bloc.changeDocumentFeedback(
+      documentId: documentId,
+      feedback: DocumentFeedback.positive,
+    ),
+    verify: (manager) {
+      verify(engine.engineEvents);
+      verify(engine.changeDocumentFeedback(
+        documentId: documentId,
+        feedback: DocumentFeedback.positive,
+      ));
+      verifyNoMoreInteractions(engine);
+    },
+    expect: () => [true],
+  );
+}
+
+class TestBloc extends Cubit<bool>
+    with
+        UseCaseBlocHelper<bool>,
+        EngineEventsMixin<bool>,
+        ChangeDocumentFeedbackMixin<bool> {
+  TestBloc() : super(false);
+
+  @override
+  Future<bool?> computeState() =>
+      fold(engineEvents).foldAll((events, errorReport) async => true);
+}
