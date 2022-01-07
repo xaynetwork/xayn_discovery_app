@@ -6,7 +6,7 @@ import 'package:xayn_design/xayn_design.dart';
 class R {
   const R._();
 
-  static Linden _linden = Linden();
+  static Linden _linden = Linden(newColors: true);
 
   static Linden get linden => _linden;
 
