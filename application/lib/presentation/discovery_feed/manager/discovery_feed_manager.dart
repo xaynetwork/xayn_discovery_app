@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -41,10 +40,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   Document? _observedDocument;
   int _documentIndex = 0;
   bool _isFullScreen = false;
-
-  @override
-  @protected
-  Future<void> close() => super.close();
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);

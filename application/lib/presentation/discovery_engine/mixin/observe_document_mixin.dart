@@ -11,6 +11,13 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<DiscoveryCardObservation, EngineEvent>>? _useCaseSink;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+
+    return super.close();
+  }
+
   void observeDocument({
     Document? document,
     DocumentViewMode? mode,

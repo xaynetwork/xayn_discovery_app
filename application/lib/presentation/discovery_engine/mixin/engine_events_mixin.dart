@@ -8,6 +8,13 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 mixin EngineEventsMixin<T> on UseCaseBlocHelper<T> {
   late final UseCaseValueStream<EngineEvent> engineEvents;
 
+  @override
+  Future<void> close() {
+    _stream = null;
+
+    return super.close();
+  }
+
   Stream<T>? _stream;
 
   @override

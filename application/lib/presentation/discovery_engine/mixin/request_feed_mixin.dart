@@ -11,6 +11,14 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
 
   bool get isLoading => false;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+    _stream = null;
+
+    return super.close();
+  }
+
   void requestNextFeedBatch() async {
     _useCaseSink ??= _getUseCaseSink();
 

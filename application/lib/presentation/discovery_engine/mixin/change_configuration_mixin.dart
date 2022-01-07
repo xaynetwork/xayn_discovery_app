@@ -9,6 +9,13 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 mixin ChangeConfigurationMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<Configuration, EngineEvent>>? _useCaseSink;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+
+    return super.close();
+  }
+
   void changeConfiguration({
     String? feedMarket,
     int? maxItemsPerFeedBatch,

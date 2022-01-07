@@ -9,6 +9,13 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<DocumentFeedbackChange, EngineEvent>>? _useCaseSink;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+
+    return super.close();
+  }
+
   void changeDocumentFeedback({
     required DocumentId documentId,
     required DocumentFeedback feedback,

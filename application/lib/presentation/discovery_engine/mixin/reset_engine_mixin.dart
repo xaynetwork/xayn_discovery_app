@@ -9,6 +9,13 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 mixin ResetEngineMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<None, EngineEvent>>? _useCaseSink;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+
+    return super.close();
+  }
+
   void resetEngine() async {
     _useCaseSink ??= _getUseCaseSink();
 

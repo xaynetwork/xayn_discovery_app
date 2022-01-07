@@ -9,6 +9,13 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 mixin CloseFeedDocumentsMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<Set<DocumentId>, EngineEvent>>? _useCaseSink;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+
+    return super.close();
+  }
+
   void closeFeedDocuments(Set<DocumentId> documents) async {
     _useCaseSink ??= _getUseCaseSink();
 

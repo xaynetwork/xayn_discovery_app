@@ -10,6 +10,14 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<String, EngineEvent>>? _useCaseSink;
 
+  @override
+  Future<void> close() {
+    _useCaseSink = null;
+    _stream = null;
+
+    return super.close();
+  }
+
   bool get isLoading => false;
 
   void search(String searchTerm) async {
