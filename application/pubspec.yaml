@@ -57,7 +57,7 @@ dependencies:
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
-      ref: 1e4b6dee4d6e4c03a0c0fb3fc979140ea7d780cf
+      ref: 22905ace38f81006c761f1205b970fdf2016a6b2
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git

@@ -118,4 +118,10 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
           EngineEvent engineEvent) =>
       _eventMap[engineEvent];
+
+  @override
+  Future<void> dispose() => _engine.dispose();
+
+  @override
+  Future<EngineEvent> send(ClientEvent event) => _engine.send(event);
 }

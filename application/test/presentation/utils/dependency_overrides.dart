@@ -111,4 +111,16 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
       EngineEvent engineEvent) {
     // TODO: implement resolveChangeDocumentFeedbackParameters
   }
+
+  @override
+  Future<void> dispose() {
+    // TODO: implement dispose
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> send(ClientEvent event) {
+    // TODO: implement send
+    throw UnimplementedError();
+  }
 }
