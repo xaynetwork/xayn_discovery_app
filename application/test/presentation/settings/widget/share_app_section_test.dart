@@ -7,12 +7,16 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 
 void main() {
+  final linden = Linden(newColors: true);
   testWidgets(
     'GIVEN section THEN verify all widgets present',
     (final WidgetTester tester) async {
-      await tester.pumpLindenApp(ShareAppSection(
-        onShareAppPressed: () {},
-      ));
+      await tester.pumpLindenApp(
+        ShareAppSection(
+          onShareAppPressed: () {},
+        ),
+        initialLinden: linden,
+      );
 
       expect(
         find.text(Strings.settingsSectionTitleSpreadTheWord),
@@ -34,9 +38,12 @@ void main() {
     'GIVEN section WHEN clicked btn THEN proper callbacks are called',
     (final WidgetTester tester) async {
       var clicked = false;
-      await tester.pumpLindenApp(ShareAppSection(
-        onShareAppPressed: () => clicked = true,
-      ));
+      await tester.pumpLindenApp(
+        ShareAppSection(
+          onShareAppPressed: () => clicked = true,
+        ),
+        initialLinden: linden,
+      );
 
       final btnFinder = find.byKey(Keys.settingsShareBtn);
       await tester.tap(btnFinder);

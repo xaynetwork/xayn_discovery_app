@@ -127,6 +127,8 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildBottomSpace() {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return SizedBox(height: R.dimen.buttonMinHeight + bottomPadding);
+    return SizedBox(
+      height: R.dimen.buttonMinHeight + bottomPadding + R.dimen.unit2,
+    );
   }
 }
