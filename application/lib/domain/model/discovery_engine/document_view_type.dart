@@ -1,4 +1,4 @@
 enum DocumentViewType {
-  story,
+  storyMode,
   readerMode,
 }
