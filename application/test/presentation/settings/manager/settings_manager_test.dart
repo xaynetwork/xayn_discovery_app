@@ -215,10 +215,7 @@ void main() {
       when(bugReportingService.showDialog()).thenAnswer((_) async {});
     },
     build: () => create(),
-    act: (manager) => manager.reportBug(
-      brightness: R.brightness,
-      primaryColor: R.colors.primary,
-    ),
+    act: (manager) => manager.reportBug(),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {
@@ -226,7 +223,7 @@ void main() {
         getAppVersionUseCase.singleOutput(none),
         bugReportingService.showDialog(
           brightness: R.brightness,
-          primaryColor: R.colors.primary,
+          primaryColor: R.colors.primaryAction,
         ),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),

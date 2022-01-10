@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -68,13 +65,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
-  void reportBug({
-    Brightness? brightness,
-    Color? primaryColor,
-  }) =>
-      _bugReportingService.showDialog(
+  void reportBug() => _bugReportingService.showDialog(
         brightness: R.brightness,
-        primaryColor: R.colors.primary,
+        primaryColor: R.colors.primaryAction,
       );
 
   void shareApp() {
