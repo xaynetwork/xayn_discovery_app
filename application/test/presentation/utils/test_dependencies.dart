@@ -19,7 +19,7 @@ import 'test_dependencies.config.dart';
     preferRelativeImports: true,
     asExtension: false,
     generateForDir: ['test'])
-Future<void> configureTestDependencies() async {
+void configureTestDependencies() {
   TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
   configureDependencies();

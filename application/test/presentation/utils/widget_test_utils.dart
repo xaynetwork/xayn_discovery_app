@@ -14,7 +14,7 @@ import '../utils/utils.dart';
 Future<void> setupWidgetTest() async {
   debugSemanticsDisableAnimations = true;
   HiveDB.init(null);
-  await configureTestDependencies();
+  configureTestDependencies();
 }
 
 /// common teardown for widget tests
