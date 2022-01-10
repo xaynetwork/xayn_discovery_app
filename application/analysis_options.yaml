@@ -1,6 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  exclude: [ '**.g.dart', '**.mocks.dart', '**.freezed.dart', '**.config.dart']
+  exclude: [ '**.g.dart', '**.mocks.dart', '**.freezed.dart', '**.config.dart', '**all_imports_test.dart']
   errors:
     invalid_use_of_visible_for_overriding_member: error
