@@ -3,12 +3,10 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/log_discovery_card_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/random_keywords/random_keywords_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
@@ -36,7 +34,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   DiscoveryFeedManager(
     this._discoveryEngineResultsUseCase,
     this._randomKeyWordsUseCase,
-    this._listenDiscoveryFeedAxisUseCase,
     this._discoveryCardObservationUseCase,
     this._discoveryCardMeasuredObservationUseCase,
     this._discoveryFeedNavActions,
@@ -47,7 +44,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final RandomKeyWordsUseCase _randomKeyWordsUseCase;
-  final ListenDiscoveryFeedAxisUseCase _listenDiscoveryFeedAxisUseCase;
   final DiscoveryCardObservationUseCase _discoveryCardObservationUseCase;
   final DiscoveryCardMeasuredObservationUseCase
       _discoveryCardMeasuredObservationUseCase;
@@ -72,7 +68,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   );
 
   late final UseCaseSink<List<Document>, DiscoveryEngineState> _searchHandler;
-  late final UseCaseValueStream<DiscoveryFeedAxis> _discoveryFeedAxisHandler;
   late final UseCaseSink<DiscoveryCardObservation, int>
       _discoveryCardObservationHandler;
 
@@ -203,11 +198,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     // trigger an initial random keyword to show the initial results.
     _searchHandler.call(const <Document>[]);
 
-    _discoveryFeedAxisHandler = consume(
-      _listenDiscoveryFeedAxisUseCase,
-      initialData: none,
-    );
-
     /// This flow observes individual cards,
     /// - first, it adds a timestamp when an observation occurs via `_discoveryCardObservationUseCase`
     /// - then it uses `pairWise` so that it bundles the previous and the current events, see [pairwise](https://rxmarbles.com/#pairwise)
@@ -263,13 +253,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   @override
-  Future<DiscoveryFeedState?> computeState() async => fold3(
+  Future<DiscoveryFeedState?> computeState() async => fold2(
         _searchHandler,
-        _discoveryFeedAxisHandler,
         _discoveryCardObservationHandler,
       ).foldAll((
         engineState,
-        axis,
         suggestTopicsAtIndex,
         errorReport,
       ) {
@@ -286,7 +274,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               isComplete: engineState.isComplete,
               isFullScreen: _isFullScreen,
               isInErrorState: false,
-              axis: axis ?? DiscoveryFeedAxis.vertical,
               suggestTopicsAtIndex: suggestTopicsAtIndex,
             );
           }

@@ -144,10 +144,14 @@ lane :check do |options|
     flutter("format ./")
   end
   if options[:coverage]
+    # Creates a fake test that imports all files so that lcov calculates the correct coverage
+    shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
+    shell('cat test/test_stub.dart >> test/all_imports_test.dart')
     flutter("test --coverage")
     lcov_ignore_rules = shell("cat lcov_ignore | grep -v \\# | tr '\n' ' '")
     shell("mv coverage/lcov.info coverage/original_lcov.info")
     shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
+    shell("genhtml coverage/lcov.info -o coverage/html")
   else
     flutter("test")
   end

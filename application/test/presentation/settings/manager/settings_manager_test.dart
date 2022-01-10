@@ -8,16 +8,12 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_feed_axis.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/get_discovery_feed_axis_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/listen_discovery_feed_axis_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/save_discovery_feed_axis_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -29,9 +25,6 @@ import 'settings_manager_test.mocks.dart';
   GetAppThemeUseCase,
   SaveAppThemeUseCase,
   ListenAppThemeUseCase,
-  GetDiscoveryFeedAxisUseCase,
-  SaveDiscoveryFeedAxisUseCase,
-  ListenDiscoveryFeedAxisUseCase,
   BugReportingService,
   ExtractLogUseCase,
   SettingsNavActions,
@@ -39,20 +32,15 @@ import 'settings_manager_test.mocks.dart';
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
-  const axis = DiscoveryFeedAxis.vertical;
   const stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
-    axis: axis,
   );
 
   late MockGetAppVersionUseCase getAppVersionUseCase;
   late MockGetAppThemeUseCase getAppThemeUseCase;
   late MockSaveAppThemeUseCase saveAppThemeUseCase;
   late MockListenAppThemeUseCase listenAppThemeUseCase;
-  late MockGetDiscoveryFeedAxisUseCase getDiscoveryFeedAxisUseCase;
-  late MockSaveDiscoveryFeedAxisUseCase saveDiscoveryFeedAxisUseCase;
-  late MockListenDiscoveryFeedAxisUseCase listenDiscoveryFeedAxisUseCase;
   late MockBugReportingService bugReportingService;
   late MockExtractLogUseCase extractLogUseCase;
 
@@ -61,17 +49,10 @@ void main() {
     getAppThemeUseCase = MockGetAppThemeUseCase();
     saveAppThemeUseCase = MockSaveAppThemeUseCase();
     listenAppThemeUseCase = MockListenAppThemeUseCase();
-    getDiscoveryFeedAxisUseCase = MockGetDiscoveryFeedAxisUseCase();
-    saveDiscoveryFeedAxisUseCase = MockSaveDiscoveryFeedAxisUseCase();
-    listenDiscoveryFeedAxisUseCase = MockListenDiscoveryFeedAxisUseCase();
     bugReportingService = MockBugReportingService();
     extractLogUseCase = MockExtractLogUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
-      (_) => const Stream.empty(),
-    );
-
-    when(listenDiscoveryFeedAxisUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
 
@@ -80,9 +61,6 @@ void main() {
 
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
-
-    when(getDiscoveryFeedAxisUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(axis));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -90,9 +68,6 @@ void main() {
         getAppThemeUseCase,
         saveAppThemeUseCase,
         listenAppThemeUseCase,
-        getDiscoveryFeedAxisUseCase,
-        saveDiscoveryFeedAxisUseCase,
-        listenDiscoveryFeedAxisUseCase,
         bugReportingService,
         extractLogUseCase,
         MockSettingsNavActions(),
@@ -105,17 +80,12 @@ void main() {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
         getAppThemeUseCase.singleOutput(none),
-        getDiscoveryFeedAxisUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
-        listenDiscoveryFeedAxisUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
-      verifyNoMoreInteractions(getDiscoveryFeedAxisUseCase);
-      verifyNoMoreInteractions(saveDiscoveryFeedAxisUseCase);
-      verifyNoMoreInteractions(listenDiscoveryFeedAxisUseCase);
     },
   );
   blocTest<SettingsScreenManager, SettingsScreenState>(
@@ -141,27 +111,6 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
-    },
-  );
-  blocTest<SettingsScreenManager, SettingsScreenState>(
-    'GIVEN app theme WHEN changeScrollDirection method called THEN call saveDiscoveryFeedScrollDirection useCase',
-    setUp: () {
-      when(saveDiscoveryFeedAxisUseCase.call(axis)).thenAnswer(
-        (_) async => const [UseCaseResult.success(axis)],
-      );
-    },
-    build: () => create(),
-    act: (manager) => manager.changeAxis(axis),
-    expect: () => [stateReady],
-    verify: (manager) {
-      verifyInOrder([
-        saveDiscoveryFeedAxisUseCase.call(DiscoveryFeedAxis.vertical),
-        getDiscoveryFeedAxisUseCase.singleOutput(none),
-        listenDiscoveryFeedAxisUseCase.transform(any),
-      ]);
-      verifyNoMoreInteractions(listenDiscoveryFeedAxisUseCase);
-      verifyNoMoreInteractions(getDiscoveryFeedAxisUseCase);
-      verifyNoMoreInteractions(saveDiscoveryFeedAxisUseCase);
     },
   );
 
