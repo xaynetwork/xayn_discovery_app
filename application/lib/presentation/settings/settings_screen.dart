@@ -25,8 +25,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen>
     with NavBarConfigMixin {
-  late final SettingsScreenManager _manager;
-  late final Future<SettingsScreenManager> initManagerFuture = di.getAsync();
+  late final SettingsScreenManager _manager = di.get();
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
@@ -35,32 +34,17 @@ class _SettingsScreenState extends State<SettingsScreen>
   Linden get linden => UnterDenLinden.getLinden(context);
 
   @override
-  void initState() {
-    initManagerFuture.then((manager) {
-      _manager = manager;
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: const AppToolbar(yourTitle: Strings.settingsTitle),
         body: _buildBody(),
       );
 
   Widget _buildBody() {
-    Widget buildBloc() =>
-        BlocBuilder<SettingsScreenManager, SettingsScreenState>(
-          bloc: _manager,
-          builder: _buildBlockState,
-        );
-    return FutureBuilder(
-      future: initManagerFuture,
-      builder: (_, snapshot) {
-        final child = snapshot.data == null ? const Center() : buildBloc();
-        return ScreenStateSwitcher(child: child);
-      },
+    Widget bloc = BlocBuilder<SettingsScreenManager, SettingsScreenState>(
+      bloc: _manager,
+      builder: _buildBlockState,
     );
+    return ScreenStateSwitcher(child: bloc);
   }
 
   Widget _buildBlockState(BuildContext context, SettingsScreenState state) {
@@ -119,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: Text(
             '${Strings.settingsVersion} ${appVersion.version}\n'
             '${Strings.settingsBuild} ${appVersion.build}',
-            style: R.styles.appBodyText,
+            style: R.styles.appBodyTextSecondary,
           ),
         ),
         onLongPress: () => _manager.extractLogs(),
