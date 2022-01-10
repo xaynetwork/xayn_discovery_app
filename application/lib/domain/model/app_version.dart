@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
-import 'package:xayn_discovery_app/infrastructure/util/package_version_extensions.dart';
 
 @immutable
 class AppVersion {
@@ -17,11 +15,6 @@ class AppVersion {
 
   factory AppVersion.initial() =>
       const AppVersion(version: '0.0.1', build: '0.0.1');
-
-  factory AppVersion.current(PackageInfo info) => AppVersion(
-        version: info.formattedVersion,
-        build: info.buildNumber,
-      );
 
   @override
   String toString() => 'Version: $version, build: $build';

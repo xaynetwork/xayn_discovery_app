@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dar
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 /// Hive's [AppStatus] repository implementation.
-@Singleton(as: AppStatusRepository)
+@LazySingleton(as: AppStatusRepository)
 class HiveAppStatusRepository extends HiveRepository<AppStatus>
     implements AppStatusRepository {
   final AppStatusMapper _mapper;

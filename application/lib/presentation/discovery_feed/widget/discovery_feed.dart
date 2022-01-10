@@ -130,10 +130,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   void initState() {
-    final ratingDialogManagerFuture = di.getAsync<RatingDialogManager>();
-    ratingDialogManagerFuture.then((manager) {
-      _ratingDialogManager = manager;
-    });
+    di
+        .getAsync<RatingDialogManager>()
+        .then((manager) => _ratingDialogManager = manager);
 
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
