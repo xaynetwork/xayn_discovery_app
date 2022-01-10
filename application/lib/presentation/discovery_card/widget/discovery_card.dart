@@ -185,17 +185,10 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           ),
           fractionSize: normalizedValue,
         );
-        // calculates the 'over' scroll, i.e. the distance that the
-        // card image + elements scroll 'outside' off the card, when scrolling
-        // over reader mode content.
-        // This value limits to _kMinImageFractionSize * mediaQuery.size.height,
-        // so that when scrolling very far and then closing reader mode,
-        // the 'close-to-fall' back to card animation isn't calculating
-        // from the 'actual' max overscoll position.
 
-        // TL;DR: this offset places the image right above, but still off screen,
-        // of the reader mode. When closing back to feed, it then drops
-        // always immediately, instead of from potentially 10k+ pixels above.
+        // Limits the max scroll-away distance,
+        // to park the image only just outside the visible range at max, when it finally animates back,
+        // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
             _kMinImageFractionSize * mediaQuery.size.height);
 
