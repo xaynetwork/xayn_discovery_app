@@ -45,7 +45,7 @@ dependencies:
   xayn_architecture:
     git:
       url: git@github.com:xaynetwork/xayn_architecture.git
-      ref: 3890ce1d4e9c609e6e70f3c4f29cd766934fbc66
+      ref: aaffef5c6fd20deddf9978cbd159c4363fb28846
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
@@ -53,7 +53,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: dc91655d2b71f31e0b912d3bda3c1154f9633480
+      ref: 28780e1c3250f8e0bcab87d21c15d0849ad57a7b
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -98,6 +98,9 @@ flutter:
     # https://github.com/flutter/flutter/issues/27802
 
     # icons
+    - packages/xayn_design/assets/graphics/forms_green.svg
+    - packages/xayn_design/assets/graphics/forms_orange.svg
+    - packages/xayn_design/assets/graphics/forms_purple.svg
     - packages/xayn_design/assets/icons/arrow_down.svg
     - packages/xayn_design/assets/icons/arrow_right.svg
     - packages/xayn_design/assets/icons/search.svg
