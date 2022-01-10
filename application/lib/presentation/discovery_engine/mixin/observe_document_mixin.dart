@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
@@ -28,7 +29,7 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
 
     useCaseSink!(DiscoveryCardObservation(
       document: document,
-      mode: mode,
+      viewType: mode,
     ));
   }
 
@@ -45,14 +46,14 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
           .distinct(
             (a, b) =>
                 a.value.document == b.value.document &&
-                a.value.mode == b.value.mode,
+                a.value.viewType == b.value.viewType,
           )
           .pairwise() // combine last card and current card
           .followedBy(discoveryCardMeasuredObservationUseCase)
-          .where((it) => it.document != null && it.mode != null)
+          .where((it) => it.document != null && it.viewType != null)
           .map((it) => LogData(
                 documentId: it.document!.documentId,
-                mode: it.mode!,
+                mode: it.viewType!,
                 duration: it.duration,
               ))
           .followedBy(useCase),
