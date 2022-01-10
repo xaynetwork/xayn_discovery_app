@@ -51,7 +51,7 @@ class TestLogManager extends LogManager {
 @LazySingleton(as: DiscoveryEngine)
 class TestDiscoveryEngine implements AppDiscoveryEngine {
   final StreamController<EngineEvent> _onEngineEvent =
-      StreamController<EngineEvent>();
+      StreamController<EngineEvent>.broadcast();
 
   void close() {
     _onEngineEvent.close();
