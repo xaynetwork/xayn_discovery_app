@@ -3,6 +3,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 
+typedef DiscoveryCardObservationPair
+    = Iterable<Timestamped<DiscoveryCardObservation>>;
+
 /// Adds a timestamp to a [DiscoveryCardObservation].
 @injectable
 class DiscoveryCardObservationUseCase extends UseCase<DiscoveryCardObservation,

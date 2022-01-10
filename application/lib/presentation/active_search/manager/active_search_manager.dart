@@ -2,12 +2,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/handlers/fold.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_stream.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_state.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -22,45 +20,33 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends Cubit<ActiveSearchState>
-    with UseCaseBlocHelper<ActiveSearchState>
+    with
+        UseCaseBlocHelper<ActiveSearchState>,
+        EngineEventsMixin<ActiveSearchState>,
+        SearchMixin<ActiveSearchState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
-    this._discoveryEngineResultsUseCase,
     this._activeSearchNavActions,
-  ) : super(ActiveSearchState.empty()) {
-    _init();
-  }
+  ) : super(ActiveSearchState.empty());
 
-  final DiscoveryEngineResultsUseCase _discoveryEngineResultsUseCase;
   final ActiveSearchNavActions _activeSearchNavActions;
-  late final UseCaseSink<DiscoveryEngineResultsParam, DiscoveryEngineState>
-      _searchHandler;
-
-  void handleSearch(String term) {
-    _searchHandler(DiscoveryEngineResultsParam(
-      searchTerm: term,
-      searchTypes: const [SearchType.web],
-    ));
-  }
-
-  void _init() {
-    _searchHandler = pipe(_discoveryEngineResultsUseCase);
-  }
 
   @override
   Future<ActiveSearchState?> computeState() async =>
-      fold(_searchHandler).foldAll((engineState, errorReport) {
-        if (errorReport.isNotEmpty) {
+      fold(engineEvents).foldAll((engineEvent, errorReport) {
+        if (errorReport.isNotEmpty || engineEvent is EngineExceptionRaised) {
           return state.copyWith(
             isInErrorState: true,
           );
         }
 
-        if (engineState != null) {
+        if (engineEvent is FeedRequestSucceeded) {
+          final currentResults = state.results ?? const <Document>[];
+
           return state.copyWith(
-            results: engineState.results,
-            isLoading: engineState.isLoading,
-            isComplete: engineState.isComplete,
+            results: {...currentResults, ...engineEvent.items},
+            isLoading: isLoading,
+            isComplete: !isLoading,
             isInErrorState: false,
           );
         }

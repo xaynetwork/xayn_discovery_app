@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:injectable/injectable.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 
 import 'test_dependencies.config.dart';
@@ -19,15 +20,27 @@ import 'test_dependencies.config.dart';
     asExtension: false,
     generateForDir: ['test'])
 void configureTestDependencies() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
-  packageInfoMock();
   configureDependencies();
+  packageInfoMock();
   $initTestGetIt(di);
 }
 
 void packageInfoMock() {
-  const MethodChannel('dev.fluttercommunity.plus/package_info')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  // needed for Windows
+  di.registerSingletonAsync<PackageInfo>(() => Future.value(PackageInfo(
+        appName: '',
+        buildNumber: '',
+        packageName: '',
+        version: '',
+        buildSignature: '',
+      )));
+
+  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/package_info'),
+          (MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{
         // 'appName': 'ABC',

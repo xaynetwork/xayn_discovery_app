@@ -34,6 +34,13 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
 
   @override
   Stream<CacheManagerEvent> transaction(Uri param) async* {
+    if (param == Uri.base) {
+      // there is no image in this case
+      yield CacheManagerEvent.completed(param, null);
+
+      return;
+    }
+
     final url = param.toString();
     final cachedVersion = await cacheManager.getFileFromCache(url);
 

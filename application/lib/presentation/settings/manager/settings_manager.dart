@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_configuration_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
@@ -21,7 +22,9 @@ abstract class SettingsNavActions {
 
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
-    with UseCaseBlocHelper<SettingsScreenState>
+    with
+        UseCaseBlocHelper<SettingsScreenState>,
+        ChangeConfigurationMixin<SettingsScreenState>
     implements SettingsNavActions {
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetAppThemeUseCase _getAppThemeUseCase;

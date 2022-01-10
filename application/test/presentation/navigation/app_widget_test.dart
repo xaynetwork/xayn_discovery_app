@@ -9,8 +9,8 @@ import '../utils/utils.dart';
 import '../utils/widget_test_utils.dart';
 
 void main() {
-  setUp(() {
-    setupWidgetTest();
+  setUp(() async {
+    await setupWidgetTest();
   });
 
   tearDown(() async {
