@@ -8,8 +8,8 @@ import '../../utils/widget_test_utils.dart';
 
 void main() {
   late MockFeatureManager manager;
-  setUp(() {
-    setupWidgetTest();
+  setUp(() async {
+    await setupWidgetTest();
     manager = MockFeatureManager();
     di.registerLazySingleton<FeatureManager>(() => manager);
     when(manager.showFeaturesScreen).thenReturn(true);

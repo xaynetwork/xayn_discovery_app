@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
@@ -10,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.
@@ -30,7 +30,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
             onPressed: _activeSearchManager.onHomeNavPressed,
           ),
           buildNavBarItemSearchActive(
-            onSearchPressed: _activeSearchManager.handleSearch,
+            onSearchPressed: _activeSearchManager.search,
             hint: Strings.activeSearchSearchHint,
             isActive: true,
           ),
@@ -62,7 +62,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
       return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
         bloc: _activeSearchManager,
         builder: (context, state) {
-          final results = state.results ?? [];
+          final results = state.results ?? {};
 
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -83,11 +83,11 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
   }
 
   Widget Function(BuildContext, int) _itemBuilder(
-    List<Document> results,
+    Set<Document> results,
     bool isPrimary,
   ) =>
       (BuildContext context, int index) {
-        final document = results[index];
+        final document = results.elementAt(index);
         return _buildResultCard(
           document,
           isPrimary,
