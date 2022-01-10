@@ -18,6 +18,7 @@ class PageRegistry {
     onboarding,
   };
 
+  // Make sure to add the page names in camel case
   static final discovery = xayn.PageData(
     name: "discovery",
     isInitial: true,
@@ -35,6 +36,7 @@ class PageRegistry {
     name: "onboarding",
     builder: (_, args) => const OnBoardingScreen(),
     pageBuilder: (_, widget) => xayn.CustomTransitionPage(
+      name: "onboarding",
       child: widget,
       opaque: false,
       transitionsBuilder: (_, a1, a2, widget) => FadeTransition(

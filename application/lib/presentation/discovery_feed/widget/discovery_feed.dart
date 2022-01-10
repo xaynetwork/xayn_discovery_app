@@ -205,7 +205,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         if (isPrimary) {
           _discoveryFeedManager.handleViewType(
             document,
-            isFullScreen ? DocumentViewType.readerMode : DocumentViewType.story,
+            isFullScreen
+                ? DocumentViewType.readerMode
+                : DocumentViewType.storyMode,
           );
         }
 
