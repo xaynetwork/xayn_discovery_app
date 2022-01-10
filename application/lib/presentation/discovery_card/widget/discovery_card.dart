@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -183,6 +185,19 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           ),
           fractionSize: normalizedValue,
         );
+        // calculates the 'over' scroll, i.e. the distance that the
+        // card image + elements scroll 'outside' off the card, when scrolling
+        // over reader mode content.
+        // This value limits to _kMinImageFractionSize * mediaQuery.size.height,
+        // so that when scrolling very far and then closing reader mode,
+        // the 'close-to-fall' back to card animation isn't calculating
+        // from the 'actual' max overscoll position.
+
+        // TL;DR: this offset places the image right above, but still off screen,
+        // of the reader mode. When closing back to feed, it then drops
+        // always immediately, instead of from potentially 10k+ pixels above.
+        final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
+            _kMinImageFractionSize * mediaQuery.size.height);
 
         return Stack(
           children: [
@@ -192,7 +207,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
               state.output?.processHtmlResult,
             )),
             Positioned(
-              top: -_scrollOffset * (1.0 - normalizedValue),
+              top: -outerScrollOffset,
               left: 0,
               right: 0,
               child: Container(
@@ -232,8 +247,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget _buildReaderMode(Size size, ProcessHtmlResult? processHtmlResult) {
     final readerMode = ReaderMode(
       title: title,
-      snippet: snippet,
-      imageUri: Uri.parse(imageUrl),
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
         left: R.dimen.unit2,
