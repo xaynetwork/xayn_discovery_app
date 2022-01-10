@@ -7,16 +7,20 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 
 void main() {
+  final linden = Linden(newColors: true);
   testWidgets(
     'GIVEN section THEN verify all widgets present',
     (final WidgetTester tester) async {
-      await tester.pumpLindenApp(SettingsGeneralInfoSection(
-        onAboutPressed: () {},
-        onImprintPressed: () {},
-        onCarbonNeutralPressed: () {},
-        onTermsPressed: () {},
-        onPrivacyPressed: () {},
-      ));
+      await tester.pumpLindenApp(
+        SettingsGeneralInfoSection(
+          onAboutPressed: () {},
+          onImprintPressed: () {},
+          onCarbonNeutralPressed: () {},
+          onTermsPressed: () {},
+          onPrivacyPressed: () {},
+        ),
+        initialLinden: linden,
+      );
 
       const kidsAmount = 5;
       expect(
@@ -54,7 +58,7 @@ void main() {
         onTermsPressed: () => callbacks[Keys.settingsTermsAndConditions] = true,
         onPrivacyPressed: () => callbacks[Keys.settingsPrivacyPolicy] = true,
       );
-      await tester.pumpLindenApp(widget);
+      await tester.pumpLindenApp(widget, initialLinden: linden);
 
       for (final key in callbacks.keys) {
         final btnFinder = find.byKey(key);

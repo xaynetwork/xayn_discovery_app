@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/your_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: const YourToolbar(yourTitle: Strings.settingsTitle),
+        appBar: const AppToolbar(yourTitle: Strings.settingsTitle),
         body: _buildBody(),
       );
 
@@ -127,6 +127,8 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildBottomSpace() {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return SizedBox(height: R.dimen.buttonMinHeight + bottomPadding);
+    return SizedBox(
+      height: R.dimen.buttonMinHeight + bottomPadding + R.dimen.unit2,
+    );
   }
 }
