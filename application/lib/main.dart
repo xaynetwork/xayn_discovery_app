@@ -32,7 +32,7 @@ Future<void> setup() async {
     (_) => HiveDB.init(null),
   );
   await hiveDb;
-  configureDependencies();
+  await configureDependencies();
   di.get<LogManager>();
   di.get<AnalyticsNavigatorObserver>();
 }
