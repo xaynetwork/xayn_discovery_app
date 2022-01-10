@@ -7,12 +7,16 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 
 void main() {
+  final linden = Linden(newColors: true);
   testWidgets(
     'GIVEN section THEN verify all widgets present',
     (final WidgetTester tester) async {
-      await tester.pumpLindenApp(SettingsHelpImproveSection(
-        onFindBugPressed: () {},
-      ));
+      await tester.pumpLindenApp(
+        SettingsHelpImproveSection(
+          onFindBugPressed: () {},
+        ),
+        initialLinden: linden,
+      );
 
       expect(
         find.text(Strings.settingsSectionTitleHelpImprove),
@@ -31,9 +35,12 @@ void main() {
     'GIVEN section WHEN clicked btn THEN proper callbacks are called',
     (final WidgetTester tester) async {
       var clicked = false;
-      await tester.pumpLindenApp(SettingsHelpImproveSection(
-        onFindBugPressed: () => clicked = true,
-      ));
+      await tester.pumpLindenApp(
+        SettingsHelpImproveSection(
+          onFindBugPressed: () => clicked = true,
+        ),
+        initialLinden: linden,
+      );
 
       final btnFinder = find.byKey(Keys.settingsHaveFoundBug);
       await tester.tap(btnFinder);
