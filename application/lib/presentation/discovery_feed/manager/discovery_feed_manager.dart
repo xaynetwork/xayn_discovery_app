@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/log_discovery_card_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_engine_results_use_case.dart';
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/search_type.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 
 const int kBufferCount = 4;
 const Duration kResolveCardAsSkippedDuration = Duration(seconds: 3);
@@ -35,6 +37,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     this._discoveryCardObservationUseCase,
     this._discoveryCardMeasuredObservationUseCase,
     this._discoveryFeedNavActions,
+    this._logDiscoveryCardAnalyticsUseCase,
   ) : super(DiscoveryFeedState.empty()) {
     _initHandlers();
   }
@@ -44,6 +47,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final DiscoveryCardObservationUseCase _discoveryCardObservationUseCase;
   final DiscoveryCardMeasuredObservationUseCase
       _discoveryCardMeasuredObservationUseCase;
+  final LogDiscoveryCardAnalyticsUseCase _logDiscoveryCardAnalyticsUseCase;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   final LogUseCase<DiscoveryCardMeasuredObservation>
@@ -83,12 +87,12 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) {
     final document = _observedDocument = state.results?[index];
-
-    if (document != null) {
+    final viewType = _observedViewTypes[document];
+    if (document != null && viewType != null) {
       _discoveryCardObservationHandler(
         DiscoveryCardObservation(
           document: document,
-          viewType: _observedViewTypes[document],
+          viewType: viewType,
         ),
       );
     }
@@ -219,6 +223,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
                 a.value.viewType == b.value.viewType,
           )
           .pairwise() // combine last card and current card
+          .followedBy(_logDiscoveryCardAnalyticsUseCase)
           .followedBy(_discoveryCardMeasuredObservationUseCase)
           .followedBy(_measuredObservationLogger)
           .bufferCount(

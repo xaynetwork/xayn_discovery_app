@@ -1,17 +1,14 @@
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-
-typedef DiscoveryCardObservationPair
-    = Iterable<Timestamped<DiscoveryCardObservation>>;
+import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 
 /// Adds a timestamp to a [DiscoveryCardObservation].
 @injectable
 class DiscoveryCardObservationUseCase extends UseCase<DiscoveryCardObservation,
-    Timestamped<DiscoveryCardObservation>> {
+    TimestampedDiscoveryCardObservation> {
   @override
-  Stream<Timestamped<DiscoveryCardObservation>> transaction(
+  Stream<TimestampedDiscoveryCardObservation> transaction(
       DiscoveryCardObservation param) {
     return Stream.value(param).timestamp();
   }
@@ -32,30 +29,4 @@ class DiscoveryCardMeasuredObservationUseCase extends UseCase<
       );
     }
   }
-}
-
-class DiscoveryCardObservation {
-  final Document? document;
-  final DocumentViewType? viewType;
-
-  const DiscoveryCardObservation({
-    required this.document,
-    required this.viewType,
-  });
-
-  const DiscoveryCardObservation.none()
-      : document = null,
-        viewType = null;
-}
-
-class DiscoveryCardMeasuredObservation extends DiscoveryCardObservation {
-  final Duration duration;
-
-  DiscoveryCardMeasuredObservation.fromObservable({
-    required DiscoveryCardObservation observable,
-    required this.duration,
-  }) : super(
-          document: observable.document,
-          viewType: observable.viewType,
-        );
 }
