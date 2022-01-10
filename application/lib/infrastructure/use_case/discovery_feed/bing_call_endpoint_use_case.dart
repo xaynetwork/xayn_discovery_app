@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document_feedback.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// Mock implementation,
 /// This will be deprecated once the real discovery engine is available.
@@ -54,7 +53,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
       }
 
       final document = Document(
-        documentId: const DocumentId(key: ''),
+        documentId: DocumentId(),
         webResource: WebResource(
           displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
@@ -63,7 +62,8 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
           datePublished: DateTime.parse(it['datePublished'] as String),
           provider: getProvider(it),
         ),
-        documentFeedback: DocumentFeedback.neutral,
+        isActive: true,
+        feedback: DocumentFeedback.neutral,
         nonPersonalizedRank: 0,
         personalizedRank: 0,
       );
@@ -90,7 +90,9 @@ WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
     return providerName != null
         ? WebResourceProvider(
             name: providerName,
-            thumbnail: providerLogoUrl == null ? null : '$providerLogoUrl?w=64',
+            thumbnail: providerLogoUrl == null
+                ? null
+                : Uri.parse('$providerLogoUrl?w=64'),
           )
         : null;
   }

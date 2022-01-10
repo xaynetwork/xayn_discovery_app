@@ -35,13 +35,13 @@ class Client implements http.Client {
       if (response.headers.containsKey('set-cookie')) {
         logger.i('Server cookies detected');
 
-        return await send(request.change(
+        return await sendWithRedirectGuard(request.change(
           uri: location,
           cookies: _getCookiesToSet(response.headers['set-cookie']!),
         ));
       }
 
-      return await send(request.change(uri: location));
+      return await sendWithRedirectGuard(request.change(uri: location));
     }
 
     return response;

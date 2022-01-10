@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -9,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
 /// the minimum fraction height of the card image.
@@ -167,14 +167,20 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           child: image,
         );
         final elements = DiscoveryCardElements(
+          manager: discoveryCardManager,
           title: webResource.title,
           timeToRead: state.output?.timeToRead ?? '',
           url: webResource.url,
           provider: webResource.provider,
           datePublished: webResource.datePublished,
-          onLikePressed: () => actionsManager.likeDocument(widget.document),
-          onDislikePressed: () =>
-              actionsManager.dislikeDocument(widget.document),
+          onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
+            documentId: widget.document.documentId,
+            feedback: DocumentFeedback.positive,
+          ),
+          onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
+            documentId: widget.document.documentId,
+            feedback: DocumentFeedback.negative,
+          ),
           fractionSize: normalizedValue,
         );
 

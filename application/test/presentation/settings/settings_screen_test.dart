@@ -32,7 +32,7 @@ void main() {
   late MockSettingsScreenManager manager;
 
   setUp(() async {
-    setupWidgetTest();
+    await setupWidgetTest();
     manager = MockSettingsScreenManager();
     di.registerFactoryAsync<SettingsScreenManager>(() => Future.value(manager));
     when(manager.state).thenReturn(stateReady);

@@ -1,10 +1,9 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/document_view_type.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryCardObservation {
   final Document? document;
-  final DocumentViewType? viewType;
+  final DocumentViewMode? viewType;
 
   const DiscoveryCardObservation({
     required this.document,
