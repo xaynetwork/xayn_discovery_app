@@ -10,6 +10,13 @@ class Keys {
   static const Key onBoardingPageThree = Key('onBoardingPageThree');
   static const Key onBoardingPageTapDetector = Key('onBoardingPageTapDetector');
 
+  static const Key personalAreaCardCollections =
+      Key('personal_area_card_collections');
+  static const Key personalAreaCardHomeFeed =
+      Key('personal_area_card_home_feed');
+  static const Key personalAreaCardSettings =
+      Key('personal_area_card_settings');
+
   static const Key settingsThemeSystem = Key('settings_theme_item_system');
   static const Key settingsThemeLight = Key('settings_theme_item_light');
   static const Key settingsThemeDark = Key('settings_theme_item_dark');
