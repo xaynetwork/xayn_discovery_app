@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
@@ -48,6 +50,13 @@ class TestLogManager extends LogManager {
 
 @LazySingleton(as: DiscoveryEngine)
 class TestDiscoveryEngine implements AppDiscoveryEngine {
+  final StreamController<EngineEvent> _onEngineEvent =
+      StreamController<EngineEvent>();
+
+  void close() {
+    _onEngineEvent.close();
+  }
+
   @factoryMethod
   static Future<TestDiscoveryEngine> create() async {
     return TestDiscoveryEngine();
@@ -71,7 +80,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
   }
 
   @override
-  Stream<EngineEvent> get engineEvents => const Stream.empty();
+  Stream<EngineEvent> get engineEvents => _onEngineEvent.stream;
 
   @override
   Future<EngineEvent> logDocumentTime(
@@ -102,9 +111,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
   }
 
   @override
-  void tempAddEvent(EngineEvent event) {
-    // TODO: implement tempAddEvent
-  }
+  void tempAddEvent(EngineEvent event) => _onEngineEvent.add(event);
 
   @override
   DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(

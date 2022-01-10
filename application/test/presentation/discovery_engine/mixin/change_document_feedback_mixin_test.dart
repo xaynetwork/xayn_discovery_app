@@ -42,9 +42,9 @@ void main() {
     );
   });
 
-  blocTest<TestBloc, bool>(
+  blocTest<_TestBloc, bool>(
     'WHEN changing feedback THEN this is passed to the engine and finally the engine emits an engine event ',
-    build: () => TestBloc(),
+    build: () => _TestBloc(),
     act: (bloc) => bloc.changeDocumentFeedback(
       documentId: documentId,
       feedback: DocumentFeedback.positive,
@@ -61,12 +61,12 @@ void main() {
   );
 }
 
-class TestBloc extends Cubit<bool>
+class _TestBloc extends Cubit<bool>
     with
         UseCaseBlocHelper<bool>,
         EngineEventsMixin<bool>,
         ChangeDocumentFeedbackMixin<bool> {
-  TestBloc() : super(false);
+  _TestBloc() : super(false);
 
   @override
   Future<bool?> computeState() =>

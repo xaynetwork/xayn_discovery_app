@@ -3,7 +3,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-@lazySingleton
+@injectable
 class LogDocumentTimeUseCase extends UseCase<LogData, EngineEvent> {
   final DiscoveryEngine _engine;
 

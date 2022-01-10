@@ -9,12 +9,9 @@ import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_repo
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import 'package:xayn_discovery_app/presentation/app/widget/app.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
-
-late final DiscoveryFeedManager discoveryFeedManager;
 
 void main() async {
   await setup();

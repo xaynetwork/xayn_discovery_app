@@ -25,9 +25,9 @@ void main() {
     );
   });
 
-  blocTest<TestBloc, bool>(
+  blocTest<_TestBloc, bool>(
     'WHEN closing feed documents THEN this job is passed to the engine',
-    build: () => TestBloc(),
+    build: () => _TestBloc(),
     act: (bloc) => bloc.closeFeedDocuments(documents),
     verify: (manager) {
       expect(manager.state, equals(false));
@@ -37,7 +37,7 @@ void main() {
   );
 }
 
-class TestBloc extends Cubit<bool>
+class _TestBloc extends Cubit<bool>
     with UseCaseBlocHelper<bool>, CloseFeedDocumentsMixin<bool> {
-  TestBloc() : super(false);
+  _TestBloc() : super(false);
 }

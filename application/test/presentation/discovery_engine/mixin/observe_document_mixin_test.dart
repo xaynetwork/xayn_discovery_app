@@ -53,9 +53,9 @@ void main() {
     );
   });
 
-  blocTest<TestBloc, bool>(
+  blocTest<_TestBloc, bool>(
     'WHEN observing a document THEN this is logged with the engine',
-    build: () => TestBloc(),
+    build: () => _TestBloc(),
     act: (bloc) async {
       bloc.observeDocument(
         document: document,
@@ -81,7 +81,7 @@ void main() {
   );
 }
 
-class TestBloc extends Cubit<bool>
+class _TestBloc extends Cubit<bool>
     with UseCaseBlocHelper<bool>, ObserveDocumentMixin<bool> {
-  TestBloc() : super(false);
+  _TestBloc() : super(false);
 }

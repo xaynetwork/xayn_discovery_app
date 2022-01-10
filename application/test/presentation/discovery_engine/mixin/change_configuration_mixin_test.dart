@@ -27,9 +27,9 @@ void main() {
     );
   });
 
-  blocTest<TestBloc, bool>(
+  blocTest<_TestBloc, bool>(
     'WHEN changing configuration THEN this configuration is passed to the engine',
-    build: () => TestBloc(),
+    build: () => _TestBloc(),
     act: (bloc) => bloc.changeConfiguration(
       feedMarket: 'test',
       maxItemsPerFeedBatch: 20,
@@ -45,7 +45,7 @@ void main() {
   );
 }
 
-class TestBloc extends Cubit<bool>
+class _TestBloc extends Cubit<bool>
     with UseCaseBlocHelper<bool>, ChangeConfigurationMixin<bool> {
-  TestBloc() : super(false);
+  _TestBloc() : super(false);
 }
