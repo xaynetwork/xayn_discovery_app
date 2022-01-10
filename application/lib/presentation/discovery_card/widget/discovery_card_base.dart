@@ -1,14 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_mock/manager/discovery_engine_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
 
@@ -35,11 +34,9 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> {
   late final DiscoveryCardManager _discoveryCardManager;
   late final ImageManager _imageManager;
-  late final DiscoveryCardActionsManager _actionsManager;
 
   DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
   ImageManager get imageManager => _imageManager;
-  DiscoveryCardActionsManager get actionsManager => _actionsManager;
 
   WebResource get webResource => widget.document.webResource;
   Uri get url => webResource.url;
@@ -53,7 +50,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     _discoveryCardManager = widget.discoveryCardManager ?? di.get();
     _imageManager = widget.imageManager ?? di.get();
-    _actionsManager = di.get();
   }
 
   @override

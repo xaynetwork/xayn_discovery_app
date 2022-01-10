@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class FaviconBar extends StatelessWidget {
   const FaviconBar({
@@ -19,7 +19,7 @@ class FaviconBar extends StatelessWidget {
     final favicon = provider.thumbnail == null
         ? Icon(Icons.web, color: R.colors.iconNew)
         : Image.network(
-            provider.thumbnail!,
+            provider.thumbnail!.toString(),
             width: R.dimen.unit3,
             height: R.dimen.unit3,
           );
