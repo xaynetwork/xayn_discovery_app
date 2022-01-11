@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/locale.dart' as intl;
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 
 final _listOfCountryCodes =
     supportedMarkets.map((e) => e.locale.countryCode).toList(growable: false);
