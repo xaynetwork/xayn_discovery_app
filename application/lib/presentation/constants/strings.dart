@@ -1,13 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
+import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
-
-/// Key is country code, value is localized country name.
-typedef CountryNames = Map<String, String>;
-
-typedef GetCountryNamesCallback = Future<CountryNames> Function(
-    AppLanguage appLanguage);
 
 /// The Strings class with constants is now replaced with yaml files under translations.
 /// Use them in the format `translations[_locale].i18n.yaml`
@@ -34,12 +29,9 @@ class Strings {
 
   /// languageCode is i.e. de, en, ...
   /// countryCode is i.e. DE, US, ...
-  static Future<void> switchTranslations(
-    AppLanguage appLanguage,
-    GetCountryNamesCallback setCountryNamesCallback,
-  ) async {
+  static Future<void> switchTranslations(AppLanguage appLanguage) async {
     _switchTranslations(appLanguage);
-    _countryNames = await setCountryNamesCallback(appLanguage);
+    _countryNames = await appLanguage.countryNames;
   }
 
   static void _switchTranslations(AppLanguage appLanguage) {
