@@ -51,11 +51,11 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildFeedView(),
+      body: _buildListView(),
     );
   }
 
-  Widget _buildFeedView() {
+  Widget _buildListView() {
     return LayoutBuilder(builder: (context, constraints) {
       final cardHeight = constraints.maxHeight * kSearchCardHeightRatio;
 
