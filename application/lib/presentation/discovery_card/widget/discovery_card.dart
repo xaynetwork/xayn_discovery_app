@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -184,6 +186,12 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           fractionSize: normalizedValue,
         );
 
+        // Limits the max scroll-away distance,
+        // to park the image only just outside the visible range at max, when it finally animates back,
+        // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
+        final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
+            _kMinImageFractionSize * mediaQuery.size.height);
+
         return Stack(
           children: [
             Positioned.fill(
@@ -192,7 +200,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
               state.output?.processHtmlResult,
             )),
             Positioned(
-              top: -_scrollOffset * (1.0 - normalizedValue),
+              top: -outerScrollOffset,
               left: 0,
               right: 0,
               child: Container(
@@ -232,8 +240,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget _buildReaderMode(Size size, ProcessHtmlResult? processHtmlResult) {
     final readerMode = ReaderMode(
       title: title,
-      snippet: snippet,
-      imageUri: Uri.parse(imageUrl),
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
         left: R.dimen.unit2,

@@ -5,10 +5,13 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/file_logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-@Injectable()
+/// This file contains handlers that help to implement proper tests
+
+@injectable
 class FileHandler {
   FileHandler();
 
@@ -33,12 +36,12 @@ class FileHandler {
       );
 }
 
-@Injectable()
+@injectable
 class ShareHandler {
   Future<void> shareFiles(List<String> paths) => Share.shareFiles(paths);
 }
 
-@Injectable()
+@injectable
 class LoggerHandler {
   void initialiseLogger(
     String pathToFile,
@@ -50,4 +53,20 @@ class LoggerHandler {
       filter: ProductionFilter(),
     );
   }
+}
+
+/// Used for testing properly the generation of a uniqueId for an object.
+/// For example, check how it is used in the [CreateCollectionUseCase] and
+/// in the corresponding [create_collection_use_case_test.dart] file.
+@injectable
+class UniqueIdHandler {
+  UniqueId generateUniqueId() => UniqueId();
+}
+
+/// Used for testing properly the generation of a datetime.
+/// For example, check how it is used in the [CreateBookmarkUseCase] and
+/// in the corresponding [create_bookmark_use_case_test.dart] file.
+@injectable
+class DateTimeHandler {
+  DateTime getDateTimeNow() => DateTime.now();
 }

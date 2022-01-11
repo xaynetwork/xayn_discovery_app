@@ -32,8 +32,6 @@ final RegExp _kMatchManifestRegExp = RegExp(
 
 class ReaderMode extends StatefulWidget {
   final String title;
-  final String snippet;
-  final Uri imageUri;
   final readability.ProcessHtmlResult? processHtmlResult;
   final VoidCallback? onProcessedHtml;
   final ScrollHandler? onScroll;
@@ -42,8 +40,6 @@ class ReaderMode extends StatefulWidget {
   const ReaderMode({
     Key? key,
     required this.title,
-    required this.snippet,
-    required this.imageUri,
     this.processHtmlResult,
     this.padding = _kPadding,
     this.onProcessedHtml,
@@ -75,8 +71,6 @@ class _ReaderModeState extends State<ReaderMode> {
   @override
   void didUpdateWidget(ReaderMode oldWidget) {
     if (oldWidget.title != widget.title ||
-        oldWidget.snippet != widget.snippet ||
-        oldWidget.imageUri != widget.imageUri ||
         oldWidget.processHtmlResult != widget.processHtmlResult) {
       _updateCardData();
     }
@@ -138,8 +132,6 @@ class _ReaderModeState extends State<ReaderMode> {
     if (processHtmlResult != null) {
       _readerModeManager.handleCardData(
         title: widget.title,
-        snippet: widget.snippet,
-        imageUri: widget.imageUri,
         processHtmlResult: processHtmlResult,
       );
     }
