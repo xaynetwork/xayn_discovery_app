@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -275,7 +276,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       document,
       () => _CardManagers(
             imageManager: di.get()
-              ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
+              ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
             discoveryCardManager: di.get()..updateUri(document.webResource.url),
           ));
 }
