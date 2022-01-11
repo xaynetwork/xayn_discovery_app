@@ -35,7 +35,7 @@ class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseParam, Bookmark> {
     }
 
     final updatedBookmark = bookmark.copyWith(collectionId: param.collectionId);
-    _bookmarksRepository.bookmark = updatedBookmark;
+    _bookmarksRepository.save(updatedBookmark);
     yield updatedBookmark;
   }
 }

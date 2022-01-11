@@ -32,8 +32,8 @@ class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
       );
     }
 
-    final collection = Collection.readLater(name: param);
-    _collectionsRepository.collection = collection;
+    final collection = Collection.readLater(name: param.trim());
+    _collectionsRepository.save(collection);
 
     yield collection;
   }

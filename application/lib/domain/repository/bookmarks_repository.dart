@@ -3,7 +3,7 @@ import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 abstract class BookmarksRepository {
-  set bookmark(Bookmark bookmark);
+  void save(Bookmark bookmark);
   List<Bookmark> getAll();
   Bookmark? getById(UniqueId id);
   List<Bookmark> getByCollectionId(UniqueId collectionId);

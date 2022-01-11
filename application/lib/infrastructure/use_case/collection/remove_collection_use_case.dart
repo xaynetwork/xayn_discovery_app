@@ -48,8 +48,10 @@ class RemoveCollectionUseCase
           _bookmarksRepository.getByCollectionId(param.collectionIdToRemove);
 
       for (var bookmark in bookmarks) {
-        _bookmarksRepository.bookmark = bookmark.copyWith(
-          collectionId: param.collectionIdMoveBookmarksTo!,
+        _bookmarksRepository.save(
+          bookmark.copyWith(
+            collectionId: param.collectionIdMoveBookmarksTo!,
+          ),
         );
       }
     }

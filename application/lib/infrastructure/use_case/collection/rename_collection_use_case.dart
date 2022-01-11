@@ -16,11 +16,11 @@ class RenameCollectionUseCase
 
   @override
   Stream<Collection> transaction(RenameCollectionUseCaseParam param) async* {
-    /// Check if we're trying to rename the default collection
-    if (param.collectionId == Collection.readLaterId) {
-      logger.e(errorMessageRenamingDefaultCollection);
+    final collectionNameTrimmed = param.newName.trim();
+    if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
+      logger.e(errorMessageCollectionNameUsed);
       throw CollectionUseCaseException(
-        errorMessageRenamingDefaultCollection,
+        errorMessageCollectionNameUsed,
       );
     }
 
@@ -33,8 +33,8 @@ class RenameCollectionUseCase
       );
     }
 
-    final updatedCollection = collection.copyWith(name: param.newName);
-    _collectionsRepository.collection = updatedCollection;
+    final updatedCollection = collection.copyWith(name: collectionNameTrimmed);
+    _collectionsRepository.save(updatedCollection);
 
     yield updatedCollection;
   }

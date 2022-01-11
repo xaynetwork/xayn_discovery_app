@@ -23,9 +23,6 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
   Box<Record> get box => Hive.box<Record>(BoxNames.collections);
 
   @override
-  set collection(Collection collection) => entity = collection;
-
-  @override
   List<Collection> getAll() {
     final values = super.getAll();
     values.sort((a, b) => a.index.compareTo(b.index));
@@ -34,4 +31,15 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
 
   @override
   int getLastCollectionIndex() => getAll().last.index;
+
+  @override
+  bool isCollectionNameUsed(String name) {
+    final values = getAll();
+    for (final value in values) {
+      if (value.name.trim() == name.trim()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
