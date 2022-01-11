@@ -4,7 +4,7 @@ import 'package:xayn_architecture/concepts/navigation/navigator_state.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 
-import '../../utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockBuildContext context;

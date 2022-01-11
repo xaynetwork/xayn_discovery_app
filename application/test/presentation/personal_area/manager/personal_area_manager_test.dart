@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 
-import '../../utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockPersonalAreaNavActions actions;

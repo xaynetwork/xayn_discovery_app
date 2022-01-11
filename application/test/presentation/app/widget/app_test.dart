@@ -5,8 +5,8 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 
-import '../../utils/utils.dart';
-import '../../utils/widget_test_utils.dart';
+import '../../test_utils/utils.dart';
+import '../../test_utils/widget_test_utils.dart';
 
 void main() {
   late MockAppManager manager;

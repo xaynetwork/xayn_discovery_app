@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/clos
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-import '../../utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockDiscoveryEngine engine;
