@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/disc
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-import '../../utils/utils.dart';
+import '../../test_utils/utils.dart';
 import 'observe_document_mixin_test.mocks.dart';
 
 @GenerateMocks([AnalyticsService])

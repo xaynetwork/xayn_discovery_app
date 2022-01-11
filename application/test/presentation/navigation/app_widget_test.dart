@@ -6,8 +6,8 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 
-import '../utils/utils.dart';
-import '../utils/widget_test_utils.dart';
+import '../test_utils/utils.dart';
+import '../test_utils/widget_test_utils.dart';
 
 void main() {
   setUp(() async {
