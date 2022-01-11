@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
@@ -33,7 +32,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
           ),
           buildNavBarItemSearchActive(
             onSearchPressed: _activeSearchManager.search,
-            hint: Strings.activeSearchSearchHint,
+            hint: R.strings.activeSearchSearchHint,
             isActive: true,
           ),
           buildNavBarItemPersonalArea(

@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -65,8 +64,8 @@ void main() {
       expect(find.byType(SettingsHelpImproveSection), findsOneWidget);
 
       final versionText =
-          '${Strings.settingsVersion} ${stateReady.appVersion.version}\n'
-          '${Strings.settingsBuild} ${stateReady.appVersion.build}';
+          '${R.strings.settingsVersion} ${stateReady.appVersion.version}\n'
+          '${R.strings.settingsBuild} ${stateReady.appVersion.build}';
 
       final btnFinder = find.text(versionText);
       await tester.dragUntilVisible(
