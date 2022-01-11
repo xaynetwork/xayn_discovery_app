@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -20,6 +21,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
   ActiveSearchNavActions,
   PersonalAreaManager,
   DiscoveryEngine,
+  BuildContext,
 ])
 class Mocks {
   Mocks._();
