@@ -48,6 +48,10 @@ class RatingDialogManager {
   /// This is to prevent showing it multiple times in debug builds.
   bool _ratingDialogShown = false;
 
+  /// Keep track if the app version check was made in order to avoid
+  /// calling use cases every time the user scrolls through cards
+  bool _appVersionChecked = false;
+
   Future<void> _requestReview() async {
     _ratingDialogShown = true;
     if (await _inAppReview.isAvailable()) {
@@ -60,20 +64,31 @@ class RatingDialogManager {
       return false;
     }
 
-    // Check if the user updated the app to a new version.
-    final currentAppVersion = await _getAppVersionUseCase.singleOutput(none);
-    final storedAppVersion =
-        await _getStoredAppVersionUseCase.singleOutput(none);
-    final shouldShowDialog = storedAppVersion < currentAppVersion;
+    // Make sure we check the app version once per app launch
+    if (!_appVersionChecked) {
+      _appVersionChecked = true;
 
-    // Save the current app version if there was an update.
-    if (shouldShowDialog) {
-      await _saveCurrentAppVersion.call(none);
+      // Check if the user updated the app to a new version.
+      final currentAppVersion = await _getAppVersionUseCase.singleOutput(none);
+      final storedAppVersion =
+          await _getStoredAppVersionUseCase.singleOutput(none);
+      final shouldShowDialog = storedAppVersion < currentAppVersion;
+
+      // Save the current app version if there was an update.
+      if (shouldShowDialog) {
+        await _saveCurrentAppVersion.call(none);
+      }
+
+      if (shouldShowDialog && !_ratingDialogShown) {
+        await _requestReview();
+        return true;
+      }
     }
 
-    if (shouldShowDialog && !_ratingDialogShown) {
-      await _requestReview();
-      return true;
+    // User scrolled through less cards than needed to show the dialog.
+    // Returning early to avoid calling the get app session usecase.
+    if (_viewedCardIndices.length < _viewedCardsThreshold) {
+      return false;
     }
 
     // Check if the current session is third session and if the user scrolled through 8 cards.

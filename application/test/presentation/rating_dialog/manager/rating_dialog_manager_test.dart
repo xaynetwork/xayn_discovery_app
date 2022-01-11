@@ -91,4 +91,56 @@ void main() {
 
     expect(await manager.showRatingDialogIfNeeded(), isTrue);
   });
+
+  test(
+      'GIVEN showRatingDialogIfNeeded is called multiple times THEN the get app version use case is called once',
+      () async {
+    when(mockGetAppSessionUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(1));
+    when(mockGetAppVersionUseCase.singleOutput(none)).thenAnswer(
+        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
+    when(mockGetStoredAppVersionUseCase.singleOutput(none)).thenAnswer(
+        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
+    when(mockSaveCurrentAppVersion.call(any))
+        .thenAnswer((_) => Future.value([]));
+    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+
+    manager = RatingDialogManager.test(
+      {},
+      mockGetAppVersionUseCase,
+      mockGetStoredAppVersionUseCase,
+      mockSaveCurrentAppVersion,
+      mockGetAppSessionUseCase,
+      mockInAppReview,
+    );
+
+    expect(await manager.showRatingDialogIfNeeded(), isFalse);
+    expect(await manager.showRatingDialogIfNeeded(), isFalse);
+    verify(mockGetAppVersionUseCase.singleOutput(any));
+    verifyNoMoreInteractions(mockGetAppVersionUseCase);
+  });
+
+  test(
+      'GIVEN showRatingDialogIfNeeded is called multiple times and _viewedCardIndices is less than threshold THEN the get app session usecase is not called',
+      () async {
+    when(mockGetAppVersionUseCase.singleOutput(none)).thenAnswer(
+        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
+    when(mockGetStoredAppVersionUseCase.singleOutput(none)).thenAnswer(
+        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
+    when(mockSaveCurrentAppVersion.call(any))
+        .thenAnswer((_) => Future.value([]));
+    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+
+    manager = RatingDialogManager.test(
+      {},
+      mockGetAppVersionUseCase,
+      mockGetStoredAppVersionUseCase,
+      mockSaveCurrentAppVersion,
+      mockGetAppSessionUseCase,
+      mockInAppReview,
+    );
+
+    expect(await manager.showRatingDialogIfNeeded(), isFalse);
+    verifyNoMoreInteractions(mockGetAppSessionUseCase);
+  });
 }
