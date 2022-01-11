@@ -8,8 +8,9 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+const double kSearchCardHeightRatio = 0.64;
 
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.
@@ -56,8 +57,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
 
   Widget _buildFeedView() {
     return LayoutBuilder(builder: (context, constraints) {
-      // transform the cardNotchSize to a fractional value between [0.0, 1.0]
-      final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
+      final cardHeight = constraints.maxHeight * kSearchCardHeightRatio;
 
       return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
         bloc: _activeSearchManager,
@@ -70,12 +70,10 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
             return Container();
           }
 
-          return FeedView(
+          return ListView.builder(
             itemBuilder: _itemBuilder(results, true),
-            secondaryItemBuilder: _itemBuilder(results, false),
             itemCount: results.length,
-            isFullScreen: false,
-            notchSize: notchSize,
+            itemExtent: cardHeight,
           );
         },
       );
@@ -97,15 +95,23 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
   Widget _buildResultCard(
     Document document,
     bool isPrimary,
-  ) =>
-      Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: R.dimen.unit,
-          vertical: R.dimen.unit0_5,
-        ),
-        child: DiscoveryFeedCard(
-          isPrimary: isPrimary,
-          document: document,
-        ),
-      );
+  ) {
+    final card = DiscoveryFeedCard(
+      isPrimary: isPrimary,
+      document: document,
+      imageManager: di.get()
+        ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: R.dimen.unit,
+        vertical: R.dimen.unit0_5,
+      ),
+      child: ClipRRect(
+        child: card,
+        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
+      ),
+    );
+  }
 }
