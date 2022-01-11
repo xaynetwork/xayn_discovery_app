@@ -14,8 +14,8 @@ void main() {
       ActiveSearchManager(MockActiveSearchNavActions());
   late DiscoveryEngine engine;
 
-  setUp(() {
-    configureTestDependencies();
+  setUp(() async {
+    await configureTestDependencies();
     engine = MockDiscoveryEngine();
     di
       ..unregister<DiscoveryEngine>()
