@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_st
 import 'package:xayn_discovery_app/presentation/onboarding/model/onboarding_page_data.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
-import '../../utils/widget_test_utils.dart';
+import '../../test_utils/widget_test_utils.dart';
 import 'onboarding_screen_widget_test.mocks.dart';
 
 @GenerateMocks([OnBoardingManager])

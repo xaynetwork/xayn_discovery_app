@@ -4,7 +4,7 @@ import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_configuration_use_case.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' hide Configuration;
 
-import '../../../presentation/utils/utils.dart';
+import '../../../presentation/test_utils/utils.dart';
 
 void main() {
   late MockDiscoveryEngine engine;
