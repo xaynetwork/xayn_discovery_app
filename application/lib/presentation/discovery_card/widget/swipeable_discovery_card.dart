@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 
 const kSwipeOpenToPosition = 0.35;
 
-enum SwipeOption { like, dislike }
+enum SwipeOption { like, neutral, dislike }
 
 class SwipeableDiscoveryCard extends StatelessWidget {
   const SwipeableDiscoveryCard({
@@ -33,8 +33,18 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   }
 
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
-        optionsLeft: isPrimary ? const [SwipeOption.like] : const [],
-        optionsRight: isPrimary ? const [SwipeOption.dislike] : const [],
+        optionsLeft: isPrimary
+            ? [
+                document.isRelevant ? SwipeOption.neutral : SwipeOption.like,
+              ]
+            : const [],
+        optionsRight: isPrimary
+            ? [
+                document.isIrrelevant
+                    ? SwipeOption.neutral
+                    : SwipeOption.dislike,
+              ]
+            : const [],
         onFling: isPrimary ? (options) => options.first : null,
         opensToPosition: kSwipeOpenToPosition,
         child: child,
@@ -48,17 +58,19 @@ class SwipeableDiscoveryCard extends StatelessWidget {
       case SwipeOption.like:
         manager.changeDocumentFeedback(
           documentId: document.documentId,
-          feedback: document.isRelevant
-              ? DocumentFeedback.neutral
-              : DocumentFeedback.positive,
+          feedback: DocumentFeedback.positive,
+        );
+        break;
+      case SwipeOption.neutral:
+        manager.changeDocumentFeedback(
+          documentId: document.documentId,
+          feedback: DocumentFeedback.neutral,
         );
         break;
       case SwipeOption.dislike:
         manager.changeDocumentFeedback(
           documentId: document.documentId,
-          feedback: document.isIrrelevant
-              ? DocumentFeedback.neutral
-              : DocumentFeedback.negative,
+          feedback: DocumentFeedback.negative,
         );
         break;
     }
@@ -76,19 +88,37 @@ class SwipeableDiscoveryCard extends StatelessWidget {
         child: getAsset(option),
       );
 
-  Color getColor(SwipeOption option) => option == SwipeOption.dislike
-      ? R.colors.swipeBackgroundDelete
-      : R.colors.swipeBackgroundRelevant;
+  Color getColor(SwipeOption option) {
+    switch (option) {
+      case SwipeOption.like:
+        return R.colors.swipeBackgroundRelevant;
+      case SwipeOption.neutral:
+        return R.colors.swipeBackgroundNeutral;
+      case SwipeOption.dislike:
+        return R.colors.swipeBackgroundIrrelevant;
+    }
+  }
 
-  Widget getAsset(SwipeOption option) => option == SwipeOption.dislike
-      ? SvgPicture.asset(
-          R.assets.icons.thumbsDown,
-          fit: BoxFit.none,
-          color: R.colors.brightIcon,
-        )
-      : SvgPicture.asset(
+  Widget getAsset(SwipeOption option) {
+    switch (option) {
+      case SwipeOption.like:
+        return SvgPicture.asset(
           R.assets.icons.thumbsUp,
           fit: BoxFit.none,
           color: R.colors.brightIcon,
         );
+      case SwipeOption.neutral:
+        return SvgPicture.asset(
+          R.assets.icons.neutral,
+          fit: BoxFit.none,
+          color: R.colors.brightIcon,
+        );
+      case SwipeOption.dislike:
+        return SvgPicture.asset(
+          R.assets.icons.thumbsDown,
+          fit: BoxFit.none,
+          color: R.colors.brightIcon,
+        );
+    }
+  }
 }
