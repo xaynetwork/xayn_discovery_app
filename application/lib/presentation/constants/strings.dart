@@ -1,49 +1,76 @@
+import 'package:flutter/cupertino.dart';
+import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
+import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+
+/// Key is country code, value is localized country name.
+typedef CountryNames = Map<String, String>;
+
+typedef GetCountryNamesCallback = Future<CountryNames> Function(
+    AppLanguage appLanguage);
+
+/// The Strings class with constants is now replaced with yaml files under messages.
+/// Use them in the format `translations[_locale].i18n.yaml`
+/// The `translations.i18n.yaml` is the default english translation.
+///
+/// In order to regenerate the translations.i18n.dart files run
+///
+/// # For continuous generation, best while development
+///     `flutter packages pub run build_runner watch`
+/// # For single shot generation:
+///     `flutter pub run build_runner build --delete-conflicting-outputs ; flutter format lib/messages/`
+///  TODO: IN CASE OF ANY ISSUE (OR FOR MORE DETAILS) - REFERENCE TO THE [run_prepush_checks.sh]
+///
+/// see `https://pub.dev/packages/i18n` for further usage of the i18n package
+/// but for now it makes sense to only use yaml files in the default way, until we
+/// agree on an automatic translation process.
+///
+/// This String allows to switch translations on demand, by changing the _translation
+/// field, which is done by the [switchTranslations(Locale)] method.
+///
+/// For new languages add the  `messages/translations[_newlang].i18n.yaml` file
+/// and extend the `switchTranslations(Locale)` implementation.
+///
 class Strings {
-  const Strings._();
+  static Translations? _translation;
+  static const Translations _defaultTranslation = Translations();
+  static CountryNames? _countryNames;
+  static CountryNames? _defaultCountryNames;
 
-  static const String your = 'Your';
+  static Translations get translation => _translation ?? _defaultTranslation;
 
-  static const String personalAreaTitle = 'Area';
-  static const String personalAreaCollections = 'Collections';
-  static const String personalAreaHomeFeed = 'Home Feed';
-  static const String personalAreaSettings = 'Settings';
+  static CountryNames get countryNames =>
+      _countryNames ?? _defaultCountryNames!;
 
-  static const String activeSearchSearchHint = 'Search';
-  static const String settingsTitle = 'Settings';
-  static const String settingsSectionTitleAppTheme = 'Your App Theme';
-  static const String settingsSectionScrollDirection =
-      'Discovery feed scroll direction';
-  static const String settingsSectionTitleGeneralInfo = 'General information';
-  static const String settingsSectionTitleHelpImprove = 'Help Us Improve!';
-  static const String settingsSectionTitleSpreadTheWord = 'Spread the Word';
+  /// languageCode is i.e. de, en, ...
+  /// countryCode is i.e. DE, US, ...
+  static Future<void> switchTranslations(
+    AppLanguage appLanguage,
+    GetCountryNamesCallback setCountryNamesCallback,
+  ) async {
+    _switchTranslations(appLanguage);
+    _countryNames = await setCountryNamesCallback(appLanguage);
+  }
 
-  static const String settingsAppThemeSystem = 'System default';
-  static const String settingsAppThemeLight = 'Light mode';
-  static const String settingsAppThemeDark = 'Dark mode';
+  static void _switchTranslations(AppLanguage appLanguage) {
+    logger.i('Initialize translations with $appLanguage');
+    if (_translation != null) {
+      logger.w(
+          'Translations have been already set to $_translation, do you really wanna set it again?');
+    }
 
-  static const String settingsScrollDirectionVertical = 'Vertical';
-  static const String settingsScrollDirectionHorizontal = 'Horizontal';
+    _translation = appLanguage.translations;
+  }
 
-  static const String settingsAboutXayn = 'About Xayn';
-  static const String settingsCarbonNeutral = 'We\'re carbon neutral!';
-  static const String settingsImprint = 'Imprint';
-  static const String settingsPrivacyPolicy = 'Privacy Policy';
-  static const String settingsTermsAndConditions = 'Terms & Conditions';
-  static const String settingsHaveFoundBug = 'Have you found a bug?';
-  static const String settingsShareBtn = 'Share with friends';
-  static const String settingsVersion = 'Version:';
-  static const String settingsBuild = 'Build:';
+  static void setDefaultCountryNames(CountryNames countryNames) async {
+    _defaultCountryNames = countryNames;
+  }
 
-  static const String minAgo = 'min ago';
-  static const String momentsAgo = 'moments ago';
-  static const String hourAgo = 'hour ago';
-  static const String hoursAgo = 'hours ago';
-  static const String dayAgo = 'day ago';
-  static const String daysAgo = 'days ago';
-
-  static const String readingTimeUnitSingular = 'minute';
-  static const String readingTimeUnitPlural = 'minutes';
-  static const String readingTimeSuffix = 'read';
-
-  static const String cannotLoadUrlError = 'Unable to load image with url: ';
+  @visibleForTesting
+  static void reset() {
+    _translation = null;
+  }
 }
+
+/// Helper method so we can use strings.my_translated_key
+Translations get strings => Strings.translation;

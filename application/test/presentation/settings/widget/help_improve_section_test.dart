@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 
 void main() {
@@ -19,10 +19,10 @@ void main() {
       );
 
       expect(
-        find.text(Strings.settingsSectionTitleHelpImprove),
+        find.text(R.strings.settingsSectionTitleHelpImprove),
         findsOneWidget,
       );
-      expect(find.text(Strings.settingsHaveFoundBug), findsOneWidget);
+      expect(find.text(R.strings.settingsHaveFoundBug), findsOneWidget);
 
       expect(find.byType(SettingsSection), findsOneWidget);
       expect(find.byType(SettingsCard), findsOneWidget);

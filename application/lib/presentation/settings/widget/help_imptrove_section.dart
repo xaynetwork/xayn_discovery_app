@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
 class SettingsHelpImproveSection extends StatelessWidget {
   final VoidCallback onFindBugPressed;
@@ -14,12 +13,12 @@ class SettingsHelpImproveSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SettingsSection(
-        title: Strings.settingsSectionTitleHelpImprove,
+        title: R.strings.settingsSectionTitleHelpImprove,
         items: [_getFindBug()],
       );
 
   SettingsCardData _getFindBug() => SettingsCardData.fromTile(SettingsTileData(
-        title: Strings.settingsHaveFoundBug,
+        title: R.strings.settingsHaveFoundBug,
         svgIconPath: R.assets.icons.bug,
         action: SettingsTileActionIcon(
           key: Keys.settingsHaveFoundBug,

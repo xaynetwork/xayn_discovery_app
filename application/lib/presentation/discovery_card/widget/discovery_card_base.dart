@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -116,7 +115,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       height: mediaQuery.size.height.ceil(),
       fit: widget.imageBoxFit,
       loadingBuilder: (context, progress) => backgroundPane,
-      errorBuilder: (context) => Text('${Strings.cannotLoadUrlError}$imageUrl'),
+      errorBuilder: (context) =>
+          Text('${R.strings.cannotLoadUrlError}$imageUrl'),
     );
   }
 }
