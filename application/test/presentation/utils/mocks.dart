@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
   GetAppThemeUseCase,
   ListenAppThemeUseCase,
   SettingsNavActions,
+  PersonalAreaNavActions,
   SettingsScreenManager,
   ActiveSearchNavActions,
   PersonalAreaManager,
