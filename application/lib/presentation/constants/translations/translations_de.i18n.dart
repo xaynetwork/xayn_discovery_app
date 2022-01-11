@@ -57,14 +57,14 @@ class TranslationsDe extends Translations {
   String get your => """Meine""";
   String get activeSearchSearchHint => """Suche""";
   String get settingsTitle => """Einstellungen""";
-  String get settingsSectionTitleAppTheme => """Mein""";
+  String get settingsSectionTitleAppTheme => """Mein App Theme""";
   String get settingsSectionScrollDirection =>
       """Discovery feed Scrollrichtung""";
-  String get settingsSectionTitleGeneralInfo => """Generlle Informationen""";
+  String get settingsSectionTitleGeneralInfo => """Generelle Informationen""";
   String get settingsSectionTitleHelpImprove =>
       """Hilf uns besser zu werden!""";
-  String get settingsSectionTitleSpreadTheWord => """Spread the Word""";
-  String get settingsAppThemeSystem => """System default""";
+  String get settingsSectionTitleSpreadTheWord => """Erzähl es weiter!""";
+  String get settingsAppThemeSystem => """System Standard""";
   String get settingsAppThemeLight => """Light mode""";
   String get settingsAppThemeDark => """Dunkler Modus""";
   String get settingsScrollDirectionVertical => """Vertikal""";
@@ -74,8 +74,8 @@ class TranslationsDe extends Translations {
   String get settingsImprint => """Impressum""";
   String get settingsPrivacyPolicy => """Privacy Policy""";
   String get settingsTermsAndConditions => """Terms & Conditions""";
-  String get settingsHaveFoundBug => """Have you found a bug?""";
-  String get settingsShareBtn => """Share with friends""";
+  String get settingsHaveFoundBug => """Einen Bug gefunden?""";
+  String get settingsShareBtn => """Teile die App mit Freunden""";
   String get settingsVersion => """Version:""";
   String get settingsBuild => """Build:""";
   String get minAgo => """min ago""";
@@ -89,21 +89,22 @@ class TranslationsDe extends Translations {
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Area""";
-  String get personalAreaCollections => """Collections""";
+  String get personalAreaCollections => """Sammlung""";
   String get personalAreaHomeFeed => """Home Feed""";
-  String get personalAreaSettings => """Settings""";
+  String get personalAreaSettings => """Einstellungen""";
+  String get test => """bla test """;
 }
 
 Map<String, String> get translationsDeMap => {
       """your""": """Meine""",
       """activeSearchSearchHint""": """Suche""",
       """settingsTitle""": """Einstellungen""",
-      """settingsSectionTitleAppTheme""": """Mein""",
+      """settingsSectionTitleAppTheme""": """Mein App Theme""",
       """settingsSectionScrollDirection""": """Discovery feed Scrollrichtung""",
-      """settingsSectionTitleGeneralInfo""": """Generlle Informationen""",
+      """settingsSectionTitleGeneralInfo""": """Generelle Informationen""",
       """settingsSectionTitleHelpImprove""": """Hilf uns besser zu werden!""",
-      """settingsSectionTitleSpreadTheWord""": """Spread the Word""",
-      """settingsAppThemeSystem""": """System default""",
+      """settingsSectionTitleSpreadTheWord""": """Erzähl es weiter!""",
+      """settingsAppThemeSystem""": """System Standard""",
       """settingsAppThemeLight""": """Light mode""",
       """settingsAppThemeDark""": """Dunkler Modus""",
       """settingsScrollDirectionVertical""": """Vertikal""",
@@ -113,8 +114,8 @@ Map<String, String> get translationsDeMap => {
       """settingsImprint""": """Impressum""",
       """settingsPrivacyPolicy""": """Privacy Policy""",
       """settingsTermsAndConditions""": """Terms & Conditions""",
-      """settingsHaveFoundBug""": """Have you found a bug?""",
-      """settingsShareBtn""": """Share with friends""",
+      """settingsHaveFoundBug""": """Einen Bug gefunden?""",
+      """settingsShareBtn""": """Teile die App mit Freunden""",
       """settingsVersion""": """Version:""",
       """settingsBuild""": """Build:""",
       """minAgo""": """min ago""",
@@ -128,7 +129,8 @@ Map<String, String> get translationsDeMap => {
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Area""",
-      """personalAreaCollections""": """Collections""",
+      """personalAreaCollections""": """Sammlung""",
       """personalAreaHomeFeed""": """Home Feed""",
-      """personalAreaSettings""": """Settings""",
+      """personalAreaSettings""": """Einstellungen""",
+      """test""": """bla test """,
     };

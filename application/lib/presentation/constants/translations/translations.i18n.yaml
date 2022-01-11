@@ -30,7 +30,8 @@ readingTimeUnitSingular: 'minute'
 readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
-personalAreaTitle: 'Area'
-personalAreaCollections: 'Collections'
-personalAreaHomeFeed: 'Home Feed'
-personalAreaSettings: 'Settings'
+personalAreaTitle: Area
+personalAreaCollections: Collections
+personalAreaHomeFeed: Home Feed
+personalAreaSettings: Settings
+test: "bla test "
