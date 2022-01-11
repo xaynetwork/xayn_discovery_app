@@ -90,6 +90,7 @@ class Translations {
   String get personalAreaCollections => """Collections""";
   String get personalAreaHomeFeed => """Home Feed""";
   String get personalAreaSettings => """Settings""";
+  String get test => """bla test """;
 }
 
 Map<String, String> get translationsMap => {
@@ -130,4 +131,5 @@ Map<String, String> get translationsMap => {
       """personalAreaCollections""": """Collections""",
       """personalAreaHomeFeed""": """Home Feed""",
       """personalAreaSettings""": """Settings""",
+      """test""": """bla test """,
     };

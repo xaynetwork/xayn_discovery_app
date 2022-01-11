@@ -77,6 +77,19 @@ end
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
 
+desc "Update strings"
+lane :update_strings do |options|
+  download_translations(
+    api_token: "***REMOVED***",
+    project_id: "502883",
+    languages: "de,en",
+    output_dir: "lib/presentation/constants/translations/",
+  )
+  # Need to move default language file to translations.i18n.yaml for the i18n build generator
+  shell("mv lib/presentation/constants/translations/translations_en.i18n.yaml lib/presentation/constants/translations/translations.i18n.yaml")
+  build_runner(options)
+end
+
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
@@ -146,7 +159,7 @@ lane :check do |options|
   if options[:coverage]
     # Creates a fake test that imports all files so that lcov calculates the correct coverage
     shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
-    shell('cat test/test_stub.dart >> test/all_imports_test.dart')
+    shell("cat test/test_stub.dart >> test/all_imports_test.dart")
     flutter("test --coverage")
     lcov_ignore_rules = shell("cat lcov_ignore | grep -v \\# | tr '\n' ' '")
     shell("mv coverage/lcov.info coverage/original_lcov.info")
@@ -197,7 +210,6 @@ def shell(args)
     sh(args)
   end
 end
-
 
 def uploadToAppCenter(token, appName, path, version)
   changelog = gitChangeLog(version)
