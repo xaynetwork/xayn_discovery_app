@@ -111,3 +111,5 @@ flutter:
     - packages/xayn_design/assets/icons/moon_and_sun.svg
     - packages/xayn_design/assets/icons/moon.svg
     - packages/xayn_design/assets/icons/sun.svg
+    - packages/xayn_design/assets/icons/bookmark.svg
+    - packages/xayn_design/assets/icons/bookmark_active.svg

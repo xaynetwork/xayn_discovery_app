@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document_feedback.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
@@ -54,7 +55,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
       }
 
       final document = Document(
-        documentId: const DocumentId(key: ''),
+        documentId: DocumentId(key: UniqueId().value),
         webResource: WebResource(
           displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),

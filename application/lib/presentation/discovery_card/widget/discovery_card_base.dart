@@ -38,13 +38,17 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   late final DiscoveryCardActionsManager _actionsManager;
 
   DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
+
   ImageManager get imageManager => _imageManager;
+
   DiscoveryCardActionsManager get actionsManager => _actionsManager;
 
   WebResource get webResource => widget.document.webResource;
-  Uri get url => webResource.url;
+
   String get imageUrl => webResource.displayUrl.toString();
+
   String get snippet => webResource.snippet;
+
   String get title => webResource.title;
 
   @override
@@ -74,20 +78,21 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      _discoveryCardManager.updateUri(url);
+      _discoveryCardManager.updateDocument(widget.document);
     }
   }
 
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-        bloc: _discoveryCardManager,
-        builder: (context, state) => buildFromState(
-          context,
-          state,
-          _buildImage(),
-        ),
-      );
+          bloc: _discoveryCardManager,
+          builder: (context, state) {
+            return buildFromState(
+              context,
+              state,
+              _buildImage(),
+            );
+          });
 
   Widget buildFromState(
     BuildContext context,

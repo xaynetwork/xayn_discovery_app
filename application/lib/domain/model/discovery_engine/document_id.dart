@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart' as xayn;
 
 part 'document_id.freezed.dart';
@@ -30,4 +31,6 @@ class DocumentId with _$DocumentId implements xayn.DocumentId {
   @override
   // TODO: implement value
   UnmodifiableUint8ListView get value => throw UnimplementedError();
+
+  UniqueId get toUniqueId => UniqueId.fromTrustedString(key);
 }

@@ -74,10 +74,7 @@ class MapDocumentToCreateBookmarkParamUseCase
     }
 
     final createBookmarkParam = CreateBookmarkUseCaseParam(
-      /// Bookmark Id should be the same as Document Id
-      /// ``` document.documentId.key == bookmark.id.value; ```
-      id: UniqueId.fromTrustedString(param.documentId.key),
-
+      id: param.documentId.toUniqueId,
       title: webResource.title,
       image: image.bytes,
       providerName: webResource.provider?.name,

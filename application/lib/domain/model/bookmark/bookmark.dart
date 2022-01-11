@@ -10,7 +10,6 @@ part 'bookmark.freezed.dart';
 @freezed
 class Bookmark extends DbEntity with _$Bookmark {
   @Assert('title.isNotEmpty', 'title cannot be empty')
-  @Assert('providerName.isNotEmpty', 'providerName cannot be empty')
   @Assert('createdAt.isNotEmpty', 'createdAt cannot be empty')
   factory Bookmark({
     /// Will have the same value of documentId of the [Document] object

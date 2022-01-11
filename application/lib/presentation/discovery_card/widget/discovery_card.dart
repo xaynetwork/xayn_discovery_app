@@ -168,13 +168,16 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         );
         final elements = DiscoveryCardElements(
           title: webResource.title,
-          timeToRead: state.output?.timeToRead ?? '',
+          timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
           provider: webResource.provider,
           datePublished: webResource.datePublished,
           onLikePressed: () => actionsManager.likeDocument(widget.document),
           onDislikePressed: () =>
               actionsManager.dislikeDocument(widget.document),
+          onBookmarkPressed: () =>
+              actionsManager.bookmarkDocument(widget.document),
+          isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
 
@@ -183,7 +186,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             Positioned.fill(
                 child: _buildReaderMode(
               mediaQuery.size,
-              state.output?.processHtmlResult,
+              state.processedDocument?.processHtmlResult,
             )),
             Positioned(
               top: -_scrollOffset * (1.0 - normalizedValue),

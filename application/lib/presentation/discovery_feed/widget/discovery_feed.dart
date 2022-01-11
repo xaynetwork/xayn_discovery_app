@@ -239,7 +239,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       () => _CardManagers(
             imageManager: di.get()
               ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
-            discoveryCardManager: di.get()..updateUri(document.webResource.url),
+            discoveryCardManager: di.get()..updateDocument(document),
           ));
 }
 

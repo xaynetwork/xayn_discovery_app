@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/document_feedback_use_case.dart';
@@ -131,9 +132,12 @@ class DiscoveryEngineManager extends Cubit<DiscoveryEngineState>
 class DiscoveryCardActionsManager {
   final DocumentFeedbackUseCase _documentFeedbackUseCase;
   final ShareUriUseCase _shareUriUseCase;
+  final CreateBookmarkFromDocumentUseCase _createBookmarkUseCase;
+
   DiscoveryCardActionsManager(
     this._documentFeedbackUseCase,
     this._shareUriUseCase,
+    this._createBookmarkUseCase,
   );
 
   void likeDocument(Document document) {
@@ -159,6 +163,9 @@ class DiscoveryCardActionsManager {
       ),
     );
   }
+
+  void bookmarkDocument(Document document) =>
+      _createBookmarkUseCase.call(document);
 
   void shareUri(Uri uri) => _shareUriUseCase.call(uri);
 }

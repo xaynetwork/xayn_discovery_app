@@ -31,7 +31,7 @@ class _DiscoveryFeedCardState
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    final timeToRead = state.output?.timeToRead ?? '';
+    final timeToRead = state.processedDocument?.timeToRead ?? '';
 
     final elements = DiscoveryCardElements(
       title: webResource.title,
@@ -41,6 +41,8 @@ class _DiscoveryFeedCardState
       datePublished: webResource.datePublished,
       onLikePressed: () => actionsManager.likeDocument(widget.document),
       onDislikePressed: () => actionsManager.dislikeDocument(widget.document),
+      onBookmarkPressed: () => actionsManager.bookmarkDocument(widget.document),
+      isBookmarked: state.isBookmarked,
     );
 
     return Stack(

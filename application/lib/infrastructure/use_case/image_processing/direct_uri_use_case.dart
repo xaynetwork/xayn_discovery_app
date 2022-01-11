@@ -45,24 +45,46 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
         await cachedVersion.file.readAsBytes(),
       );
     } else {
-      final response = await client.sendWithRedirectGuard(
-        http.Request(
-          CommonHttpRequestParams.httpRequestGet,
-          url,
-          followRedirects: false,
-          headers: headers,
-          timeout: CommonHttpRequestParams.httpRequestTimeout,
-        ),
-      );
-
-      final bytes = Uint8List.fromList(
-        await response.readAsBytes(),
-      );
-
-      await cacheManager.putFile(url, bytes);
-
+      final bytes = await _saveToCache(url);
       yield CacheManagerEvent.completed(param, bytes);
     }
+  }
+
+  @override
+  // ignore: invalid_override_of_non_virtual_member
+  Future<CacheManagerEvent> singleOutput(Uri param) async {
+    final url = param.toString();
+    final cachedVersion = await cacheManager.getFileFromCache(url);
+
+    if (cachedVersion != null) {
+      return CacheManagerEvent.completed(
+        param,
+        await cachedVersion.file.readAsBytes(),
+      );
+    } else {
+      final bytes = await _saveToCache(url);
+      return CacheManagerEvent.completed(param, bytes);
+    }
+  }
+
+  Future<Uint8List> _saveToCache(String url) async {
+    final response = await client.sendWithRedirectGuard(
+      http.Request(
+        CommonHttpRequestParams.httpRequestGet,
+        url,
+        followRedirects: false,
+        headers: headers,
+        timeout: CommonHttpRequestParams.httpRequestTimeout,
+      ),
+    );
+
+    final bytes = Uint8List.fromList(
+      await response.readAsBytes(),
+    );
+
+    await cacheManager.putFile(url, bytes);
+
+    return bytes;
   }
 }
 

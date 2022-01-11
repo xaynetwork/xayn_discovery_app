@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_engine/document.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
@@ -30,8 +33,10 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
   final InjectReaderMetaDataUseCase _injectReaderMetaDataUseCase;
+  final ListenIsBookmarkedUseCase _listenIsBookmarkedUseCase;
 
   late final UseCaseSink<Uri, ProcessedDocument> _updateUri;
+  late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler;
 
   bool _isLoading = false;
 
@@ -40,14 +45,21 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._loadHtmlUseCase,
     this._readabilityUseCase,
     this._injectReaderMetaDataUseCase,
+    this._listenIsBookmarkedUseCase,
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
 
-  /// Update the uri which contains the news article
-  void updateUri(Uri uri) => _updateUri(uri);
+  void updateDocument(Document document) {
+    _isBookmarkedHandler(document.documentId.toUniqueId);
 
-  Future<void> _init() async {
+    /// Update the uri which contains the news article
+    _updateUri(document.webResource.url);
+  }
+
+  void _init() {
+    _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);
+
     /// html reader mode elements:
     ///
     /// - loads the source html
@@ -84,24 +96,35 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   @override
-  Future<DiscoveryCardState?> computeState() async =>
-      fold(_updateUri).foldAll((output, errorReport) {
-        if (errorReport.isNotEmpty) {
-          logger.e(errorReport.of(_updateUri)!.error);
+  Future<DiscoveryCardState?> computeState() async {
+    fold2(_updateUri, _isBookmarkedHandler).foldAll((
+      processedDocument,
+      isBookmarked,
+      errorReport,
+    ) {
+      if (errorReport.isNotEmpty) {
+        logger.e(errorReport.of(_updateUri)!.error);
 
-          return DiscoveryCardState.error();
-        }
+        return DiscoveryCardState.error();
+      }
 
-        var nextState = state.copyWith(
-          isComplete: !_isLoading,
+      var nextState = state.copyWith(
+        isComplete: !_isLoading,
+      );
+
+      if (isBookmarked != null) {
+        nextState = nextState.copyWith(
+          isBookmarked: isBookmarked,
         );
+      }
 
-        if (output != null) {
-          nextState = nextState.copyWith(
-            output: output,
-          );
-        }
+      if (processedDocument != null) {
+        nextState = nextState.copyWith(
+          processedDocument: processedDocument,
+        );
+      }
 
-        return nextState;
-      });
+      return nextState;
+    });
+  }
 }
