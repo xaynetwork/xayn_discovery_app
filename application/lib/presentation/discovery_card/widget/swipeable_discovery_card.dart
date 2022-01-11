@@ -5,6 +5,7 @@ import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 const kSwipeOpenToPosition = 0.35;
 
@@ -39,6 +40,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
         child: child,
         onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
         optionBuilder: optionsBuilder,
+        waitBeforeClosingDuration: Duration.zero,
       );
 
   void onOptionsTap(SwipeOption option) {
@@ -46,13 +48,17 @@ class SwipeableDiscoveryCard extends StatelessWidget {
       case SwipeOption.like:
         manager.changeDocumentFeedback(
           documentId: document.documentId,
-          feedback: DocumentFeedback.positive,
+          feedback: document.isRelevant
+              ? DocumentFeedback.neutral
+              : DocumentFeedback.positive,
         );
         break;
       case SwipeOption.dislike:
         manager.changeDocumentFeedback(
           documentId: document.documentId,
-          feedback: DocumentFeedback.negative,
+          feedback: document.isIrrelevant
+              ? DocumentFeedback.neutral
+              : DocumentFeedback.negative,
         );
         break;
     }

@@ -49,11 +49,11 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: f4abc2cd0444be47dee38392270189a1a7126e24
+      ref: 4c081c6b8aa656b69b0520b67e367821dcc2a86c
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: dc91655d2b71f31e0b912d3bda3c1154f9633480
+      ref: d5e41ef63f383e3829a8576044dccf04eb359ab3
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
