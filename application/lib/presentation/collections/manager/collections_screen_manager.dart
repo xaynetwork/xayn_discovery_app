@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -24,8 +23,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final DateTimeHandler _dateTimeHandler;
 
-  @visibleForTesting
-  CollectionsScreenManager(
+  CollectionsScreenManager._(
     this._createCollectionUseCase,
     this._removeCollectionUseCase,
     this._renameCollectionUseCase,
@@ -33,7 +31,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     this._dateTimeHandler,
     this._collections,
   ) : super(CollectionsScreenState.initial()) {
-    init();
+    _init();
   }
 
   @factoryMethod
@@ -48,7 +46,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     final collections =
         (await getAllCollectionsUseCase.singleOutput(none)).collections;
 
-    return CollectionsScreenManager(
+    return CollectionsScreenManager._(
       createCollectionUseCase,
       removeCollectionUseCase,
       renameCollectionUseCase,
@@ -63,7 +61,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       _collectionsHandler;
   dynamic _useCaseError;
 
-  void init() {
+  void _init() {
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
   }
 

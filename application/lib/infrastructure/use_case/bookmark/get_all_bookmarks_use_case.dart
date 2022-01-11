@@ -16,12 +16,10 @@ class GetAllBookmarksUseCase
   @override
   Stream<GetAllBookmarksUseCaseOut> transaction(
       GetAllBookmarksUseCaseIn param) async* {
-    late List<Bookmark> bookmarks;
-    if (param.collectionId != null) {
-      bookmarks = _bookmarksRepository.getByCollectionId(param.collectionId!);
-    } else {
-      bookmarks = _bookmarksRepository.getAll();
-    }
+    final collectionId = param.collectionId;
+    late final List<Bookmark> bookmarks = collectionId == null
+        ? _bookmarksRepository.getAll()
+        : _bookmarksRepository.getByCollectionId(collectionId);
 
     yield GetAllBookmarksUseCaseOut(bookmarks);
   }
@@ -33,7 +31,6 @@ class GetAllBookmarksUseCaseIn extends Equatable {
   const GetAllBookmarksUseCaseIn({this.collectionId});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [collectionId];
 }
 
