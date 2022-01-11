@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_st
 import 'package:xayn_discovery_app/presentation/onboarding/model/onboarding_page_data.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 
-import '../../utils/test_dependencies.dart';
+import '../../utils/widget_test_utils.dart';
 import 'onboarding_screen_widget_test.mocks.dart';
 
 @GenerateMocks([OnBoardingManager])
@@ -24,15 +24,17 @@ void main() {
   Finder getTapDetector() => find.byKey(Keys.onBoardingPageTapDetector);
   Finder navBarFinder() => find.byType(NavBar);
 
-  setUpAll(() {
+  setUp(() async {
+    await setupWidgetTest();
     manager = MockOnBoardingManager();
-    configureTestDependencies();
-    di
-      ..unregister<OnBoardingManager>()
-      ..registerSingleton<OnBoardingManager>(manager);
+    di.registerLazySingleton<OnBoardingManager>(() => manager);
 
     when(manager.stream).thenAnswer((_) => const Stream.empty());
     when(manager.state).thenAnswer((_) => const OnBoardingState.started());
+  });
+
+  tearDown(() async {
+    await tearDownWidgetTest();
   });
 
   OnBoardingScreenState getState() =>
