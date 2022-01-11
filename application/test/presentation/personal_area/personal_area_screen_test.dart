@@ -9,7 +9,6 @@ import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
@@ -50,7 +49,7 @@ void main() {
       await openScreen(tester);
 
       expect(find.byType(AppToolbar), findsOneWidget);
-      expect(find.text('${Strings.your} ${Strings.personalAreaTitle}'),
+      expect(find.text('${R.strings.your} ${R.strings.personalAreaTitle}'),
           findsOneWidget);
       expect(find.byType(PersonalAreaCard), findsNWidgets(3));
       expect(find.byKey(Keys.personalAreaCardCollections), findsOneWidget);

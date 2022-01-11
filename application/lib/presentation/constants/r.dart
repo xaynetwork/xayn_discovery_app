@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
 
 /// Wraps the Linden design system as an R object.
 @immutable
@@ -9,6 +11,8 @@ class R {
   static Linden _linden = Linden(newColors: true);
 
   static Linden get linden => _linden;
+
+  static Translations get strings => Strings.translation;
 
   static XAssets get assets => _linden.assets;
 

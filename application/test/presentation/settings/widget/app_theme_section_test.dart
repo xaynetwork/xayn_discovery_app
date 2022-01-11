@@ -4,7 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 
 void main() {
@@ -23,10 +23,10 @@ void main() {
 
       expect(find.byType(SettingsSection), findsOneWidget);
       expect(find.byType(SettingsSelectable), findsOneWidget);
-      expect(find.text(Strings.settingsSectionTitleAppTheme), findsOneWidget);
-      expect(find.text(Strings.settingsAppThemeSystem), findsOneWidget);
-      expect(find.text(Strings.settingsAppThemeLight), findsOneWidget);
-      expect(find.text(Strings.settingsAppThemeDark), findsOneWidget);
+      expect(find.text(R.strings.settingsSectionTitleAppTheme), findsOneWidget);
+      expect(find.text(R.strings.settingsAppThemeSystem), findsOneWidget);
+      expect(find.text(R.strings.settingsAppThemeLight), findsOneWidget);
+      expect(find.text(R.strings.settingsAppThemeDark), findsOneWidget);
       expect(find.byType(Text), findsNWidgets(4));
     },
   );

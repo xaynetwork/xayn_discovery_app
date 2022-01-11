@@ -3,7 +3,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
 typedef OnAppThemeSelected = Function(AppTheme theme);
 
@@ -19,7 +18,7 @@ class SettingsAppThemeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SettingsSection.custom(
-        title: Strings.settingsSectionTitleAppTheme,
+        title: R.strings.settingsSectionTitleAppTheme,
         topPadding: 0,
         child: SettingsSelectable.icons(
           items: AppTheme.values.map(_getItem).toList(),
@@ -48,11 +47,11 @@ class SettingsAppThemeSection extends StatelessWidget {
   String _getTitle(AppTheme theme) {
     switch (theme) {
       case AppTheme.system:
-        return Strings.settingsAppThemeSystem;
+        return R.strings.settingsAppThemeSystem;
       case AppTheme.light:
-        return Strings.settingsAppThemeLight;
+        return R.strings.settingsAppThemeLight;
       case AppTheme.dark:
-        return Strings.settingsAppThemeDark;
+        return R.strings.settingsAppThemeDark;
     }
   }
 
