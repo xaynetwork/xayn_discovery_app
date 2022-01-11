@@ -24,7 +24,7 @@ class SaveCurrentAppVersion extends UseCase<None, None> {
     final appStatus = _repository.appStatus;
     final updatedAppStatus =
         appStatus.copyWith(lastKnownAppVersion: currentAppVersion);
-    _repository.appStatus = updatedAppStatus;
+    _repository.save(updatedAppStatus);
     yield none;
   }
 }

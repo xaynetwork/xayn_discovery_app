@@ -28,8 +28,5 @@ class HiveAppStatusRepository extends HiveRepository<AppStatus>
   Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.appStatus);
 
   @override
-  set appStatus(AppStatus appStatus) => entity = appStatus;
-
-  @override
   AppStatus get appStatus => getById(AppStatus.globalId) ?? AppStatus.initial();
 }

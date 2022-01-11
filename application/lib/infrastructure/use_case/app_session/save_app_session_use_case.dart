@@ -13,7 +13,7 @@ class IncrementAppSessionUseCase extends UseCase<None, None> {
     final appStatus = _repository.appStatus;
     final updatedAppStatus =
         appStatus.copyWith(numberOfSessions: appStatus.numberOfSessions + 1);
-    _repository.appStatus = updatedAppStatus;
+    _repository.save(updatedAppStatus);
     yield none;
   }
 }
