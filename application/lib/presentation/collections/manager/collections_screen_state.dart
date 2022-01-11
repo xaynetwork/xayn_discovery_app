@@ -8,8 +8,13 @@ class CollectionsScreenState with _$CollectionsScreenState {
   const CollectionsScreenState._();
 
   const factory CollectionsScreenState({
+    /// List of collections
     required List<Collection> collections,
+
+    /// Timestamp of update time (for making sure that state is emitted)
     required DateTime timestamp,
+
+    /// Error Message
     String? errorMsg,
   }) = _CollectionsScreenState;
 

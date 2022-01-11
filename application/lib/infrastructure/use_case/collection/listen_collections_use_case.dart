@@ -13,11 +13,10 @@ class ListenCollectionsUseCase
 
   ListenCollectionsUseCase(this._collectionsRepository);
   @override
-  Stream<ListenCollectionsUseCaseOut> transaction(None param) {
-    return _collectionsRepository.watch().map(
-          (_) => ListenCollectionsUseCaseOut(_collectionsRepository.getAll()),
-        );
-  }
+  Stream<ListenCollectionsUseCaseOut> transaction(None param) =>
+      _collectionsRepository.watch().map(
+            (_) => ListenCollectionsUseCaseOut(_collectionsRepository.getAll()),
+          );
 }
 
 class ListenCollectionsUseCaseOut extends Equatable {
