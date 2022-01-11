@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const double kSearchCardHeightRatio = 0.64;
@@ -100,7 +101,7 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
       isPrimary: isPrimary,
       document: document,
       imageManager: di.get()
-        ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
+        ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
     );
 
     return Padding(
