@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
-import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 import 'package:xayn_discovery_app/presentation/utils/locale.dart';
 
 class App extends StatefulWidget {
@@ -46,10 +45,7 @@ class _AppState extends State<App> {
           locale: appLocale,
         );
 
-        Strings.switchTranslations(
-          currentLanguage,
-          currentLanguage.countryNames,
-        );
+        Strings.switchTranslations(currentLanguage);
 
         return locales.first;
       },
