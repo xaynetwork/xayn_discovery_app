@@ -11,6 +11,10 @@ on:
     branches:
       - '*'
 
+concurrency:
+  group:  ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   Basic-checks:
     runs-on: ubuntu-latest
@@ -33,6 +37,7 @@ jobs:
           sudo apt install lcov jq
 
       - name: Run checks
+        timeout-minutes: 10
         env:
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
