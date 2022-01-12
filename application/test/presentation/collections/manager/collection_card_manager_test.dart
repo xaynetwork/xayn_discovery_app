@@ -72,8 +72,9 @@ void main() {
     setUp: () => when(getcollectionCardDataUseCase.singleOutput(collectionId))
         .thenAnswer(
       (realInvocation) => Future.error(
-        CollectionUseCaseException(
-            errorMessageGettingCardDataOfNotExistingCollection),
+        GetCollectionCardDataUseCaseException(
+          errorMsgCollectionDoesntExist,
+        ),
       ),
     ),
     act: (manager) => manager.retrieveCollectionCardInfo(collectionId),
@@ -84,7 +85,7 @@ void main() {
     expect: () => [
       initialState,
       initialState.copyWith(
-        errorMsg: errorMessageGettingCardDataOfNotExistingCollection,
+        errorMsg: errorMsgCollectionDoesntExist,
       ),
     ],
   );

@@ -18,8 +18,10 @@ class CreateCollectionUseCase extends UseCase<String, Collection?> {
   Stream<Collection?> transaction(String param) async* {
     final collectionNameTrimmed = param.trim();
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
-      logger.e(errorMessageCollectionNameUsed);
-      throw (CollectionUseCaseException(errorMessageCollectionNameUsed));
+      logger.e(toString() + ': ' + errorMsgCollectionAlreadyExists);
+      throw (CreateCollectionUseCaseException(
+        errorMsgCollectionAlreadyExists,
+      ));
     }
     final collectionIndex = _collectionsRepository.getLastCollectionIndex() + 1;
     final id = _uniqueIdHandler.generateUniqueId();

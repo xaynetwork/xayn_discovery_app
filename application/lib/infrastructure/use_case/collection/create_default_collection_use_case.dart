@@ -15,7 +15,7 @@ class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
   Stream<Collection> transaction(String param) async* {
     assert(
       param.isNotEmpty,
-      errorMessageCollectionNameEmpty,
+      errorMsgCollectionNameEmpty,
     );
 
     final collections = _collectionsRepository.getAll();
@@ -26,9 +26,9 @@ class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
           (element) => element.id == Collection.readLaterId,
         )
         .isNotEmpty) {
-      logger.e(errorMessageCreatingExistingDefaultCollection);
-      throw CollectionUseCaseException(
-        errorMessageCreatingExistingDefaultCollection,
+      logger.e(toString() + ': ' + errorMsgCollectionAlreadyExists);
+      throw CreateDefaultCollectionUseCaseException(
+        errorMsgCollectionAlreadyExists,
       );
     }
 

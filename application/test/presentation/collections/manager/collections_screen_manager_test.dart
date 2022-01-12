@@ -137,7 +137,7 @@ void main() {
     setUp: () {
       when(createCollectionUseCase.singleOutput(newCollection.name)).thenAnswer(
         (_) => Future.error(
-            CollectionUseCaseException(errorMessageCollectionNameUsed)),
+            CreateCollectionUseCaseException(errorMsgCollectionAlreadyExists)),
       );
     },
     act: (manager) {
@@ -146,7 +146,7 @@ void main() {
     expect: () => [
       //default one, emitted when manager created
       populatedState,
-      populatedState.copyWith(errorMsg: errorMessageCollectionNameUsed),
+      populatedState.copyWith(errorMsg: errorMsgCollectionAlreadyExists),
     ],
     verify: (manager) {
       verifyInOrder([
@@ -216,7 +216,7 @@ void main() {
         ),
       ).thenAnswer(
         (_) => Future.error(
-          CollectionUseCaseException(errorMessageCollectionNameUsed),
+          RenameCollectionUseCaseException(errorMsgCollectionAlreadyExists),
         ),
       );
     },
@@ -227,7 +227,7 @@ void main() {
     expect: () => [
       //default one, emitted when manager created
       populatedState,
-      populatedState.copyWith(errorMsg: errorMessageCollectionNameUsed),
+      populatedState.copyWith(errorMsg: errorMsgCollectionAlreadyExists),
     ],
     verify: (manager) {
       verifyInOrder([
@@ -296,7 +296,7 @@ void main() {
         ),
       ).thenAnswer(
         (_) => Future.error(
-          CollectionUseCaseException(errorMessageRemovingNotExistingCollection),
+          RemoveCollectionUseCaseException(errorMsgCollectionDoesntExist),
         ),
       );
     },
@@ -306,8 +306,7 @@ void main() {
     expect: () => [
       //default one, emitted when manager created
       populatedState,
-      populatedState.copyWith(
-          errorMsg: errorMessageRemovingNotExistingCollection),
+      populatedState.copyWith(errorMsg: errorMsgCollectionDoesntExist),
     ],
     verify: (manager) {
       verifyInOrder([

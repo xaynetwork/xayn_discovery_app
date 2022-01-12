@@ -19,18 +19,18 @@ class RenameCollectionUseCase
   Stream<Collection?> transaction(RenameCollectionUseCaseParam param) async* {
     final collectionNameTrimmed = param.newName.trim();
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
-      logger.e(errorMessageCollectionNameUsed);
-      throw CollectionUseCaseException(
-        errorMessageCollectionNameUsed,
+      logger.e(toString() + ': ' + errorMsgCollectionAlreadyExists);
+      throw RenameCollectionUseCaseException(
+        errorMsgCollectionAlreadyExists,
       );
     }
 
     final collection = _collectionsRepository.getById(param.collectionId);
 
     if (collection == null) {
-      logger.e(errorMessageRenamingNotExistingCollection);
-      throw CollectionUseCaseException(
-        errorMessageRenamingNotExistingCollection,
+      logger.e(toString() + ': ' + errorMsgCollectionDoesntExist);
+      throw RenameCollectionUseCaseException(
+        errorMsgCollectionDoesntExist,
       );
     }
 
