@@ -171,7 +171,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           title: webResource.title,
-          timeToRead: state.output?.timeToRead ?? '',
+          timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
           provider: webResource.provider,
           datePublished: webResource.datePublished,
@@ -183,6 +183,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             documentId: widget.document.documentId,
             feedback: DocumentFeedback.negative,
           ),
+          onBookmarkPressed: () =>
+              discoveryCardManager.bookmarkDocument(widget.document),
+          isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
 
@@ -197,7 +200,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             Positioned.fill(
                 child: _buildReaderMode(
               mediaQuery.size,
-              state.output?.processHtmlResult,
+              state.processedDocument?.processHtmlResult,
             )),
             Positioned(
               top: -outerScrollOffset,

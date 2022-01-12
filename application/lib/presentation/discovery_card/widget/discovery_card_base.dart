@@ -39,7 +39,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   ImageManager get imageManager => _imageManager;
 
   WebResource get webResource => widget.document.webResource;
-  Uri get url => webResource.url;
   String get imageUrl => webResource.displayUrl.toString();
   String get snippet => webResource.snippet;
   String get title => webResource.title;
@@ -70,7 +69,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      _discoveryCardManager.updateUri(url);
+      _discoveryCardManager.updateDocument(widget.document);
     }
   }
 
