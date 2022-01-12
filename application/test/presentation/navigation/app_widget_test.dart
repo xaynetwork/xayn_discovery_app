@@ -3,6 +3,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 
 import '../utils/utils.dart';
@@ -56,38 +57,27 @@ void main() {
     expect(find.byType(DiscoveryFeed), findsOneWidget);
   });
 
-  testWidgets('In DiscoveryFeed clicking on Account, navigates to Settings',
+  testWidgets(
+      'In DiscoveryFeed clicking on PersonalArea, navigates to Settings',
       (driver) async {
     await driver.initToDiscoveryPage();
 
-    await driver.navigateToAccount();
+    await driver.navigateToPersonalArea();
 
     expect(find.byType(DiscoveryFeed), findsNothing);
-    expect(find.byType(SettingsScreen), findsOneWidget);
+    expect(find.byType(PersonalAreaScreen), findsOneWidget);
   });
 
   testWidgets(
-      'In Settings (coming from search) clicking back, navigates to search',
+      'In Settings (coming from PersonalAreaScreen) clicking back, navigates to PersonalAreaScreen',
       (driver) async {
     await driver.initToDiscoveryPage();
-    await driver.navigateToSearch();
-    await driver.navigateToAccount();
+    await driver.navigateToPersonalArea();
+    await driver.navigateToSettingsScreen();
 
     await driver.navigateBack();
 
     expect(find.byType(SettingsScreen), findsNothing);
-    expect(find.byType(ActiveSearch), findsOneWidget);
-  });
-
-  testWidgets(
-      'In Settings (coming from discovery) clicking back, navigates to discovery',
-      (driver) async {
-    await driver.initToDiscoveryPage();
-    await driver.navigateToAccount();
-
-    await driver.navigateBack();
-
-    expect(find.byType(SettingsScreen), findsNothing);
-    expect(find.byType(DiscoveryFeed), findsOneWidget);
+    expect(find.byType(PersonalAreaScreen), findsOneWidget);
   });
 }

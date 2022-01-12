@@ -20,7 +20,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
-  void onAccountNavPressed();
+  void onPersonalAreaNavPressed();
 }
 
 /// A widget which displays a list of discovery results.
@@ -60,8 +60,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             buildNavBarItemSearch(
               onPressed: discoveryFeedManager.onSearchNavPressed,
             ),
-            buildNavBarItemAccount(
-              onPressed: discoveryFeedManager.onAccountNavPressed,
+            buildNavBarItemPersonalArea(
+              onPressed: discoveryFeedManager.onPersonalAreaNavPressed,
             ),
           ],
         );
