@@ -21,4 +21,24 @@ void main() {
       expect(appVersion.toString(), 'Version: $version, build: $build');
     },
   );
+
+  test(
+    'GIVEN two AppVersions WHEN second version is grater THEN the second AppVersion is greater',
+    () {
+      const appVersion1 = AppVersion(version: '1.0.0', build: '1');
+      const appVersion2 = AppVersion(version: '1.0.1', build: '1');
+
+      expect(appVersion2, greaterThan(appVersion1));
+    },
+  );
+
+  test(
+    'GIVEN two AppVersions WHEN both versions are teh same THEN both AppVersion are the same',
+    () {
+      const appVersion1 = AppVersion(version: '1.2.3', build: '1');
+      const appVersion2 = AppVersion(version: '1.2.3', build: '1');
+
+      expect(appVersion2, equals(appVersion1));
+    },
+  );
 }
