@@ -37,9 +37,9 @@ class GetCollectionCardDataUseCase
     final collection = _collectionsRepository.getById(param);
 
     if (collection == null) {
-      logger.e(errorMessageGettingCardDataOfNotExistingCollection);
-      throw CollectionUseCaseException(
-        errorMessageGettingCardDataOfNotExistingCollection,
+      logger.e(toString() + ': ' + errorMsgCollectionDoesntExist);
+      throw GetCollectionCardDataUseCaseException(
+        errorMsgCollectionDoesntExist,
       );
     }
     final bookmarks = _bookmarksRepository.getByCollectionId(param);

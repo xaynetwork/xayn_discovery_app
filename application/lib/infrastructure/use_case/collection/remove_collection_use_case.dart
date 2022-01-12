@@ -24,9 +24,9 @@ class RemoveCollectionUseCase
   Stream<Collection?> transaction(RemoveCollectionUseCaseParam param) async* {
     /// Check if we're trying to delete the default collection
     if (param.collectionIdToRemove == Collection.readLaterId) {
-      logger.e(errorMessageRemovingExistingDefaultCollection);
-      throw CollectionUseCaseException(
-        errorMessageRemovingExistingDefaultCollection,
+      logger.e(toString() + ': ' + errorMsgRemovingExistingDefaultCollection);
+      throw RemoveCollectionUseCaseException(
+        errorMsgRemovingExistingDefaultCollection,
       );
     }
 
@@ -34,9 +34,9 @@ class RemoveCollectionUseCase
         _collectionsRepository.getById(param.collectionIdToRemove);
 
     if (collection == null) {
-      logger.e(errorMessageRemovingNotExistingCollection);
-      throw CollectionUseCaseException(
-        errorMessageRemovingNotExistingCollection,
+      logger.e(toString() + ': ' + errorMsgCollectionDoesntExist);
+      throw RemoveCollectionUseCaseException(
+        errorMsgCollectionDoesntExist,
       );
     }
 
