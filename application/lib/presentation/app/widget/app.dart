@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:instabug_flutter/Instabug.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -46,6 +47,7 @@ class _AppState extends State<App> {
         );
 
         Strings.switchTranslations(currentLanguage);
+        Instabug.setLocale(currentLanguage.instabugLocale);
 
         return locales.first;
       },

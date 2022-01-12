@@ -1,3 +1,4 @@
+import 'package:instabug_flutter/Instabug.dart';
 import 'package:intl/locale.dart' as intl;
 import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations_de.i18n.dart';
@@ -36,6 +37,15 @@ extension Utils on AppLanguage {
         return 'en';
       case AppLanguage.german:
         return 'de';
+    }
+  }
+
+  IBGLocale get instabugLocale {
+    switch (this) {
+      case AppLanguage.english:
+        return IBGLocale.english;
+      case AppLanguage.german:
+        return IBGLocale.german;
     }
   }
 
