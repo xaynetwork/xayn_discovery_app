@@ -2,6 +2,8 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/request_feed_mixin.dart';
@@ -28,17 +30,39 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         RequestFeedMixin<DiscoveryFeedState>,
         ObserveDocumentMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
-  DiscoveryFeedManager(
+  DiscoveryFeedManager._(
     this._engine,
     this._discoveryFeedNavActions,
-  ) : super(DiscoveryFeedState.empty());
+    this._updateCardIndexUseCase,
+    this._cardIndex,
+    DiscoveryFeedState initialState,
+  ) : super(initialState);
+
+  @factoryMethod
+  static Future<DiscoveryFeedManager> create(
+    DiscoveryEngine engine,
+    DiscoveryFeedNavActions discoveryFeedNavActions,
+    FetchCardIndexUseCase fetchCardIndexUseCase,
+    UpdateCardIndexUseCase updateCardIndexUseCase,
+  ) async {
+    final cardIndex = await fetchCardIndexUseCase.singleOutput(none);
+
+    return DiscoveryFeedManager._(
+      engine,
+      discoveryFeedNavActions,
+      updateCardIndexUseCase,
+      cardIndex,
+      DiscoveryFeedState.initial(cardIndex),
+    );
+  }
 
   final DiscoveryEngine _engine;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
+  final UpdateCardIndexUseCase _updateCardIndexUseCase;
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
-  int _documentIndex = 0;
+  int _cardIndex = 0;
   bool _isFullScreen = false;
 
   void handleNavigateIntoCard() {
@@ -59,7 +83,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       mode: _observedViewTypes[document],
     );
 
-    scheduleComputeState(() => _documentIndex = index);
+    scheduleComputeState(() async =>
+        _cardIndex = await _updateCardIndexUseCase.singleOutput(index));
   }
 
   /// Triggers a new observation for [document], if that document matches
@@ -127,7 +152,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isComplete: !isLoading,
           isInErrorState: errorReport.isNotEmpty,
           isFullScreen: _isFullScreen,
-          resultIndex: _documentIndex,
+          cardIndex: _cardIndex,
         );
 
         // guard against same-state emission
