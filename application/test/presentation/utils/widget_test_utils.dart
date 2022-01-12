@@ -34,9 +34,6 @@ extension WidgetTesterCommonActions on WidgetTester {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
     await pumpAndSettle();
-    // this fixes the test for now,
-    // DiscoveryFeedManager became async
-    await runAsync(pumpAndSettle);
   }
 
   Future<void> navigateToSearch() async {
