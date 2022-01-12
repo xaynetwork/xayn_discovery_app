@@ -12,6 +12,9 @@ on:
         description: 'Manually run releases choose one or many of: ios_internal, android_internal, none'
         required: true
         default: 'ios_internal android_internal'
+concurrency:
+  group:  ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 
 env:
   flutter_channel: 'stable'
