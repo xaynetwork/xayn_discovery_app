@@ -8,12 +8,12 @@ import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'bookmark_exception.dart';
 
 @injectable
-class RemoveBookmarkUseCase extends UseCase<UniqueId, Bookmark> {
+class RemoveBookmarkUseCase extends UseCase<UniqueId, Bookmark?> {
   final BookmarksRepository _bookmarksRepository;
   RemoveBookmarkUseCase(this._bookmarksRepository);
 
   @override
-  Stream<Bookmark> transaction(UniqueId param) async* {
+  Stream<Bookmark?> transaction(UniqueId param) async* {
     final bookmark = _bookmarksRepository.getById(param);
     if (bookmark == null) {
       logger.e(errorMessageRemovingNotExistingBookmark);
