@@ -3,6 +3,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 const Curve _kAnimationCurve = Curves.elasticOut;
+const Curve _kAnimationSnapCurve = Curves.linearToEaseOut;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit;
 final EdgeInsets _kPadding = EdgeInsets.only(
@@ -61,7 +62,8 @@ class FeedView extends StatelessWidget {
   Widget build(BuildContext context) => CardView(
         animationDuration: R.animations.feedTransitionDuration,
         animationCurve: _kAnimationCurve,
-        animateToSnapDuration: R.animations.unit2,
+        animateToSnapDuration: R.animations.unit3,
+        animateToSnapCurve: _kAnimationSnapCurve,
         scrollDirection: scrollDirection,
         controller: cardViewController,
         size: mainCardSize,
