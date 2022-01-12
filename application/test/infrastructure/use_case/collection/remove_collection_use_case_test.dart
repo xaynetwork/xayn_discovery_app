@@ -6,7 +6,7 @@ import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -48,7 +48,7 @@ void main() {
 
   group('Remove collection use case', () {
     useCaseTest(
-      'WHEN the collection to remove corresponds to the default collection THEN throw an exception',
+      'WHEN the collection to remove corresponds to the default collection THEN yield failure output with proper enum value',
       build: () => removeCollectionUseCase,
       input: [
         RemoveCollectionUseCaseParam(
@@ -60,14 +60,16 @@ void main() {
         verifyNoMoreInteractions(bookmarksRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<RemoveCollectionUseCaseException>()),
+        useCaseSuccess(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum.tryingToRemoveDefaultCollection,
+          ),
         )
       ],
     );
 
     useCaseTest(
-      'WHEN the collection to remove doesn\'t exist THEN throw an exception',
+      'WHEN the collection to remove doesn\'t exist THEN yield failure output with proper enum value',
       setUp: () => when(collectionsRepository.getById(any)).thenReturn(null),
       build: () => removeCollectionUseCase,
       input: [
@@ -81,8 +83,10 @@ void main() {
         verifyNoMoreInteractions(bookmarksRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<RemoveCollectionUseCaseException>()),
+        useCaseSuccess(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum.tryingToRemoveNotExistingCollection,
+          ),
         )
       ],
     );
@@ -137,7 +141,13 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
         verifyNoMoreInteractions(bookmarksRepository);
       },
-      expect: [useCaseSuccess(collection)],
+      expect: [
+        useCaseSuccess(
+          CollectionUseCaseGenericOut.success(
+            collection,
+          ),
+        )
+      ],
     );
   });
 }
