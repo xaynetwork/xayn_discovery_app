@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
   const DiscoveryFeedCard({
@@ -36,6 +37,7 @@ class _DiscoveryFeedCardState
 
     final elements = DiscoveryCardElements(
       manager: discoveryCardManager,
+      document: widget.document,
       title: webResource.title,
       timeToRead: timeToRead,
       url: webResource.url,
@@ -43,11 +45,15 @@ class _DiscoveryFeedCardState
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
         documentId: widget.document.documentId,
-        feedback: DocumentFeedback.positive,
+        feedback: widget.document.isRelevant
+            ? DocumentFeedback.neutral
+            : DocumentFeedback.positive,
       ),
       onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
         documentId: widget.document.documentId,
-        feedback: DocumentFeedback.negative,
+        feedback: widget.document.isIrrelevant
+            ? DocumentFeedback.neutral
+            : DocumentFeedback.negative,
       ),
       onBookmarkPressed: () =>
           discoveryCardManager.toggleBookmarkDocument(widget.document),

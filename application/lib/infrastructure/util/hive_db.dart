@@ -45,6 +45,7 @@ class HiveDB {
   static Future<void> _openBoxes({bool inMemory = false}) async {
     await Future.wait([
       _openBox<Record>(BoxNames.appSettings, inMemory: inMemory),
+      _openBox<Record>(BoxNames.appStatus, inMemory: inMemory),
       _openBox<Record>(BoxNames.bookmarks, inMemory: inMemory),
       _openBox<Record>(BoxNames.collections, inMemory: inMemory),
     ]);

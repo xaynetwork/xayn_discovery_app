@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
+import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -38,6 +39,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   DiscoveryFeedManager? _discoveryFeedManager;
   late final CardViewController _cardViewController = CardViewController();
   late final Map<Document, _CardManagers> _cardManagers = {};
+  final RatingDialogManager _ratingDialogManager = di.get();
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -82,7 +84,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
               documentId: document.documentId,
-              feedback: DocumentFeedback.positive,
+              feedback: document.isRelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.positive,
             ),
           ),
           buildNavBarItemShare(
@@ -94,7 +98,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
               documentId: document.documentId,
-              feedback: DocumentFeedback.negative,
+              feedback: document.isIrrelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.negative,
             ),
           ),
         ],
@@ -166,16 +172,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-      var isInReaderMode = discoveryFeedManager.state.isFullScreen;
 
       return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
         bloc: discoveryFeedManager,
         builder: (context, state) {
           final results = state.results;
 
-          if (isInReaderMode != state.isFullScreen) {
-            // we need to update NavBarConfig ONLY WHEN we change this flag
-            isInReaderMode = !isInReaderMode;
+          if (state.isFullScreen) {
+            // always update whenever state changes and when in full screen mode.
+            // the only state update that can happen, is the change in like/dislike
+            // of the presented document.
+            // on that change, we need a redraw to update the like/dislike icons'
+            // selection status.
             NavBarContainer.updateNavBar(context);
           }
 
@@ -205,9 +213,16 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               isSwipingEnabled: true,
               isFullScreen: false,
             ),
+            boxBorderBuilder: _boxBorderBuilder(
+              results: results,
+              isFullScreen: state.isFullScreen,
+            ),
             itemCount: _totalResults,
             onFinalIndex: discoveryFeedManager.handleLoadMore,
-            onIndexChanged: discoveryFeedManager.handleIndexChanged,
+            onIndexChanged: (int index) {
+              discoveryFeedManager.handleIndexChanged(index);
+              _ratingDialogManager.handleIndexChanged(index);
+            },
             isFullScreen: state.isFullScreen,
             fullScreenOffsetFraction:
                 _dragDistance / DiscoveryCard.dragThreshold,
@@ -264,6 +279,29 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           card: card,
           isSwipingEnabled: isSwipingEnabled,
         );
+      };
+
+  BoxBorder? Function(int) _boxBorderBuilder({
+    required Set<Document> results,
+    required bool isFullScreen,
+  }) =>
+      (int index) {
+        final document = results.elementAt(index);
+
+        switch (document.feedback) {
+          case DocumentFeedback.neutral:
+            return null;
+          case DocumentFeedback.positive:
+            return Border.all(
+              color: R.colors.swipeBackgroundRelevant,
+              width: R.dimen.sentimentBorderSize,
+            );
+          case DocumentFeedback.negative:
+            return Border.all(
+              color: R.colors.swipeBackgroundIrrelevant,
+              width: R.dimen.sentimentBorderSize,
+            );
+        }
       };
 
   void _onFullScreenDrag(double distance) {

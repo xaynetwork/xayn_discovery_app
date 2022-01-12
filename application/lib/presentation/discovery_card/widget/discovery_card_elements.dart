@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 
 import 'favicon_bar.dart';
 
@@ -71,6 +71,7 @@ class DiscoveryCardElements extends StatelessWidget {
         onDislikePressed: onDislikePressed,
         onBookmarkPressed: onBookmarkPressed,
         isBookmarked: isBookmarked,
+        document: document,
       ),
     );
 

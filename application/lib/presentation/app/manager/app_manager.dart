@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
@@ -15,12 +16,14 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   AppManager(
     this._getAppThemeUseCase,
     this._listenAppThemeUseCase,
+    this._incrementAppSessionUseCase,
   ) : super(AppState.empty()) {
     _init();
   }
 
   final GetAppThemeUseCase _getAppThemeUseCase;
   final ListenAppThemeUseCase _listenAppThemeUseCase;
+  final IncrementAppSessionUseCase _incrementAppSessionUseCase;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   late AppTheme _appTheme;
@@ -28,6 +31,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
 
   void _init() async {
     scheduleComputeState(() async {
+      await _incrementAppSessionUseCase.call(none);
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
       _initDone = true;
