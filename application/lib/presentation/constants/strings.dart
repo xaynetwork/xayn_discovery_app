@@ -3,6 +3,11 @@ class Strings {
 
   static const String your = 'Your';
 
+  static const String personalAreaTitle = 'Area';
+  static const String personalAreaCollections = 'Collections';
+  static const String personalAreaHomeFeed = 'Home Feed';
+  static const String personalAreaSettings = 'Settings';
+
   static const String activeSearchSearchHint = 'Search';
   static const String settingsTitle = 'Settings';
   static const String settingsSectionTitleAppTheme = 'Your App Theme';

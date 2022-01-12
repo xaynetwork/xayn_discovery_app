@@ -4,4 +4,5 @@ abstract class BoxNames {
   static const appSettings = 'settings';
   static const collections = 'collections';
   static const bookmarks = 'bookmarks';
+  static const appStatus = 'appStatus';
 }

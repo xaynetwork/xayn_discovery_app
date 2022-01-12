@@ -9,7 +9,7 @@ abstract class OnBoardingNavActions {
   void onClosePressed();
 }
 
-@injectable
+@lazySingleton
 class OnBoardingManager extends Cubit<OnBoardingState>
     with UseCaseBlocHelper<OnBoardingState>
     implements OnBoardingNavActions {

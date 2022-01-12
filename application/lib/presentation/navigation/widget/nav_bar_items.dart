@@ -92,7 +92,7 @@ NavBarItemEdit buildNavBarItemSearchActive({
       key: Keys.navBarItemSearch,
     );
 
-NavBarItemIconButton buildNavBarItemAccount({
+NavBarItemIconButton buildNavBarItemPersonalArea({
   required VoidCallback onPressed,
   bool isActive = false,
 }) =>
@@ -100,5 +100,5 @@ NavBarItemIconButton buildNavBarItemAccount({
       svgIconPath: R.linden.assets.icons.person,
       isHighlighted: isActive,
       onPressed: onPressed,
-      key: Keys.navBarItemAccount,
+      key: Keys.navBarItemPersonalArea,
     );
