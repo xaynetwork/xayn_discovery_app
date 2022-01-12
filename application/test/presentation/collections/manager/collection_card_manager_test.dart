@@ -5,16 +5,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_collection_card_data_use_case.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
 import 'collection_card_manager_test.mocks.dart';
 
-@GenerateMocks([GetCollectionCardDataUseCase])
+@GenerateMocks([GetCollectionCardDataUseCase, CollectionErrorsEnumMapper])
 void main() {
   late MockGetCollectionCardDataUseCase getcollectionCardDataUseCase;
+  late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
   late CollectionCardManager collectionCardManager;
   late CollectionCardState initialState;
   late CollectionCardState populatedState;
@@ -24,7 +26,11 @@ void main() {
 
   setUp(() {
     getcollectionCardDataUseCase = MockGetCollectionCardDataUseCase();
-    collectionCardManager = CollectionCardManager(getcollectionCardDataUseCase);
+    collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
+    collectionCardManager = CollectionCardManager(
+      getcollectionCardDataUseCase,
+      collectionErrorsEnumMapper,
+    );
     collectionId = UniqueId();
     numOfItems = 4;
     image = Uint8List.fromList([1, 2, 3]);
@@ -48,8 +54,8 @@ void main() {
     build: () => collectionCardManager,
     setUp: () => when(getcollectionCardDataUseCase.singleOutput(collectionId))
         .thenAnswer(
-      (realInvocation) => Future.value(
-        GetCollectionCardDataUseCaseOut(
+      (_) => Future.value(
+        GetCollectionCardDataUseCaseOut.success(
           numOfItems: numOfItems,
           image: image,
         ),
@@ -67,16 +73,24 @@ void main() {
   );
 
   blocTest<CollectionCardManager, CollectionCardState>(
-    'WHEN getCollectionCardDataUseCase throws an exception THEN call emit current state with error message ',
+    'WHEN getCollectionCardDataUseCase returns a failure output THEN emit current state with error message ',
     build: () => collectionCardManager,
-    setUp: () => when(getcollectionCardDataUseCase.singleOutput(collectionId))
-        .thenAnswer(
-      (realInvocation) => Future.error(
-        GetCollectionCardDataUseCaseException(
-          errorMsgCollectionDoesntExist,
+    setUp: () {
+      when(getcollectionCardDataUseCase.singleOutput(collectionId)).thenAnswer(
+        (_) => Future.value(
+          const GetCollectionCardDataUseCaseOut.failure(
+            CollectionUseCaseErrorEnum
+                .tryingToGetCardDataForNotExistingCollection,
+          ),
         ),
-      ),
-    ),
+      );
+      when(
+        collectionErrorsEnumMapper.mapEnumToString(
+          CollectionUseCaseErrorEnum
+              .tryingToGetCardDataForNotExistingCollection,
+        ),
+      ).thenReturn(errorMsgTryingToGetCardDataForNotExistingCollection);
+    },
     act: (manager) => manager.retrieveCollectionCardInfo(collectionId),
     verify: (manager) {
       verify(getcollectionCardDataUseCase.singleOutput(collectionId)).called(1);
@@ -85,7 +99,7 @@ void main() {
     expect: () => [
       initialState,
       initialState.copyWith(
-        errorMsg: errorMsgCollectionDoesntExist,
+        errorMsg: errorMsgTryingToGetCardDataForNotExistingCollection,
       ),
     ],
   );

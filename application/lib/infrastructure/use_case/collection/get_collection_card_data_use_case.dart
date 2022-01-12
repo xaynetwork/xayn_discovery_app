@@ -1,13 +1,10 @@
-import 'dart:typed_data';
-
-import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_exception.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+
+import 'collection_use_cases_outputs.dart';
 
 /// UseCase that retrieves data to show in the collection card:
 /// 1) number of items
@@ -23,7 +20,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 /// we can then return null, since when an error occurs no data has been retrieved.
 @injectable
 class GetCollectionCardDataUseCase
-    extends UseCase<UniqueId, GetCollectionCardDataUseCaseOut?> {
+    extends UseCase<UniqueId, GetCollectionCardDataUseCaseOut> {
   final BookmarksRepository _bookmarksRepository;
   final CollectionsRepository _collectionsRepository;
 
@@ -33,32 +30,19 @@ class GetCollectionCardDataUseCase
   );
 
   @override
-  Stream<GetCollectionCardDataUseCaseOut?> transaction(UniqueId param) async* {
+  Stream<GetCollectionCardDataUseCaseOut> transaction(UniqueId param) async* {
     final collection = _collectionsRepository.getById(param);
 
     if (collection == null) {
-      logger.e(toString() + ': ' + errorMsgCollectionDoesntExist);
-      throw GetCollectionCardDataUseCaseException(
-        errorMsgCollectionDoesntExist,
-      );
+      yield const GetCollectionCardDataUseCaseOut.failure(
+          CollectionUseCaseErrorEnum
+              .tryingToGetCardDataForNotExistingCollection);
+      return;
     }
     final bookmarks = _bookmarksRepository.getByCollectionId(param);
-    yield GetCollectionCardDataUseCaseOut(
+    yield GetCollectionCardDataUseCaseOut.success(
       numOfItems: bookmarks.length,
       image: bookmarks.last.image,
     );
   }
-}
-
-class GetCollectionCardDataUseCaseOut extends Equatable {
-  final int numOfItems;
-  final Uint8List? image;
-
-  const GetCollectionCardDataUseCaseOut({
-    this.numOfItems = 0,
-    this.image,
-  });
-
-  @override
-  List<Object?> get props => [numOfItems, image];
 }
