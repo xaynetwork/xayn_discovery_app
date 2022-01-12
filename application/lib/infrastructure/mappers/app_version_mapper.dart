@@ -11,7 +11,7 @@ class MapToAppVersionMapper implements Mapper<Map?, AppVersion> {
 
   @override
   AppVersion map(Map? input) {
-    if (input == null || input is! Map<int, dynamic>) {
+    if (input == null) {
       return AppVersion.initial();
     }
 
