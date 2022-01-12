@@ -25,7 +25,6 @@ import 'bookmarks_screen_manager_test.mocks.dart';
   DateTimeHandler,
 ])
 void main() {
-  late MockGetAllBookmarksUseCase getAllBookmarksUseCase;
   late MockListenBookmarksUseCase listenBookmarksUseCase;
   late MockRemoveBookmarkUseCase removeBookmarkUseCase;
   late MockMoveBookmarkUseCase moveBookmarkUseCase;
@@ -49,13 +48,19 @@ void main() {
   ];
 
   setUp(() {
-    getAllBookmarksUseCase = MockGetAllBookmarksUseCase();
     listenBookmarksUseCase = MockListenBookmarksUseCase();
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     moveBookmarkUseCase = MockMoveBookmarkUseCase();
     dateTimeHandler = MockDateTimeHandler();
+
+    when(listenBookmarksUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+
+    when(listenBookmarksUseCase.transaction(any)).thenAnswer(
+      (_) => Stream.value(ListBookmarksUseCaseOut(bookmarks)),
+    );
+
     bookmarksScreenManager = BookmarksScreenManager(
-      getAllBookmarksUseCase,
       listenBookmarksUseCase,
       removeBookmarkUseCase,
       moveBookmarkUseCase,
@@ -63,10 +68,6 @@ void main() {
     );
     initialState = BookmarksScreenState.initial();
     populatedState = BookmarksScreenState.populated(bookmarks, timestamp);
-
-    when(listenBookmarksUseCase.transform(any)).thenAnswer(
-      (_) => Stream.value(collectionId),
-    );
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp);
   });
@@ -76,39 +77,27 @@ void main() {
       'WHEN manager is created THEN emit initial state ',
       setUp: () => when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp),
       build: () => bookmarksScreenManager,
-      expect: () => [
-        initialState,
-      ],
+      verify: (manager) => expect(manager.state.bookmarks.isEmpty, true),
+      expect: () => [],
     );
 
     blocTest<BookmarksScreenManager, BookmarksScreenState>(
       'WHEN enteringScreen method has been called THEN emit call the usecase and emit populate state ',
-      setUp: () {
-        when(getAllBookmarksUseCase.singleOutput(
-                GetAllBookmarksUseCaseIn(collectionId: collectionId)))
-            .thenAnswer((_) => Future.error(BookmarkUseCaseException(
-                errorMessageGettingBookmarksOfNotExistingCollection)));
-      },
+      setUp: () {},
       build: () => bookmarksScreenManager,
       act: (manager) {
         manager.enteringScreen(collectionId);
-        manager.updateBookmarksList(collectionId);
       },
       verify: (manager) {
         verifyInOrder([
-          getAllBookmarksUseCase.singleOutput(
-              GetAllBookmarksUseCaseIn(collectionId: collectionId)),
+          listenBookmarksUseCase
+              .transaction(ListBookmarksUseCaseIn(collectionId: collectionId)),
           // listenBookmarksUseCase.transform(Stream.value(collectionId)),
         ]);
-        verifyNoMoreInteractions(getAllBookmarksUseCase);
+        verifyNoMoreInteractions(listenBookmarksUseCase);
         // verifyNoMoreInteractions(listenBookmarksUseCase);
       },
-      expect: () => [
-        initialState,
-        initialState.copyWith(
-          errorMsg: errorMessageGettingBookmarksOfNotExistingCollection,
-        )
-      ],
+      expect: () => [initialState],
     );
   });
 }
