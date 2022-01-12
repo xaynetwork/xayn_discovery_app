@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
@@ -8,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_exc
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 @injectable
-class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseParam, Bookmark> {
+class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseParam, Bookmark?> {
   final BookmarksRepository _bookmarksRepository;
   final CollectionsRepository _collectionsRepository;
 
@@ -40,12 +41,15 @@ class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseParam, Bookmark> {
   }
 }
 
-class MoveBookmarkUseCaseParam {
+class MoveBookmarkUseCaseParam extends Equatable {
   final UniqueId bookmarkId;
   final UniqueId collectionId;
 
-  MoveBookmarkUseCaseParam({
+  const MoveBookmarkUseCaseParam({
     required this.bookmarkId,
     required this.collectionId,
   });
+
+  @override
+  List<Object?> get props => [bookmarkId, collectionId];
 }

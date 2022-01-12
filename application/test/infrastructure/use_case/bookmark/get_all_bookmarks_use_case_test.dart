@@ -4,15 +4,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_exception.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 void main() {
   late MockBookmarksRepository bookmarksRepository;
+  late MockCollectionsRepository collectionsRepository;
   late GetAllBookmarksUseCase getAllBookmarksUseCase;
   final collectionId = UniqueId();
+  final Collection collection =
+      Collection(id: collectionId, name: 'Test collection', index: 3);
 
   final bookmark1 = Bookmark(
     id: UniqueId(),
@@ -46,15 +51,39 @@ void main() {
 
   setUp(() {
     bookmarksRepository = MockBookmarksRepository();
-    getAllBookmarksUseCase = GetAllBookmarksUseCase(bookmarksRepository);
+    collectionsRepository = MockCollectionsRepository();
+    getAllBookmarksUseCase = GetAllBookmarksUseCase(
+      bookmarksRepository,
+      collectionsRepository,
+    );
   });
 
   group('Get all bookmarks use case', () {
     useCaseTest(
-      'WHEN called THEN get all the bookmarks',
-      setUp: () => when(bookmarksRepository.getAll()).thenReturn(
-        [bookmark1, bookmark2, bookmark3],
-      ),
+      'WHEN an id of a NOT existing collection has been given THEN throw a BookmarkUseCaseException',
+      setUp: () =>
+          when(collectionsRepository.getById(collectionId)).thenReturn(null),
+      build: () => getAllBookmarksUseCase,
+      input: [GetAllBookmarksUseCaseIn(collectionId: collectionId)],
+      verify: (_) {
+        verify(collectionsRepository.getById(collectionId)).called(1);
+        verifyNoMoreInteractions(collectionsRepository);
+      },
+      expect: [
+        useCaseFailure(
+          throwsA(const TypeMatcher<BookmarkUseCaseException>()),
+        )
+      ],
+    );
+    useCaseTest(
+      'WHEN an id of an existing collection has been given THEN get all the bookmarks of that collection',
+      setUp: () {
+        when(collectionsRepository.getById(collectionId))
+            .thenReturn(collection);
+        when(bookmarksRepository.getAll()).thenReturn(
+          [bookmark1, bookmark2, bookmark3],
+        );
+      },
       build: () => getAllBookmarksUseCase,
       input: [const GetAllBookmarksUseCaseIn()],
       verify: (_) {
@@ -76,10 +105,13 @@ void main() {
 
     useCaseTest(
       'WHEN called THEN get all the bookmarks by collection id',
-      setUp: () =>
-          when(bookmarksRepository.getByCollectionId(collectionId)).thenReturn(
-        [bookmark1, bookmark2],
-      ),
+      setUp: () {
+        when(collectionsRepository.getById(collectionId))
+            .thenReturn(collection);
+        when(bookmarksRepository.getByCollectionId(collectionId)).thenReturn(
+          [bookmark1, bookmark2],
+        );
+      },
       build: () => getAllBookmarksUseCase,
       input: [GetAllBookmarksUseCaseIn(collectionId: collectionId)],
       verify: (_) {
