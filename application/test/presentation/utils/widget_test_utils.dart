@@ -33,7 +33,10 @@ extension WidgetTesterCommonActions on WidgetTester {
   Future<void> initToDiscoveryPage() async {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
-    await pumpAndSettle(updateNabBarDebounceTimeout);
+    await pumpAndSettle();
+    // this fixes the test for now,
+    // DiscoveryFeedManager became async
+    await runAsync(pumpAndSettle);
   }
 
   Future<void> navigateToSearch() async {
