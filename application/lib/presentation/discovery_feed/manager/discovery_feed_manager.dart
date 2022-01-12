@@ -30,39 +30,25 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         RequestFeedMixin<DiscoveryFeedState>,
         ObserveDocumentMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
-  DiscoveryFeedManager._(
+  DiscoveryFeedManager(
     this._engine,
     this._discoveryFeedNavActions,
+    this._fetchCardIndexUseCase,
     this._updateCardIndexUseCase,
-    this._cardIndex,
-    DiscoveryFeedState initialState,
-  ) : super(initialState);
-
-  @factoryMethod
-  static Future<DiscoveryFeedManager> create(
-    DiscoveryEngine engine,
-    DiscoveryFeedNavActions discoveryFeedNavActions,
-    FetchCardIndexUseCase fetchCardIndexUseCase,
-    UpdateCardIndexUseCase updateCardIndexUseCase,
-  ) async {
-    final cardIndex = await fetchCardIndexUseCase.singleOutput(none);
-
-    return DiscoveryFeedManager._(
-      engine,
-      discoveryFeedNavActions,
-      updateCardIndexUseCase,
-      cardIndex,
-      DiscoveryFeedState.initial(cardIndex),
-    );
+  ) : super(DiscoveryFeedState.initial()) {
+    _init();
   }
 
   final DiscoveryEngine _engine;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
+  final FetchCardIndexUseCase _fetchCardIndexUseCase;
   final UpdateCardIndexUseCase _updateCardIndexUseCase;
+
+  late final UseCaseValueStream<int> _cardIndexConsumer;
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
-  int _cardIndex = 0;
+  int? _cardIndex;
   bool _isFullScreen = false;
 
   void handleNavigateIntoCard() {
@@ -122,13 +108,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   @override
-  Future<DiscoveryFeedState?> computeState() async => fold(
+  Future<DiscoveryFeedState?> computeState() async => fold2(
+        _cardIndexConsumer,
         engineEvents,
       ).foldAll((
+        cardIndex,
         engineEvent,
         errorReport,
       ) {
         final engine = _engine as AppDiscoveryEngine;
+
+        _cardIndex ??= cardIndex;
+
+        if (_cardIndex == null) return null;
+
         var results = engineEvent is FeedRequestSucceeded
             ? {...state.results, ...engineEvent.items}
             : state.results;
@@ -152,7 +145,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isComplete: !isLoading,
           isInErrorState: errorReport.isNotEmpty,
           isFullScreen: _isFullScreen,
-          cardIndex: _cardIndex,
+          cardIndex: _cardIndex!,
         );
 
         // guard against same-state emission
@@ -168,5 +161,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
+  }
+
+  void _init() {
+    _cardIndexConsumer = consume(_fetchCardIndexUseCase, initialData: none)
+        .transform((out) => out.take(1));
   }
 }
