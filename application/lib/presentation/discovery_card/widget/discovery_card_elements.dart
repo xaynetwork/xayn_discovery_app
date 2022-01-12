@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
@@ -20,6 +20,7 @@ class DiscoveryCardElements extends StatelessWidget {
   const DiscoveryCardElements({
     Key? key,
     required this.manager,
+    required this.document,
     required this.title,
     required this.timeToRead,
     required this.url,
@@ -32,6 +33,7 @@ class DiscoveryCardElements extends StatelessWidget {
     this.fractionSize = 1.0,
   }) : super(key: key);
   final DiscoveryCardManager manager;
+  final Document document;
   final String title;
   final String timeToRead;
   final Uri url;

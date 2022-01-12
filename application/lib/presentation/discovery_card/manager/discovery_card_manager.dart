@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/is_bookmarked_use_case.dart';
@@ -19,7 +20,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readabili
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/utils/document_utils.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -130,7 +130,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       errorReport,
     ) {
       if (errorReport.isNotEmpty) {
-        logger.e(errorReport.of(_updateUri)!.error);
+        final report =
+            errorReport.of(_updateUri) ?? errorReport.of(_isBookmarkedHandler);
+        logger.e(report!.error);
 
         return DiscoveryCardState.error();
       }

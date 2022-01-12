@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
@@ -11,6 +13,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onDislikePressed,
     required this.onBookmarkPressed,
     required this.isBookmarked,
+    required this.document,
   }) : super(key: key);
 
   final VoidCallback onSharePressed;
@@ -18,13 +21,16 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
   final bool isBookmarked;
+  final Document document;
 
   @override
   Widget build(BuildContext context) {
     final likeButton = IconButton(
       onPressed: onLikePressed,
       icon: SvgPicture.asset(
-        R.assets.icons.thumbsUp,
+        document.isRelevant
+            ? R.assets.icons.thumbsUpActive
+            : R.assets.icons.thumbsUp,
         fit: BoxFit.none,
         color: R.colors.brightIcon,
       ),
@@ -51,7 +57,9 @@ class DiscoveryCardFooter extends StatelessWidget {
     final dislikeButton = IconButton(
       onPressed: onDislikePressed,
       icon: SvgPicture.asset(
-        R.assets.icons.thumbsDown,
+        document.isIrrelevant
+            ? R.assets.icons.thumbsDownActive
+            : R.assets.icons.thumbsDown,
         fit: BoxFit.none,
         color: R.colors.brightIcon,
       ),
