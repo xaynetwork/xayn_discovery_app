@@ -6,7 +6,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_col
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
 import 'collections_screen_manager_test.mocks.dart';
 
@@ -25,6 +26,7 @@ import 'collections_screen_manager_test.mocks.dart';
   ListenCollectionsUseCase,
   GetAllCollectionsUseCase,
   GetAllBookmarksUseCase,
+  CollectionErrorsEnumMapper,
   DateTimeHandler,
 ])
 void main() {
@@ -33,6 +35,7 @@ void main() {
   late MockRenameCollectionUseCase renameCollectionUseCase;
   late MockListenCollectionsUseCase listenCollectionsUseCase;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
+  late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
   late CollectionsScreenState populatedState;
   final timeStamp = DateTime.now();
@@ -71,6 +74,7 @@ void main() {
         removeCollectionUseCase,
         renameCollectionUseCase,
         listenCollectionsUseCase,
+        collectionErrorsEnumMapper,
         dateTimeHandler,
       );
 
@@ -80,6 +84,7 @@ void main() {
     renameCollectionUseCase = MockRenameCollectionUseCase();
     listenCollectionsUseCase = MockListenCollectionsUseCase();
     getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
+    collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
     dateTimeHandler = MockDateTimeHandler();
     populatedState = CollectionsScreenState.populated(
       [collection1, collection2],
@@ -111,7 +116,7 @@ void main() {
     build: () => collectionsScreenManager,
     setUp: () {
       when(createCollectionUseCase.singleOutput(newCollection.name)).thenAnswer(
-        (_) => Future.value(newCollection),
+        (_) => Future.value(CollectionUseCaseGenericOut.success(collection1)),
       );
     },
     act: (manager) {
@@ -132,13 +137,21 @@ void main() {
   );
 
   blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN createCollectionUsecase throws an exception THEN return current state with error message',
+    'WHEN createCollectionUsecase returns a failure output THEN return current state with error message',
     build: () => collectionsScreenManager,
     setUp: () {
       when(createCollectionUseCase.singleOutput(newCollection.name)).thenAnswer(
-        (_) => Future.error(
-            CreateCollectionUseCaseException(errorMsgCollectionAlreadyExists)),
+        (_) => Future.value(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum
+                .tryingToCreateCollectionUsingExistingName,
+          ),
+        ),
       );
+
+      when(collectionErrorsEnumMapper.mapEnumToString(
+        CollectionUseCaseErrorEnum.tryingToCreateCollectionUsingExistingName,
+      )).thenReturn(errorMsgTryingToCreateCollectionUsingExistingName);
     },
     act: (manager) {
       manager.createCollection(collectionName: newCollection.name);
@@ -146,7 +159,8 @@ void main() {
     expect: () => [
       //default one, emitted when manager created
       populatedState,
-      populatedState.copyWith(errorMsg: errorMsgCollectionAlreadyExists),
+      populatedState.copyWith(
+          errorMsg: errorMsgTryingToCreateCollectionUsingExistingName),
     ],
     verify: (manager) {
       verifyInOrder([
@@ -172,11 +186,11 @@ void main() {
           ),
         ),
       ).thenAnswer(
-        (_) => Future.value(
+        (_) => Future.value(CollectionUseCaseGenericOut.success(
           collection1.copyWith(
             name: newCollectionName,
           ),
-        ),
+        )),
       );
     },
     act: (manager) => manager.renameCollection(
@@ -204,7 +218,7 @@ void main() {
   );
 
   blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN renameCollectionUsecase throws an exception THEN return current state with error message',
+    'WHEN renameCollectionUsecase returns a failure output THEN return current state with error message',
     build: () => collectionsScreenManager,
     setUp: () {
       when(
@@ -215,10 +229,17 @@ void main() {
           ),
         ),
       ).thenAnswer(
-        (_) => Future.error(
-          RenameCollectionUseCaseException(errorMsgCollectionAlreadyExists),
+        (_) => Future.value(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum
+                .tryingToRenameCollectionUsingExistingName,
+          ),
         ),
       );
+
+      when(collectionErrorsEnumMapper.mapEnumToString(
+        CollectionUseCaseErrorEnum.tryingToRenameCollectionUsingExistingName,
+      )).thenReturn(errorMsgTryingToRenameCollectionUsingExistingName);
     },
     act: (manager) => manager.renameCollection(
       collectionId: collection1.id,
@@ -227,7 +248,8 @@ void main() {
     expect: () => [
       //default one, emitted when manager created
       populatedState,
-      populatedState.copyWith(errorMsg: errorMsgCollectionAlreadyExists),
+      populatedState.copyWith(
+          errorMsg: errorMsgTryingToRenameCollectionUsingExistingName),
     ],
     verify: (manager) {
       verifyInOrder([
@@ -258,7 +280,7 @@ void main() {
         ),
       ).thenAnswer(
         (_) => Future.value(
-          collection1,
+          CollectionUseCaseGenericOut.success(collection1),
         ),
       );
     },
@@ -285,7 +307,7 @@ void main() {
   );
 
   blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN removeCollectionUseCase throws an exception THEN return current state with error message',
+    'WHEN removeCollectionUseCase returns a failure output THEN return current state with error message',
     build: () => collectionsScreenManager,
     setUp: () {
       when(
@@ -295,10 +317,16 @@ void main() {
           ),
         ),
       ).thenAnswer(
-        (_) => Future.error(
-          RemoveCollectionUseCaseException(errorMsgCollectionDoesntExist),
+        (_) => Future.value(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum.tryingToRemoveDefaultCollection,
+          ),
         ),
       );
+
+      when(collectionErrorsEnumMapper.mapEnumToString(
+        CollectionUseCaseErrorEnum.tryingToRemoveDefaultCollection,
+      )).thenReturn(errorMsgTryingToRemoveDefaultCollection);
     },
     act: (manager) => manager.removeCollection(
       collectionIdToRemove: collection1.id,
@@ -306,7 +334,8 @@ void main() {
     expect: () => [
       //default one, emitted when manager created
       populatedState,
-      populatedState.copyWith(errorMsg: errorMsgCollectionDoesntExist),
+      populatedState.copyWith(
+          errorMsg: errorMsgTryingToRemoveDefaultCollection),
     ],
     verify: (manager) {
       verifyInOrder([

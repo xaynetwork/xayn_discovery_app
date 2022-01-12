@@ -5,13 +5,12 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
-import 'collection_exception.dart';
+import 'collection_use_cases_outputs.dart';
 
 @injectable
 class RemoveCollectionUseCase
-    extends UseCase<RemoveCollectionUseCaseParam, Collection?> {
+    extends UseCase<RemoveCollectionUseCaseParam, CollectionUseCaseGenericOut> {
   final CollectionsRepository _collectionsRepository;
   final BookmarksRepository _bookmarksRepository;
 
@@ -21,23 +20,22 @@ class RemoveCollectionUseCase
   );
 
   @override
-  Stream<Collection?> transaction(RemoveCollectionUseCaseParam param) async* {
+  Stream<CollectionUseCaseGenericOut> transaction(
+      RemoveCollectionUseCaseParam param) async* {
     /// Check if we're trying to delete the default collection
     if (param.collectionIdToRemove == Collection.readLaterId) {
-      logger.e(toString() + ': ' + errorMsgRemovingExistingDefaultCollection);
-      throw RemoveCollectionUseCaseException(
-        errorMsgRemovingExistingDefaultCollection,
-      );
+      yield const CollectionUseCaseGenericOut.failure(
+          CollectionUseCaseErrorEnum.tryingToRemoveDefaultCollection);
+      return;
     }
 
     final collection =
         _collectionsRepository.getById(param.collectionIdToRemove);
 
     if (collection == null) {
-      logger.e(toString() + ': ' + errorMsgCollectionDoesntExist);
-      throw RemoveCollectionUseCaseException(
-        errorMsgCollectionDoesntExist,
-      );
+      yield const CollectionUseCaseGenericOut.failure(
+          CollectionUseCaseErrorEnum.tryingToRemoveNotExistingCollection);
+      return;
     }
 
     /// Check if the bookmarks must be deleted or moved to a different collection
@@ -58,7 +56,7 @@ class RemoveCollectionUseCase
     }
 
     _collectionsRepository.remove(collection);
-    yield collection;
+    yield CollectionUseCaseGenericOut.success(collection);
   }
 }
 

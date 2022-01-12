@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -27,7 +27,7 @@ void main() {
 
   group('Rename collection use case', () {
     useCaseTest(
-      'WHEN the given name corresponds to a collection name that already exists THEN throw an exception',
+      'WHEN the given name corresponds to a collection name that already exists THEN yield failure output with proper enum value',
       setUp: () =>
           when(collectionsRepository.isCollectionNameUsed(newCollectionName))
               .thenReturn(true),
@@ -42,14 +42,17 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<RenameCollectionUseCaseException>()),
+        useCaseSuccess(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum
+                .tryingToRenameCollectionUsingExistingName,
+          ),
         )
       ],
     );
 
     useCaseTest(
-      'WHEN the given id corresponds to a collection that doesn\'t exist THEN throw an exception',
+      'WHEN the given id corresponds to a collection that doesn\'t exist THEN yield failure output with proper enum value',
       setUp: () => when(collectionsRepository.getById(any)).thenReturn(null),
       build: () => renameCollectionUseCase,
       input: [
@@ -64,8 +67,10 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<RenameCollectionUseCaseException>()),
+        useCaseSuccess(
+          const CollectionUseCaseGenericOut.failure(
+            CollectionUseCaseErrorEnum.tryingToRenameNotExistingCollection,
+          ),
         )
       ],
     );
@@ -87,7 +92,13 @@ void main() {
         ]);
         verifyNoMoreInteractions(collectionsRepository);
       },
-      expect: [useCaseSuccess(updatedCollection)],
+      expect: [
+        useCaseSuccess(
+          CollectionUseCaseGenericOut.success(
+            collection,
+          ),
+        )
+      ],
     );
   });
 }

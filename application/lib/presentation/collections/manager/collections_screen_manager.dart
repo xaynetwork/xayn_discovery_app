@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_exception.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
@@ -13,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_col
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
 @injectable
 class CollectionsScreenManager extends Cubit<CollectionsScreenState>
@@ -21,6 +21,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
   final RemoveCollectionUseCase _removeCollectionUseCase;
   final RenameCollectionUseCase _renameCollectionUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
+  final CollectionErrorsEnumMapper _collectionErrorsEnumMapper;
   final DateTimeHandler _dateTimeHandler;
 
   CollectionsScreenManager._(
@@ -28,6 +29,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     this._removeCollectionUseCase,
     this._renameCollectionUseCase,
     this._listenCollectionsUseCase,
+    this._collectionErrorsEnumMapper,
     this._dateTimeHandler,
     this._collections,
   ) : super(CollectionsScreenState.initial()) {
@@ -41,6 +43,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     RemoveCollectionUseCase removeCollectionUseCase,
     RenameCollectionUseCase renameCollectionUseCase,
     ListenCollectionsUseCase listenCollectionsUseCase,
+    CollectionErrorsEnumMapper collectionErrorsEnumMapper,
     DateTimeHandler dateTimeHandler,
   ) async {
     final collections =
@@ -51,6 +54,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       removeCollectionUseCase,
       renameCollectionUseCase,
       listenCollectionsUseCase,
+      collectionErrorsEnumMapper,
       dateTimeHandler,
       collections,
     );
@@ -59,62 +63,72 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
   late List<Collection> _collections;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
       _collectionsHandler;
-  dynamic _useCaseError;
+  String? _useCaseError;
 
   void _init() {
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
   }
 
-  void createCollection({required String collectionName}) {
+  void createCollection({required String collectionName}) async {
     _useCaseError = null;
-    _createCollectionUseCase.singleOutput(collectionName).catchError(
-      (e, _) {
-        scheduleComputeState(() => _useCaseError = e);
+    final useCaseOut =
+        await _createCollectionUseCase.singleOutput(collectionName);
 
-        /// We need to return a FutureOr<Collection?>
-        /// The tests don't work without the return statement
-        return null;
-      },
+    /// We just need to handle the failure case.
+    /// In case of success we will automatically get the updated list of Collections
+    /// since we are listening to the repo through the [ListenCollectionsUseCase]
+    useCaseOut.mapOrNull(
+      failure: (useCaseOut) => scheduleComputeState(
+        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
+          useCaseOut.error,
+        ),
+      ),
     );
   }
 
   void renameCollection({
     required UniqueId collectionId,
     required String newName,
-  }) {
+  }) async {
     _useCaseError = null;
     final param = RenameCollectionUseCaseParam(
       collectionId: collectionId,
       newName: newName,
     );
-    _renameCollectionUseCase.singleOutput(param).catchError(
-      (e, _) {
-        scheduleComputeState(() => _useCaseError = e);
+    final useCaseOut = await _renameCollectionUseCase.singleOutput(param);
 
-        /// We need to return a FutureOr<Collection?>
-        /// The tests don't work without the return statement
-        return null;
-      },
+    /// We just need to handle the failure case.
+    /// In case of success we will automatically get the updated list of Collections
+    /// since we are listening to the repo through the [ListenCollectionsUseCase]
+    useCaseOut.mapOrNull(
+      failure: (useCaseOut) => scheduleComputeState(
+        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
+          useCaseOut.error,
+        ),
+      ),
     );
   }
 
   void removeCollection({
     required UniqueId collectionIdToRemove,
     UniqueId? collectionIdMoveBookmarksTo,
-  }) {
+  }) async {
     _useCaseError = null;
     final param = RemoveCollectionUseCaseParam(
       collectionIdToRemove: collectionIdToRemove,
       collectionIdMoveBookmarksTo: collectionIdMoveBookmarksTo,
     );
-    _removeCollectionUseCase.singleOutput(param).catchError(
-      (e, _) {
-        scheduleComputeState(() => _useCaseError = e);
+    final useCaseOut = await _removeCollectionUseCase.singleOutput(param);
 
-        /// We need to return a FutureOr<Collection?>
-        /// The tests don't work without the return statement
-        return null;
-      },
+    /// We just need to handle the failure case.
+    /// In case of success we will automatically get the updated list of Collections
+    /// since we are listening to the repo through the [ListenCollectionsUseCase]
+    useCaseOut.mapOrNull(
+      failure: (useCaseOut) => scheduleComputeState(
+        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
+          useCaseOut.error,
+        ),
+      ),
     );
   }
 
@@ -122,13 +136,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
   Future<CollectionsScreenState?> computeState() async {
     String errorMsg;
     if (_useCaseError != null) {
-      final error = _useCaseError;
-      if (error is CollectionUseCaseException) {
-        errorMsg = error.msg;
-      } else {
-        errorMsg = error.toString();
-      }
-      return state.copyWith(errorMsg: errorMsg);
+      return state.copyWith(errorMsg: _useCaseError);
     }
 
     return fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
