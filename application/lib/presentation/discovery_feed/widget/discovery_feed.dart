@@ -39,7 +39,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   DiscoveryFeedManager? _discoveryFeedManager;
   late final CardViewController _cardViewController = CardViewController();
   late final Map<Document, _CardManagers> _cardManagers = {};
-  RatingDialogManager? _ratingDialogManager;
+  final RatingDialogManager _ratingDialogManager = di.get();
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -145,10 +145,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   void initState() {
-    di
-        .getAsync<RatingDialogManager>()
-        .then((manager) => _ratingDialogManager = manager);
-
     WidgetsBinding.instance!.addObserver(this);
 
     di.getAsync<DiscoveryFeedManager>().then((it) {
@@ -215,7 +211,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onFinalIndex: discoveryFeedManager.handleLoadMore,
             onIndexChanged: (int index) {
               discoveryFeedManager.handleIndexChanged(index);
-              _ratingDialogManager?.handleIndexChanged(index);
+              _ratingDialogManager.handleIndexChanged(index);
             },
             isFullScreen: state.isFullScreen,
             fullScreenOffsetFraction:
