@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 
 @lazySingleton
@@ -30,11 +31,11 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
 
   @override
   void onSearchNavPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.search));
+      changeStack((stack) => stack.replace(PageRegistry.search));
 
   @override
-  void onAccountNavPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.account));
+  void onPersonalAreaNavPressed() =>
+      changeStack((stack) => stack.replace(PageRegistry.personalArea));
 }
 
 @Injectable(as: SettingsNavActions)
@@ -58,11 +59,45 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
       : changeStack = manager.manipulateStack;
 
   @override
-  void onHomeNavPressed() => changeStack((stack) => stack.pop());
+  void onHomeNavPressed() =>
+      changeStack((stack) => stack.replace(PageRegistry.discovery));
 
   @override
-  void onAccountNavPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.account));
+  void onPersonalAreaNavPressed() =>
+      changeStack((stack) => stack.replace(PageRegistry.personalArea));
+}
+
+@Injectable(as: PersonalAreaNavActions)
+class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  PersonalAreaNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onHomeNavPressed() =>
+      changeStack((stack) => stack.replace(PageRegistry.discovery));
+
+  @override
+  void onActiveSearchNavPressed() =>
+      changeStack((stack) => stack.replace(PageRegistry.search));
+
+  @override
+  void onCollectionsNavPressed() {
+    throw UnimplementedError('Screen not ready yet');
+    // changeStack((stack) => stack.push(PageRegistry.collections));
+  }
+
+  @override
+  void onHomeFeedSettingsNavPressed() {
+    throw UnimplementedError('Screen not ready yet');
+    // changeStack((stack) => stack.push(PageRegistry.homeFeedSettings));
+  }
+
+  @override
+  void onSettingsNavPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.settings));
 }
 
 @Injectable(as: OnBoardingNavActions)

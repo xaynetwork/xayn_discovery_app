@@ -35,14 +35,15 @@ void main() {
   setUp(() async {
     await setupWidgetTest();
     manager = MockSettingsScreenManager();
-    di.registerFactoryAsync<SettingsScreenManager>(() => Future.value(manager));
+    di.registerSingleton<SettingsScreenManager>(manager);
     when(manager.state).thenReturn(stateReady);
     streamController = StreamController<SettingsScreenState>();
     when(manager.stream).thenAnswer((_) => streamController.stream);
     when(manager.reportBug()).thenAnswer((_) async {});
   });
 
-  tearDown(() {
+  tearDown(() async {
+    await tearDownWidgetTest();
     streamController.close();
   });
 
@@ -224,6 +225,7 @@ void main() {
           di.get<SettingsNavActions>().onBackNavPressed();
         });
         await tester.initToDiscoveryPage();
+        await tester.navigateToPersonalArea();
         await tester.navigateToSettingsScreen();
         await tester.navigateBack();
         expect(find.byType(SettingsScreen), findsNothing);

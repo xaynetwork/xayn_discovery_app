@@ -10,7 +10,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
 
-  void onAccountNavPressed();
+  void onPersonalAreaNavPressed();
 }
 
 /// Manages the state for the active search screen.
@@ -53,7 +53,8 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
       });
 
   @override
-  void onAccountNavPressed() => _activeSearchNavActions.onAccountNavPressed();
+  void onPersonalAreaNavPressed() =>
+      _activeSearchNavActions.onPersonalAreaNavPressed();
 
   @override
   void onHomeNavPressed() => _activeSearchNavActions.onHomeNavPressed();

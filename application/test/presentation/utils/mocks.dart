@@ -1,6 +1,8 @@
 import 'package:in_app_review/in_app_review.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
@@ -21,9 +23,12 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
   GetAppThemeUseCase,
   ListenAppThemeUseCase,
   SettingsNavActions,
+  PersonalAreaNavActions,
   SettingsScreenManager,
   ActiveSearchNavActions,
+  PersonalAreaManager,
   DiscoveryEngine,
+  BuildContext,
   IncrementAppSessionUseCase,
   MapToAppVersionMapper,
   AppVersionToMapMapper,
