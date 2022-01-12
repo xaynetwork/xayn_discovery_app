@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -20,6 +21,7 @@ class DiscoveryCardElements extends StatelessWidget {
   const DiscoveryCardElements({
     Key? key,
     required this.manager,
+    required this.document,
     required this.title,
     required this.timeToRead,
     required this.url,
@@ -30,6 +32,7 @@ class DiscoveryCardElements extends StatelessWidget {
     this.fractionSize = 1.0,
   }) : super(key: key);
   final DiscoveryCardManager manager;
+  final Document document;
   final String title;
   final String timeToRead;
   final Uri url;
@@ -65,6 +68,7 @@ class DiscoveryCardElements extends StatelessWidget {
         onSharePressed: () => manager.shareUri(url),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
+        document: document,
       ),
     );
 
@@ -114,18 +118,22 @@ class _ButtonRowFooter extends StatelessWidget {
     required this.onSharePressed,
     required this.onLikePressed,
     required this.onDislikePressed,
+    required this.document,
   }) : super(key: key);
 
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
+  final Document document;
 
   @override
   Widget build(BuildContext context) {
     final likeButton = IconButton(
       onPressed: onLikePressed,
       icon: SvgPicture.asset(
-        R.assets.icons.thumbsUp,
+        document.isRelevant
+            ? R.assets.icons.thumbsUpActive
+            : R.assets.icons.thumbsUp,
         fit: BoxFit.none,
         color: R.colors.brightIcon,
       ),
@@ -143,7 +151,9 @@ class _ButtonRowFooter extends StatelessWidget {
     final dislikeButton = IconButton(
       onPressed: onDislikePressed,
       icon: SvgPicture.asset(
-        R.assets.icons.thumbsDown,
+        document.isIrrelevant
+            ? R.assets.icons.thumbsDownActive
+            : R.assets.icons.thumbsDown,
         fit: BoxFit.none,
         color: R.colors.brightIcon,
       ),

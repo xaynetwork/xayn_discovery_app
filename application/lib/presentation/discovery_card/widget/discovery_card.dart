@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dar
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 /// the minimum fraction height of the card image.
 /// This value must be in the range of [0.0, 1.0], where 1.0 is the
@@ -170,6 +171,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         );
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
+          document: widget.document,
           title: webResource.title,
           timeToRead: state.output?.timeToRead ?? '',
           url: webResource.url,
@@ -177,11 +179,15 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
             documentId: widget.document.documentId,
-            feedback: DocumentFeedback.positive,
+            feedback: widget.document.isRelevant
+                ? DocumentFeedback.neutral
+                : DocumentFeedback.positive,
           ),
           onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
             documentId: widget.document.documentId,
-            feedback: DocumentFeedback.negative,
+            feedback: widget.document.isIrrelevant
+                ? DocumentFeedback.neutral
+                : DocumentFeedback.negative,
           ),
           fractionSize: normalizedValue,
         );
