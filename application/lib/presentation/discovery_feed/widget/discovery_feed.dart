@@ -84,7 +84,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
               documentId: document.documentId,
-              feedback: DocumentFeedback.positive,
+              feedback: document.isRelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.positive,
             ),
           ),
           buildNavBarItemShare(
@@ -96,7 +98,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
               documentId: document.documentId,
-              feedback: DocumentFeedback.negative,
+              feedback: document.isIrrelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.negative,
             ),
           ),
         ],
@@ -168,16 +172,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-      var isInReaderMode = discoveryFeedManager.state.isFullScreen;
 
       return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
         bloc: discoveryFeedManager,
         builder: (context, state) {
           final results = state.results;
 
-          if (isInReaderMode != state.isFullScreen) {
-            // we need to update NavBarConfig ONLY WHEN we change this flag
-            isInReaderMode = !isInReaderMode;
+          if (state.isFullScreen) {
+            // always update whenever state changes and when in full screen mode.
+            // the only state update that can happen, is the change in like/dislike
+            // of the presented document.
+            // on that change, we need a redraw to update the like/dislike icons'
+            // selection status.
             NavBarContainer.updateNavBar(context);
           }
 
@@ -206,6 +212,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               isPrimary: false,
               isSwipingEnabled: true,
               isFullScreen: false,
+            ),
+            boxBorderBuilder: _boxBorderBuilder(
+              results: results,
+              isFullScreen: state.isFullScreen,
             ),
             itemCount: _totalResults,
             onFinalIndex: discoveryFeedManager.handleLoadMore,
@@ -269,6 +279,29 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           card: card,
           isSwipingEnabled: isSwipingEnabled,
         );
+      };
+
+  BoxBorder? Function(int) _boxBorderBuilder({
+    required Set<Document> results,
+    required bool isFullScreen,
+  }) =>
+      (int index) {
+        final document = results.elementAt(index);
+
+        switch (document.feedback) {
+          case DocumentFeedback.neutral:
+            return null;
+          case DocumentFeedback.positive:
+            return Border.all(
+              color: R.colors.swipeBackgroundRelevant,
+              width: R.dimen.sentimentBorderSize,
+            );
+          case DocumentFeedback.negative:
+            return Border.all(
+              color: R.colors.swipeBackgroundIrrelevant,
+              width: R.dimen.sentimentBorderSize,
+            );
+        }
       };
 
   void _onFullScreenDrag(double distance) {

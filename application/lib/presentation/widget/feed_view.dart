@@ -27,6 +27,7 @@ class FeedView extends StatelessWidget {
   final double itemSpacing;
   final EdgeInsets padding;
   final BorderRadius borderRadius;
+  final BoxBorderBuilder? boxBorderBuilder;
 
   FeedView({
     Key? key,
@@ -40,6 +41,7 @@ class FeedView extends StatelessWidget {
     this.cardViewController,
     this.secondaryItemBuilder,
     this.itemCount,
+    this.boxBorderBuilder,
   })  : mainCardSize =
             isFullScreen ? 1.0 - .15 * fullScreenOffsetFraction : notchSize,
         padding = isFullScreen
@@ -68,6 +70,7 @@ class FeedView extends StatelessWidget {
         secondaryItemBuilder: secondaryItemBuilder,
         itemCount: itemCount ?? 0,
         itemSpacing: itemSpacing,
+        borderBuilder: boxBorderBuilder,
         clipBorderRadius: borderRadius,
         onFinalIndex: onFinalIndex,
         onIndexChanged: onIndexChanged,
