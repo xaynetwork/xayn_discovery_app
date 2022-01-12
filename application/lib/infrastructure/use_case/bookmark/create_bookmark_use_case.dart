@@ -68,25 +68,29 @@ class MapDocumentToCreateBookmarkParamUseCase
   @override
   Stream<CreateBookmarkUseCaseParam> transaction(Document param) async* {
     final webResource = param.webResource;
-    final image = await _directUriUseCase.singleOutput(webResource.displayUrl);
-
+    final image = await _getImageData(webResource.displayUrl);
     final thumbnailUri = webResource.provider?.thumbnail;
-
-    CacheManagerEvent? providerThumbnail;
-
-    if (thumbnailUri != null) {
-      providerThumbnail = await _directUriUseCase.singleOutput(thumbnailUri);
-    }
+    final providerThumbnail = await _getImageData(thumbnailUri);
 
     final createBookmarkParam = CreateBookmarkUseCaseParam(
       id: param.documentId.uniqueId,
       title: webResource.title,
-      image: image.bytes,
+      image: image,
       providerName: webResource.provider?.name,
-      providerThumbnail: providerThumbnail?.bytes,
+      providerThumbnail: providerThumbnail,
     );
-
     yield createBookmarkParam;
+  }
+
+  Future<Uint8List?> _getImageData(Uri? uri) async {
+    if (uri == null) return null;
+    final list = await _directUriUseCase.call(uri);
+    final last = list.last;
+    Object? error;
+    late CacheManagerEvent value;
+    last.fold(defaultOnError: (e, _) => error = e, onValue: (it) => value = it);
+    if (error != null) throw error!;
+    return value.bytes;
   }
 }
 
