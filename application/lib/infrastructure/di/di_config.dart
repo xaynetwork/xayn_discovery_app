@@ -15,8 +15,8 @@ final di = GetIt.instance;
   preferRelativeImports: true, // default
   asExtension: false, // default
 )
-void configureDependencies() {
-  $initGetIt(di);
+Future<void> configureDependencies() async {
+  await $initGetIt(di);
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
 }

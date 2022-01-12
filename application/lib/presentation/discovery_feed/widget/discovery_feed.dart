@@ -13,13 +13,15 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
+import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
-  void onAccountNavPressed();
+  void onPersonalAreaNavPressed();
 }
 
 /// A widget which displays a list of discovery results.
@@ -37,6 +39,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   DiscoveryFeedManager? _discoveryFeedManager;
   late final CardViewController _cardViewController = CardViewController();
   late final Map<Document, _CardManagers> _cardManagers = {};
+  final RatingDialogManager _ratingDialogManager = di.get();
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -59,8 +62,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             buildNavBarItemSearch(
               onPressed: discoveryFeedManager.onSearchNavPressed,
             ),
-            buildNavBarItemAccount(
-              onPressed: discoveryFeedManager.onAccountNavPressed,
+            buildNavBarItemPersonalArea(
+              onPressed: discoveryFeedManager.onPersonalAreaNavPressed,
             ),
           ],
         );
@@ -216,7 +219,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             ),
             itemCount: _totalResults,
             onFinalIndex: discoveryFeedManager.handleLoadMore,
-            onIndexChanged: discoveryFeedManager.handleIndexChanged,
+            onIndexChanged: (int index) {
+              discoveryFeedManager.handleIndexChanged(index);
+              _ratingDialogManager.handleIndexChanged(index);
+            },
             isFullScreen: state.isFullScreen,
             fullScreenOffsetFraction:
                 _dragDistance / DiscoveryCard.dragThreshold,
@@ -308,7 +314,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       document,
       () => _CardManagers(
             imageManager: di.get()
-              ..getImage(Uri.parse(document.webResource.displayUrl.toString())),
+              ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
             discoveryCardManager: di.get()..updateUri(document.webResource.url),
           ));
 }
