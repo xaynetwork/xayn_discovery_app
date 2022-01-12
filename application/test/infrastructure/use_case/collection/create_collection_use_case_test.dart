@@ -44,7 +44,7 @@ void main() {
       },
       expect: [
         useCaseFailure(
-          throwsA(const TypeMatcher<CollectionUseCaseException>()),
+          throwsA(const TypeMatcher<CreateCollectionUseCaseException>()),
         )
       ],
     );

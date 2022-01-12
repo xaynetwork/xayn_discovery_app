@@ -1,20 +1,4 @@
-const String errorMessageCreatingExistingDefaultCollection =
-    'Trying to create again the default collection';
-const String errorMessageRemovingExistingDefaultCollection =
-    'Trying to remove the default collection';
-const String errorMessageRenamingDefaultCollection =
-    'Trying to rename the default collection';
-const String errorMessageRenamingNotExistingCollection =
-    'Trying to rename a collection that doesn\'t exist';
-const String errorMessageRemovingNotExistingCollection =
-    'Trying to remove a collection that doesn\'t exist';
-const String errorMessageCollectionNameEmpty =
-    'The name of the default collection cannot be empty';
-const String errorMessageCollectionNameUsed = 'Collection name already exists';
-const String errorMessageGettingCardDataOfNotExistingCollection =
-    'Trying to get collection card data of a collection that doesn\'t exist';
-
-class CollectionUseCaseException implements Exception {
+abstract class CollectionUseCaseException implements Exception {
   final String msg;
 
   CollectionUseCaseException(this.msg);
@@ -22,3 +6,30 @@ class CollectionUseCaseException implements Exception {
   @override
   String toString() => msg;
 }
+
+class CreateCollectionUseCaseException extends CollectionUseCaseException {
+  CreateCollectionUseCaseException(String msg) : super(msg);
+}
+
+class CreateDefaultCollectionUseCaseException
+    extends CollectionUseCaseException {
+  CreateDefaultCollectionUseCaseException(String msg) : super(msg);
+}
+
+class GetCollectionCardDataUseCaseException extends CollectionUseCaseException {
+  GetCollectionCardDataUseCaseException(String msg) : super(msg);
+}
+
+class RemoveCollectionUseCaseException extends CollectionUseCaseException {
+  RemoveCollectionUseCaseException(String msg) : super(msg);
+}
+
+class RenameCollectionUseCaseException extends CollectionUseCaseException {
+  RenameCollectionUseCaseException(String msg) : super(msg);
+}
+
+const String errorMsgRemovingExistingDefaultCollection =
+    'The default collection cannot be removed';
+const String errorMsgCollectionNameEmpty = 'Collection name cannot be empty';
+const String errorMsgCollectionAlreadyExists = 'The collection already exists';
+const String errorMsgCollectionDoesntExist = 'The collection doesn\'t exist';
