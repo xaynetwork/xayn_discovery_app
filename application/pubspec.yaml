@@ -26,6 +26,7 @@ dependencies:
   http: ^0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
+  in_app_review: 2.0.3
   injectable: ^1.2.2
   instabug_flutter: ^10.9.1
   intl: ^0.17.0
@@ -42,6 +43,7 @@ dependencies:
       url: git@github.com:xaynetwork/story.git
       ref: cd93531ce08e4afd4490d8bc5f436432a8c0bacd
   uuid: ^3.0.5
+  version: 2.0.0
   xayn_architecture:
     git:
       url: git@github.com:xaynetwork/xayn_architecture.git
