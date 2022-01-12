@@ -18,8 +18,8 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     required bool isInErrorState,
   }) = _DiscoveryFeedState;
 
-  factory DiscoveryFeedState.initial(int cardIndex) => DiscoveryFeedState(
-        cardIndex: cardIndex,
+  factory DiscoveryFeedState.initial() => const DiscoveryFeedState(
+        cardIndex: 0,
         isComplete: false,
         isInErrorState: false,
       );
