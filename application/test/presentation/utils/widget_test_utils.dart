@@ -33,7 +33,7 @@ extension WidgetTesterCommonActions on WidgetTester {
   Future<void> initToDiscoveryPage() async {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
-    await pumpAndSettle();
+    await pumpAndSettle(updateNabBarDebounceTimeout);
   }
 
   Future<void> navigateToSearch() async {
