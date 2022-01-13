@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -15,11 +14,8 @@ class ListenIsBookmarkedUseCase extends UseCase<UniqueId, bool> {
 
   @override
   Stream<bool> transaction(UniqueId param) => _bookmarksRepository
-          .watch()
-          .where((event) => event.id == param)
-          .map((_) => _bookmarksRepository.getById(param))
-          .map((event) {
-        debugPrint('listenIsBookmarked is emitting now: ${event != null}');
-        return event != null;
-      });
+      .watch()
+      .where((event) => event.id == param)
+      .map((_) => _bookmarksRepository.getById(param))
+      .map((event) => event != null);
 }

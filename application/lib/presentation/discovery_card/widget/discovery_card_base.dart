@@ -80,17 +80,13 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-          bloc: _discoveryCardManager,
-          builder: (context, state) {
-            debugPrint(
-                'card base: manager: ${_discoveryCardManager.hashCode} \tstate: ${state.hashCode}\tstate.isBookmarked:${state.isBookmarked}');
-
-            return buildFromState(
-              context,
-              state,
-              _buildImage(),
-            );
-          });
+        bloc: _discoveryCardManager,
+        builder: (context, state) => buildFromState(
+          context,
+          state,
+          _buildImage(),
+        ),
+      );
 
   Widget buildFromState(
     BuildContext context,
