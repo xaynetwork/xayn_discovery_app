@@ -34,7 +34,6 @@ class _DiscoveryFeedCardState
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    debugPrint('_DiscoveryFeedCardState: state:${state.hashCode}');
     final timeToRead = state.processedDocument?.timeToRead ?? '';
 
     final elements = DiscoveryCardElements(

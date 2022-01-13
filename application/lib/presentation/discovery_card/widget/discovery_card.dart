@@ -158,8 +158,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    debugPrint('_DiscoveryCardState: state:${state.hashCode}');
-
     final mediaQuery = MediaQuery.of(context);
     // normalize the animation value to [0.0, 1.0]
     final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
@@ -291,14 +289,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 class _DiscoveryCardPageState extends _DiscoveryCardState {
   @override
   Widget buildFromState(
-      BuildContext context, DiscoveryCardState state, Widget image) {
-    debugPrint('_DiscoveryCardPageState: state:${state.hashCode}');
-
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: super.buildFromState(context, state, image),
-      ),
-    );
-  }
+          BuildContext context, DiscoveryCardState state, Widget image) =>
+      Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: super.buildFromState(context, state, image),
+        ),
+      );
 }

@@ -4,7 +4,7 @@ import 'package:xayn_design/src/utils/design_testing_utils.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
 
-import '../../utils/extensions.dart';
+import '../../test_utils/extensions.dart';
 
 void main() {
   const title = 'CardTitle';

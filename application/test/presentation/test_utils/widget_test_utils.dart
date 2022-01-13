@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/main.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
-import '../utils/utils.dart';
+import '../test_utils/utils.dart';
 
 /// common setup for widget tests
 Future<void> setupWidgetTest() async {

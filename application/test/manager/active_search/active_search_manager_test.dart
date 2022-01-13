@@ -6,8 +6,8 @@ import 'package:xayn_discovery_app/presentation/active_search/manager/active_sea
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-import '../../presentation/utils/fakes.dart';
-import '../../presentation/utils/utils.dart';
+import '../../presentation/test_utils/fakes.dart';
+import '../../presentation/test_utils/utils.dart';
 
 void main() {
   ActiveSearchManager buildManager() =>

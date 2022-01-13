@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 
-import '../../presentation/utils/utils.dart';
+import '../../presentation/test_utils/utils.dart';
 
 void main() {
   late AppStatusMapper mapper;

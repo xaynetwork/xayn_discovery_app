@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
 class SettingsGeneralInfoSection extends StatelessWidget {
   final VoidCallback onAboutPressed;
@@ -24,7 +23,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SettingsSection(
-        title: Strings.settingsSectionTitleGeneralInfo,
+        title: R.strings.settingsSectionTitleGeneralInfo,
         items: [
           _getAboutXayn(),
           _getCarbonNeutral(),
@@ -36,7 +35,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
 
   SettingsCardData _getAboutXayn() =>
       SettingsCardData.fromTile(SettingsTileData(
-        title: Strings.settingsAboutXayn,
+        title: R.strings.settingsAboutXayn,
         svgIconPath: R.assets.icons.info,
         action: SettingsTileActionIcon(
           key: Keys.settingsAboutXayn,
@@ -47,7 +46,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
 
   SettingsCardData _getCarbonNeutral() =>
       SettingsCardData.fromTile(SettingsTileData(
-        title: Strings.settingsCarbonNeutral,
+        title: R.strings.settingsCarbonNeutral,
         svgIconPath: R.assets.icons.plant,
         action: SettingsTileActionIcon(
           key: Keys.settingsCarbonNeutral,
@@ -57,7 +56,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
       ));
 
   SettingsCardData _getImprint() => SettingsCardData.fromTile(SettingsTileData(
-        title: Strings.settingsImprint,
+        title: R.strings.settingsImprint,
         svgIconPath: R.assets.icons.legal,
         action: SettingsTileActionIcon(
           key: Keys.settingsImprint,
@@ -68,7 +67,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
 
   SettingsCardData _getPrivacyPolicy() =>
       SettingsCardData.fromTile(SettingsTileData(
-        title: Strings.settingsPrivacyPolicy,
+        title: R.strings.settingsPrivacyPolicy,
         svgIconPath: R.assets.icons.legal,
         action: SettingsTileActionIcon(
           key: Keys.settingsPrivacyPolicy,
@@ -78,7 +77,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
       ));
 
   SettingsCardData _getTC() => SettingsCardData.fromTile(SettingsTileData(
-        title: Strings.settingsTermsAndConditions,
+        title: R.strings.settingsTermsAndConditions,
         svgIconPath: R.assets.icons.legal,
         action: SettingsTileActionIcon(
           key: Keys.settingsTermsAndConditions,

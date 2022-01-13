@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -18,8 +17,8 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 
-import '../utils/utils.dart';
-import '../utils/widget_test_utils.dart';
+import '../test_utils/utils.dart';
+import '../test_utils/widget_test_utils.dart';
 
 void main() {
   late StreamController<SettingsScreenState> streamController;
@@ -65,8 +64,8 @@ void main() {
       expect(find.byType(SettingsHelpImproveSection), findsOneWidget);
 
       final versionText =
-          '${Strings.settingsVersion} ${stateReady.appVersion.version}\n'
-          '${Strings.settingsBuild} ${stateReady.appVersion.build}';
+          '${R.strings.settingsVersion} ${stateReady.appVersion.version}\n'
+          '${R.strings.settingsBuild} ${stateReady.appVersion.build}';
 
       final btnFinder = find.text(versionText);
       await tester.dragUntilVisible(

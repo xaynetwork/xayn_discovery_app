@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
 class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
   final String yourTitle;
@@ -12,7 +11,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = '${Strings.your} $yourTitle';
+    final title = '${R.strings.your} $yourTitle';
     final text = Text(title, style: R.styles.appHeadlineText);
     return SafeArea(
       child: Padding(

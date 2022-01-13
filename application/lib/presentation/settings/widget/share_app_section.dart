@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
 class ShareAppSection extends StatelessWidget {
   final VoidCallback onShareAppPressed;
@@ -15,7 +14,7 @@ class ShareAppSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: SettingsSection.custom(
-          title: Strings.settingsSectionTitleSpreadTheWord,
+          title: R.strings.settingsSectionTitleSpreadTheWord,
           child: _buildShareBtn(),
           crossAxisAlignment: CrossAxisAlignment.center,
         ),
@@ -24,7 +23,7 @@ class ShareAppSection extends StatelessWidget {
   AppRaisedButton _buildShareBtn() => AppRaisedButton.textWithIcon(
         key: Keys.settingsShareBtn,
         onPressed: onShareAppPressed,
-        text: Strings.settingsShareBtn,
+        text: R.strings.settingsShareBtn,
         svgIconPath: R.assets.icons.heart,
       );
 }
