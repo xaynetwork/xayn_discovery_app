@@ -59,6 +59,7 @@ abstract class DiscoveryCardNavActions {
   void onBackNavPressed();
 }
 
+@immutable
 class DiscoveryCardScreenArgs {
   const DiscoveryCardScreenArgs({
     required this.isPrimary,
