@@ -6,11 +6,11 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
-import 'collection_use_cases_outputs.dart';
+import 'collection_use_cases_errors.dart';
 
 @injectable
 class RemoveCollectionUseCase
-    extends UseCase<RemoveCollectionUseCaseParam, CollectionUseCaseGenericOut> {
+    extends UseCase<RemoveCollectionUseCaseParam, Collection> {
   final CollectionsRepository _collectionsRepository;
   final BookmarksRepository _bookmarksRepository;
 
@@ -20,22 +20,17 @@ class RemoveCollectionUseCase
   );
 
   @override
-  Stream<CollectionUseCaseGenericOut> transaction(
-      RemoveCollectionUseCaseParam param) async* {
+  Stream<Collection> transaction(RemoveCollectionUseCaseParam param) async* {
     /// Check if we're trying to delete the default collection
     if (param.collectionIdToRemove == Collection.readLaterId) {
-      yield const CollectionUseCaseGenericOut.failure(
-          CollectionUseCaseErrorEnum.tryingToRemoveDefaultCollection);
-      return;
+      throw CollectionUseCaseError.tryingToRemoveDefaultCollection;
     }
 
     final collection =
         _collectionsRepository.getById(param.collectionIdToRemove);
 
     if (collection == null) {
-      yield const CollectionUseCaseGenericOut.failure(
-          CollectionUseCaseErrorEnum.tryingToRemoveNotExistingCollection);
-      return;
+      throw CollectionUseCaseError.tryingToRemoveNotExistingCollection;
     }
 
     /// Check if the bookmarks must be deleted or moved to a different collection
@@ -56,7 +51,7 @@ class RemoveCollectionUseCase
     }
 
     _collectionsRepository.remove(collection);
-    yield CollectionUseCaseGenericOut.success(collection);
+    yield collection;
   }
 }
 

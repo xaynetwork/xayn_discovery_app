@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_collection_card_data_use_case.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
@@ -26,26 +27,13 @@ class CollectionCardManager extends Cubit<CollectionCardState>
 
   Future<void> retrieveCollectionCardInfo(UniqueId collectionId) async {
     _useCaseError = null;
-    final useCaseOut =
-        await _getCollectionCardDataUseCase.singleOutput(collectionId);
-    useCaseOut.map(
-      success: (out) {
-        scheduleComputeState(
-          () {
-            numOfItems = out.numOfItems;
-            image = out.image;
-          },
-        );
+    final useCaseOut = await _getCollectionCardDataUseCase.call(collectionId);
+    useCaseOut.last.fold(
+      defaultOnError: _defaultOnError,
+      matchOnError: {
+        On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
       },
-      failure: (out) {
-        scheduleComputeState(
-          () {
-            _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
-              out.error,
-            );
-          },
-        );
-      },
+      onValue: _onValue,
     );
   }
 
@@ -59,4 +47,21 @@ class CollectionCardManager extends Cubit<CollectionCardState>
       image: image,
     );
   }
+
+  void _defaultOnError(Object e, StackTrace? s) =>
+      scheduleComputeState(() => _useCaseError = e.toString());
+
+  void _matchOnCollectionUseCaseError(Object e, StackTrace? s) =>
+      scheduleComputeState(
+        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
+          e as CollectionUseCaseError,
+        ),
+      );
+
+  void _onValue(GetCollectionCardDataUseCaseOut out) => scheduleComputeState(
+        () {
+          numOfItems = out.numOfItems;
+          image = out.image;
+        },
+      );
 }
