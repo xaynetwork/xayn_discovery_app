@@ -11,6 +11,10 @@ abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
 
   void onPersonalAreaNavPressed();
+
+  void onCardDetailsPressed(Document document);
+
+  void onBackPressed();
 }
 
 /// Manages the state for the active search screen.
@@ -58,4 +62,11 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
 
   @override
   void onHomeNavPressed() => _activeSearchNavActions.onHomeNavPressed();
+
+  @override
+  void onCardDetailsPressed(Document document) =>
+      _activeSearchNavActions.onCardDetailsPressed(document);
+
+  @override
+  void onBackPressed() => _activeSearchNavActions.onBackPressed();
 }

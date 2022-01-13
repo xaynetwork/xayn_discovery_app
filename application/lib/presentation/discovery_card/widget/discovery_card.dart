@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -9,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -52,16 +56,31 @@ class DiscoveryCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryCardState();
 }
 
+class DiscoveryCardScreenArgs {
+  const DiscoveryCardScreenArgs({
+    required this.isPrimary,
+    required this.document,
+    required this.imageManager,
+    required this.discoveryCardManager,
+  });
+
+  final bool isPrimary;
+  final Document document;
+  final ImageManager imageManager;
+  final DiscoveryCardManager discoveryCardManager;
+}
+
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
 class DiscoveryCardScreen extends DiscoveryCard {
-  const DiscoveryCardScreen({
+  DiscoveryCardScreen({
     Key? key,
-    required bool isPrimary,
-    required Document document,
+    required DiscoveryCardScreenArgs args,
   }) : super(
           key: key,
-          isPrimary: isPrimary,
-          document: document,
+          isPrimary: args.isPrimary,
+          document: args.document,
+          imageManager: args.imageManager,
+          discoveryCardManager: args.discoveryCardManager,
         );
 
   @override
@@ -274,7 +293,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 }
 
-class _DiscoveryCardPageState extends _DiscoveryCardState {
+class _DiscoveryCardPageState extends _DiscoveryCardState
+    with NavBarConfigMixin {
+// TODO: create a new manager
+  late final ActiveSearchManager _activeSearchManager = di.get();
+
   @override
   Widget buildFromState(
           BuildContext context, DiscoveryCardState state, Widget image) =>
@@ -283,5 +306,42 @@ class _DiscoveryCardPageState extends _DiscoveryCardState {
           bottom: false,
           child: super.buildFromState(context, state, image),
         ),
+      );
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig(
+        [
+          buildNavBarItemArrowLeft(onPressed: () async {
+            // await _currentCardController?.animateToClose();
+
+            _activeSearchManager.onBackPressed();
+          }),
+          buildNavBarItemLike(
+            isLiked: widget.document.isRelevant,
+            onPressed: () {},
+            //   managers.discoveryCardManager.changeDocumentFeedback(
+            // documentId: document.documentId,
+            // feedback: document.isRelevant
+            //     ? DocumentFeedback.neutral
+            //     : DocumentFeedback.positive,
+            // ),
+          ),
+          buildNavBarItemShare(
+            onPressed: () {},
+            // managers.discoveryCardManager
+            //     .shareUri(document.webResource.url),
+          ),
+          // buildNavBarItemDisLike(
+          //   isDisLiked: document.isIrrelevant,
+          //   onPressed: () =>
+          //       managers.discoveryCardManager.changeDocumentFeedback(
+          //     documentId: document.documentId,
+          //     feedback: document.isIrrelevant
+          //         ? DocumentFeedback.neutral
+          //         : DocumentFeedback.negative,
+          //   ),
+          // ),
+        ],
+        isWidthExpanded: true,
       );
 }

@@ -97,11 +97,14 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
     Document document,
     bool isPrimary,
   ) {
-    final card = DiscoveryFeedCard(
-      isPrimary: isPrimary,
-      document: document,
-      imageManager: di.get()
-        ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
+    final card = GestureDetector(
+      onTap: () => _activeSearchManager.onCardDetailsPressed(document),
+      child: DiscoveryFeedCard(
+        isPrimary: isPrimary,
+        document: document,
+        imageManager: di.get()
+          ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
+      ),
     );
 
     return Padding(

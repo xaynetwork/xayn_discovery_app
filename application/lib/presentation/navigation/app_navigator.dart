@@ -1,12 +1,16 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @lazySingleton
 class AppNavigationManager extends xayn.NavigatorManager {
@@ -65,6 +69,21 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   @override
   void onPersonalAreaNavPressed() =>
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
+
+  @override
+  void onCardDetailsPressed(Document document) {
+    final args = DiscoveryCardScreenArgs(
+      isPrimary: true,
+      document: document,
+      imageManager: di.get()
+        ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
+      discoveryCardManager: di.get()..updateUri(document.webResource.url),
+    );
+    changeStack((stack) => stack.push(PageRegistry.cardDetails(args)));
+  }
+
+  @override
+  void onBackPressed() => changeStack((stack) => stack.pop());
 }
 
 @Injectable(as: PersonalAreaNavActions)
