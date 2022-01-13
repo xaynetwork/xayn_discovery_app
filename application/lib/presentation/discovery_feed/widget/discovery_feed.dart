@@ -147,11 +147,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     WidgetsBinding.instance!.addObserver(this);
 
     di.getAsync<DiscoveryFeedManager>().then((it) {
-      setState(() {
-        _discoveryFeedManager = it;
+      if (mounted) {
+        setState(() {
+          _discoveryFeedManager = it;
 
-        NavBarContainer.updateNavBar(context);
-      });
+          NavBarContainer.updateNavBar(context);
+        });
+      }
     });
 
     super.initState();
