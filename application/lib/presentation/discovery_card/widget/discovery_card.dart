@@ -196,7 +196,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             showXaynBottomSheet(
               context,
               child: SaveBookmarkToCollection(
-                bookmarkId: widget.document.documentId.uniqueId,
+                bookmarkId: widget.document.documentUniqueId,
               ),
             );
           },

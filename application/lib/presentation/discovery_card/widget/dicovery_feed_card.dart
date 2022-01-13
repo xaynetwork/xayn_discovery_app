@@ -61,7 +61,7 @@ class _DiscoveryFeedCardState
         showXaynBottomSheet(
           context,
           child: SaveBookmarkToCollection(
-            bookmarkId: widget.document.documentId.uniqueId,
+            bookmarkId: widget.document.documentUniqueId,
           ),
         );
       },
