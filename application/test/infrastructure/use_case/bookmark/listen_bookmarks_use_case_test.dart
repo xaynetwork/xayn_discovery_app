@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
@@ -12,6 +13,7 @@ import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 void main() {
   late MockBookmarksRepository bookmarksRepository;
+  late MockCollectionsRepository collectionsRepository;
   late ListenBookmarksUseCase listenBookmarksUseCase;
   final collectionId = UniqueId();
 
@@ -35,9 +37,19 @@ void main() {
     createdAt: DateTime.now().toUtc().toString(),
   );
 
+  final collection = Collection(
+    id: const UniqueId.fromTrustedString('test_collection'),
+    name: 'test_collection',
+    index: 0,
+  );
+
   setUp(() {
     bookmarksRepository = MockBookmarksRepository();
-    listenBookmarksUseCase = ListenBookmarksUseCase(bookmarksRepository);
+    collectionsRepository = MockCollectionsRepository();
+    listenBookmarksUseCase = ListenBookmarksUseCase(
+      bookmarksRepository,
+      collectionsRepository,
+    );
   });
 
   group('Listen bookmarks use case', () {
@@ -54,9 +66,11 @@ void main() {
         );
         when(bookmarksRepository.getByCollectionId(collectionId))
             .thenReturn([bookmark1, bookmark2]);
+        when(collectionsRepository.getById(collectionId))
+            .thenReturn(collection);
       },
       build: () => listenBookmarksUseCase,
-      input: [collectionId],
+      input: [ListenBookmarksUseCaseIn(collectionId: collectionId)],
       verify: (_) {
         verifyInOrder([
           bookmarksRepository.watch(),
@@ -66,7 +80,9 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ListenBookmarksUseCaseOut([bookmark1, bookmark2]),
+          ListenBookmarksUseCaseOut(
+            [bookmark1, bookmark2],
+          ),
         )
       ],
     );

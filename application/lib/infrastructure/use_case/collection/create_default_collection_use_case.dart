@@ -2,9 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
-
-import 'collection_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 
 @injectable
 class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
@@ -15,7 +13,6 @@ class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
   Stream<Collection> transaction(String param) async* {
     assert(
       param.isNotEmpty,
-      errorMessageCollectionNameEmpty,
     );
 
     final collections = _collectionsRepository.getAll();
@@ -26,10 +23,7 @@ class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
           (element) => element.id == Collection.readLaterId,
         )
         .isNotEmpty) {
-      logger.e(errorMessageCreatingExistingDefaultCollection);
-      throw CollectionUseCaseException(
-        errorMessageCreatingExistingDefaultCollection,
-      );
+      throw CollectionUseCaseError.tryingToCreateAgainDefaultCollection;
     }
 
     final collection = Collection.readLater(name: param.trim());

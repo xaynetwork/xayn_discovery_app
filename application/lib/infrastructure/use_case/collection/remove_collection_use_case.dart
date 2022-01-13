@@ -1,12 +1,12 @@
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
-import 'collection_exception.dart';
+import 'collection_use_cases_errors.dart';
 
 @injectable
 class RemoveCollectionUseCase
@@ -23,20 +23,14 @@ class RemoveCollectionUseCase
   Stream<Collection> transaction(RemoveCollectionUseCaseParam param) async* {
     /// Check if we're trying to delete the default collection
     if (param.collectionIdToRemove == Collection.readLaterId) {
-      logger.e(errorMessageRemovingExistingDefaultCollection);
-      throw CollectionUseCaseException(
-        errorMessageRemovingExistingDefaultCollection,
-      );
+      throw CollectionUseCaseError.tryingToRemoveDefaultCollection;
     }
 
     final collection =
         _collectionsRepository.getById(param.collectionIdToRemove);
 
     if (collection == null) {
-      logger.e(errorMessageRemovingNotExistingCollection);
-      throw CollectionUseCaseException(
-        errorMessageRemovingNotExistingCollection,
-      );
+      throw CollectionUseCaseError.tryingToRemoveNotExistingCollection;
     }
 
     /// Check if the bookmarks must be deleted or moved to a different collection
@@ -61,12 +55,16 @@ class RemoveCollectionUseCase
   }
 }
 
-class RemoveCollectionUseCaseParam {
+class RemoveCollectionUseCaseParam extends Equatable {
   final UniqueId collectionIdToRemove;
   final UniqueId? collectionIdMoveBookmarksTo;
 
-  RemoveCollectionUseCaseParam({
+  const RemoveCollectionUseCaseParam({
     required this.collectionIdToRemove,
     this.collectionIdMoveBookmarksTo,
   });
+
+  @override
+  List<Object?> get props =>
+      [collectionIdToRemove, collectionIdMoveBookmarksTo];
 }
