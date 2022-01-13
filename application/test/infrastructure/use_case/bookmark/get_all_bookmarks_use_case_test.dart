@@ -6,7 +6,7 @@ import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -60,7 +60,7 @@ void main() {
 
   group('Get all bookmarks use case', () {
     useCaseTest(
-      'WHEN an id of a NOT existing collection has been given THEN throw a BookmarkUseCaseException',
+      'WHEN an id of a NOT existing collection has been given THEN yield failure output with proper error enum',
       setUp: () =>
           when(collectionsRepository.getById(collectionId)).thenReturn(null),
       build: () => getAllBookmarksUseCase,
@@ -70,8 +70,11 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<BookmarkUseCaseException>()),
+        useCaseSuccess(
+          const BookmarkUseCaseListOut.failure(
+            BookmarkUseCaseErrorEnum
+                .tryingToGetBookmarksForNotExistingCollection,
+          ),
         )
       ],
     );
@@ -92,7 +95,7 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          GetAllBookmarksUseCaseOut(
+          BookmarkUseCaseListOut.success(
             [
               bookmark1,
               bookmark2,
@@ -119,7 +122,7 @@ void main() {
         verifyNoMoreInteractions(bookmarksRepository);
       },
       expect: [
-        useCaseSuccess(GetAllBookmarksUseCaseOut([
+        useCaseSuccess(BookmarkUseCaseListOut.success([
           bookmark1,
           bookmark2,
         ])),

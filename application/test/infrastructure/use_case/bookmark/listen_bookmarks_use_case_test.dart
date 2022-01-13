@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -80,7 +81,7 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ListenBookmarksUseCaseOut([bookmark1, bookmark2]),
+          BookmarkUseCaseListOut.success([bookmark1, bookmark2]),
         )
       ],
     );
