@@ -19,19 +19,18 @@ import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 class Strings {
   static Translations? _translation;
   static const Translations _defaultTranslation = Translations();
-  static CountryNames? _countryNames;
-  static CountryNames? _defaultCountryNames;
+  static Future<CountryNames>? _countryNames;
+  static late final Future<CountryNames> _defaultCountryNames =
+      AppLanguage.english.countryNames;
 
   static Translations get translation => _translation ?? _defaultTranslation;
 
-  static CountryNames get countryNames =>
-      _countryNames ?? _defaultCountryNames!;
+  static Future<CountryNames> get countryNames =>
+      _countryNames ?? _defaultCountryNames;
 
-  /// languageCode is i.e. de, en, ...
-  /// countryCode is i.e. DE, US, ...
-  static Future<void> switchTranslations(AppLanguage appLanguage) async {
+  static void switchTranslations(AppLanguage appLanguage) {
     _switchTranslations(appLanguage);
-    _countryNames = await appLanguage.countryNames;
+    _countryNames = appLanguage.countryNames;
   }
 
   static void _switchTranslations(AppLanguage appLanguage) {
@@ -44,13 +43,10 @@ class Strings {
     _translation = appLanguage.translations;
   }
 
-  static void setDefaultCountryNames(CountryNames countryNames) async {
-    _defaultCountryNames = countryNames;
-  }
-
   @visibleForTesting
   static void reset() {
     _translation = null;
+    _countryNames = null;
   }
 }
 

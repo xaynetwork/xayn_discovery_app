@@ -1,7 +1,6 @@
-import 'package:intl/locale.dart' as intl;
 import 'package:test/test.dart';
 import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
-import 'package:xayn_discovery_app/presentation/utils/locale.dart';
+import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 
 void main() {
   test(
@@ -22,7 +21,7 @@ void main() {
       'Given a Locale with an existing language code and a null country code, expect to return the correct app language',
       () {
     final result = AppLanguageHelper.from(
-        locale: intl.Locale.fromSubtags(languageCode: 'de'));
+        locale: AppLocale.fromSubtags(languageCode: 'de'));
     expect(result, AppLanguage.german);
   });
 

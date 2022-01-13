@@ -1,12 +1,12 @@
-import 'package:intl/locale.dart';
 import 'package:xayn_discovery_app/domain/model/market.dart';
+import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 
 /// TODO this is a copy-paste version of the BingMarkets from xayn_search
 /// Needs to be adjusted for the real supported markets
-class DiscoveryEngineMarket extends Market<Locale> {
+class DiscoveryEngineMarket extends Market<AppLocale> {
   static const _default = 'undefined';
   @override
-  final Locale locale;
+  final AppLocale locale;
 
   DiscoveryEngineMarket(this.locale);
 
@@ -44,11 +44,11 @@ class DiscoveryEngineMarket extends Market<Locale> {
   @override
   bool get stringify => true;
 
-  static DiscoveryEngineMarket findSupportedMarketForLocale(Locale locale) {
+  static DiscoveryEngineMarket findSupportedMarketForLocale(AppLocale locale) {
     bool equalsCountry(Market element) =>
         element.country == locale.countryCode?.toUpperCase();
     final alwaysSupportedMarket = DiscoveryEngineMarket(
-        Locale.fromSubtags(languageCode: 'en', countryCode: 'US'));
+        AppLocale.fromSubtags(languageCode: 'en', countryCode: 'US'));
     DiscoveryEngineMarket equalsLanguage() => supportedMarkets.firstWhere(
           (element) => element.language == locale.languageCode,
           orElse: () => alwaysSupportedMarket,
@@ -57,85 +57,87 @@ class DiscoveryEngineMarket extends Market<Locale> {
   }
 }
 
+/// TODO change to  real supported markets based on webz or discovery engine specifications
 final supportedMarkets = [
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'es', countryCode: 'AR')),
+      AppLocale.fromSubtags(languageCode: 'es', countryCode: 'AR')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'AU')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'AU')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'de', countryCode: 'AT')),
+      AppLocale.fromSubtags(languageCode: 'de', countryCode: 'AT')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'nl', countryCode: 'BE')),
+      AppLocale.fromSubtags(languageCode: 'nl', countryCode: 'BE')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'fr', countryCode: 'BE')),
+      AppLocale.fromSubtags(languageCode: 'fr', countryCode: 'BE')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'pt', countryCode: 'BR')),
+      AppLocale.fromSubtags(languageCode: 'pt', countryCode: 'BR')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'CA')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'CA')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'fr', countryCode: 'CA')),
+      AppLocale.fromSubtags(languageCode: 'fr', countryCode: 'CA')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'es', countryCode: 'CL')),
+      AppLocale.fromSubtags(languageCode: 'es', countryCode: 'CL')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'da', countryCode: 'DK')),
+      AppLocale.fromSubtags(languageCode: 'da', countryCode: 'DK')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'fi', countryCode: 'FI')),
+      AppLocale.fromSubtags(languageCode: 'fi', countryCode: 'FI')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'fr', countryCode: 'FR')),
+      AppLocale.fromSubtags(languageCode: 'fr', countryCode: 'FR')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'de', countryCode: 'DE')),
+      AppLocale.fromSubtags(languageCode: 'de', countryCode: 'DE')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'zh', countryCode: 'HK')),
+      AppLocale.fromSubtags(languageCode: 'zh', countryCode: 'HK')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'IN')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'IN')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'ID')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'ID')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'it', countryCode: 'IT')),
+      AppLocale.fromSubtags(languageCode: 'it', countryCode: 'IT')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'ja', countryCode: 'JP')),
+      AppLocale.fromSubtags(languageCode: 'ja', countryCode: 'JP')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'ko', countryCode: 'KR')),
+      AppLocale.fromSubtags(languageCode: 'ko', countryCode: 'KR')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'MY')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'MY')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'es', countryCode: 'MX')),
+      AppLocale.fromSubtags(languageCode: 'es', countryCode: 'MX')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'nl', countryCode: 'NL')),
+      AppLocale.fromSubtags(languageCode: 'nl', countryCode: 'NL')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'NZ')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'NZ')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'nb', countryCode: 'NO')),
+      AppLocale.fromSubtags(languageCode: 'nb', countryCode: 'NO')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN')),
+      AppLocale.fromSubtags(languageCode: 'zh', countryCode: 'CN')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'pl', countryCode: 'PL')),
+      AppLocale.fromSubtags(languageCode: 'pl', countryCode: 'PL')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'PH')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'PH')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'ru', countryCode: 'RU')),
+      AppLocale.fromSubtags(languageCode: 'ru', countryCode: 'RU')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'ZA')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'ZA')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'es', countryCode: 'ES')),
+      AppLocale.fromSubtags(languageCode: 'es', countryCode: 'ES')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'sv', countryCode: 'SE')),
+      AppLocale.fromSubtags(languageCode: 'sv', countryCode: 'SE')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'fr', countryCode: 'CH')),
+      AppLocale.fromSubtags(languageCode: 'fr', countryCode: 'CH')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'de', countryCode: 'CH')),
+      AppLocale.fromSubtags(languageCode: 'de', countryCode: 'CH')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW')),
+      AppLocale.fromSubtags(languageCode: 'zh', countryCode: 'TW')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'tr', countryCode: 'TR')),
+      AppLocale.fromSubtags(languageCode: 'tr', countryCode: 'TR')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'GB')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'GB')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'en', countryCode: 'US')),
+      AppLocale.fromSubtags(languageCode: 'en', countryCode: 'US')),
   DiscoveryEngineMarket(
-      Locale.fromSubtags(languageCode: 'es', countryCode: 'US')),
+      AppLocale.fromSubtags(languageCode: 'es', countryCode: 'US')),
 ];
 
+/// TODO change to  real supported languages based on webz or discovery engine specifications
 const List<String> supportedLanguages = [
   'ar',
   'eu',
