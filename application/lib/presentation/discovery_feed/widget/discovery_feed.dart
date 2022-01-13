@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
@@ -69,7 +71,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         );
     NavBarConfig buildReaderMode() {
       final document = discoveryFeedManager.state.results
-          .elementAt(discoveryFeedManager.state.resultIndex);
+          .elementAt(discoveryFeedManager.state.cardIndex);
       final managers = managersOf(document);
 
       return NavBarConfig(
@@ -198,6 +200,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           }
 
           _totalResults = results.length;
+          _cardViewController.index = min(_totalResults - 1, state.cardIndex);
+
+          onIndexChanged(int index) {
+            discoveryFeedManager.handleIndexChanged(index);
+            _ratingDialogManager.handleIndexChanged(index);
+          }
 
           return FeedView(
             cardViewController: _cardViewController,
@@ -219,10 +227,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             ),
             itemCount: _totalResults,
             onFinalIndex: discoveryFeedManager.handleLoadMore,
-            onIndexChanged: (int index) {
-              discoveryFeedManager.handleIndexChanged(index);
-              _ratingDialogManager.handleIndexChanged(index);
-            },
+            onIndexChanged: _totalResults > 0 ? onIndexChanged : null,
             isFullScreen: state.isFullScreen,
             fullScreenOffsetFraction:
                 _dragDistance / DiscoveryCard.dragThreshold,

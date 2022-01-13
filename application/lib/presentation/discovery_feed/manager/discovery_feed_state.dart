@@ -12,21 +12,21 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
 
   const factory DiscoveryFeedState({
     @Default(<Document>{}) Set<Document> results,
-    required int resultIndex,
+    required int cardIndex,
     required bool isComplete,
     @Default(false) bool isFullScreen,
     required bool isInErrorState,
   }) = _DiscoveryFeedState;
 
-  factory DiscoveryFeedState.empty() => const DiscoveryFeedState(
-        resultIndex: 0,
+  factory DiscoveryFeedState.initial() => const DiscoveryFeedState(
+        cardIndex: 0,
         isComplete: false,
         isInErrorState: false,
       );
 
   bool equals(DiscoveryFeedState other) =>
       isFullScreen == other.isFullScreen &&
-      resultIndex == other.resultIndex &&
+      cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
       isInErrorState == other.isInErrorState &&
       const SetEquality().equals(results, other.results);

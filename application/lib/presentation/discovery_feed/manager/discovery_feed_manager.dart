@@ -2,6 +2,8 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/request_feed_mixin.dart';
@@ -31,14 +33,22 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   DiscoveryFeedManager(
     this._engine,
     this._discoveryFeedNavActions,
-  ) : super(DiscoveryFeedState.empty());
+    this._fetchCardIndexUseCase,
+    this._updateCardIndexUseCase,
+  ) : super(DiscoveryFeedState.initial()) {
+    _init();
+  }
 
   final DiscoveryEngine _engine;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
+  final FetchCardIndexUseCase _fetchCardIndexUseCase;
+  final UpdateCardIndexUseCase _updateCardIndexUseCase;
+
+  late final UseCaseValueStream<int> _cardIndexConsumer;
 
   final ObservedViewTypes _observedViewTypes = {};
   Document? _observedDocument;
-  int _documentIndex = 0;
+  int? _cardIndex;
   bool _isFullScreen = false;
 
   void handleNavigateIntoCard() {
@@ -59,7 +69,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       mode: _observedViewTypes[document],
     );
 
-    scheduleComputeState(() => _documentIndex = index);
+    scheduleComputeState(() async =>
+        _cardIndex = await _updateCardIndexUseCase.singleOutput(index));
   }
 
   /// Triggers a new observation for [document], if that document matches
@@ -97,13 +108,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   @override
-  Future<DiscoveryFeedState?> computeState() async => fold(
+  Future<DiscoveryFeedState?> computeState() async => fold2(
+        _cardIndexConsumer,
         engineEvents,
       ).foldAll((
+        cardIndex,
         engineEvent,
         errorReport,
       ) {
         final engine = _engine as AppDiscoveryEngine;
+
+        _cardIndex ??= cardIndex;
+
+        if (_cardIndex == null) return null;
+
         var results = engineEvent is FeedRequestSucceeded
             ? {...state.results, ...engineEvent.items}
             : state.results;
@@ -127,7 +145,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isComplete: !isLoading,
           isInErrorState: errorReport.isNotEmpty,
           isFullScreen: _isFullScreen,
-          resultIndex: _documentIndex,
+          cardIndex: _cardIndex!,
         );
 
         // guard against same-state emission
@@ -143,5 +161,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
+  }
+
+  void _init() {
+    _cardIndexConsumer = consume(_fetchCardIndexUseCase, initialData: none)
+        .transform((out) => out.take(1));
   }
 }
