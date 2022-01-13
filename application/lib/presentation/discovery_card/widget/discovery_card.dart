@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -54,6 +53,10 @@ class DiscoveryCard extends DiscoveryCardBase {
 
   @override
   State<StatefulWidget> createState() => _DiscoveryCardState();
+}
+
+abstract class DiscoveryCardNavActions {
+  void onBackNavPressed();
 }
 
 class DiscoveryCardScreenArgs {
@@ -295,8 +298,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
     with NavBarConfigMixin {
-// TODO: create a new manager
-  late final ActiveSearchManager _activeSearchManager = di.get();
+  late final DiscoveryCardManager _discoveryCardManager = di.get();
 
   @override
   Widget buildFromState(
@@ -311,36 +313,31 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
         [
-          buildNavBarItemArrowLeft(onPressed: () async {
-            // await _currentCardController?.animateToClose();
-
-            _activeSearchManager.onBackPressed();
-          }),
+          buildNavBarItemArrowLeft(
+            onPressed: () => _discoveryCardManager.onBackNavPressed(),
+          ),
           buildNavBarItemLike(
             isLiked: widget.document.isRelevant,
-            onPressed: () {},
-            //   managers.discoveryCardManager.changeDocumentFeedback(
-            // documentId: document.documentId,
-            // feedback: document.isRelevant
-            //     ? DocumentFeedback.neutral
-            //     : DocumentFeedback.positive,
-            // ),
+            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+              documentId: widget.document.documentId,
+              feedback: widget.document.isRelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.positive,
+            ),
           ),
           buildNavBarItemShare(
-            onPressed: () {},
-            // managers.discoveryCardManager
-            //     .shareUri(document.webResource.url),
+            onPressed: () =>
+                _discoveryCardManager.shareUri(widget.document.webResource.url),
           ),
-          // buildNavBarItemDisLike(
-          //   isDisLiked: document.isIrrelevant,
-          //   onPressed: () =>
-          //       managers.discoveryCardManager.changeDocumentFeedback(
-          //     documentId: document.documentId,
-          //     feedback: document.isIrrelevant
-          //         ? DocumentFeedback.neutral
-          //         : DocumentFeedback.negative,
-          //   ),
-          // ),
+          buildNavBarItemDisLike(
+            isDisLiked: widget.document.isIrrelevant,
+            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+              documentId: widget.document.documentId,
+              feedback: widget.document.isIrrelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.negative,
+            ),
+          ),
         ],
         isWidthExpanded: true,
       );

@@ -42,6 +42,17 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
 }
 
+@Injectable(as: DiscoveryCardNavActions)
+class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
+  final xayn.StackManipulationFunction changeStack;
+  DiscoveryCardNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+}
+
 @Injectable(as: SettingsNavActions)
 class SettingsNavActionsImpl extends SettingsNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -81,9 +92,6 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
     );
     changeStack((stack) => stack.push(PageRegistry.cardDetails(args)));
   }
-
-  @override
-  void onBackPressed() => changeStack((stack) => stack.pop());
 }
 
 @Injectable(as: PersonalAreaNavActions)
