@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 
-import '../../utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;

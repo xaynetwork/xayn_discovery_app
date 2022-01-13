@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 
 void main() {
@@ -24,14 +24,14 @@ void main() {
 
       const kidsAmount = 5;
       expect(
-        find.text(Strings.settingsSectionTitleGeneralInfo),
+        find.text(R.strings.settingsSectionTitleGeneralInfo),
         findsOneWidget,
       );
-      expect(find.text(Strings.settingsAboutXayn), findsOneWidget);
-      expect(find.text(Strings.settingsCarbonNeutral), findsOneWidget);
-      expect(find.text(Strings.settingsImprint), findsOneWidget);
-      expect(find.text(Strings.settingsPrivacyPolicy), findsOneWidget);
-      expect(find.text(Strings.settingsTermsAndConditions), findsOneWidget);
+      expect(find.text(R.strings.settingsAboutXayn), findsOneWidget);
+      expect(find.text(R.strings.settingsCarbonNeutral), findsOneWidget);
+      expect(find.text(R.strings.settingsImprint), findsOneWidget);
+      expect(find.text(R.strings.settingsPrivacyPolicy), findsOneWidget);
+      expect(find.text(R.strings.settingsTermsAndConditions), findsOneWidget);
 
       expect(find.byType(SettingsSection), findsOneWidget);
       expect(find.byType(SettingsCard), findsNWidgets(kidsAmount));

@@ -19,6 +19,10 @@ dependencies:
   get_it: ^7.0.0
   flutter_bloc: ^7.3.1
   flutter_cache_manager: ^3.1.3
+  flutter_localized_countries:
+    git:
+      url: https://github.com/xaynetwork/flutter-localized-countries
+      ref: 1.0.0
   freezed_annotation: ^0.15.0
   fwfh_chewie: ^0.7.0+1
   hive: 2.0.4
@@ -27,6 +31,7 @@ dependencies:
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
   in_app_review: 2.0.3
+  i18n: 4.0.0-alpha.0
   injectable: ^1.2.2
   instabug_flutter: ^10.9.1
   intl: ^0.17.0
@@ -51,7 +56,7 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 4c081c6b8aa656b69b0520b67e367821dcc2a86c
+      ref: c750ae093139b6d42ea510c60d21ece6af99f82a
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git

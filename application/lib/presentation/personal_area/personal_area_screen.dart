@@ -5,7 +5,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
@@ -47,7 +46,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       builder: (_, __) => _buildScreen(),
     );
     return Scaffold(
-      appBar: const AppToolbar(yourTitle: Strings.personalAreaTitle),
+      appBar: AppToolbar(yourTitle: R.strings.personalAreaTitle),
       body: bloc,
     );
   }
@@ -84,7 +83,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   PersonalAreaCard _buildCollection() => PersonalAreaCard(
         key: Keys.personalAreaCardCollections,
-        title: Strings.personalAreaCollections,
+        title: R.strings.personalAreaCollections,
         color: R.colors.personalAreaCollections,
         svgIconPath: R.assets.icons.book,
         svgBackground: R.assets.graphics.formsOrange,
@@ -93,7 +92,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   PersonalAreaCard _buildHomeFeed() => PersonalAreaCard(
         key: Keys.personalAreaCardHomeFeed,
-        title: Strings.personalAreaHomeFeed,
+        title: R.strings.personalAreaHomeFeed,
         color: R.colors.personalAreaHomeFeed,
         svgIconPath: R.assets.icons.confetti,
         svgBackground: R.assets.graphics.formsGreen,
@@ -102,7 +101,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   PersonalAreaCard _buildSettings() => PersonalAreaCard(
         key: Keys.personalAreaCardSettings,
-        title: Strings.personalAreaSettings,
+        title: R.strings.personalAreaSettings,
         color: R.colors.personalAreaSettings,
         svgIconPath: R.assets.icons.gear,
         svgBackground: R.assets.graphics.formsPurple,
