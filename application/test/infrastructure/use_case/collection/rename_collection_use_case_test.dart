@@ -33,7 +33,7 @@ void main() {
               .thenReturn(true),
       build: () => renameCollectionUseCase,
       input: [
-        RenameCollectionUseCaseParam(
+        const RenameCollectionUseCaseParam(
             collectionId: Collection.readLaterId, newName: newCollectionName)
       ],
       verify: (_) {
