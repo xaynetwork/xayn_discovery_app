@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -31,7 +31,7 @@ void main() {
 
   group(('Remove bookmark use case'), () {
     useCaseTest(
-      'WHEN the bookmark to remove doesn\'t exist THEN throw an exception',
+      'WHEN the bookmark to remove doesn\'t exist THEN yield failure output with proper error enum',
       setUp: () => when(bookmarksRepository.getById(bookmarkIdToRemove))
           .thenReturn(null),
       build: () => removeBookmarkUseCase,
@@ -43,8 +43,10 @@ void main() {
         verifyNoMoreInteractions(bookmarksRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(const TypeMatcher<BookmarkUseCaseException>()),
+        useCaseSuccess(
+          const BookmarkUseCaseGenericOut.failure(
+            BookmarkUseCaseErrorEnum.tryingToRemoveNotExistingBookmark,
+          ),
         )
       ],
     );
@@ -62,7 +64,7 @@ void main() {
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
-      expect: [useCaseSuccess(bookmark)],
+      expect: [useCaseSuccess(BookmarkUseCaseGenericOut.success(bookmark))],
     );
   });
 }
