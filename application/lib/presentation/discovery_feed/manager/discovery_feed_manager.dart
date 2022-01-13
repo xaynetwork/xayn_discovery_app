@@ -62,6 +62,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) {
+    if (index >= state.results.length) return;
+
     final document = _observedDocument = state.results.elementAt(index);
 
     observeDocument(
