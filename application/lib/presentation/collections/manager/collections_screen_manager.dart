@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
@@ -71,18 +72,17 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
 
   void createCollection({required String collectionName}) async {
     _useCaseError = null;
-    final useCaseOut =
-        await _createCollectionUseCase.singleOutput(collectionName);
+    final useCaseOut = await _createCollectionUseCase.call(collectionName);
 
     /// We just need to handle the failure case.
     /// In case of success we will automatically get the updated list of Collections
     /// since we are listening to the repo through the [ListenCollectionsUseCase]
-    useCaseOut.mapOrNull(
-      failure: (useCaseOut) => scheduleComputeState(
-        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
-          useCaseOut.error,
-        ),
-      ),
+    useCaseOut.last.fold(
+      defaultOnError: _defaultOnError,
+      matchOnError: {
+        On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
+      },
+      onValue: (_) {},
     );
   }
 
@@ -95,17 +95,17 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       collectionId: collectionId,
       newName: newName,
     );
-    final useCaseOut = await _renameCollectionUseCase.singleOutput(param);
+    final useCaseOut = await _renameCollectionUseCase.call(param);
 
     /// We just need to handle the failure case.
     /// In case of success we will automatically get the updated list of Collections
     /// since we are listening to the repo through the [ListenCollectionsUseCase]
-    useCaseOut.mapOrNull(
-      failure: (useCaseOut) => scheduleComputeState(
-        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
-          useCaseOut.error,
-        ),
-      ),
+    useCaseOut.last.fold(
+      defaultOnError: _defaultOnError,
+      matchOnError: {
+        On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
+      },
+      onValue: (_) {},
     );
   }
 
@@ -118,17 +118,17 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       collectionIdToRemove: collectionIdToRemove,
       collectionIdMoveBookmarksTo: collectionIdMoveBookmarksTo,
     );
-    final useCaseOut = await _removeCollectionUseCase.singleOutput(param);
+    final useCaseOut = await _removeCollectionUseCase.call(param);
 
     /// We just need to handle the failure case.
     /// In case of success we will automatically get the updated list of Collections
     /// since we are listening to the repo through the [ListenCollectionsUseCase]
-    useCaseOut.mapOrNull(
-      failure: (useCaseOut) => scheduleComputeState(
-        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
-          useCaseOut.error,
-        ),
-      ),
+    useCaseOut.last.fold(
+      defaultOnError: _defaultOnError,
+      matchOnError: {
+        On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
+      },
+      onValue: (_) {},
     );
   }
 
@@ -159,4 +159,14 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       );
     });
   }
+
+  void _defaultOnError(Object e, StackTrace? s) =>
+      scheduleComputeState(() => _useCaseError = e.toString());
+
+  void _matchOnCollectionUseCaseError(Object e, StackTrace? s) =>
+      scheduleComputeState(
+        () => _useCaseError = _collectionErrorsEnumMapper.mapEnumToString(
+          e as CollectionUseCaseError,
+        ),
+      );
 }

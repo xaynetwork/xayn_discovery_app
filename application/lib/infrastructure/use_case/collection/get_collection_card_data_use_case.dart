@@ -1,10 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
-import 'collection_use_cases_outputs.dart';
+import 'collection_use_cases_errors.dart';
 
 /// UseCase that retrieves data to show in the collection card:
 /// 1) number of items
@@ -34,15 +37,25 @@ class GetCollectionCardDataUseCase
     final collection = _collectionsRepository.getById(param);
 
     if (collection == null) {
-      yield const GetCollectionCardDataUseCaseOut.failure(
-          CollectionUseCaseErrorEnum
-              .tryingToGetCardDataForNotExistingCollection);
-      return;
+      throw CollectionUseCaseError.tryingToGetCardDataForNotExistingCollection;
     }
     final bookmarks = _bookmarksRepository.getByCollectionId(param);
-    yield GetCollectionCardDataUseCaseOut.success(
+    yield GetCollectionCardDataUseCaseOut(
       numOfItems: bookmarks.length,
       image: bookmarks.last.image,
     );
   }
+}
+
+class GetCollectionCardDataUseCaseOut extends Equatable {
+  final int numOfItems;
+  final Uint8List? image;
+
+  const GetCollectionCardDataUseCaseOut({
+    required this.numOfItems,
+    this.image,
+  });
+
+  @override
+  List<Object?> get props => [numOfItems, image];
 }
