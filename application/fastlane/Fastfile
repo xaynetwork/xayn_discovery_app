@@ -14,30 +14,15 @@ import("../ios/fastlane/Fastfile")
 import("lib/properties.rb")
 import("lib/git.rb")
 
-#ios, android, web
-platform = "android"
-
-#apk, appbundle
-android_output = "apk"
-
-#internal, external
-flavor = "internal"
-
-#release, debug
-build = "debug"
-
-# env defaults that will be used when no ENV variables are provided
-ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "api-gw.xaynet.dev",
-                 "SEARCH_API_URL_PRODUCTION" => "api-gw.xayn.com",
-                 "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
-                 "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com" }
+### All the configs are in this file, eventually all project specific parts will move there
+import("lib/config.rb")
 
 # Common checks before running a lane
 before_all do |lane, options|
-  options[:platform] = options[:platform] || platform
-  options[:android_output] = options[:android_output] || android_output
-  options[:flavor] = options[:flavor] || flavor
-  options[:build] = options[:build] || build
+  options[:platform] = options[:platform] || Config::PLATFORM
+  options[:android_output] = options[:android_output] || Config::ANDROID_OUTPUT
+  options[:flavor] = options[:flavor] || Config::FLAVOR
+  options[:build] = options[:build] || Config::BUILD
   options[:coverage] = options[:coverage] || false
   ## downloading the iOS adhoc profile
   options[:downloadProfile] = options[:downloadProfile] || false
@@ -56,11 +41,26 @@ private_lane :flutter_build do |options|
   pub_get(options)
   build_runner(options)
 
-  target = options[:platform] == "android" ? options[:android_output] : options[:platform]
+  platform = options[:platform]
+  target = platform == "android" ? options[:android_output] : platform
   type = options[:build] == "release" ? "--release" : "--debug"
-  codesign = options[:platform] == "ios" ? "--no-codesign" : ""
+  codesign = platform == "ios" ? "--no-codesign" : ""
+  flavor = options[:flavor]
+  appName = Config::FLAVOR_MATRIX[flavor][platform]["name"]
+  appId = Config::FLAVOR_MATRIX[flavor][platform]["id"]
 
-  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]}")
+  defines = {
+    "GIT_TAG" => options[:version_name],
+    "USER_APP_ID" => appId,
+    "USER_APP_NAME" => appName,
+  }
+
+  if platform == "ios"
+    defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor]["provisioning_profile_name"]
+  end
+  dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
+
+  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]} --dart-define=USER_APP_ID=#{appId} --dart-define=USER_APP_NAME=\"#{appName}\" #{dartDefines}")
 end
 
 desc "Build internal apk"
@@ -172,32 +172,31 @@ lane :check do |options|
   end
 end
 
-desc "Build and publish (i.e fastlane publish platform:ios build:release)"
+desc "Build and publish (i.e fastlane publish platform:ios build:release flavor:beta)"
 lane :publish do |options|
-  if options[:platform] == "android"
+  platform = options[:platform]
+  flavor = options[:flavor]
+  config = Config::FLAVOR_MATRIX[flavor][platform]
+  appcenter_target = config["appcenter_target"]
+  appcenter_token = config["appcenter_token"]
+  appcenter_buildfile = config["appcenter_buildfile"]
+
+  if platform == "android"
     android_prepare_internal
   end
   flutter_build(options)
-  if options[:platform] == "ios"
+  if platform == "ios"
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
     end
-    UI.user_error!("No $APPCENTER_IOS_INTERNAL_TOKEN provided!") unless ENV.key?("APPCENTER_IOS_INTERNAL_TOKEN")
-    uploadToAppCenter(
-      ENV["APPCENTER_IOS_INTERNAL_TOKEN"],
-      "Discovery-App-internal",
-      "build/discovery-app.ipa",
-      options[:version_name]
-    )
-  else
-    UI.user_error!("No $APPCENTER_IOS_ANDROID_TOKEN provided!") unless ENV.key?("APPCENTER_ANDROID_INTERNAL_TOKEN")
-    uploadToAppCenter(
-      ENV["APPCENTER_ANDROID_INTERNAL_TOKEN"],
-      "Discovery-App-Android-internal",
-      "build/app/outputs/flutter-apk/app-release.apk",
-      options[:version_name]
-    )
   end
+  UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
+  uploadToAppCenter(
+    ENV[appcenter_token],
+    appcenter_target,
+    appcenter_buildfile,
+    options[:version_name]
+  )
 end
 
 # Private helper methods

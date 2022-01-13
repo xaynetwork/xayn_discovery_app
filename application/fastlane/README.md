@@ -19,7 +19,15 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane create_appstore_api_key
 ```
 
-Create an api key
+Create an app store connect api key 
+
+### update_strings
+
+```sh
+[bundle exec] fastlane update_strings
+```
+
+Update strings
 
 ### build_runner
 
@@ -75,7 +83,7 @@ Sanity checks (options: coverage:[true/FALSE])
 [bundle exec] fastlane publish
 ```
 
-Build and publish (i.e fastlane publish platform:ios build:release)
+Build and publish (i.e fastlane publish platform:ios build:release flavor:beta)
 
 ----
 
