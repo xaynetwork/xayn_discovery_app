@@ -39,6 +39,8 @@ before_all do |lane, options|
   options[:flavor] = options[:flavor] || flavor
   options[:build] = options[:build] || build
   options[:coverage] = options[:coverage] || false
+  ## downloading the iOS adhoc profile
+  options[:downloadProfile] = options[:downloadProfile] || false
 
   version_name = gitVersionName()
   build_number = gitVersionNumber()

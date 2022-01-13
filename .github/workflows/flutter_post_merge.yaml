@@ -68,6 +68,7 @@ jobs:
         timeout-minutes: 20
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
           APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
@@ -77,7 +78,7 @@ jobs:
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
         working-directory: ./application
         run: |
-          fastlane publish platform:ios build:release
+          fastlane publish platform:ios build:release downloadProfile:true
 
   publish_android:
     name: Publish Android
