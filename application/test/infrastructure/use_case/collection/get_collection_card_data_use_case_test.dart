@@ -6,7 +6,7 @@ import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_outputs.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_collection_card_data_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -47,7 +47,7 @@ void main() {
     'Get collection card data use case',
     () {
       useCaseTest(
-        'WHEN the collection to retrieve data for doesn\'t exist THEN yield failure output with proper enum value',
+        'WHEN the collection to retrieve data for doesn\'t exist THEN throw error',
         setUp: () =>
             when(collectionsRepository.getById(collectionId)).thenReturn(null),
         build: () => getCollectionCardDataUseCase,
@@ -60,12 +60,12 @@ void main() {
           verifyNoMoreInteractions(bookmarksRepository);
         },
         expect: [
-          useCaseSuccess(
-            const GetCollectionCardDataUseCaseOut.failure(
-              CollectionUseCaseErrorEnum
+          useCaseFailure(
+            throwsA(
+              CollectionUseCaseError
                   .tryingToGetCardDataForNotExistingCollection,
             ),
-          )
+          ),
         ],
       );
 
@@ -89,7 +89,7 @@ void main() {
         },
         expect: [
           useCaseSuccess(
-            GetCollectionCardDataUseCaseOut.success(
+            GetCollectionCardDataUseCaseOut(
               numOfItems: bookmarks.length,
               image: bookmarks.last.image,
             ),

@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_outputs.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -29,7 +29,7 @@ void main() {
 
   group('Create collection use case', () {
     useCaseTest(
-      'WHEN the given name corresponds to a collection name that already exists THEN yield failure output with proper enum value',
+      'WHEN the given name corresponds to a collection name that already exists THEN throw error',
       setUp: () =>
           when(collectionsRepository.isCollectionNameUsed(collectionName))
               .thenReturn(true),
@@ -43,12 +43,11 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseSuccess(
-          const CollectionUseCaseGenericOut.failure(
-            CollectionUseCaseErrorEnum
-                .tryingToCreateCollectionUsingExistingName,
+        useCaseFailure(
+          throwsA(
+            CollectionUseCaseError.tryingToCreateCollectionUsingExistingName,
           ),
-        )
+        ),
       ],
     );
     useCaseTest(
@@ -72,7 +71,9 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseSuccess(CollectionUseCaseGenericOut.success(createdCollection))
+        useCaseSuccess(
+          createdCollection,
+        ),
       ],
     );
   });

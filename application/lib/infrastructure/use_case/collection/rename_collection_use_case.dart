@@ -1,40 +1,36 @@
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
-import 'collection_use_cases_outputs.dart';
+import 'collection_use_cases_errors.dart';
 
 @injectable
 class RenameCollectionUseCase
-    extends UseCase<RenameCollectionUseCaseParam, CollectionUseCaseGenericOut> {
+    extends UseCase<RenameCollectionUseCaseParam, Collection> {
   final CollectionsRepository _collectionsRepository;
 
   RenameCollectionUseCase(this._collectionsRepository);
 
   @override
-  Stream<CollectionUseCaseGenericOut> transaction(
-      RenameCollectionUseCaseParam param) async* {
+  Stream<Collection> transaction(RenameCollectionUseCaseParam param) async* {
     final collectionNameTrimmed = param.newName.trim();
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
-      yield const CollectionUseCaseGenericOut.failure(
-          CollectionUseCaseErrorEnum.tryingToRenameCollectionUsingExistingName);
-      return;
+      throw CollectionUseCaseError.tryingToRenameCollectionUsingExistingName;
     }
 
     final collection = _collectionsRepository.getById(param.collectionId);
 
     if (collection == null) {
-      yield const CollectionUseCaseGenericOut.failure(
-          CollectionUseCaseErrorEnum.tryingToRenameNotExistingCollection);
-      return;
+      throw CollectionUseCaseError.tryingToRenameNotExistingCollection;
     }
 
     final updatedCollection = collection.copyWith(name: collectionNameTrimmed);
     _collectionsRepository.save(updatedCollection);
 
-    yield CollectionUseCaseGenericOut.success(collection);
+    yield updatedCollection;
   }
 }
 
