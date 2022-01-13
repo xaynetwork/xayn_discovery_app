@@ -5,11 +5,12 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 
 @injectable
 class CreateBookmarkUseCase
-    extends UseCase<CreateBookmarkUseCaseParam, Bookmark> {
+    extends UseCase<CreateBookmarkUseCaseIn, BookmarkUseCaseGenericOut> {
   final BookmarksRepository _bookmarksRepository;
   final UniqueIdHandler _uniqueIdHandler;
   final DateTimeHandler _dateTimeHandler;
@@ -21,7 +22,9 @@ class CreateBookmarkUseCase
   );
 
   @override
-  Stream<Bookmark> transaction(CreateBookmarkUseCaseParam param) async* {
+  Stream<BookmarkUseCaseGenericOut> transaction(
+    CreateBookmarkUseCaseIn param,
+  ) async* {
     final uniqueId = _uniqueIdHandler.generateUniqueId();
     final dateTime = _dateTimeHandler.getDateTimeNow();
     final bookmark = Bookmark(
@@ -34,18 +37,18 @@ class CreateBookmarkUseCase
       createdAt: dateTime.toUtc().toString(),
     );
     _bookmarksRepository.save(bookmark);
-    yield bookmark;
+    yield BookmarkUseCaseGenericOut.success(bookmark);
   }
 }
 
-class CreateBookmarkUseCaseParam {
+class CreateBookmarkUseCaseIn {
   final String title;
   final Uint8List image;
   final String providerName;
   final Uint8List providerThumbnail;
   final UniqueId collectionId;
 
-  CreateBookmarkUseCaseParam({
+  CreateBookmarkUseCaseIn({
     required this.title,
     required this.image,
     required this.providerName,
