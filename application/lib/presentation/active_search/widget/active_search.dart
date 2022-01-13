@@ -7,8 +7,9 @@ import 'package:xayn_discovery_app/presentation/active_search/manager/active_sea
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
+import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const double kSearchCardHeightRatio = 0.64;
@@ -22,7 +23,8 @@ class ActiveSearch extends StatefulWidget {
   _ActiveSearchState createState() => _ActiveSearchState();
 }
 
-class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
+class _ActiveSearchState extends State<ActiveSearch>
+    with NavBarConfigMixin, CardManagersMixin {
   late final ActiveSearchManager _activeSearchManager = di.get();
 
   @override
@@ -97,13 +99,22 @@ class _ActiveSearchState extends State<ActiveSearch> with NavBarConfigMixin {
     Document document,
     bool isPrimary,
   ) {
+    final managers = managersOf(document);
     final card = GestureDetector(
-      onTap: () => _activeSearchManager.onCardDetailsPressed(document),
+      onTap: () {
+        final args = DiscoveryCardScreenArgs(
+          isPrimary: true,
+          document: document,
+          imageManager: managers.imageManager,
+          discoveryCardManager: managers.discoveryCardManager,
+        );
+        _activeSearchManager.onCardDetailsPressed(args);
+      },
       child: DiscoveryFeedCard(
         isPrimary: isPrimary,
         document: document,
-        imageManager: di.get()
-          ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
+        imageManager: managers.imageManager,
+        discoveryCardManager: managers.discoveryCardManager,
       ),
     );
 

@@ -2,6 +2,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/handlers/fold.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
@@ -12,7 +13,7 @@ abstract class ActiveSearchNavActions {
 
   void onPersonalAreaNavPressed();
 
-  void onCardDetailsPressed(Document document);
+  void onCardDetailsPressed(DiscoveryCardScreenArgs args);
 }
 
 /// Manages the state for the active search screen.
@@ -62,6 +63,6 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
   void onHomeNavPressed() => _activeSearchNavActions.onHomeNavPressed();
 
   @override
-  void onCardDetailsPressed(Document document) =>
-      _activeSearchNavActions.onCardDetailsPressed(document);
+  void onCardDetailsPressed(DiscoveryCardScreenArgs args) =>
+      _activeSearchNavActions.onCardDetailsPressed(args);
 }
