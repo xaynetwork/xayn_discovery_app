@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/rese
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/reset_engine_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-import '../../utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockDiscoveryEngine engine;

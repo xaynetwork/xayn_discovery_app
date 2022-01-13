@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -35,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: const AppToolbar(yourTitle: Strings.settingsTitle),
+        appBar: AppToolbar(yourTitle: R.strings.settingsTitle),
         body: _buildBody(),
       );
 
@@ -101,8 +100,8 @@ class _SettingsScreenState extends State<SettingsScreen>
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: R.dimen.unit4),
           child: Text(
-            '${Strings.settingsVersion} ${appVersion.version}\n'
-            '${Strings.settingsBuild} ${appVersion.build}',
+            '${R.strings.settingsVersion} ${appVersion.version}\n'
+            '${R.strings.settingsBuild} ${appVersion.build}',
             style: R.styles.appBodyTextSecondary,
           ),
         ),

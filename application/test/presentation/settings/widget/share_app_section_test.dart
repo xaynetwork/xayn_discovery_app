@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 
 void main() {
@@ -19,10 +19,10 @@ void main() {
       );
 
       expect(
-        find.text(Strings.settingsSectionTitleSpreadTheWord),
+        find.text(R.strings.settingsSectionTitleSpreadTheWord),
         findsOneWidget,
       );
-      expect(find.text(Strings.settingsShareBtn), findsOneWidget);
+      expect(find.text(R.strings.settingsShareBtn), findsOneWidget);
 
       expect(find.byType(SettingsSection), findsOneWidget);
       expect(find.byType(SettingsCard), findsNothing);
