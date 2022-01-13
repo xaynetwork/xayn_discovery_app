@@ -73,7 +73,7 @@ class MapDocumentToCreateBookmarkParamUseCase
     final providerThumbnail = await _getImageData(thumbnailUri);
 
     final createBookmarkParam = CreateBookmarkUseCaseParam(
-      id: param.documentId.uniqueId,
+      id: param.documentUniqueId,
       title: webResource.title,
       image: image,
       providerName: webResource.provider?.name,

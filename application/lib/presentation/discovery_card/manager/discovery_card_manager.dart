@@ -64,7 +64,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void updateDocument(Document document) async {
-    _isBookmarkedHandler(document.documentId.uniqueId);
+    _isBookmarkedHandler(document.documentUniqueId);
 
     /// Update the uri which contains the news article
     _updateUri(document.webResource.url);
@@ -73,7 +73,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void shareUri(Uri uri) => _shareUriUseCase.call(uri);
 
   void toggleBookmarkDocument(Document document) => state.isBookmarked
-      ? _removeBookmarkUseCase(document.documentId.uniqueId)
+      ? _removeBookmarkUseCase(document.documentUniqueId)
       : _createBookmarkUseCase.call(document);
 
   Future<void> _init() async {
@@ -115,37 +115,36 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   @override
-  Future<DiscoveryCardState?> computeState() async {
-    return fold2(_updateUri, _isBookmarkedHandler).foldAll((
-      processedDocument,
-      isBookmarked,
-      errorReport,
-    ) {
-      if (errorReport.isNotEmpty) {
-        final report =
-            errorReport.of(_updateUri) ?? errorReport.of(_isBookmarkedHandler);
-        logger.e(report!.error);
+  Future<DiscoveryCardState?> computeState() async =>
+      fold2(_updateUri, _isBookmarkedHandler).foldAll((
+        processedDocument,
+        isBookmarked,
+        errorReport,
+      ) {
+        if (errorReport.isNotEmpty) {
+          final report = errorReport.of(_updateUri) ??
+              errorReport.of(_isBookmarkedHandler);
+          logger.e(report!.error);
 
-        return DiscoveryCardState.error();
-      }
+          return DiscoveryCardState.error();
+        }
 
-      var nextState = state.copyWith(
-        isComplete: !_isLoading,
-      );
-
-      if (isBookmarked != null) {
-        nextState = nextState.copyWith(
-          isBookmarked: isBookmarked,
+        var nextState = state.copyWith(
+          isComplete: !_isLoading,
         );
-      }
 
-      if (processedDocument != null) {
-        nextState = nextState.copyWith(
-          processedDocument: processedDocument,
-        );
-      }
+        if (isBookmarked != null) {
+          nextState = nextState.copyWith(
+            isBookmarked: isBookmarked,
+          );
+        }
 
-      return nextState;
-    });
-  }
+        if (processedDocument != null) {
+          nextState = nextState.copyWith(
+            processedDocument: processedDocument,
+          );
+        }
+
+        return nextState;
+      });
 }
