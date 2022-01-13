@@ -163,30 +163,36 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Future<Set<Document>> _maybeReduceCardCount(Set<Document> results) async {
-    if (results.length > _maxCardCount) {
-      var nextResults = results.toSet();
-      var cardIndex = _cardIndex!;
-      final flaggedForDisposal = results.take(results.length - _maxCardCount);
+    if (results.length <= _maxCardCount) return results;
 
-      nextResults = nextResults..removeAll(flaggedForDisposal);
-      cardIndex = cardIndex - flaggedForDisposal.length;
+    var nextResults = results.toSet();
+    var cardIndex = _cardIndex!;
+    final flaggedForDisposal = results.take(results.length - _maxCardCount);
 
-      // Invoke the use case which closes these Documents for the engine
-      // ok to be fire and forget, should we instead wait for the ack,
-      // then we need a specific CloseDocumentEngineEvent.
-      // Currently, we just get a generic [ClientEventSucceeded] event only.
-      closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
-      // adjust the cardIndex to counter the removals
-      _cardIndex = await _updateCardIndexUseCase
-          .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
+    nextResults = nextResults..removeAll(flaggedForDisposal);
+    cardIndex = nextResults.toList().indexOf(_observedDocument!);
 
-      // Additional cleanup on the observer.
-      flaggedForDisposal.forEach(_observedViewTypes.remove);
-
-      return nextResults;
+    if (cardIndex == -1) {
+      // This means we are about to remove the Document that is currently
+      // in front, which should be avoided.
+      // Only remove documents when scrolled far enough, so that the impact
+      // is seamless to the user.
+      return results;
     }
 
-    return results;
+    // Invoke the use case which closes these Documents for the engine
+    // ok to be fire and forget, should we instead wait for the ack,
+    // then we need a specific CloseDocumentEngineEvent.
+    // Currently, we just get a generic [ClientEventSucceeded] event only.
+    closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
+    // adjust the cardIndex to counter the removals
+    _cardIndex = await _updateCardIndexUseCase
+        .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
+
+    // Additional cleanup on the observer.
+    flaggedForDisposal.forEach(_observedViewTypes.remove);
+
+    return nextResults;
   }
 
   @override
