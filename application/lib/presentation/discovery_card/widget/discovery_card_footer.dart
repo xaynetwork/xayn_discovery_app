@@ -19,7 +19,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
-  final VoidCallback onBookmarkPressed;
+  final Function(BuildContext) onBookmarkPressed;
   final bool isBookmarked;
   final Document document;
 
@@ -37,7 +37,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final bookmarkButton = IconButton(
-      onPressed: onBookmarkPressed,
+      onPressed: () => onBookmarkPressed(context),
       icon: SvgPicture.asset(
         isBookmarked ? R.assets.icons.bookmarkActive : R.assets.icons.bookmark,
         fit: BoxFit.none,

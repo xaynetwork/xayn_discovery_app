@@ -41,7 +41,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final DateTime datePublished;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
-  final VoidCallback onBookmarkPressed;
+  final Function(BuildContext) onBookmarkPressed;
   final bool isBookmarked;
   final double fractionSize;
 

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_discovery_app/presentation/collection_bottom_sheet/widget/save_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -10,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
@@ -191,8 +193,15 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),
-          onBookmarkPressed: () =>
-              discoveryCardManager.toggleBookmarkDocument(widget.document),
+          onBookmarkPressed: (context) {
+            discoveryCardManager.toggleBookmarkDocument(widget.document);
+            showXaynBottomSheet(
+              context,
+              child: SaveBookmarkToCollection(
+                bookmarkId: widget.document.documentId.uniqueId,
+              ),
+            );
+          },
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
