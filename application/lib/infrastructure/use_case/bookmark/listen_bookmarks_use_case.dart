@@ -14,7 +14,7 @@ typedef GetBookmarksHandler = List<Bookmark> Function(UniqueId? collectionId);
 
 @injectable
 class ListenBookmarksUseCase
-    extends UseCase<ListBookmarksUseCaseIn, ListBookmarksUseCaseOut> {
+    extends UseCase<ListenBookmarksUseCaseIn, ListenBookmarksUseCaseOut> {
   final BookmarksRepository _bookmarksRepository;
   final CollectionsRepository _collectionsRepository;
 
@@ -23,8 +23,8 @@ class ListenBookmarksUseCase
     this._collectionsRepository,
   );
   @override
-  Stream<ListBookmarksUseCaseOut> transaction(
-      ListBookmarksUseCaseIn param) async* {
+  Stream<ListenBookmarksUseCaseOut> transaction(
+      ListenBookmarksUseCaseIn param) async* {
     final collectionId = param.collectionId;
     late final GetBookmarksHandler getBookmarksHandler;
 
@@ -45,26 +45,26 @@ class ListenBookmarksUseCase
     }
 
     yield* _bookmarksRepository.watch().map(
-          (_) => ListBookmarksUseCaseOut(
+          (_) => ListenBookmarksUseCaseOut(
             getBookmarksHandler(param.collectionId),
           ),
         );
   }
 }
 
-class ListBookmarksUseCaseIn extends Equatable {
+class ListenBookmarksUseCaseIn extends Equatable {
   final UniqueId? collectionId;
 
-  const ListBookmarksUseCaseIn({this.collectionId});
+  const ListenBookmarksUseCaseIn({this.collectionId});
 
   @override
   List<Object?> get props => [collectionId];
 }
 
-class ListBookmarksUseCaseOut extends Equatable {
+class ListenBookmarksUseCaseOut extends Equatable {
   final List<Bookmark> bookmarks;
 
-  const ListBookmarksUseCaseOut(this.bookmarks);
+  const ListenBookmarksUseCaseOut(this.bookmarks);
 
   @override
   List<Object?> get props => [bookmarks];

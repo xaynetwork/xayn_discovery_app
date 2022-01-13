@@ -28,7 +28,7 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     _init();
   }
 
-  late final UseCaseSink<ListBookmarksUseCaseIn, ListBookmarksUseCaseOut>
+  late final UseCaseSink<ListenBookmarksUseCaseIn, ListenBookmarksUseCaseOut>
       _listenBookmarksHandler;
 
   dynamic _useCaseError;
@@ -37,8 +37,9 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     _listenBookmarksHandler = pipe(_listenBookmarksUseCase);
   }
 
-  Future<void> enteringScreen(UniqueId collectionId) async {
-    _listenBookmarksHandler(ListBookmarksUseCaseIn(collectionId: collectionId));
+  void enteringScreen(UniqueId collectionId) {
+    _listenBookmarksHandler(
+        ListenBookmarksUseCaseIn(collectionId: collectionId));
   }
 
   void moveBookmark({

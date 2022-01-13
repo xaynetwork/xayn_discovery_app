@@ -6,7 +6,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_exception.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
@@ -30,7 +29,6 @@ void main() {
   late MockMoveBookmarkUseCase moveBookmarkUseCase;
   late MockDateTimeHandler dateTimeHandler;
   late BookmarksScreenManager bookmarksScreenManager;
-  late BookmarksScreenState initialState;
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
@@ -57,7 +55,7 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(listenBookmarksUseCase.transaction(any)).thenAnswer(
-      (_) => Stream.value(ListBookmarksUseCaseOut(bookmarks)),
+      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks)),
     );
 
     bookmarksScreenManager = BookmarksScreenManager(
@@ -66,38 +64,123 @@ void main() {
       moveBookmarkUseCase,
       dateTimeHandler,
     );
-    initialState = BookmarksScreenState.initial();
     populatedState = BookmarksScreenState.populated(bookmarks, timestamp);
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp);
   });
 
-  group('Bookmarks screen manager', () {
-    blocTest<BookmarksScreenManager, BookmarksScreenState>(
-      'WHEN manager is created THEN emit initial state ',
-      setUp: () => when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp),
-      build: () => bookmarksScreenManager,
-      verify: (manager) => expect(manager.state.bookmarks.isEmpty, true),
-      expect: () => [],
-    );
+  group(
+    'Bookmarks screen manager',
+    () {
+      blocTest<BookmarksScreenManager, BookmarksScreenState>(
+        'WHEN manager is created THEN emit initial state ',
+        build: () => bookmarksScreenManager,
+        verify: (manager) => expect(manager.state.bookmarks.isEmpty, true),
+        expect: () => [],
+      );
 
-    blocTest<BookmarksScreenManager, BookmarksScreenState>(
-      'WHEN enteringScreen method has been called THEN emit call the usecase and emit populate state ',
-      setUp: () {},
-      build: () => bookmarksScreenManager,
-      act: (manager) {
-        manager.enteringScreen(collectionId);
-      },
-      verify: (manager) {
-        verifyInOrder([
-          listenBookmarksUseCase
-              .transaction(ListBookmarksUseCaseIn(collectionId: collectionId)),
-          // listenBookmarksUseCase.transform(Stream.value(collectionId)),
-        ]);
-        verifyNoMoreInteractions(listenBookmarksUseCase);
-        // verifyNoMoreInteractions(listenBookmarksUseCase);
-      },
-      expect: () => [initialState],
-    );
-  });
+      blocTest<BookmarksScreenManager, BookmarksScreenState>(
+        'WHEN enteringScreen method has been called THEN call the usecase and emit populate state ',
+        build: () => bookmarksScreenManager,
+        act: (manager) {
+          manager.enteringScreen(collectionId);
+        },
+        verify: (manager) {
+          verifyInOrder([
+            listenBookmarksUseCase.transform(any),
+            listenBookmarksUseCase.transaction(
+                ListenBookmarksUseCaseIn(collectionId: collectionId)),
+          ]);
+          verifyNoMoreInteractions(listenBookmarksUseCase);
+        },
+        expect: () => [populatedState],
+      );
+
+      blocTest<BookmarksScreenManager, BookmarksScreenState>(
+        'WHEN moveBookmark method has been called THEN call the usecase ',
+        setUp: () => when(
+          moveBookmarkUseCase.singleOutput(
+            MoveBookmarkUseCaseParam(
+              bookmarkId: bookmarks.first.id,
+              collectionId: collectionId,
+            ),
+          ),
+        ).thenAnswer((_) => Future.value(bookmarks.first)),
+        build: () => bookmarksScreenManager,
+        act: (manager) {
+          manager.moveBookmark(
+            bookmarkId: bookmarks.first.id,
+            collectionId: collectionId,
+          );
+        },
+        verify: (manager) {
+          verifyInOrder([
+            moveBookmarkUseCase.singleOutput(
+              MoveBookmarkUseCaseParam(
+                bookmarkId: bookmarks.first.id,
+                collectionId: collectionId,
+              ),
+            ),
+          ]);
+
+          verifyNoMoreInteractions(moveBookmarkUseCase);
+        },
+      );
+
+      blocTest<BookmarksScreenManager, BookmarksScreenState>(
+        'WHEN moveBookmark method has been called THEN call the usecase ',
+        setUp: () => when(
+          moveBookmarkUseCase.singleOutput(
+            MoveBookmarkUseCaseParam(
+              bookmarkId: bookmarks.first.id,
+              collectionId: collectionId,
+            ),
+          ),
+        ).thenAnswer((_) => Future.value(bookmarks.first)),
+        build: () => bookmarksScreenManager,
+        act: (manager) {
+          manager.moveBookmark(
+            bookmarkId: bookmarks.first.id,
+            collectionId: collectionId,
+          );
+        },
+        verify: (manager) {
+          verifyInOrder([
+            moveBookmarkUseCase.singleOutput(
+              MoveBookmarkUseCaseParam(
+                bookmarkId: bookmarks.first.id,
+                collectionId: collectionId,
+              ),
+            ),
+          ]);
+
+          verifyNoMoreInteractions(moveBookmarkUseCase);
+        },
+      );
+
+      blocTest<BookmarksScreenManager, BookmarksScreenState>(
+        'WHEN removeBookmark method has been called THEN call the usecase ',
+        setUp: () => when(
+          removeBookmarkUseCase.singleOutput(
+            bookmarks.first.id,
+          ),
+        ).thenAnswer((_) => Future.value(bookmarks.first)),
+        build: () => bookmarksScreenManager,
+        act: (manager) {
+          manager.removeBookmark(
+            bookmarks.first.id,
+          );
+        },
+        verify: (manager) {
+          verifyInOrder([
+            removeBookmarkUseCase.singleOutput(
+              bookmarks.first.id,
+            ),
+          ]);
+
+          verifyNoMoreInteractions(removeBookmarkUseCase);
+        },
+      );
+    },
+  );
 }
