@@ -6,7 +6,7 @@ import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -60,7 +60,7 @@ void main() {
 
   group('Get all bookmarks use case', () {
     useCaseTest(
-      'WHEN an id of a NOT existing collection has been given THEN yield failure output with proper error enum',
+      'WHEN an id of a NOT existing collection has been given THEN throw error',
       setUp: () =>
           when(collectionsRepository.getById(collectionId)).thenReturn(null),
       build: () => getAllBookmarksUseCase,
@@ -70,16 +70,15 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseSuccess(
-          const BookmarkUseCaseListOut.failure(
-            BookmarkUseCaseErrorEnum
-                .tryingToGetBookmarksForNotExistingCollection,
+        useCaseFailure(
+          throwsA(
+            BookmarkUseCaseError.tryingToGetBookmarksForNotExistingCollection,
           ),
-        )
+        ),
       ],
     );
     useCaseTest(
-      'WHEN an id of an existing collection has been given THEN get all the bookmarks of that collection',
+      'WHEN no collection id has been provided THEN get all the bookmarks ',
       setUp: () {
         when(collectionsRepository.getById(collectionId))
             .thenReturn(collection);
@@ -95,7 +94,7 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          BookmarkUseCaseListOut.success(
+          GetAllBookmarksUseCaseOut(
             [
               bookmark1,
               bookmark2,
@@ -107,7 +106,7 @@ void main() {
     );
 
     useCaseTest(
-      'WHEN called THEN get all the bookmarks by collection id',
+      'WHEN called with an existing collection id THEN get all the bookmarks by collection id',
       setUp: () {
         when(collectionsRepository.getById(collectionId))
             .thenReturn(collection);
@@ -122,10 +121,14 @@ void main() {
         verifyNoMoreInteractions(bookmarksRepository);
       },
       expect: [
-        useCaseSuccess(BookmarkUseCaseListOut.success([
-          bookmark1,
-          bookmark2,
-        ])),
+        useCaseSuccess(
+          GetAllBookmarksUseCaseOut(
+            [
+              bookmark1,
+              bookmark2,
+            ],
+          ),
+        ),
       ],
     );
   });
