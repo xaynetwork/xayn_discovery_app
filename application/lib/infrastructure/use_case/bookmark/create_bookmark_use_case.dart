@@ -31,15 +31,14 @@ class CreateBookmarkFromDocumentUseCase extends UseCase<Document, Bookmark> {
 }
 
 @injectable
-class CreateBookmarkUseCase
-    extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
+class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
   final BookmarksRepository _bookmarksRepository;
   final DateTimeHandler _dateTimeHandler;
 
   CreateBookmarkUseCase(
-      this._bookmarksRepository,
-      this._dateTimeHandler,
-      );
+    this._bookmarksRepository,
+    this._dateTimeHandler,
+  );
 
   @override
   Stream<Bookmark> transaction(CreateBookmarkUseCaseIn param) async* {
