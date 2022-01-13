@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/request_feed_mixin.dart';
@@ -11,9 +12,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-const int kBufferCount = 4;
-const Duration kResolveCardAsSkippedDuration = Duration(seconds: 3);
-Duration kBatchSkippedThreshold = kResolveCardAsSkippedDuration * kBufferCount;
+const int _kMaxCardCount = 10;
 
 typedef ObservedViewTypes = Map<Document, DocumentViewMode>;
 
@@ -28,6 +27,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         UseCaseBlocHelper<DiscoveryFeedState>,
         EngineEventsMixin<DiscoveryFeedState>,
         RequestFeedMixin<DiscoveryFeedState>,
+        CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
@@ -35,11 +35,17 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     this._discoveryFeedNavActions,
     this._fetchCardIndexUseCase,
     this._updateCardIndexUseCase,
-  ) : super(DiscoveryFeedState.initial()) {
+  )   : _maxCardCount = _kMaxCardCount,
+        super(DiscoveryFeedState.initial()) {
     _init();
   }
 
   final DiscoveryEngine _engine;
+
+  /// The max card count of the feed
+  /// If the count overflows, then n-cards will be removed from the beginning
+  /// onwards, until maxCardCount is satisfied.
+  final int _maxCardCount;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
   final FetchCardIndexUseCase _fetchCardIndexUseCase;
   final UpdateCardIndexUseCase _updateCardIndexUseCase;
@@ -117,7 +123,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         cardIndex,
         engineEvent,
         errorReport,
-      ) {
+      ) async {
         final engine = _engine as AppDiscoveryEngine;
 
         _cardIndex ??= cardIndex;
@@ -142,6 +148,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               .toSet();
         }
 
+        results = await _maybeReduceCardCount(results);
+
         final nextState = DiscoveryFeedState(
           results: results,
           isComplete: !isLoading,
@@ -153,6 +161,33 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
       });
+
+  Future<Set<Document>> _maybeReduceCardCount(Set<Document> results) async {
+    if (results.length > _maxCardCount) {
+      var nextResults = results.toSet();
+      var cardIndex = _cardIndex!;
+      final flaggedForDisposal = results.take(results.length - _maxCardCount);
+
+      nextResults = nextResults..removeAll(flaggedForDisposal);
+      cardIndex = cardIndex - flaggedForDisposal.length;
+
+      // Invoke the use case which closes these Documents for the engine
+      // ok to be fire and forget, should we instead wait for the ack,
+      // then we need a specific CloseDocumentEngineEvent.
+      // Currently, we just get a generic [ClientEventSucceeded] event only.
+      closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
+      // adjust the cardIndex to counter the removals
+      _cardIndex = await _updateCardIndexUseCase
+          .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
+
+      // Additional cleanup on the observer.
+      flaggedForDisposal.forEach(_observedViewTypes.remove);
+
+      return nextResults;
+    }
+
+    return results;
+  }
 
   @override
   void onSearchNavPressed() => _discoveryFeedNavActions.onSearchNavPressed();
