@@ -5,7 +5,6 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -47,7 +46,7 @@ void main() {
 
   group('Create Bookmark use case', () {
     useCaseTest(
-      'WHEN input values are given THEN create bookmark, save it and yield success output',
+      'WHEN input values are given THEN create bookmark, save it and yield bookmark',
       setUp: () {
         when(uniqueIdHandler.generateUniqueId()).thenReturn(bookmarkId);
         when(dateTimeHandler.getDateTimeNow()).thenReturn(dateTime);
@@ -69,9 +68,7 @@ void main() {
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
-      expect: [
-        useCaseSuccess(BookmarkUseCaseGenericOut.success(createdBookmark))
-      ],
+      expect: [useCaseSuccess(createdBookmark)],
     );
   });
 }
