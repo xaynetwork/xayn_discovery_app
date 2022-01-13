@@ -70,7 +70,7 @@ void main() {
             .thenReturn(collection);
       },
       build: () => listenBookmarksUseCase,
-      input: [ListBookmarksUseCaseIn(collectionId: collectionId)],
+      input: [ListenBookmarksUseCaseIn(collectionId: collectionId)],
       verify: (_) {
         verifyInOrder([
           bookmarksRepository.watch(),
@@ -80,7 +80,7 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ListBookmarksUseCaseOut([bookmark1, bookmark2]),
+          ListenBookmarksUseCaseOut([bookmark1, bookmark2]),
         )
       ],
     );
