@@ -43,13 +43,13 @@ void main() {
 
   group('Create Bookmark use case', () {
     useCaseTest(
-      'WHEN input values are given THEN create the bookmark and save it',
+      'WHEN input values are given THEN create bookmark, save it and yield bookmark',
       setUp: () {
         when(dateTimeHandler.getDateTimeNow()).thenReturn(dateTime);
       },
       build: () => createBookmarkUseCase,
       input: [
-        CreateBookmarkUseCaseParam(
+        CreateBookmarkUseCaseIn(
           id: bookmarkId,
           collectionId: collectionId,
           title: title,

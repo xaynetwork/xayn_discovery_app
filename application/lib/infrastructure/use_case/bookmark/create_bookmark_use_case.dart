@@ -32,17 +32,17 @@ class CreateBookmarkFromDocumentUseCase extends UseCase<Document, Bookmark> {
 
 @injectable
 class CreateBookmarkUseCase
-    extends UseCase<CreateBookmarkUseCaseParam, Bookmark> {
+    extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
   final BookmarksRepository _bookmarksRepository;
   final DateTimeHandler _dateTimeHandler;
 
   CreateBookmarkUseCase(
-    this._bookmarksRepository,
-    this._dateTimeHandler,
-  );
+      this._bookmarksRepository,
+      this._dateTimeHandler,
+      );
 
   @override
-  Stream<Bookmark> transaction(CreateBookmarkUseCaseParam param) async* {
+  Stream<Bookmark> transaction(CreateBookmarkUseCaseIn param) async* {
     final dateTime = _dateTimeHandler.getDateTimeNow();
     final bookmark = Bookmark(
       id: param.id,
@@ -60,26 +60,26 @@ class CreateBookmarkUseCase
 
 @injectable
 class MapDocumentToCreateBookmarkParamUseCase
-    extends UseCase<Document, CreateBookmarkUseCaseParam> {
+    extends UseCase<Document, CreateBookmarkUseCaseIn> {
   final DirectUriUseCase _directUriUseCase;
 
   MapDocumentToCreateBookmarkParamUseCase(this._directUriUseCase);
 
   @override
-  Stream<CreateBookmarkUseCaseParam> transaction(Document param) async* {
+  Stream<CreateBookmarkUseCaseIn> transaction(Document param) async* {
     final webResource = param.webResource;
     final image = await _getImageData(webResource.displayUrl);
     final thumbnailUri = webResource.provider?.thumbnail;
     final providerThumbnail = await _getImageData(thumbnailUri);
 
-    final createBookmarkParam = CreateBookmarkUseCaseParam(
+    final createBookmarkUseCaseIn = CreateBookmarkUseCaseIn(
       id: param.documentUniqueId,
       title: webResource.title,
       image: image,
       providerName: webResource.provider?.name,
       providerThumbnail: providerThumbnail,
     );
-    yield createBookmarkParam;
+    yield createBookmarkUseCaseIn;
   }
 
   Future<Uint8List?> _getImageData(Uri? uri) async {
@@ -94,7 +94,7 @@ class MapDocumentToCreateBookmarkParamUseCase
   }
 }
 
-class CreateBookmarkUseCaseParam {
+class CreateBookmarkUseCaseIn {
   final UniqueId id;
   final String title;
   final Uint8List? image;
@@ -102,7 +102,7 @@ class CreateBookmarkUseCaseParam {
   final Uint8List? providerThumbnail;
   final UniqueId collectionId;
 
-  CreateBookmarkUseCaseParam({
+  CreateBookmarkUseCaseIn({
     required this.id,
     required this.title,
     required this.image,

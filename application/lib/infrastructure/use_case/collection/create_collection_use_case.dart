@@ -3,9 +3,8 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-import 'collection_exception.dart';
+import 'collection_use_cases_errors.dart';
 
 @injectable
 class CreateCollectionUseCase extends UseCase<String, Collection> {
@@ -18,8 +17,7 @@ class CreateCollectionUseCase extends UseCase<String, Collection> {
   Stream<Collection> transaction(String param) async* {
     final collectionNameTrimmed = param.trim();
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
-      logger.e(errorMessageCollectionNameUsed);
-      throw (CollectionUseCaseException(errorMessageCollectionNameUsed));
+      throw CollectionUseCaseError.tryingToCreateCollectionUsingExistingName;
     }
     final collectionIndex = _collectionsRepository.getLastCollectionIndex() + 1;
     final id = _uniqueIdHandler.generateUniqueId();

@@ -6,7 +6,7 @@ import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_exception.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -17,7 +17,7 @@ void main() {
   late MoveBookmarkUseCase moveBookmarkUseCase;
   final bookmarkIdToMove = UniqueId();
   final collectionIdWhereToMoveBookmark = UniqueId();
-  final input = MoveBookmarkUseCaseParam(
+  final input = MoveBookmarkUseCaseIn(
     bookmarkId: bookmarkIdToMove,
     collectionId: collectionIdWhereToMoveBookmark,
   );
@@ -53,7 +53,7 @@ void main() {
     'Move bookmark use case',
     () {
       useCaseTest(
-        'WHEN the bookmark to move doesn\'t exist THEN throw an exception',
+        'WHEN the bookmark to move doesn\'t exist THEN throw error',
         setUp: () => when(bookmarksRepository.getById(any)).thenReturn(null),
         build: () => moveBookmarkUseCase,
         input: [input],
@@ -68,13 +68,13 @@ void main() {
         },
         expect: [
           useCaseFailure(
-            throwsA(const TypeMatcher<BookmarkUseCaseException>()),
+            throwsA(BookmarkUseCaseError.tryingToMoveNotExistingBookmark),
           )
         ],
       );
 
       useCaseTest(
-        'WHEN the collection where to move the bookmark to doesn\'t exist THEN throw an exception',
+        'WHEN the collection where to move the bookmark to doesn\'t exist THEN throw error',
         setUp: () {
           when(bookmarksRepository.getById(any)).thenReturn(bookmark);
           when(collectionsRepository.getById(any)).thenReturn(null);
@@ -93,8 +93,9 @@ void main() {
         },
         expect: [
           useCaseFailure(
-            throwsA(const TypeMatcher<BookmarkUseCaseException>()),
-          )
+            throwsA(BookmarkUseCaseError
+                .tryingToMoveBookmarkToNotExistingCollection),
+          ),
         ],
       );
       useCaseTest(
