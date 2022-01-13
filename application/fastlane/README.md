@@ -13,13 +13,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### update_strings
+### create_appstore_api_key
 
 ```sh
-[bundle exec] fastlane update_strings
+[bundle exec] fastlane create_appstore_api_key
 ```
 
-Update strings
+Create an api key
 
 ### build_runner
 
