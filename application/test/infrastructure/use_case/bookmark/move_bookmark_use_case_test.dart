@@ -6,7 +6,7 @@ import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -53,7 +53,7 @@ void main() {
     'Move bookmark use case',
     () {
       useCaseTest(
-        'WHEN the bookmark to move doesn\'t exist THEN yield failure output with proper error enum',
+        'WHEN the bookmark to move doesn\'t exist THEN throw error',
         setUp: () => when(bookmarksRepository.getById(any)).thenReturn(null),
         build: () => moveBookmarkUseCase,
         input: [input],
@@ -67,16 +67,14 @@ void main() {
           verifyNoMoreInteractions(collectionsRepository);
         },
         expect: [
-          useCaseSuccess(
-            const BookmarkUseCaseGenericOut.failure(
-              BookmarkUseCaseErrorEnum.tryingToMoveNotExistingBookmark,
-            ),
+          useCaseFailure(
+            throwsA(BookmarkUseCaseError.tryingToMoveNotExistingBookmark),
           )
         ],
       );
 
       useCaseTest(
-        'WHEN the collection where to move the bookmark to doesn\'t exist THEN yield failure output with proper error enum',
+        'WHEN the collection where to move the bookmark to doesn\'t exist THEN throw error',
         setUp: () {
           when(bookmarksRepository.getById(any)).thenReturn(bookmark);
           when(collectionsRepository.getById(any)).thenReturn(null);
@@ -94,12 +92,10 @@ void main() {
           verifyNoMoreInteractions(collectionsRepository);
         },
         expect: [
-          useCaseSuccess(
-            const BookmarkUseCaseGenericOut.failure(
-              BookmarkUseCaseErrorEnum
-                  .tryingToMoveBookmarkToNotExistingCollection,
-            ),
-          )
+          useCaseFailure(
+            throwsA(BookmarkUseCaseError
+                .tryingToMoveBookmarkToNotExistingCollection),
+          ),
         ],
       );
       useCaseTest(
@@ -121,9 +117,7 @@ void main() {
             verifyNoMoreInteractions(bookmarksRepository);
             verifyNoMoreInteractions(collectionsRepository);
           },
-          expect: [
-            useCaseSuccess(BookmarkUseCaseGenericOut.success(updatedBookmark))
-          ]);
+          expect: [useCaseSuccess(updatedBookmark)]);
     },
   );
 }

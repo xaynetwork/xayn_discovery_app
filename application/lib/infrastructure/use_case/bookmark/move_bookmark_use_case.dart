@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
-import 'bookmark_use_cases_outputs.dart';
+import 'bookmark_use_cases_errors.dart';
 
 @injectable
-class MoveBookmarkUseCase
-    extends UseCase<MoveBookmarkUseCaseIn, BookmarkUseCaseGenericOut> {
+class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseIn, Bookmark> {
   final BookmarksRepository _bookmarksRepository;
   final CollectionsRepository _collectionsRepository;
 
@@ -19,26 +19,21 @@ class MoveBookmarkUseCase
   );
 
   @override
-  Stream<BookmarkUseCaseGenericOut> transaction(
-      MoveBookmarkUseCaseIn param) async* {
+  Stream<Bookmark> transaction(MoveBookmarkUseCaseIn param) async* {
     final bookmark = _bookmarksRepository.getById(param.bookmarkId);
     if (bookmark == null) {
-      yield const BookmarkUseCaseGenericOut.failure(
-          BookmarkUseCaseErrorEnum.tryingToMoveNotExistingBookmark);
-      return;
+      throw BookmarkUseCaseError.tryingToMoveNotExistingBookmark;
     }
 
     final collection = _collectionsRepository.getById(param.collectionId);
 
     if (collection == null) {
-      yield const BookmarkUseCaseGenericOut.failure(
-          BookmarkUseCaseErrorEnum.tryingToMoveBookmarkToNotExistingCollection);
-      return;
+      throw BookmarkUseCaseError.tryingToMoveBookmarkToNotExistingCollection;
     }
 
     final updatedBookmark = bookmark.copyWith(collectionId: param.collectionId);
     _bookmarksRepository.save(updatedBookmark);
-    yield BookmarkUseCaseGenericOut.success(updatedBookmark);
+    yield updatedBookmark;
   }
 }
 

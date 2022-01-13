@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_outputs.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
@@ -32,7 +31,7 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     _init();
   }
 
-  late final UseCaseSink<ListenBookmarksUseCaseIn, BookmarkUseCaseListOut>
+  late final UseCaseSink<ListenBookmarksUseCaseIn, ListenBookmarksUseCaseOut>
       _listenBookmarksHandler;
 
   String? _useCaseError;
@@ -53,23 +52,29 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     _useCaseError = null;
     final param = MoveBookmarkUseCaseIn(
         bookmarkId: bookmarkId, collectionId: collectionId);
-    final useCaseOut = await _moveBookmarkUseCase.singleOutput(param);
-    useCaseOut.mapOrNull(
-      failure: (useCaseOut) => scheduleComputeState(
-        () => _useCaseError =
-            _bookmarkErrorsEnumMapper.mapEnumToString(useCaseOut.error),
-      ),
+    final useCaseOut = await _moveBookmarkUseCase.call(param);
+
+    /// We just need to handle the failure case.
+    /// In case of success we will automatically get the updated list of Collections
+    /// since we are listening to the repo through the [ListenBookmarksUseCase]
+    useCaseOut.last.fold(
+      defaultOnError: _defaultOnError,
+      matchOnError: {
+        On<BookmarkUseCaseError>(_matchOnBookmarkUseCaseError),
+      },
+      onValue: (_) {},
     );
   }
 
   void removeBookmark(UniqueId bookmarkId) async {
     _useCaseError = null;
-    final useCaseOut = await _removeBookmarkUseCase.singleOutput(bookmarkId);
-    useCaseOut.mapOrNull(
-      failure: (useCaseOut) => scheduleComputeState(
-        () => _useCaseError =
-            _bookmarkErrorsEnumMapper.mapEnumToString(useCaseOut.error),
-      ),
+    final useCaseOut = await _removeBookmarkUseCase.call(bookmarkId);
+    useCaseOut.last.fold(
+      defaultOnError: _defaultOnError,
+      matchOnError: {
+        On<BookmarkUseCaseError>(_matchOnBookmarkUseCaseError),
+      },
+      onValue: (_) {},
     );
   }
 
@@ -94,13 +99,21 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
           }
 
           if (bookmarkEvent != null) {
-            List<Bookmark> bookmarks = [];
-            bookmarkEvent.whenOrNull(success: (out) => bookmarks = out);
             return BookmarksScreenState.populated(
-              bookmarks,
+              bookmarkEvent.bookmarks,
               _dateTimeHandler.getDateTimeNow(),
             );
           }
         },
+      );
+
+  void _defaultOnError(Object e, StackTrace? s) =>
+      scheduleComputeState(() => _useCaseError = e.toString());
+
+  void _matchOnBookmarkUseCaseError(Object e, StackTrace? s) =>
+      scheduleComputeState(
+        () => _useCaseError = _bookmarkErrorsEnumMapper.mapEnumToString(
+          e as BookmarkUseCaseError,
+        ),
       );
 }

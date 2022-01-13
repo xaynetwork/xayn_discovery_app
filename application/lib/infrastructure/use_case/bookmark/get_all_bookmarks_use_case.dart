@@ -6,13 +6,13 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
-import 'bookmark_use_cases_outputs.dart';
+import 'bookmark_use_cases_errors.dart';
 
 /// If the [UniqueId] is provided then return the list bookmarks by collection id
 /// If the [UniqueId] is null then return the list of all bookmarks
 @injectable
 class GetAllBookmarksUseCase
-    extends UseCase<GetAllBookmarksUseCaseIn, BookmarkUseCaseListOut> {
+    extends UseCase<GetAllBookmarksUseCaseIn, GetAllBookmarksUseCaseOut> {
   final BookmarksRepository _bookmarksRepository;
   final CollectionsRepository _collectionsRepository;
 
@@ -21,7 +21,7 @@ class GetAllBookmarksUseCase
     this._collectionsRepository,
   );
   @override
-  Stream<BookmarkUseCaseListOut> transaction(
+  Stream<GetAllBookmarksUseCaseOut> transaction(
       GetAllBookmarksUseCaseIn param) async* {
     late final List<Bookmark> bookmarks;
     final collectionId = param.collectionId;
@@ -30,16 +30,14 @@ class GetAllBookmarksUseCase
       final collection = _collectionsRepository.getById(collectionId);
 
       if (collection == null) {
-        yield const BookmarkUseCaseListOut.failure(BookmarkUseCaseErrorEnum
-            .tryingToGetBookmarksForNotExistingCollection);
-        return;
+        throw BookmarkUseCaseError.tryingToGetBookmarksForNotExistingCollection;
       }
       bookmarks = _bookmarksRepository.getByCollectionId(collectionId);
     } else {
       bookmarks = _bookmarksRepository.getAll();
     }
 
-    yield BookmarkUseCaseListOut.success(bookmarks);
+    yield GetAllBookmarksUseCaseOut(bookmarks);
   }
 }
 
