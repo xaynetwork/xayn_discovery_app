@@ -12,8 +12,6 @@ import 'package:yaml/yaml.dart';
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() async {});
-
   tearDown(() {
     Strings.reset();
   });
@@ -36,6 +34,23 @@ void main() async {
     expect(stringDefault, 'Imprint');
     expect(strings.settingsImprint, 'Impressum');
     expect(strings.runtimeType, TranslationsDe);
+  });
+
+  test('When switching a language countryNames will be changed as well.',
+      () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+
+    final defaultCountries = await Strings.countryNames;
+
+    Strings.switchTranslations(
+      AppLanguage.german,
+    );
+
+    final newCountries = await Strings.countryNames;
+
+    expect(defaultCountries, isNot(newCountries));
+    expect(defaultCountries['DE'], 'Germany');
+    expect(newCountries['DE'], 'Deutschland');
   });
 
   group('Translation Linter:', () {

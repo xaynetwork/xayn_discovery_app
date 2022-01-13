@@ -10,8 +10,8 @@ import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
+import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
-import 'package:xayn_discovery_app/presentation/utils/locale.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -30,11 +30,11 @@ class _AppState extends State<App> {
       theme: UnterDenLinden.getLinden(context).themeData,
       routeInformationParser: _navigatorManager.routeInformationParser,
       routerDelegate: AppRouter(_navigatorManager),
-      localeListResolutionCallback: (locales, supportedLocales) {
-        locales = locales == null || locales.isEmpty
+      localeListResolutionCallback: (systemLocales, supportedLocales) {
+        final locales = systemLocales == null || systemLocales.isEmpty
             ? [const Locale('en', 'US')]
-            : locales;
-        final appLocale = locales.first.toIntlLocale();
+            : systemLocales;
+        final appLocale = locales.first.toAppLocale();
 
         // TODO retrieve the last language from the app state
         // if (savedAppLanguageTag != null) {
