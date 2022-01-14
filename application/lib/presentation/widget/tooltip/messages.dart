@@ -1,5 +1,6 @@
 import 'package:xayn_design/xayn_design.dart'
     show MessageFactory, TooltipParams, TooltipKey, TextualNotification;
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class TooltipKeys {
   static const activeSearchDisabled = TooltipKey('activeSearchDisabled');
@@ -12,7 +13,7 @@ abstract class XaynMessageProvider {
     const _defaultMessage = TextualNotification();
     final activeSearchMessages = {
       TooltipKeys.activeSearchDisabled: TooltipParams(
-          label: 'Active Search disabled', // R.strings...
+          label: R.strings.activeSearchSearchHint,
           builder: (_) => _defaultMessage),
     };
 
