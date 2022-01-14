@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
@@ -45,12 +46,12 @@ class DiscoveryCard extends DiscoveryCardBase {
     this.onDrag,
     this.onController,
   }) : super(
-    key: key,
-    isPrimary: isPrimary,
-    document: document,
-    discoveryCardManager: discoveryCardManager,
-    imageManager: imageManager,
-  );
+          key: key,
+          isPrimary: isPrimary,
+          document: document,
+          discoveryCardManager: discoveryCardManager,
+          imageManager: imageManager,
+        );
 
   @override
   State<StatefulWidget> createState() => _DiscoveryCardState();
@@ -81,12 +82,12 @@ class DiscoveryCardScreen extends DiscoveryCard {
     Key? key,
     required DiscoveryCardScreenArgs args,
   }) : super(
-    key: key,
-    isPrimary: args.isPrimary,
-    document: args.document,
-    imageManager: args.imageManager,
-    discoveryCardManager: args.discoveryCardManager,
-  );
+          key: key,
+          isPrimary: args.isPrimary,
+          document: args.document,
+          imageManager: args.imageManager,
+          discoveryCardManager: args.discoveryCardManager,
+        );
 
   @override
   State<StatefulWidget> createState() => _DiscoveryCardPageState();
@@ -127,8 +128,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     _onDrag = (distance) {
       _openingAnimation.value = (1.0 -
-          (DiscoveryCard.dragThreshold - distance) /
-              DiscoveryCard.dragThreshold)
+              (DiscoveryCard.dragThreshold - distance) /
+                  DiscoveryCard.dragThreshold)
           .clamp(_kMinImageFractionSize, 1.0);
 
       widget.onDrag?.call(distance);
@@ -236,9 +237,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           children: [
             Positioned.fill(
                 child: _buildReaderMode(
-                  mediaQuery.size,
-                  state.processedDocument?.processHtmlResult,
-                )),
+              mediaQuery.size,
+              state.processedDocument?.processHtmlResult,
+            )),
             Positioned(
               top: -outerScrollOffset,
               left: 0,
@@ -314,7 +315,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
 
   @override
   Widget buildFromState(
-      BuildContext context, DiscoveryCardState state, Widget image) =>
+          BuildContext context, DiscoveryCardState state, Widget image) =>
       Scaffold(
         body: SafeArea(
           bottom: false,
@@ -324,34 +325,33 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
-    [
-      buildNavBarItemArrowLeft(
-        onPressed: () => _discoveryCardManager.onBackNavPressed(),
-      ),
-      buildNavBarItemLike(
-        isLiked: widget.document.isRelevant,
-        onPressed: () => _discoveryCardManager.changeDocumentFeedback(
-          documentId: widget.document.documentId,
-          feedback: widget.document.isRelevant
-              ? DocumentFeedback.neutral
-              : DocumentFeedback.positive,
-        ),
-      ),
-      buildNavBarItemShare(
-        onPressed: () =>
-            _discoveryCardManager.shareUri(widget.document.webResource.url),
-      ),
-      buildNavBarItemDisLike(
-        isDisLiked: widget.document.isIrrelevant,
-        onPressed: () => _discoveryCardManager.changeDocumentFeedback(
-          documentId: widget.document.documentId,
-          feedback: widget.document.isIrrelevant
-              ? DocumentFeedback.neutral
-              : DocumentFeedback.negative,
-        ),
-      ),
-    ],
-    isWidthExpanded: true,
-import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
-  );
+        [
+          buildNavBarItemArrowLeft(
+            onPressed: () => _discoveryCardManager.onBackNavPressed(),
+          ),
+          buildNavBarItemLike(
+            isLiked: widget.document.isRelevant,
+            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+              documentId: widget.document.documentId,
+              feedback: widget.document.isRelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.positive,
+            ),
+          ),
+          buildNavBarItemShare(
+            onPressed: () =>
+                _discoveryCardManager.shareUri(widget.document.webResource.url),
+          ),
+          buildNavBarItemDisLike(
+            isDisLiked: widget.document.isIrrelevant,
+            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+              documentId: widget.document.documentId,
+              feedback: widget.document.isIrrelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.negative,
+            ),
+          ),
+        ],
+        isWidthExpanded: true,
+      );
 }
