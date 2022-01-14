@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -37,7 +38,7 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed>
-    with WidgetsBindingObserver, NavBarConfigMixin {
+    with WidgetsBindingObserver, NavBarConfigMixin, TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
   late final CardViewController _cardViewController = CardViewController();
   late final Map<Document, _CardManagers> _cardManagers = {};
@@ -62,7 +63,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               onPressed: discoveryFeedManager.onHomeNavPressed,
             ),
             buildNavBarItemSearch(
-              onPressed: discoveryFeedManager.onSearchNavPressed,
+              isDisabled: true,
+              onPressed: () => showTooltip(TooltipKeys.activeSearchDisabled),
             ),
             buildNavBarItemPersonalArea(
               onPressed: discoveryFeedManager.onPersonalAreaNavPressed,

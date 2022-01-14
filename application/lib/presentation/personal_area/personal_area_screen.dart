@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
   const PersonalAreaScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class PersonalAreaScreen extends StatefulWidget {
 }
 
 class PersonalAreaScreenState extends State<PersonalAreaScreen>
-    with NavBarConfigMixin {
+    with NavBarConfigMixin, TooltipStateMixin {
   late final PersonalAreaManager _manager = di.get();
 
   @override
@@ -28,7 +29,8 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             onPressed: _manager.onHomeNavPressed,
           ),
           buildNavBarItemSearch(
-            onPressed: _manager.onActiveSearchNavPressed,
+            isDisabled: true,
+            onPressed: () => showTooltip(TooltipKeys.activeSearchDisabled),
           ),
           buildNavBarItemPersonalArea(
             isActive: true,
