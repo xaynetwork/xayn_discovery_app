@@ -238,7 +238,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     required bool isFullScreen,
   }) =>
       (BuildContext context, int index) {
-        final document = results.elementAt(index);
+        final normalizedIndex = index.clamp(0, results.length - 1);
+        final document = results.elementAt(normalizedIndex);
         final managers = managersOf(document);
         final discoveryFeedManager = _discoveryFeedManager!;
 
@@ -284,7 +285,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     required bool isFullScreen,
   }) =>
       (int index) {
-        final document = results.elementAt(index);
+        final normalizedIndex = index.clamp(0, results.length - 1);
+        final document = results.elementAt(normalizedIndex);
 
         switch (document.feedback) {
           case DocumentFeedback.neutral:
