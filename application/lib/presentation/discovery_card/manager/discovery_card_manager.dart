@@ -35,13 +35,15 @@ const String _kReadingTimeLanguage = 'en-US';
 class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with
         UseCaseBlocHelper<DiscoveryCardState>,
-        ChangeDocumentFeedbackMixin<DiscoveryCardState> {
+        ChangeDocumentFeedbackMixin<DiscoveryCardState>
+    implements DiscoveryCardNavActions {
   final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
   final InjectReaderMetaDataUseCase _injectReaderMetaDataUseCase;
-  final ListenIsBookmarkedUseCase _listenIsBookmarkedUseCase;
   final ShareUriUseCase _shareUriUseCase;
+  final ListenIsBookmarkedUseCase _listenIsBookmarkedUseCase;
+  final DiscoveryCardNavActions _discoveryCardNavActions;
   final CreateBookmarkFromDocumentUseCase _createBookmarkUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
 
@@ -56,6 +58,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._readabilityUseCase,
     this._injectReaderMetaDataUseCase,
     this._shareUriUseCase,
+    this._discoveryCardNavActions,
     this._listenIsBookmarkedUseCase,
     this._createBookmarkUseCase,
     this._removeBookmarkUseCase,
@@ -147,4 +150,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         return nextState;
       });
+
+  @override
+  void onBackNavPressed() => _discoveryCardNavActions.onBackNavPressed();
 }

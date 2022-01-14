@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
@@ -38,6 +39,17 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
 }
 
+@Injectable(as: DiscoveryCardNavActions)
+class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
+  final xayn.StackManipulationFunction changeStack;
+  DiscoveryCardNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+}
+
 @Injectable(as: SettingsNavActions)
 class SettingsNavActionsImpl extends SettingsNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -65,6 +77,10 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   @override
   void onPersonalAreaNavPressed() =>
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
+
+  @override
+  void onCardDetailsPressed(DiscoveryCardScreenArgs args) =>
+      changeStack((stack) => stack.push(PageRegistry.cardDetails(args)));
 }
 
 @Injectable(as: PersonalAreaNavActions)
