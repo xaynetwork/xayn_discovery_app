@@ -172,7 +172,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     nextResults = nextResults..removeAll(flaggedForDisposal);
     cardIndex = nextResults.toList().indexOf(_observedDocument!);
 
-    if (cardIndex == -1) {
+    if (cardIndex <= 2) {
       // This means we are about to remove the Document that is currently
       // in front, which should be avoided.
       // Only remove documents when scrolled far enough, so that the impact
