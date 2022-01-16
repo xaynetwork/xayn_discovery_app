@@ -176,6 +176,14 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     nextResults = nextResults..removeAll(flaggedForDisposal);
     cardIndex = nextResults.toList().indexOf(_observedDocument!);
 
+    // The number 2 was chosen because we always animate transitions when
+    // moving between cards.
+    // If it is 2, then we have at least some cards above, and some cards below.
+    // This is actually important, because a transition going from card A to card B
+    // might currently be playing out:
+    // If cardIndex would be 0 or 1, then that running animation might not play correctly:
+    // the space above index 0 is zero, so there is no "from" range anymore
+    // which was the starting value when the animation began.
     if (cardIndex <= 2) {
       // This means we are about to remove the Document that is currently
       // in front, which should be avoided.
