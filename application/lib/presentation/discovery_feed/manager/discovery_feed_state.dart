@@ -8,10 +8,13 @@ part 'discovery_feed_state.freezed.dart';
 /// The state of the [DiscoveryFeedManager].
 @freezed
 class DiscoveryFeedState with _$DiscoveryFeedState {
+  final SetEquality _setEquality = const SetEquality();
+
   const DiscoveryFeedState._();
 
   const factory DiscoveryFeedState({
     @Default(<Document>{}) Set<Document> results,
+    @Default(<Document>{}) Set<Document> removedResults,
     required int cardIndex,
     required bool isComplete,
     @Default(false) bool isFullScreen,
@@ -29,5 +32,6 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
       isInErrorState == other.isInErrorState &&
-      const SetEquality().equals(results, other.results);
+      _setEquality.equals(results, other.results) &&
+      _setEquality.equals(removedResults, other.removedResults);
 }

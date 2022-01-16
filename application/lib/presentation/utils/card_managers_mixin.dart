@@ -13,9 +13,18 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
     _cardManagers
       ..forEach((_, managers) => managers.closeAll())
       ..clear();
+
     super.dispose();
   }
 
+  @mustCallSuper
+  void removeObsoleteCardManagers(Iterable<Document> results) {
+    for (var key in results) {
+      _cardManagers.remove(key)?.closeAll();
+    }
+  }
+
+  @mustCallSuper
   _CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
       document,
       () => _CardManagers(
