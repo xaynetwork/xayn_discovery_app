@@ -61,7 +61,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 28780e1c3250f8e0bcab87d21c15d0849ad57a7b
+      ref: 538d97a78ba83940e8a1265404fea2e637ebe5aa
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -124,3 +124,5 @@ flutter:
     - packages/xayn_design/assets/icons/sun.svg
     - packages/xayn_design/assets/icons/bookmark.svg
     - packages/xayn_design/assets/icons/bookmark_active.svg
+    - packages/xayn_design/assets/icons/plus.svg
+    - packages/xayn_design/assets/icons/check.svg

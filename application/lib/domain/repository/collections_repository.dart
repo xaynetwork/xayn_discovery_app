@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 abstract class CollectionsRepository {
   void save(Collection collection);
 
-  /// return the list of collection sorted by [Collection.index]
+  /// return the list of collection sorted by [Collection.selectedCollection]
   List<Collection> getAll();
   Collection? getById(UniqueId id);
   void remove(Collection collection);

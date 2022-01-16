@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_discovery_app/presentation/collection_bottom_sheet/widget/save_bookmark_to_collection.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -218,11 +218,17 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             discoveryCardManager.toggleBookmarkDocument(widget.document);
             showXaynBottomSheet(
               context,
-              child: SaveBookmarkToCollection(
+              builder: (_) => MoveBookmarkToCollectionBottomSheet(
                 bookmarkId: widget.document.documentUniqueId,
               ),
             );
           },
+          onBookmarkLongPressed: (context) => showXaynBottomSheet(
+            context,
+            builder: (_) => MoveBookmarkToCollectionBottomSheet(
+              bookmarkId: widget.document.documentUniqueId,
+            ),
+          ),
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );

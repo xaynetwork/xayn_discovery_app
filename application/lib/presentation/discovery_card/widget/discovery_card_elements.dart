@@ -29,6 +29,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onLikePressed,
     required this.onDislikePressed,
     required this.onBookmarkPressed,
+    required this.onBookmarkLongPressed,
     required this.isBookmarked,
     this.fractionSize = 1.0,
   }) : super(key: key);
@@ -42,6 +43,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
   final Function(BuildContext) onBookmarkPressed;
+  final Function(BuildContext) onBookmarkLongPressed;
   final bool isBookmarked;
   final double fractionSize;
 
@@ -72,6 +74,7 @@ class DiscoveryCardElements extends StatelessWidget {
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
         onBookmarkPressed: onBookmarkPressed,
+        onBookmarkLongPressed:onBookmarkLongPressed,
         isBookmarked: isBookmarked,
         document: document,
       ),

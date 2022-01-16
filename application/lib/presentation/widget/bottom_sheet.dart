@@ -1,49 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-showXaynBottomSheet(BuildContext context, {required BottomSheetWidget child}) {
-  final scrollableBody = Flexible(
-    child: SingleChildScrollView(
-      controller: ModalScrollController.of(context),
-      child: child.body,
-    ),
-  );
+typedef _BottomSheetBuilder = BottomSheetBase Function(BuildContext context);
 
-  final headerAndBody = Column(
-    mainAxisSize: MainAxisSize.min,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [child.header, scrollableBody],
-  );
-
-  final constrainedChild = LayoutBuilder(
-    builder: (context, constraints) => ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: constraints.maxHeight * 0.9,
-      ),
-      child: headerAndBody,
-    ),
-  );
-
+Future showXaynBottomSheet(BuildContext context,
+    {required _BottomSheetBuilder builder}) {
   // todo: move to xayn_design
   const backgroundColor = Colors.white;
-  final barrierColor = Colors.white.withOpacity(0.4);
+  final barrierColor = Colors.white.withOpacity(0.8);
 
-  return showCupertinoModalBottomSheet(
+  NavBarContainer.hideNavBar(context);
+
+  return showMaterialModalBottomSheet(
     context: context,
     enableDrag: false,
     backgroundColor: backgroundColor,
     barrierColor: barrierColor,
-    builder: (context) => constrainedChild,
+    builder: builder,
   );
 }
 
-mixin BottomSheetMixin implements BottomSheetWidget {
+class BottomSheetBase extends StatefulWidget {
+  const BottomSheetBase({
+    Key? key,
+    required this.body,
+    this.padding,
+  }) : super(key: key);
+
+  final Widget body;
+  final EdgeInsets? padding;
+
   @override
-  Widget get header => Container();
+  _BottomSheetBaseState createState() => _BottomSheetBaseState();
 }
 
-abstract class BottomSheetWidget {
-  Widget get header;
+class _BottomSheetBaseState extends State<BottomSheetBase> {
+  @override
+  Widget build(BuildContext context) {
+    final content = Padding(
+      padding: widget.padding ??
+          EdgeInsets.only(
+            left: R.dimen.unit3,
+            right: R.dimen.unit3,
+            bottom: R.dimen.unit3,
+            top: R.dimen.unit2,
+          ),
+      child: widget.body,
+    );
 
-  Widget get body;
+    // todo: move to xayn_design
+    const maxWidth = 480.0;
+
+    final constrainedChild = LayoutBuilder(
+      builder: (context, constraints) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: constraints.maxHeight * 0.9,
+          maxWidth: maxWidth,
+        ),
+        child: content,
+      ),
+    );
+
+    final bottomSheet = WillPopScope(
+      onWillPop: () async {
+        NavBarContainer.showNavBar(context);
+        return true;
+      },
+      child: constrainedChild,
+    );
+
+    return bottomSheet;
+  }
+}
+
+mixin BottomSheetBodyMixin {
+  ScrollController? getScrollController(BuildContext context) =>
+      ModalScrollController.of(context);
+
+  void closeBottomSheet(BuildContext context) => Navigator.pop(context);
 }

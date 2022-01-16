@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/presentation/collection_bottom_sheet/widget/save_bookmark_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -57,14 +57,22 @@ class _DiscoveryFeedCardState
             : DocumentFeedback.negative,
       ),
       onBookmarkPressed: (context) {
+        if (!state.isBookmarked) {
+          showXaynBottomSheet(
+            context,
+            builder: (_) => MoveBookmarkToCollectionBottomSheet(
+              bookmarkId: widget.document.documentUniqueId,
+            ),
+          );
+        }
         discoveryCardManager.toggleBookmarkDocument(widget.document);
-        showXaynBottomSheet(
-          context,
-          child: SaveBookmarkToCollection(
-            bookmarkId: widget.document.documentUniqueId,
-          ),
-        );
       },
+      onBookmarkLongPressed: (context) => showXaynBottomSheet(
+        context,
+        builder: (_) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: widget.document.documentUniqueId,
+        ),
+      ),
       isBookmarked: state.isBookmarked,
     );
 
