@@ -176,6 +176,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         builder: (context, state) {
           final results = state.results;
 
+          removeObsoleteCardManagers(state.removedResults);
+
           if (state.isFullScreen) {
             // always update whenever state changes and when in full screen mode.
             // the only state update that can happen, is the change in like/dislike
