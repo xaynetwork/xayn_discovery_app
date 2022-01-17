@@ -56,7 +56,7 @@ class _DiscoveryFeedCardState
             ? DocumentFeedback.neutral
             : DocumentFeedback.negative,
       ),
-      onBookmarkPressed: (context) {
+      onBookmarkPressed: () {
         if (!state.isBookmarked) {
           showXaynBottomSheet(
             context,
@@ -67,7 +67,7 @@ class _DiscoveryFeedCardState
         }
         discoveryCardManager.toggleBookmarkDocument(widget.document);
       },
-      onBookmarkLongPressed: (context) => showXaynBottomSheet(
+      onBookmarkLongPressed: () => showXaynBottomSheet(
         context,
         builder: (_) => MoveBookmarkToCollectionBottomSheet(
           bookmarkId: widget.document.documentUniqueId,

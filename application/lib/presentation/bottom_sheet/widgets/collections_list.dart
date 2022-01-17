@@ -83,7 +83,7 @@ class _CollectionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final item = Padding(
-      padding: EdgeInsets.symmetric(vertical: R.dimen.unit),
+      padding: EdgeInsets.symmetric(vertical: R.dimen.unit2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,

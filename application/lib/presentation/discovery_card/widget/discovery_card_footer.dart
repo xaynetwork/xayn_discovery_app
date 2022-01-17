@@ -20,8 +20,8 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
-  final Function(BuildContext) onBookmarkPressed;
-  final Function(BuildContext) onBookmarkLongPressed;
+  final VoidCallback onBookmarkPressed;
+  final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final Document document;
 
@@ -39,8 +39,8 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final bookmarkButton = GestureDetector(
-      onTap: () => onBookmarkPressed(context),
-      onLongPress: () => onBookmarkLongPressed(context),
+      onTap: onBookmarkPressed,
+      onLongPress: onBookmarkLongPressed,
       child: SvgPicture.asset(
         isBookmarked ? R.assets.icons.bookmarkActive : R.assets.icons.bookmark,
         fit: BoxFit.none,

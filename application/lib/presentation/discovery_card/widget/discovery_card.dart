@@ -214,7 +214,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),
-          onBookmarkPressed: (context) {
+          onBookmarkPressed: () {
             discoveryCardManager.toggleBookmarkDocument(widget.document);
             showXaynBottomSheet(
               context,
@@ -223,7 +223,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
               ),
             );
           },
-          onBookmarkLongPressed: (context) => showXaynBottomSheet(
+          onBookmarkLongPressed: () => showXaynBottomSheet(
             context,
             builder: (_) => MoveBookmarkToCollectionBottomSheet(
               bookmarkId: widget.document.documentUniqueId,

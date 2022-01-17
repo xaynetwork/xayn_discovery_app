@@ -5,8 +5,11 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 typedef _BottomSheetBuilder = BottomSheetBase Function(BuildContext context);
 
-Future showXaynBottomSheet(BuildContext context,
-    {required _BottomSheetBuilder builder}) {
+Future showXaynBottomSheet(
+  BuildContext context, {
+  required _BottomSheetBuilder builder,
+  bool showBarrierColor = true,
+}) {
   // todo: move to xayn_design
   const backgroundColor = Colors.white;
   final barrierColor = Colors.white.withOpacity(0.8);
@@ -17,7 +20,7 @@ Future showXaynBottomSheet(BuildContext context,
     context: context,
     enableDrag: false,
     backgroundColor: backgroundColor,
-    barrierColor: barrierColor,
+    barrierColor: showBarrierColor ? barrierColor : null,
     builder: builder,
   );
 }
