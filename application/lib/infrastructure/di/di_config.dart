@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
@@ -15,8 +16,13 @@ final di = GetIt.instance;
   preferRelativeImports: true, // default
   asExtension: false, // default
 )
-Future<void> configureDependencies() async {
-  await $initGetIt(di);
+Future<void> configureDependencies({
+  Environment environment = kReleaseMode ? prod : dev,
+}) async {
+  await $initGetIt(
+    di,
+    environment: environment.name,
+  );
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
 }

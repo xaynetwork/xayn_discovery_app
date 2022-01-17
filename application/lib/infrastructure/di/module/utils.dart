@@ -4,6 +4,21 @@ import 'package:package_info_plus/package_info_plus.dart';
 @module
 abstract class UtilsModule {
   @preResolve
-  @singleton
+  @lazySingleton
+  @dev
+  @prod
   Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
+
+  @preResolve
+  @lazySingleton
+  @test
+  Future<PackageInfo> get packageInfoTest => Future.value(
+        PackageInfo(
+          appName: '',
+          buildNumber: '',
+          packageName: '',
+          version: '',
+          buildSignature: '',
+        ),
+      );
 }
