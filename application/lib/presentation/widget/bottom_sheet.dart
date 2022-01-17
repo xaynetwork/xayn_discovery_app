@@ -66,12 +66,19 @@ class _BottomSheetBaseState extends State<BottomSheetBase> {
       ),
     );
 
+    final avoidKeyboardChild = Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: constrainedChild,
+    );
+
     final bottomSheet = WillPopScope(
       onWillPop: () async {
         NavBarContainer.showNavBar(context);
         return true;
       },
-      child: constrainedChild,
+      child: avoidKeyboardChild,
     );
 
     return bottomSheet;

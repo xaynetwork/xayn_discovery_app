@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
@@ -80,7 +81,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       onAddCollectionPressed: _showAddCollectionBottomSheet,
     );
 
-    final footer = _Footer(
+    final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
       onApplyPressed: _onApplyPressed,
     );
@@ -138,37 +139,6 @@ class _Header extends StatelessWidget {
           R.assets.icons.plus,
           onPressed: onAddCollectionPressed,
         ),
-      ],
-    );
-  }
-}
-
-class _Footer extends StatelessWidget {
-  const _Footer({
-    Key? key,
-    required this.onCancelPressed,
-    required this.onApplyPressed,
-  }) : super(key: key);
-
-  final VoidCallback onCancelPressed;
-  final VoidCallback onApplyPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final cancelButton = AppGhostButton.text(
-      'Cancel',
-      onPressed: onCancelPressed,
-    );
-    final applyButton = AppRaisedButton.text(
-      text: 'Apply',
-      onPressed: onApplyPressed,
-    );
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        cancelButton,
-        applyButton,
       ],
     );
   }
