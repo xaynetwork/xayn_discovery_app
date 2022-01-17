@@ -91,6 +91,17 @@ class Translations {
   String get personalAreaHomeFeed => """Home Feed""";
   String get personalAreaSettings => """Settings""";
   String get comingSoon => """Coming soon""";
+  String get feedSettingsScreenTitle => """Your home feed""";
+  String get feedSettingsScreenContryListHint =>
+      """Choose the countries you would like to receive news from (max. %s)""";
+  String get feedSettingsScreenActiveCountryListSubtitle =>
+      """Active countries""";
+  String get feedSettingsScreenInActiveCountryListSubtitle =>
+      """Inactive countries""";
+  String get feedSettingsScreenMinSelectedCountriesError =>
+      """There always has to be at least one country selected""";
+  String get feedSettingsScreenMaxSelectedCountriesError =>
+      """There are already %s countries selected""";
 }
 
 Map<String, String> get translationsMap => {
@@ -132,4 +143,14 @@ Map<String, String> get translationsMap => {
       """personalAreaHomeFeed""": """Home Feed""",
       """personalAreaSettings""": """Settings""",
       """comingSoon""": """Coming soon""",
+      """feedSettingsScreenTitle""": """Your home feed""",
+      """feedSettingsScreenContryListHint""":
+          """Choose the countries you would like to receive news from (max. %s)""",
+      """feedSettingsScreenActiveCountryListSubtitle""": """Active countries""",
+      """feedSettingsScreenInActiveCountryListSubtitle""":
+          """Inactive countries""",
+      """feedSettingsScreenMinSelectedCountriesError""":
+          """There always has to be at least one country selected""",
+      """feedSettingsScreenMaxSelectedCountriesError""":
+          """There are already %s countries selected""",
     };
