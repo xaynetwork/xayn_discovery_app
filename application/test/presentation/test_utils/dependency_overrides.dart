@@ -64,7 +64,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
 
   @override
   Future<EngineEvent> changeConfiguration(
-      {Pattern? feedMarket, int? maxItemsPerFeedBatch}) {
+      {FeedMarkets? feedMarkets, int? maxItemsPerFeedBatch}) {
     return Future.value(const EngineEvent.clientEventSucceeded());
   }
 

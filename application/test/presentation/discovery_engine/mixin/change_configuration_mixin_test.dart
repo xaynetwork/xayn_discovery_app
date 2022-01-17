@@ -20,7 +20,7 @@ void main() {
         () => Future.value(ChangeConfigurationUseCase(engine)));
 
     when(engine.changeConfiguration(
-            feedMarket: anyNamed('feedMarket'),
+            feedMarkets: anyNamed('feedMarkets'),
             maxItemsPerFeedBatch: anyNamed('maxItemsPerFeedBatch')))
         .thenAnswer(
       (_) => Future.value(const ClientEventSucceeded()),
@@ -37,7 +37,7 @@ void main() {
     verify: (manager) {
       expect(manager.state, equals(false));
       verify(engine.changeConfiguration(
-        feedMarket: 'test',
+        feedMarkets: {},
         maxItemsPerFeedBatch: 20,
       ));
       verifyNoMoreInteractions(engine);

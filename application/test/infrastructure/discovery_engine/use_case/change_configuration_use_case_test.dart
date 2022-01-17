@@ -14,14 +14,14 @@ void main() {
   });
 
   void _setUpSuccess() => when(engine.changeConfiguration(
-              feedMarket: anyNamed('feedMarket'),
+              feedMarkets: anyNamed('feedMarkets'),
               maxItemsPerFeedBatch: anyNamed('maxItemsPerFeedBatch')))
           .thenAnswer(
         (_) => Future.value(const ClientEventSucceeded()),
       );
 
   void _setUpFailure() => when(engine.changeConfiguration(
-              feedMarket: anyNamed('feedMarket'),
+              feedMarkets: anyNamed('feedMarkets'),
               maxItemsPerFeedBatch: anyNamed('maxItemsPerFeedBatch')))
           .thenAnswer(
         (_) => Future.value(const EngineExceptionRaised(
