@@ -120,9 +120,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
   }
 
   @override
-  Future<void> dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
+  Future<void> dispose() async {
   }
 
   @override
