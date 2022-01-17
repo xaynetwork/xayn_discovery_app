@@ -5,8 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 abstract class UtilsModule {
   @preResolve
   @lazySingleton
-  @dev
-  @prod
+  @Environment('default')
   Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
 
   @preResolve
