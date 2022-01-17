@@ -6,6 +6,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -147,11 +148,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     WidgetsBinding.instance!.addObserver(this);
 
     di.getAsync<DiscoveryFeedManager>().then((it) {
-      setState(() {
-        _discoveryFeedManager = it;
+      if (mounted) {
+        setState(() {
+          _discoveryFeedManager = it;
 
-        NavBarContainer.updateNavBar(context);
-      });
+          NavBarContainer.updateNavBar(context);
+        });
+      }
     });
 
     super.initState();
@@ -201,6 +204,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           }
 
           return FeedView(
+            key: Keys.feedView,
             cardViewController: _cardViewController,
             itemBuilder: _itemBuilder(
               results: results,
@@ -225,11 +229,20 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             fullScreenOffsetFraction:
                 _dragDistance / DiscoveryCard.dragThreshold,
             notchSize: notchSize,
+            cardIdentifierBuilder: _createUniqueCardIdentity(results),
           );
         },
       );
     });
   }
+
+  String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
+      (int index) {
+        final normalizedIndex = index.clamp(0, results.length - 1);
+        final document = results.elementAt(normalizedIndex);
+
+        return document.documentId.toString();
+      };
 
   Widget Function(BuildContext, int) _itemBuilder({
     required Set<Document> results,
