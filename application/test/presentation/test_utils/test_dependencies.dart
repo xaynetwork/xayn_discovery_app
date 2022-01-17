@@ -20,6 +20,6 @@ import 'test_dependencies.config.dart';
 Future<void> configureTestDependencies() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
-  await configureDependencies(environment: test);
+  await configureDependencies(environment: test.name);
   $initTestGetIt(di);
 }
