@@ -26,6 +26,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
   SettingsNavActions,
   PersonalAreaNavActions,
   FeedSettingsNavActions,
+  FeedSettingsManager,
   SettingsScreenManager,
   ActiveSearchNavActions,
   PersonalAreaManager,
