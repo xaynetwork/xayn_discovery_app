@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 
@@ -12,11 +13,18 @@ void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;
   late MockGetAppThemeUseCase getAppThemeUseCase;
   late MockIncrementAppSessionUseCase incrementAppSessionUseCase;
+  late MockMaybeCreateDefaultCollectionUseCase
+      maybeCreateDefaultCollectionUseCase;
+  late Collection mockDefaultCollection;
 
   setUp(() {
+    mockDefaultCollection =
+        Collection.readLater(name: 'mock default collection');
     listenAppThemeUseCase = MockListenAppThemeUseCase();
     getAppThemeUseCase = MockGetAppThemeUseCase();
     incrementAppSessionUseCase = MockIncrementAppSessionUseCase();
+    maybeCreateDefaultCollectionUseCase =
+        MockMaybeCreateDefaultCollectionUseCase();
 
     when(getAppThemeUseCase.singleOutput(none)).thenAnswer(
       (_) async => AppTheme.system,
@@ -32,12 +40,18 @@ void main() {
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
+    when(maybeCreateDefaultCollectionUseCase.call(any)).thenAnswer(
+      (_) async => [
+        UseCaseResult.success(mockDefaultCollection),
+      ],
+    );
   });
 
   AppManager create() => AppManager(
         getAppThemeUseCase,
         listenAppThemeUseCase,
         incrementAppSessionUseCase,
+        maybeCreateDefaultCollectionUseCase,
       );
 
   blocTest<AppManager, AppState>(
@@ -46,6 +60,7 @@ void main() {
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
       verify(incrementAppSessionUseCase.call(none)).called(1);
+      verify(maybeCreateDefaultCollectionUseCase.call(any)).called(1);
       verify(getAppThemeUseCase.singleOutput(none)).called(1);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);

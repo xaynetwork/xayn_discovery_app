@@ -3,10 +3,8 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-typedef _OnSelectCollection = void Function(Collection);
+typedef _OnSelectCollection = void Function(Collection?);
 
-//should be ordered alphabetically except the read later
-// selecting a  selected one, puts triggers null on collection -> remove from current collection.
 class CollectionsListBottomSheet extends StatefulWidget {
   final List<Collection> collections;
   final _OnSelectCollection onSelectCollection;
@@ -19,7 +17,7 @@ class CollectionsListBottomSheet extends StatefulWidget {
     this.initialIndex = 0,
   })  : assert(collections.length > 0,
             'collections must have at least one collection in CollectionsListBottomSheet'),
-        assert(initialIndex < collections.length - 1,
+        assert(initialIndex < collections.length,
             'initial index must not exceed collections length in CollectionsListBottomSheet'),
         assert(initialIndex >= 0,
             'initial index must not be negative in CollectionsListBottomSheet'),
@@ -32,13 +30,13 @@ class CollectionsListBottomSheet extends StatefulWidget {
 
 class _CollectionsListBottomSheetState
     extends State<CollectionsListBottomSheet> {
-  late Collection selectedCollection;
-
-  get collections => widget.collections;
+  Collection? selectedCollection;
+  List<Collection> collections = [];
 
   @override
   void initState() {
-    selectedCollection = collections[widget.initialIndex];
+    selectedCollection = _getSelectedCollection();
+    collections = _getOrderedCollections();
     super.initState();
   }
 
@@ -62,9 +60,20 @@ class _CollectionsListBottomSheetState
       )
       .toList();
 
-  _onSelectCollection(Collection selected) {
+  void _onSelectCollection(Collection? selected) {
     widget.onSelectCollection(selected);
     setState(() => selectedCollection = selected);
+  }
+
+  Collection? _getSelectedCollection() =>
+      widget.initialIndex < 0 ? null : widget.collections[widget.initialIndex];
+
+  List<Collection> _getOrderedCollections() {
+    final list = List.of(widget.collections);
+    final defaultCollection = list.firstWhere((it) => it.isDefault);
+    list.remove(defaultCollection);
+    list.sort((a, b) => a.name.compareTo(b.name));
+    return [defaultCollection, ...list];
   }
 }
 
@@ -99,7 +108,7 @@ class _CollectionItem extends StatelessWidget {
     );
 
     return GestureDetector(
-      onTap: () => onSelectCollection(collection),
+      onTap: () => onSelectCollection(isSelected ? null : collection),
       child: item,
     );
   }

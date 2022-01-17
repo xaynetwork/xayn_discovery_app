@@ -107,8 +107,9 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   _onApplyPressed() {
     closeBottomSheet(context);
-    _moveBookmarkToCollectionManager!
-        .moveBookmarkToSelectedCollection(bookmarkId: widget.bookmarkId);
+    _moveBookmarkToCollectionManager!.onApplyPressed(
+      bookmarkId: widget.bookmarkId,
+    );
   }
 }
 

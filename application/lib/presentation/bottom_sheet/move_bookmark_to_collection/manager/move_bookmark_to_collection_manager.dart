@@ -4,9 +4,11 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 @injectable
 class MoveBookmarkToCollectionManager
@@ -14,6 +16,7 @@ class MoveBookmarkToCollectionManager
     with UseCaseBlocHelper<MoveBookmarkToCollectionState> {
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final MoveBookmarkUseCase _moveBookmarkUseCase;
+  final RemoveBookmarkUseCase _removeBookmarkUseCase;
 
   late List<Collection> _collections;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
@@ -23,6 +26,7 @@ class MoveBookmarkToCollectionManager
   MoveBookmarkToCollectionManager._(
     this._listenCollectionsUseCase,
     this._moveBookmarkUseCase,
+    this._removeBookmarkUseCase,
     this._collections,
   ) : super(MoveBookmarkToCollectionState.initial()) {
     _init();
@@ -33,16 +37,14 @@ class MoveBookmarkToCollectionManager
     GetAllCollectionsUseCase getAllCollectionsUseCase,
     ListenCollectionsUseCase listenCollectionsUseCase,
     MoveBookmarkUseCase moveBookmarkUseCase,
+    RemoveBookmarkUseCase removeBookmarkUseCase,
   ) async {
-    // final collections =
-    //     (await getAllCollectionsUseCase.singleOutput(none)).collections;
-    final collections = [
-      Collection.readLater(name: 'read later'),
-      Collection(id: UniqueId(), index: 1, name: 'test'),
-    ];
+    final collections =
+        (await getAllCollectionsUseCase.singleOutput(none)).collections;
     return MoveBookmarkToCollectionManager._(
       listenCollectionsUseCase,
       moveBookmarkUseCase,
+      removeBookmarkUseCase,
       collections,
     );
   }
@@ -52,10 +54,18 @@ class MoveBookmarkToCollectionManager
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
   }
 
-  void updateSelectedCollection(Collection collection) =>
+  void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  Future<void> moveBookmarkToSelectedCollection(
+  Future<void> onApplyPressed({required UniqueId bookmarkId}) async {
+    if (state.selectedCollection == null) {
+      await _removeBookmarkUseCase.call(bookmarkId);
+    } else {
+      await _moveBookmarkToSelectedCollection(bookmarkId: bookmarkId);
+    }
+  }
+
+  Future<void> _moveBookmarkToSelectedCollection(
       {required UniqueId bookmarkId}) async {
     final param = MoveBookmarkUseCaseIn(
         bookmarkId: bookmarkId, collectionId: state.selectedCollection!.id);
@@ -65,8 +75,9 @@ class MoveBookmarkToCollectionManager
   @override
   Future<MoveBookmarkToCollectionState?> computeState() async {
     return fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
-      if (errorReport.exists(_collectionsHandler)) {
+      if (errorReport.isNotEmpty) {
         final error = errorReport.of(_collectionsHandler)!.error;
+        logger.e(error);
         return state.copyWith(errorMsg: error.toString());
       }
 

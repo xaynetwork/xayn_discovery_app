@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/maybe_create_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
@@ -17,6 +18,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._getAppThemeUseCase,
     this._listenAppThemeUseCase,
     this._incrementAppSessionUseCase,
+    this._maybeCreateDefaultCollectionUseCase,
   ) : super(AppState.empty()) {
     _init();
   }
@@ -24,6 +26,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   final GetAppThemeUseCase _getAppThemeUseCase;
   final ListenAppThemeUseCase _listenAppThemeUseCase;
   final IncrementAppSessionUseCase _incrementAppSessionUseCase;
+  final MaybeCreateDefaultCollectionUseCase
+      _maybeCreateDefaultCollectionUseCase;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   late AppTheme _appTheme;
@@ -32,6 +36,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   void _init() async {
     scheduleComputeState(() async {
       await _incrementAppSessionUseCase.call(none);
+      await _maybeCreateDefaultCollectionUseCase.call('Read later');
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
       _initDone = true;
