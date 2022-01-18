@@ -148,10 +148,11 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               .toSet();
         }
 
-        results = await _maybeReduceCardCount(results);
+        final sets = await _maybeReduceCardCount(results);
 
         final nextState = DiscoveryFeedState(
-          results: results,
+          results: sets.results,
+          removedResults: sets.removedResults,
           isComplete: !isLoading,
           isInErrorState: errorReport.isNotEmpty,
           isFullScreen: _isFullScreen,
@@ -162,22 +163,33 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         if (!nextState.equals(state)) return nextState;
       });
 
-  Future<Set<Document>> _maybeReduceCardCount(Set<Document> results) async {
-    if (results.length <= _maxCardCount) return results;
+  Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
+    if (results.length <= _maxCardCount) {
+      return ResultSets(results: results);
+    }
 
     var nextResults = results.toSet();
     var cardIndex = _cardIndex!;
-    final flaggedForDisposal = results.take(results.length - _maxCardCount);
+    final flaggedForDisposal =
+        results.take(results.length - _maxCardCount).toSet();
 
     nextResults = nextResults..removeAll(flaggedForDisposal);
     cardIndex = nextResults.toList().indexOf(_observedDocument!);
 
-    if (cardIndex == -1) {
+    // The number 2 was chosen because we always animate transitions when
+    // moving between cards.
+    // If it is 2, then we have at least some cards above, and some cards below.
+    // This is actually important, because a transition going from card A to card B
+    // might currently be playing out:
+    // If cardIndex would be 0 or 1, then that running animation might not play correctly:
+    // the space above index 0 is zero, so there is no "from" range anymore
+    // which was the starting value when the animation began.
+    if (cardIndex <= 2) {
       // This means we are about to remove the Document that is currently
       // in front, which should be avoided.
       // Only remove documents when scrolled far enough, so that the impact
       // is seamless to the user.
-      return results;
+      return ResultSets(results: results);
     }
 
     // Invoke the use case which closes these Documents for the engine
@@ -192,7 +204,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     // Additional cleanup on the observer.
     flaggedForDisposal.forEach(_observedViewTypes.remove);
 
-    return nextResults;
+    return ResultSets(
+      results: nextResults,
+      removedResults: flaggedForDisposal,
+    );
   }
 
   @override
@@ -210,4 +225,14 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     _cardIndexConsumer = consume(_fetchCardIndexUseCase, initialData: none)
         .transform((out) => out.take(1));
   }
+}
+
+class ResultSets {
+  final Set<Document> results;
+  final Set<Document> removedResults;
+
+  const ResultSets({
+    required this.results,
+    this.removedResults = const <Document>{},
+  });
 }

@@ -57,7 +57,7 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 2e4d51a4088a78cc89eb004f84c9c681c8fbf651
+      ref: 5a9f499461aa4a93e11a96eafbba74f32f73a7d5
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
@@ -122,3 +122,5 @@ flutter:
     - packages/xayn_design/assets/icons/moon_and_sun.svg
     - packages/xayn_design/assets/icons/moon.svg
     - packages/xayn_design/assets/icons/sun.svg
+    - packages/xayn_design/assets/icons/bookmark.svg
+    - packages/xayn_design/assets/icons/bookmark_active.svg
