@@ -62,15 +62,19 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(listenBookmarksUseCase.transaction(any)).thenAnswer(
-      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks)),
+      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks, '')),
     );
 
     bookmarksScreenManager = BookmarksScreenManager(
       listenBookmarksUseCase,
       removeBookmarkUseCase,
       moveBookmarkUseCase,
+      //_createDefaultCollectionUseCase
+      null,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
+      //_bookmarksScreenNavActions
+      null,
     );
 
     populatedState = BookmarksScreenState.populated(bookmarks, timestamp);

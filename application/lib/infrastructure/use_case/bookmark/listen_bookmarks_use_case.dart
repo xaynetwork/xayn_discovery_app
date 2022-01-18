@@ -2,15 +2,17 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
 import 'bookmark_use_cases_errors.dart';
 
-typedef GetBookmarksHandler = List<Bookmark> Function(UniqueId? collectionId);
+typedef _GetBookmarksHandler = List<Bookmark> Function(UniqueId? collectionId);
 
 @injectable
 class ListenBookmarksUseCase
@@ -26,10 +28,11 @@ class ListenBookmarksUseCase
   Stream<ListenBookmarksUseCaseOut> transaction(
       ListenBookmarksUseCaseIn param) async* {
     final collectionId = param.collectionId;
-    late final GetBookmarksHandler getBookmarksHandler;
+    late final _GetBookmarksHandler getBookmarksHandler;
+    Collection? collection;
 
     if (collectionId != null) {
-      final collection = _collectionsRepository.getById(collectionId);
+      collection = _collectionsRepository.getById(collectionId);
 
       if (collection == null) {
         throw BookmarkUseCaseError.tryingToGetBookmarksForNotExistingCollection;
@@ -41,11 +44,12 @@ class ListenBookmarksUseCase
       getBookmarksHandler = (_) => _bookmarksRepository.getAll();
     }
 
-    yield* _bookmarksRepository.watch().map(
-          (_) => ListenBookmarksUseCaseOut(
-            getBookmarksHandler(param.collectionId),
-          ),
-        );
+    yield* Rx.merge([Stream.value(null), _bookmarksRepository.watch()]).map(
+      (_) => ListenBookmarksUseCaseOut(
+        getBookmarksHandler(param.collectionId),
+        collection?.name ?? '',
+      ),
+    );
   }
 }
 
@@ -60,9 +64,10 @@ class ListenBookmarksUseCaseIn extends Equatable {
 
 class ListenBookmarksUseCaseOut extends Equatable {
   final List<Bookmark> bookmarks;
+  final String collectionName;
 
-  const ListenBookmarksUseCaseOut(this.bookmarks);
+  const ListenBookmarksUseCaseOut(this.bookmarks, this.collectionName);
 
   @override
-  List<Object?> get props => [bookmarks];
+  List<Object?> get props => [bookmarks, collectionName];
 }
