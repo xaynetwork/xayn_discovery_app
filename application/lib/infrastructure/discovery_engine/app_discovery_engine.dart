@@ -36,12 +36,12 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   @factoryMethod
   static Future<AppDiscoveryEngine> create() async {
     // todo: read from AppSettings
-    const configuration = Configuration(
+    final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
       applicationDirectoryPath: '/',
       maxItemsPerFeedBatch: 20,
-      feedMarket: 'en-US',
+      feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')},
     );
     final engine = await DiscoveryEngine.init(configuration: configuration);
 
@@ -50,11 +50,13 @@ class AppDiscoveryEngine implements DiscoveryEngine {
 
   @override
   Future<EngineEvent> changeConfiguration({
-    String? feedMarket,
+    FeedMarkets? feedMarkets,
     int? maxItemsPerFeedBatch,
   }) =>
       _engine.changeConfiguration(
-          feedMarket: feedMarket, maxItemsPerFeedBatch: maxItemsPerFeedBatch);
+        feedMarkets: feedMarkets,
+        maxItemsPerFeedBatch: maxItemsPerFeedBatch,
+      );
 
   @override
   Future<EngineEvent> changeDocumentFeedback({
