@@ -1,6 +1,7 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
+import 'translations.i18n.dart';
 
 String get _languageCode => 'en';
 String _plural(int count,
@@ -49,8 +50,8 @@ String _cardinal(
       other: other,
     );
 
-class Translations {
-  const Translations();
+class TranslationsEn extends Translations {
+  const TranslationsEn();
   String get locale => "en";
   String get languageCode => "en";
   String get your => """Your""";
@@ -116,7 +117,7 @@ class Translations {
   String get bottomSheetCreateCollectionTextFieldHint => """Collection name""";
 }
 
-Map<String, String> get translationsMap => {
+Map<String, String> get translationsEnMap => {
       """your""": """Your""",
       """activeSearchSearchHint""": """Search""",
       """settingsTitle""": """Settings""",

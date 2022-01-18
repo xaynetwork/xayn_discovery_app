@@ -36,6 +36,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   void _init() async {
     scheduleComputeState(() async {
       await _incrementAppSessionUseCase.call(none);
+
+      //todo: get readLater string from local depending on user's language
       await _createOrGetDefaultCollectionUseCase.call('Read later');
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);

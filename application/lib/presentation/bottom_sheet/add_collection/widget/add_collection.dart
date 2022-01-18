@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/manager/create_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 typedef _OnAddCollectionSheetClosed = Function(Collection);
 
@@ -40,19 +41,19 @@ class _AddCollectionState extends State<_AddCollection>
   @override
   Widget build(BuildContext context) {
     final textField = AppTextField(
-      hintText: 'Collection name',
+      hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
       onChanged: updateCollectionName,
     );
 
-    const header = BottomSheetHeader(
-      headerText: 'Create a new Collection',
+    final header = BottomSheetHeader(
+      headerText: R.strings.bottomSheetCreateCollectionHeader,
     );
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
       onApplyPressed: onApplyPressed,
       isApplyDisabled: collectionName == null || collectionName!.isEmpty,
-      applyBtnText: 'Create',
+      applyBtnText: R.strings.bottomSheetCreate,
     );
 
     return Column(

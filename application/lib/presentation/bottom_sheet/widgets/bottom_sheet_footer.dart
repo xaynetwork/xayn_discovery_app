@@ -21,11 +21,11 @@ class BottomSheetFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cancelButton = AppGhostButton.text(
-      cancelBtnText ?? 'Cancel',
+      cancelBtnText ?? R.strings.bottomSheetCancel,
       onPressed: onCancelPressed,
     );
     final applyButton = AppRaisedButton.text(
-      text: applyBtnText ?? 'Apply',
+      text: applyBtnText ?? R.strings.bottomSheetApply,
       onPressed: isApplyDisabled ? null : onApplyPressed,
     );
 
