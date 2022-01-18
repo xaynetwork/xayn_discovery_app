@@ -18,7 +18,7 @@ class CreateDefaultCollectionUseCase extends UseCase<String, Collection> {
     final collections = _collectionsRepository.getAll();
 
     /// Check if the default collection already exists.
-    if (collections.where((it) => it.isDefault).isNotEmpty) {
+    if (collections.any((it) => it.isDefault)) {
       throw CollectionUseCaseError.tryingToCreateAgainDefaultCollection;
     }
 

@@ -18,7 +18,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._getAppThemeUseCase,
     this._listenAppThemeUseCase,
     this._incrementAppSessionUseCase,
-    this._maybeCreateDefaultCollectionUseCase,
+    this._createOrGetDefaultCollectionUseCase,
   ) : super(AppState.empty()) {
     _init();
   }
@@ -27,7 +27,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   final ListenAppThemeUseCase _listenAppThemeUseCase;
   final IncrementAppSessionUseCase _incrementAppSessionUseCase;
   final CreateOrGetDefaultCollectionUseCase
-      _maybeCreateDefaultCollectionUseCase;
+      _createOrGetDefaultCollectionUseCase;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   late AppTheme _appTheme;
@@ -36,7 +36,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   void _init() async {
     scheduleComputeState(() async {
       await _incrementAppSessionUseCase.call(none);
-      await _maybeCreateDefaultCollectionUseCase.call('Read later');
+      await _createOrGetDefaultCollectionUseCase.call('Read later');
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
       _initDone = true;

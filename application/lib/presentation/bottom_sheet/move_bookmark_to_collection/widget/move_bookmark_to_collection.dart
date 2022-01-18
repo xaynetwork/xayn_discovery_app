@@ -71,21 +71,19 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   @override
   Widget build(BuildContext context) {
     final body = _moveBookmarkToCollectionManager == null
-        ? const Text('loading')
+        ? const Center(child: CircularProgressIndicator())
         : BlocBuilder<MoveBookmarkToCollectionManager,
-                MoveBookmarkToCollectionState>(
+            MoveBookmarkToCollectionState>(
             bloc: _moveBookmarkToCollectionManager,
-            builder: (_, state) {
-              if (state.collections.isNotEmpty) {
-                return CollectionsListBottomSheet(
-                  collections: state.collections,
-                  onSelectCollection: _moveBookmarkToCollectionManager!
-                      .updateSelectedCollection,
-                  initialSelectedCollection: state.selectedCollection,
-                );
-              }
-              return Container();
-            });
+            builder: (_, state) => state.collections.isNotEmpty
+                ? CollectionsListBottomSheet(
+                    collections: state.collections,
+                    onSelectCollection: _moveBookmarkToCollectionManager!
+                        .updateSelectedCollection,
+                    initialSelectedCollection: state.selectedCollection,
+                  )
+                : Container(),
+          );
 
     final scrollableBody = Flexible(
       child: SingleChildScrollView(
