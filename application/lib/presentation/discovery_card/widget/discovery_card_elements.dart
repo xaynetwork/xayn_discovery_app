@@ -78,7 +78,7 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     final faviconRow = FaviconBar(
-      provider: provider!,
+      provider: provider,
       datePublished: datePublished,
     );
 
