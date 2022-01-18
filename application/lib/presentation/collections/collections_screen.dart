@@ -15,7 +15,8 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
 import 'manager/collection_card_state.dart';
 
@@ -61,8 +62,14 @@ class _CollectionsScreenState extends State<CollectionsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: const AppToolbar(
-          yourTitle: Strings.collectionsScreenHeader,
+        appBar: AppToolbar(
+          appToolbarData: AppToolbarData.withTrailingIcon(
+            yourTitle: Strings.collectionsScreenHeader,
+            iconPath: R.assets.icons.plus,
+            onPressed: () {
+              throw UnimplementedError();
+            },
+          ),
         ),
         body: StreamBuilder<CollectionsScreenManager>(
           stream: _collectionsScreenManagerStream.stream,

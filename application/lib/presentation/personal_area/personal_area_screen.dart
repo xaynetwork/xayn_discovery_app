@@ -9,7 +9,8 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
@@ -54,7 +55,11 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       builder: (_, __) => _buildScreen(),
     );
     return Scaffold(
-      appBar: AppToolbar(title: R.strings.personalAreaTitle),
+      appBar: AppToolbar(
+        appToolbarData: AppToolbarData.titleOnly(
+          yourTitle: R.strings.personalAreaTitle,
+        ),
+      ),
       body: bloc,
     );
   }
