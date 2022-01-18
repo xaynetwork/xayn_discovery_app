@@ -7,19 +7,19 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 class FaviconBar extends StatelessWidget {
   const FaviconBar({
     Key? key,
-    required this.provider,
+    this.provider,
     required this.datePublished,
   }) : super(key: key);
 
-  final WebResourceProvider provider;
+  final WebResourceProvider? provider;
   final DateTime datePublished;
 
   @override
   Widget build(BuildContext context) {
-    final favicon = provider.thumbnail == null
+    final favicon = provider?.thumbnail == null
         ? Icon(Icons.web, color: R.colors.icon)
         : Image.network(
-            provider.thumbnail!.toString(),
+            provider!.thumbnail!.toString(),
             width: R.dimen.unit3,
             height: R.dimen.unit3,
           );
@@ -38,7 +38,7 @@ class FaviconBar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              provider.name,
+              provider?.name ?? '',
               style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
             ),
             Text(
