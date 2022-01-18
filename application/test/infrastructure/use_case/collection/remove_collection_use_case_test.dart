@@ -51,7 +51,7 @@ void main() {
       'WHEN the collection to remove corresponds to the default collection THEN throw error',
       build: () => removeCollectionUseCase,
       input: [
-        RemoveCollectionUseCaseParam(
+        const RemoveCollectionUseCaseParam(
           collectionIdToRemove: Collection.readLaterId,
         )
       ],

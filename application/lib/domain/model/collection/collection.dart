@@ -28,8 +28,8 @@ class Collection extends DbEntity with _$Collection {
 
   /// This is the id of the default collection.
   /// The default collection cannot be deleted or renamed.
-  static UniqueId readLaterId =
-      const UniqueId.fromTrustedString('defaultCollectionId');
+  static const UniqueId readLaterId =
+      UniqueId.fromTrustedString('defaultCollectionId');
 }
 
 /// Why this extension is needed ?
