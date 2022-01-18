@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
+/// TODO To remove and use [CardWidget] instead
 const _itemHeight = 150.0;
 
 class PersonalAreaCard extends StatelessWidget {

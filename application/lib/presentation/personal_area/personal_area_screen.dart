@@ -7,7 +7,8 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
@@ -88,38 +89,36 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
               ))
           .toList();
 
-  PersonalAreaCard _buildCollection() => PersonalAreaCard(
+  CardWidget _buildCollection() => CardWidget(
         key: Keys.personalAreaCardCollections,
-        title: R.strings.personalAreaCollections,
-        color: R.colors.personalAreaCollections,
-        svgIconPath: R.assets.icons.book,
-        svgBackground: R.assets.graphics.formsOrange,
-        onPressed: () {
-          hideTooltip();
-          _manager.onCollectionsNavPressed();
-        },
+        cardData: CardData.personalArea(
+          title: R.strings.personalAreaCollections,
+          color: R.colors.personalAreaCollections,
+          svgIconPath: R.assets.icons.book,
+          svgBackground: R.assets.graphics.formsOrange,
+          onPressed: _manager.onCollectionsNavPressed,
+        ),
       );
 
-  PersonalAreaCard _buildHomeFeed() => PersonalAreaCard(
-      key: Keys.personalAreaCardHomeFeed,
-      title: R.strings.personalAreaHomeFeed,
-      color: R.colors.personalAreaHomeFeed,
-      svgIconPath: R.assets.icons.confetti,
-      svgBackground: R.assets.graphics.formsGreen,
-      onPressed: () {
-        hideTooltip();
-        _manager.onHomeFeedSettingsNavPressed();
-      });
+  CardWidget _buildHomeFeed() => CardWidget(
+        key: Keys.personalAreaCardHomeFeed,
+        cardData: CardData.personalArea(
+          title: R.strings.personalAreaHomeFeed,
+          color: R.colors.personalAreaHomeFeed,
+          svgIconPath: R.assets.icons.confetti,
+          svgBackground: R.assets.graphics.formsGreen,
+          onPressed: _manager.onHomeFeedSettingsNavPressed,
+        ),
+      );
 
-  PersonalAreaCard _buildSettings() => PersonalAreaCard(
+  CardWidget _buildSettings() => CardWidget(
         key: Keys.personalAreaCardSettings,
-        title: R.strings.personalAreaSettings,
-        color: R.colors.personalAreaSettings,
-        svgIconPath: R.assets.icons.gear,
-        svgBackground: R.assets.graphics.formsPurple,
-        onPressed: () {
-          hideTooltip();
-          _manager.onSettingsNavPressed();
-        },
+        cardData: CardData.personalArea(
+          title: R.strings.personalAreaSettings,
+          color: R.colors.personalAreaSettings,
+          svgIconPath: R.assets.icons.gear,
+          svgBackground: R.assets.graphics.formsPurple,
+          onPressed: _manager.onSettingsNavPressed,
+        ),
       );
 }
