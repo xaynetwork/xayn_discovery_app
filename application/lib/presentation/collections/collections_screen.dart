@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/collections/manager/collections_
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
@@ -64,7 +63,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.withTrailingIcon(
-            yourTitle: Strings.collectionsScreenHeader,
+            yourTitle: R.strings.collectionsScreenTitle,
             iconPath: R.assets.icons.plus,
             onPressed: () {
               throw UnimplementedError();
