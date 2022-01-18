@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -14,10 +15,10 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 /// the minimum fraction height of the card image.
 /// This value must be in the range of [0.0, 1.0], where 1.0 is the
@@ -66,14 +67,10 @@ class DiscoveryCardScreenArgs {
   const DiscoveryCardScreenArgs({
     required this.isPrimary,
     required this.document,
-    required this.imageManager,
-    required this.discoveryCardManager,
   });
 
   final bool isPrimary;
   final Document document;
-  final ImageManager imageManager;
-  final DiscoveryCardManager discoveryCardManager;
 }
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
@@ -85,8 +82,6 @@ class DiscoveryCardScreen extends DiscoveryCard {
           key: key,
           isPrimary: args.isPrimary,
           document: args.document,
-          imageManager: args.imageManager,
-          discoveryCardManager: args.discoveryCardManager,
         );
 
   @override

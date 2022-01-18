@@ -32,10 +32,10 @@ readingTimeUnitSingular: 'minute'
 readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
-personalAreaTitle: Your Area
-personalAreaCollections: Collections
-personalAreaHomeFeed: Discovery Feed
-personalAreaSettings: Settings
+personalAreaTitle: Your Space
+personalAreaCollections: Collections Settings
+personalAreaHomeFeed: Feed Settings
+personalAreaSettings: App Settings
 comingSoon: Coming soon
 feedSettingsScreenTitle: Your Discovery Feed
 # %s - those symbols should be in all translations!

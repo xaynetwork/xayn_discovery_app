@@ -124,19 +124,26 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
-        builder: (context, cardState) => CardWidget(
-          key: Keys.generateCollectionsScreenCardKey(
+        builder: (context, cardState) {
+          final cardKey = Keys.generateCollectionsScreenCardKey(
             collection.id.toString(),
-          ),
-          cardData: CardData.collectionsScreen(
-            title: collection.name,
-            onPressed: () => throw UnimplementedError(),
-            onLongPressed: () => throw UnimplementedError(),
-            numOfItems: cardState.numOfItems,
-            backgroundImage: cardState.image,
-            color: R.colors.collectionsScreenCard,
-          ),
-        ),
+          );
+          return CardWidget(
+            key: cardKey,
+            cardData: CardData.collectionsScreen(
+              key: cardKey,
+              title: collection.name,
+              onPressed: () =>
+                  _collectionsScreenManager?.onCollectionPressed(collection.id),
+              onLongPressed: () => throw UnimplementedError(),
+              numOfItems: cardState.numOfItems,
+              backgroundImage: cardState.image,
+              color: R.colors.collectionsScreenCard,
+              // Screenwidth - 2 * side paddings
+              cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
+            ),
+          );
+        },
       );
 
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(

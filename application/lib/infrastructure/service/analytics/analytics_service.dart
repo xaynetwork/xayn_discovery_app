@@ -1,6 +1,6 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:amplitude_flutter/amplitude.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -37,7 +37,9 @@ class AmplitudeAnalyticsService implements AnalyticsService {
   Future<void> send(AnalyticsEvent event) async {
     await _amplitude.logEvent(
       event.type,
-      eventProperties: event.properties,
+      eventProperties: event.properties
+          // this ensures that unserializable objects like i.e. [UniqueId] can tracked in analytics
+          .map((key, value) => MapEntry(key, value.toString())),
     );
 
     logger.i('Analytics event has been fired:\n${{
