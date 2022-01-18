@@ -100,8 +100,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaCollections,
           color: R.colors.personalAreaCollections,
           svgIconPath: R.assets.icons.book,
-          svgBackgroundPath: R.assets.graphics.formsOrange,
+          svgBackground: R.assets.graphics.formsOrange,
           onPressed: _manager.onCollectionsNavPressed,
+          key: Keys.personalAreaCardCollections,
         ),
       );
 
@@ -111,8 +112,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaHomeFeed,
           color: R.colors.personalAreaHomeFeed,
           svgIconPath: R.assets.icons.confetti,
-          svgBackgroundPath: R.assets.graphics.formsGreen,
+          svgBackground: R.assets.graphics.formsGreen,
           onPressed: _manager.onHomeFeedSettingsNavPressed,
+          key: Keys.personalAreaCardHomeFeed,
         ),
       );
 
@@ -122,8 +124,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaSettings,
           color: R.colors.personalAreaSettings,
           svgIconPath: R.assets.icons.gear,
-          svgBackgroundPath: R.assets.graphics.formsPurple,
+          svgBackground: R.assets.graphics.formsPurple,
           onPressed: _manager.onSettingsNavPressed,
+          key: Keys.personalAreaCardSettings,
         ),
       );
 }

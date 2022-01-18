@@ -13,6 +13,7 @@ class BookmarksScreenState with _$BookmarksScreenState {
 
     /// Timestamp of update time (for making sure that state is emitted)
     required DateTime? timestamp,
+    required String? collectionName,
 
     /// Error message
     String? errorMsg,
@@ -22,14 +23,17 @@ class BookmarksScreenState with _$BookmarksScreenState {
       BookmarksScreenState(
         bookmarks: const [],
         timestamp: timeStamp,
+        collectionName: null,
       );
 
   factory BookmarksScreenState.populated(
     List<Bookmark> bookmarks,
     DateTime timestamp,
+    String collectionName,
   ) =>
       BookmarksScreenState(
         bookmarks: bookmarks,
         timestamp: timestamp,
+        collectionName: collectionName,
       );
 }

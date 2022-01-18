@@ -1,6 +1,8 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
@@ -53,6 +55,34 @@ class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
   void onBackNavPressed() => changeStack((stack) => stack.pop());
 }
 
+@Injectable(as: BookmarksScreenNavActions)
+class BookmarksScreenNavActionsImpl extends BookmarksScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  BookmarksScreenNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onBookmarkPressed({
+    required bool isPrimary,
+    required UniqueId bookmarkId,
+  }) {
+    /// FIXME currently there is no way to retrieve a Document from a DocumentID
+    //import 'package:xayn_discovery_app/domain/model/extensions/uniqueid_extension.dart';
+    // DocumentId documentId = bookmarkId.documentId;
+
+    changeStack(
+        (stack) => stack.push(PageRegistry.cardDetails(DiscoveryCardScreenArgs(
+              document: documentId,
+              isPrimary: false,
+            ))));
+  }
+}
+
 @Injectable(as: SettingsNavActions)
 class SettingsNavActionsImpl extends SettingsNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -87,6 +117,10 @@ class CollectionsScreenNavActionsImpl extends CollectionsScreenNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onCollectionPressed(UniqueId collectionId) =>
+      changeStack((stack) => stack.push(PageRegistry.bookmarks(collectionId)));
 }
 
 @Injectable(as: ActiveSearchNavActions)

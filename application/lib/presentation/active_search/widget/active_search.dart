@@ -116,8 +116,6 @@ class _ActiveSearchState extends State<ActiveSearch>
             final args = DiscoveryCardScreenArgs(
               isPrimary: true,
               document: document,
-              imageManager: managers.imageManager,
-              discoveryCardManager: managers.discoveryCardManager,
             );
             _activeSearchManager.onCardDetailsPressed(args);
           },

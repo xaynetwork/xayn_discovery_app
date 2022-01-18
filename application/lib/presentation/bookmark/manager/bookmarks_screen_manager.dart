@@ -1,34 +1,61 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'bookmarks_screen_state.dart';
 
+abstract class BookmarksScreenNavActions {
+  void onBackNavPressed();
+
+  void onBookmarkPressed({
+    required bool isPrimary,
+    required UniqueId bookmarkId,
+  });
+}
+
 @injectable
 class BookmarksScreenManager extends Cubit<BookmarksScreenState>
-    with UseCaseBlocHelper<BookmarksScreenState> {
+    with UseCaseBlocHelper<BookmarksScreenState>
+    implements BookmarksScreenNavActions {
   final ListenBookmarksUseCase _listenBookmarksUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
   final MoveBookmarkUseCase _moveBookmarkUseCase;
+  final CreateDefaultCollectionUseCase _createDefaultCollectionUseCase;
   final BookmarkErrorsEnumMapper _bookmarkErrorsEnumMapper;
   final DateTimeHandler _dateTimeHandler;
+  final BookmarksScreenNavActions _bookmarksScreenNavActions;
+  late final UniqueId? _collectionId;
+
   BookmarksScreenManager(
     this._listenBookmarksUseCase,
     this._removeBookmarkUseCase,
     this._moveBookmarkUseCase,
+    this._createDefaultCollectionUseCase,
     this._bookmarkErrorsEnumMapper,
     this._dateTimeHandler,
-  ) : super(
+    this._bookmarksScreenNavActions, {
+
+    /// Required param to load a collection when entering a screen, alternatively call [enteringScreen]
+    @factoryParam UniqueId? collectionId,
+  })  : _collectionId = collectionId,
+        super(
           BookmarksScreenState.initial(),
         ) {
     _init();
+    final collectionId = _collectionId;
+    if (collectionId != null) {
+      enteringScreen(collectionId);
+    }
   }
 
   late final UseCaseSink<ListenBookmarksUseCaseIn, ListenBookmarksUseCaseOut>
@@ -41,8 +68,18 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   }
 
   void enteringScreen(UniqueId collectionId) {
+    _fechCollection(collectionId);
+  }
+
+  void _fechCollection(UniqueId collectionId) {
     _listenBookmarksHandler(
         ListenBookmarksUseCaseIn(collectionId: collectionId));
+  }
+
+  void _createDefaultCollectionAndFetchCollection() {
+    _createDefaultCollectionUseCase
+        .singleOutput(R.strings.defaultCollectionNameReadLater)
+        .then((value) => _fechCollection(Collection.readLaterId));
   }
 
   void moveBookmark({
@@ -91,6 +128,15 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
           if (errorReport.exists(_listenBookmarksHandler)) {
             final error = errorReport.of(_listenBookmarksHandler)!.error;
 
+            // Ignore error when we have to create the collection
+            if (error ==
+                    BookmarkUseCaseError
+                        .tryingToGetBookmarksForNotExistingCollection &&
+                _collectionId == Collection.readLaterId) {
+              _createDefaultCollectionAndFetchCollection();
+              return state;
+            }
+
             errorMsg = error.toString();
 
             return state.copyWith(
@@ -102,6 +148,7 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
             return BookmarksScreenState.populated(
               bookmarkEvent.bookmarks,
               _dateTimeHandler.getDateTimeNow(),
+              bookmarkEvent.collectionName,
             );
           }
         },
@@ -116,4 +163,15 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
           e as BookmarkUseCaseError,
         ),
       );
+
+  @override
+  void onBackNavPressed() => _bookmarksScreenNavActions.onBackNavPressed();
+
+  @override
+  void onBookmarkPressed({
+    required bool isPrimary,
+    required UniqueId bookmarkId,
+  }) =>
+      _bookmarksScreenNavActions.onBookmarkPressed(
+          bookmarkId: bookmarkId, isPrimary: false);
 }

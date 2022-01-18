@@ -80,9 +80,7 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ListenBookmarksUseCaseOut(
-            [bookmark1, bookmark2],
-          ),
+          ListenBookmarksUseCaseOut([bookmark1, bookmark2], ""),
         )
       ],
     );
