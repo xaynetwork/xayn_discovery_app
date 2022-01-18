@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -76,6 +77,18 @@ class FeedSettingsNavActionsImpl extends FeedSettingsNavActions {
   void onBackNavPressed() => changeStack((stack) => stack.pop());
 }
 
+@Injectable(as: CollectionsScreenNavActions)
+class CollectionsScreenNavActionsImpl extends CollectionsScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  CollectionsScreenNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+}
+
 @Injectable(as: ActiveSearchNavActions)
 class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -115,8 +128,7 @@ class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
 
   @override
   void onCollectionsNavPressed() {
-    throw UnimplementedError('Screen not ready yet');
-    // changeStack((stack) => stack.push(PageRegistry.collections));
+    changeStack((stack) => stack.push(PageRegistry.collections));
   }
 
   @override

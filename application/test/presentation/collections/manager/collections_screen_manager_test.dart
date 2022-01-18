@@ -28,6 +28,7 @@ import 'collections_screen_manager_test.mocks.dart';
   GetAllCollectionsUseCase,
   GetAllBookmarksUseCase,
   CollectionErrorsEnumMapper,
+  CollectionsScreenNavActions,
   DateTimeHandler,
 ])
 void main() {
@@ -37,6 +38,7 @@ void main() {
   late MockListenCollectionsUseCase listenCollectionsUseCase;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
   late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
+  late MockCollectionsScreenNavActions collectionsScreenNavActions;
   late MockDateTimeHandler dateTimeHandler;
   late CollectionsScreenState populatedState;
   final timeStamp = DateTime.now();
@@ -76,6 +78,7 @@ void main() {
         renameCollectionUseCase,
         listenCollectionsUseCase,
         collectionErrorsEnumMapper,
+        collectionsScreenNavActions,
         dateTimeHandler,
       );
 
@@ -86,6 +89,7 @@ void main() {
     listenCollectionsUseCase = MockListenCollectionsUseCase();
     getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
     collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
+    collectionsScreenNavActions = MockCollectionsScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
     populatedState = CollectionsScreenState.populated(
       [collection1, collection2],

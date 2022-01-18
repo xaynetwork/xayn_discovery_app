@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
@@ -9,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/collections/util/collection_erro
 
 import 'collection_card_state.dart';
 
+@injectable
 class CollectionCardManager extends Cubit<CollectionCardState>
     with UseCaseBlocHelper<CollectionCardState> {
   final GetCollectionCardDataUseCase _getCollectionCardDataUseCase;
