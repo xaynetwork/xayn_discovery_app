@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 
 @injectable
@@ -9,6 +10,6 @@ class CreateCollectionManager {
     this._createCollectionUseCase,
   );
 
-  void createCollection(String collectionName) =>
-      _createCollectionUseCase.call(collectionName);
+  Future<Collection> createCollection(String collectionName) =>
+      _createCollectionUseCase.singleOutput(collectionName);
 }

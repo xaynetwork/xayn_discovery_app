@@ -4,10 +4,10 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 
 @injectable
-class MaybeCreateDefaultCollectionUseCase extends UseCase<String, Collection> {
+class CreateOrGetDefaultCollectionUseCase extends UseCase<String, Collection> {
   final CollectionsRepository _collectionsRepository;
 
-  MaybeCreateDefaultCollectionUseCase(this._collectionsRepository);
+  CreateOrGetDefaultCollectionUseCase(this._collectionsRepository);
 
   @override
   Stream<Collection> transaction(String param) async* {

@@ -75,9 +75,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   void shareUri(Uri uri) => _shareUriUseCase.call(uri);
 
-  void toggleBookmarkDocument(Document document) => state.isBookmarked
-      ? _removeBookmarkUseCase(document.documentUniqueId)
-      : _createBookmarkUseCase.call(document);
+  bool toggleBookmarkDocument(Document document) {
+    state.isBookmarked
+        ? _removeBookmarkUseCase(document.documentUniqueId)
+        : _createBookmarkUseCase.call(document);
+    return state.isBookmarked;
+  }
 
   Future<void> _init() async {
     _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);

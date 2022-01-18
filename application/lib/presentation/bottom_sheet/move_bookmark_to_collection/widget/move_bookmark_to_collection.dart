@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 
 class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
-  final UniqueId bookmarkId;
-
-  MoveBookmarkToCollectionBottomSheet({Key? key, required this.bookmarkId})
-      : super(
+  MoveBookmarkToCollectionBottomSheet({
+    Key? key,
+    required UniqueId bookmarkId,
+    Collection? forceSelectCollection,
+  }) : super(
           key: key,
-          body: _MoveBookmarkToCollection(bookmarkId: bookmarkId),
+          body: _MoveBookmarkToCollection(
+            bookmarkId: bookmarkId,
+            forceSelectCollection: forceSelectCollection,
+          ),
         );
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId bookmarkId;
+  final Collection? forceSelectCollection;
 
-  const _MoveBookmarkToCollection({Key? key, required this.bookmarkId})
-      : super(key: key);
+  const _MoveBookmarkToCollection({
+    Key? key,
+    required this.bookmarkId,
+    this.forceSelectCollection,
+  }) : super(key: key);
 
   @override
   _MoveBookmarkToCollectionState createState() =>
@@ -39,10 +49,16 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   @override
   void initState() {
     di.getAsync<MoveBookmarkToCollectionManager>().then(
-          (it) => setState(
-            () => _moveBookmarkToCollectionManager = it,
-          ),
+      (it) async {
+        await it.updateInitialSelectedCollection(
+          bookmarkId: widget.bookmarkId,
+          forceSelectCollection: widget.forceSelectCollection,
         );
+        setState(
+          () => _moveBookmarkToCollectionManager = it,
+        );
+      },
+    );
     super.initState();
   }
 
@@ -65,6 +81,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
                   collections: state.collections,
                   onSelectCollection: _moveBookmarkToCollectionManager!
                       .updateSelectedCollection,
+                  initialSelectedCollection: state.selectedCollection,
                 );
               }
               return Container();
@@ -77,8 +94,22 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       ),
     );
 
-    final header = _Header(
-      onAddCollectionPressed: _showAddCollectionBottomSheet,
+    final plusIcon = SvgPicture.asset(
+      R.assets.icons.plus,
+      fit: BoxFit.none,
+      color: R.colors.icon,
+      height: R.dimen.smallIconSize,
+      width: R.dimen.smallIconSize,
+    );
+
+    final iconButton = GestureDetector(
+      onTap: _showAddCollectionBottomSheet,
+      child: plusIcon,
+    );
+
+    final header = BottomSheetHeader(
+      headerText: 'Save to',
+      actionWidget: iconButton,
     );
 
     final footer = BottomSheetFooter(
@@ -99,9 +130,11 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   _showAddCollectionBottomSheet() {
     closeBottomSheet(context);
-    showXaynBottomSheet(
+    showAppBottomSheet(
       context,
-      builder: (_) => const AddCollectionBottomSheet(),
+      builder: (_) => AddCollectionBottomSheet(
+        bookmarkIdToMoveAfterAddingCollection: widget.bookmarkId,
+      ),
     );
   }
 
@@ -109,38 +142,6 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     _moveBookmarkToCollectionManager!.onApplyPressed(
       bookmarkId: widget.bookmarkId,
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({
-    Key? key,
-    required this.onAddCollectionPressed,
-  }) : super(key: key);
-
-  final VoidCallback onAddCollectionPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    // todo: move to strings
-    const saveTo = 'Save to';
-
-    //todo: move to xayn_design
-    const style = TextStyle(fontSize: 13);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          saveTo,
-          style: style,
-        ),
-        AppGhostButton.icon(
-          R.assets.icons.plus,
-          onPressed: onAddCollectionPressed,
-        ),
-      ],
     );
   }
 }

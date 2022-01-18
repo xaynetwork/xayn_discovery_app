@@ -56,23 +56,9 @@ class _DiscoveryFeedCardState
             ? DocumentFeedback.neutral
             : DocumentFeedback.negative,
       ),
-      onBookmarkPressed: () {
-        if (!state.isBookmarked) {
-          showXaynBottomSheet(
-            context,
-            builder: (_) => MoveBookmarkToCollectionBottomSheet(
-              bookmarkId: widget.document.documentUniqueId,
-            ),
-          );
-        }
-        discoveryCardManager.toggleBookmarkDocument(widget.document);
-      },
-      onBookmarkLongPressed: () => showXaynBottomSheet(
-        context,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.document.documentUniqueId,
-        ),
-      ),
+      onBookmarkPressed: onBookmarkPressed,
+      onBookmarkLongPressed: () =>
+          state.isBookmarked ? onBookmarkLongPressed() : null,
       isBookmarked: state.isBookmarked,
     );
 
@@ -87,4 +73,28 @@ class _DiscoveryFeedCardState
       ],
     );
   }
+
+  void onBookmarkPressed() async {
+    final isBookmarked =
+        discoveryCardManager.toggleBookmarkDocument(widget.document);
+
+    //mock snack bar
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!isBookmarked) {
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: widget.document.documentUniqueId,
+        ),
+      );
+    }
+  }
+
+  void onBookmarkLongPressed() => showAppBottomSheet(
+        context,
+        builder: (_) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: widget.document.documentUniqueId,
+        ),
+      );
 }

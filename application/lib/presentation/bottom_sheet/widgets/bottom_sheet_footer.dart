@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class BottomSheetFooter extends StatelessWidget {
   const BottomSheetFooter({
@@ -28,12 +29,17 @@ class BottomSheetFooter extends StatelessWidget {
       onPressed: isApplyDisabled ? null : onApplyPressed,
     );
 
-    return Row(
+    final row = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        cancelButton,
-        applyButton,
+        Expanded(child: cancelButton),
+        Expanded(child: applyButton),
       ],
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: R.dimen.unit2),
+      child: row,
     );
   }
 }

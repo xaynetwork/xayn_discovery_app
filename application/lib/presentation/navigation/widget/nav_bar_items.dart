@@ -102,3 +102,18 @@ NavBarItemIconButton buildNavBarItemPersonalArea({
       onPressed: onPressed,
       key: Keys.navBarItemPersonalArea,
     );
+
+NavBarItemIconButton buildNavBarItemBookmark({
+  required VoidCallback onPressed,
+  required VoidCallback onLongPressed,
+  required bool isBookmarked,
+}) =>
+    NavBarItemIconButton(
+      svgIconPath: isBookmarked
+          ? R.assets.icons.bookmarkActive
+          : R.assets.icons.bookmark,
+      isHighlighted: false,
+      onPressed: onPressed,
+      onLongPressed: onLongPressed,
+      key: Keys.navBarItemBookmark,
+    );

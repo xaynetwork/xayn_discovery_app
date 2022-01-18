@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
@@ -214,21 +213,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),
-          onBookmarkPressed: () {
-            discoveryCardManager.toggleBookmarkDocument(widget.document);
-            showXaynBottomSheet(
-              context,
-              builder: (_) => MoveBookmarkToCollectionBottomSheet(
-                bookmarkId: widget.document.documentUniqueId,
-              ),
-            );
-          },
-          onBookmarkLongPressed: () => showXaynBottomSheet(
-            context,
-            builder: (_) => MoveBookmarkToCollectionBottomSheet(
-              bookmarkId: widget.document.documentUniqueId,
-            ),
-          ),
+          onBookmarkPressed: onBookmarkPressed,
+          onBookmarkLongPressed: () =>
+              state.isBookmarked ? onBookmarkLongPressed() : null,
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
@@ -276,6 +263,30 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     );
   }
 
+  void onBookmarkPressed() async {
+    final isBookmarked =
+        discoveryCardManager.toggleBookmarkDocument(widget.document);
+
+    //mock snack bar
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!isBookmarked) {
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: widget.document.documentUniqueId,
+        ),
+      );
+    }
+  }
+
+  void onBookmarkLongPressed() => showAppBottomSheet(
+        context,
+        builder: (_) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: widget.document.documentUniqueId,
+        ),
+      );
+
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
 
@@ -317,8 +328,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
     with NavBarConfigMixin {
-  late final DiscoveryCardManager _discoveryCardManager = di.get();
-
   @override
   Widget buildFromState(
           BuildContext context, DiscoveryCardState state, Widget image) =>
@@ -333,24 +342,29 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
   NavBarConfig get navBarConfig => NavBarConfig(
         [
           buildNavBarItemArrowLeft(
-            onPressed: () => _discoveryCardManager.onBackNavPressed(),
+            onPressed: () => discoveryCardManager.onBackNavPressed(),
           ),
           buildNavBarItemLike(
             isLiked: widget.document.isRelevant,
-            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+            onPressed: () => discoveryCardManager.changeDocumentFeedback(
               documentId: widget.document.documentId,
               feedback: widget.document.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
             ),
           ),
+          buildNavBarItemBookmark(
+            isBookmarked: discoveryCardManager.state.isBookmarked,
+            onPressed: onBookmarkPressed,
+            onLongPressed: onBookmarkLongPressed,
+          ),
           buildNavBarItemShare(
             onPressed: () =>
-                _discoveryCardManager.shareUri(widget.document.webResource.url),
+                discoveryCardManager.shareUri(widget.document.webResource.url),
           ),
           buildNavBarItemDisLike(
             isDisLiked: widget.document.isIrrelevant,
-            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+            onPressed: () => discoveryCardManager.changeDocumentFeedback(
               documentId: widget.document.documentId,
               feedback: widget.document.isIrrelevant
                   ? DocumentFeedback.neutral

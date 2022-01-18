@@ -6,6 +6,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
@@ -16,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
+import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -71,6 +73,34 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       final document = discoveryFeedManager.state.results
           .elementAt(discoveryFeedManager.state.cardIndex);
       final managers = managersOf(document);
+      bool isBookmarked = managers.discoveryCardManager.state.isBookmarked;
+      void onBookmarkPressed() async {
+        final _isBookmarked =
+            managers.discoveryCardManager.toggleBookmarkDocument(document);
+
+        //mock snack bar
+        await Future.delayed(const Duration(seconds: 1));
+
+        setState(() {
+          isBookmarked = _isBookmarked;
+        });
+
+        if (!_isBookmarked) {
+          showAppBottomSheet(
+            context,
+            builder: (_) => MoveBookmarkToCollectionBottomSheet(
+              bookmarkId: document.documentUniqueId,
+            ),
+          );
+        }
+      }
+
+      void onBookmarkLongPressed() => showAppBottomSheet(
+            context,
+            builder: (_) => MoveBookmarkToCollectionBottomSheet(
+              bookmarkId: document.documentUniqueId,
+            ),
+          );
 
       return NavBarConfig(
         [
@@ -88,6 +118,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
             ),
+          ),
+          buildNavBarItemBookmark(
+            isBookmarked: isBookmarked,
+            onPressed: onBookmarkPressed,
+            onLongPressed: () => isBookmarked ? onBookmarkLongPressed() : null,
           ),
           buildNavBarItemShare(
             onPressed: () => managers.discoveryCardManager

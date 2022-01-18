@@ -5,22 +5,21 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 typedef _BottomSheetBuilder = BottomSheetBase Function(BuildContext context);
 
-Future showXaynBottomSheet(
+Future showAppBottomSheet(
   BuildContext context, {
   required _BottomSheetBuilder builder,
   bool showBarrierColor = true,
 }) {
-  // todo: move to xayn_design
-  const backgroundColor = Colors.white;
-  final barrierColor = Colors.white.withOpacity(0.8);
-
   NavBarContainer.hideNavBar(context);
 
   return showMaterialModalBottomSheet(
     context: context,
     enableDrag: false,
-    backgroundColor: backgroundColor,
-    barrierColor: showBarrierColor ? barrierColor : null,
+    shape: RoundedRectangleBorder(
+      borderRadius: R.styles.roundBorderBottomSheet,
+    ),
+    backgroundColor: R.colors.bottomSheetBackgroundColor,
+    barrierColor: showBarrierColor ? R.colors.bottomSheetBarrierColor : null,
     builder: builder,
   );
 }
@@ -42,27 +41,21 @@ class BottomSheetBase extends StatefulWidget {
 class _BottomSheetBaseState extends State<BottomSheetBase> {
   @override
   Widget build(BuildContext context) {
-    final content = Padding(
+    final paddedBody = Padding(
       padding: widget.padding ??
-          EdgeInsets.only(
-            left: R.dimen.unit3,
-            right: R.dimen.unit3,
-            bottom: R.dimen.unit3,
-            top: R.dimen.unit2,
+          EdgeInsets.symmetric(
+            horizontal: R.dimen.unit3,
           ),
       child: widget.body,
     );
-
-    // todo: move to xayn_design
-    const maxWidth = 480.0;
 
     final constrainedChild = LayoutBuilder(
       builder: (context, constraints) => ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: constraints.maxHeight * 0.9,
-          maxWidth: maxWidth,
+          maxWidth: R.dimen.bottomSheetMaxWidth,
         ),
-        child: content,
+        child: paddedBody,
       ),
     );
 
@@ -89,5 +82,8 @@ mixin BottomSheetBodyMixin {
   ScrollController? getScrollController(BuildContext context) =>
       ModalScrollController.of(context);
 
-  void closeBottomSheet(BuildContext context) => Navigator.pop(context);
+  void closeBottomSheet(BuildContext context) {
+    Navigator.pop(context);
+    NavBarContainer.showNavBar(context);
+  }
 }

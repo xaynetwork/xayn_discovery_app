@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 typedef _OnSelectCollection = void Function(Collection?);
@@ -8,19 +9,15 @@ typedef _OnSelectCollection = void Function(Collection?);
 class CollectionsListBottomSheet extends StatefulWidget {
   final List<Collection> collections;
   final _OnSelectCollection onSelectCollection;
-  final int initialIndex;
+  final Collection? initialSelectedCollection;
 
   const CollectionsListBottomSheet({
     Key? key,
     required this.collections,
     required this.onSelectCollection,
-    this.initialIndex = 0,
+    this.initialSelectedCollection,
   })  : assert(collections.length > 0,
             'collections must have at least one collection in CollectionsListBottomSheet'),
-        assert(initialIndex < collections.length,
-            'initial index must not exceed collections length in CollectionsListBottomSheet'),
-        assert(initialIndex >= 0,
-            'initial index must not be negative in CollectionsListBottomSheet'),
         super(key: key);
 
   @override
@@ -35,7 +32,7 @@ class _CollectionsListBottomSheetState
 
   @override
   void initState() {
-    selectedCollection = _getSelectedCollection();
+    selectedCollection = widget.initialSelectedCollection;
     collections = _getOrderedCollections();
     super.initState();
   }
@@ -51,8 +48,7 @@ class _CollectionsListBottomSheetState
   List<Widget> _getCollectionItems() => collections
       .map<Widget>(
         (Collection it) => _CollectionItem(
-          //todo: add to keys
-          key: Key('collectionItem' + it.id.value),
+          key: Keys.collectionItem(it.id.value),
           collection: it,
           isSelected: it == selectedCollection,
           onSelectCollection: _onSelectCollection,
@@ -64,9 +60,6 @@ class _CollectionsListBottomSheetState
     widget.onSelectCollection(selected);
     setState(() => selectedCollection = selected);
   }
-
-  Collection? _getSelectedCollection() =>
-      widget.initialIndex < 0 ? null : widget.collections[widget.initialIndex];
 
   List<Collection> _getOrderedCollections() {
     final list = List.of(widget.collections);
@@ -91,23 +84,51 @@ class _CollectionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final item = Padding(
-      padding: EdgeInsets.symmetric(vertical: R.dimen.unit2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(collection.name),
-          if (isSelected)
-            SvgPicture.asset(
-              R.assets.icons.check,
-              fit: BoxFit.none,
-            ),
-        ],
+    final check = SvgPicture.asset(
+      R.assets.icons.check,
+      fit: BoxFit.fitHeight,
+      color: R.colors.icon,
+    );
+
+    final visibleCheck = SizedBox(
+      height: double.maxFinite,
+      child: Visibility(
+        visible: isSelected,
+        child: check,
       ),
     );
 
+    //todo: replace with asset
+    final thumbnail = Container(
+      height: 24,
+      width: 24,
+      color: const Color(0x816ADDCC),
+    );
+
+    final roundedThumbnail = ClipRRect(
+      child: thumbnail,
+      borderRadius: R.styles.roundBorder0_5,
+    );
+
+    final row = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        roundedThumbnail,
+        SizedBox(width: R.dimen.unit2),
+        Text(collection.name, style: R.styles.bottomSheetText),
+        const Spacer(flex: 9),
+        Flexible(flex: 1, child: visibleCheck),
+      ],
+    );
+
+    final item = SizedBox(
+      child: row,
+      height: R.dimen.unit5,
+    );
+
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () => onSelectCollection(isSelected ? null : collection),
       child: item,
     );

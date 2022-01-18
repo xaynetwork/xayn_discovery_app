@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/manager/create_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_text_field.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 
 class AddCollectionBottomSheet extends BottomSheetBase {
-  const AddCollectionBottomSheet({Key? key})
-      : super(
+  AddCollectionBottomSheet({
+    Key? key,
+    UniqueId? bookmarkIdToMoveAfterAddingCollection,
+  }) : super(
           key: key,
-          body: const _AddCollection(),
+          body: _AddCollection(
+            bookmarkIdToMoveAfterAddingCollection:
+                bookmarkIdToMoveAfterAddingCollection,
+          ),
         );
 }
 
 class _AddCollection extends StatefulWidget {
-  const _AddCollection({Key? key}) : super(key: key);
+  const _AddCollection({Key? key, this.bookmarkIdToMoveAfterAddingCollection})
+      : super(key: key);
+
+  final UniqueId? bookmarkIdToMoveAfterAddingCollection;
 
   @override
   _AddCollectionState createState() => _AddCollectionState();
@@ -32,12 +43,15 @@ class _AddCollectionState extends State<_AddCollection>
       onChanged: updateCollectionName,
     );
 
-    const header = Text('Create a new Collection');
+    const header = BottomSheetHeader(
+      headerText: 'Create a new Collection',
+    );
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
       onApplyPressed: onApplyPressed,
       isApplyDisabled: collectionName == null || collectionName!.isEmpty,
+      applyBtnText: 'Create',
     );
 
     return Column(
@@ -55,8 +69,17 @@ class _AddCollectionState extends State<_AddCollection>
         () => collectionName = name,
       );
 
-  void onApplyPressed() {
-    _createCollectionManager.createCollection(collectionName!);
+  void onApplyPressed() async {
+    final newCollection =
+        await _createCollectionManager.createCollection(collectionName!);
     closeBottomSheet(context);
+    if (widget.bookmarkIdToMoveAfterAddingCollection == null) return;
+    showAppBottomSheet(
+      context,
+      builder: (_) => MoveBookmarkToCollectionBottomSheet(
+        bookmarkId: widget.bookmarkIdToMoveAfterAddingCollection!,
+        forceSelectCollection: newCollection,
+      ),
+    );
   }
 }
