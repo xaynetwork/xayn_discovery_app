@@ -11,7 +11,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 
 class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarkToCollectionBottomSheet({
@@ -130,21 +129,23 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
-      builder: (_) => AddCollectionBottomSheet(
-        onSheetClosed: _onAddCollectionSheetClosed,
+      builder: (buildContext) => AddCollectionBottomSheet(
+        onSheetClosed: (collection) => _onAddCollectionSheetClosed(
+          buildContext,
+          collection,
+        ),
       ),
     );
   }
 
-  _onAddCollectionSheetClosed(Collection newCollection) {
-    showAppBottomSheet(
-      context,
-      builder: (_) => MoveBookmarkToCollectionBottomSheet(
-        bookmarkId: widget.bookmarkId,
-        forceSelectCollection: newCollection,
-      ),
-    );
-  }
+  _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: widget.bookmarkId,
+          forceSelectCollection: newCollection,
+        ),
+      );
 
   _onApplyPressed() {
     closeBottomSheet(context);

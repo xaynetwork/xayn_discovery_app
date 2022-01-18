@@ -13,8 +13,8 @@ void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;
   late MockGetAppThemeUseCase getAppThemeUseCase;
   late MockIncrementAppSessionUseCase incrementAppSessionUseCase;
-  late MockMaybeCreateDefaultCollectionUseCase
-      maybeCreateDefaultCollectionUseCase;
+  late MockCreateOrGetDefaultCollectionUseCase
+      createOrGetDefaultCollectionUseCase;
   late Collection mockDefaultCollection;
 
   setUp(() {
@@ -23,8 +23,8 @@ void main() {
     listenAppThemeUseCase = MockListenAppThemeUseCase();
     getAppThemeUseCase = MockGetAppThemeUseCase();
     incrementAppSessionUseCase = MockIncrementAppSessionUseCase();
-    maybeCreateDefaultCollectionUseCase =
-        MockMaybeCreateDefaultCollectionUseCase();
+    createOrGetDefaultCollectionUseCase =
+        MockCreateOrGetDefaultCollectionUseCase();
 
     when(getAppThemeUseCase.singleOutput(none)).thenAnswer(
       (_) async => AppTheme.system,
@@ -40,7 +40,7 @@ void main() {
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
-    when(maybeCreateDefaultCollectionUseCase.call(any)).thenAnswer(
+    when(createOrGetDefaultCollectionUseCase.call(any)).thenAnswer(
       (_) async => [
         UseCaseResult.success(mockDefaultCollection),
       ],
@@ -51,7 +51,7 @@ void main() {
         getAppThemeUseCase,
         listenAppThemeUseCase,
         incrementAppSessionUseCase,
-        maybeCreateDefaultCollectionUseCase,
+        createOrGetDefaultCollectionUseCase,
       );
 
   blocTest<AppManager, AppState>(
@@ -60,7 +60,7 @@ void main() {
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
       verify(incrementAppSessionUseCase.call(none)).called(1);
-      verify(maybeCreateDefaultCollectionUseCase.call(any)).called(1);
+      verify(createOrGetDefaultCollectionUseCase.call(any)).called(1);
       verify(getAppThemeUseCase.singleOutput(none)).called(1);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);

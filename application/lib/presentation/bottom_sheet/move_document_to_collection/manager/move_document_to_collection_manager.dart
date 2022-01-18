@@ -27,7 +27,6 @@ class MoveDocumentToCollectionManager
   final IsBookmarkedUseCase _isBookmarkedUseCase;
 
   late List<Collection> _collections;
-  late bool _isBookmarked;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
       _collectionsHandler;
   Collection? _selectedCollection;
@@ -81,7 +80,6 @@ class MoveDocumentToCollectionManager
       return;
     }
     final isBookmarked = await _isBookmarkedUseCase.singleOutput(bookmarkId);
-    scheduleComputeState(() => _isBookmarked = isBookmarked);
     if (!isBookmarked) return;
     final bookmark = await _getBookmarkUseCase.singleOutput(bookmarkId);
     final selectedCollection = _collections.firstWhere(
@@ -94,13 +92,16 @@ class MoveDocumentToCollectionManager
       scheduleComputeState(() => _selectedCollection = collection);
 
   Future<void> onApplyPressed({required Document document}) async {
-    if (!state.isBookmarked && state.selectedCollection != null) {
-      await _createBookmarkUseCase.call(document);
+    final hasSelected = state.selectedCollection != null;
+    final isBookmarked =
+        await _isBookmarkedUseCase.singleOutput(document.documentUniqueId);
+    if (!isBookmarked && hasSelected) {
+      await _createBookmarkInSelectedCollection(document: document);
     }
-    if (state.isBookmarked && state.selectedCollection == null) {
+    if (isBookmarked && !hasSelected) {
       await _removeBookmarkUseCase.call(document.documentUniqueId);
     }
-    if (state.isBookmarked && state.selectedCollection != null) {
+    if (isBookmarked && hasSelected) {
       await _moveBookmarkToSelectedCollection(
           bookmarkId: document.documentUniqueId);
     }
@@ -115,26 +116,33 @@ class MoveDocumentToCollectionManager
     await _moveBookmarkUseCase.call(param);
   }
 
-  @override
-  Future<MoveDocumentToCollectionState?> computeState() async {
-    return fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
-      if (errorReport.isNotEmpty) {
-        final error = errorReport.of(_collectionsHandler)!.error;
-        logger.e(error);
-        return state.copyWith(errorMsg: error.toString());
-      }
-
-      if (usecaseOut != null) {
-        _collections = usecaseOut.collections;
-      }
-
-      final newState = state.copyWith(
-        collections: _collections,
-        selectedCollection: _selectedCollection,
-        isBookmarked: _isBookmarked,
-      );
-
-      return newState;
-    });
+  Future<void> _createBookmarkInSelectedCollection(
+      {required Document document}) async {
+    final param = CreateBookmarkFromDocumentUseCaseIn(
+      document: document,
+      collectionId: state.selectedCollection!.id,
+    );
+    await _createBookmarkUseCase.call(param);
   }
+
+  @override
+  Future<MoveDocumentToCollectionState?> computeState() async =>
+      fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
+        if (errorReport.isNotEmpty) {
+          final error = errorReport.of(_collectionsHandler)!.error;
+          logger.e(error);
+          return state.copyWith(errorMsg: error.toString());
+        }
+
+        if (usecaseOut != null) {
+          _collections = usecaseOut.collections;
+        }
+
+        final newState = state.copyWith(
+          collections: _collections,
+          selectedCollection: _selectedCollection,
+        );
+
+        return newState;
+      });
 }

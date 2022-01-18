@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -131,21 +130,23 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
-      builder: (_) => AddCollectionBottomSheet(
-        onSheetClosed: _onAddCollectionSheetClosed,
+      builder: (buildContext) => AddCollectionBottomSheet(
+        onSheetClosed: (collection) => _onAddCollectionSheetClosed(
+          buildContext,
+          collection,
+        ),
       ),
     );
   }
 
-  _onAddCollectionSheetClosed(Collection newCollection) {
-    showAppBottomSheet(
-      context,
-      builder: (_) => MoveDocumentToCollectionBottomSheet(
-        document: widget.document,
-        forceSelectCollection: newCollection,
-      ),
-    );
-  }
+  _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
+          forceSelectCollection: newCollection,
+        ),
+      );
 
   _onApplyPressed() {
     closeBottomSheet(context);

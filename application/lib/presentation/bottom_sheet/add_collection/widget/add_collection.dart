@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/manager/create_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
-import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 
 typedef _OnAddCollectionSheetClosed = Function(Collection);
 
@@ -75,6 +74,8 @@ class _AddCollectionState extends State<_AddCollection>
     final newCollection =
         await _createCollectionManager.createCollection(collectionName!);
     closeBottomSheet(context);
-    if (widget.onSheetClosed != null) widget.onSheetClosed!(newCollection);
+    if (widget.onSheetClosed != null) {
+      widget.onSheetClosed!(newCollection);
+    }
   }
 }

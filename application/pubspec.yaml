@@ -43,7 +43,6 @@ dependencies:
   rxdart: ^0.27.2
   share: ^2.0.4
   shimmer: ^2.0.0
-  modal_bottom_sheet: ^2.0.0
   story:
     git:
       url: git@github.com:xaynetwork/story.git
@@ -61,7 +60,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 12e8de6dcba99c544606f834d6f7d49494b12312
+      ref: 3e494bd5a28556add9fe739fcba68d01c2462e1f
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git

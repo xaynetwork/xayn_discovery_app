@@ -102,24 +102,23 @@ class MoveBookmarkToCollectionManager
   }
 
   @override
-  Future<MoveBookmarkToCollectionState?> computeState() async {
-    return fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
-      if (errorReport.isNotEmpty) {
-        final error = errorReport.of(_collectionsHandler)!.error;
-        logger.e(error);
-        return state.copyWith(errorMsg: error.toString());
-      }
+  Future<MoveBookmarkToCollectionState?> computeState() async =>
+      fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
+        if (errorReport.isNotEmpty) {
+          final error = errorReport.of(_collectionsHandler)!.error;
+          logger.e(error);
+          return state.copyWith(errorMsg: error.toString());
+        }
 
-      if (usecaseOut != null) {
-        _collections = usecaseOut.collections;
-      }
+        if (usecaseOut != null) {
+          _collections = usecaseOut.collections;
+        }
 
-      final newState = state.copyWith(
-        collections: _collections,
-        selectedCollection: _selectedCollection,
-      );
+        final newState = state.copyWith(
+          collections: _collections,
+          selectedCollection: _selectedCollection,
+        );
 
-      return newState;
-    });
-  }
+        return newState;
+      });
 }

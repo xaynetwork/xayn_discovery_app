@@ -78,7 +78,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   bool toggleBookmarkDocument(Document document) {
     state.isBookmarked
         ? _removeBookmarkUseCase(document.documentUniqueId)
-        : _createBookmarkUseCase.call(document);
+        : _createBookmarkUseCase.call(
+            CreateBookmarkFromDocumentUseCaseIn(document: document),
+          );
     return state.isBookmarked;
   }
 
