@@ -120,8 +120,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
   }
 
   @override
-  Future<void> dispose() async {
-  }
+  Future<void> dispose() async {}
 
   @override
   Future<EngineEvent> send(ClientEvent event) {
