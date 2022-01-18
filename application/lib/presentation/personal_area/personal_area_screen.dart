@@ -30,7 +30,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           ),
           buildNavBarItemSearch(
             isDisabled: true,
-            onPressed: () => showTooltip(TooltipKeys.activeSearchDisabled),
+            onPressed: () => showTooltip(
+              TooltipKeys.activeSearchDisabled,
+              style: TooltipStyle.arrow,
+            ),
           ),
           buildNavBarItemPersonalArea(
             isActive: true,
