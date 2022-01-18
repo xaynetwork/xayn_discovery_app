@@ -21,6 +21,9 @@ import '../test_utils/dependency_overrides.dart';
 import '../test_utils/utils.dart';
 import 'discovery_feed_test.mocks.dart';
 
+/// todo: will need to be rewritten once we get rid of all the "fake" engine things,
+/// requestFeed and requestNextFeedBatch will be covered when we move away from
+/// the temporary test mixins.
 @GenerateMocks([
   AppDiscoveryEngine,
   InvokeBingUseCase,
@@ -29,11 +32,12 @@ import 'discovery_feed_test.mocks.dart';
   AnalyticsService,
 ])
 void main() async {
-  late final AppDiscoveryEngine engine;
-  late final MockFeedRepository feedRepository;
-  late final MockInvokeBingUseCase invokeApiEndpointUseCase;
-  late final MockConnectivityUseCase connectivityUseCase;
-  late final DiscoveryFeedManager manager;
+  late AppDiscoveryEngine engine;
+  late MockDiscoveryEngine mockDiscoveryEngine;
+  late MockFeedRepository feedRepository;
+  late MockInvokeBingUseCase invokeApiEndpointUseCase;
+  late MockConnectivityUseCase connectivityUseCase;
+  late DiscoveryFeedManager manager;
 
   createFakeDocument() => Document(
         documentId: DocumentId(),
@@ -59,6 +63,7 @@ void main() async {
 
   setUp(() async {
     connectivityUseCase = MockConnectivityUseCase();
+    mockDiscoveryEngine = MockDiscoveryEngine();
     engine = AppDiscoveryEngine(TestDiscoveryEngine());
     invokeApiEndpointUseCase = MockInvokeBingUseCase();
     feedRepository = MockFeedRepository();
@@ -83,7 +88,6 @@ void main() async {
         () => Future.value(connectivityUseCase));
     di.registerSingletonAsync<InvokeApiEndpointUseCase>(
         () => Future.value(invokeApiEndpointUseCase));
-    di.registerSingletonAsync<DiscoveryEngine>(() => Future.value(engine));
     di.registerSingleton<FeedRepository>(feedRepository);
     di.registerSingleton<AnalyticsService>(MockAnalyticsService());
 
@@ -99,6 +103,7 @@ void main() async {
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
+      di.registerSingletonAsync<DiscoveryEngine>(() => Future.value(engine));
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -115,9 +120,121 @@ void main() async {
       ),
     ],
     verify: (manager) {
-      verify(feedRepository.get()).called(2);
-      verify(feedRepository.save(any)).called(1);
+      verifyInOrder([
+        // when manager inits
+        feedRepository.get(),
+        // check value just before save
+        feedRepository.get(),
+        feedRepository.save(any),
+      ]);
       verifyNoMoreInteractions(feedRepository);
+    },
+  );
+
+  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+    'WHEN closing documents THEN the discovery engine is notified ',
+    build: () => manager,
+    setUp: () async {
+      when(mockDiscoveryEngine.engineEvents)
+          .thenAnswer((_) => const Stream.empty());
+      when(mockDiscoveryEngine.closeFeedDocuments(any)).thenAnswer(
+          (documentIds) => Future.value(const ClientEventSucceeded()));
+
+      di.registerSingletonAsync<DiscoveryEngine>(
+          () => Future.value(AppDiscoveryEngine(mockDiscoveryEngine)));
+      // wait for requestFeed to complete
+      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+    },
+    act: (manager) async {
+      manager.closeFeedDocuments({fakeDocumentA.documentId});
+    },
+    verify: (manager) {
+      verifyInOrder([
+        mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
+      ]);
+      verifyNoMoreInteractions(mockDiscoveryEngine);
+    },
+  );
+
+  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+      'WHEN observing documents THEN the discovery engine is notified ',
+      build: () => manager,
+      setUp: () async {
+        when(mockDiscoveryEngine.engineEvents)
+            .thenAnswer((_) => const Stream.empty());
+        when(mockDiscoveryEngine.logDocumentTime(
+          documentId: anyNamed('documentId'),
+          mode: anyNamed('mode'),
+          seconds: anyNamed('seconds'),
+        )).thenAnswer((_) => Future.value(const ClientEventSucceeded()));
+
+        di.registerSingletonAsync<DiscoveryEngine>(
+            () => Future.value(AppDiscoveryEngine(mockDiscoveryEngine)));
+        // wait for requestFeed to complete
+        await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+      },
+      act: (manager) async {
+        manager.observeDocument(
+          document: fakeDocumentA,
+          mode: DocumentViewMode.story,
+        );
+        await Future.delayed(const Duration(milliseconds: 1500));
+        manager.observeDocument(
+          document: fakeDocumentA,
+          mode: DocumentViewMode.reader,
+        );
+      },
+      verify: (manager) {
+        verifyInOrder([
+          mockDiscoveryEngine.engineEvents,
+          mockDiscoveryEngine.logDocumentTime(
+            documentId: fakeDocumentA.documentId,
+            mode: DocumentViewMode.story,
+            seconds: 1,
+          ),
+        ]);
+        verifyNoMoreInteractions(mockDiscoveryEngine);
+      });
+
+  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+    'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
+    build: () => manager,
+    setUp: () async {
+      when(mockDiscoveryEngine.engineEvents)
+          .thenAnswer((_) => const Stream.empty());
+
+      di.registerSingletonAsync<DiscoveryEngine>(
+          () => Future.value(AppDiscoveryEngine(mockDiscoveryEngine)));
+
+      // wait for requestFeed to complete
+      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+    },
+    act: (manager) async {
+      manager.handleNavigateIntoCard();
+      // allow some time to pass to emit a state
+      await Future.delayed(const Duration(milliseconds: 100));
+      manager.handleNavigateOutOfCard();
+    },
+    expect: () => [
+      DiscoveryFeedState(
+        results: {fakeDocumentA, fakeDocumentB},
+        cardIndex: 0,
+        isComplete: true,
+        isFullScreen: true,
+        isInErrorState: false,
+      ),
+      DiscoveryFeedState(
+        results: {fakeDocumentA, fakeDocumentB},
+        cardIndex: 0,
+        isComplete: true,
+        isFullScreen: false,
+        isInErrorState: false,
+      ),
+    ],
+    verify: (manager) {
+      verify(mockDiscoveryEngine.engineEvents);
+      verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );
 }
