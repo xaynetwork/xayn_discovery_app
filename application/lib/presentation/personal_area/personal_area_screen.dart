@@ -25,9 +25,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
         [
-          buildNavBarItemHome(
-            onPressed: _manager.onHomeNavPressed,
-          ),
+          buildNavBarItemHome(onPressed: () {
+            hideTooltip();
+            _manager.onHomeNavPressed();
+          }),
           buildNavBarItemSearch(
             isDisabled: true,
             onPressed: () => showTooltip(
@@ -39,6 +40,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             isActive: true,
             onPressed: () {
               // nothing to do, we already on this screen :)
+              hideTooltip();
             },
           ),
         ],
@@ -92,17 +94,22 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         color: R.colors.personalAreaCollections,
         svgIconPath: R.assets.icons.book,
         svgBackground: R.assets.graphics.formsOrange,
-        onPressed: _manager.onCollectionsNavPressed,
+        onPressed: () {
+          hideTooltip();
+          _manager.onCollectionsNavPressed();
+        },
       );
 
   PersonalAreaCard _buildHomeFeed() => PersonalAreaCard(
-        key: Keys.personalAreaCardHomeFeed,
-        title: R.strings.personalAreaHomeFeed,
-        color: R.colors.personalAreaHomeFeed,
-        svgIconPath: R.assets.icons.confetti,
-        svgBackground: R.assets.graphics.formsGreen,
-        onPressed: _manager.onHomeFeedSettingsNavPressed,
-      );
+      key: Keys.personalAreaCardHomeFeed,
+      title: R.strings.personalAreaHomeFeed,
+      color: R.colors.personalAreaHomeFeed,
+      svgIconPath: R.assets.icons.confetti,
+      svgBackground: R.assets.graphics.formsGreen,
+      onPressed: () {
+        hideTooltip();
+        _manager.onHomeFeedSettingsNavPressed();
+      });
 
   PersonalAreaCard _buildSettings() => PersonalAreaCard(
         key: Keys.personalAreaCardSettings,
@@ -110,6 +117,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         color: R.colors.personalAreaSettings,
         svgIconPath: R.assets.icons.gear,
         svgBackground: R.assets.graphics.formsPurple,
-        onPressed: _manager.onSettingsNavPressed,
+        onPressed: () {
+          hideTooltip();
+          _manager.onSettingsNavPressed();
+        },
       );
 }

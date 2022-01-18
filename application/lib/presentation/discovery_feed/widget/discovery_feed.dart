@@ -61,9 +61,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     NavBarConfig buildDefault() => NavBarConfig(
           [
             buildNavBarItemHome(
-              isActive: true,
-              onPressed: discoveryFeedManager.onHomeNavPressed,
-            ),
+                isActive: true,
+                onPressed: () {
+                  hideTooltip();
+                  discoveryFeedManager.onHomeNavPressed();
+                }),
             buildNavBarItemSearch(
               isDisabled: true,
               onPressed: () => showTooltip(
@@ -72,7 +74,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               ),
             ),
             buildNavBarItemPersonalArea(
-              onPressed: discoveryFeedManager.onPersonalAreaNavPressed,
+              onPressed: () {
+                hideTooltip();
+                discoveryFeedManager.onPersonalAreaNavPressed();
+              },
             ),
           ],
         );
@@ -284,7 +289,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                     _currentCardController = controller,
               )
             : GestureDetector(
-                onTap: discoveryFeedManager.handleNavigateIntoCard,
+                onTap: () {
+                  hideTooltip();
+                  discoveryFeedManager.handleNavigateIntoCard();
+                },
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,
