@@ -17,7 +17,7 @@ mixin ChangeConfigurationMixin<T> on UseCaseBlocHelper<T> {
   }
 
   void changeConfiguration({
-    String? feedMarket,
+    Set<FeedMarket>? feedMarkets,
     int? maxItemsPerFeedBatch,
   }) async {
     _useCaseSink ??= _getUseCaseSink();
@@ -25,7 +25,7 @@ mixin ChangeConfigurationMixin<T> on UseCaseBlocHelper<T> {
     final useCaseSink = await _useCaseSink;
 
     useCaseSink!(Configuration(
-      feedMarket: feedMarket,
+      feedMarkets: feedMarkets,
       maxItemsPerFeedBatch: maxItemsPerFeedBatch,
     ));
   }
