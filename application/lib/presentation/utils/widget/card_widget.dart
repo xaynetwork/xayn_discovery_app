@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 
 const _itemHeight = 150.0;
@@ -121,7 +120,8 @@ class CardWidget extends StatelessWidget {
           ?.copyWith(color: R.colors.primaryTextInverse),
     );
 
-    final articleText = numOfItems == 1 ? Strings.article : Strings.articles;
+    final articleText =
+        numOfItems == 1 ? R.strings.article : R.strings.articles;
 
     final numOfItemsText = Text(
       numOfItems.toString() + ' ' + articleText,

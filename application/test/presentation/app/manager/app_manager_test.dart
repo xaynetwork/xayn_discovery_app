@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import '../../test_utils/utils.dart';
 
@@ -47,9 +48,12 @@ void main() {
         UseCaseResult.success(mockDefaultCollection),
       ],
     );
-    when(createDefaultCollectionUseCase.singleOutput('Read Later')).thenAnswer(
+
+    when(createDefaultCollectionUseCase
+            .singleOutput(R.strings.defaultCollectionNameReadLater))
+        .thenAnswer(
       (_) => Future.value(
-        Collection.readLater(name: 'Read Later'),
+        Collection.readLater(name: R.strings.defaultCollectionNameReadLater),
       ),
     );
   });
@@ -70,8 +74,9 @@ void main() {
       verify(incrementAppSessionUseCase.call(none)).called(1);
       verify(createOrGetDefaultCollectionUseCase.call(any)).called(1);
       verify(getAppThemeUseCase.singleOutput(none)).called(1);
-      verify(createDefaultCollectionUseCase.singleOutput('Read Later'))
-          .called(1);
+      verify(createDefaultCollectionUseCase.singleOutput(
+        R.strings.defaultCollectionNameReadLater,
+      )).called(1);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);
       verifyNoMoreInteractions(createDefaultCollectionUseCase);

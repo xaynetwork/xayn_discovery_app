@@ -44,7 +44,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
           .call(R.strings.defaultCollectionNameReadLater);
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
-      _createDefaultCollectionUseCase.singleOutput('Read Later');
+      _createDefaultCollectionUseCase
+          .singleOutput(R.strings.defaultCollectionNameReadLater);
       _initDone = true;
     });
   }
