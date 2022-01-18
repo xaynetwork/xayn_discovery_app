@@ -30,7 +30,7 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
       () => _CardManagers(
             imageManager: di.get()
               ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
-            discoveryCardManager: di.get()..updateUri(document.webResource.url),
+            discoveryCardManager: di.get()..updateDocument(document),
           ));
 }
 

@@ -11,7 +11,6 @@ import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 void main() {
   late MockBookmarksRepository bookmarksRepository;
-  late MockUniqueIdHandler uniqueIdHandler;
   late MockDateTimeHandler dateTimeHandler;
   late CreateBookmarkUseCase createBookmarkUseCase;
 
@@ -35,11 +34,9 @@ void main() {
 
   setUp(() {
     bookmarksRepository = MockBookmarksRepository();
-    uniqueIdHandler = MockUniqueIdHandler();
     dateTimeHandler = MockDateTimeHandler();
     createBookmarkUseCase = CreateBookmarkUseCase(
       bookmarksRepository,
-      uniqueIdHandler,
       dateTimeHandler,
     );
   });
@@ -48,12 +45,12 @@ void main() {
     useCaseTest(
       'WHEN input values are given THEN create bookmark, save it and yield bookmark',
       setUp: () {
-        when(uniqueIdHandler.generateUniqueId()).thenReturn(bookmarkId);
         when(dateTimeHandler.getDateTimeNow()).thenReturn(dateTime);
       },
       build: () => createBookmarkUseCase,
       input: [
         CreateBookmarkUseCaseIn(
+          id: bookmarkId,
           collectionId: collectionId,
           title: title,
           image: image,
@@ -63,7 +60,7 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          uniqueIdHandler.generateUniqueId(),
+          dateTimeHandler.getDateTimeNow(),
           bookmarksRepository.save(createdBookmark),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);

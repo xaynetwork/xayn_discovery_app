@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
@@ -28,6 +28,8 @@ class DiscoveryCardElements extends StatelessWidget {
     this.provider,
     required this.onLikePressed,
     required this.onDislikePressed,
+    required this.onBookmarkPressed,
+    required this.isBookmarked,
     this.fractionSize = 1.0,
   }) : super(key: key);
   final DiscoveryCardManager manager;
@@ -39,6 +41,8 @@ class DiscoveryCardElements extends StatelessWidget {
   final DateTime datePublished;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
+  final VoidCallback onBookmarkPressed;
+  final bool isBookmarked;
   final double fractionSize;
 
   @override
@@ -63,10 +67,12 @@ class DiscoveryCardElements extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         vertical: R.dimen.unit3,
       ),
-      child: _ButtonRowFooter(
+      child: DiscoveryCardFooter(
         onSharePressed: () => manager.shareUri(url),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
+        onBookmarkPressed: onBookmarkPressed,
+        isBookmarked: isBookmarked,
         document: document,
       ),
     );
@@ -108,65 +114,5 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     return elements;
-  }
-}
-
-class _ButtonRowFooter extends StatelessWidget {
-  const _ButtonRowFooter({
-    Key? key,
-    required this.onSharePressed,
-    required this.onLikePressed,
-    required this.onDislikePressed,
-    required this.document,
-  }) : super(key: key);
-
-  final VoidCallback onSharePressed;
-  final VoidCallback onLikePressed;
-  final VoidCallback onDislikePressed;
-  final Document document;
-
-  @override
-  Widget build(BuildContext context) {
-    final likeButton = IconButton(
-      onPressed: onLikePressed,
-      icon: SvgPicture.asset(
-        document.isRelevant
-            ? R.assets.icons.thumbsUpActive
-            : R.assets.icons.thumbsUp,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
-    );
-
-    final shareButton = IconButton(
-      onPressed: onSharePressed,
-      icon: SvgPicture.asset(
-        R.assets.icons.share,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
-    );
-
-    final dislikeButton = IconButton(
-      onPressed: onDislikePressed,
-      icon: SvgPicture.asset(
-        document.isIrrelevant
-            ? R.assets.icons.thumbsDownActive
-            : R.assets.icons.thumbsDown,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
-    );
-
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: R.dimen.unit4,
-      children: [
-        likeButton,
-        shareButton,
-        dislikeButton,
-      ],
-    );
   }
 }
