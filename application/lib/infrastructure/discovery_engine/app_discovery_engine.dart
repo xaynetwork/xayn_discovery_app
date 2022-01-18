@@ -41,7 +41,7 @@ class AppDiscoveryEngine implements DiscoveryEngine {
       apiBaseUrl: Env.searchApiBaseUrl,
       applicationDirectoryPath: '/',
       maxItemsPerFeedBatch: 20,
-      feedMarkets: {const FeedMarket(countyCode: 'DE', langCode: 'de')},
+      feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')},
     );
     final engine = await DiscoveryEngine.init(configuration: configuration);
 

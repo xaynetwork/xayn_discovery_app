@@ -34,9 +34,9 @@ void main() {
       setUp: () => _setUpSuccess(),
       build: () => ChangeConfigurationUseCase(engine),
       input: [
-        const Configuration(
+        Configuration(
           maxItemsPerFeedBatch: 20,
-          feedMarket: 'test',
+          feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')},
         )
       ],
       expect: [useCaseSuccess(const ClientEventSucceeded())],
@@ -47,10 +47,9 @@ void main() {
       setUp: () => _setUpFailure(),
       build: () => ChangeConfigurationUseCase(engine),
       input: [
-        const Configuration(
-          maxItemsPerFeedBatch: 20,
-          feedMarket: 'test',
-        )
+        Configuration(
+            maxItemsPerFeedBatch: 20,
+            feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')})
       ],
       expect: [
         useCaseSuccess(const EngineExceptionRaised(

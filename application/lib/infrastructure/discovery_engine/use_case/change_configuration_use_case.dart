@@ -11,18 +11,18 @@ class ChangeConfigurationUseCase extends UseCase<Configuration, EngineEvent> {
   @override
   Stream<EngineEvent> transaction(Configuration param) async* {
     yield await _engine.changeConfiguration(
-      feedMarkets: {const FeedMarket(countyCode: 'DE', langCode: 'de')},
+      feedMarkets: param.feedMarkets,
       maxItemsPerFeedBatch: param.maxItemsPerFeedBatch,
     );
   }
 }
 
 class Configuration {
-  final String? feedMarket;
+  final Set<FeedMarket>? feedMarkets;
   final int? maxItemsPerFeedBatch;
 
   const Configuration({
-    this.feedMarket,
+    this.feedMarkets,
     this.maxItemsPerFeedBatch,
   });
 }

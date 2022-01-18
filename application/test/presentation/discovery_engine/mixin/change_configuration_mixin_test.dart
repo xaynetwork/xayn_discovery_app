@@ -31,13 +31,13 @@ void main() {
     'WHEN changing configuration THEN this configuration is passed to the engine',
     build: () => _TestBloc(),
     act: (bloc) => bloc.changeConfiguration(
-      feedMarket: 'test',
+      feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')},
       maxItemsPerFeedBatch: 20,
     ),
     verify: (manager) {
       expect(manager.state, equals(false));
       verify(engine.changeConfiguration(
-        feedMarkets: {},
+        feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')},
         maxItemsPerFeedBatch: 20,
       ));
       verifyNoMoreInteractions(engine);
