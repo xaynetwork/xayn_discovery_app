@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -57,8 +57,7 @@ class _DiscoveryFeedCardState
             : DocumentFeedback.negative,
       ),
       onBookmarkPressed: onBookmarkPressed,
-      onBookmarkLongPressed: () =>
-          state.isBookmarked ? onBookmarkLongPressed() : null,
+      onBookmarkLongPressed: onBookmarkLongPressed,
       isBookmarked: state.isBookmarked,
     );
 
@@ -78,14 +77,14 @@ class _DiscoveryFeedCardState
     final isBookmarked =
         discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-    //mock snack bar
-    await Future.delayed(const Duration(seconds: 1));
-
     if (!isBookmarked) {
+      //mock snack bar
+      await Future.delayed(const Duration(seconds: 1));
+
       showAppBottomSheet(
         context,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.document.documentUniqueId,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
         ),
       );
     }
@@ -93,8 +92,8 @@ class _DiscoveryFeedCardState
 
   void onBookmarkLongPressed() => showAppBottomSheet(
         context,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.document.documentUniqueId,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
         ),
       );
 }

@@ -2,60 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
-  MoveBookmarkToCollectionBottomSheet({
+class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
+  MoveDocumentToCollectionBottomSheet({
     Key? key,
-    required UniqueId bookmarkId,
+    required Document document,
     Collection? forceSelectCollection,
   }) : super(
           key: key,
-          body: _MoveBookmarkToCollection(
-            bookmarkId: bookmarkId,
+          body: _MoveDocumentToCollection(
+            document: document,
             forceSelectCollection: forceSelectCollection,
           ),
         );
 }
 
-class _MoveBookmarkToCollection extends StatefulWidget {
-  final UniqueId bookmarkId;
+class _MoveDocumentToCollection extends StatefulWidget {
+  final Document document;
   final Collection? forceSelectCollection;
 
-  const _MoveBookmarkToCollection({
+  const _MoveDocumentToCollection({
     Key? key,
-    required this.bookmarkId,
+    required this.document,
     this.forceSelectCollection,
   }) : super(key: key);
 
   @override
-  _MoveBookmarkToCollectionState createState() =>
-      _MoveBookmarkToCollectionState();
+  _MoveDocumentToCollectionState createState() =>
+      _MoveDocumentToCollectionState();
 }
 
-class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
+class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     with BottomSheetBodyMixin {
-  MoveBookmarkToCollectionManager? _moveBookmarkToCollectionManager;
+  MoveDocumentToCollectionManager? _moveDocumentToCollectionManager;
 
   @override
   void initState() {
-    di.getAsync<MoveBookmarkToCollectionManager>().then(
+    di.getAsync<MoveDocumentToCollectionManager>().then(
       (it) async {
         await it.updateInitialSelectedCollection(
-          bookmarkId: widget.bookmarkId,
+          bookmarkId: widget.document.documentUniqueId,
           forceSelectCollection: widget.forceSelectCollection,
         );
         setState(
-          () => _moveBookmarkToCollectionManager = it,
+          () => _moveDocumentToCollectionManager = it,
         );
       },
     );
@@ -64,21 +65,21 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   @override
   void dispose() {
-    _moveBookmarkToCollectionManager?.close();
+    _moveDocumentToCollectionManager?.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final body = _moveBookmarkToCollectionManager == null
+    final body = _moveDocumentToCollectionManager == null
         ? const Center(child: CircularProgressIndicator())
-        : BlocBuilder<MoveBookmarkToCollectionManager,
-            MoveBookmarkToCollectionState>(
-            bloc: _moveBookmarkToCollectionManager,
+        : BlocBuilder<MoveDocumentToCollectionManager,
+            MoveDocumentToCollectionState>(
+            bloc: _moveDocumentToCollectionManager,
             builder: (_, state) => state.collections.isNotEmpty
                 ? CollectionsListBottomSheet(
                     collections: state.collections,
-                    onSelectCollection: _moveBookmarkToCollectionManager!
+                    onSelectCollection: _moveDocumentToCollectionManager!
                         .updateSelectedCollection,
                     initialSelectedCollection: state.selectedCollection,
                   )
@@ -139,8 +140,8 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   _onAddCollectionSheetClosed(Collection newCollection) {
     showAppBottomSheet(
       context,
-      builder: (_) => MoveBookmarkToCollectionBottomSheet(
-        bookmarkId: widget.bookmarkId,
+      builder: (_) => MoveDocumentToCollectionBottomSheet(
+        document: widget.document,
         forceSelectCollection: newCollection,
       ),
     );
@@ -148,8 +149,8 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   _onApplyPressed() {
     closeBottomSheet(context);
-    _moveBookmarkToCollectionManager!.onApplyPressed(
-      bookmarkId: widget.bookmarkId,
+    _moveDocumentToCollectionManager!.onApplyPressed(
+      document: widget.document,
     );
   }
 }

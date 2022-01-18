@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -214,8 +214,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 : DocumentFeedback.negative,
           ),
           onBookmarkPressed: onBookmarkPressed,
-          onBookmarkLongPressed: () =>
-              state.isBookmarked ? onBookmarkLongPressed() : null,
+          onBookmarkLongPressed: onBookmarkLongPressed,
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
@@ -266,15 +265,14 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   void onBookmarkPressed() async {
     final isBookmarked =
         discoveryCardManager.toggleBookmarkDocument(widget.document);
-
-    //mock snack bar
-    await Future.delayed(const Duration(seconds: 1));
-
     if (!isBookmarked) {
+      //mock snack bar
+      await Future.delayed(const Duration(seconds: 1));
+
       showAppBottomSheet(
         context,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.document.documentUniqueId,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
         ),
       );
     }
@@ -282,8 +280,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   void onBookmarkLongPressed() => showAppBottomSheet(
         context,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.document.documentUniqueId,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
         ),
       );
 

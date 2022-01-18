@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/manager/create_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/widget/bottom_sheet.dart';
 
+typedef _OnAddCollectionSheetClosed = Function(Collection);
+
 class AddCollectionBottomSheet extends BottomSheetBase {
   AddCollectionBottomSheet({
     Key? key,
-    UniqueId? bookmarkIdToMoveAfterAddingCollection,
+    _OnAddCollectionSheetClosed? onSheetClosed,
   }) : super(
           key: key,
           body: _AddCollection(
-            bookmarkIdToMoveAfterAddingCollection:
-                bookmarkIdToMoveAfterAddingCollection,
+            onSheetClosed: onSheetClosed,
           ),
         );
 }
 
 class _AddCollection extends StatefulWidget {
-  const _AddCollection({Key? key, this.bookmarkIdToMoveAfterAddingCollection})
-      : super(key: key);
+  const _AddCollection({
+    Key? key,
+    this.onSheetClosed,
+  }) : super(key: key);
 
-  final UniqueId? bookmarkIdToMoveAfterAddingCollection;
+  final _OnAddCollectionSheetClosed? onSheetClosed;
 
   @override
   _AddCollectionState createState() => _AddCollectionState();
@@ -73,13 +75,6 @@ class _AddCollectionState extends State<_AddCollection>
     final newCollection =
         await _createCollectionManager.createCollection(collectionName!);
     closeBottomSheet(context);
-    if (widget.bookmarkIdToMoveAfterAddingCollection == null) return;
-    showAppBottomSheet(
-      context,
-      builder: (_) => MoveBookmarkToCollectionBottomSheet(
-        bookmarkId: widget.bookmarkIdToMoveAfterAddingCollection!,
-        forceSelectCollection: newCollection,
-      ),
-    );
+    if (widget.onSheetClosed != null) widget.onSheetClosed!(newCollection);
   }
 }
