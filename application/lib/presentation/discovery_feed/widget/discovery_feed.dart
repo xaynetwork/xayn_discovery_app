@@ -68,7 +68,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               isDisabled: true,
               onPressed: () => showTooltip(
                 TooltipKeys.activeSearchDisabled,
-                style: TooltipStyle.arrow,
+                style: TooltipStyle.arrowDown,
               ),
             ),
             buildNavBarItemPersonalArea(
