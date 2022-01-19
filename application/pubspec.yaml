@@ -57,7 +57,7 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 5a9f499461aa4a93e11a96eafbba74f32f73a7d5
+      ref: 75da7e1cf3df0195b5d7e6c3cd8c991e94d8918d
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
@@ -75,7 +75,7 @@ dependencies:
   xayn_swipe_it: ^1.0.0
 
 dependency_overrides:
-  ### This is necessary because the xayn_discovery_engine_flutter project refernces the main branch of xayn_discovery_engine
+  ### This is necessary because the xayn_discovery_engine_flutter project references the main branch of xayn_discovery_engine
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
