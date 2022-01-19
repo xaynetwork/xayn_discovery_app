@@ -40,6 +40,7 @@ dependencies:
   logger: 1.1.0
   package_info_plus: 1.3.0
   path_provider: ^2.0.5
+  provider: 6.0.1
   rxdart: ^0.27.2
   share: ^2.0.4
   shimmer: ^2.0.0
@@ -60,7 +61,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 3e494bd5a28556add9fe739fcba68d01c2462e1f
+      ref: 94bb7aed028a77ee74a8356f5ab6551ae90c9605
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git

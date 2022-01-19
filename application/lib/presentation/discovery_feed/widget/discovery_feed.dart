@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -37,7 +38,11 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed>
-    with WidgetsBindingObserver, NavBarConfigMixin, CardManagersMixin {
+    with
+        WidgetsBindingObserver,
+        NavBarConfigMixin,
+        CardManagersMixin,
+        TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
   late final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
@@ -57,14 +62,23 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     NavBarConfig buildDefault() => NavBarConfig(
           [
             buildNavBarItemHome(
-              isActive: true,
-              onPressed: discoveryFeedManager.onHomeNavPressed,
-            ),
+                isActive: true,
+                onPressed: () {
+                  hideTooltip();
+                  discoveryFeedManager.onHomeNavPressed();
+                }),
             buildNavBarItemSearch(
-              onPressed: discoveryFeedManager.onSearchNavPressed,
+              isDisabled: true,
+              onPressed: () => showTooltip(
+                TooltipKeys.activeSearchDisabled,
+                style: TooltipStyle.arrowDown,
+              ),
             ),
             buildNavBarItemPersonalArea(
-              onPressed: discoveryFeedManager.onPersonalAreaNavPressed,
+              onPressed: () {
+                hideTooltip();
+                discoveryFeedManager.onPersonalAreaNavPressed();
+              },
             ),
           ],
         );
@@ -307,7 +321,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                     _currentCardController = controller,
               )
             : GestureDetector(
-                onTap: discoveryFeedManager.handleNavigateIntoCard,
+                onTap: () {
+                  hideTooltip();
+                  discoveryFeedManager.handleNavigateIntoCard();
+                },
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,

@@ -71,10 +71,12 @@ NavBarItemIconButton buildNavBarItemHome({
 NavBarItemIconButton buildNavBarItemSearch({
   required VoidCallback onPressed,
   bool isActive = false,
+  bool isDisabled = false,
 }) =>
     NavBarItemIconButton(
       svgIconPath: R.linden.assets.icons.search,
-      isHighlighted: isActive,
+      isHighlighted: isActive && !isDisabled,
+      isDisabled: isDisabled,
       onPressed: onPressed,
       key: Keys.navBarItemSearch,
     );
