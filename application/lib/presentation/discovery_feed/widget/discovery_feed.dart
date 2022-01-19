@@ -72,14 +72,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       final document = discoveryFeedManager.state.results
           .elementAt(discoveryFeedManager.state.cardIndex);
       final managers = managersOf(document);
-      bool isBookmarked = managers.discoveryCardManager.state.isBookmarked;
+
       void onBookmarkPressed() async {
         final _isBookmarked =
             managers.discoveryCardManager.toggleBookmarkDocument(document);
-
-        setState(() {
-          isBookmarked = managers.discoveryCardManager.state.isBookmarked;
-        });
 
         if (!_isBookmarked) {
           //mock snack bar
@@ -119,7 +115,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             ),
           ),
           buildNavBarItemBookmark(
-            isBookmarked: isBookmarked,
+            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
             onPressed: onBookmarkPressed,
             onLongPressed: onBookmarkLongPressed,
           ),

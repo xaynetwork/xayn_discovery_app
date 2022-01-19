@@ -228,8 +228,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           children: [
             Positioned.fill(
                 child: _buildReaderMode(
-              mediaQuery.size,
-              state.processedDocument?.processHtmlResult,
+              processHtmlResult: state.processedDocument?.processHtmlResult,
+              size: mediaQuery.size,
+              isBookmarked: state.isBookmarked,
             )),
             Positioned(
               top: -outerScrollOffset,
@@ -292,7 +293,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     return false;
   }
 
-  Widget _buildReaderMode(Size size, ProcessHtmlResult? processHtmlResult) {
+  Widget _buildReaderMode({
+    required ProcessHtmlResult? processHtmlResult,
+    required Size size,
+    required bool isBookmarked,
+  }) {
     final readerMode = ReaderMode(
       title: title,
       processHtmlResult: processHtmlResult,
@@ -312,13 +317,19 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
       bloc: discoveryCardManager,
-      builder: (context, state) => ClipRRect(
-        child: OverflowBox(
-          alignment: Alignment.topCenter,
-          maxWidth: size.width,
-          child: readerMode,
-        ),
-      ),
+      builder: (context, state) {
+        if (state.isBookmarked != isBookmarked) {
+          NavBarContainer.updateNavBar(context);
+        }
+
+        return ClipRRect(
+          child: OverflowBox(
+            alignment: Alignment.topCenter,
+            maxWidth: size.width,
+            child: readerMode,
+          ),
+        );
+      },
     );
   }
 }
