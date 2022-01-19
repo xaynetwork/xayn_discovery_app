@@ -7,6 +7,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -43,17 +44,14 @@ void main() {
 
     di.registerSingletonAsync<LogDocumentTimeUseCase>(
         () => Future.value(LogDocumentTimeUseCase(engine)));
-
     di.registerSingleton<DiscoveryCardObservationUseCase>(
         DiscoveryCardObservationUseCase());
-
     di.registerSingleton<DiscoveryCardMeasuredObservationUseCase>(
         DiscoveryCardMeasuredObservationUseCase());
+    di.registerLazySingletonAsync<SendAnalyticsUseCase>(
+        () async => SendAnalyticsUseCase(analyticsService));
 
-    di.registerSingletonAsync<LogDiscoveryCardAnalyticsUseCase>(
-        () => Future.value(LogDiscoveryCardAnalyticsUseCase(analyticsService)));
-
-    when(analyticsService.logEvent(any)).thenReturn(null);
+    when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 
     when(engine.logDocumentTime(
       documentId: anyNamed('documentId'),

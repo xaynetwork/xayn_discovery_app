@@ -201,13 +201,13 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           provider: webResource.provider,
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
-            documentId: widget.document.documentId,
+            document: widget.document,
             feedback: widget.document.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
           ),
           onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
-            documentId: widget.document.documentId,
+            document: widget.document,
             feedback: widget.document.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
@@ -323,7 +323,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           buildNavBarItemLike(
             isLiked: widget.document.isRelevant,
             onPressed: () => _discoveryCardManager.changeDocumentFeedback(
-              documentId: widget.document.documentId,
+              document: widget.document,
               feedback: widget.document.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
@@ -336,7 +336,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           buildNavBarItemDisLike(
             isDisLiked: widget.document.isIrrelevant,
             onPressed: () => _discoveryCardManager.changeDocumentFeedback(
-              documentId: widget.document.documentId,
+              document: widget.document,
               feedback: widget.document.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,

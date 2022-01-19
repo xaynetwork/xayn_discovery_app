@@ -57,19 +57,19 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     switch (option) {
       case SwipeOption.like:
         manager.changeDocumentFeedback(
-          documentId: document.documentId,
+          document: document,
           feedback: DocumentFeedback.positive,
         );
         break;
       case SwipeOption.neutral:
         manager.changeDocumentFeedback(
-          documentId: document.documentId,
+          document: document,
           feedback: DocumentFeedback.neutral,
         );
         break;
       case SwipeOption.dislike:
         manager.changeDocumentFeedback(
-          documentId: document.documentId,
+          document: document,
           feedback: DocumentFeedback.negative,
         );
         break;

@@ -2,22 +2,22 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 const String _kEventType = 'documentIndexChanged';
-const String _kParamPreviousDocumentId = 'previousDocumentId';
-const String _kParamNextDocumentId = 'nextDocumentId';
+const String _kParamPreviousDocumentId = 'previousDocument';
+const String _kParamNextDocumentId = 'nextDocument';
 const String _kParamDirection = 'direction';
 
-enum Direction { up, down }
+enum Direction { start, up, down }
 
-class DocumentChangedEvent extends AnalyticsEvent {
-  DocumentChangedEvent({
-    required Document previous,
+class DocumentIndexChangedEvent extends AnalyticsEvent {
+  DocumentIndexChangedEvent({
+    Document? previous,
     required Document next,
     required Direction direction,
   }) : super(
           _kEventType,
           properties: {
-            _kParamPreviousDocumentId: previous.documentId,
-            _kParamNextDocumentId: next.documentId,
+            if (previous != null) _kParamPreviousDocumentId: previous,
+            _kParamNextDocumentId: next,
             _kParamDirection: direction.stringify(),
           },
         );
@@ -30,6 +30,8 @@ extension DirectionExtension on Direction {
         return 'down';
       case Direction.up:
         return 'up';
+      case Direction.start:
+        return 'start';
     }
   }
 }

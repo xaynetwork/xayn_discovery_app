@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
+import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -43,8 +46,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         CardManagersMixin,
         TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
-  late final CardViewController _cardViewController = CardViewController();
+  late final AppNavigationManager _appNavigationManager;
+  final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
+  late final StreamSubscription<bool> _navigationPageNameSubscription;
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -97,7 +102,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             isLiked: document.isRelevant,
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
-              documentId: document.documentId,
+              document: document,
               feedback: document.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
@@ -111,7 +116,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             isDisLiked: document.isIrrelevant,
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
-              documentId: document.documentId,
+              document: document,
               feedback: document.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,
@@ -160,6 +165,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void dispose() {
     _cardViewController.dispose();
     _discoveryFeedManager?.close();
+    _navigationPageNameSubscription.cancel();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -179,6 +185,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         });
       }
     });
+
+    _appNavigationManager = di.get();
+
+    _navigationPageNameSubscription = _appNavigationManager.stream
+        .map((it) => it.pages.last.name == PageRegistry.discovery.name)
+        .listen(_discoveryFeedManager?.handleActivityStatus);
 
     super.initState();
   }

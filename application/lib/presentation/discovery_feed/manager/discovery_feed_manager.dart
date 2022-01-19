@@ -1,9 +1,9 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/feed_documents_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -54,7 +54,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final FetchCardIndexUseCase _fetchCardIndexUseCase;
   final UpdateCardIndexUseCase _updateCardIndexUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
-  final SetEquality _setEquality = const SetEquality();
 
   late final UseCaseValueStream<int> _cardIndexConsumer;
 
@@ -65,10 +64,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
+
+    _sendAnalyticsUseCase(DocumentViewModeChangedEvent(
+      document: _observedDocument!,
+      viewMode: DocumentViewMode.reader,
+    ));
   }
 
   void handleNavigateOutOfCard() {
     scheduleComputeState(() => _isFullScreen = false);
+
+    _sendAnalyticsUseCase(DocumentViewModeChangedEvent(
+      document: _observedDocument!,
+      viewMode: DocumentViewMode.story,
+    ));
   }
 
   /// Trigger this handler whenever the primary card changes.
@@ -76,12 +85,27 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   void handleIndexChanged(int index) {
     if (index >= state.results.length) return;
 
+    final previousDocument = _observedDocument;
     final document = _observedDocument = state.results.elementAt(index);
+    var direction = Direction.start;
+
+    if (previousDocument != null) {
+      final previousIndex =
+          state.results.toList(growable: false).indexOf(previousDocument);
+
+      direction = previousIndex < index ? Direction.down : Direction.up;
+    }
 
     observeDocument(
       document: document,
       mode: _observedViewTypes[document],
     );
+
+    _sendAnalyticsUseCase(DocumentIndexChangedEvent(
+      next: document,
+      previous: previousDocument,
+      direction: direction,
+    ));
 
     scheduleComputeState(() async =>
         _cardIndex = await _updateCardIndexUseCase.singleOutput(index));
@@ -164,11 +188,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isFullScreen: _isFullScreen,
           cardIndex: _cardIndex!,
         );
-
-        if (_setEquality.equals(nextState.results, state.results)) {
-          _sendAnalyticsUseCase(
-              FeedDocumentsChangedEvent(documents: nextState.results));
-        }
 
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
