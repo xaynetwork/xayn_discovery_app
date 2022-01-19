@@ -11,21 +11,26 @@ class AppSettings extends DbEntity with _$AppSettings {
     required bool isOnboardingDone,
     required AppTheme appTheme,
     required UniqueId id,
+    // A generated key, which is unique for every app installation.
+    required UniqueId installationId,
   }) = _AppSettings;
 
   factory AppSettings.global({
     required bool isOnboardingDone,
     required AppTheme appTheme,
+    required UniqueId installationId,
   }) =>
       AppSettings._(
         isOnboardingDone: isOnboardingDone,
         appTheme: appTheme,
         id: AppSettings.globalId,
+        installationId: installationId,
       );
 
   factory AppSettings.initial() => AppSettings.global(
         isOnboardingDone: false,
         appTheme: AppTheme.system,
+        installationId: UniqueId(),
       );
 
   static UniqueId globalId =
