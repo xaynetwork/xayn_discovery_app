@@ -18,6 +18,7 @@ void main() async {
   late MockAppSettingsMapper mapper;
   late MockBox<Record> box;
   late HiveAppSettingsRepository repository;
+  final settings = AppSettings.initial();
 
   setUp(() {
     mapper = MockAppSettingsMapper();
@@ -43,7 +44,7 @@ void main() async {
 
         expect(
           appSettings,
-          AppSettings.initial(),
+          settings,
         );
 
         verify(box.toMap());
@@ -74,7 +75,7 @@ void main() async {
 
       test('given AppSettings should persist it in Hive box', () async {
         repository.save(
-          AppSettings.initial(),
+          settings,
         );
 
         verify(box.toMap());

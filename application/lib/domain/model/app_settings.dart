@@ -7,6 +7,15 @@ part 'app_settings.freezed.dart';
 
 @freezed
 class AppSettings extends DbEntity with _$AppSettings {
+  /// using a late final here for convenience,
+  /// this way, if
+  /// - a = AppSettings.initial();
+  /// - b = AppSettings.initial();
+  /// then a == b // is true
+  /// ...both constructors will 'create' an installation ID, but they then
+  /// reuse the late final version always.
+  static late final nextInstallationId = UniqueId();
+
   factory AppSettings._({
     required bool isOnboardingDone,
     required AppTheme appTheme,
@@ -18,19 +27,19 @@ class AppSettings extends DbEntity with _$AppSettings {
   factory AppSettings.global({
     required bool isOnboardingDone,
     required AppTheme appTheme,
-    required UniqueId installationId,
+    UniqueId? installationId,
   }) =>
       AppSettings._(
         isOnboardingDone: isOnboardingDone,
         appTheme: appTheme,
         id: AppSettings.globalId,
-        installationId: installationId,
+        installationId: installationId ?? nextInstallationId,
       );
 
   factory AppSettings.initial() => AppSettings.global(
         isOnboardingDone: false,
         appTheme: AppTheme.system,
-        installationId: UniqueId(),
+        installationId: nextInstallationId,
       );
 
   static UniqueId globalId =
