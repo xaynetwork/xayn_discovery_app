@@ -65,13 +65,23 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
-      ref: 97a564d8282fda83b00f86b42a13c98fb6bc7f8c
+      ### This hash must be the same like the hash in the xayn_discovery_engine dependency override
+      ref: fcf40b7b7a6cfbcbbf2caf3f37484d27acaae6fd
       path: discovery_engine_flutter
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
       ref: 73a8792b4372d07a72bdc21d8a631d97a5a89ebe
   xayn_swipe_it: ^1.0.0
+
+dependency_overrides:
+  ### This is necessary because the xayn_discovery_engine_flutter project refernces the main branch of xayn_discovery_engine
+  xayn_discovery_engine:
+    git:
+      url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
+      ### This hash must be the same like the hash in the xayn_discovery_engine_flutter dependency
+      ref: fcf40b7b7a6cfbcbbf2caf3f37484d27acaae6fd
+      path: discovery_engine
 
 # Please list dependencies alphabetically!
 dev_dependencies:
