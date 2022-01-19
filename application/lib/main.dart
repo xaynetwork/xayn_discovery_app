@@ -1,6 +1,7 @@
 import 'dart:async' show Zone, runZonedGuarded;
 
 import 'package:flutter/material.dart';
+import 'package:home_indicator/home_indicator.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -35,6 +36,7 @@ Future<void> setup() async {
   await configureDependencies();
   di.get<LogManager>();
   di.get<AnalyticsNavigatorObserver>();
+  HomeIndicator.hide();
 }
 
 Widget getApp() {

@@ -15,7 +15,9 @@ class AppRouter extends xayn.NavigatorDelegate {
       alignment: AlignmentDirectional.bottomCenter,
       children: [
         buildNavigator(observers: [NavBarObserver()]),
-        const TooltipContextProvider(child: NavBar()),
+        const TooltipContextProvider(
+          child: NavBar(padding: EdgeInsets.all(34)),
+        ),
       ],
     );
     return MaterialApp(
