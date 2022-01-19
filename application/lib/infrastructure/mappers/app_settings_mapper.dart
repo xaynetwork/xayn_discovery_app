@@ -21,11 +21,8 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
 
     final isOnboardingDone = map[AppSettingsFields.isOnboardingDone] as bool?;
     final appTheme = _intToAppThemeMapper.map(map[AppSettingsFields.appTheme]);
-    final installationIdValue =
-        map[AppSettingsFields.installationId] as String?;
-    final installationId = installationIdValue != null
-        ? UniqueId.fromTrustedString(installationIdValue)
-        : UniqueId();
+    final installationId = _trustedValueToUniqueId(
+        map[AppSettingsFields.installationId] as String?);
 
     return AppSettings.global(
       isOnboardingDone: isOnboardingDone ?? false,
@@ -40,6 +37,12 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
         AppSettingsFields.appTheme: _appThemeToIntMapper.map(entity.appTheme),
         AppSettingsFields.installationId: entity.installationId.value,
       };
+
+  UniqueId? _trustedValueToUniqueId(String? trustedValue) {
+    if (trustedValue == null) return null;
+
+    return UniqueId.fromTrustedString(trustedValue);
+  }
 }
 
 abstract class AppSettingsFields {

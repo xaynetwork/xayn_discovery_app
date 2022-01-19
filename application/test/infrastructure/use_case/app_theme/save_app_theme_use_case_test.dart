@@ -9,14 +9,13 @@ import '../use_case_mocks/use_case_mocks.mocks.dart';
 void main() {
   late MockAppSettingsRepository repository;
   late SaveAppThemeUseCase useCase;
-  final settings = AppSettings.initial();
 
   const appTheme = AppTheme.dark;
 
   setUp(() {
     repository = MockAppSettingsRepository();
     useCase = SaveAppThemeUseCase(repository);
-    when(repository.settings).thenAnswer((_) => settings);
+    when(repository.settings).thenAnswer((_) => AppSettings.initial());
   });
 
   test(
@@ -27,7 +26,7 @@ void main() {
       verifyInOrder([
         repository.settings,
         repository.save(
-          settings.copyWith(appTheme: appTheme),
+          AppSettings.initial().copyWith(appTheme: appTheme),
         ),
       ]);
       verifyNoMoreInteractions(repository);
