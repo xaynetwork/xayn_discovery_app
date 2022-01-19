@@ -39,7 +39,6 @@ class AppSettings extends DbEntity with _$AppSettings {
   factory AppSettings.initial() => AppSettings.global(
         isOnboardingDone: false,
         appTheme: AppTheme.system,
-        installationId: nextInstallationId,
       );
 
   static UniqueId globalId =
