@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
 import 'app_theme_mapper.dart';
@@ -20,10 +21,16 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
 
     final isOnboardingDone = map[AppSettingsFields.isOnboardingDone] as bool?;
     final appTheme = _intToAppThemeMapper.map(map[AppSettingsFields.appTheme]);
+    final installationIdValue =
+        map[AppSettingsFields.installationId] as String?;
+    final installationId = installationIdValue != null
+        ? UniqueId.fromTrustedString(installationIdValue)
+        : UniqueId();
 
     return AppSettings.global(
       isOnboardingDone: isOnboardingDone ?? false,
       appTheme: appTheme,
+      installationId: installationId,
     );
   }
 
@@ -31,6 +38,7 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
   DbEntityMap toMap(AppSettings entity) => {
         AppSettingsFields.isOnboardingDone: entity.isOnboardingDone,
         AppSettingsFields.appTheme: _appThemeToIntMapper.map(entity.appTheme),
+        AppSettingsFields.installationId: entity.installationId.value,
       };
 }
 
@@ -39,4 +47,5 @@ abstract class AppSettingsFields {
 
   static const int isOnboardingDone = 0;
   static const int appTheme = 1;
+  static const int installationId = 2;
 }

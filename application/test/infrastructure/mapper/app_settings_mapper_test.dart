@@ -3,6 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart';
 
@@ -37,6 +38,7 @@ void main() {
       final map = {
         0: true,
         1: 2,
+        2: 'installation_id',
       };
       final settings = mapper.fromMap(map);
       expect(
@@ -44,6 +46,7 @@ void main() {
         AppSettings.global(
           isOnboardingDone: true,
           appTheme: AppTheme.dark,
+          installationId: const UniqueId.fromTrustedString('installation_id'),
         ),
       );
     });
@@ -56,11 +59,13 @@ void main() {
       final settings = AppSettings.global(
         isOnboardingDone: true,
         appTheme: AppTheme.dark,
+        installationId: const UniqueId.fromTrustedString('installation_id'),
       );
       final map = mapper.toMap(settings);
       final expectedMap = {
         0: true,
         1: 2,
+        2: 'installation_id',
       };
       expect(map, expectedMap);
     });
