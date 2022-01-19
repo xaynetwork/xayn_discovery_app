@@ -92,6 +92,7 @@ class TranslationsDe extends Translations {
   String get personalAreaCollections => """Sammlung""";
   String get personalAreaHomeFeed => """Home Feed""";
   String get personalAreaSettings => """Einstellungen""";
+  String get comingSoon => """Kommt bald""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -131,4 +132,5 @@ Map<String, String> get translationsDeMap => {
       """personalAreaCollections""": """Sammlung""",
       """personalAreaHomeFeed""": """Home Feed""",
       """personalAreaSettings""": """Einstellungen""",
+      """comingSoon""": """Kommt bald""",
     };

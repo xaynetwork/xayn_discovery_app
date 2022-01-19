@@ -33,27 +33,27 @@ extension WidgetTesterCommonActions on WidgetTester {
   Future<void> initToDiscoveryPage() async {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
-    await pumpAndSettle(updateNabBarDebounceTimeout);
+    await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
   Future<void> navigateToSearch() async {
     await tap(Keys.navBarItemSearch.finds());
-    await pumpAndSettle(updateNabBarDebounceTimeout);
+    await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
   Future<void> navigateToHome() async {
     await tap(Keys.navBarItemHome.finds());
-    await pumpAndSettle(updateNabBarDebounceTimeout);
+    await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
   Future<void> navigateToPersonalArea() async {
     await tap(Keys.navBarItemPersonalArea.finds());
-    await pumpAndSettle(updateNabBarDebounceTimeout);
+    await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
   Future<void> navigateToSettingsScreen() async {
     await tap(Keys.personalAreaCardSettings.finds());
-    await pumpAndSettle(updateNabBarDebounceTimeout);
+    await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
   Future<void> navigateBack() async {
