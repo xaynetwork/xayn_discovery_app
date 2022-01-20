@@ -20,7 +20,8 @@ class LanguageCodeToLanguageNameMapper extends Mapper<String, String?> {
         return R.strings.langNamePolish;
       case SupportedLanguageCodes.spanish:
         return R.strings.langNameSpanish;
+      default:
+        return null;
     }
-    return null;
   }
 }

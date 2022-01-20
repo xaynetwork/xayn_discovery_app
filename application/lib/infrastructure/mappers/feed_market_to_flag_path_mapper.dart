@@ -31,7 +31,8 @@ class FeedMarketToFlagAssetPathMapper extends Mapper<FeedMarket, String?> {
         return R.assets.illustrations.flagPoland;
       case SupportedCountryCodes.usa:
         return R.assets.illustrations.flagUSA;
+      default:
+        return null;
     }
-    return null;
   }
 }

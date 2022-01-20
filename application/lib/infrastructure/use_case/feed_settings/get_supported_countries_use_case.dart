@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 
-typedef SupportedCountries = List<Country>;
+typedef SupportedCountries = Iterable<Country>;
 
 @injectable
 class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
@@ -23,9 +23,12 @@ class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
 
   @override
   Stream<SupportedCountries> transaction(None param) async* {
+    // TODO get current app language from the settings
+    // right now we do not have language change, so English is hardcoded
     final countryNames = await getCountryNames(AppLanguage.english);
     final countries = supportedFeedMarkets.map((FeedMarket market) {
-      final flag = _flagMapper.map(market)!;
+      final flag = _flagMapper.map(market);
+      if (flag == null) throw FlagNotFindForMarketException(market);
       final countryName = countryNames[market.countryCode]!;
 
       final language = (needToShowLanguageCode[market.countryCode] == true)
@@ -39,8 +42,17 @@ class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
         langCode: market.languageCode,
         language: language,
       );
-    }).toList();
+    });
 
     yield countries;
   }
+}
+
+class FlagNotFindForMarketException implements Exception {
+  final FeedMarket market;
+
+  FlagNotFindForMarketException(this.market);
+
+  @override
+  String toString() => 'Can\'t find flag for market: $market';
 }
