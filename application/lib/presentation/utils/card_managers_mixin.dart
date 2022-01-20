@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
-  late final Map<Document, _CardManagers> _cardManagers = {};
+  late final Map<DocumentId, _CardManagers> _cardManagers = {};
 
   @override
   void dispose() {
@@ -20,13 +20,13 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   @mustCallSuper
   void removeObsoleteCardManagers(Iterable<Document> results) {
     for (var key in results) {
-      _cardManagers.remove(key)?.closeAll();
+      _cardManagers.remove(key.documentId)?.closeAll();
     }
   }
 
   @mustCallSuper
   _CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
-      document,
+      document.documentId,
       () => _CardManagers(
             imageManager: di.get()
               ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
