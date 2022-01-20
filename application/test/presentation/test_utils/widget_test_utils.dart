@@ -34,6 +34,7 @@ extension WidgetTesterCommonActions on WidgetTester {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
     await pumpAndSettle(updateNavBarDebounceTimeout);
+    await runAsync(pumpAndSettle);
   }
 
   Future<void> navigateToSearch() async {
