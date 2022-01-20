@@ -4,6 +4,10 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class TooltipKeys {
   static const activeSearchDisabled = TooltipKey('activeSearchDisabled');
+  static const feedSettingsScreenMaxSelectedCountries =
+      TooltipKey('feedSettingsScreenMaxSelectedCountries');
+  static const feedSettingsScreenMinSelectedCountries =
+      TooltipKey('feedSettingsScreenMinSelectedCountries');
 }
 
 abstract class XaynMessageProvider {
@@ -14,6 +18,10 @@ abstract class XaynMessageProvider {
     final activeSearchMessages = {
       TooltipKeys.activeSearchDisabled: TooltipParams(
         label: R.strings.comingSoon,
+        builder: (_) => _defaultMessage,
+      ),
+      TooltipKeys.feedSettingsScreenMinSelectedCountries: TooltipParams(
+        label: R.strings.feedSettingsScreenMinSelectedCountriesError,
         builder: (_) => _defaultMessage,
       ),
     };
