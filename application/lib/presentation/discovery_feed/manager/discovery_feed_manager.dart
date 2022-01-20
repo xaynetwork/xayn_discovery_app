@@ -14,7 +14,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const int _kMaxCardCount = 10;
 
-typedef ObservedViewTypes = Map<Document, DocumentViewMode>;
+typedef ObservedViewTypes = Map<DocumentId, DocumentViewMode>;
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -85,7 +85,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// the last known inner document (secondary cards may also trigger).
   /// Use [viewType] to indicate the current view of that same document.
   void handleViewType(Document document, DocumentViewMode mode) {
-    _observedViewTypes[document] = mode;
+    _observedViewTypes[document.documentId] = mode;
 
     if (document == _observedDocument) {
       observeDocument(
@@ -164,7 +164,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
-    if (results.length <= _maxCardCount) {
+    final observedDocument = _observedDocument;
+
+    if (observedDocument == null || results.length <= _maxCardCount) {
       return ResultSets(results: results);
     }
 
@@ -174,7 +176,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         results.take(results.length - _maxCardCount).toSet();
 
     nextResults = nextResults..removeAll(flaggedForDisposal);
-    cardIndex = nextResults.toList().indexOf(_observedDocument!);
+    cardIndex = nextResults.toList().indexOf(observedDocument);
 
     // The number 2 was chosen because we always animate transitions when
     // moving between cards.
