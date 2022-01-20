@@ -89,7 +89,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     NavBarConfig buildReaderMode() {
       final document = discoveryFeedManager.state.results
           .elementAt(discoveryFeedManager.state.cardIndex);
-      final managers = managersOf(document);
 
       return NavBarConfig(
         [
@@ -99,29 +98,34 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
-            isLiked: document.isRelevant,
-            onPressed: () =>
+              isLiked: document.isRelevant,
+              onPressed: () async {
+                final managers = await managersOf(document);
+
                 managers.discoveryCardManager.changeDocumentFeedback(
-              document: document,
-              feedback: document.isRelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.positive,
-            ),
-          ),
-          buildNavBarItemShare(
-            onPressed: () => managers.discoveryCardManager
-                .shareUri(document.webResource.url),
-          ),
+                  document: document,
+                  feedback: document.isRelevant
+                      ? DocumentFeedback.neutral
+                      : DocumentFeedback.positive,
+                );
+              }),
+          buildNavBarItemShare(onPressed: () async {
+            final managers = await managersOf(document);
+
+            managers.discoveryCardManager.shareUri(document);
+          }),
           buildNavBarItemDisLike(
-            isDisLiked: document.isIrrelevant,
-            onPressed: () =>
+              isDisLiked: document.isIrrelevant,
+              onPressed: () async {
+                final managers = await managersOf(document);
+
                 managers.discoveryCardManager.changeDocumentFeedback(
-              document: document,
-              feedback: document.isIrrelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.negative,
-            ),
-          ),
+                  document: document,
+                  feedback: document.isIrrelevant
+                      ? DocumentFeedback.neutral
+                      : DocumentFeedback.negative,
+                );
+              }),
         ],
         isWidthExpanded: true,
       );
@@ -290,7 +294,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       (BuildContext context, int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
-        final managers = managersOf(document);
         final discoveryFeedManager = _discoveryFeedManager!;
 
         if (isPrimary) {
@@ -300,37 +303,44 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           );
         }
 
-        final card = isFullScreen
-            ? DiscoveryCard(
-                isPrimary: true,
-                document: document,
-                discoveryCardManager: managers.discoveryCardManager,
-                imageManager: managers.imageManager,
-                onDiscard: discoveryFeedManager.handleNavigateOutOfCard,
-                onDrag: _onFullScreenDrag,
-                onController: (controller) =>
-                    _currentCardController = controller,
-              )
-            : GestureDetector(
-                onTap: () {
-                  hideTooltip();
-                  discoveryFeedManager.handleNavigateIntoCard();
-                },
-                child: DiscoveryFeedCard(
-                  isPrimary: isPrimary,
-                  document: document,
-                  discoveryCardManager: managers.discoveryCardManager,
-                  imageManager: managers.imageManager,
-                ),
-              );
+        return FutureBuilder<CardManagers>(
+            future: managersOf(document),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return Container();
 
-        return SwipeableDiscoveryCard(
-          manager: managers.discoveryCardManager,
-          isPrimary: isPrimary,
-          document: document,
-          card: card,
-          isSwipingEnabled: isSwipingEnabled,
-        );
+              final managers = snapshot.requireData;
+              final card = isFullScreen
+                  ? DiscoveryCard(
+                      isPrimary: true,
+                      document: document,
+                      discoveryCardManager: managers.discoveryCardManager,
+                      imageManager: managers.imageManager,
+                      onDiscard: discoveryFeedManager.handleNavigateOutOfCard,
+                      onDrag: _onFullScreenDrag,
+                      onController: (controller) =>
+                          _currentCardController = controller,
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        hideTooltip();
+                        discoveryFeedManager.handleNavigateIntoCard();
+                      },
+                      child: DiscoveryFeedCard(
+                        isPrimary: isPrimary,
+                        document: document,
+                        discoveryCardManager: managers.discoveryCardManager,
+                        imageManager: managers.imageManager,
+                      ),
+                    );
+
+              return SwipeableDiscoveryCard(
+                manager: managers.discoveryCardManager,
+                isPrimary: isPrimary,
+                document: document,
+                card: card,
+                isSwipingEnabled: isSwipingEnabled,
+              );
+            });
       };
 
   BoxBorder? Function(int) _boxBorderBuilder({

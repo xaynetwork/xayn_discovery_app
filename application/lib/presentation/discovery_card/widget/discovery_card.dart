@@ -302,7 +302,18 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
     with NavBarConfigMixin {
-  late final DiscoveryCardManager _discoveryCardManager = di.get();
+  DiscoveryCardManager? _discoveryCardManager;
+
+  @override
+  void initState() {
+    di.getAsync<DiscoveryCardManager>().then((it) {
+      _discoveryCardManager = it;
+
+      NavBarContainer.updateNavBar(context);
+    });
+
+    super.initState();
+  }
 
   @override
   Widget buildFromState(
@@ -315,34 +326,41 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
       );
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig(
-        [
-          buildNavBarItemArrowLeft(
-            onPressed: () => _discoveryCardManager.onBackNavPressed(),
+  NavBarConfig get navBarConfig {
+    final discoveryCardManager = _discoveryCardManager;
+
+    if (discoveryCardManager == null) {
+      return NavBarConfig.hidden();
+    }
+
+    return NavBarConfig(
+      [
+        buildNavBarItemArrowLeft(
+          onPressed: () => discoveryCardManager.onBackNavPressed(),
+        ),
+        buildNavBarItemLike(
+          isLiked: widget.document.isRelevant,
+          onPressed: () => discoveryCardManager.changeDocumentFeedback(
+            document: widget.document,
+            feedback: widget.document.isRelevant
+                ? DocumentFeedback.neutral
+                : DocumentFeedback.positive,
           ),
-          buildNavBarItemLike(
-            isLiked: widget.document.isRelevant,
-            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
-              document: widget.document,
-              feedback: widget.document.isRelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.positive,
-            ),
+        ),
+        buildNavBarItemShare(
+          onPressed: () => discoveryCardManager.shareUri(widget.document),
+        ),
+        buildNavBarItemDisLike(
+          isDisLiked: widget.document.isIrrelevant,
+          onPressed: () => discoveryCardManager.changeDocumentFeedback(
+            document: widget.document,
+            feedback: widget.document.isIrrelevant
+                ? DocumentFeedback.neutral
+                : DocumentFeedback.negative,
           ),
-          buildNavBarItemShare(
-            onPressed: () =>
-                _discoveryCardManager.shareUri(widget.document.webResource.url),
-          ),
-          buildNavBarItemDisLike(
-            isDisLiked: widget.document.isIrrelevant,
-            onPressed: () => _discoveryCardManager.changeDocumentFeedback(
-              document: widget.document,
-              feedback: widget.document.isIrrelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.negative,
-            ),
-          ),
-        ],
-        isWidthExpanded: true,
-      );
+        ),
+      ],
+      isWidthExpanded: true,
+    );
+  }
 }

@@ -98,23 +98,31 @@ class _ActiveSearchState extends State<ActiveSearch>
     Document document,
     bool isPrimary,
   ) {
-    final managers = managersOf(document);
-    final card = GestureDetector(
-      onTap: () {
-        final args = DiscoveryCardScreenArgs(
-          isPrimary: true,
-          document: document,
-          imageManager: managers.imageManager,
-          discoveryCardManager: managers.discoveryCardManager,
+    final card = FutureBuilder<CardManagers>(
+      future: managersOf(document),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Container();
+
+        final managers = snapshot.requireData;
+
+        return GestureDetector(
+          onTap: () {
+            final args = DiscoveryCardScreenArgs(
+              isPrimary: true,
+              document: document,
+              imageManager: managers.imageManager,
+              discoveryCardManager: managers.discoveryCardManager,
+            );
+            _activeSearchManager.onCardDetailsPressed(args);
+          },
+          child: DiscoveryFeedCard(
+            isPrimary: isPrimary,
+            document: document,
+            imageManager: managers.imageManager,
+            discoveryCardManager: managers.discoveryCardManager,
+          ),
         );
-        _activeSearchManager.onCardDetailsPressed(args);
       },
-      child: DiscoveryFeedCard(
-        isPrimary: isPrimary,
-        document: document,
-        imageManager: managers.imageManager,
-        discoveryCardManager: managers.discoveryCardManager,
-      ),
     );
 
     return Padding(
