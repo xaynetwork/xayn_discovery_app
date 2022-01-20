@@ -1,6 +1,5 @@
-
 # Checks for a map of {envKey : propertyKey} if either of those is set and then tries to read it from the user
-def askAndSetProperties(propertiesPath, hash)
+def askAndSetProperties(propertiesPath, hash, defaults)
   resultingProps = {}
   loadedProperties = loadProperties(propertiesPath)
   hash.each do |envKey, propertyKey|
@@ -12,8 +11,8 @@ def askAndSetProperties(propertiesPath, hash)
       next
     end
 
-    if ENV_DEFAULTS.key?(envKey)
-      prop = ENV_DEFAULTS[envKey]
+    if defaults.key?(envKey)
+      prop = defaults[envKey]
     end
 
     if !prop
