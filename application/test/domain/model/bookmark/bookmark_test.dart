@@ -32,7 +32,7 @@ void main() {
     );
 
     test(
-      'WHEN an empty provider name is given THEN throw assert exception',
+      'WHEN an empty provider name is given THEN does not throw assert exception',
       () {
         expect(
           () => Bookmark(
@@ -44,7 +44,7 @@ void main() {
             providerThumbnail: providerThumbnail,
             createdAt: createdAt,
           ),
-          throwsAssertionError,
+          predicate((bookmark) => bookmark != null),
         );
       },
     );

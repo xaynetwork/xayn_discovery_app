@@ -11,7 +11,8 @@ class DiscoveryCardState with _$DiscoveryCardState {
 
   const factory DiscoveryCardState({
     @Default(false) bool isComplete,
-    ProcessedDocument? output,
+    @Default(false) bool isBookmarked,
+    ProcessedDocument? processedDocument,
   }) = _DiscoveryCardState;
 
   factory DiscoveryCardState.initial() => const DiscoveryCardState();

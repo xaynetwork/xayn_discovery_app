@@ -34,3 +34,12 @@ personalAreaTitle: Area
 personalAreaCollections: Sammlung
 personalAreaHomeFeed: Home Feed
 personalAreaSettings: Einstellungen
+comingSoon: Kommt bald
+feedSettingsScreenTitle: Your home feed
+# %s - those symbols should be in all translations!
+feedSettingsScreenContryListHint: Choose the countries you would like to receive news from (max. %s)
+feedSettingsScreenActiveCountryListSubtitle: Active countries
+feedSettingsScreenInActiveCountryListSubtitle: Inactive countries
+feedSettingsScreenMinSelectedCountriesError: There always has to be at least one country selected
+# %s - those symbols should be in all translations!
+feedSettingsScreenMaxSelectedCountriesError: There are already %s countries selected

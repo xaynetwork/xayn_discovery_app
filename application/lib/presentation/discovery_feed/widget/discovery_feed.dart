@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -36,7 +37,11 @@ class DiscoveryFeed extends StatefulWidget {
 }
 
 class _DiscoveryFeedState extends State<DiscoveryFeed>
-    with WidgetsBindingObserver, NavBarConfigMixin, CardManagersMixin {
+    with
+        WidgetsBindingObserver,
+        NavBarConfigMixin,
+        CardManagersMixin,
+        TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
   late final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
@@ -56,14 +61,23 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     NavBarConfig buildDefault() => NavBarConfig(
           [
             buildNavBarItemHome(
-              isActive: true,
-              onPressed: discoveryFeedManager.onHomeNavPressed,
-            ),
+                isActive: true,
+                onPressed: () {
+                  hideTooltip();
+                  discoveryFeedManager.onHomeNavPressed();
+                }),
             buildNavBarItemSearch(
-              onPressed: discoveryFeedManager.onSearchNavPressed,
+              isDisabled: true,
+              onPressed: () => showTooltip(
+                TooltipKeys.activeSearchDisabled,
+                style: TooltipStyle.arrowDown,
+              ),
             ),
             buildNavBarItemPersonalArea(
-              onPressed: discoveryFeedManager.onPersonalAreaNavPressed,
+              onPressed: () {
+                hideTooltip();
+                discoveryFeedManager.onPersonalAreaNavPressed();
+              },
             ),
           ],
         );
@@ -125,10 +139,19 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   Widget build(BuildContext context) {
+    // Reduce the top padding when notch is present.
+    var topPadding = MediaQuery.of(context).padding.top;
+    if (topPadding - R.dimen.unit > 0) {
+      topPadding = topPadding - R.dimen.unit;
+    }
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: _buildFeedView(),
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.only(top: topPadding),
+          child: _buildFeedView(),
+        ),
       ),
     );
   }
@@ -175,6 +198,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         bloc: discoveryFeedManager,
         builder: (context, state) {
           final results = state.results;
+
+          removeObsoleteCardManagers(state.removedResults);
 
           if (state.isFullScreen) {
             // always update whenever state changes and when in full screen mode.
@@ -275,7 +300,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                     _currentCardController = controller,
               )
             : GestureDetector(
-                onTap: discoveryFeedManager.handleNavigateIntoCard,
+                onTap: () {
+                  hideTooltip();
+                  discoveryFeedManager.handleNavigateIntoCard();
+                },
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,

@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/presentation/active_search/manager/active_sea
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -42,6 +43,7 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
 @Injectable(as: DiscoveryCardNavActions)
 class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
   final xayn.StackManipulationFunction changeStack;
+
   DiscoveryCardNavActionsImpl(AppNavigationManager manager)
       // ignore: INVALID_USE_OF_PROTECTED_MEMBER
       : changeStack = manager.manipulateStack;
@@ -55,6 +57,18 @@ class SettingsNavActionsImpl extends SettingsNavActions {
   final xayn.StackManipulationFunction changeStack;
 
   SettingsNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+}
+
+@Injectable(as: FeedSettingsNavActions)
+class FeedSettingsNavActionsImpl extends FeedSettingsNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  FeedSettingsNavActionsImpl(AppNavigationManager manager)
       // ignore: INVALID_USE_OF_PROTECTED_MEMBER
       : changeStack = manager.manipulateStack;
 
@@ -107,8 +121,7 @@ class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
 
   @override
   void onHomeFeedSettingsNavPressed() {
-    throw UnimplementedError('Screen not ready yet');
-    // changeStack((stack) => stack.push(PageRegistry.homeFeedSettings));
+    changeStack((stack) => stack.push(PageRegistry.feedSettings));
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
@@ -20,6 +21,7 @@ import '../test_utils/widget_test_utils.dart';
 void main() {
   late StreamController<None> streamController;
   late MockPersonalAreaManager manager;
+  late final tooltipController = ApplicationTooltipController();
 
   setUp(() async {
     await setupWidgetTest();
@@ -37,7 +39,13 @@ void main() {
 
   Future<void> openScreen(WidgetTester tester) async {
     await tester.pumpLindenApp(
-      const PersonalAreaScreen(),
+      Provider<ApplicationTooltipController>.value(
+        value: tooltipController,
+        child: const ApplicationTooltipProvider(
+          messageFactory: {},
+          child: PersonalAreaScreen(),
+        ),
+      ),
       initialLinden: Linden(newColors: true),
     );
     await tester.pumpAndSettle(R.animations.screenStateChangeDuration);
@@ -97,13 +105,13 @@ void main() {
       },
     );
     testWidgets(
-      'WHEN clicked on activeSearch THEN call redirected to manager',
+      'WHEN clicked on activeSearch THEN call is not redirected to manager (Active Search disabled)',
       (final WidgetTester tester) async {
         await tester.initToDiscoveryPage();
         await tester.navigateToPersonalArea();
-
         await tester.tap(Keys.navBarItemSearch.finds());
-        verify(manager.onActiveSearchNavPressed());
+        await tester.pumpAndSettle();
+        verifyNever(manager.onActiveSearchNavPressed());
       },
     );
     testWidgets(

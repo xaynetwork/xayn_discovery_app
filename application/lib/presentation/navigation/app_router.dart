@@ -4,21 +4,42 @@ import 'package:xayn_design/xayn_design.dart' hide NavBarObserver;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
+
+const double kExtraBottomOffset = 18.0;
 
 class AppRouter extends xayn.NavigatorDelegate {
   AppRouter(AppNavigationManager navigationManager) : super(navigationManager);
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        theme: R.linden.themeData,
-        home: NavBarContainer(
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              buildNavigator(observers: [NavBarObserver()]),
-              const NavBar(),
-            ],
+  Widget build(BuildContext context) {
+    // The purpose to the extra bottom padding is to align the navbar
+    // so that it's in the middle of current and next card
+    // even on devices without the bottom safe area.
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final extraBottomPadding =
+        bottomPadding > 0 ? bottomPadding : kExtraBottomOffset;
+
+    final stack = Stack(
+      alignment: AlignmentDirectional.bottomCenter,
+      children: [
+        buildNavigator(observers: [NavBarObserver()]),
+        TooltipContextProvider(
+          child: NavBar(
+            padding: EdgeInsets.all(R.dimen.unit2)
+                .copyWith(bottom: R.dimen.unit2 + extraBottomPadding),
           ),
         ),
-      );
+      ],
+    );
+    return MaterialApp(
+      theme: R.linden.themeData,
+      home: NavBarContainer(
+        child: ApplicationTooltipProvider(
+          messageFactory: XaynMessageProvider.of(XaynMessageSet.values),
+          child: stack,
+        ),
+      ),
+    );
+  }
 }

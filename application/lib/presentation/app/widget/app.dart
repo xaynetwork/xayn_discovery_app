@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:instabug_flutter/Instabug.dart';
+import 'package:provider/provider.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -23,6 +24,8 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AppManager _appManager = di.get();
   late final AppNavigationManager _navigatorManager = di.get();
+  late final ApplicationTooltipController _applicationTooltipController =
+      ApplicationTooltipController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +58,10 @@ class _AppState extends State<App> {
 
     return BlocConsumer<AppManager, AppState>(
       bloc: _appManager,
-      builder: (_, __) => materialApp,
+      builder: (_, __) => Provider<ApplicationTooltipController>.value(
+        value: _applicationTooltipController,
+        child: materialApp,
+      ),
       listener: (_, state) => _changeBrightness(state.appTheme),
     );
   }

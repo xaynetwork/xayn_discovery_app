@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
   const PersonalAreaScreen({Key? key}) : super(key: key);
@@ -18,22 +19,28 @@ class PersonalAreaScreen extends StatefulWidget {
 }
 
 class PersonalAreaScreenState extends State<PersonalAreaScreen>
-    with NavBarConfigMixin {
+    with NavBarConfigMixin, TooltipStateMixin {
   late final PersonalAreaManager _manager = di.get();
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
         [
-          buildNavBarItemHome(
-            onPressed: _manager.onHomeNavPressed,
-          ),
+          buildNavBarItemHome(onPressed: () {
+            hideTooltip();
+            _manager.onHomeNavPressed();
+          }),
           buildNavBarItemSearch(
-            onPressed: _manager.onActiveSearchNavPressed,
+            isDisabled: true,
+            onPressed: () => showTooltip(
+              TooltipKeys.activeSearchDisabled,
+              style: TooltipStyle.arrowDown,
+            ),
           ),
           buildNavBarItemPersonalArea(
             isActive: true,
             onPressed: () {
               // nothing to do, we already on this screen :)
+              hideTooltip();
             },
           ),
         ],
@@ -87,17 +94,22 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         color: R.colors.personalAreaCollections,
         svgIconPath: R.assets.icons.book,
         svgBackground: R.assets.graphics.formsOrange,
-        onPressed: _manager.onCollectionsNavPressed,
+        onPressed: () {
+          hideTooltip();
+          _manager.onCollectionsNavPressed();
+        },
       );
 
   PersonalAreaCard _buildHomeFeed() => PersonalAreaCard(
-        key: Keys.personalAreaCardHomeFeed,
-        title: R.strings.personalAreaHomeFeed,
-        color: R.colors.personalAreaHomeFeed,
-        svgIconPath: R.assets.icons.confetti,
-        svgBackground: R.assets.graphics.formsGreen,
-        onPressed: _manager.onHomeFeedSettingsNavPressed,
-      );
+      key: Keys.personalAreaCardHomeFeed,
+      title: R.strings.personalAreaHomeFeed,
+      color: R.colors.personalAreaHomeFeed,
+      svgIconPath: R.assets.icons.confetti,
+      svgBackground: R.assets.graphics.formsGreen,
+      onPressed: () {
+        hideTooltip();
+        _manager.onHomeFeedSettingsNavPressed();
+      });
 
   PersonalAreaCard _buildSettings() => PersonalAreaCard(
         key: Keys.personalAreaCardSettings,
@@ -105,6 +117,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         color: R.colors.personalAreaSettings,
         svgIconPath: R.assets.icons.gear,
         svgBackground: R.assets.graphics.formsPurple,
-        onPressed: _manager.onSettingsNavPressed,
+        onPressed: () {
+          hideTooltip();
+          _manager.onSettingsNavPressed();
+        },
       );
 }
