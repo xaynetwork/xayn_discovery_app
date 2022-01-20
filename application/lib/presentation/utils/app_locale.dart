@@ -6,12 +6,12 @@ import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.
 typedef AppLocale = intl.Locale;
 
 late final _listOfCountryCodes =
-    supportedMarkets.map((e) => e.locale.countryCode).toList(growable: false);
-late final needToShowLanguageCode = Map.fromEntries(supportedMarkets.map((e) =>
-    MapEntry(
-        e.locale.countryCode,
+    supportedFeedMarkets.map((e) => e.countryCode).toList();
+late final needToShowLanguageCode = Map.fromEntries(supportedFeedMarkets.map(
+    (e) => MapEntry(
+        e.countryCode,
         _listOfCountryCodes
-                .where((element) => e.locale.countryCode == element)
+                .where((element) => e.countryCode == element)
                 .length >
             1)));
 
