@@ -4,7 +4,7 @@
     <application
         android:name=".CustomFlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="xayn_discovery_app">
+        android:label="@string/app_name">
 
         <activity
             android:name=".MainActivity"

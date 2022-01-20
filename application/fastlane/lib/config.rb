@@ -39,6 +39,7 @@ module Config
       "ios" => {
         "id" => "com.xayn.discovery",
         "name" => "Discovery App Beta",
+        # Discoveru is correct!! :P
         "appcenter_target" => "Discoveru-App-iOS-beta",
         "appcenter_token" => "APPCENTER_IOS_BETA_TOKEN",
         "appcenter_buildfile" => "build/discovery-app.ipa",
@@ -46,6 +47,9 @@ module Config
       "android" => {
         "id" => "com.xayn.search",
         "name" => "Discovery App Beta",
+        "appcenter_target" => "Discovery-App-Android-beta",
+        "appcenter_token" => "APPCENTER_ANDROID_BETA_TOKEN",
+        "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
       },
     },
     "production" => {
@@ -57,6 +61,15 @@ module Config
         "id" => "com.xayn.search",
         "name" => "Discovery App",
       },
+    },
+  }
+
+  ANDROID_BUILD_CONFIG = {
+    "internal" => {
+      "key_alias" => "release_internal",
+    },
+    "beta" => {
+      "key_alias" => "release_beta",
     },
   }
 
