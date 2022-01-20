@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
-const double kExtraBottomOffset = 34.0;
+const double kExtraBottomOffset = 18.0;
 
 class AppRouter extends xayn.NavigatorDelegate {
   AppRouter(AppNavigationManager navigationManager) : super(navigationManager);
@@ -25,7 +25,10 @@ class AppRouter extends xayn.NavigatorDelegate {
       children: [
         buildNavigator(observers: [NavBarObserver()]),
         TooltipContextProvider(
-          child: NavBar(padding: EdgeInsets.all(extraBottomPadding)),
+          child: NavBar(
+            padding: EdgeInsets.all(R.dimen.unit2)
+                .copyWith(bottom: R.dimen.unit2 + extraBottomPadding),
+          ),
         ),
       ],
     );
