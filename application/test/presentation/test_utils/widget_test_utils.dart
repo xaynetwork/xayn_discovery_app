@@ -33,7 +33,6 @@ extension WidgetTesterCommonActions on WidgetTester {
 
   Future<void> initToDiscoveryPage() async {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
-    await di.getAsync<DiscoveryFeedManager>();
     await pumpWidget(getApp());
     await pumpAndSettle(updateNavBarDebounceTimeout);
   }
