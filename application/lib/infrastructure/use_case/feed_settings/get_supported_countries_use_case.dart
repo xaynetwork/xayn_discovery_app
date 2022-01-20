@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/infrastructure/mappers/feed_market_to_flag_pa
 import 'package:xayn_discovery_app/infrastructure/mappers/language_code_to_language_name_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
-import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 
 typedef SupportedCountries = Iterable<Country>;
@@ -31,7 +30,7 @@ class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
       if (flag == null) throw FlagNotFindForMarketException(market);
       final countryName = countryNames[market.countryCode]!;
 
-      final language = (needToShowLanguageCode[market.countryCode] == true)
+      final language = isCountryMultilingual(market.countryCode)
           ? _languageNameMapper.map(market.languageCode)
           : null;
 
