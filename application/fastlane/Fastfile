@@ -19,27 +19,29 @@ import("lib/config.rb")
 
 # Common checks before running a lane
 before_all do |lane, options|
+  options[:clean] = options[:clean] || false
   options[:platform] = options[:platform] || Config::PLATFORM
   options[:android_output] = options[:android_output] || Config::ANDROID_OUTPUT
   options[:flavor] = options[:flavor] || Config::FLAVOR
   options[:build] = options[:build] || Config::BUILD
   options[:coverage] = options[:coverage] || false
   ## downloading the iOS adhoc profile
-  options[:downloadProfile] = options[:downloadProfile] || false
+  options[:downloadProfile] = options[:downloadProfile] || true
 
   version_name = gitVersionName()
   build_number = gitVersionNumber()
   options[:build_number] = options[:build_number] || build_number
   options[:version_name] = options[:version_name] || version_name
-  puts options
+  UI.success "Params:\n#{JSON.pretty_generate(options)}"
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
 desc "Flutter build"
 private_lane :flutter_build do |options|
-  clean(options)
-  pub_get(options)
-  build_runner(options)
+   if options[:clean]
+     clean(options)
+   end
+   build_runner(options)
 
   platform = options[:platform]
   target = platform == "android" ? options[:android_output] : platform
@@ -63,15 +65,16 @@ private_lane :flutter_build do |options|
   flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]} --dart-define=USER_APP_ID=#{appId} --dart-define=USER_APP_NAME=\"#{appName}\" #{dartDefines}")
 end
 
-desc "Build internal apk"
-private_lane :android_prepare_internal do |options|
+desc "Prepare internal key.properties"
+private_lane :android_prepare_key_properties do |options|
   UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
   provisionigPassword = ENV["PROVISIONING_PASSWORD"]
+  keyAlias = Config::ANDROID_BUILD_CONFIG[options[:flavor]]["key_alias"]
   setProperties("../android/key.properties", {
-    :storePassword => provisionigPassword,
-    :keyPassword => provisionigPassword,
-    :keyAlias => "release",
-    :storeFile => "internal_release.jks",
+    "storePassword" => provisionigPassword,
+    "keyPassword" => provisionigPassword,
+    "keyAlias" => keyAlias,
+    "storeFile" => "releases.jks",
   })
 end
 
@@ -182,7 +185,7 @@ lane :publish do |options|
   appcenter_buildfile = config["appcenter_buildfile"]
 
   if platform == "android"
-    android_prepare_internal
+    android_prepare_key_properties(options)
   end
   flutter_build(options)
   if platform == "ios"
