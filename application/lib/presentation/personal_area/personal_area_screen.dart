@@ -53,7 +53,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       builder: (_, __) => _buildScreen(),
     );
     return Scaffold(
-      appBar: AppToolbar(yourTitle: R.strings.personalAreaTitle),
+      appBar: AppToolbar(title: R.strings.personalAreaTitle),
       body: bloc,
     );
   }
