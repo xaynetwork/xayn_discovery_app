@@ -194,7 +194,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
-    if (results.length <= _maxCardCount) {
+    final observedDocument = _observedDocument;
+
+    if (observedDocument == null || results.length <= _maxCardCount) {
       return ResultSets(results: results);
     }
 
@@ -204,7 +206,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         results.take(results.length - _maxCardCount).toSet();
 
     nextResults = nextResults..removeAll(flaggedForDisposal);
-    cardIndex = nextResults.toList().indexOf(_observedDocument!);
+    cardIndex = nextResults.toList().indexOf(observedDocument);
 
     // The number 2 was chosen because we always animate transitions when
     // moving between cards.

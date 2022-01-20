@@ -50,6 +50,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   late final StreamSubscription<bool> _navigationPageNameSubscription;
+  late final Future<DiscoveryFeedManager> _discoveryCardManagerFuture =
+      di.getAsync();
+  final Map<Document, Future<CardManagers>> _managerFutures =
+      <Document, Future<CardManagers>>{};
   DiscoveryCardController? _currentCardController;
 
   int _totalResults = 0;
@@ -155,7 +159,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     }
 
     final feedView = FutureBuilder<DiscoveryFeedManager>(
-      future: di.getAsync(),
+      future: _discoveryCardManagerFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           _discoveryFeedManager = snapshot.requireData;
@@ -184,6 +188,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     _cardViewController.dispose();
     _discoveryFeedManager?.close();
     _navigationPageNameSubscription.cancel();
+    _managerFutures.clear();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -299,6 +304,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
         final discoveryFeedManager = _discoveryFeedManager!;
+        final managersFuture =
+            _managerFutures.putIfAbsent(document, () => managersOf(document));
 
         if (isPrimary) {
           discoveryFeedManager.handleViewType(
@@ -308,7 +315,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         }
 
         return FutureBuilder<CardManagers>(
-            future: managersOf(document),
+            future: managersFuture,
             builder: (context, snapshot) {
               if (!snapshot.hasData) return Container();
 
