@@ -1,6 +1,8 @@
+# Deprecated translation.
+# Later should be removed
 your: 'Meine'
 activeSearchSearchHint: 'Suche'
-settingsTitle: 'Einstellungen'
+settingsTitle: 'Your Settings'
 settingsSectionTitleAppTheme: 'Mein App Theme'
 settingsSectionScrollDirection: 'Discovery feed Scrollrichtung'
 settingsSectionTitleGeneralInfo: 'Generelle Informationen'
@@ -30,16 +32,44 @@ readingTimeUnitSingular: 'minute'
 readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
-personalAreaTitle: Area
+personalAreaTitle: Your Area
 personalAreaCollections: Sammlung
 personalAreaHomeFeed: Home Feed
 personalAreaSettings: Einstellungen
 comingSoon: Kommt bald
-feedSettingsScreenTitle: Your home feed
+feedSettingsScreenTitle: Your Home Feed
 # %s - those symbols should be in all translations!
-feedSettingsScreenContryListHint: Choose the countries you would like to receive news from (max. %s)
-feedSettingsScreenActiveCountryListSubtitle: Active countries
-feedSettingsScreenInActiveCountryListSubtitle: Inactive countries
+feedSettingsScreenContryListHint: Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)
+feedSettingsScreenActiveCountryListSubtitle: Aktive Länder
+feedSettingsScreenInActiveCountryListSubtitle: Inaktive Länder
 feedSettingsScreenMinSelectedCountriesError: There always has to be at least one country selected
 # %s - those symbols should be in all translations!
-feedSettingsScreenMaxSelectedCountriesError: There are already %s countries selected
+feedSettingsScreenMaxSelectedCountriesError: Es sind bereits %s Länder ausgewählt
+defaultCollectionTitle: Später lesen
+bottomSheetCancel: Abbrechen
+langNameFrench: Französisch
+langNameDutch: Niederländisch
+langNameEnglish: Englisch
+langNameGerman: Deutsch
+langNamePolish: Polnisch
+langNameSpanish: Spanisch
+bottomSheetApply: Anwenden
+bottomSheetCreate: Erstellen
+bottomSheetCreateCollectionHeader: Eine neue Collection erstellen
+bottomSheetCreateCollectionTextFieldHint: Collection-Name
+errorMsgTryingToCreateCollectionUsingExistingName: Du versuchst, eine Collection mit einem vorhandenen Namen zu erstellen
+errorMsgTryingToCreateAgainDefaultCollection: Du versuchst, eine Default- Collection zu erstellen
+errorMsgTryingToGetCardDataForNotExistingCollection: That collection doesn't exist
+errorMsgTryingToRemoveDefaultCollection: You can't remove the default collection
+errorMsgTryingToRemoveNotExistingCollection: That collection doesn't exist
+errorMsgTryingToRenameCollectionUsingExistingName: There already is a collection with this name
+errorMsgTryingToRenameNotExistingCollection: That collection doesn't exist
+errorMsgTryingToMoveNotExistingBookmark: This bookmark doesn't exist
+errorMsgTryingToMoveBookmarkToNotExistingCollection: That collection doesn't exist
+errorMsgTryingToRemoveNotExistingBookmark: That bookmark doesn't exist
+errorMsgTryingToGetBookmarksForNotExistingCollection: That collection doesn't exist
+articles: articles
+article: article
+collectionsScreenTitle: collections
+defaultCollectionNameReadLater: Read later
+bookmarkSnackBarSavedTo: Saved to %s
