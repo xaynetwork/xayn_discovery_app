@@ -106,3 +106,27 @@ final FeedMarkets supportedFeedMarkets = <FeedMarket>{
     languageCode: SupportedLanguageCodes.english,
   ),
 };
+
+//region utils
+
+late final _listOfSupportedCountryCodes =
+    supportedFeedMarkets.map((e) => e.countryCode).toList();
+
+bool _isCountryHasMultipleLanguages(String countryCode) =>
+    _listOfSupportedCountryCodes
+        .where((element) => countryCode == element)
+        .length >
+    1;
+
+late final _multiLanguageCountryMap = Map.fromEntries(
+  supportedFeedMarkets.map(
+    (e) => MapEntry(
+      e.countryCode,
+      _isCountryHasMultipleLanguages(e.countryCode),
+    ),
+  ),
+);
+
+bool isCountryMultilingual(String? countryCode) =>
+    countryCode != null && _multiLanguageCountryMap[countryCode] == true;
+//endregion utils
