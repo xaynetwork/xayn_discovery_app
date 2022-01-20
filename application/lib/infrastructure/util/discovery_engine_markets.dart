@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/language_code_to_langu
 class SupportedCountryCodes {
   SupportedCountryCodes._();
 
-  static late Set<String> allValues = {
+  static late final Set<String> allValues = {
     austria,
     belgium,
     canada,
@@ -39,7 +39,7 @@ class SupportedCountryCodes {
 class SupportedLanguageCodes {
   SupportedLanguageCodes._();
 
-  static late Set<String> allValues = {
+  static late final Set<String> allValues = {
     dutch,
     english,
     french,
