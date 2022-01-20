@@ -139,10 +139,19 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   Widget build(BuildContext context) {
+    // Reduce the top padding when notch is present.
+    var topPadding = MediaQuery.of(context).padding.top;
+    if (topPadding - R.dimen.unit > 0) {
+      topPadding = topPadding - R.dimen.unit;
+    }
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: _buildFeedView(),
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.only(top: topPadding),
+          child: _buildFeedView(),
+        ),
       ),
     );
   }

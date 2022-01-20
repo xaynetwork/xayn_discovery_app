@@ -27,6 +27,7 @@ dependencies:
   fwfh_chewie: ^0.7.0+1
   hive: 2.0.4
   hive_crdt: 2.0.2
+  home_indicator: 2.0.0
   http: ^0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
@@ -61,7 +62,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 32b017b4e5736958433d0af6514fea6742620238
+      ref: e7b82f5e1b8b09c5330d38446cfb89aa9470215a
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
