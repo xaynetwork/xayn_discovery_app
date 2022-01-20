@@ -5,6 +5,9 @@ const String _kEventType = 'openScreen';
 const String _kParamScreen = 'screen';
 const String _kParamArguments = 'arguments';
 
+/// An [AnalyticsEvent] which tracks when switching screens.
+/// - [screenName] is the name of the screen that was navigated into.
+/// - [arguments] are optional screen parameters.
 class OpenScreenEvent extends AnalyticsEvent {
   OpenScreenEvent({
     required String screenName,

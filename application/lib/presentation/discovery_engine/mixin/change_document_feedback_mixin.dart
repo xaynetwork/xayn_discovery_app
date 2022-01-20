@@ -32,7 +32,8 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
       feedback: feedback,
     ));
 
-    sendAnalyticsUseCase(DocumentFeedbackChangedEvent(document: document));
+    sendAnalyticsUseCase(DocumentFeedbackChangedEvent(
+        document: document.copyWith(feedback: feedback)));
   }
 
   Future<UseCaseSink<DocumentFeedbackChange, EngineEvent>>

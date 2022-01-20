@@ -6,6 +6,9 @@ const String _kEventType = 'documentViewModeChanged';
 const String _kParamViewMode = 'viewMode';
 const String _kParamDocument = 'document';
 
+/// An [AnalyticsEvent] which tracks when a card switches view mode between story and reader.
+/// - [document] is the target [Document].
+/// - [viewMode] indicates the mode, story or reader.
 class DocumentViewModeChangedEvent extends AnalyticsEvent {
   DocumentViewModeChangedEvent({
     required Document document,

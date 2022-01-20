@@ -5,6 +5,9 @@ const String _kEventType = 'documentBookmarked';
 const String _kParamDocument = 'document';
 const String _kParamIsBookmarked = 'isBookmarked';
 
+/// An [AnalyticsEvent] which tracks when a [Document] was bookmarked, or not.
+/// - [document] is the target [Document].
+/// - [isBookmarked] is true when bookmarked, false when not.
 class DocumentBookmarkedEvent extends AnalyticsEvent {
   DocumentBookmarkedEvent({
     Document? previous,
