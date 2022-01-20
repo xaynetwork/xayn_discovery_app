@@ -57,8 +57,7 @@ void main() {
       await openScreen(tester);
 
       expect(find.byType(AppToolbar), findsOneWidget);
-      expect(find.text('${R.strings.your} ${R.strings.personalAreaTitle}'),
-          findsOneWidget);
+      expect(find.text(R.strings.personalAreaTitle), findsOneWidget);
       expect(find.byType(PersonalAreaCard), findsNWidgets(3));
       expect(find.byKey(Keys.personalAreaCardCollections), findsOneWidget);
       expect(find.byKey(Keys.personalAreaCardHomeFeed), findsOneWidget);
