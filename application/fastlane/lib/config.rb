@@ -78,4 +78,9 @@ module Config
       "adhoc" => false,
     },
   }
+
+  # Appcenter defaults
+  APPCENTER_OWNER_NAME = "XAIN_AG"
+  APPCENTER_OWNER_TYPE = "organization"
+  APPCENTER_DEFAULT_TARGET = "Collaborators"
 end

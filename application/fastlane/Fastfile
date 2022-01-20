@@ -216,12 +216,12 @@ def uploadToAppCenter(token, appName, path, version)
   changelog = gitChangeLog(version)
   appcenter_upload(
     api_token: token,
-    owner_name: "XAIN_AG",
-    owner_type: "organization",
+    owner_name: Config::APPCENTER_OWNER_NAME,
+    owner_type: Config::APPCENTER_OWNER_TYPE,
     app_name: appName,
     file: path,
     release_notes: changelog,
-    destinations: "Collaborators",
+    destinations: Config::APPCENTER_DEFAULT_TARGET,
     notify_testers: true,
   )
 end
