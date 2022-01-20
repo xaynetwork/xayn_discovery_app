@@ -6,17 +6,26 @@ import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
+const double kExtraBottomOffset = 34.0;
+
 class AppRouter extends xayn.NavigatorDelegate {
   AppRouter(AppNavigationManager navigationManager) : super(navigationManager);
 
   @override
   Widget build(BuildContext context) {
+    // The purpose to the extra bottom padding is to align the navbar
+    // so that it's in the middle of current and next card
+    // even on devices without the bottom safe area.
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final extraBottomPadding =
+        bottomPadding > 0 ? bottomPadding : kExtraBottomOffset;
+
     final stack = Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
         buildNavigator(observers: [NavBarObserver()]),
-        const TooltipContextProvider(
-          child: NavBar(padding: EdgeInsets.all(34)),
+        TooltipContextProvider(
+          child: NavBar(padding: EdgeInsets.all(extraBottomPadding)),
         ),
       ],
     );
