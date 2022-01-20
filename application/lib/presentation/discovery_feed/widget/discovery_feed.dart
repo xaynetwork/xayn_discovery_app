@@ -153,13 +153,27 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     if (topPadding - R.dimen.unit > 0) {
       topPadding = topPadding - R.dimen.unit;
     }
+
+    final feedView = FutureBuilder<DiscoveryFeedManager>(
+      future: di.getAsync(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          _discoveryFeedManager = snapshot.requireData;
+
+          NavBarContainer.updateNavBar(context);
+        }
+
+        return _buildFeedView();
+      },
+    );
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
         top: false,
         child: Padding(
           padding: EdgeInsets.only(top: topPadding),
-          child: _buildFeedView(),
+          child: feedView,
         ),
       ),
     );
@@ -179,16 +193,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
-
-    di.getAsync<DiscoveryFeedManager>().then((it) {
-      if (mounted) {
-        setState(() {
-          _discoveryFeedManager = it;
-
-          NavBarContainer.updateNavBar(context);
-        });
-      }
-    });
 
     _appNavigationManager = di.get();
 

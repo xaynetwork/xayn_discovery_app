@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import 'package:xayn_discovery_app/main.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 import '../test_utils/utils.dart';
@@ -32,9 +33,9 @@ extension WidgetTesterCommonActions on WidgetTester {
 
   Future<void> initToDiscoveryPage() async {
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
+    await di.getAsync<DiscoveryFeedManager>();
     await pumpWidget(getApp());
     await pumpAndSettle(updateNavBarDebounceTimeout);
-    await runAsync(pumpAndSettle);
   }
 
   Future<void> navigateToSearch() async {
