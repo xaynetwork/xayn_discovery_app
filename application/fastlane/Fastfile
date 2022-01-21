@@ -17,21 +17,29 @@ import("lib/git.rb")
 ### All the configs are in this file, eventually all project specific parts will move there
 import("lib/config.rb")
 
+
+
+
 # Common checks before running a lane
 before_all do |lane, options|
-  options[:clean] = options[:clean] || false
-  options[:platform] = options[:platform] || Config::PLATFORM
-  options[:android_output] = options[:android_output] || Config::ANDROID_OUTPUT
-  options[:flavor] = options[:flavor] || Config::FLAVOR
-  options[:build] = options[:build] || Config::BUILD
-  options[:coverage] = options[:coverage] || false
+  setIfNotSet = lambda{ | option, alt |
+    options[option] = options.key?(option) ? options[option] : alt
+  }
+
+  setIfNotSet.call(:clean, true)
+  setIfNotSet.call(:platform, Config::PLATFORM)
+  setIfNotSet.call(:android_output, Config::ANDROID_OUTPUT)
+  setIfNotSet.call(:flavor, Config::FLAVOR)
+  setIfNotSet.call(:build, Config::BUILD)
+  setIfNotSet.call(:upload_to_appcenter, true)
+  setIfNotSet.call(:coverage, false)
   ## downloading the iOS adhoc profile
-  options[:downloadProfile] = options[:downloadProfile] || true
+  setIfNotSet.call(:downloadProfile, true)
 
   version_name = gitVersionName()
   build_number = gitVersionNumber()
-  options[:build_number] = options[:build_number] || build_number
-  options[:version_name] = options[:version_name] || version_name
+  setIfNotSet.call(:build_number, build_number)
+  setIfNotSet.call(:version_name, version_name)
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
 end
 
@@ -194,13 +202,15 @@ lane :publish do |options|
       ios_create_ipa(options)
     end
   end
-  UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
-  uploadToAppCenter(
-    ENV[appcenter_token],
-    appcenter_target,
-    appcenter_buildfile,
-    options[:version_name]
-  )
+  if options[:upload_to_appcenter]
+    UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
+    uploadToAppCenter(
+      ENV[appcenter_token],
+      appcenter_target,
+      appcenter_buildfile,
+      options[:version_name]
+    )
+  end
 end
 
 # Private helper methods
