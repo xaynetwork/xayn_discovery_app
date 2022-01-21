@@ -57,7 +57,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     return Scaffold(
       appBar: AppToolbar(
         appToolbarData: AppToolbarData.titleOnly(
-          yourTitle: R.strings.personalAreaTitle,
+          title: R.strings.personalAreaTitle,
         ),
       ),
       body: bloc,
@@ -100,7 +100,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaCollections,
           color: R.colors.personalAreaCollections,
           svgIconPath: R.assets.icons.book,
-          svgBackground: R.assets.graphics.formsOrange,
+          svgBackgroundPath: R.assets.graphics.formsOrange,
           onPressed: _manager.onCollectionsNavPressed,
         ),
       );
@@ -111,7 +111,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaHomeFeed,
           color: R.colors.personalAreaHomeFeed,
           svgIconPath: R.assets.icons.confetti,
-          svgBackground: R.assets.graphics.formsGreen,
+          svgBackgroundPath: R.assets.graphics.formsGreen,
           onPressed: _manager.onHomeFeedSettingsNavPressed,
         ),
       );
@@ -122,7 +122,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaSettings,
           color: R.colors.personalAreaSettings,
           svgIconPath: R.assets.icons.gear,
-          svgBackground: R.assets.graphics.formsPurple,
+          svgBackgroundPath: R.assets.graphics.formsPurple,
           onPressed: _manager.onSettingsNavPressed,
         ),
       );

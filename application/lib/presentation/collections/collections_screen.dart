@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -28,10 +26,8 @@ class CollectionsScreen extends StatefulWidget {
 
 class _CollectionsScreenState extends State<CollectionsScreen>
     with NavBarConfigMixin {
-  late final CollectionsScreenManager? _collectionsScreenManager;
+  CollectionsScreenManager? _collectionsScreenManager;
   late final CollectionCardManager _collectionCardManager;
-  late final StreamController<CollectionsScreenManager>
-      _collectionsScreenManagerStream;
 
   @override
   void initState() {
@@ -40,22 +36,18 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   }
 
   void _initManagers() {
-    _collectionsScreenManagerStream = StreamController();
     _collectionCardManager = di.get();
     di.getAsync<CollectionsScreenManager>().then((it) {
-      _collectionsScreenManager = it;
-      _collectionsScreenManagerStream.add(it);
+      setState(() {
+        _collectionsScreenManager = it;
+      });
     });
   }
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
         buildNavBarItemBack(
-          onPressed: () {
-            if (_collectionsScreenManager != null) {
-              _collectionsScreenManager!.onBackNavPressed();
-            }
-          },
+          onPressed: () => _collectionsScreenManager?.onBackNavPressed(),
         ),
       );
 
@@ -63,29 +55,23 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.withTrailingIcon(
-            yourTitle: R.strings.collectionsScreenTitle,
+            title: R.strings.collectionsScreenTitle,
             iconPath: R.assets.icons.plus,
             onPressed: () {
-              throw UnimplementedError();
+              _showTemporaryAlertDialog(_collectionsScreenManager!);
             },
           ),
         ),
-        body: StreamBuilder<CollectionsScreenManager>(
-          stream: _collectionsScreenManagerStream.stream,
-          builder: (_, snapshot) {
-            return _buildBody(snapshot.data);
-          },
-        ),
+        body: _buildBody(),
       );
 
-  Widget _buildBody(CollectionsScreenManager? manager) {
-    if (manager == null) {
-      return const Center(child: CircularProgressIndicator());
+  Widget _buildBody() {
+    if (_collectionsScreenManager == null) {
+      return Container();
     }
-
     Widget screenBloc =
         BlocBuilder<CollectionsScreenManager, CollectionsScreenState>(
-      bloc: manager,
+      bloc: _collectionsScreenManager,
       builder: _buildScreen,
     );
 
@@ -113,7 +99,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
         bottomPadding,
       ),
     );
-    return SingleChildScrollView(child: withPadding);
+    return withPadding;
   }
 
   Widget _buildCard(Collection collection) {
@@ -121,24 +107,68 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     return BlocBuilder<CollectionCardManager, CollectionCardState>(
       bloc: _collectionCardManager,
       builder: (context, cardState) {
-        return CardWidget(
+        final card = CardWidget(
           key: Keys.generateCollectionsScreenCardKey(
             collection.id.toString(),
           ),
           cardData: CardData.collectionsScreen(
             title: collection.name,
-            onPressed: () {
-              throw UnimplementedError();
-            },
-            onLongPressed: () {
-              throw UnimplementedError();
-            },
+            onPressed: () => throw UnimplementedError(),
+            onLongPressed: () => throw UnimplementedError(),
             numOfItems: cardState.numOfItems,
             backgroundImage: cardState.image,
             color: R.colors.collectionsScreenCard,
           ),
         );
+        return Padding(
+          padding: EdgeInsets.only(bottom: R.dimen.unit2),
+          child: card,
+        );
       },
+    );
+  }
+
+  /// Temporary dialog implemented in order to test the functionality
+  /// Will be removed when the bottom sheet will be ready
+  void _showTemporaryAlertDialog(CollectionsScreenManager _manager) async {
+    String collectionName = '';
+
+    // ignore: prefer_function_declarations_over_variables
+    final dialog = (CollectionsScreenState state) => AlertDialog(
+          title: const Text('Create collection'),
+          content: TextField(
+            onChanged: (value) {
+              collectionName = value;
+            },
+            decoration: InputDecoration(
+              hintText: 'Collection name',
+              errorText: state.errorMsg,
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () async {
+                final collection = await _manager.createCollection(
+                  collectionName: collectionName,
+                );
+                if (collection != null) {
+                  Navigator.pop(context);
+                }
+              },
+            )
+          ],
+        );
+    final builder =
+        BlocBuilder<CollectionsScreenManager, CollectionsScreenState>(
+      bloc: _manager,
+      builder: (_, state) => dialog(state),
+    );
+
+    await showDialog<bool>(
+      useRootNavigator: false,
+      context: context,
+      builder: (context) => builder,
     );
   }
 }

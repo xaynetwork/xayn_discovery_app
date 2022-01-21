@@ -79,8 +79,9 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
   }
 
-  void createCollection({required String collectionName}) async {
+  Future<Collection?> createCollection({required String collectionName}) async {
     _useCaseError = null;
+    Collection? createdCollection;
     final useCaseOut = await _createCollectionUseCase.call(collectionName);
 
     /// We just need to handle the failure case.
@@ -91,8 +92,11 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       matchOnError: {
         On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
       },
-      onValue: (_) {},
+      onValue: (collection) => createdCollection = collection,
     );
+    if (_useCaseError == null) {
+      return createdCollection;
+    }
   }
 
   void renameCollection({
