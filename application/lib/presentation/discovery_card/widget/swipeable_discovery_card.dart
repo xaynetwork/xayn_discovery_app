@@ -45,6 +45,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
               ]
             : const [],
         minFlingVelocity: _kMinFlingVelocity,
+        minFlingDragDistanceFraction: .333,
         onFling: isPrimary ? (options) => options.first : null,
         opensToPosition: _kSwipeOpenToPosition,
         child: child,
