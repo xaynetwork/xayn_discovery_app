@@ -45,11 +45,6 @@ feedSettingsScreenInActiveCountryListSubtitle: Inactive Countries
 feedSettingsScreenMinSelectedCountriesError: Select at least one country
 # %s - those symbols should be in all translations!
 feedSettingsScreenMaxSelectedCountriesError: Your already selected %s countries
-<<<<<<< HEAD
-=======
-feedSettingsScreenMaxSelectedCountriesError: There are already %s countries selected
-defaultCollectionTitle: Read Later
->>>>>>> 28b73187 (Updated strings from POEditor)
 bottomSheetCancel: Cancel
 langNameFrench: French
 langNameDutch: Dutch
