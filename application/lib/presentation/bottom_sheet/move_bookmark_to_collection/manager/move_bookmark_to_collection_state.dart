@@ -23,4 +23,13 @@ class MoveBookmarkToCollectionState with _$MoveBookmarkToCollectionState {
       const MoveBookmarkToCollectionState(
         collections: [],
       );
+
+  factory MoveBookmarkToCollectionState.populated({
+    required List<Collection> collections,
+    required Collection? selectedCollection,
+  }) =>
+      MoveBookmarkToCollectionState(
+        collections: collections,
+        selectedCollection: selectedCollection,
+      );
 }

@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 /// Manages the state for the material app.
 ///
@@ -36,9 +37,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   void _init() async {
     scheduleComputeState(() async {
       await _incrementAppSessionUseCase.call(none);
-
-      //todo: get readLater string from local depending on user's language
-      await _createOrGetDefaultCollectionUseCase.call('Read later');
+      await _createOrGetDefaultCollectionUseCase
+          .call(R.strings.defaultCollectionNameReadLater);
       _appTheme = await _getAppThemeUseCase.singleOutput(none);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
       _initDone = true;

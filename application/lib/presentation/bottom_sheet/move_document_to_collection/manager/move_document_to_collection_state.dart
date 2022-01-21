@@ -12,10 +12,22 @@ class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
     required List<Collection> collections,
     Collection? selectedCollection,
     String? errorMsg,
+    @Default(false) bool isBookmarked,
   }) = _MoveDocumentToCollectionState;
 
   factory MoveDocumentToCollectionState.initial() =>
       const MoveDocumentToCollectionState(
         collections: [],
+      );
+
+  factory MoveDocumentToCollectionState.populated({
+    required List<Collection> collections,
+    required Collection? selectedCollection,
+    required bool isBookmarked,
+  }) =>
+      MoveDocumentToCollectionState(
+        collections: collections,
+        selectedCollection: selectedCollection,
+        isBookmarked: isBookmarked,
       );
 }

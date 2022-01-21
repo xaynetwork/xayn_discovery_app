@@ -127,8 +127,7 @@ class _CollectionItem extends StatelessWidget {
       height: R.dimen.unit5,
     );
 
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
+    return InkWell(
       onTap: () => onSelectCollection(isSelected ? null : collection),
       child: item,
     );

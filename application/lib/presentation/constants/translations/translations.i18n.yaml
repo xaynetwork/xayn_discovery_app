@@ -1,6 +1,8 @@
+# Deprecated translation.
+# Later should be removed
 your: 'Your'
 activeSearchSearchHint: 'Search'
-settingsTitle: 'Settings'
+settingsTitle: 'Your Settings'
 settingsSectionTitleAppTheme: 'Your App Theme'
 settingsSectionScrollDirection: 'Discovery feed scroll direction'
 settingsSectionTitleGeneralInfo: 'General information'
@@ -30,19 +32,19 @@ readingTimeUnitSingular: 'minute'
 readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
-personalAreaTitle: Area
+personalAreaTitle: Your Area
 personalAreaCollections: Collections
 personalAreaHomeFeed: Home Feed
 personalAreaSettings: Settings
 comingSoon: Coming soon
-feedSettingsScreenTitle: Your home feed
+feedSettingsScreenTitle: Your Home Feed
 # %s - those symbols should be in all translations!
-feedSettingsScreenContryListHint: Choose the countries you would like to receive news from (max. %s)
-feedSettingsScreenActiveCountryListSubtitle: Active countries
-feedSettingsScreenInActiveCountryListSubtitle: Inactive countries
-feedSettingsScreenMinSelectedCountriesError: There always has to be at least one country selected
+feedSettingsScreenContryListHint: Choose the countries to receive news from (max. %s)
+feedSettingsScreenActiveCountryListSubtitle: Active Countries
+feedSettingsScreenInActiveCountryListSubtitle: Inactive Countries
+feedSettingsScreenMinSelectedCountriesError: Select at least one country
 # %s - those symbols should be in all translations!
-feedSettingsScreenMaxSelectedCountriesError: There are already %s countries selected
+feedSettingsScreenMaxSelectedCountriesError: Your already selected %s countries
 defaultCollectionTitle: Read Later
 bottomSheetCancel: Cancel
 langNameFrench: French
@@ -55,3 +57,21 @@ bottomSheetApply: Apply
 bottomSheetCreate: Create
 bottomSheetCreateCollectionHeader: Create a new Collection
 bottomSheetCreateCollectionTextFieldHint: Collection name
+errorMsgTryingToCreateCollectionUsingExistingName: That name exists already
+errorMsgTryingToCreateAgainDefaultCollection: You're trying to create a default collection, again
+errorMsgTryingToGetCardDataForNotExistingCollection: That collection doesn't exist
+errorMsgTryingToRemoveDefaultCollection: You can't remove the default collection
+errorMsgTryingToRemoveNotExistingCollection: That collection doesn't exist
+errorMsgTryingToRenameCollectionUsingExistingName: There already is a collection with this name
+errorMsgTryingToRenameNotExistingCollection: That collection doesn't exist
+errorMsgTryingToMoveNotExistingBookmark: This bookmark doesn't exist
+errorMsgTryingToMoveBookmarkToNotExistingCollection: That collection doesn't exist
+errorMsgTryingToRemoveNotExistingBookmark: That bookmark doesn't exist
+errorMsgTryingToGetBookmarksForNotExistingCollection: That collection doesn't exist
+articles: articles
+article: article
+collectionsScreenTitle: Your Collections
+defaultCollectionNameReadLater: Read later
+bookmarkSnackBarSavedTo: Saved to %s
+readLater: Read Later
+bottomSheetSaveTo: Save to

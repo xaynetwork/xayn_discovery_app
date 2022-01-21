@@ -91,22 +91,12 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       ),
     );
 
-    final plusIcon = SvgPicture.asset(
-      R.assets.icons.plus,
-      fit: BoxFit.none,
-      color: R.colors.icon,
-      height: R.dimen.smallIconSize,
-      width: R.dimen.smallIconSize,
-    );
-
-    final iconButton = GestureDetector(
-      onTap: _showAddCollectionBottomSheet,
-      child: plusIcon,
-    );
-
     final header = BottomSheetHeader(
-      headerText: 'Save to',
-      actionWidget: iconButton,
+      headerText: R.strings.bottomSheetSaveTo,
+      actionWidget: AppGhostButton.icon(
+        R.assets.icons.plus,
+        onPressed: _showAddCollectionBottomSheet,
+      ),
     );
 
     final footer = BottomSheetFooter(

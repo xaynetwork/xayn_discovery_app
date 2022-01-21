@@ -51,8 +51,8 @@ class _AddCollectionState extends State<_AddCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: onApplyPressed,
-      isApplyDisabled: collectionName == null || collectionName!.isEmpty,
+      onApplyPressed: () => onApplyPressed(collectionName),
+      isApplyDisabled: collectionName == null || collectionName!.trim().isEmpty,
       applyBtnText: R.strings.bottomSheetCreate,
     );
 
@@ -71,9 +71,13 @@ class _AddCollectionState extends State<_AddCollection>
         () => collectionName = name,
       );
 
-  void onApplyPressed() async {
+  void onApplyPressed(String? collectionName) async {
+    if (collectionName == null) {
+      throw Exception(
+          'Add Collection Bottom Sheet: Not possible to add nullable collection name.');
+    }
     final newCollection =
-        await _createCollectionManager.createCollection(collectionName!);
+        await _createCollectionManager.createCollection(collectionName);
     closeBottomSheet(context);
     if (widget.onSheetClosed != null) {
       widget.onSheetClosed!(newCollection);

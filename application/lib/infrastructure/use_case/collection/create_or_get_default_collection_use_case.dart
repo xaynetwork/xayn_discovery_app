@@ -18,12 +18,12 @@ class CreateOrGetDefaultCollectionUseCase extends UseCase<String, Collection> {
     final collections = _collectionsRepository.getAll();
 
     final Collection collection = collections.firstWhere((it) => it.isDefault,
-        orElse: () => createCollection(param));
+        orElse: () => _createCollection(param));
 
     yield collection;
   }
 
-  Collection createCollection(String name) {
+  Collection _createCollection(String name) {
     final collection = Collection.readLater(name: name.trim());
     _collectionsRepository.save(collection);
     return collection;

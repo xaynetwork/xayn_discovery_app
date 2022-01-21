@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/is_bookmarked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
@@ -20,7 +20,6 @@ class MoveBookmarkToCollectionManager
   final MoveBookmarkUseCase _moveBookmarkUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
   final GetBookmarkUseCase _getBookmarkUseCase;
-  final IsBookmarkedUseCase _isBookmarkedUseCase;
 
   late List<Collection> _collections;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
@@ -32,7 +31,6 @@ class MoveBookmarkToCollectionManager
     this._moveBookmarkUseCase,
     this._removeBookmarkUseCase,
     this._getBookmarkUseCase,
-    this._isBookmarkedUseCase,
     this._collections,
   ) : super(MoveBookmarkToCollectionState.initial()) {
     _init();
@@ -45,7 +43,6 @@ class MoveBookmarkToCollectionManager
     MoveBookmarkUseCase moveBookmarkUseCase,
     RemoveBookmarkUseCase removeBookmarkUseCase,
     GetBookmarkUseCase getBookmarkUseCase,
-    IsBookmarkedUseCase isBookmarkedUseCase,
   ) async {
     final collections =
         (await getAllCollectionsUseCase.singleOutput(none)).collections;
@@ -55,7 +52,6 @@ class MoveBookmarkToCollectionManager
       moveBookmarkUseCase,
       removeBookmarkUseCase,
       getBookmarkUseCase,
-      isBookmarkedUseCase,
       collections,
     );
   }
@@ -72,9 +68,14 @@ class MoveBookmarkToCollectionManager
       updateSelectedCollection(forceSelectCollection);
       return;
     }
-    final isBookmark = await _isBookmarkedUseCase.singleOutput(bookmarkId);
-    if (!isBookmark) return;
-    final bookmark = await _getBookmarkUseCase.singleOutput(bookmarkId);
+
+    late Bookmark bookmark;
+    try {
+      bookmark = await _getBookmarkUseCase.singleOutput(bookmarkId);
+    } catch (e) {
+      return;
+    }
+
     final selectedCollection = _collections.firstWhere(
       (it) => it.id == bookmark.collectionId,
     );
@@ -84,21 +85,20 @@ class MoveBookmarkToCollectionManager
   void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  Future<void> onApplyPressed({required UniqueId bookmarkId}) async {
+  void onApplyPressed({required UniqueId bookmarkId}) {
     if (state.selectedCollection == null) {
-      await _removeBookmarkUseCase.call(bookmarkId);
+      _removeBookmarkUseCase.call(bookmarkId);
     } else {
-      await _moveBookmarkToSelectedCollection(bookmarkId: bookmarkId);
+      _moveBookmarkToSelectedCollection(bookmarkId: bookmarkId);
     }
   }
 
-  Future<void> _moveBookmarkToSelectedCollection(
-      {required UniqueId bookmarkId}) async {
+  void _moveBookmarkToSelectedCollection({required UniqueId bookmarkId}) {
     final param = MoveBookmarkUseCaseIn(
       bookmarkId: bookmarkId,
       collectionId: state.selectedCollection!.id,
     );
-    await _moveBookmarkUseCase.call(param);
+    _moveBookmarkUseCase.call(param);
   }
 
   @override
@@ -114,7 +114,7 @@ class MoveBookmarkToCollectionManager
           _collections = usecaseOut.collections;
         }
 
-        final newState = state.copyWith(
+        final newState = MoveBookmarkToCollectionState.populated(
           collections: _collections,
           selectedCollection: _selectedCollection,
         );
