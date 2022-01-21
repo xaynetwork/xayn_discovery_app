@@ -98,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: R.dimen.unit4),
+          padding: EdgeInsets.only(top: R.dimen.unit4),
           child: Text(
             '${R.strings.settingsVersion} ${appVersion.version}\n'
             '${R.strings.settingsBuild} ${appVersion.build}',
@@ -108,10 +108,5 @@ class _SettingsScreenState extends State<SettingsScreen>
         onLongPress: () => _manager.extractLogs(),
       );
 
-  Widget _buildBottomSpace() {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return SizedBox(
-      height: R.dimen.buttonMinHeight + bottomPadding + R.dimen.unit2,
-    );
-  }
+  Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
 }
