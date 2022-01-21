@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
+import 'package:xayn_discovery_app/presentation/app_loading/widget/app_loading_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
@@ -15,6 +16,7 @@ class PageRegistry {
 
   /// Always also add a page to this pages set
   static final Set<xayn.UntypedPageData> pages = {
+    appLoading,
     discovery,
     search,
     personalArea,
@@ -24,9 +26,14 @@ class PageRegistry {
   };
 
   // Make sure to add the page names in camel case
+  static final appLoading = xayn.PageData(
+    name: "appLoading",
+    isInitial: true,
+    builder: (_, args) => const AppLoadingScreen(),
+  );
   static final discovery = xayn.PageData(
     name: "discovery",
-    isInitial: true,
+    // isInitial: true,
     builder: (_, args) => const DiscoveryFeed(),
   );
   static final search = xayn.PageData(
