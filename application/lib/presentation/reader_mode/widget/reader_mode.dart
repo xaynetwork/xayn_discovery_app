@@ -118,12 +118,25 @@ class _ReaderModeState extends State<ReaderMode> {
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
 
-            return result;
+            return _onProcessedHtml(result);
           },
           onScroll: widget.onScroll,
         );
       },
     );
+  }
+
+  Future<readability.ProcessHtmlResult> _onProcessedHtml(
+      readability.ProcessHtmlResult result) async {
+    final byline = result.metadata?.byline?.trim();
+
+    if (byline == null || byline.isEmpty) {
+      return result;
+    }
+
+    // todo: add POEditor strings here
+    return result
+        .withOtherContent('<p>by <b>$byline</b></p>${result.contents}');
   }
 
   void _updateCardData() {
