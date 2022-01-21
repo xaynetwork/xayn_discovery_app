@@ -11,10 +11,10 @@ abstract class Env {
       kReleaseMode ? _EnvProd.searchApiSecretKey : _EnvDev.searchApiSecretKey;
   static const String imageFetcherUrl =
       kReleaseMode ? _EnvProd.imageFetcherUrl : _EnvDev.imageFetcherUrl;
-  static const String instabugToken = EnvironmentHelper.kIsInternal
+  static const String instabugToken = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.instabugToken
       : _EnvProd.instabugToken;
-  static const String amplitudeApiKey = EnvironmentHelper.kIsInternal
+  static const String amplitudeApiKey = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.amplitudeApiKey
       : _EnvProd.amplitudeApiKey;
 }

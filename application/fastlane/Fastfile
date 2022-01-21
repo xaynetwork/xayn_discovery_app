@@ -55,6 +55,7 @@ private_lane :flutter_build do |options|
     "GIT_TAG" => options[:version_name],
     "USER_APP_ID" => appId,
     "USER_APP_NAME" => appName,
+    "USER_FLAVOR" => flavor,
   }
 
   if platform == "ios"
