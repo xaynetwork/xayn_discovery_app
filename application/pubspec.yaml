@@ -27,7 +27,12 @@ dependencies:
   fwfh_chewie: ^0.7.0+1
   hive: 2.0.4
   hive_crdt: 2.0.2
-  home_indicator: 2.0.0
+  # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
+  # Should be updated the to next version when this PR is merged: https://github.com/RainwayApp/flutter_home_indicator/pull/10
+  home_indicator:
+    git:
+      url: https://github.com/nohli/flutter_home_indicator.git
+      ref: migrate-to-android-v2-embedding
   http: ^0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
