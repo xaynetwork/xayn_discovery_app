@@ -3,6 +3,7 @@ import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -19,6 +20,7 @@ class PageRegistry {
     personalArea,
     settings,
     onboarding,
+    feedSettings,
   };
 
   // Make sure to add the page names in camel case
@@ -58,5 +60,10 @@ class PageRegistry {
         child: widget,
       ),
     ),
+  );
+
+  static final feedSettings = xayn.PageData(
+    name: "feedSettings",
+    builder: (_, args) => const FeedSettingsScreen(),
   );
 }

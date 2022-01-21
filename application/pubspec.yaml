@@ -27,6 +27,7 @@ dependencies:
   fwfh_chewie: ^0.7.0+1
   hive: 2.0.4
   hive_crdt: 2.0.2
+  home_indicator: 2.0.0
   http: ^0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
@@ -57,11 +58,11 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 5a9f499461aa4a93e11a96eafbba74f32f73a7d5
+      ref: 75da7e1cf3df0195b5d7e6c3cd8c991e94d8918d
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 94bb7aed028a77ee74a8356f5ab6551ae90c9605
+      ref: 1838b6d6756e020a410614d28e23639d5da2df5b
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -75,7 +76,7 @@ dependencies:
   xayn_swipe_it: ^1.0.0
 
 dependency_overrides:
-  ### This is necessary because the xayn_discovery_engine_flutter project refernces the main branch of xayn_discovery_engine
+  ### This is necessary because the xayn_discovery_engine_flutter project references the main branch of xayn_discovery_engine
   xayn_discovery_engine:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -114,6 +115,18 @@ flutter:
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
     # https://github.com/flutter/flutter/issues/27802
+
+    # illustrations
+    - packages/xayn_design/assets/illustrations/flag_austria.svg
+    - packages/xayn_design/assets/illustrations/flag_belgium.svg
+    - packages/xayn_design/assets/illustrations/flag_canada.svg
+    - packages/xayn_design/assets/illustrations/flag_germany.svg
+    - packages/xayn_design/assets/illustrations/flag_ireland.svg
+    - packages/xayn_design/assets/illustrations/flag_netherlands.svg
+    - packages/xayn_design/assets/illustrations/flag_poland.svg
+    - packages/xayn_design/assets/illustrations/flag_switzerland.svg
+    - packages/xayn_design/assets/illustrations/flag_uk.svg
+    - packages/xayn_design/assets/illustrations/flag_usa.svg
 
     # icons
     - packages/xayn_design/assets/graphics/forms_green.svg

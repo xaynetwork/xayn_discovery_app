@@ -51,6 +51,11 @@ extension WidgetTesterCommonActions on WidgetTester {
     await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
+  Future<void> navigateToFeedSettings() async {
+    await tap(Keys.personalAreaCardHomeFeed.finds());
+    await pumpAndSettle(updateNavBarDebounceTimeout);
+  }
+
   Future<void> navigateToSettingsScreen() async {
     await tap(Keys.personalAreaCardSettings.finds());
     await pumpAndSettle(updateNavBarDebounceTimeout);
