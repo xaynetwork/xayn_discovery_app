@@ -1,5 +1,10 @@
 import 'package:xayn_design/xayn_design.dart'
-    show MessageFactory, TooltipParams, TooltipKey, TextualNotification;
+    show
+        CustomizedTextualNotification,
+        MessageFactory,
+        TextualNotification,
+        TooltipKey,
+        TooltipParams;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class TooltipKeys {
@@ -22,7 +27,8 @@ abstract class XaynMessageProvider {
       ),
       TooltipKeys.feedSettingsScreenMinSelectedCountries: TooltipParams(
         label: R.strings.feedSettingsScreenMinSelectedCountriesError,
-        builder: (_) => _defaultMessage,
+        builder: (_) => CustomizedTextualNotification(
+            labelTextStyle: R.styles.tooltipHighlightTextStyle),
       ),
     };
 

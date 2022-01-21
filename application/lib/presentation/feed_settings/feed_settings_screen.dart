@@ -67,7 +67,9 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
       params: TooltipParams(
         label: R.strings.feedSettingsScreenMaxSelectedCountriesError
             .replaceFirst('%s', state.maxSelectedCountryAmount.toString()),
-        builder: (_) => const TextualNotification(),
+        builder: (_) => CustomizedTextualNotification(
+          labelTextStyle: R.styles.tooltipHighlightTextStyle,
+        ),
       ),
     );
     final page = CountryFeedSettingsPage(
