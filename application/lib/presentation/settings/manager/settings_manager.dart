@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
@@ -76,15 +77,17 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     print('shareApp clicked');
   }
 
-  void openUrl(String url) {
+  void openUrl(String url) async {
     final uri = Uri.tryParse(url);
     assert(
       uri != null && uri.hasAuthority,
       'Please pass valid url. Current: $url',
     );
-    // todo: handle open URL
-    //ignore: avoid_print
-    print('openUrl clicked. url: $url');
+
+    if (!await launch(url)) {
+      //ignore: avoid_print
+      print('Could not launch $url');
+    }
   }
 
   @override
