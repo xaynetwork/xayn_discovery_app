@@ -6,11 +6,11 @@ part 'app_toolbar_data.freezed.dart';
 @freezed
 class AppToolbarData with _$AppToolbarData {
   const factory AppToolbarData.titleOnly({
-    required String yourTitle,
+    required String title,
   }) = _AppToolbarDataTitleOnly;
 
   const factory AppToolbarData.withTrailingIcon({
-    required String yourTitle,
+    required String title,
     required String iconPath,
     VoidCallback? onPressed,
   }) = _AppToolbarDataWithTrailingIcon;

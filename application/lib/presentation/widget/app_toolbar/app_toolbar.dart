@@ -14,7 +14,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = '${R.strings.your} ${appToolbarData.yourTitle}';
+    final title = appToolbarData.title;
     final text = Text(title, style: R.styles.appHeadlineText);
     final content = appToolbarData.map(
       titleOnly: (_) => text,

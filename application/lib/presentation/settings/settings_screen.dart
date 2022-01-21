@@ -38,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.titleOnly(
-            yourTitle: R.strings.settingsTitle,
+            title: R.strings.settingsTitle,
           ),
         ),
         body: _buildBody(),

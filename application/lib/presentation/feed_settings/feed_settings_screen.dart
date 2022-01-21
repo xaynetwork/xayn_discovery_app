@@ -9,7 +9,8 @@ import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_setti
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class FeedSettingsScreen extends StatefulWidget {
@@ -42,7 +43,11 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppToolbar(title: R.strings.feedSettingsScreenTitle),
+        appBar: AppToolbar(
+          appToolbarData: AppToolbarData.titleOnly(
+            title: R.strings.feedSettingsScreenTitle,
+          ),
+        ),
         body: _buildBody(),
       );
 

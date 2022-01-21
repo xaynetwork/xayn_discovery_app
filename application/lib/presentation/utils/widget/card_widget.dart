@@ -23,7 +23,7 @@ class CardWidget extends StatelessWidget {
         title: data.title,
         color: data.color,
         svgIconPath: data.svgIconPath,
-        svgBackground: data.svgBackground,
+        svgBackground: data.svgBackgroundPath,
         onPressed: data.onPressed,
       ),
       collectionsScreen: (data) => _buildCollectionsScreenCardContent(
@@ -34,7 +34,7 @@ class CardWidget extends StatelessWidget {
 
     final Widget background = cardData.map(
       personalArea: (data) => SvgPicture.asset(
-        data.svgBackground,
+        data.svgBackgroundPath,
         height: _itemHeight,
       ),
       collectionsScreen: (data) => data.backgroundImage != null

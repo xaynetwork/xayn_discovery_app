@@ -11,7 +11,7 @@ class CardData with _$CardData {
     required String title,
     required Color color,
     required String svgIconPath,
-    required String svgBackground,
+    required String svgBackgroundPath,
     required VoidCallback onPressed,
   }) = _CardDataPersonalArea;
 
