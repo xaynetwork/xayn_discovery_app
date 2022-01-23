@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -176,7 +177,7 @@ void main() {
       'WHEN "about" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: 'https://about.com',
+        url: Urls.aboutXayn,
         btnKey: Keys.settingsAboutXayn,
       ),
     );
@@ -185,7 +186,7 @@ void main() {
       'WHEN "carbon neutral" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: 'https://carbonNeutral.com',
+        url: Urls.carbonNeutral,
         btnKey: Keys.settingsCarbonNeutral,
       ),
     );
@@ -194,7 +195,7 @@ void main() {
       'WHEN "imprint" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: 'https://imprint.com',
+        url: Urls.imprint,
         btnKey: Keys.settingsImprint,
       ),
     );
@@ -203,7 +204,7 @@ void main() {
       'WHEN "privacy" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: 'https://pp.com',
+        url: Urls.privacyPolicy,
         btnKey: Keys.settingsPrivacyPolicy,
       ),
     );
@@ -212,7 +213,7 @@ void main() {
       'WHEN "termsAndConditions" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: 'https://tc.com',
+        url: Urls.termsAndConditions,
         btnKey: Keys.settingsTermsAndConditions,
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
@@ -13,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 abstract class SettingsNavActions {
   void onBackNavPressed();
@@ -31,6 +31,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final BugReportingService _bugReportingService;
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
+  final UrlOpener _urlOpener;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -40,6 +41,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._bugReportingService,
     this._extractLogUseCase,
     this._settingsNavActions,
+    this._urlOpener,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -77,18 +79,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     print('shareApp clicked');
   }
 
-  void openUrl(String url) async {
-    final uri = Uri.tryParse(url);
-    assert(
-      uri != null && uri.hasAuthority,
-      'Please pass valid url. Current: $url',
-    );
-
-    if (!await launch(url)) {
-      //ignore: avoid_print
-      print('Could not launch $url');
-    }
-  }
+  void openUrl(String url) => _urlOpener.openUrl(url);
 
   @override
   Future<SettingsScreenState?> computeState() async {
