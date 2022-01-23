@@ -21,11 +21,28 @@ class App extends StatefulWidget {
   State<StatefulWidget> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   late final AppManager _appManager = di.get();
   late final AppNavigationManager _navigatorManager = di.get();
   late final ApplicationTooltipController _applicationTooltipController =
       ApplicationTooltipController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    _changeBrightness(_appManager.state.appTheme);
+  }
 
   @override
   Widget build(BuildContext context) {
