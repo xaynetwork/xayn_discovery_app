@@ -100,7 +100,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       _sendAnalyticsUseCase(
         DocumentBookmarkedEvent(
           document: document,
-          isBookmarked: !state.isBookmarked,
+          isBookmarked: state.isBookmarked,
         ),
       );
     }

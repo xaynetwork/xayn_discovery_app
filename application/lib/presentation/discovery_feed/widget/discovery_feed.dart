@@ -97,7 +97,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final _isBookmarked = await managers.discoveryCardManager
             .toggleBookmarkDocument(document);
 
-        if (!_isBookmarked) {
+        if (_isBookmarked) {
           //mock snack bar
           await Future.delayed(const Duration(seconds: 1));
 
