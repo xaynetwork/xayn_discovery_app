@@ -56,7 +56,7 @@ class TranslationsDe extends Translations {
   String get languageCode => "de";
   String get your => """Meine""";
   String get activeSearchSearchHint => """Suche""";
-  String get settingsTitle => """Einstellungen""";
+  String get settingsTitle => """Your Settings""";
   String get settingsSectionTitleAppTheme => """Mein App Theme""";
   String get settingsSectionScrollDirection =>
       """Discovery feed Scrollrichtung""";
@@ -88,28 +88,69 @@ class TranslationsDe extends Translations {
   String get readingTimeUnitPlural => """minutes""";
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
-  String get personalAreaTitle => """Area""";
+  String get personalAreaTitle => """Your Area""";
   String get personalAreaCollections => """Sammlung""";
   String get personalAreaHomeFeed => """Home Feed""";
   String get personalAreaSettings => """Einstellungen""";
   String get comingSoon => """Kommt bald""";
-  String get feedSettingsScreenTitle => """Your home feed""";
+  String get feedSettingsScreenTitle => """Your Home Feed""";
   String get feedSettingsScreenContryListHint =>
-      """Choose the countries you would like to receive news from (max. %s)""";
-  String get feedSettingsScreenActiveCountryListSubtitle =>
-      """Active countries""";
+      """Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)""";
+  String get feedSettingsScreenActiveCountryListSubtitle => """Aktive Länder""";
   String get feedSettingsScreenInActiveCountryListSubtitle =>
-      """Inactive countries""";
+      """Inaktive Länder""";
   String get feedSettingsScreenMinSelectedCountriesError =>
-      """There always has to be at least one country selected""";
+      """Select at least one country""";
   String get feedSettingsScreenMaxSelectedCountriesError =>
-      """There are already %s countries selected""";
+      """Es sind bereits %s Länder ausgewählt""";
+  String get defaultCollectionTitle => """Später lesen""";
+  String get bottomSheetCancel => """Abbrechen""";
+  String get langNameFrench => """Französisch""";
+  String get langNameDutch => """Niederländisch""";
+  String get langNameEnglish => """Englisch""";
+  String get langNameGerman => """Deutsch""";
+  String get langNamePolish => """Polnisch""";
+  String get langNameSpanish => """Spanisch""";
+  String get bottomSheetApply => """Anwenden""";
+  String get bottomSheetCreate => """Erstellen""";
+  String get bottomSheetCreateCollectionHeader =>
+      """Eine neue Collection erstellen""";
+  String get bottomSheetCreateCollectionTextFieldHint => """Collection-Name""";
+  String get errorMsgTryingToCreateCollectionUsingExistingName =>
+      """Du versuchst, eine Collection mit einem vorhandenen Namen zu erstellen""";
+  String get errorMsgTryingToCreateAgainDefaultCollection =>
+      """Du versuchst, eine Default- Collection zu erstellen""";
+  String get errorMsgTryingToGetCardDataForNotExistingCollection =>
+      """That collection doesn't exist""";
+  String get errorMsgTryingToRemoveDefaultCollection =>
+      """You can't remove the default collection""";
+  String get errorMsgTryingToRemoveNotExistingCollection =>
+      """That collection doesn't exist""";
+  String get errorMsgTryingToRenameCollectionUsingExistingName =>
+      """There already is a collection with this name""";
+  String get errorMsgTryingToRenameNotExistingCollection =>
+      """That collection doesn't exist""";
+  String get errorMsgTryingToMoveNotExistingBookmark =>
+      """This bookmark doesn't exist""";
+  String get errorMsgTryingToMoveBookmarkToNotExistingCollection =>
+      """That collection doesn't exist""";
+  String get errorMsgTryingToRemoveNotExistingBookmark =>
+      """That bookmark doesn't exist""";
+  String get errorMsgTryingToGetBookmarksForNotExistingCollection =>
+      """That collection doesn't exist""";
+  String get articles => """articles""";
+  String get article => """article""";
+  String get collectionsScreenTitle => """Your Collections""";
+  String get defaultCollectionNameReadLater => """Read later""";
+  String get bookmarkSnackBarSavedTo => """Saved to %s""";
+  String get readLater => """Read Later""";
+  String get bottomSheetSaveTo => """Save to""";
 }
 
 Map<String, String> get translationsDeMap => {
       """your""": """Meine""",
       """activeSearchSearchHint""": """Suche""",
-      """settingsTitle""": """Einstellungen""",
+      """settingsTitle""": """Your Settings""",
       """settingsSectionTitleAppTheme""": """Mein App Theme""",
       """settingsSectionScrollDirection""": """Discovery feed Scrollrichtung""",
       """settingsSectionTitleGeneralInfo""": """Generelle Informationen""",
@@ -139,19 +180,61 @@ Map<String, String> get translationsDeMap => {
       """readingTimeUnitPlural""": """minutes""",
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
-      """personalAreaTitle""": """Area""",
+      """personalAreaTitle""": """Your Area""",
       """personalAreaCollections""": """Sammlung""",
       """personalAreaHomeFeed""": """Home Feed""",
       """personalAreaSettings""": """Einstellungen""",
       """comingSoon""": """Kommt bald""",
-      """feedSettingsScreenTitle""": """Your home feed""",
+      """feedSettingsScreenTitle""": """Your Home Feed""",
       """feedSettingsScreenContryListHint""":
-          """Choose the countries you would like to receive news from (max. %s)""",
-      """feedSettingsScreenActiveCountryListSubtitle""": """Active countries""",
+          """Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)""",
+      """feedSettingsScreenActiveCountryListSubtitle""": """Aktive Länder""",
       """feedSettingsScreenInActiveCountryListSubtitle""":
-          """Inactive countries""",
+          """Inaktive Länder""",
       """feedSettingsScreenMinSelectedCountriesError""":
-          """There always has to be at least one country selected""",
+          """Select at least one country""",
       """feedSettingsScreenMaxSelectedCountriesError""":
-          """There are already %s countries selected""",
+          """Es sind bereits %s Länder ausgewählt""",
+      """defaultCollectionTitle""": """Später lesen""",
+      """bottomSheetCancel""": """Abbrechen""",
+      """langNameFrench""": """Französisch""",
+      """langNameDutch""": """Niederländisch""",
+      """langNameEnglish""": """Englisch""",
+      """langNameGerman""": """Deutsch""",
+      """langNamePolish""": """Polnisch""",
+      """langNameSpanish""": """Spanisch""",
+      """bottomSheetApply""": """Anwenden""",
+      """bottomSheetCreate""": """Erstellen""",
+      """bottomSheetCreateCollectionHeader""":
+          """Eine neue Collection erstellen""",
+      """bottomSheetCreateCollectionTextFieldHint""": """Collection-Name""",
+      """errorMsgTryingToCreateCollectionUsingExistingName""":
+          """Du versuchst, eine Collection mit einem vorhandenen Namen zu erstellen""",
+      """errorMsgTryingToCreateAgainDefaultCollection""":
+          """Du versuchst, eine Default- Collection zu erstellen""",
+      """errorMsgTryingToGetCardDataForNotExistingCollection""":
+          """That collection doesn't exist""",
+      """errorMsgTryingToRemoveDefaultCollection""":
+          """You can't remove the default collection""",
+      """errorMsgTryingToRemoveNotExistingCollection""":
+          """That collection doesn't exist""",
+      """errorMsgTryingToRenameCollectionUsingExistingName""":
+          """There already is a collection with this name""",
+      """errorMsgTryingToRenameNotExistingCollection""":
+          """That collection doesn't exist""",
+      """errorMsgTryingToMoveNotExistingBookmark""":
+          """This bookmark doesn't exist""",
+      """errorMsgTryingToMoveBookmarkToNotExistingCollection""":
+          """That collection doesn't exist""",
+      """errorMsgTryingToRemoveNotExistingBookmark""":
+          """That bookmark doesn't exist""",
+      """errorMsgTryingToGetBookmarksForNotExistingCollection""":
+          """That collection doesn't exist""",
+      """articles""": """articles""",
+      """article""": """article""",
+      """collectionsScreenTitle""": """Your Collections""",
+      """defaultCollectionNameReadLater""": """Read later""",
+      """bookmarkSnackBarSavedTo""": """Saved to %s""",
+      """readLater""": """Read Later""",
+      """bottomSheetSaveTo""": """Save to""",
     };

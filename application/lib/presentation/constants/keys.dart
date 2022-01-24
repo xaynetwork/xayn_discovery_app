@@ -43,6 +43,9 @@ class Keys {
   static const Key navBarItemLike = Key('nav_bar_item_like');
   static const Key navBarItemDisLike = Key('nav_bar_item_dis_like');
   static const Key navBarItemShare = Key('nav_bar_item_share');
+  static const Key navBarItemBookmark = Key('nav_bar_item_bookmark');
 
   static const Key feedView = Key('feed_view');
+
+  static Key collectionItem(String value) => Key('collectionItem' + value);
 }
