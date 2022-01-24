@@ -78,7 +78,7 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
       ref: 73a8792b4372d07a72bdc21d8a631d97a5a89ebe
-  xayn_swipe_it: ^1.0.0
+  xayn_swipe_it: ^1.0.3
 
 dependency_overrides:
   ### This is necessary because the xayn_discovery_engine_flutter project references the main branch of xayn_discovery_engine
