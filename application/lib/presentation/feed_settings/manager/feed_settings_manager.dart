@@ -1,9 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 
 import 'feed_settings_state.dart';
 
@@ -18,11 +21,15 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
     with UseCaseBlocHelper
     implements FeedSettingsNavActions {
   final GetSupportedCountriesUseCase _getSupportedCountriesUseCase;
+  final GetSelectedCountriesUseCase _getSelectedCountriesUseCase;
+  final SaveSelectedCountriesUseCase _saveSelectedFeedMarketsUseCase;
   final FeedSettingsNavActions _navActions;
 
   FeedSettingsManager(
     this._navActions,
     this._getSupportedCountriesUseCase,
+    this._getSelectedCountriesUseCase,
+    this._saveSelectedFeedMarketsUseCase,
   ) : super(const FeedSettingsState.initial());
 
   final _allCountries = <Country>{};
@@ -31,24 +38,31 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
   Future<void> init() async {
     final countries = await _getSupportedCountriesUseCase.singleOutput(none);
     _allCountries.addAll(countries);
-    scheduleComputeState(() => _selectedCountries.add(_allCountries.first));
+    final selectedMarkets =
+        await _getSelectedCountriesUseCase.singleOutput(_allCountries);
+
+    scheduleComputeState(() => _selectedCountries.addAll(selectedMarkets));
   }
 
   /// return [true], if [country] was added successfully
-  bool onAddCountryPressed(Country country) {
+  Future<bool> onAddCountryPressed(Country country) async {
     if (_selectedCountries.length == maxSelectedCountryAmount) {
       return false;
     }
-    scheduleComputeState(() => _selectedCountries.add(country));
+    _selectedCountries.add(country);
+    await _saveSelectedFeedMarketsUseCase.singleOutput(_selectedCountries);
+    scheduleComputeState(() {});
     return true;
   }
 
   /// return [true], if [country] was removed successfully
-  bool onRemoveCountryPressed(Country country) {
+  Future<bool> onRemoveCountryPressed(Country country) async {
     if (_selectedCountries.length == 1) {
       return false;
     }
-    scheduleComputeState(() => _selectedCountries.remove(country));
+    _selectedCountries.remove(country);
+    await _saveSelectedFeedMarketsUseCase.singleOutput(_selectedCountries);
+    scheduleComputeState(() {});
     return true;
   }
 
