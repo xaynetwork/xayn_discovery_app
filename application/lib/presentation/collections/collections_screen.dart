@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -25,23 +26,27 @@ class CollectionsScreen extends StatefulWidget {
 }
 
 class _CollectionsScreenState extends State<CollectionsScreen>
-    with NavBarConfigMixin {
+    with NavBarConfigMixin, CollectionCardManagersMixin {
   CollectionsScreenManager? _collectionsScreenManager;
-  late final CollectionCardManager _collectionCardManager;
 
   @override
   void initState() {
-    _initManagers();
+    _initManager();
     super.initState();
   }
 
-  void _initManagers() {
-    _collectionCardManager = di.get();
+  void _initManager() {
     di.getAsync<CollectionsScreenManager>().then((it) {
       setState(() {
         _collectionsScreenManager = it;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _collectionsScreenManager?.close();
+    super.dispose();
   }
 
   @override
@@ -103,9 +108,8 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   }
 
   Widget _buildCard(Collection collection) {
-    _collectionCardManager.retrieveCollectionCardInfo(collection.id);
     return BlocBuilder<CollectionCardManager, CollectionCardState>(
-      bloc: _collectionCardManager,
+      bloc: managerOf(collection.id),
       builder: (context, cardState) {
         final card = CardWidget(
           key: Keys.generateCollectionsScreenCardKey(
