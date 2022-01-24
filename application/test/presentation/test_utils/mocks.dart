@@ -1,6 +1,7 @@
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mockito/annotations.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -40,6 +41,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
   SaveCurrentAppVersion,
   GetAppSessionUseCase,
   InAppReview,
+  GetSupportedCountriesUseCase,
 ])
 class Mocks {
   Mocks._();
