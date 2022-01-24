@@ -7,7 +7,8 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
-const kSwipeOpenToPosition = 0.35;
+const double _kSwipeOpenToPosition = 0.35;
+const double _kMinFlingVelocity = 250.0;
 
 enum SwipeOption { like, neutral, dislike }
 
@@ -34,19 +35,19 @@ class SwipeableDiscoveryCard extends StatelessWidget {
 
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
         optionsLeft: isPrimary
-            ? [
-                document.isRelevant ? SwipeOption.neutral : SwipeOption.like,
-              ]
+            ? [document.isRelevant ? SwipeOption.neutral : SwipeOption.like]
             : const [],
         optionsRight: isPrimary
             ? [
                 document.isIrrelevant
                     ? SwipeOption.neutral
-                    : SwipeOption.dislike,
+                    : SwipeOption.dislike
               ]
             : const [],
+        minFlingVelocity: _kMinFlingVelocity,
+        minFlingDragDistanceFraction: .333,
         onFling: isPrimary ? (options) => options.first : null,
-        opensToPosition: kSwipeOpenToPosition,
+        opensToPosition: _kSwipeOpenToPosition,
         child: child,
         onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
         optionBuilder: optionsBuilder,
