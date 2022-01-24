@@ -12,6 +12,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onLikePressed,
     required this.onDislikePressed,
     required this.onBookmarkPressed,
+    required this.onBookmarkLongPressed,
     required this.isBookmarked,
     required this.document,
   }) : super(key: key);
@@ -20,6 +21,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
+  final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final Document document;
 
@@ -36,9 +38,10 @@ class DiscoveryCardFooter extends StatelessWidget {
       ),
     );
 
-    final bookmarkButton = IconButton(
-      onPressed: onBookmarkPressed,
-      icon: SvgPicture.asset(
+    final bookmarkButton = GestureDetector(
+      onTap: onBookmarkPressed,
+      onLongPress: onBookmarkLongPressed,
+      child: SvgPicture.asset(
         isBookmarked ? R.assets.icons.bookmarkActive : R.assets.icons.bookmark,
         fit: BoxFit.none,
         color: R.colors.brightIcon,
