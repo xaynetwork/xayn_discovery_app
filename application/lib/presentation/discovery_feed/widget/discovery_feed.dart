@@ -45,7 +45,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         CardManagersMixin,
         TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
-  CardManagers? _cardManagers;
+  CardManagers? _managers;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   late final Future<DiscoveryFeedManager> _discoveryCardManagerFuture =
@@ -60,9 +60,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   NavBarConfig get navBarConfig {
     final discoveryFeedManager = _discoveryFeedManager;
-    final managers = _cardManagers;
 
-    if (discoveryFeedManager == null || managers == null) {
+    if (discoveryFeedManager == null) {
       return NavBarConfig.hidden();
     }
 
@@ -94,10 +93,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           .elementAt(discoveryFeedManager.state.cardIndex);
 
       void onBookmarkPressed() async {
-        final _isBookmarked = await managers.discoveryCardManager
+        final managers = await managersOf(document);
+        final isBookmarked = await managers.discoveryCardManager
             .toggleBookmarkDocument(document);
 
-        if (_isBookmarked) {
+        if (isBookmarked) {
           //mock snack bar
           await Future.delayed(const Duration(seconds: 1));
 
@@ -126,30 +126,39 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           }),
           buildNavBarItemLike(
               isLiked: document.isRelevant,
-              onPressed: () =>
-                  managers.discoveryCardManager.changeDocumentFeedback(
-                    document: document,
-                    feedback: document.isRelevant
-                        ? DocumentFeedback.neutral
-                        : DocumentFeedback.positive,
-                  )),
+              onPressed: () async {
+                final managers = await managersOf(document);
+
+                managers.discoveryCardManager.changeDocumentFeedback(
+                  document: document,
+                  feedback: document.isRelevant
+                      ? DocumentFeedback.neutral
+                      : DocumentFeedback.positive,
+                );
+              }),
           buildNavBarItemBookmark(
-            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
+            isBookmarked:
+                _managers?.discoveryCardManager.state.isBookmarked ?? false,
             onPressed: onBookmarkPressed,
             onLongPressed: onBookmarkLongPressed,
           ),
-          buildNavBarItemShare(
-              onPressed: () =>
-                  managers.discoveryCardManager.shareUri(document)),
+          buildNavBarItemShare(onPressed: () async {
+            final managers = await managersOf(document);
+
+            managers.discoveryCardManager.shareUri(document);
+          }),
           buildNavBarItemDisLike(
               isDisLiked: document.isIrrelevant,
-              onPressed: () =>
-                  managers.discoveryCardManager.changeDocumentFeedback(
-                    document: document,
-                    feedback: document.isIrrelevant
-                        ? DocumentFeedback.neutral
-                        : DocumentFeedback.negative,
-                  )),
+              onPressed: () async {
+                final managers = await managersOf(document);
+
+                managers.discoveryCardManager.changeDocumentFeedback(
+                  document: document,
+                  feedback: document.isIrrelevant
+                      ? DocumentFeedback.neutral
+                      : DocumentFeedback.negative,
+                );
+              }),
         ],
         isWidthExpanded: true,
       );
@@ -249,6 +258,22 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             return const Center();
           }
 
+          if (state.isFullScreen) {
+            // always update whenever state changes and when in full screen mode.
+            // the only state update that can happen, is the change in like/dislike
+            // of the presented document.
+            // on that change, we need a redraw to update the like/dislike icons'
+            // selection status.
+            NavBarContainer.updateNavBar(context);
+          }
+
+          final document = results.elementAt(state.cardIndex);
+
+          managersOf(document).then((it) {
+            _managers = it;
+            NavBarContainer.updateNavBar(context);
+          });
+
           _totalResults = results.length;
           _cardViewController.index = min(_totalResults - 1, state.cardIndex);
 
@@ -256,14 +281,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             discoveryFeedManager.handleIndexChanged(index);
             _ratingDialogManager.handleIndexChanged(index);
           }
-
-          final document = results.elementAt(state.cardIndex);
-
-          managersOf(document).then((it) {
-            _cardManagers = it;
-
-            NavBarContainer.updateNavBar(context);
-          });
 
           return FeedView(
             key: Keys.feedView,
