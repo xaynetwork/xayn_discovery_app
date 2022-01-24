@@ -14,8 +14,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
-import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
-import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -46,10 +44,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         CardManagersMixin,
         TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
-  late final AppNavigationManager _appNavigationManager;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
-  late final StreamSubscription<bool> _navigationPageNameSubscription;
   late final Future<DiscoveryFeedManager> _discoveryCardManagerFuture =
       di.getAsync();
   final Map<Document, Future<CardManagers>> _managerFutures =
@@ -185,9 +181,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   void dispose() {
+    _discoveryFeedManager?.handleActivityStatus(false);
+
     _cardViewController.dispose();
-    _discoveryFeedManager?.close();
-    _navigationPageNameSubscription.cancel();
     _managerFutures.clear();
 
     WidgetsBinding.instance!.removeObserver(this);
@@ -198,12 +194,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
-
-    _appNavigationManager = di.get();
-
-    _navigationPageNameSubscription = _appNavigationManager.stream
-        .map((it) => it.pages.last.name == PageRegistry.discovery.name)
-        .listen(_discoveryFeedManager?.handleActivityStatus);
 
     super.initState();
   }
