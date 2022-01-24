@@ -42,7 +42,7 @@ feedSettingsScreenTitle: Your Home Feed
 feedSettingsScreenContryListHint: Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)
 feedSettingsScreenActiveCountryListSubtitle: Aktive Länder
 feedSettingsScreenInActiveCountryListSubtitle: Inaktive Länder
-feedSettingsScreenMinSelectedCountriesError: There always has to be at least one country selected
+feedSettingsScreenMinSelectedCountriesError: Select at least one country
 # %s - those symbols should be in all translations!
 feedSettingsScreenMaxSelectedCountriesError: Es sind bereits %s Länder ausgewählt
 defaultCollectionTitle: Später lesen
@@ -70,6 +70,8 @@ errorMsgTryingToRemoveNotExistingBookmark: That bookmark doesn't exist
 errorMsgTryingToGetBookmarksForNotExistingCollection: That collection doesn't exist
 articles: articles
 article: article
-collectionsScreenTitle: collections
+collectionsScreenTitle: Your Collections
 defaultCollectionNameReadLater: Read later
 bookmarkSnackBarSavedTo: Saved to %s
+readLater: Read Later
+bottomSheetSaveTo: Save to

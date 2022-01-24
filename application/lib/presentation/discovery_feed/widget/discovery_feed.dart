@@ -7,6 +7,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
@@ -44,6 +45,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         CardManagersMixin,
         TooltipStateMixin {
   DiscoveryFeedManager? _discoveryFeedManager;
+  CardManagers? _cardManagers;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   late final Future<DiscoveryFeedManager> _discoveryCardManagerFuture =
@@ -58,8 +60,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   NavBarConfig get navBarConfig {
     final discoveryFeedManager = _discoveryFeedManager;
+    final managers = _cardManagers;
 
-    if (discoveryFeedManager == null) {
+    if (discoveryFeedManager == null || managers == null) {
       return NavBarConfig.hidden();
     }
 
@@ -90,6 +93,30 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       final document = discoveryFeedManager.state.results
           .elementAt(discoveryFeedManager.state.cardIndex);
 
+      void onBookmarkPressed() async {
+        final _isBookmarked =
+            managers.discoveryCardManager.toggleBookmarkDocument(document);
+
+        if (!_isBookmarked) {
+          //mock snack bar
+          await Future.delayed(const Duration(seconds: 1));
+
+          showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: document,
+            ),
+          );
+        }
+      }
+
+      void onBookmarkLongPressed() => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: document,
+            ),
+          );
+
       return NavBarConfig(
         [
           buildNavBarItemArrowLeft(onPressed: () async {
@@ -99,33 +126,30 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           }),
           buildNavBarItemLike(
               isLiked: document.isRelevant,
-              onPressed: () async {
-                final managers = await managersOf(document);
-
-                managers.discoveryCardManager.changeDocumentFeedback(
-                  document: document,
-                  feedback: document.isRelevant
-                      ? DocumentFeedback.neutral
-                      : DocumentFeedback.positive,
-                );
-              }),
-          buildNavBarItemShare(onPressed: () async {
-            final managers = await managersOf(document);
-
-            managers.discoveryCardManager.shareUri(document);
-          }),
+              onPressed: () =>
+                  managers.discoveryCardManager.changeDocumentFeedback(
+                    document: document,
+                    feedback: document.isRelevant
+                        ? DocumentFeedback.neutral
+                        : DocumentFeedback.positive,
+                  )),
+          buildNavBarItemBookmark(
+            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
+            onPressed: onBookmarkPressed,
+            onLongPressed: onBookmarkLongPressed,
+          ),
+          buildNavBarItemShare(
+              onPressed: () =>
+                  managers.discoveryCardManager.shareUri(document)),
           buildNavBarItemDisLike(
               isDisLiked: document.isIrrelevant,
-              onPressed: () async {
-                final managers = await managersOf(document);
-
-                managers.discoveryCardManager.changeDocumentFeedback(
-                  document: document,
-                  feedback: document.isIrrelevant
-                      ? DocumentFeedback.neutral
-                      : DocumentFeedback.negative,
-                );
-              }),
+              onPressed: () =>
+                  managers.discoveryCardManager.changeDocumentFeedback(
+                    document: document,
+                    feedback: document.isIrrelevant
+                        ? DocumentFeedback.neutral
+                        : DocumentFeedback.negative,
+                  )),
         ],
         isWidthExpanded: true,
       );
@@ -215,15 +239,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
           removeObsoleteCardManagers(state.removedResults);
 
-          if (state.isFullScreen) {
-            // always update whenever state changes and when in full screen mode.
-            // the only state update that can happen, is the change in like/dislike
-            // of the presented document.
-            // on that change, we need a redraw to update the like/dislike icons'
-            // selection status.
-            NavBarContainer.updateNavBar(context);
-          }
-
           if (!state.isComplete && state.results.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -241,6 +256,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             discoveryFeedManager.handleIndexChanged(index);
             _ratingDialogManager.handleIndexChanged(index);
           }
+
+          final document = results.elementAt(state.cardIndex);
+
+          managersOf(document).then((it) {
+            _cardManagers = it;
+
+            NavBarContainer.updateNavBar(context);
+          });
 
           return FeedView(
             key: Keys.feedView,

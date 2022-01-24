@@ -27,7 +27,12 @@ dependencies:
   fwfh_chewie: ^0.7.0+1
   hive: 2.0.4
   hive_crdt: 2.0.2
-  home_indicator: 2.0.0
+  # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
+  # Should be updated the to next version when this PR is merged: https://github.com/RainwayApp/flutter_home_indicator/pull/10
+  home_indicator:
+    git:
+      url: https://github.com/nohli/flutter_home_indicator.git
+      ref: migrate-to-android-v2-embedding
   http: ^0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: ^7.1.0
@@ -62,7 +67,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: c5c98589f5faa2bedc84eeb75391d8ee31b5d23f
+      ref: 74628069163b16eaa0e57405cad00a8c789b81e6
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -147,3 +152,5 @@ flutter:
     - packages/xayn_design/assets/icons/sun.svg
     - packages/xayn_design/assets/icons/bookmark.svg
     - packages/xayn_design/assets/icons/bookmark_active.svg
+    - packages/xayn_design/assets/icons/plus.svg
+    - packages/xayn_design/assets/icons/check.svg

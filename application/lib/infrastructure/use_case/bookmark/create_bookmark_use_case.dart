@@ -13,21 +13,25 @@ import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/dire
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
-class CreateBookmarkFromDocumentUseCase extends UseCase<Document, Bookmark> {
+class CreateBookmarkFromDocumentUseCase
+    extends UseCase<CreateBookmarkFromDocumentUseCaseIn, Bookmark> {
   final MapDocumentToCreateBookmarkParamUseCase _mapper;
   final CreateBookmarkUseCase _createBookmark;
 
   CreateBookmarkFromDocumentUseCase(this._mapper, this._createBookmark);
 
   @override
-  Stream<Bookmark> transaction(Document param) async* {
+  Stream<Bookmark> transaction(
+      CreateBookmarkFromDocumentUseCaseIn param) async* {
     final createBookmarkParam = await _mapper.singleOutput(param);
     final bookmark = await _createBookmark.singleOutput(createBookmarkParam);
     yield bookmark;
   }
 
   @override
-  Stream<Document> transform(Stream<Document> incoming) => incoming.distinct();
+  Stream<CreateBookmarkFromDocumentUseCaseIn> transform(
+          Stream<CreateBookmarkFromDocumentUseCaseIn> incoming) =>
+      incoming.distinct();
 }
 
 @injectable
@@ -58,25 +62,27 @@ class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
 }
 
 @injectable
-class MapDocumentToCreateBookmarkParamUseCase
-    extends UseCase<Document, CreateBookmarkUseCaseIn> {
+class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
+    CreateBookmarkFromDocumentUseCaseIn, CreateBookmarkUseCaseIn> {
   final DirectUriUseCase _directUriUseCase;
 
   MapDocumentToCreateBookmarkParamUseCase(this._directUriUseCase);
 
   @override
-  Stream<CreateBookmarkUseCaseIn> transaction(Document param) async* {
-    final webResource = param.webResource;
+  Stream<CreateBookmarkUseCaseIn> transaction(
+      CreateBookmarkFromDocumentUseCaseIn param) async* {
+    final webResource = param.document.webResource;
     final image = await _getImageData(webResource.displayUrl);
     final thumbnailUri = webResource.provider?.thumbnail;
     final providerThumbnail = await _getImageData(thumbnailUri);
 
     final createBookmarkUseCaseIn = CreateBookmarkUseCaseIn(
-      id: param.documentUniqueId,
+      id: param.document.documentUniqueId,
       title: webResource.title,
       image: image,
       providerName: webResource.provider?.name,
       providerThumbnail: providerThumbnail,
+      collectionId: param.collectionId,
     );
     yield createBookmarkUseCaseIn;
   }
@@ -107,6 +113,16 @@ class CreateBookmarkUseCaseIn {
     required this.image,
     required this.providerName,
     required this.providerThumbnail,
+    this.collectionId = Collection.readLaterId,
+  });
+}
+
+class CreateBookmarkFromDocumentUseCaseIn {
+  final Document document;
+  final UniqueId collectionId;
+
+  CreateBookmarkFromDocumentUseCaseIn({
+    required this.document,
     this.collectionId = Collection.readLaterId,
   });
 }

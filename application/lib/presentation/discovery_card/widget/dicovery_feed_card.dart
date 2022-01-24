@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -54,8 +56,8 @@ class _DiscoveryFeedCardState
             ? DocumentFeedback.neutral
             : DocumentFeedback.negative,
       ),
-      onBookmarkPressed: () =>
-          discoveryCardManager.toggleBookmarkDocument(widget.document),
+      onBookmarkPressed: onBookmarkPressed,
+      onBookmarkLongPressed: onBookmarkLongPressed,
       isBookmarked: state.isBookmarked,
     );
 
@@ -70,4 +72,28 @@ class _DiscoveryFeedCardState
       ],
     );
   }
+
+  void onBookmarkPressed() async {
+    final isBookmarked =
+        discoveryCardManager.toggleBookmarkDocument(widget.document);
+
+    if (!isBookmarked) {
+      //mock snack bar
+      await Future.delayed(const Duration(seconds: 1));
+
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
+        ),
+      );
+    }
+  }
+
+  void onBookmarkLongPressed() => showAppBottomSheet(
+        context,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
+        ),
+      );
 }
