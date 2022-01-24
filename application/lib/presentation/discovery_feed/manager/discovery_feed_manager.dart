@@ -17,7 +17,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const int _kMaxCardCount = 10;
 
-typedef ObservedViewTypes = Map<Document, DocumentViewMode>;
+typedef ObservedViewTypes = Map<DocumentId, DocumentViewMode>;
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -57,7 +57,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   late final UseCaseValueStream<int> _cardIndexConsumer;
 
-  final ObservedViewTypes _observedViewTypes = {};
+  final ObservedViewTypes _observedViewTypes = <DocumentId, DocumentViewMode>{};
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
@@ -98,7 +98,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
     observeDocument(
       document: document,
-      mode: _observedViewTypes[document],
+      mode: _observedViewTypes[document.documentId],
     );
 
     _sendAnalyticsUseCase(DocumentIndexChangedEvent(
@@ -115,9 +115,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// the last known inner document (secondary cards may also trigger).
   /// Use [viewType] to indicate the current view of that same document.
   void handleViewType(Document document, DocumentViewMode mode) {
-    _observedViewTypes[document] = mode;
+    _observedViewTypes[document.documentId] = mode;
 
-    if (document == _observedDocument) {
+    if (document.documentId == _observedDocument?.documentId) {
       observeDocument(
         document: document,
         mode: mode,
@@ -133,9 +133,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// When the app moves into the foreground
   /// - we trigger a new observation with the last known card details
   void handleActivityStatus(bool isAppInForeground) {
+    final observedDocument = _observedDocument;
+
+    if (observedDocument == null) return;
+
     observeDocument(
-      document: isAppInForeground ? _observedDocument : null,
-      mode: isAppInForeground ? _observedViewTypes[_observedDocument] : null,
+      document: isAppInForeground ? observedDocument : null,
+      mode: isAppInForeground
+          ? _observedViewTypes[observedDocument.documentId]
+          : null,
     );
   }
 

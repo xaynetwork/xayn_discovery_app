@@ -116,6 +116,18 @@ flutter:
     # The following could be refactored when this issue is resolved
     # https://github.com/flutter/flutter/issues/27802
 
+    # illustrations
+    - packages/xayn_design/assets/illustrations/flag_austria.svg
+    - packages/xayn_design/assets/illustrations/flag_belgium.svg
+    - packages/xayn_design/assets/illustrations/flag_canada.svg
+    - packages/xayn_design/assets/illustrations/flag_germany.svg
+    - packages/xayn_design/assets/illustrations/flag_ireland.svg
+    - packages/xayn_design/assets/illustrations/flag_netherlands.svg
+    - packages/xayn_design/assets/illustrations/flag_poland.svg
+    - packages/xayn_design/assets/illustrations/flag_switzerland.svg
+    - packages/xayn_design/assets/illustrations/flag_uk.svg
+    - packages/xayn_design/assets/illustrations/flag_usa.svg
+
     # icons
     - packages/xayn_design/assets/graphics/forms_green.svg
     - packages/xayn_design/assets/graphics/forms_orange.svg

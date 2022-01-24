@@ -48,7 +48,7 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
       (out) => out
           .distinct(
             (a, b) =>
-                a.value.document == b.value.document &&
+                a.value.document?.documentId == b.value.document?.documentId &&
                 a.value.viewType == b.value.viewType,
           )
           .pairwise() // combine last card and current card

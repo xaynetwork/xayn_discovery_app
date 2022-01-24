@@ -20,7 +20,7 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   @mustCallSuper
   void removeObsoleteCardManagers(Iterable<Document> results) {
     for (var key in results) {
-      _cardManagers.remove(key)?.closeAll();
+      _cardManagers.remove(key.documentId)?.closeAll();
     }
   }
 
