@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
@@ -202,13 +203,13 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           provider: webResource.provider,
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
-            documentId: widget.document.documentId,
+            document: widget.document,
             feedback: widget.document.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
           ),
           onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
-            documentId: widget.document.documentId,
+            document: widget.document,
             feedback: widget.document.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
@@ -265,8 +266,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   void onBookmarkPressed() async {
     final isBookmarked =
-        discoveryCardManager.toggleBookmarkDocument(widget.document);
-    if (!isBookmarked) {
+        await discoveryCardManager.toggleBookmarkDocument(widget.document);
+
+    if (isBookmarked) {
       showTooltip(
         TooltipKeys.bookmarkedToDefault,
         parameters: [context, widget.document],
@@ -332,6 +334,19 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
     with NavBarConfigMixin {
+  DiscoveryCardManager? _discoveryCardManager;
+
+  @override
+  void initState() {
+    di.getAsync<DiscoveryCardManager>().then((it) {
+      _discoveryCardManager = it;
+
+      NavBarContainer.updateNavBar(context);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget buildFromState(
           BuildContext context, DiscoveryCardState state, Widget image) =>
@@ -343,39 +358,46 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
       );
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig(
-        [
-          buildNavBarItemArrowLeft(
-            onPressed: () => discoveryCardManager.onBackNavPressed(),
+  NavBarConfig get navBarConfig {
+    final discoveryCardManager = _discoveryCardManager;
+
+    if (discoveryCardManager == null) {
+      return NavBarConfig.hidden();
+    }
+
+    return NavBarConfig(
+      [
+        buildNavBarItemArrowLeft(
+          onPressed: () => discoveryCardManager.onBackNavPressed(),
+        ),
+        buildNavBarItemLike(
+          isLiked: widget.document.isRelevant,
+          onPressed: () => discoveryCardManager.changeDocumentFeedback(
+            document: widget.document,
+            feedback: widget.document.isRelevant
+                ? DocumentFeedback.neutral
+                : DocumentFeedback.positive,
           ),
-          buildNavBarItemLike(
-            isLiked: widget.document.isRelevant,
-            onPressed: () => discoveryCardManager.changeDocumentFeedback(
-              documentId: widget.document.documentId,
-              feedback: widget.document.isRelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.positive,
-            ),
+        ),
+        buildNavBarItemBookmark(
+          isBookmarked: discoveryCardManager.state.isBookmarked,
+          onPressed: onBookmarkPressed,
+          onLongPressed: onBookmarkLongPressed,
+        ),
+        buildNavBarItemShare(
+          onPressed: () => discoveryCardManager.shareUri(widget.document),
+        ),
+        buildNavBarItemDisLike(
+          isDisLiked: widget.document.isIrrelevant,
+          onPressed: () => discoveryCardManager.changeDocumentFeedback(
+            document: widget.document,
+            feedback: widget.document.isIrrelevant
+                ? DocumentFeedback.neutral
+                : DocumentFeedback.negative,
           ),
-          buildNavBarItemBookmark(
-            isBookmarked: discoveryCardManager.state.isBookmarked,
-            onPressed: onBookmarkPressed,
-            onLongPressed: onBookmarkLongPressed,
-          ),
-          buildNavBarItemShare(
-            onPressed: () =>
-                discoveryCardManager.shareUri(widget.document.webResource.url),
-          ),
-          buildNavBarItemDisLike(
-            isDisLiked: widget.document.isIrrelevant,
-            onPressed: () => discoveryCardManager.changeDocumentFeedback(
-              documentId: widget.document.documentId,
-              feedback: widget.document.isIrrelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.negative,
-            ),
-          ),
-        ],
-        isWidthExpanded: true,
-      );
+        ),
+      ],
+      isWidthExpanded: true,
+    );
+  }
 }

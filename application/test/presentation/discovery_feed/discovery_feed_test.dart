@@ -89,7 +89,8 @@ void main() async {
     di.registerSingletonAsync<InvokeApiEndpointUseCase>(
         () => Future.value(invokeApiEndpointUseCase));
     di.registerSingleton<FeedRepository>(feedRepository);
-    di.registerSingleton<AnalyticsService>(MockAnalyticsService());
+    di.registerSingletonAsync<AnalyticsService>(
+        () => Future.value(MockAnalyticsService()));
 
     manager = await di.getAsync<DiscoveryFeedManager>();
   });
@@ -212,9 +213,6 @@ void main() async {
     },
     act: (manager) async {
       manager.handleNavigateIntoCard();
-      // allow some time to pass to emit a state
-      await Future.delayed(const Duration(milliseconds: 100));
-      manager.handleNavigateOutOfCard();
     },
     expect: () => [
       DiscoveryFeedState(
@@ -222,13 +220,6 @@ void main() async {
         cardIndex: 0,
         isComplete: true,
         isFullScreen: true,
-        isInErrorState: false,
-      ),
-      DiscoveryFeedState(
-        results: {fakeDocumentA, fakeDocumentB},
-        cardIndex: 0,
-        isComplete: true,
-        isFullScreen: false,
         isInErrorState: false,
       ),
     ],

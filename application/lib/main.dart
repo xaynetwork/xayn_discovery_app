@@ -35,8 +35,8 @@ Future<void> setup() async {
   await hiveDb;
   await configureDependencies();
   di.get<LogManager>();
-  di.get<AnalyticsNavigatorObserver>();
   HomeIndicator.hide();
+  await di.getAsync<AnalyticsNavigatorObserver>();
 }
 
 Widget getApp() {
