@@ -37,4 +37,7 @@ extension StringUtils on String {
           result.substring(1).toLowerCase();
     }
   }
+
+  String truncate(int maxLength) =>
+      length < maxLength ? this : substring(0, maxLength);
 }
