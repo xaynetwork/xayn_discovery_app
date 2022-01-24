@@ -97,7 +97,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final isBookmarked = await managers.discoveryCardManager
             .toggleBookmarkDocument(document);
 
-        if (!isBookmarked) {
+        if (isBookmarked) {
           showTooltip(
             TooltipKeys.bookmarkedToDefault,
             parameters: [context, document],

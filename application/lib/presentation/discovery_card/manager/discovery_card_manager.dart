@@ -85,6 +85,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   Future<bool> toggleBookmarkDocument(Document document) async {
+    final nextIsBookmarked = !state.isBookmarked;
     final useCaseResults = await (state.isBookmarked
         ? _removeBookmarkUseCase(document.documentUniqueId)
         : _createBookmarkUseCase(
@@ -100,12 +101,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       _sendAnalyticsUseCase(
         DocumentBookmarkedEvent(
           document: document,
-          isBookmarked: state.isBookmarked,
+          isBookmarked: nextIsBookmarked,
         ),
       );
     }
 
-    return state.isBookmarked;
+    return nextIsBookmarked;
   }
 
   Future<void> _init() async {

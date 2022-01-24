@@ -78,7 +78,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
     final isBookmarked =
         await discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-    if (!isBookmarked) {
+    if (isBookmarked) {
       showTooltip(
         TooltipKeys.bookmarkedToDefault,
         parameters: [context, widget.document],
