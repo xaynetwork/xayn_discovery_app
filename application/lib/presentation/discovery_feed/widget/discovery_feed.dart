@@ -97,15 +97,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final isBookmarked = await managers.discoveryCardManager
             .toggleBookmarkDocument(document);
 
-        if (isBookmarked) {
-          //mock snack bar
-          await Future.delayed(const Duration(seconds: 1));
-
-          showAppBottomSheet(
-            context,
-            builder: (_) => MoveDocumentToCollectionBottomSheet(
-              document: document,
-            ),
+        if (!isBookmarked) {
+          showTooltip(
+            TooltipKeys.bookmarkedToDefault,
+            parameters: [context, document],
           );
         }
       }

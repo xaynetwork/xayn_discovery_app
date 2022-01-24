@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.d
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 /// the minimum fraction height of the card image.
 /// This value must be in the range of [0.0, 1.0], where 1.0 is the
@@ -113,7 +114,7 @@ class DiscoveryCardController extends ChangeNotifier {
 }
 
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, TooltipStateMixin {
   late final AnimationController _openingAnimation;
   late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
@@ -267,15 +268,10 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     final isBookmarked =
         await discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-    if (isBookmarked) {
-      //mock snack bar
-      await Future.delayed(const Duration(seconds: 1));
-
-      showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-        ),
+    if (!isBookmarked) {
+      showTooltip(
+        TooltipKeys.bookmarkedToDefault,
+        parameters: [context, widget.document],
       );
     }
   }

@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
@@ -29,8 +30,8 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryFeedCardState();
 }
 
-class _DiscoveryFeedCardState
-    extends DiscoveryCardBaseState<DiscoveryFeedCard> {
+class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
+    with TooltipStateMixin {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
@@ -77,15 +78,10 @@ class _DiscoveryFeedCardState
     final isBookmarked =
         await discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-    if (isBookmarked) {
-      //mock snack bar
-      await Future.delayed(const Duration(seconds: 1));
-
-      showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-        ),
+    if (!isBookmarked) {
+      showTooltip(
+        TooltipKeys.bookmarkedToDefault,
+        parameters: [context, widget.document],
       );
     }
   }
