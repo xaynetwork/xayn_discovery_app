@@ -2,31 +2,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 void main() {
   late MockCollectionsRepository collectionsRepository;
-  late CreateDefaultCollectionUseCase createDefaultCollectionUseCase;
+  late CreateOrGetDefaultCollectionUseCase createOrGetDefaultCollectionUseCase;
   const String defaultCollectionName = 'Read Later';
   final collection = Collection(
       id: Collection.readLaterId, name: defaultCollectionName.trim(), index: 0);
-  const int lastCollectionIndex = 1;
 
   setUp(() {
     collectionsRepository = MockCollectionsRepository();
-    createDefaultCollectionUseCase =
-        CreateDefaultCollectionUseCase(collectionsRepository);
+    createOrGetDefaultCollectionUseCase =
+        CreateOrGetDefaultCollectionUseCase(collectionsRepository);
   });
 
-  group('Rename collection use case', () {
+  group('Create or get default collection use case', () {
     useCaseTest(
-      'WHEN the default collection already exists THEN throw error',
+      'WHEN the default collection already exists THEN return it',
       setUp: () =>
           when(collectionsRepository.getAll()).thenReturn([collection]),
-      build: () => createDefaultCollectionUseCase,
+      build: () => createOrGetDefaultCollectionUseCase,
       input: [defaultCollectionName],
       verify: (_) {
         verifyInOrder([
@@ -35,22 +33,17 @@ void main() {
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
-        useCaseFailure(
-          throwsA(
-            CollectionUseCaseError.tryingToCreateAgainDefaultCollection,
-          ),
-        ),
+        useCaseSuccess(collection),
       ],
     );
 
     useCaseTest(
-      'WHEN the default collection doesn\'t exist THEN create the collection, save it and return it',
+      'WHEN the default collection does not exist THEN create it',
       setUp: () {
         when(collectionsRepository.getAll()).thenReturn([]);
-        when(collectionsRepository.getLastCollectionIndex())
-            .thenReturn(lastCollectionIndex);
+        when(collectionsRepository.save(collection));
       },
-      build: () => createDefaultCollectionUseCase,
+      build: () => createOrGetDefaultCollectionUseCase,
       input: [defaultCollectionName],
       verify: (_) {
         verifyInOrder([
@@ -59,7 +52,9 @@ void main() {
         ]);
         verifyNoMoreInteractions(collectionsRepository);
       },
-      expect: [useCaseSuccess(collection)],
+      expect: [
+        useCaseSuccess(collection),
+      ],
     );
   });
 }
