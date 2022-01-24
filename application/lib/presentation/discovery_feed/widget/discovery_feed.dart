@@ -181,9 +181,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   void dispose() {
-    _discoveryFeedManager?.handleActivityStatus(false);
-
     _cardViewController.dispose();
+    _discoveryFeedManager?.close();
     _managerFutures.clear();
 
     WidgetsBinding.instance!.removeObserver(this);

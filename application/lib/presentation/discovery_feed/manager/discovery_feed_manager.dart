@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -25,7 +24,7 @@ typedef ObservedViewTypes = Map<DocumentId, DocumentViewMode>;
 /// It consumes events from the discovery engine and emits a state
 /// which contains a list of discovery news items which should be displayed
 /// in a list format by widgets.
-@singleton
+@injectable
 class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     with
         UseCaseBlocHelper<DiscoveryFeedState>,
@@ -62,11 +61,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
-
-  @override
-  @protected
-  @visibleForTesting
-  Future<void> close() => super.close();
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
@@ -255,11 +249,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   @override
-  void onSearchNavPressed() => _discoveryFeedNavActions.onSearchNavPressed();
+  void onSearchNavPressed() {
+    // detect that we exit the feed screen
+    handleActivityStatus(false);
+
+    _discoveryFeedNavActions.onSearchNavPressed();
+  }
 
   @override
-  void onPersonalAreaNavPressed() =>
-      _discoveryFeedNavActions.onPersonalAreaNavPressed();
+  void onPersonalAreaNavPressed() {
+    // detect that we exit the feed screen
+    handleActivityStatus(false);
+
+    _discoveryFeedNavActions.onPersonalAreaNavPressed();
+  }
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
