@@ -100,7 +100,7 @@ class TranslationsDe extends Translations {
   String get feedSettingsScreenInActiveCountryListSubtitle =>
       """Inaktive Länder""";
   String get feedSettingsScreenMinSelectedCountriesError =>
-      """There always has to be at least one country selected""";
+      """Select at least one country""";
   String get feedSettingsScreenMaxSelectedCountriesError =>
       """Es sind bereits %s Länder ausgewählt""";
   String get defaultCollectionTitle => """Später lesen""";
@@ -140,9 +140,11 @@ class TranslationsDe extends Translations {
       """That collection doesn't exist""";
   String get articles => """articles""";
   String get article => """article""";
-  String get collectionsScreenTitle => """collections""";
+  String get collectionsScreenTitle => """Your Collections""";
   String get defaultCollectionNameReadLater => """Read later""";
   String get bookmarkSnackBarSavedTo => """Saved to %s""";
+  String get readLater => """Read Later""";
+  String get bottomSheetSaveTo => """Save to""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -190,7 +192,7 @@ Map<String, String> get translationsDeMap => {
       """feedSettingsScreenInActiveCountryListSubtitle""":
           """Inaktive Länder""",
       """feedSettingsScreenMinSelectedCountriesError""":
-          """There always has to be at least one country selected""",
+          """Select at least one country""",
       """feedSettingsScreenMaxSelectedCountriesError""":
           """Es sind bereits %s Länder ausgewählt""",
       """defaultCollectionTitle""": """Später lesen""",
@@ -230,7 +232,9 @@ Map<String, String> get translationsDeMap => {
           """That collection doesn't exist""",
       """articles""": """articles""",
       """article""": """article""",
-      """collectionsScreenTitle""": """collections""",
+      """collectionsScreenTitle""": """Your Collections""",
       """defaultCollectionNameReadLater""": """Read later""",
       """bookmarkSnackBarSavedTo""": """Saved to %s""",
+      """readLater""": """Read Later""",
+      """bottomSheetSaveTo""": """Save to""",
     };

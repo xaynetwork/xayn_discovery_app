@@ -120,6 +120,8 @@ class Strings {
       'Trying to remove a bookmark that doesn\'t exist';
   static const String errorMsgTryingToGetBookmarksForNotExistingCollection =
       'Trying to get bookmarks for a collection that doesn\'t exist';
+  static const String errorMsgTryingToGetNotExistingBookmark =
+      'Trying to get a bookmark that doesn\'t exist';
 }
 
 /// Helper method so we can use strings.my_translated_key

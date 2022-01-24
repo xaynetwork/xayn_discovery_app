@@ -3,4 +3,5 @@ enum BookmarkUseCaseError {
   tryingToMoveBookmarkToNotExistingCollection,
   tryingToRemoveNotExistingBookmark,
   tryingToGetBookmarksForNotExistingCollection,
+  tryingToGetNotExistingBookmark,
 }
