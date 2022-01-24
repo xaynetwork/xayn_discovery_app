@@ -14,29 +14,3 @@ extension DocumentExtension on Document {
 extension DocumentIdUtils on DocumentId {
   UniqueId get uniqueId => UniqueId.fromTrustedString(toString());
 }
-
-extension DocumentFeedbackExtension on DocumentFeedback {
-  String stringify() {
-    switch (this) {
-      case DocumentFeedback.neutral:
-        return 'neutral';
-      case DocumentFeedback.negative:
-        return 'negative';
-      case DocumentFeedback.positive:
-        return 'positive';
-    }
-  }
-}
-
-extension DocumentViewModeExtension on DocumentViewMode {
-  String stringify() {
-    switch (this) {
-      case DocumentViewMode.reader:
-        return 'reader';
-      case DocumentViewMode.story:
-        return 'story';
-      case DocumentViewMode.web:
-        return 'web';
-    }
-  }
-}

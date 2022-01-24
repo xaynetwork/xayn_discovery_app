@@ -78,8 +78,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _updateUri(document.webResource.url);
   }
 
-  void shareUri(Document document) async {
-    await _shareUriUseCase.call(document.webResource.url);
+  void shareUri(Document document) {
+    _shareUriUseCase.call(document.webResource.url);
 
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
   }

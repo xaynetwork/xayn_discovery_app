@@ -1,5 +1,4 @@
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 const String _kEventType = 'documentViewModeChanged';
@@ -16,7 +15,7 @@ class DocumentViewModeChangedEvent extends AnalyticsEvent {
   }) : super(
           _kEventType,
           properties: {
-            _kParamViewMode: viewMode.stringify(),
+            _kParamViewMode: viewMode.name,
             _kParamDocument: document,
           },
         );

@@ -22,20 +22,7 @@ class DocumentIndexChangedEvent extends AnalyticsEvent {
           properties: {
             if (previous != null) _kParamPreviousDocument: previous,
             _kParamNextDocument: next,
-            _kParamDirection: direction.stringify(),
+            _kParamDirection: direction.name,
           },
         );
-}
-
-extension DirectionExtension on Direction {
-  String stringify() {
-    switch (this) {
-      case Direction.down:
-        return 'down';
-      case Direction.up:
-        return 'up';
-      case Direction.start:
-        return 'start';
-    }
-  }
 }

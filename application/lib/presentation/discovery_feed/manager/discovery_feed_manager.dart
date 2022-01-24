@@ -82,33 +82,33 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
-  void handleIndexChanged(int index) {
+  void handleIndexChanged(int index) async {
     if (index >= state.results.length) return;
 
-    final previousDocument = _observedDocument;
-    final document = _observedDocument = state.results.elementAt(index);
-    var direction = Direction.start;
-
-    if (previousDocument != null) {
-      final previousIndex =
-          state.results.toList(growable: false).indexOf(previousDocument);
-
-      direction = previousIndex < index ? Direction.down : Direction.up;
-    }
+    final nextDocument = state.results.elementAt(index);
+    final nextCardIndex = await _updateCardIndexUseCase.singleOutput(index);
+    final didSwipeBefore = _cardIndex != null && _observedDocument != null;
+    final direction = didSwipeBefore
+        ? _cardIndex! < index
+            ? Direction.down
+            : Direction.up
+        : Direction.start;
 
     observeDocument(
-      document: document,
-      mode: _observedViewTypes[document.documentId],
+      document: nextDocument,
+      mode: _observedViewTypes[nextDocument.documentId],
     );
 
     _sendAnalyticsUseCase(DocumentIndexChangedEvent(
-      next: document,
-      previous: previousDocument,
+      next: nextDocument,
+      previous: _observedDocument,
       direction: direction,
     ));
 
-    scheduleComputeState(() async =>
-        _cardIndex = await _updateCardIndexUseCase.singleOutput(index));
+    scheduleComputeState(() {
+      _cardIndex = nextCardIndex;
+      _observedDocument = nextDocument;
+    });
   }
 
   /// Triggers a new observation for [document], if that document matches
