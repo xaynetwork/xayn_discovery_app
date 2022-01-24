@@ -21,6 +21,9 @@ class BookmarkErrorsEnumMapper {
       case BookmarkUseCaseError.tryingToGetBookmarksForNotExistingCollection:
         msg = Strings.errorMsgTryingToGetBookmarksForNotExistingCollection;
         break;
+      case BookmarkUseCaseError.tryingToGetNotExistingBookmark:
+        msg = Strings.errorMsgTryingToGetBookmarksForNotExistingCollection;
+        break;
     }
     return msg;
   }

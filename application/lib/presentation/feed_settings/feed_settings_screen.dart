@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
@@ -9,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class FeedSettingsScreen extends StatefulWidget {
   const FeedSettingsScreen({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class FeedSettingsScreen extends StatefulWidget {
 }
 
 class FeedSettingsScreenState extends State<FeedSettingsScreen>
-    with NavBarConfigMixin {
+    with NavBarConfigMixin, TooltipStateMixin {
   late final manager = di.get<FeedSettingsManager>();
 
   @override
@@ -40,7 +42,7 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppToolbar(yourTitle: R.strings.feedSettingsScreenTitle),
+        appBar: AppToolbar(title: R.strings.feedSettingsScreenTitle),
         body: _buildBody(),
       );
 
@@ -60,13 +62,34 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
   }
 
   Widget _buildStateReady(FeedSettingsStateReady state) {
-    final page = CountryFeedSettingsPage(
-      maxSelectedCountryAmount: state.maxSelectedCountryAmount,
-      selectedCountries: state.selectedCountries,
-      unSelectedCountries: state.unSelectedCountries,
-      onAddCountryPressed: manager.onAddCountryPressed,
-      onRemoveCountryPressed: manager.onRemoveCountryPressed,
+    registerTooltip(
+      key: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
+      params: TooltipParams(
+        label: R.strings.feedSettingsScreenMaxSelectedCountriesError
+            .replaceFirst('%s', state.maxSelectedCountryAmount.toString()),
+        builder: (_) => CustomizedTextualNotification(
+          labelTextStyle: R.styles.tooltipHighlightTextStyle,
+        ),
+      ),
     );
+    final page = CountryFeedSettingsPage(
+        maxSelectedCountryAmount: state.maxSelectedCountryAmount,
+        selectedCountries: state.selectedCountries,
+        unSelectedCountries: state.unSelectedCountries,
+        onAddCountryPressed: (Country country) {
+          final added = manager.onAddCountryPressed(country);
+          if (!added) {
+            showTooltip(TooltipKeys.feedSettingsScreenMaxSelectedCountries);
+          }
+        },
+        onRemoveCountryPressed: (Country country) {
+          final removed = manager.onRemoveCountryPressed(country);
+          if (!removed) {
+            showTooltip(
+              TooltipKeys.feedSettingsScreenMinSelectedCountries,
+            );
+          }
+        });
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
       child: page,

@@ -6,6 +6,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
@@ -86,6 +87,30 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           .elementAt(discoveryFeedManager.state.cardIndex);
       final managers = managersOf(document);
 
+      void onBookmarkPressed() async {
+        final _isBookmarked =
+            managers.discoveryCardManager.toggleBookmarkDocument(document);
+
+        if (!_isBookmarked) {
+          //mock snack bar
+          await Future.delayed(const Duration(seconds: 1));
+
+          showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: document,
+            ),
+          );
+        }
+      }
+
+      void onBookmarkLongPressed() => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: document,
+            ),
+          );
+
       return NavBarConfig(
         [
           buildNavBarItemArrowLeft(onPressed: () async {
@@ -102,6 +127,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
             ),
+          ),
+          buildNavBarItemBookmark(
+            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
+            onPressed: onBookmarkPressed,
+            onLongPressed: onBookmarkLongPressed,
           ),
           buildNavBarItemShare(
             onPressed: () => managers.discoveryCardManager

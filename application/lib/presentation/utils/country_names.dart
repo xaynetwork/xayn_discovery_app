@@ -1,4 +1,5 @@
 import 'package:flutter_localized_countries/flutter_localized_countries.dart';
+import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 
@@ -19,7 +20,7 @@ extension CountryNameExtension on CountryNames {
   String countryNameForLocale(
     AppLocale locale,
   ) {
-    final showLanguageCode = needToShowLanguageCode[locale.countryCode] == true;
+    final showLanguageCode = isCountryMultilingual(locale.countryCode);
     final countryCode = locale.countryCode;
     String resolvedCountryName;
 

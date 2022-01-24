@@ -4,8 +4,6 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'feed.freezed.dart';
 
-const kDefaultCollectionId = 'defaultCollectionId';
-
 @freezed
 class Feed extends DbEntity with _$Feed {
   static UniqueId globalId = const UniqueId.fromTrustedString('feed_id');

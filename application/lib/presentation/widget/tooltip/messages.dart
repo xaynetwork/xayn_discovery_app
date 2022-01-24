@@ -1,9 +1,18 @@
 import 'package:xayn_design/xayn_design.dart'
-    show MessageFactory, TooltipParams, TooltipKey, TextualNotification;
+    show
+        CustomizedTextualNotification,
+        MessageFactory,
+        TextualNotification,
+        TooltipKey,
+        TooltipParams;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class TooltipKeys {
   static const activeSearchDisabled = TooltipKey('activeSearchDisabled');
+  static const feedSettingsScreenMaxSelectedCountries =
+      TooltipKey('feedSettingsScreenMaxSelectedCountries');
+  static const feedSettingsScreenMinSelectedCountries =
+      TooltipKey('feedSettingsScreenMinSelectedCountries');
 }
 
 abstract class XaynMessageProvider {
@@ -15,6 +24,11 @@ abstract class XaynMessageProvider {
       TooltipKeys.activeSearchDisabled: TooltipParams(
         label: R.strings.comingSoon,
         builder: (_) => _defaultMessage,
+      ),
+      TooltipKeys.feedSettingsScreenMinSelectedCountries: TooltipParams(
+        label: R.strings.feedSettingsScreenMinSelectedCountriesError,
+        builder: (_) => CustomizedTextualNotification(
+            labelTextStyle: R.styles.tooltipHighlightTextStyle),
       ),
     };
 
