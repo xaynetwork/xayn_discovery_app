@@ -70,7 +70,7 @@ class DiscoveryCardElements extends StatelessWidget {
         vertical: R.dimen.unit3,
       ),
       child: DiscoveryCardFooter(
-        onSharePressed: () => manager.shareUri(url),
+        onSharePressed: () => manager.shareUri(document),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
         onBookmarkPressed: onBookmarkPressed,

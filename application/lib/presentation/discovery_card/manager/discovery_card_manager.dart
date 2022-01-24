@@ -5,6 +5,9 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
@@ -46,6 +49,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final DiscoveryCardNavActions _discoveryCardNavActions;
   final CreateBookmarkFromDocumentUseCase _createBookmarkUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final UseCaseSink<Uri, ProcessedDocument> _updateUri;
   late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler;
@@ -62,6 +66,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._listenIsBookmarkedUseCase,
     this._createBookmarkUseCase,
     this._removeBookmarkUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
@@ -73,15 +78,35 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _updateUri(document.webResource.url);
   }
 
-  void shareUri(Uri uri) => _shareUriUseCase.call(uri);
+  void shareUri(Document document) {
+    _shareUriUseCase.call(document.webResource.url);
 
-  bool toggleBookmarkDocument(Document document) {
-    state.isBookmarked
+    _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
+  }
+
+  Future<bool> toggleBookmarkDocument(Document document) async {
+    final nextIsBookmarked = !state.isBookmarked;
+    final useCaseResults = await (state.isBookmarked
         ? _removeBookmarkUseCase(document.documentUniqueId)
-        : _createBookmarkUseCase.call(
+        : _createBookmarkUseCase(
             CreateBookmarkFromDocumentUseCaseIn(document: document),
-          );
-    return state.isBookmarked;
+          ));
+    var hasError = false;
+
+    for (var it in useCaseResults) {
+      it.fold(defaultOnError: (e, s) => hasError = true, onValue: (_) {});
+    }
+
+    if (!hasError) {
+      _sendAnalyticsUseCase(
+        DocumentBookmarkedEvent(
+          document: document,
+          isBookmarked: nextIsBookmarked,
+        ),
+      );
+    }
+
+    return nextIsBookmarked;
   }
 
   Future<void> _init() async {

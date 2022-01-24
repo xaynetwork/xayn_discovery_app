@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
@@ -127,4 +129,21 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
     // TODO: implement send
     throw UnimplementedError();
   }
+}
+
+@LazySingleton(as: AnalyticsService)
+class TestAnalyticsService implements AnalyticsService {
+  TestAnalyticsService._();
+
+  /// We need the di to generate the exact same thing as in the original AnalyticsService.
+  /// ...which is a Future<AnalyticsService>
+  @factoryMethod
+  static Future<AnalyticsService> initialized() async =>
+      TestAnalyticsService._();
+
+  @override
+  Future<void> flush() async {}
+
+  @override
+  Future<void> send(AnalyticsEvent event) async {}
 }

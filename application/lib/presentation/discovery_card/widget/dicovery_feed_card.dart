@@ -46,13 +46,13 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       provider: webResource.provider,
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
-        documentId: widget.document.documentId,
+        document: widget.document,
         feedback: widget.document.isRelevant
             ? DocumentFeedback.neutral
             : DocumentFeedback.positive,
       ),
       onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
-        documentId: widget.document.documentId,
+        document: widget.document,
         feedback: widget.document.isIrrelevant
             ? DocumentFeedback.neutral
             : DocumentFeedback.negative,
@@ -76,9 +76,9 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
 
   void onBookmarkPressed() async {
     final isBookmarked =
-        discoveryCardManager.toggleBookmarkDocument(widget.document);
+        await discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-    if (!isBookmarked) {
+    if (isBookmarked) {
       showTooltip(
         TooltipKeys.bookmarkedToDefault,
         parameters: [context, widget.document],
