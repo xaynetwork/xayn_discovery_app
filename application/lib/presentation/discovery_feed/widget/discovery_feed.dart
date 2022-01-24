@@ -94,8 +94,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           .elementAt(discoveryFeedManager.state.cardIndex);
 
       void onBookmarkPressed() async {
-        final _isBookmarked =
-            managers.discoveryCardManager.toggleBookmarkDocument(document);
+        final _isBookmarked = await managers.discoveryCardManager
+            .toggleBookmarkDocument(document);
 
         if (!_isBookmarked) {
           //mock snack bar

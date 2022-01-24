@@ -75,7 +75,7 @@ class _DiscoveryFeedCardState
 
   void onBookmarkPressed() async {
     final isBookmarked =
-        discoveryCardManager.toggleBookmarkDocument(widget.document);
+        await discoveryCardManager.toggleBookmarkDocument(widget.document);
 
     if (!isBookmarked) {
       //mock snack bar

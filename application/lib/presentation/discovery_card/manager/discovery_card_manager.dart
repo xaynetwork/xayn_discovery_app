@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
@@ -83,12 +84,27 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
   }
 
-  bool toggleBookmarkDocument(Document document) {
-    state.isBookmarked
+  Future<bool> toggleBookmarkDocument(Document document) async {
+    final useCaseResults = await (state.isBookmarked
         ? _removeBookmarkUseCase(document.documentUniqueId)
-        : _createBookmarkUseCase.call(
+        : _createBookmarkUseCase(
             CreateBookmarkFromDocumentUseCaseIn(document: document),
-          );
+          ));
+    var hasError = false;
+
+    for (var it in useCaseResults) {
+      it.fold(defaultOnError: (e, s) => hasError = true, onValue: (_) {});
+    }
+
+    if (!hasError) {
+      _sendAnalyticsUseCase(
+        DocumentBookmarkedEvent(
+          document: document,
+          isBookmarked: !state.isBookmarked,
+        ),
+      );
+    }
+
     return state.isBookmarked;
   }
 

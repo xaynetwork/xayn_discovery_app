@@ -265,7 +265,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   void onBookmarkPressed() async {
     final isBookmarked =
-        discoveryCardManager.toggleBookmarkDocument(widget.document);
+        await discoveryCardManager.toggleBookmarkDocument(widget.document);
+
     if (!isBookmarked) {
       //mock snack bar
       await Future.delayed(const Duration(seconds: 1));
