@@ -30,7 +30,7 @@ if (flutterVersionName == null) {
 
 
 def dartEnvironmentVariables = [
-        USER_APP_NAME: 'Xayn Discovery App Internal',
+        USER_APP_NAME: 'Discovery',
         USER_APP_ID  : 'com.xayn.discovery.internal'
 ]
 if (project.hasProperty('dart-defines')) {

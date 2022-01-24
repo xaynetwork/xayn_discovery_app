@@ -22,14 +22,14 @@ module Config
     "internal" => {
       "ios" => {
         "id" => "com.xayn.discovery.internal",
-        "name" => "Discovery App Internal",
+        "name" => "Discovery",
         "appcenter_target" => "Discovery-App-internal",
         "appcenter_token" => "APPCENTER_IOS_INTERNAL_TOKEN",
         "appcenter_buildfile" => "build/discovery-app.ipa",
       },
       "android" => {
         "id" => "com.xayn.discovery.internal",
-        "name" => "Discovery App Internal",
+        "name" => "Discovery",
         "appcenter_target" => "Discovery-App-Android-internal",
         "appcenter_token" => "APPCENTER_ANDROID_INTERNAL_TOKEN",
         "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
@@ -38,7 +38,7 @@ module Config
     "beta" => {
       "ios" => {
         "id" => "com.xayn.discovery",
-        "name" => "Discovery App Beta",
+        "name" => "Xayn 3.0",
         # Discoveru is correct!! :P
         "appcenter_target" => "Discoveru-App-iOS-beta",
         "appcenter_token" => "APPCENTER_IOS_BETA_TOKEN",
@@ -46,7 +46,7 @@ module Config
       },
       "android" => {
         "id" => "com.xayn.search",
-        "name" => "Discovery App Beta",
+        "name" => "Xayn 3.0",
         "appcenter_target" => "Discovery-App-Android-beta",
         "appcenter_token" => "APPCENTER_ANDROID_BETA_TOKEN",
         "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
