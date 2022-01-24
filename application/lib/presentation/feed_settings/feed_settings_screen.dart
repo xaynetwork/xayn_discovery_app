@@ -81,14 +81,14 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
         maxSelectedCountryAmount: state.maxSelectedCountryAmount,
         selectedCountries: state.selectedCountries,
         unSelectedCountries: state.unSelectedCountries,
-        onAddCountryPressed: (Country country) {
-          final added = manager.onAddCountryPressed(country);
+        onAddCountryPressed: (Country country) async {
+          final added = await manager.onAddCountryPressed(country);
           if (!added) {
             showTooltip(TooltipKeys.feedSettingsScreenMaxSelectedCountries);
           }
         },
-        onRemoveCountryPressed: (Country country) {
-          final removed = manager.onRemoveCountryPressed(country);
+        onRemoveCountryPressed: (Country country) async {
+          final removed = await manager.onRemoveCountryPressed(country);
           if (!removed) {
             showTooltip(
               TooltipKeys.feedSettingsScreenMinSelectedCountries,
