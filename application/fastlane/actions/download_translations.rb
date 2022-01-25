@@ -28,7 +28,7 @@ module Fastlane
             request.set_form_data(
               "api_token" => api_token,
               # translated', 'untranslated', 'fuzzy', 'not_fuzzy', 'automatic', 'not_automatic', 'proofread', 'not_proofread'
-              "filters" => "",
+              "filters" => filters.reduce{ |v, s| "#{v},#{s}"},
               "id" => project_id,
               "language" => language,
               "type" => type,
