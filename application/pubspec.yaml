@@ -54,6 +54,7 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/story.git
       ref: cd93531ce08e4afd4490d8bc5f436432a8c0bacd
+  url_launcher: 6.0.18
   uuid: ^3.0.5
   version: 2.0.0
   xayn_architecture:
@@ -67,7 +68,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 74628069163b16eaa0e57405cad00a8c789b81e6
+      ref: 4791da304ad17cdba3fbb96a9010805552b734df
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git

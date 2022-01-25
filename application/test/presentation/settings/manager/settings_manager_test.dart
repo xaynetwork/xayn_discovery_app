@@ -29,6 +29,7 @@ void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;
   late MockBugReportingService bugReportingService;
   late MockExtractLogUseCase extractLogUseCase;
+  late MockUrlOpener urlOpener;
   late MockShareUriUseCase shareUriUseCase;
 
   setUp(() {
@@ -38,6 +39,7 @@ void main() {
     listenAppThemeUseCase = MockListenAppThemeUseCase();
     bugReportingService = MockBugReportingService();
     extractLogUseCase = MockExtractLogUseCase();
+    urlOpener = MockUrlOpener();
     shareUriUseCase = MockShareUriUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
@@ -59,6 +61,7 @@ void main() {
         bugReportingService,
         extractLogUseCase,
         MockSettingsNavActions(),
+        urlOpener,
         shareUriUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
@@ -162,24 +165,11 @@ void main() {
         () => manager.openUrl(url),
         returnsNormally,
       );
+      verify(urlOpener.openUrl(url));
+      verifyNoMoreInteractions(urlOpener);
     },
   );
-  test(
-    'GIVEN NON url string  WHEN openUrl method called THEN throw AssertError',
-    () {
-      const fakeUrls = [
-        'xayn.com',
-        'hello',
-      ];
-      final manager = create();
-      for (final fakeUrl in fakeUrls) {
-        expect(
-          () => manager.openUrl(fakeUrl),
-          throwsA(isA<AssertionError>()),
-        );
-      }
-    },
-  );
+
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'GIVEN string with url WHEN openUrl method called THEN call ___ useCase',
     build: () => create(),
