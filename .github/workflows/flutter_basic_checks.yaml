@@ -37,7 +37,7 @@ jobs:
           sudo apt install lcov jq
 
       - name: Run checks
-        timeout-minutes: 10
+        timeout-minutes: 20
         env:
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
