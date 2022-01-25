@@ -88,10 +88,10 @@ class Translations {
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Your Area""";
   String get personalAreaCollections => """Collections""";
-  String get personalAreaHomeFeed => """Home Feed""";
+  String get personalAreaHomeFeed => """Discovery Feed""";
   String get personalAreaSettings => """Settings""";
   String get comingSoon => """Coming soon""";
-  String get feedSettingsScreenTitle => """Your Home Feed""";
+  String get feedSettingsScreenTitle => """Your Discovery Feed""";
   String get feedSettingsScreenContryListHint =>
       """Choose the countries to receive news from (max. %s)""";
   String get feedSettingsScreenActiveCountryListSubtitle =>
@@ -102,7 +102,6 @@ class Translations {
       """Select at least one country""";
   String get feedSettingsScreenMaxSelectedCountriesError =>
       """Your already selected %s countries""";
-  String get defaultCollectionTitle => """Read Later""";
   String get bottomSheetCancel => """Cancel""";
   String get langNameFrench => """French""";
   String get langNameDutch => """Dutch""";
@@ -123,7 +122,6 @@ class Translations {
   String get collectionsScreenTitle => """Your Collections""";
   String get defaultCollectionNameReadLater => """Read later""";
   String get bookmarkSnackBarSavedTo => """Saved to %s""";
-  String get readLater => """Read Later""";
   String get bottomSheetSaveTo => """Save to""";
   String get readerModeBylinePrefix => """by""";
   String get errorMsgCollectionDoesntExist =>
@@ -169,10 +167,10 @@ Map<String, String> get translationsMap => {
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Your Area""",
       """personalAreaCollections""": """Collections""",
-      """personalAreaHomeFeed""": """Home Feed""",
+      """personalAreaHomeFeed""": """Discovery Feed""",
       """personalAreaSettings""": """Settings""",
       """comingSoon""": """Coming soon""",
-      """feedSettingsScreenTitle""": """Your Home Feed""",
+      """feedSettingsScreenTitle""": """Your Discovery Feed""",
       """feedSettingsScreenContryListHint""":
           """Choose the countries to receive news from (max. %s)""",
       """feedSettingsScreenActiveCountryListSubtitle""": """Active Countries""",
@@ -182,7 +180,6 @@ Map<String, String> get translationsMap => {
           """Select at least one country""",
       """feedSettingsScreenMaxSelectedCountriesError""":
           """Your already selected %s countries""",
-      """defaultCollectionTitle""": """Read Later""",
       """bottomSheetCancel""": """Cancel""",
       """langNameFrench""": """French""",
       """langNameDutch""": """Dutch""",
@@ -203,7 +200,6 @@ Map<String, String> get translationsMap => {
       """collectionsScreenTitle""": """Your Collections""",
       """defaultCollectionNameReadLater""": """Read later""",
       """bookmarkSnackBarSavedTo""": """Saved to %s""",
-      """readLater""": """Read Later""",
       """bottomSheetSaveTo""": """Save to""",
       """readerModeBylinePrefix""": """by""",
       """errorMsgCollectionDoesntExist""": """The collection doesn't exist""",
