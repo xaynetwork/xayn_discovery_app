@@ -4,10 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
@@ -60,7 +58,7 @@ void main() {
       'WHEN a bookmark id is given and repository emits an event THEN usecase emits if that bookmark is not bookmarked',
       setUp: () {
         when(bookmarksRepository.watch()).thenAnswer(
-              (_) => Stream.value(
+          (_) => Stream.value(
             ChangedEvent(
               id: bookmark1.id,
               newObject: bookmark1,

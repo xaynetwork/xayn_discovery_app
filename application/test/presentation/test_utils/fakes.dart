@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 final fakeDocument = Document(
@@ -20,4 +24,14 @@ final fakeDocument = Document(
   nonPersonalizedRank: 0,
   personalizedRank: 0,
   isActive: true,
+);
+
+final fakeBookmark = Bookmark(
+  id: UniqueId(),
+  collectionId: UniqueId(),
+  title: 'Bookmark1 title',
+  image: Uint8List.fromList([1, 2, 3]),
+  providerName: 'Provider name',
+  providerThumbnail: Uint8List.fromList([4, 5, 6]),
+  createdAt: DateTime.now().toUtc().toString(),
 );
