@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/file_logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
