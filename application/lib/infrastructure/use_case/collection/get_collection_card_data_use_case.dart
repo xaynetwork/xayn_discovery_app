@@ -42,7 +42,7 @@ class GetCollectionCardDataUseCase
     final bookmarks = _bookmarksRepository.getByCollectionId(param);
     yield GetCollectionCardDataUseCaseOut(
       numOfItems: bookmarks.length,
-      image: bookmarks.last.image,
+      image: bookmarks.first.image,
     );
   }
 }

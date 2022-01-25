@@ -38,9 +38,14 @@ class CardWidget extends StatelessWidget {
         height: _itemHeight,
       ),
       collectionsScreen: (data) => data.backgroundImage != null
-          ? Image.memory(
-              data.backgroundImage!,
-              height: _itemHeight,
+          ? ClipRRect(
+              borderRadius:
+                  UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+              child: Image.memory(
+                data.backgroundImage!,
+                fit: BoxFit.cover,
+                height: _itemHeight,
+              ),
             )
           : SvgPicture.asset(
               ///TODO this is temporary, the right assets will be added when ready
@@ -51,7 +56,13 @@ class CardWidget extends StatelessWidget {
 
     final stack = Stack(
       children: [
-        Positioned.fill(left: null, child: background),
+        Positioned.fill(
+          left: cardData.map(
+            personalArea: (_) => null,
+            collectionsScreen: (_) => 0.0,
+          ),
+          child: background,
+        ),
         Positioned(
           left: contentPadding,
           bottom: contentPadding,
