@@ -8,7 +8,8 @@ import 'feature_manager_state.dart';
 
 const FeatureMap kInitialFeatureMap = {
   Feature.onBoarding: false,
-  Feature.featuresScreen: EnvironmentHelper.kIsDebug,
+  Feature.featuresScreen:
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
 };
 
 @lazySingleton
