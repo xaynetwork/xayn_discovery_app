@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_collec
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'collection_card_manager_test.mocks.dart';
 
@@ -97,7 +97,7 @@ void main() {
         collectionErrorsEnumMapper.mapEnumToString(
           CollectionUseCaseError.tryingToGetCardDataForNotExistingCollection,
         ),
-      ).thenReturn(Strings.errorMsgTryingToGetCardDataForNotExistingCollection);
+      ).thenReturn(R.strings.errorMsgCollectionDoesntExist);
     },
     act: (manager) => manager.retrieveCollectionCardInfo(collectionId),
     verify: (manager) {
@@ -107,7 +107,7 @@ void main() {
     expect: () => [
       initialState,
       initialState.copyWith(
-        errorMsg: Strings.errorMsgTryingToGetCardDataForNotExistingCollection,
+        errorMsg: R.strings.errorMsgCollectionDoesntExist,
       ),
     ],
   );

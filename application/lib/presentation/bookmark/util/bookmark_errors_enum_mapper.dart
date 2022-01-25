@@ -1,28 +1,27 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 @lazySingleton
 class BookmarkErrorsEnumMapper {
   String mapEnumToString(BookmarkUseCaseError errorEnum) {
     String msg;
 
-    /// TODO replace with the POEditor string in order to have translation
     switch (errorEnum) {
       case BookmarkUseCaseError.tryingToMoveNotExistingBookmark:
-        msg = Strings.errorMsgTryingToMoveNotExistingBookmark;
+        msg = R.strings.errorMsgBookmarkDoesntExist;
         break;
       case BookmarkUseCaseError.tryingToMoveBookmarkToNotExistingCollection:
-        msg = Strings.errorMsgTryingToMoveBookmarkToNotExistingCollection;
+        msg = R.strings.errorMsgCollectionDoesntExist;
         break;
       case BookmarkUseCaseError.tryingToRemoveNotExistingBookmark:
-        msg = Strings.errorMsgTryingToRemoveNotExistingBookmark;
+        msg = R.strings.errorMsgBookmarkDoesntExist;
         break;
       case BookmarkUseCaseError.tryingToGetBookmarksForNotExistingCollection:
-        msg = Strings.errorMsgTryingToGetBookmarksForNotExistingCollection;
+        msg = R.strings.errorMsgCollectionDoesntExist;
         break;
       case BookmarkUseCaseError.tryingToGetNotExistingBookmark:
-        msg = Strings.errorMsgTryingToGetBookmarksForNotExistingCollection;
+        msg = R.strings.errorMsgBookmarkDoesntExist;
         break;
     }
     return msg;
