@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import AppTrackingTransparency
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -8,6 +9,10 @@ import Flutter
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+    if #available(iOS 14, *) {
+        ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+       })
+    }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

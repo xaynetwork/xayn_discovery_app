@@ -45,6 +45,7 @@ jobs:
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           FASTLANE_SKIP_UPDATE_CHECK: '1'
         working-directory: ./application
         run: |
