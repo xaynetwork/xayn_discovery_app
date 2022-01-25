@@ -11,8 +11,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_co
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
