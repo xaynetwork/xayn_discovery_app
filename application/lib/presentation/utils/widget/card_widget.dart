@@ -48,8 +48,7 @@ class CardWidget extends StatelessWidget {
               ),
             )
           : SvgPicture.asset(
-              ///TODO this is temporary, the right assets will be added when ready
-              R.assets.graphics.formsOrange,
+              R.assets.graphics.formsEmptyCollection,
               height: _itemHeight,
             ),
     );
@@ -59,7 +58,8 @@ class CardWidget extends StatelessWidget {
         Positioned.fill(
           left: cardData.map(
             personalArea: (_) => null,
-            collectionsScreen: (_) => 0.0,
+            collectionsScreen: (data) =>
+                data.backgroundImage != null ? 0.0 : null,
           ),
           child: background,
         ),
