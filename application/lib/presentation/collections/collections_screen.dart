@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
@@ -26,7 +27,7 @@ class CollectionsScreen extends StatefulWidget {
 }
 
 class _CollectionsScreenState extends State<CollectionsScreen>
-    with NavBarConfigMixin, CollectionCardManagersMixin {
+    with NavBarConfigMixin, CollectionCardManagersMixin, BottomSheetBodyMixin {
   CollectionsScreenManager? _collectionsScreenManager;
 
   @override
@@ -62,9 +63,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
           appToolbarData: AppToolbarData.withTrailingIcon(
             title: R.strings.collectionsScreenTitle,
             iconPath: R.assets.icons.plus,
-            onPressed: () {
-              _showTemporaryAlertDialog(_collectionsScreenManager!);
-            },
+            onPressed: () => _showAddCollectionBottomSheet(),
           ),
         ),
         body: _buildBody(),
@@ -132,47 +131,10 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     );
   }
 
-  /// Temporary dialog implemented in order to test the functionality
-  /// Will be removed when the bottom sheet will be ready
-  void _showTemporaryAlertDialog(CollectionsScreenManager _manager) async {
-    String collectionName = '';
-
-    // ignore: prefer_function_declarations_over_variables
-    final dialog = (CollectionsScreenState state) => AlertDialog(
-          title: const Text('Create collection'),
-          content: TextField(
-            onChanged: (value) {
-              collectionName = value;
-            },
-            decoration: InputDecoration(
-              hintText: 'Collection name',
-              errorText: state.errorMsg,
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () async {
-                final collection = await _manager.createCollection(
-                  collectionName: collectionName,
-                );
-                if (collection != null) {
-                  Navigator.pop(context);
-                }
-              },
-            )
-          ],
-        );
-    final builder =
-        BlocBuilder<CollectionsScreenManager, CollectionsScreenState>(
-      bloc: _manager,
-      builder: (_, state) => dialog(state),
-    );
-
-    await showDialog<bool>(
-      useRootNavigator: false,
-      context: context,
-      builder: (context) => builder,
+  _showAddCollectionBottomSheet() {
+    showAppBottomSheet(
+      context,
+      builder: (buildContext) => AddCollectionBottomSheet(),
     );
   }
 }
