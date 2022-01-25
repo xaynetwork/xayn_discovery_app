@@ -1,6 +1,7 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
+
 import 'translations.i18n.dart';
 
 String get _languageCode => 'de';
@@ -116,35 +117,22 @@ class TranslationsDe extends Translations {
   String get bottomSheetCreateCollectionHeader =>
       """Eine neue Collection erstellen""";
   String get bottomSheetCreateCollectionTextFieldHint => """Collection-Name""";
-  String get errorMsgTryingToCreateCollectionUsingExistingName =>
-      """Du versuchst, eine Collection mit einem vorhandenen Namen zu erstellen""";
   String get errorMsgTryingToCreateAgainDefaultCollection =>
       """Du versuchst, eine Default- Collection zu erstellen""";
-  String get errorMsgTryingToGetCardDataForNotExistingCollection =>
-      """That collection doesn't exist""";
   String get errorMsgTryingToRemoveDefaultCollection =>
-      """You can't remove the default collection""";
-  String get errorMsgTryingToRemoveNotExistingCollection =>
-      """That collection doesn't exist""";
-  String get errorMsgTryingToRenameCollectionUsingExistingName =>
-      """There already is a collection with this name""";
-  String get errorMsgTryingToRenameNotExistingCollection =>
-      """That collection doesn't exist""";
-  String get errorMsgTryingToMoveNotExistingBookmark =>
-      """This bookmark doesn't exist""";
-  String get errorMsgTryingToMoveBookmarkToNotExistingCollection =>
-      """That collection doesn't exist""";
-  String get errorMsgTryingToRemoveNotExistingBookmark =>
-      """That bookmark doesn't exist""";
-  String get errorMsgTryingToGetBookmarksForNotExistingCollection =>
-      """That collection doesn't exist""";
-  String get articles => """articles""";
-  String get article => """article""";
-  String get collectionsScreenTitle => """Your Collections""";
-  String get defaultCollectionNameReadLater => """Read later""";
-  String get bookmarkSnackBarSavedTo => """Saved to %s""";
-  String get readLater => """Read Later""";
-  String get bottomSheetSaveTo => """Save to""";
+      """Die Default-Collection kannst du nicht löschen""";
+  String get articles => """Artikel""";
+  String get article => """Artikel""";
+  String get collectionsScreenTitle => """Deine Collections""";
+  String get defaultCollectionNameReadLater => """Später lesen""";
+  String get bookmarkSnackBarSavedTo => """In %s gespeichert""";
+  String get bottomSheetSaveTo => """Speichern in""";
+  String get readerModeBylinePrefix => """by""";
+  String get errorMsgCollectionDoesntExist =>
+      """The collection doesn't exist""";
+  String get errorMsgBookmarkDoesntExist => """The bookmark doesn't exist""";
+  String get errorMsgCollectionNameAlreadyUsed =>
+      """This name is already used""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -208,33 +196,18 @@ Map<String, String> get translationsDeMap => {
       """bottomSheetCreateCollectionHeader""":
           """Eine neue Collection erstellen""",
       """bottomSheetCreateCollectionTextFieldHint""": """Collection-Name""",
-      """errorMsgTryingToCreateCollectionUsingExistingName""":
-          """Du versuchst, eine Collection mit einem vorhandenen Namen zu erstellen""",
       """errorMsgTryingToCreateAgainDefaultCollection""":
           """Du versuchst, eine Default- Collection zu erstellen""",
-      """errorMsgTryingToGetCardDataForNotExistingCollection""":
-          """That collection doesn't exist""",
       """errorMsgTryingToRemoveDefaultCollection""":
-          """You can't remove the default collection""",
-      """errorMsgTryingToRemoveNotExistingCollection""":
-          """That collection doesn't exist""",
-      """errorMsgTryingToRenameCollectionUsingExistingName""":
-          """There already is a collection with this name""",
-      """errorMsgTryingToRenameNotExistingCollection""":
-          """That collection doesn't exist""",
-      """errorMsgTryingToMoveNotExistingBookmark""":
-          """This bookmark doesn't exist""",
-      """errorMsgTryingToMoveBookmarkToNotExistingCollection""":
-          """That collection doesn't exist""",
-      """errorMsgTryingToRemoveNotExistingBookmark""":
-          """That bookmark doesn't exist""",
-      """errorMsgTryingToGetBookmarksForNotExistingCollection""":
-          """That collection doesn't exist""",
-      """articles""": """articles""",
-      """article""": """article""",
-      """collectionsScreenTitle""": """Your Collections""",
-      """defaultCollectionNameReadLater""": """Read later""",
-      """bookmarkSnackBarSavedTo""": """Saved to %s""",
-      """readLater""": """Read Later""",
-      """bottomSheetSaveTo""": """Save to""",
+          """Die Default-Collection kannst du nicht löschen""",
+      """articles""": """Artikel""",
+      """article""": """Artikel""",
+      """collectionsScreenTitle""": """Deine Collections""",
+      """defaultCollectionNameReadLater""": """Später lesen""",
+      """bookmarkSnackBarSavedTo""": """In %s gespeichert""",
+      """bottomSheetSaveTo""": """Speichern in""",
+      """readerModeBylinePrefix""": """by""",
+      """errorMsgCollectionDoesntExist""": """The collection doesn't exist""",
+      """errorMsgBookmarkDoesntExist""": """The bookmark doesn't exist""",
+      """errorMsgCollectionNameAlreadyUsed""": """This name is already used""",
     };
