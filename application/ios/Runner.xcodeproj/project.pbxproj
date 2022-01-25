@@ -365,9 +365,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.xayn.discovery.internal;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(USER_APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Xayn Discovery Internal Adhoc Profile";
+				PROVISIONING_PROFILE_SPECIFIER = "$(USER_PROVISIONING_PROFILE)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -498,9 +498,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.xayn.discovery.internal;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(USER_APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Xayn Discovery Internal Adhoc Profile";
+				PROVISIONING_PROFILE_SPECIFIER = "$(USER_PROVISIONING_PROFILE)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -525,9 +525,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.xayn.discovery.internal;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(USER_APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Xayn Discovery Internal Adhoc Profile";
+				PROVISIONING_PROFILE_SPECIFIER = "$(USER_PROVISIONING_PROFILE)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

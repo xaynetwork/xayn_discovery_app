@@ -14,62 +14,76 @@ import("../ios/fastlane/Fastfile")
 import("lib/properties.rb")
 import("lib/git.rb")
 
-#ios, android, web
-platform = "android"
+### All the configs are in this file, eventually all project specific parts will move there
+import("lib/config.rb")
 
-#apk, appbundle
-android_output = "apk"
 
-#internal, external
-flavor = "internal"
 
-#release, debug
-build = "debug"
-
-# env defaults that will be used when no ENV variables are provided
-ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "api-gw.xaynet.dev",
-                 "SEARCH_API_URL_PRODUCTION" => "api-gw.xayn.com",
-                 "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
-                 "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com" }
 
 # Common checks before running a lane
 before_all do |lane, options|
-  options[:platform] = options[:platform] || platform
-  options[:android_output] = options[:android_output] || android_output
-  options[:flavor] = options[:flavor] || flavor
-  options[:build] = options[:build] || build
-  options[:coverage] = options[:coverage] || false
+  setIfNotSet = lambda{ | option, alt |
+    options[option] = options.key?(option) ? options[option] : alt
+  }
+
+  setIfNotSet.call(:clean, true)
+  setIfNotSet.call(:platform, Config::PLATFORM)
+  setIfNotSet.call(:android_output, Config::ANDROID_OUTPUT)
+  setIfNotSet.call(:flavor, Config::FLAVOR)
+  setIfNotSet.call(:build, Config::BUILD)
+  setIfNotSet.call(:upload_to_appcenter, true)
+  setIfNotSet.call(:coverage, false)
+  ## downloading the iOS adhoc profile
+  setIfNotSet.call(:downloadProfile, true)
 
   version_name = gitVersionName()
   build_number = gitVersionNumber()
-  options[:build_number] = options[:build_number] || build_number
-  options[:version_name] = options[:version_name] || version_name
-  puts options
+  setIfNotSet.call(:build_number, build_number)
+  setIfNotSet.call(:version_name, version_name)
+  UI.success "Params:\n#{JSON.pretty_generate(options)}"
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
 desc "Flutter build"
 private_lane :flutter_build do |options|
-  clean(options)
-  pub_get(options)
-  build_runner(options)
+   if options[:clean]
+     clean(options)
+   end
+   build_runner(options)
 
-  target = options[:platform] == "android" ? options[:android_output] : options[:platform]
+  platform = options[:platform]
+  target = platform == "android" ? options[:android_output] : platform
   type = options[:build] == "release" ? "--release" : "--debug"
-  codesign = options[:platform] == "ios" ? "--no-codesign" : ""
+  codesign = platform == "ios" ? "--no-codesign" : ""
+  flavor = options[:flavor]
+  appName = Config::FLAVOR_MATRIX[flavor][platform]["name"]
+  appId = Config::FLAVOR_MATRIX[flavor][platform]["id"]
 
-  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]}")
+  defines = {
+    "GIT_TAG" => options[:version_name],
+    "USER_APP_ID" => appId,
+    "USER_APP_NAME" => appName,
+    "USER_FLAVOR" => flavor,
+  }
+
+  if platform == "ios"
+    defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor]["provisioning_profile_name"]
+  end
+  dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
+
+  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]} --dart-define=USER_APP_ID=#{appId} --dart-define=USER_APP_NAME=\"#{appName}\" #{dartDefines}")
 end
 
-desc "Build internal apk"
-private_lane :android_prepare_internal do |options|
+desc "Prepare internal key.properties"
+private_lane :android_prepare_key_properties do |options|
   UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
   provisionigPassword = ENV["PROVISIONING_PASSWORD"]
+  keyAlias = Config::ANDROID_BUILD_CONFIG[options[:flavor]]["key_alias"]
   setProperties("../android/key.properties", {
-    :storePassword => provisionigPassword,
-    :keyPassword => provisionigPassword,
-    :keyAlias => "release",
-    :storeFile => "internal_release.jks",
+    "storePassword" => provisionigPassword,
+    "keyPassword" => provisionigPassword,
+    "keyAlias" => keyAlias,
+    "storeFile" => "releases.jks",
   })
 end
 
@@ -111,7 +125,7 @@ lane :check_config_files do |options|
     "IMAGE_FETCHER_URL_DEBUG" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN",
     "AMPLITUDE_API_KEY_DEBUG" => "AMPLITUDE_API_KEY",
-  })
+  }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
                       {
@@ -120,12 +134,12 @@ lane :check_config_files do |options|
     "IMAGE_FETCHER_URL_PRODUCTION" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN",
     "AMPLITUDE_API_KEY_PRODUCTION" => "AMPLITUDE_API_KEY",
-  })
+  }, Config::ENV_DEFAULTS)
 
   if options[:flavor] != "internal" && options[:release] != "debug"
-    askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN" })
+    askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   else
-    askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" })
+    askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   end
 end
 
@@ -170,29 +184,30 @@ lane :check do |options|
   end
 end
 
-desc "Build and publish (i.e fastlane publish platform:ios build:release)"
+desc "Build and publish (i.e fastlane publish platform:ios build:release flavor:beta)"
 lane :publish do |options|
-  if options[:platform] == "android"
-    android_prepare_internal
+  platform = options[:platform]
+  flavor = options[:flavor]
+  config = Config::FLAVOR_MATRIX[flavor][platform]
+  appcenter_target = config["appcenter_target"]
+  appcenter_token = config["appcenter_token"]
+  appcenter_buildfile = config["appcenter_buildfile"]
+
+  if platform == "android"
+    android_prepare_key_properties(options)
   end
   flutter_build(options)
-  if options[:platform] == "ios"
+  if platform == "ios"
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
     end
-    UI.user_error!("No $APPCENTER_IOS_INTERNAL_TOKEN provided!") unless ENV.key?("APPCENTER_IOS_INTERNAL_TOKEN")
+  end
+  if options[:upload_to_appcenter]
+    UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
     uploadToAppCenter(
-      ENV["APPCENTER_IOS_INTERNAL_TOKEN"],
-      "Discovery-App-internal",
-      "build/discovery-app.ipa",
-      options[:version_name]
-    )
-  else
-    UI.user_error!("No $APPCENTER_IOS_ANDROID_TOKEN provided!") unless ENV.key?("APPCENTER_ANDROID_INTERNAL_TOKEN")
-    uploadToAppCenter(
-      ENV["APPCENTER_ANDROID_INTERNAL_TOKEN"],
-      "Discovery-App-Android-internal",
-      "build/app/outputs/flutter-apk/app-release.apk",
+      ENV[appcenter_token],
+      appcenter_target,
+      appcenter_buildfile,
       options[:version_name]
     )
   end
@@ -215,12 +230,12 @@ def uploadToAppCenter(token, appName, path, version)
   changelog = gitChangeLog(version)
   appcenter_upload(
     api_token: token,
-    owner_name: "XAIN_AG",
-    owner_type: "organization",
+    owner_name: Config::APPCENTER_OWNER_NAME,
+    owner_type: Config::APPCENTER_OWNER_TYPE,
     app_name: appName,
     file: path,
     release_notes: changelog,
-    destinations: "Collaborators",
+    destinations: Config::APPCENTER_DEFAULT_TARGET,
     notify_testers: true,
   )
 end
