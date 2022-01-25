@@ -2,33 +2,19 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/urls.dart';
 
-import 'settings_manager_test.mocks.dart';
+import '../../test_utils/utils.dart';
 
-@GenerateMocks([
-  GetAppVersionUseCase,
-  GetAppThemeUseCase,
-  SaveAppThemeUseCase,
-  ListenAppThemeUseCase,
-  BugReportingService,
-  ExtractLogUseCase,
-  SettingsNavActions,
-])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
@@ -43,6 +29,7 @@ void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;
   late MockBugReportingService bugReportingService;
   late MockExtractLogUseCase extractLogUseCase;
+  late MockShareUriUseCase shareUriUseCase;
 
   setUp(() {
     getAppVersionUseCase = MockGetAppVersionUseCase();
@@ -51,6 +38,7 @@ void main() {
     listenAppThemeUseCase = MockListenAppThemeUseCase();
     bugReportingService = MockBugReportingService();
     extractLogUseCase = MockExtractLogUseCase();
+    shareUriUseCase = MockShareUriUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
@@ -71,6 +59,7 @@ void main() {
         bugReportingService,
         extractLogUseCase,
         MockSettingsNavActions(),
+        shareUriUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -143,15 +132,15 @@ void main() {
   );
 
   blocTest<SettingsScreenManager, SettingsScreenState>(
-    'WHEN shareApp method called THEN call ___ useCase',
+    'WHEN shareApp method called THEN call shareUriUseCase',
     build: () => create(),
     act: (manager) => manager.shareApp(),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
-        //default calls here,
         getAppVersionUseCase.singleOutput(none),
+        shareUriUseCase.call(Uri.parse(Urls.download)),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
@@ -159,6 +148,7 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
+      verifyNoMoreInteractions(shareUriUseCase);
     },
   );
   test(

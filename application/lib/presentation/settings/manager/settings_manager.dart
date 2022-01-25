@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_configuration_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
@@ -12,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/urls.dart';
 
 abstract class SettingsNavActions {
   void onBackNavPressed();
@@ -30,6 +32,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final BugReportingService _bugReportingService;
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
+  final ShareUriUseCase _shareUriUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -39,6 +42,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._bugReportingService,
     this._extractLogUseCase,
     this._settingsNavActions,
+    this._shareUriUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -70,11 +74,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         primaryColor: R.colors.primaryAction,
       );
 
-  void shareApp() {
-    // todo: handle share app url/etc action
-    //ignore: avoid_print
-    print('shareApp clicked');
-  }
+  void shareApp() => _shareUriUseCase.call(Uri.parse(Urls.download));
 
   void openUrl(String url) {
     final uri = Uri.tryParse(url);
