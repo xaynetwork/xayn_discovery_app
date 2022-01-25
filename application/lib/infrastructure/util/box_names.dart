@@ -4,6 +4,7 @@ abstract class BoxNames {
   static const appSettings = 'settings';
   static const collections = 'collections';
   static const bookmarks = 'bookmarks';
+  static const documents = 'documents';
   static const appStatus = 'appStatus';
   static const feed = 'feed';
   static const feedSettings = 'feedSettings';

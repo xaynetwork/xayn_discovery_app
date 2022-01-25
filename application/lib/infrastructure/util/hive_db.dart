@@ -49,6 +49,7 @@ class HiveDB {
       _openBox<Record>(BoxNames.feed, inMemory: inMemory),
       _openBox<Record>(BoxNames.feedSettings, inMemory: inMemory),
       _openBox<Record>(BoxNames.bookmarks, inMemory: inMemory),
+      _openBox<Record>(BoxNames.documents, inMemory: inMemory),
       _openBox<Record>(BoxNames.collections, inMemory: inMemory),
     ]);
   }
