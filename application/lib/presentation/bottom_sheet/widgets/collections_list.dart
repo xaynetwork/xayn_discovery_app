@@ -98,27 +98,26 @@ class _CollectionItem extends StatelessWidget {
       ),
     );
 
-    //todo: replace with asset
-    final thumbnail = Container(
-      height: 24,
-      width: 24,
-      color: const Color(0x816ADDCC),
-    );
-
-    final roundedThumbnail = ClipRRect(
-      child: thumbnail,
-      borderRadius: R.styles.roundBorder0_5,
+    final thumbnail = Thumbnail.assetImage(
+      R.assets.graphics.formsEmptyCollection,
+      backgroundColor: R.colors.collectionThumbnailBackground,
     );
 
     final row = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        roundedThumbnail,
+        thumbnail,
         SizedBox(width: R.dimen.unit2),
-        Text(collection.name, style: R.styles.bottomSheetText),
-        const Spacer(flex: 9),
-        Flexible(flex: 1, child: visibleCheck),
+        Expanded(
+          child: Text(
+            collection.name,
+            style: R.styles.bottomSheetText,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        visibleCheck,
+        SizedBox(width: R.dimen.unit2),
       ],
     );
 
