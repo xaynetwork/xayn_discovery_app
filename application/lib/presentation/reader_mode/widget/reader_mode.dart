@@ -134,9 +134,8 @@ class _ReaderModeState extends State<ReaderMode> {
       return result;
     }
 
-    // todo: add POEditor strings here
-    return result
-        .withOtherContent('<p>by <b>$byline</b></p>${result.contents}');
+    return result.withOtherContent(
+        '<p>${R.strings.readerModeBylinePrefix} <b>$byline</b></p>${result.contents}');
   }
 
   void _updateCardData() {
