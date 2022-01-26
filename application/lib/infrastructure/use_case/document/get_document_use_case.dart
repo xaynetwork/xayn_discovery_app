@@ -15,11 +15,11 @@ class GetDocumentUseCase extends UseCase<UniqueId, Document> {
 
   @override
   Stream<Document> transaction(UniqueId param) async* {
-    final document = _documentRepository.getById(param);
-    if (document == null) {
+    final wrapper = _documentRepository.getById(param);
+    if (wrapper == null) {
       throw BookmarkUseCaseError.tryingToGetNotExistingBookmark;
     }
-    yield document;
+    yield wrapper.document;
   }
 }
 

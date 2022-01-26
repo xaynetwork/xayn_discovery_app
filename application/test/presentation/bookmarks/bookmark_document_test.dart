@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
@@ -41,7 +40,7 @@ void main() {
         CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument));
     final document = await getDocumentUseCase.singleOutput(bookmark.id);
 
-    expect(document, DocumentWrapper(fakeDocument));
+    expect(document, fakeDocument);
   });
 
   test(
