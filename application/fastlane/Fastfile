@@ -107,7 +107,8 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
-  command = "pub  run build_runner build --delete-conflicting-outputs"
+  mode = options[:watch] ? 'watch' : 'build'
+  command = "pub run build_runner #{mode} --delete-conflicting-outputs"
   begin
     flutter(command)
   rescue => ex
@@ -150,7 +151,8 @@ end
 
 desc "Watch changes for rerunning the build_runner"
 lane :watch do |options|
-  flutter("packages pub run build_runner watch --delete-conflicting-outputs")
+  options[:watch] = true;
+  build_runner(options)
 end
 
 desc "Flutter clean"
