@@ -16,13 +16,10 @@ abstract class MarketingAnalyticsService {
 
 @LazySingleton(as: MarketingAnalyticsService)
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
-  late AppsflyerSdk _appsflyer;
+  final AppsflyerSdk _appsflyer;
 
   @visibleForTesting
-  AppsFlyerMarketingAnalyticsService({
-    required AppsflyerSdk appsflyer,
-  }) {
-    _appsflyer = appsflyer;
+  AppsFlyerMarketingAnalyticsService(this._appsflyer) {
     _appsflyer.onAppOpenAttribution(_onAppOpenAttribution);
     _appsflyer.onInstallConversionData(_onInstallConversionData);
     _appsflyer.onDeepLinking(_onDeepLinking);
@@ -41,7 +38,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
 
     final appsFlyer = AppsflyerSdk(options);
     appsFlyer.initSdk();
-    return AppsFlyerMarketingAnalyticsService(appsflyer: appsFlyer);
+    return AppsFlyerMarketingAnalyticsService(appsFlyer);
   }
 
   @override
