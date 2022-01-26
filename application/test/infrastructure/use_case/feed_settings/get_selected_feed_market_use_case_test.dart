@@ -23,7 +23,7 @@ void main() {
   });
 
   test(
-    'GIVEN feedSettings with empty feed markets WHEN get settings THEN return set of markets',
+    'GIVEN feedSettings with empty feed markets WHEN get settings THEN return empty set of markets',
     () async {
       when(repository.settings).thenReturn(FeedSettings(feedMarkets: {}));
       final output = await useCase.singleOutput(none);
