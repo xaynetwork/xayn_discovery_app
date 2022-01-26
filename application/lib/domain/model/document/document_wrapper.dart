@@ -7,37 +7,13 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../unique_id.dart';
 
-class DocumentWrapper extends Equatable implements DbEntity, Document {
-  const DocumentWrapper(Document document) : _document = document;
+class DocumentWrapper extends Equatable implements DbEntity {
+  const DocumentWrapper(this.document);
 
   @override
-  UniqueId get id => _document.documentId.uniqueId;
-  final Document _document;
+  UniqueId get id => document.documentId.uniqueId;
+  final Document document;
 
   @override
-  $DocumentCopyWith<Document> get copyWith => _document.copyWith;
-
-  @override
-  DocumentId get documentId => _document.documentId;
-
-  @override
-  DocumentFeedback get feedback => _document.feedback;
-
-  @override
-  bool get isActive => _document.isActive;
-
-  @override
-  int get nonPersonalizedRank => _document.nonPersonalizedRank;
-
-  @override
-  int get personalizedRank => _document.personalizedRank;
-
-  @override
-  Map<String, dynamic> toJson() => _document.toJson();
-
-  @override
-  WebResource get webResource => _document.webResource;
-
-  @override
-  List<Object?> get props => [_document];
+  List<Object?> get props => [document];
 }
