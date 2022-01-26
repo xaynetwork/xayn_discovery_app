@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widg
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/collections/swipeable_collection_card.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -87,9 +88,10 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     CollectionsScreenState screenState,
   ) {
     final list = ListView.builder(
-      shrinkWrap: true,
       itemCount: screenState.collections.length,
-      itemBuilder: (_, index) => _buildCard(screenState.collections[index]),
+      itemBuilder: (_, index) => _buildCard(
+        screenState.collections[index],
+      ),
     );
 
     final bottomPadding = R.dimen.unit2;
@@ -107,10 +109,22 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   }
 
   Widget _buildCard(Collection collection) {
-    return BlocBuilder<CollectionCardManager, CollectionCardState>(
-      bloc: managerOf(collection.id),
-      builder: (context, cardState) {
-        final card = CardWidget(
+    late Widget card;
+    if (collection.isDefault) {
+      card = _buildBaseCard(collection);
+    } else {
+      card = _buildSwipeableCard(collection);
+    }
+    return Padding(
+      padding: EdgeInsets.only(bottom: R.dimen.unit2),
+      child: card,
+    );
+  }
+
+  Widget _buildBaseCard(Collection collection) =>
+      BlocBuilder<CollectionCardManager, CollectionCardState>(
+        bloc: managerOf(collection.id),
+        builder: (context, cardState) => CardWidget(
           key: Keys.generateCollectionsScreenCardKey(
             collection.id.toString(),
           ),
@@ -122,14 +136,12 @@ class _CollectionsScreenState extends State<CollectionsScreen>
             backgroundImage: cardState.image,
             color: R.colors.collectionsScreenCard,
           ),
-        );
-        return Padding(
-          padding: EdgeInsets.only(bottom: R.dimen.unit2),
-          child: card,
-        );
-      },
-    );
-  }
+        ),
+      );
+
+  Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
+        collectionCard: _buildBaseCard(collection),
+      );
 
   _showAddCollectionBottomSheet() {
     showAppBottomSheet(
