@@ -42,8 +42,8 @@ void main() {
     await driver.initToDiscoveryPage();
     await driver.navigateToSearch();
 
-    expect(find.byType(DiscoveryFeed), findsOneWidget);
-    expect(find.byType(ActiveSearch), findsNothing);
+    expect(find.byType(DiscoveryFeed), findsNothing);
+    expect(find.byType(ActiveSearch), findsOneWidget);
   });
 
   testWidgets('In Active Search clicking on home returns to discovery feed',
