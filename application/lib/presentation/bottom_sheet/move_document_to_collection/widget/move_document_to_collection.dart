@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -114,8 +114,8 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
-      builder: (buildContext) => AddCollectionBottomSheet(
-        onSheetClosed: (collection) => _onAddCollectionSheetClosed(
+      builder: (buildContext) => CreateCollectionBottomSheet(
+        onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,
         ),

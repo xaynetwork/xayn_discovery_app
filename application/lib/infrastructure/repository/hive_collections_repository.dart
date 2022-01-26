@@ -9,6 +9,8 @@ import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 import 'hive_repository.dart';
 
+const maxCollectionNameLength = 40;
+
 @Singleton(as: CollectionsRepository)
 class HiveCollectionsRepository extends HiveRepository<Collection>
     implements CollectionsRepository {
@@ -50,4 +52,8 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
     }
     return false;
   }
+
+  @override
+  bool isCollectionNameNotValid(String name) =>
+      name.trim().length > maxCollectionNameLength || name.trim().isEmpty;
 }

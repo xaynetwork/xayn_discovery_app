@@ -14,4 +14,5 @@ abstract class CollectionsRepository {
   Stream<RepositoryEvent> watch({UniqueId id});
   int getLastCollectionIndex();
   bool isCollectionNameUsed(String name);
+  bool isCollectionNameNotValid(String name);
 }

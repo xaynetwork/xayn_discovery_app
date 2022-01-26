@@ -129,6 +129,8 @@ class Translations {
   String get errorMsgBookmarkDoesntExist => """The bookmark doesn't exist""";
   String get errorMsgCollectionNameAlreadyUsed =>
       """This name is already used""";
+  String get errorMsgCollectionNameIsInvalid =>
+      """The name shouldn't exceed %s characters""";
 }
 
 Map<String, String> get translationsMap => {
@@ -205,4 +207,6 @@ Map<String, String> get translationsMap => {
       """errorMsgCollectionDoesntExist""": """The collection doesn't exist""",
       """errorMsgBookmarkDoesntExist""": """The bookmark doesn't exist""",
       """errorMsgCollectionNameAlreadyUsed""": """This name is already used""",
+      """errorMsgCollectionNameIsInvalid""":
+          """The name shouldn't exceed %s characters""",
     };

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
@@ -134,7 +134,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   _showAddCollectionBottomSheet() {
     showAppBottomSheet(
       context,
-      builder: (buildContext) => AddCollectionBottomSheet(),
+      builder: (buildContext) => CreateCollectionBottomSheet(),
     );
   }
 }
