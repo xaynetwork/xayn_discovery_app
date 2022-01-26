@@ -10,8 +10,7 @@ import AppTrackingTransparency
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     if #available(iOS 14, *) {
-        ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-       })
+        ATTrackingManager.requestTrackingAuthorization { _ in }
     }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
