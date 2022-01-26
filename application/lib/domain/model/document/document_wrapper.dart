@@ -8,7 +8,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import '../unique_id.dart';
 
 class DocumentWrapper extends Equatable implements DbEntity, Document {
-  DocumentWrapper(Document document) : _document = document;
+  const DocumentWrapper(Document document) : _document = document;
 
   @override
   UniqueId get id => _document.documentId.uniqueId;
