@@ -83,10 +83,11 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
         .removeWhere((country) => _selectedCountries.contains(country));
     try {
       return FeedSettingsState.ready(
-          maxSelectedCountryAmount: maxSelectedCountryAmount,
-          selectedCountries: _selectedCountries.toList(),
-          unSelectedCountries: unSelectedCountries,
-          errorKey: _errorTooltipKey);
+        maxSelectedCountryAmount: maxSelectedCountryAmount,
+        selectedCountries: _selectedCountries.toList(),
+        unSelectedCountries: unSelectedCountries,
+        errorKey: _errorTooltipKey,
+      );
     } finally {
       _errorTooltipKey = null;
     }

@@ -30,7 +30,13 @@ class SaveSelectedCountriesUseCase extends UseCase<Set<Country>, None> {
         .map((e) => engine.FeedMarket(
             countryCode: e.countryCode, langCode: e.languageCode))
         .toSet();
-    await _discoveryEngine.changeConfiguration(feedMarkets: engineMarkets);
+    final resultEvent =
+        await _discoveryEngine.changeConfiguration(feedMarkets: engineMarkets);
+
+    if (resultEvent is engine.EngineExceptionReason) {
+      // todo: add better handling later
+      throw resultEvent;
+    }
 
     // update local storage with markets below
     final settings = _repository.settings;
