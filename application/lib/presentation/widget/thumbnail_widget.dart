@@ -48,6 +48,8 @@ class Thumbnail extends StatelessWidget {
           src,
           width: width ?? R.dimen.unit3,
           height: height ?? R.dimen.unit3,
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
         ),
         super(key: key);
 
@@ -66,7 +68,7 @@ class Thumbnail extends StatelessWidget {
             width: width ?? R.dimen.unit3,
             height: height ?? R.dimen.unit3,
             color: color,
-            fit: BoxFit.scaleDown,
+            fit: BoxFit.contain,
           ),
         ),
         super(key: key);

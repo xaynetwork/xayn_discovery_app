@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_design/xayn_design.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collection_list_item.dart';
+import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
-
-typedef _OnSelectCollection = void Function(Collection?);
 
 class CollectionsListBottomSheet extends StatefulWidget {
   final List<Collection> collections;
-  final _OnSelectCollection onSelectCollection;
+  final OnSelectCollection onSelectCollection;
   final Collection? initialSelectedCollection;
 
   const CollectionsListBottomSheet({
@@ -26,8 +27,8 @@ class CollectionsListBottomSheet extends StatefulWidget {
       _CollectionsListBottomSheetState();
 }
 
-class _CollectionsListBottomSheetState
-    extends State<CollectionsListBottomSheet> {
+class _CollectionsListBottomSheetState extends State<CollectionsListBottomSheet>
+    with CollectionCardManagersMixin {
   Collection? selectedCollection;
   List<Collection> collections = [];
 
@@ -39,83 +40,28 @@ class _CollectionsListBottomSheetState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: _getCollectionItems(),
-    );
-  }
+  Widget build(BuildContext context) => ListView.builder(
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: collections.length,
+        itemExtent: R.dimen.collectionItemBottomSheetHeight,
+        itemBuilder: (_, index) => _buildCollectionItem(collections[index]),
+      );
 
-  List<Widget> _getCollectionItems() => collections
-      .map<Widget>(
-        (Collection it) => _CollectionItem(
-          key: Keys.collectionItem(it.id.value),
-          collection: it,
-          isSelected: it == selectedCollection,
+  Widget _buildCollectionItem(Collection collection) =>
+      BlocBuilder<CollectionCardManager, CollectionCardState>(
+        bloc: managerOf(collection.id),
+        builder: (context, cardState) => CollectionListItem(
+          key: Keys.collectionItem(collection.id.value),
+          collection: collection,
+          collectionImage: cardState.image,
+          isSelected: collection == selectedCollection,
           onSelectCollection: _onSelectCollection,
         ),
-      )
-      .toList();
+      );
 
   void _onSelectCollection(Collection? selected) {
     widget.onSelectCollection(selected);
     setState(() => selectedCollection = selected);
-  }
-}
-
-class _CollectionItem extends StatelessWidget {
-  final Collection collection;
-  final bool isSelected;
-  final _OnSelectCollection onSelectCollection;
-
-  const _CollectionItem({
-    Key? key,
-    required this.collection,
-    required this.isSelected,
-    required this.onSelectCollection,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final check = SvgPicture.asset(
-      R.assets.icons.check,
-      fit: BoxFit.fitHeight,
-      color: R.colors.icon,
-      height: R.dimen.collectionItemBottomSheetHeight,
-    );
-
-    final thumbnail = Thumbnail.assetImage(
-      R.assets.graphics.formsEmptyCollection,
-      backgroundColor: R.colors.collectionThumbnailBackground,
-    );
-
-    final collectionName = Text(
-      collection.name,
-      style: R.styles.bottomSheetText,
-      overflow: TextOverflow.ellipsis,
-    );
-
-    final row = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        thumbnail,
-        SizedBox(width: R.dimen.unit2),
-        Expanded(child: collectionName),
-        Visibility(visible: isSelected, child: check),
-        SizedBox(width: R.dimen.unit2),
-      ],
-    );
-
-    final item = SizedBox(
-      child: row,
-      height: R.dimen.collectionItemBottomSheetHeight,
-    );
-
-    return InkWell(
-      onTap: () => onSelectCollection(isSelected ? null : collection),
-      child: item,
-    );
   }
 }

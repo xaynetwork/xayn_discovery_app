@@ -84,18 +84,12 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
                 : Container(),
           );
 
-    final scrollableBody = Flexible(
-      child: SingleChildScrollView(
-        controller: getScrollController(context),
-        child: body,
-      ),
-    );
-
     final header = BottomSheetHeader(
       headerText: R.strings.bottomSheetSaveTo,
       actionWidget: AppGhostButton.icon(
         R.assets.icons.plus,
         onPressed: _showAddCollectionBottomSheet,
+        contentPadding: EdgeInsets.zero,
       ),
     );
 
@@ -109,7 +103,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         header,
-        scrollableBody,
+        Flexible(child: body),
         footer,
       ],
     );

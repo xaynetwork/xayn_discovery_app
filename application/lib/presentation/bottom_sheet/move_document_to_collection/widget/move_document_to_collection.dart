@@ -85,13 +85,6 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
                 : Container(),
           );
 
-    final scrollableBody = Flexible(
-      child: SingleChildScrollView(
-        controller: getScrollController(context),
-        child: body,
-      ),
-    );
-
     final header = BottomSheetHeader(
       headerText: R.strings.bottomSheetSaveTo,
       actionWidget: AppGhostButton.icon(
@@ -111,7 +104,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         header,
-        scrollableBody,
+        Flexible(child: body),
         footer,
       ],
     );
