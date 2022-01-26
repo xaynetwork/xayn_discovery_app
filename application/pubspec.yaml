@@ -48,7 +48,7 @@ dependencies:
   path_provider: ^2.0.5
   provider: 6.0.1
   rxdart: ^0.27.2
-  share: ^2.0.4
+  share_plus: 3.0.4
   shimmer: ^2.0.0
   story:
     git:

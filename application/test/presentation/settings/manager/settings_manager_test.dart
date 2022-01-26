@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_u
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/urls.dart';
 
 import '../../test_utils/utils.dart';
 
@@ -29,6 +30,7 @@ void main() {
   late MockBugReportingService bugReportingService;
   late MockExtractLogUseCase extractLogUseCase;
   late MockUrlOpener urlOpener;
+  late MockShareUriUseCase shareUriUseCase;
 
   setUp(() {
     getAppVersionUseCase = MockGetAppVersionUseCase();
@@ -38,6 +40,7 @@ void main() {
     bugReportingService = MockBugReportingService();
     extractLogUseCase = MockExtractLogUseCase();
     urlOpener = MockUrlOpener();
+    shareUriUseCase = MockShareUriUseCase();
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
@@ -59,6 +62,7 @@ void main() {
         extractLogUseCase,
         MockSettingsNavActions(),
         urlOpener,
+        shareUriUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -131,15 +135,15 @@ void main() {
   );
 
   blocTest<SettingsScreenManager, SettingsScreenState>(
-    'WHEN shareApp method called THEN call ___ useCase',
+    'WHEN shareApp method called THEN call shareUriUseCase',
     build: () => create(),
     act: (manager) => manager.shareApp(),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {
       verifyInOrder([
-        //default calls here,
         getAppVersionUseCase.singleOutput(none),
+        shareUriUseCase.call(Uri.parse(Urls.download)),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
@@ -147,6 +151,7 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
+      verifyNoMoreInteractions(shareUriUseCase);
     },
   );
   test(

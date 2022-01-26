@@ -21,7 +21,8 @@ abstract class BaseHiveRepository<T extends DbEntity> {
   Box<Record> get box;
 
   /// All unwrapped items in the box.
-  List<T> get _values => box.values.map(_unwrap).toList();
+  List<T> get _values =>
+      box.values.where((it) => it.value != null).map(_unwrap).toList();
 
   /// The helper mapper method to ensure that [Record] always has a corresponding value.
   T _unwrap(Record record) => _mapperCache.putIfAbsent(

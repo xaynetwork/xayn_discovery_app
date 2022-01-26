@@ -1,7 +1,6 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
-
 import 'translations.i18n.dart';
 
 String get _languageCode => 'de';
@@ -57,10 +56,9 @@ class TranslationsDe extends Translations {
   String get languageCode => "de";
   String get your => """Meine""";
   String get activeSearchSearchHint => """Suche""";
-  String get settingsTitle => """Your Settings""";
+  String get settingsTitle => """Deine Einstellungen""";
   String get settingsSectionTitleAppTheme => """Mein App Theme""";
-  String get settingsSectionScrollDirection =>
-      """Discovery feed Scrollrichtung""";
+  String get settingsSectionScrollDirection => """Feed Scroll-Richtung""";
   String get settingsSectionTitleGeneralInfo => """Generelle Informationen""";
   String get settingsSectionTitleHelpImprove =>
       """Hilf uns besser zu werden!""";
@@ -89,22 +87,21 @@ class TranslationsDe extends Translations {
   String get readingTimeUnitPlural => """minutes""";
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
-  String get personalAreaTitle => """Your Area""";
+  String get personalAreaTitle => """Dein Bereich""";
   String get personalAreaCollections => """Sammlung""";
-  String get personalAreaHomeFeed => """Home Feed""";
+  String get personalAreaHomeFeed => """Discovery Feed""";
   String get personalAreaSettings => """Einstellungen""";
   String get comingSoon => """Kommt bald""";
-  String get feedSettingsScreenTitle => """Your Home Feed""";
+  String get feedSettingsScreenTitle => """Dein Feed""";
   String get feedSettingsScreenContryListHint =>
       """Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)""";
   String get feedSettingsScreenActiveCountryListSubtitle => """Aktive Länder""";
   String get feedSettingsScreenInActiveCountryListSubtitle =>
       """Inaktive Länder""";
   String get feedSettingsScreenMinSelectedCountriesError =>
-      """Select at least one country""";
+      """Wähle mindestens ein Land aus""";
   String get feedSettingsScreenMaxSelectedCountriesError =>
       """Es sind bereits %s Länder ausgewählt""";
-  String get defaultCollectionTitle => """Später lesen""";
   String get bottomSheetCancel => """Abbrechen""";
   String get langNameFrench => """Französisch""";
   String get langNameDutch => """Niederländisch""";
@@ -138,9 +135,9 @@ class TranslationsDe extends Translations {
 Map<String, String> get translationsDeMap => {
       """your""": """Meine""",
       """activeSearchSearchHint""": """Suche""",
-      """settingsTitle""": """Your Settings""",
+      """settingsTitle""": """Deine Einstellungen""",
       """settingsSectionTitleAppTheme""": """Mein App Theme""",
-      """settingsSectionScrollDirection""": """Discovery feed Scrollrichtung""",
+      """settingsSectionScrollDirection""": """Feed Scroll-Richtung""",
       """settingsSectionTitleGeneralInfo""": """Generelle Informationen""",
       """settingsSectionTitleHelpImprove""": """Hilf uns besser zu werden!""",
       """settingsSectionTitleSpreadTheWord""": """Erzähl es weiter!""",
@@ -168,22 +165,21 @@ Map<String, String> get translationsDeMap => {
       """readingTimeUnitPlural""": """minutes""",
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
-      """personalAreaTitle""": """Your Area""",
+      """personalAreaTitle""": """Dein Bereich""",
       """personalAreaCollections""": """Sammlung""",
-      """personalAreaHomeFeed""": """Home Feed""",
+      """personalAreaHomeFeed""": """Discovery Feed""",
       """personalAreaSettings""": """Einstellungen""",
       """comingSoon""": """Kommt bald""",
-      """feedSettingsScreenTitle""": """Your Home Feed""",
+      """feedSettingsScreenTitle""": """Dein Feed""",
       """feedSettingsScreenContryListHint""":
           """Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)""",
       """feedSettingsScreenActiveCountryListSubtitle""": """Aktive Länder""",
       """feedSettingsScreenInActiveCountryListSubtitle""":
           """Inaktive Länder""",
       """feedSettingsScreenMinSelectedCountriesError""":
-          """Select at least one country""",
+          """Wähle mindestens ein Land aus""",
       """feedSettingsScreenMaxSelectedCountriesError""":
           """Es sind bereits %s Länder ausgewählt""",
-      """defaultCollectionTitle""": """Später lesen""",
       """bottomSheetCancel""": """Abbrechen""",
       """langNameFrench""": """Französisch""",
       """langNameDutch""": """Niederländisch""",
