@@ -3,6 +3,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
 typedef _OnSelectCollection = void Function(Collection?);
 
@@ -40,6 +41,7 @@ class _CollectionsListBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: _getCollectionItems(),
     );
@@ -88,43 +90,35 @@ class _CollectionItem extends StatelessWidget {
       R.assets.icons.check,
       fit: BoxFit.fitHeight,
       color: R.colors.icon,
+      height: R.dimen.collectionItemBottomSheetHeight,
     );
 
-    final visibleCheck = SizedBox(
-      height: double.maxFinite,
-      child: Visibility(
-        visible: isSelected,
-        child: check,
-      ),
+    final thumbnail = Thumbnail.assetImage(
+      R.assets.graphics.formsEmptyCollection,
+      backgroundColor: R.colors.collectionThumbnailBackground,
     );
 
-    //todo: replace with asset
-    final thumbnail = Container(
-      height: 24,
-      width: 24,
-      color: const Color(0x816ADDCC),
-    );
-
-    final roundedThumbnail = ClipRRect(
-      child: thumbnail,
-      borderRadius: R.styles.roundBorder0_5,
+    final collectionName = Text(
+      collection.name,
+      style: R.styles.bottomSheetText,
+      overflow: TextOverflow.ellipsis,
     );
 
     final row = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        roundedThumbnail,
+        thumbnail,
         SizedBox(width: R.dimen.unit2),
-        Text(collection.name, style: R.styles.bottomSheetText),
-        const Spacer(flex: 9),
-        Flexible(flex: 1, child: visibleCheck),
+        Expanded(child: collectionName),
+        Visibility(visible: isSelected, child: check),
+        SizedBox(width: R.dimen.unit2),
       ],
     );
 
     final item = SizedBox(
       child: row,
-      height: R.dimen.unit5,
+      height: R.dimen.collectionItemBottomSheetHeight,
     );
 
     return InkWell(
