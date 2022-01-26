@@ -2,8 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 
 import '../test_utils/fakes.dart';
@@ -13,29 +15,14 @@ void main() {
   late CreateBookmarkFromDocumentUseCase createBookmark;
   late GetDocumentUseCase getDocumentUseCase;
   late GetBookmarkUseCase getBookmarkUseCase;
+  late RemoveBookmarkUseCase removeBookmarkUseCase;
 
   setUp(() async {
     await setupWidgetTest();
-    // final documentRepository = HiveDocumentRepository(DocumentMapper());
-    // final bookmarkRepository = HiveBookmarksRepository(BookmarkMapper());
-    // final createBookmarkUseCase =
-    //    di.get<>()
-    // // ignore: prefer_function_declarations_over_variables
-    //
-    // final uriUseCase = DirectUriUseCase(
-    //   client: FakeHttpClient.always404(),
-    //   headers: {},
-    //   cacheManager: createFakeImageCacheManager(),
-    // );
-    // final mapDocumentToCreateBookmarkParamUseCase =
-    //     MapDocumentToCreateBookmarkParamUseCase(uriUseCase);
-    // createBookmark = CreateBookmarkFromDocumentUseCase(
-    //     mapDocumentToCreateBookmarkParamUseCase,
-    //     createBookmarkUseCase,
-    //     documentRepository);
     getDocumentUseCase = di.get();
     getBookmarkUseCase = di.get();
     createBookmark = di.get();
+    removeBookmarkUseCase = di.get();
   });
 
   tearDown(() async {
@@ -66,5 +53,15 @@ void main() {
         await getBookmarkUseCase.singleOutput(fakeDocument.documentId.uniqueId);
 
     expect(original, secondCall);
+  });
+
+  test('After deleting a bookmark also the corresponding document is removed.',
+      () async {
+    final bookmark = await createBookmark.singleOutput(
+        CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument));
+    await removeBookmarkUseCase.singleOutput(bookmark.id);
+
+    expect(() async => await getDocumentUseCase.singleOutput(bookmark.id),
+        throwsA(BookmarkUseCaseError.tryingToGetNotExistingBookmark));
   });
 }
