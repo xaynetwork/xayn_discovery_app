@@ -2,9 +2,9 @@
 # Later should be removed
 your: 'Meine'
 activeSearchSearchHint: 'Suche'
-settingsTitle: 'Your Settings'
+settingsTitle: 'Deine Einstellungen'
 settingsSectionTitleAppTheme: 'Mein App Theme'
-settingsSectionScrollDirection: 'Discovery feed Scrollrichtung'
+settingsSectionScrollDirection: 'Feed Scroll-Richtung'
 settingsSectionTitleGeneralInfo: 'Generelle Informationen'
 settingsSectionTitleHelpImprove: 'Hilf uns besser zu werden!'
 settingsSectionTitleSpreadTheWord: 'Erzähl es weiter!'
@@ -32,20 +32,19 @@ readingTimeUnitSingular: 'minute'
 readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
-personalAreaTitle: Your Area
+personalAreaTitle: Dein Bereich
 personalAreaCollections: Sammlung
-personalAreaHomeFeed: Home Feed
+personalAreaHomeFeed: Discovery Feed
 personalAreaSettings: Einstellungen
 comingSoon: Kommt bald
-feedSettingsScreenTitle: Your Home Feed
+feedSettingsScreenTitle: Dein Feed
 # %s - those symbols should be in all translations!
 feedSettingsScreenContryListHint: Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)
 feedSettingsScreenActiveCountryListSubtitle: Aktive Länder
 feedSettingsScreenInActiveCountryListSubtitle: Inaktive Länder
-feedSettingsScreenMinSelectedCountriesError: Select at least one country
+feedSettingsScreenMinSelectedCountriesError: Wähle mindestens ein Land aus
 # %s - those symbols should be in all translations!
 feedSettingsScreenMaxSelectedCountriesError: Es sind bereits %s Länder ausgewählt
-defaultCollectionTitle: Später lesen
 bottomSheetCancel: Abbrechen
 langNameFrench: Französisch
 langNameDutch: Niederländisch
@@ -57,21 +56,16 @@ bottomSheetApply: Anwenden
 bottomSheetCreate: Erstellen
 bottomSheetCreateCollectionHeader: Eine neue Collection erstellen
 bottomSheetCreateCollectionTextFieldHint: Collection-Name
-errorMsgTryingToCreateCollectionUsingExistingName: Du versuchst, eine Collection mit einem vorhandenen Namen zu erstellen
 errorMsgTryingToCreateAgainDefaultCollection: Du versuchst, eine Default- Collection zu erstellen
-errorMsgTryingToGetCardDataForNotExistingCollection: That collection doesn't exist
-errorMsgTryingToRemoveDefaultCollection: You can't remove the default collection
-errorMsgTryingToRemoveNotExistingCollection: That collection doesn't exist
-errorMsgTryingToRenameCollectionUsingExistingName: There already is a collection with this name
-errorMsgTryingToRenameNotExistingCollection: That collection doesn't exist
-errorMsgTryingToMoveNotExistingBookmark: This bookmark doesn't exist
-errorMsgTryingToMoveBookmarkToNotExistingCollection: That collection doesn't exist
-errorMsgTryingToRemoveNotExistingBookmark: That bookmark doesn't exist
-errorMsgTryingToGetBookmarksForNotExistingCollection: That collection doesn't exist
-articles: articles
-article: article
-collectionsScreenTitle: Your Collections
-defaultCollectionNameReadLater: Read later
-bookmarkSnackBarSavedTo: Saved to %s
-readLater: Read Later
-bottomSheetSaveTo: Save to
+errorMsgTryingToRemoveDefaultCollection: Die Default-Collection kannst du nicht löschen
+articles: Artikel
+article: Artikel
+collectionsScreenTitle: Deine Collections
+defaultCollectionNameReadLater: Später lesen
+bookmarkSnackBarSavedTo: In %s gespeichert
+bottomSheetSaveTo: Speichern in
+# This is a simple prefix, before the author entry, for example "by " + author name
+readerModeBylinePrefix: by
+errorMsgCollectionDoesntExist: The collection doesn't exist
+errorMsgBookmarkDoesntExist: The bookmark doesn't exist
+errorMsgCollectionNameAlreadyUsed: This name is already used

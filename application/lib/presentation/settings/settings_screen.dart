@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -81,12 +82,11 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Widget _buildGeneralSection() => SettingsGeneralInfoSection(
-        onAboutPressed: () => _manager.openUrl('https://about.com'),
-        onCarbonNeutralPressed: () =>
-            _manager.openUrl('https://carbonNeutral.com'),
-        onImprintPressed: () => _manager.openUrl('https://imprint.com'),
-        onPrivacyPressed: () => _manager.openUrl('https://pp.com'),
-        onTermsPressed: () => _manager.openUrl('https://tc.com'),
+        onAboutPressed: () => _manager.openUrl(Urls.aboutXayn),
+        onCarbonNeutralPressed: () => _manager.openUrl(Urls.carbonNeutral),
+        onImprintPressed: () => _manager.openUrl(Urls.imprint),
+        onPrivacyPressed: () => _manager.openUrl(Urls.privacyPolicy),
+        onTermsPressed: () => _manager.openUrl(Urls.termsAndConditions),
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
