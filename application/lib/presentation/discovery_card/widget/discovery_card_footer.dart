@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -27,51 +28,37 @@ class DiscoveryCardFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final likeButton = IconButton(
+    final likeButton = AppGhostButton.icon(
+      document.isRelevant
+          ? R.assets.icons.thumbsUpActive
+          : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
-      icon: SvgPicture.asset(
-        document.isRelevant
-            ? R.assets.icons.thumbsUpActive
-            : R.assets.icons.thumbsUp,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
+      iconColor: R.colors.brightIcon,
     );
 
-    final bookmarkButton = GestureDetector(
-      onTap: onBookmarkPressed,
-      onLongPress: onBookmarkLongPressed,
-      child: SvgPicture.asset(
-        isBookmarked ? R.assets.icons.bookmarkActive : R.assets.icons.bookmark,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
+    final bookmarkButton = AppGhostButton.icon(
+      isBookmarked ? R.assets.icons.bookmarkActive : R.assets.icons.bookmark,
+      onPressed: onBookmarkPressed,
+      onLongPressed: onBookmarkLongPressed,
+      iconColor: R.colors.brightIcon,
     );
 
-    final shareButton = IconButton(
+    final shareButton = AppGhostButton.icon(
+      R.assets.icons.share,
       onPressed: onSharePressed,
-      icon: SvgPicture.asset(
-        R.assets.icons.share,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
+      iconColor: R.colors.brightIcon,
     );
 
-    final dislikeButton = IconButton(
+    final dislikeButton = AppGhostButton.icon(
+      document.isIrrelevant
+          ? R.assets.icons.thumbsDownActive
+          : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,
-      icon: SvgPicture.asset(
-        document.isIrrelevant
-            ? R.assets.icons.thumbsDownActive
-            : R.assets.icons.thumbsDown,
-        fit: BoxFit.none,
-        color: R.colors.brightIcon,
-      ),
+      iconColor: R.colors.brightIcon,
     );
 
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: R.dimen.unit4,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         likeButton,
         bookmarkButton,
