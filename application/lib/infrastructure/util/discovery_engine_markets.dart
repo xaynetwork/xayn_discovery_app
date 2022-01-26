@@ -56,6 +56,11 @@ class SupportedLanguageCodes {
   static const String spanish = 'es';
 }
 
+const defaultFeedMarket = FeedMarket(
+  countryCode: SupportedCountryCodes.usa,
+  languageCode: SupportedLanguageCodes.english,
+);
+
 final FeedMarkets supportedFeedMarkets = <FeedMarket>{
   const FeedMarket(
     countryCode: SupportedCountryCodes.austria,
@@ -101,10 +106,7 @@ final FeedMarkets supportedFeedMarkets = <FeedMarket>{
     countryCode: SupportedCountryCodes.poland,
     languageCode: SupportedLanguageCodes.polish,
   ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.usa,
-    languageCode: SupportedLanguageCodes.english,
-  ),
+  defaultFeedMarket,
 };
 
 //region utils

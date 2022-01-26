@@ -4,6 +4,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart' as engine;
 typedef FeedMarkets = Set<FeedMarket>;
 
 /// Internal representation of [engine.FeedMarket]
+/// that we store in [FeedSettingsRepository]
 class FeedMarket extends Equatable {
   final String countryCode;
   final String languageCode;
