@@ -6,6 +6,7 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_state.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 import '../../test_utils/utils.dart';
 
@@ -69,7 +70,7 @@ void main() {
     build: () => manager,
     act: (manager) async {
       await manager.init();
-      expect(await manager.onAddCountryPressed(germany), isTrue);
+      await manager.onAddCountryPressed(germany);
     },
     expect: () {
       final unselected = List<Country>.from(unSelectedList);
@@ -96,8 +97,8 @@ void main() {
     build: () => manager,
     act: (manager) async {
       await manager.init();
-      expect(await manager.onAddCountryPressed(germany), isTrue);
-      expect(await manager.onRemoveCountryPressed(germany), isTrue);
+      await manager.onAddCountryPressed(germany);
+      await manager.onRemoveCountryPressed(germany);
     },
     expect: () {
       final unselected = List<Country>.from(unSelectedList);
@@ -127,10 +128,13 @@ void main() {
     build: () => manager,
     act: (manager) async {
       await manager.init();
-      expect(await manager.onRemoveCountryPressed(germany), isTrue);
+      await manager.onRemoveCountryPressed(germany);
     },
     expect: () => [
       const FeedSettingsState.initial(),
+      stateReady.copyWith(
+        errorKey: TooltipKeys.feedSettingsScreenMinSelectedCountries,
+      ),
       stateReady,
     ],
     verify: (_) {
@@ -147,20 +151,30 @@ void main() {
     build: () => manager,
     act: (manager) async {
       await manager.init();
-      expect(await manager.onAddCountryPressed(germany), isTrue);
-      expect(await manager.onAddCountryPressed(austria), isTrue);
-      expect(await manager.onAddCountryPressed(spain), isFalse);
+      await manager.onAddCountryPressed(germany);
+      await manager.onAddCountryPressed(austria);
+      await manager.onAddCountryPressed(spain);
     },
     expect: () {
       final unselected = List<Country>.from(unSelectedList);
       unselected.remove(germany);
       final unselected2 = List<Country>.from(unselected);
+      unselected2.remove(germany);
       unselected2.remove(austria);
       return [
         const FeedSettingsState.initial(),
         stateReady.copyWith(
           selectedCountries: [usa, germany],
           unSelectedCountries: unselected,
+        ),
+        stateReady.copyWith(
+          selectedCountries: [usa, germany, austria],
+          unSelectedCountries: unselected2,
+        ),
+        stateReady.copyWith(
+          selectedCountries: [usa, germany, austria],
+          unSelectedCountries: unselected2,
+          errorKey: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
         ),
         stateReady.copyWith(
           selectedCountries: [usa, germany, austria],
