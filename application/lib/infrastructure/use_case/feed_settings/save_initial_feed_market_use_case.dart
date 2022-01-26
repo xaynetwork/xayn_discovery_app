@@ -5,11 +5,11 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 
 @injectable
-class SaveDefaultFeedMarketUseCase
+class SaveInitialFeedMarketUseCase
     extends UseCase<SaveDefaultFeedMarketInput, None> {
   final FeedSettingsRepository _repository;
 
-  SaveDefaultFeedMarketUseCase(
+  SaveInitialFeedMarketUseCase(
     this._repository,
   );
 
