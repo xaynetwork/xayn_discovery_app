@@ -127,12 +127,13 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     super.initState();
 
     _onDrag = (distance) {
+      final dX = distance.abs();
+
       _openingAnimation.value = (1.0 -
-              (DiscoveryCard.dragThreshold - distance) /
-                  DiscoveryCard.dragThreshold)
+              (DiscoveryCard.dragThreshold - dX) / DiscoveryCard.dragThreshold)
           .clamp(_kMinImageFractionSize, 1.0);
 
-      widget.onDrag?.call(distance);
+      widget.onDrag?.call(dX);
     };
 
     _openingAnimation = AnimationController(

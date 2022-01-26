@@ -79,7 +79,7 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
 
   void onDragUpdate(DragUpdateDetails event) {
     // update the distance
-    _distance += event.delta.dx;
+    _distance += event.delta.dx.abs();
 
     // test if we dragged far enough
     if (_distance > threshold) {
