@@ -17,7 +17,7 @@ class DocumentMapper extends BaseDbEntityMapper<DocumentWrapper> {
   @override
   DbEntityMap toMap(DocumentWrapper entity) => {
         BookmarkMapperFields.id: entity.id.value,
-        BookmarkMapperFields.json: entity.toJson(),
+        BookmarkMapperFields.json: entity.document.toJson(),
       };
 
   @override
