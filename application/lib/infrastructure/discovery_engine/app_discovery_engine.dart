@@ -7,7 +7,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_default_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -40,9 +40,9 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   @factoryMethod
   static Future<AppDiscoveryEngine> create(
     GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
-    SaveDefaultFeedMarketUseCase saveDefaultFeedMarketUseCase,
+    SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
   ) async {
-    await _saveDefaultFeedMarket(saveDefaultFeedMarketUseCase);
+    await _saveInitialFeedMarket(saveInitialFeedMarketUseCase);
 
     final localMarkets = await getSelectedFeedMarketsUseCase.singleOutput(none);
 
@@ -63,8 +63,8 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     return AppDiscoveryEngine(engine);
   }
 
-  static Future<void> _saveDefaultFeedMarket(
-    SaveDefaultFeedMarketUseCase useCase,
+  static Future<void> _saveInitialFeedMarket(
+    SaveInitialFeedMarketUseCase useCase,
   ) async {
     final deviceLocale = WidgetsBinding.instance!.window.locale;
     final input = SaveDefaultFeedMarketInput(

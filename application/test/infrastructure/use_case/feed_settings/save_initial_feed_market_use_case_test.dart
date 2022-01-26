@@ -4,13 +4,13 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_default_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 
 import '../../../presentation/test_utils/utils.dart';
 
 void main() {
-  late SaveDefaultFeedMarketUseCase useCase;
+  late SaveInitialFeedMarketUseCase useCase;
   late MockFeedSettingsRepository repository;
 
   const nullableLocale = Locale.fromSubtags(
@@ -25,7 +25,7 @@ void main() {
 
   setUp(() {
     repository = MockFeedSettingsRepository();
-    useCase = SaveDefaultFeedMarketUseCase(repository);
+    useCase = SaveInitialFeedMarketUseCase(repository);
     when(repository.settings).thenReturn(FeedSettings(feedMarkets: {}));
   });
 
