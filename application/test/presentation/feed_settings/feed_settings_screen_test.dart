@@ -24,7 +24,7 @@ void main() {
     await setupWidgetTest();
     manager = MockFeedSettingsManager();
     di.registerSingleton<FeedSettingsManager>(manager);
-    streamController = StreamController<FeedSettingsState>();
+    streamController = StreamController<FeedSettingsState>.broadcast();
 
     when(manager.state).thenReturn(stateReady);
     when(manager.stream).thenAnswer((_) => streamController.stream);
