@@ -138,6 +138,7 @@ flutter:
     - packages/xayn_design/assets/graphics/forms_green.svg
     - packages/xayn_design/assets/graphics/forms_orange.svg
     - packages/xayn_design/assets/graphics/forms_purple.svg
+    - packages/xayn_design/assets/graphics/forms_empty_collection.svg
     - packages/xayn_design/assets/icons/arrow_down.svg
     - packages/xayn_design/assets/icons/arrow_right.svg
     - packages/xayn_design/assets/icons/search.svg

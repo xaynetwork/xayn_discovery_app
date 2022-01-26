@@ -81,45 +81,6 @@ void main() async {
         );
       });
 
-      test('WHEN image is null THEN throw a DbEntityMapperException', () {
-        final mapWithImageNull = Map.from(map);
-        mapWithImageNull[3] = null;
-
-        expect(
-          () => mapper.fromMap(mapWithImageNull),
-          throwsA(
-            isA<DbEntityMapperException>(),
-          ),
-        );
-      });
-
-      test('WHEN providerName is null THEN throw a DbEntityMapperException',
-          () {
-        final mapWithProviderNameNull = Map.from(map);
-        mapWithProviderNameNull[4] = null;
-
-        expect(
-          () => mapper.fromMap(mapWithProviderNameNull),
-          throwsA(
-            isA<DbEntityMapperException>(),
-          ),
-        );
-      });
-
-      test(
-          'WHEN providerThumbnail is null THEN throw a DbEntityMapperException',
-          () {
-        final mapWithProviderThumbnailNull = Map.from(map);
-        mapWithProviderThumbnailNull[5] = null;
-
-        expect(
-          () => mapper.fromMap(mapWithProviderThumbnailNull),
-          throwsA(
-            isA<DbEntityMapperException>(),
-          ),
-        );
-      });
-
       test('WHEN createdAt is null THEN throw a DbEntityMapperException', () {
         final mapWithCreatedAtNull = Map.from(map);
         mapWithCreatedAtNull[6] = null;

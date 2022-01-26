@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
+import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
@@ -21,6 +22,7 @@ class PageRegistry {
     settings,
     onboarding,
     feedSettings,
+    collections
   };
 
   // Make sure to add the page names in camel case
@@ -65,5 +67,10 @@ class PageRegistry {
   static final feedSettings = xayn.PageData(
     name: "feedSettings",
     builder: (_, args) => const FeedSettingsScreen(),
+  );
+
+  static final collections = xayn.PageData(
+    name: "collections",
+    builder: (_, args) => const CollectionsScreen(),
   );
 }
