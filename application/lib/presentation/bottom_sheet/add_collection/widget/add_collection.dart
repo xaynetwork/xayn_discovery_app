@@ -45,8 +45,11 @@ class _AddCollectionState extends State<_AddCollection>
       onChanged: updateCollectionName,
     );
 
-    final header = BottomSheetHeader(
-      headerText: R.strings.bottomSheetCreateCollectionHeader,
+    final header = Padding(
+      padding: EdgeInsets.symmetric(vertical: R.dimen.unit),
+      child: BottomSheetHeader(
+        headerText: R.strings.bottomSheetCreateCollectionHeader,
+      ),
     );
 
     final footer = BottomSheetFooter(
