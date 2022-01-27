@@ -26,7 +26,12 @@ void main() {
 
   setUp(() {
     bookmarksRepository = MockBookmarksRepository();
-    removeBookmarkUseCase = RemoveBookmarkUseCase(bookmarksRepository);
+    final documentRepository = MockDocumentRepository();
+    when(documentRepository.getById(any)).thenReturn(null);
+    removeBookmarkUseCase = RemoveBookmarkUseCase(
+      bookmarksRepository,
+      documentRepository,
+    );
   });
 
   group(('Remove bookmark use case'), () {
