@@ -32,7 +32,7 @@ void main() {
     late MockGetBookmarkUseCase getBookmarkUseCase;
     late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
 
-    late MoveBookmarkToCollectionState initialState;
+    late MoveBookmarkToCollectionState populatedState;
     late MoveBookmarkToCollectionManager moveBookmarkToCollectionManager;
 
     final collection1 =
@@ -75,7 +75,7 @@ void main() {
       getBookmarkUseCase = MockGetBookmarkUseCase();
       getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
 
-      initialState = MoveBookmarkToCollectionState.populated(
+      populatedState = MoveBookmarkToCollectionState.populated(
         collections: [collection1, collection2],
         selectedCollection: null,
       );
@@ -88,7 +88,7 @@ void main() {
       'WHEN MoveBookmarkToCollectionManager is created THEN get values and emit MoveBookmarkToCollectionStatePopulated ',
       build: () => moveBookmarkToCollectionManager,
       expect: () => [
-        initialState,
+        populatedState,
       ],
       verify: (manager) {
         verifyInOrder([
@@ -112,8 +112,8 @@ void main() {
         manager.updateInitialSelectedCollection(bookmarkId: bookmark.id);
       },
       expect: () => [
-        initialState,
-        initialState.copyWith(
+        populatedState,
+        populatedState.copyWith(
           selectedCollection: collection1,
         )
       ],
@@ -136,7 +136,7 @@ void main() {
       act: (manager) {
         manager.updateInitialSelectedCollection(bookmarkId: bookmark.id);
       },
-      expect: () => [initialState],
+      expect: () => [populatedState],
       verify: (manager) {
         verifyInOrder([
           getBookmarkUseCase.singleOutput(bookmark.id),
@@ -155,8 +155,8 @@ void main() {
         );
       },
       expect: () => [
-        initialState,
-        initialState.copyWith(
+        populatedState,
+        populatedState.copyWith(
           selectedCollection: collection2,
         ),
       ],
@@ -173,7 +173,7 @@ void main() {
           (_) => Future.value([UseCaseResult.success(bookmark)]),
         );
       },
-      seed: () => initialState.copyWith(
+      seed: () => populatedState.copyWith(
         selectedCollection: collection2,
       ),
       act: (manager) {
@@ -196,7 +196,7 @@ void main() {
           (_) => Future.value([UseCaseResult.success(bookmark)]),
         );
       },
-      seed: () => initialState.copyWith(
+      seed: () => populatedState.copyWith(
         selectedCollection: null,
       ),
       act: (manager) {

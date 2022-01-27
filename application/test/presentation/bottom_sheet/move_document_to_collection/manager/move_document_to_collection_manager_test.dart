@@ -36,7 +36,7 @@ void main() {
     late MockGetBookmarkUseCase getBookmarkUseCase;
     late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
 
-    late MoveDocumentToCollectionState initialState;
+    late MoveDocumentToCollectionState populatedState;
     late MoveDocumentToCollectionManager moveDocumentToCollectionManager;
 
     final collection1 =
@@ -82,7 +82,7 @@ void main() {
       getBookmarkUseCase = MockGetBookmarkUseCase();
       getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
 
-      initialState = MoveDocumentToCollectionState.populated(
+      populatedState = MoveDocumentToCollectionState.populated(
         collections: [collection1, collection2],
         selectedCollection: null,
         isBookmarked: false,
@@ -96,7 +96,7 @@ void main() {
       'WHEN MoveDocumentToCollectionManager is created THEN get values and emit MoveDocumentToCollectionStatePopulated ',
       build: () => moveDocumentToCollectionManager,
       expect: () => [
-        initialState,
+        populatedState,
       ],
       verify: (manager) {
         verifyInOrder([
@@ -120,8 +120,8 @@ void main() {
         manager.updateInitialSelectedCollection(bookmarkId: bookmark.id);
       },
       expect: () => [
-        initialState,
-        initialState.copyWith(
+        populatedState,
+        populatedState.copyWith(
           isBookmarked: true,
           selectedCollection: collection1,
         )
@@ -145,7 +145,7 @@ void main() {
       act: (manager) {
         manager.updateInitialSelectedCollection(bookmarkId: bookmark.id);
       },
-      expect: () => [initialState],
+      expect: () => [populatedState],
       verify: (manager) {
         verifyInOrder([
           getBookmarkUseCase.singleOutput(bookmark.id),
@@ -169,8 +169,8 @@ void main() {
         );
       },
       expect: () => [
-        initialState,
-        initialState.copyWith(
+        populatedState,
+        populatedState.copyWith(
           selectedCollection: collection2,
           isBookmarked: false,
         ),
@@ -198,8 +198,8 @@ void main() {
         );
       },
       expect: () => [
-        initialState,
-        initialState.copyWith(
+        populatedState,
+        populatedState.copyWith(
           selectedCollection: collection2,
           isBookmarked: true,
         ),
@@ -220,7 +220,7 @@ void main() {
           (_) => Future.value([UseCaseResult.success(bookmark)]),
         );
       },
-      seed: () => initialState.copyWith(
+      seed: () => populatedState.copyWith(
         selectedCollection: collection2,
         isBookmarked: false,
       ),
@@ -245,7 +245,7 @@ void main() {
           (_) => Future.value([UseCaseResult.success(bookmark)]),
         );
       },
-      seed: () => initialState.copyWith(
+      seed: () => populatedState.copyWith(
         selectedCollection: collection2,
         isBookmarked: true,
       ),
@@ -270,7 +270,7 @@ void main() {
           (_) => Future.value([UseCaseResult.success(bookmark)]),
         );
       },
-      seed: () => initialState.copyWith(
+      seed: () => populatedState.copyWith(
         selectedCollection: null,
         isBookmarked: true,
       ),
@@ -290,7 +290,7 @@ void main() {
     blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = false and selectedCollection = null THEN do not expect calls ',
       build: () => moveDocumentToCollectionManager,
-      seed: () => initialState.copyWith(
+      seed: () => populatedState.copyWith(
         selectedCollection: null,
         isBookmarked: false,
       ),
