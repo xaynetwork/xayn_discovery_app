@@ -36,8 +36,8 @@ Future<void> configureDependencies({
       () => di.get<AppNavigationManager>());
 }
 
-Future<void> initServices() async {
+void initServices() {
   di.get<LogManager>();
   di.get<MarketingAnalyticsService>();
-  await di.getAsync<AnalyticsNavigatorObserver>();
+  di.get<AnalyticsNavigatorObserver>();
 }
