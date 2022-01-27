@@ -4,7 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_configuration_mixin.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
@@ -14,7 +14,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_u
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
-import 'package:xayn_discovery_app/presentation/utils/urls.dart';
 
 abstract class SettingsNavActions {
   void onBackNavPressed();
@@ -22,9 +21,7 @@ abstract class SettingsNavActions {
 
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
-    with
-        UseCaseBlocHelper<SettingsScreenState>,
-        ChangeConfigurationMixin<SettingsScreenState>
+    with UseCaseBlocHelper<SettingsScreenState>
     implements SettingsNavActions {
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetAppThemeUseCase _getAppThemeUseCase;

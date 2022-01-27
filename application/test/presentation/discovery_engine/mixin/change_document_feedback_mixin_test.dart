@@ -17,7 +17,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../test_utils/fakes.dart';
 import '../../test_utils/utils.dart';
-
 import 'change_document_feedback_mixin_test.mocks.dart';
 
 @GenerateMocks([AnalyticsService])

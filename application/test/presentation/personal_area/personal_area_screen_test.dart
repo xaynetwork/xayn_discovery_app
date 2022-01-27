@@ -12,8 +12,8 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/widget/personal_area_card.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 
 import '../test_utils/utils.dart';
 import '../test_utils/widget_test_utils.dart';
@@ -58,7 +58,7 @@ void main() {
 
       expect(find.byType(AppToolbar), findsOneWidget);
       expect(find.text(R.strings.personalAreaTitle), findsOneWidget);
-      expect(find.byType(PersonalAreaCard), findsNWidgets(3));
+      expect(find.byType(CardWidget), findsNWidgets(3));
       expect(find.byKey(Keys.personalAreaCardCollections), findsOneWidget);
       expect(find.byKey(Keys.personalAreaCardHomeFeed), findsOneWidget);
       expect(find.byKey(Keys.personalAreaCardSettings), findsOneWidget);

@@ -3,8 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// A temporary wrapper for the [DiscoveryEngine].
@@ -34,18 +38,41 @@ class AppDiscoveryEngine implements DiscoveryEngine {
   AppDiscoveryEngine(this._engine);
 
   @factoryMethod
-  static Future<AppDiscoveryEngine> create() async {
-    // todo: read from AppSettings
+  static Future<AppDiscoveryEngine> create(
+    GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+    SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+  ) async {
+    await _saveInitialFeedMarket(saveInitialFeedMarketUseCase);
+
+    final localMarkets = await getSelectedFeedMarketsUseCase.singleOutput(none);
+
+    final markets = localMarkets
+        .map((e) =>
+            FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
+        .toSet();
+
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
       applicationDirectoryPath: '/',
       maxItemsPerFeedBatch: 20,
-      feedMarkets: {const FeedMarket(countryCode: 'DE', langCode: 'de')},
+      feedMarkets: markets,
     );
     final engine = await DiscoveryEngine.init(configuration: configuration);
 
     return AppDiscoveryEngine(engine);
+  }
+
+  static Future<void> _saveInitialFeedMarket(
+    SaveInitialFeedMarketUseCase useCase,
+  ) async {
+    final deviceLocale = WidgetsBinding.instance!.window.locale;
+    final input = SaveDefaultFeedMarketInput(
+      deviceLocale,
+      defaultFeedMarket,
+      supportedFeedMarkets,
+    );
+    await useCase.call(input);
   }
 
   @override

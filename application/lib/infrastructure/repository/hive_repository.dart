@@ -20,8 +20,15 @@ abstract class BaseHiveRepository<T extends DbEntity> {
   /// The Hive box.
   Box<Record> get box;
 
-  /// All unwrapped items in the box.
-  List<T> get _values => box.values.map(_unwrap).toList();
+  /// All unwrapped not null items in the box.
+  /// Why the filter for null values is needed?
+  /// Because when the remove method is called, the record is not actually deleted
+  /// but only marked as deleted.
+  /// Therefore the null values must be filtered out before calling the [unwrap] method
+  /// otherwise a null map will be passed to the [fromMap] method, which will return a null value.
+  /// The [putIfAbsent] method expects instead a non nullable value.
+  List<T> get _values =>
+      box.values.where((it) => it.value != null).map(_unwrap).toList();
 
   /// The helper mapper method to ensure that [Record] always has a corresponding value.
   T _unwrap(Record record) => _mapperCache.putIfAbsent(
@@ -33,7 +40,7 @@ abstract class BaseHiveRepository<T extends DbEntity> {
   /// Checks if the box is not empty.
   bool get isNotEmpty => _values.isNotEmpty;
 
-  /// Gets all items from the box.
+  /// Gets all not null items from the box.
   List<T> getAll() => _values;
 
   /// Removes all items from the box.
