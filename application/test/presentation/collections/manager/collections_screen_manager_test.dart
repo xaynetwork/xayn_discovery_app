@@ -16,7 +16,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'collections_screen_manager_test.mocks.dart';
 
@@ -28,6 +28,7 @@ import 'collections_screen_manager_test.mocks.dart';
   GetAllCollectionsUseCase,
   GetAllBookmarksUseCase,
   CollectionErrorsEnumMapper,
+  CollectionsScreenNavActions,
   DateTimeHandler,
 ])
 void main() {
@@ -37,6 +38,7 @@ void main() {
   late MockListenCollectionsUseCase listenCollectionsUseCase;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
   late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
+  late MockCollectionsScreenNavActions collectionsScreenNavActions;
   late MockDateTimeHandler dateTimeHandler;
   late CollectionsScreenState populatedState;
   final timeStamp = DateTime.now();
@@ -76,6 +78,7 @@ void main() {
         renameCollectionUseCase,
         listenCollectionsUseCase,
         collectionErrorsEnumMapper,
+        collectionsScreenNavActions,
         dateTimeHandler,
       );
 
@@ -86,6 +89,7 @@ void main() {
     listenCollectionsUseCase = MockListenCollectionsUseCase();
     getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
     collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
+    collectionsScreenNavActions = MockCollectionsScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
     populatedState = CollectionsScreenState.populated(
       [collection1, collection2],
@@ -154,7 +158,7 @@ void main() {
 
       when(collectionErrorsEnumMapper.mapEnumToString(
         CollectionUseCaseError.tryingToCreateCollectionUsingExistingName,
-      )).thenReturn(Strings.errorMsgTryingToCreateCollectionUsingExistingName);
+      )).thenReturn(R.strings.errorMsgCollectionNameAlreadyUsed);
     },
     act: (manager) {
       manager.createCollection(collectionName: newCollection.name);
@@ -163,7 +167,7 @@ void main() {
       //default one, emitted when manager created
       populatedState,
       populatedState.copyWith(
-          errorMsg: Strings.errorMsgTryingToCreateCollectionUsingExistingName),
+          errorMsg: R.strings.errorMsgCollectionNameAlreadyUsed),
     ],
     verify: (manager) {
       verifyInOrder([
@@ -248,7 +252,7 @@ void main() {
 
       when(collectionErrorsEnumMapper.mapEnumToString(
         CollectionUseCaseError.tryingToRenameCollectionUsingExistingName,
-      )).thenReturn(Strings.errorMsgTryingToRenameCollectionUsingExistingName);
+      )).thenReturn(R.strings.errorMsgCollectionNameAlreadyUsed);
     },
     act: (manager) => manager.renameCollection(
       collectionId: collection1.id,
@@ -258,7 +262,7 @@ void main() {
       //default one, emitted when manager created
       populatedState,
       populatedState.copyWith(
-          errorMsg: Strings.errorMsgTryingToRenameCollectionUsingExistingName),
+          errorMsg: R.strings.errorMsgCollectionNameAlreadyUsed),
     ],
     verify: (manager) {
       verifyInOrder([
@@ -342,7 +346,7 @@ void main() {
 
       when(collectionErrorsEnumMapper.mapEnumToString(
         CollectionUseCaseError.tryingToRemoveDefaultCollection,
-      )).thenReturn(Strings.errorMsgTryingToRemoveDefaultCollection);
+      )).thenReturn(R.strings.errorMsgTryingToRemoveDefaultCollection);
     },
     act: (manager) => manager.removeCollection(
       collectionIdToRemove: collection1.id,
@@ -351,7 +355,7 @@ void main() {
       //default one, emitted when manager created
       populatedState,
       populatedState.copyWith(
-          errorMsg: Strings.errorMsgTryingToRemoveDefaultCollection),
+          errorMsg: R.strings.errorMsgTryingToRemoveDefaultCollection),
     ],
     verify: (manager) {
       verifyInOrder([

@@ -48,12 +48,13 @@ dependencies:
   path_provider: ^2.0.5
   provider: 6.0.1
   rxdart: ^0.27.2
-  share: ^2.0.4
+  share_plus: 3.0.4
   shimmer: ^2.0.0
   story:
     git:
       url: git@github.com:xaynetwork/story.git
       ref: cd93531ce08e4afd4490d8bc5f436432a8c0bacd
+  url_launcher: 6.0.18
   uuid: ^3.0.5
   version: 2.0.0
   xayn_architecture:
@@ -67,7 +68,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 74628069163b16eaa0e57405cad00a8c789b81e6
+      ref: 5b057d7073f245a4af5609d4436dc7cbca992369
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -78,7 +79,7 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
       ref: 73a8792b4372d07a72bdc21d8a631d97a5a89ebe
-  xayn_swipe_it: ^1.0.0
+  xayn_swipe_it: ^1.0.3
 
 dependency_overrides:
   ### This is necessary because the xayn_discovery_engine_flutter project references the main branch of xayn_discovery_engine
@@ -137,6 +138,7 @@ flutter:
     - packages/xayn_design/assets/graphics/forms_green.svg
     - packages/xayn_design/assets/graphics/forms_orange.svg
     - packages/xayn_design/assets/graphics/forms_purple.svg
+    - packages/xayn_design/assets/graphics/forms_empty_collection.svg
     - packages/xayn_design/assets/icons/arrow_down.svg
     - packages/xayn_design/assets/icons/arrow_right.svg
     - packages/xayn_design/assets/icons/search.svg

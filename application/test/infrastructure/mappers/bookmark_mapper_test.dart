@@ -81,43 +81,21 @@ void main() async {
         );
       });
 
-      test('WHEN image is null THEN throw a DbEntityMapperException', () {
+      test('WHEN image is null THEN set image null in bookmark', () {
         final mapWithImageNull = Map.from(map);
         mapWithImageNull[3] = null;
+        final bookmark = mapper.fromMap(mapWithImageNull);
 
-        expect(
-          () => mapper.fromMap(mapWithImageNull),
-          throwsA(
-            isA<DbEntityMapperException>(),
-          ),
-        );
+        expect(bookmark!.image, null);
       });
 
-      test('WHEN providerName is null THEN throw a DbEntityMapperException',
-          () {
-        final mapWithProviderNameNull = Map.from(map);
-        mapWithProviderNameNull[4] = null;
-
-        expect(
-          () => mapper.fromMap(mapWithProviderNameNull),
-          throwsA(
-            isA<DbEntityMapperException>(),
-          ),
-        );
-      });
-
-      test(
-          'WHEN providerThumbnail is null THEN throw a DbEntityMapperException',
+      test('WHEN providerThumbnail is null THEN the bookmark has no thumbnail',
           () {
         final mapWithProviderThumbnailNull = Map.from(map);
         mapWithProviderThumbnailNull[5] = null;
+        final bookmark = mapper.fromMap(mapWithProviderThumbnailNull)!;
 
-        expect(
-          () => mapper.fromMap(mapWithProviderThumbnailNull),
-          throwsA(
-            isA<DbEntityMapperException>(),
-          ),
-        );
+        expect(bookmark.providerThumbnail, null);
       });
 
       test('WHEN createdAt is null THEN throw a DbEntityMapperException', () {

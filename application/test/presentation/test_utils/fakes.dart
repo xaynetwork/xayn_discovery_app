@@ -1,8 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:file/memory.dart';
+import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+import 'mocks.mocks.dart';
 
 final fakeDocument = Document(
   documentId: DocumentId(),
@@ -25,6 +30,15 @@ final fakeDocument = Document(
   personalizedRank: 0,
   isActive: true,
 );
+
+AppImageCacheManager createFakeImageCacheManager() {
+  final imageCacheManager = MockAppImageCacheManager();
+  when(imageCacheManager.getFileFromCache(any))
+      .thenAnswer((realInvocation) async => null);
+  when(imageCacheManager.putFile(any, any)).thenAnswer(
+      (realInvocation) async => MemoryFileSystem().file('test.dart'));
+  return imageCacheManager;
+}
 
 final fakeBookmark = Bookmark(
   id: UniqueId(),

@@ -33,7 +33,7 @@ class _CollectionsListBottomSheetState
   @override
   void initState() {
     selectedCollection = widget.initialSelectedCollection;
-    collections = _getOrderedCollections();
+    collections = widget.collections;
     super.initState();
   }
 
@@ -59,14 +59,6 @@ class _CollectionsListBottomSheetState
   void _onSelectCollection(Collection? selected) {
     widget.onSelectCollection(selected);
     setState(() => selectedCollection = selected);
-  }
-
-  List<Collection> _getOrderedCollections() {
-    final list = List.of(widget.collections);
-    final defaultCollection = list.firstWhere((it) => it.isDefault);
-    list.remove(defaultCollection);
-    list.sort((a, b) => a.name.compareTo(b.name));
-    return [defaultCollection, ...list];
   }
 }
 

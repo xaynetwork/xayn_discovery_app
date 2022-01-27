@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
@@ -9,7 +8,8 @@ import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_setti
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class FeedSettingsScreen extends StatefulWidget {
@@ -42,7 +42,11 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppToolbar(title: R.strings.feedSettingsScreenTitle),
+        appBar: AppToolbar(
+          appToolbarData: AppToolbarData.titleOnly(
+            title: R.strings.feedSettingsScreenTitle,
+          ),
+        ),
         body: _buildBody(),
       );
 
@@ -55,9 +59,19 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
       return ScreenStateSwitcher(child: child);
     }
 
-    return BlocBuilder<FeedSettingsManager, FeedSettingsState>(
+    void _buildBlockListener(BuildContext context, FeedSettingsState state) {
+      if (state is FeedSettingsStateReady && state.errorKey != null) {
+        showTooltip(state.errorKey!);
+      }
+    }
+
+    return BlocListener<FeedSettingsManager, FeedSettingsState>(
+      listener: _buildBlockListener,
       bloc: manager,
-      builder: _buildBlockState,
+      child: BlocBuilder<FeedSettingsManager, FeedSettingsState>(
+        bloc: manager,
+        builder: _buildBlockState,
+      ),
     );
   }
 
@@ -73,23 +87,12 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
       ),
     );
     final page = CountryFeedSettingsPage(
-        maxSelectedCountryAmount: state.maxSelectedCountryAmount,
-        selectedCountries: state.selectedCountries,
-        unSelectedCountries: state.unSelectedCountries,
-        onAddCountryPressed: (Country country) {
-          final added = manager.onAddCountryPressed(country);
-          if (!added) {
-            showTooltip(TooltipKeys.feedSettingsScreenMaxSelectedCountries);
-          }
-        },
-        onRemoveCountryPressed: (Country country) {
-          final removed = manager.onRemoveCountryPressed(country);
-          if (!removed) {
-            showTooltip(
-              TooltipKeys.feedSettingsScreenMinSelectedCountries,
-            );
-          }
-        });
+      maxSelectedCountryAmount: state.maxSelectedCountryAmount,
+      selectedCountries: state.selectedCountries,
+      unSelectedCountries: state.unSelectedCountries,
+      onAddCountryPressed: manager.onAddCountryPressed,
+      onRemoveCountryPressed: manager.onRemoveCountryPressed,
+    );
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
       child: page,

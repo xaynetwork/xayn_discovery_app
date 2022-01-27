@@ -31,7 +31,11 @@ class HiveBookmarksRepository extends HiveRepository<Bookmark>
   }
 
   @override
-  List<Bookmark> getByCollectionId(UniqueId collectionId) => getAll()
-      .where((element) => element.collectionId == collectionId)
-      .toList(growable: false);
+  List<Bookmark> getByCollectionId(UniqueId collectionId) {
+    final bookmarks = getAll()
+        .where((element) => element.collectionId == collectionId)
+        .toList(growable: false);
+    bookmarks.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    return bookmarks;
+  }
 }
