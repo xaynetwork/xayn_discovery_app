@@ -13,7 +13,6 @@ void main() {
   const String defaultCollectionName = 'Read Later';
   final collection = Collection(
       id: Collection.readLaterId, name: defaultCollectionName.trim(), index: 0);
-  const int lastCollectionIndex = 1;
 
   setUp(() {
     collectionsRepository = MockCollectionsRepository();
@@ -45,11 +44,7 @@ void main() {
 
     useCaseTest(
       'WHEN the default collection doesn\'t exist THEN create the collection, save it and return it',
-      setUp: () {
-        when(collectionsRepository.getAll()).thenReturn([]);
-        when(collectionsRepository.getLastCollectionIndex())
-            .thenReturn(lastCollectionIndex);
-      },
+      setUp: () => when(collectionsRepository.getAll()).thenReturn([]),
       build: () => createDefaultCollectionUseCase,
       input: [defaultCollectionName],
       verify: (_) {
