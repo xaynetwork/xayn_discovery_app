@@ -34,7 +34,7 @@ abstract class _EnvDev {
   static const String instabugToken = __EnvDev.instabugToken;
   static const String amplitudeApiKey = __EnvDev.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvDev.appsflyerDevKey;
-  static const String appStoreNumericalId = __EnvDev.appsflyerDevKey;
+  static const String appStoreNumericalId = __EnvDev.appStoreNumericalId;
 }
 
 /// Standard Env config.
