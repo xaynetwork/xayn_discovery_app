@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -18,13 +20,14 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         map[BookmarkMapperFields.title] ?? throwMapperException() as String;
 
     /// The [image] field is nullable
-    final image = map[BookmarkMapperFields.image];
+    final image = map[BookmarkMapperFields.image] as Uint8List?;
 
     /// The [providerName] field is nullable
     final providerName = map[BookmarkMapperFields.providerName];
 
     /// The [providerThumbnail] field is nullable
-    final providerThumbnail = map[BookmarkMapperFields.providerThumbnail];
+    final providerThumbnail =
+        map[BookmarkMapperFields.providerThumbnail] as Uint8List?;
 
     final createdAt =
         map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
