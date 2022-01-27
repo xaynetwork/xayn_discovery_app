@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
@@ -12,6 +13,8 @@ import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @lazySingleton
 class AppNavigationManager extends xayn.NavigatorManager {
@@ -58,8 +61,10 @@ class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
 @Injectable(as: BookmarksScreenNavActions)
 class BookmarksScreenNavActionsImpl extends BookmarksScreenNavActions {
   final xayn.StackManipulationFunction changeStack;
+  final GetDocumentUseCase _getDocumentUseCase;
 
-  BookmarksScreenNavActionsImpl(AppNavigationManager manager)
+  BookmarksScreenNavActionsImpl(
+      AppNavigationManager manager, this._getDocumentUseCase)
       // ignore: INVALID_USE_OF_PROTECTED_MEMBER
       : changeStack = manager.manipulateStack;
 
@@ -71,15 +76,16 @@ class BookmarksScreenNavActionsImpl extends BookmarksScreenNavActions {
     required bool isPrimary,
     required UniqueId bookmarkId,
   }) {
-    /// FIXME currently there is no way to retrieve a Document from a DocumentID
-    //import 'package:xayn_discovery_app/domain/model/extensions/uniqueid_extension.dart';
-    // DocumentId documentId = bookmarkId.documentId;
-
-    changeStack(
+    void gotoDiscoveryCardDetails(Document document) => changeStack(
         (stack) => stack.push(PageRegistry.cardDetails(DiscoveryCardScreenArgs(
-              document: documentId,
-              isPrimary: false,
+              document: document,
+              isPrimary: isPrimary,
             ))));
+
+    _getDocumentUseCase.singleOutput(bookmarkId).then(gotoDiscoveryCardDetails,
+        onError: (error, stack) {
+      logger.e("Could not open the Bookmarks Document.", error, stack);
+    });
   }
 }
 

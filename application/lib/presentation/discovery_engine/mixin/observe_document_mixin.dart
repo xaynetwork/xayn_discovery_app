@@ -8,8 +8,8 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_time_spent_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<DiscoveryCardObservation, EngineEvent>>? _useCaseSink;
@@ -42,7 +42,7 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
         di.get<DiscoveryCardObservationUseCase>();
     final discoveryCardMeasuredObservationUseCase =
         di.get<DiscoveryCardMeasuredObservationUseCase>();
-    final sendAnalyticsUseCase = await di.getAsync<SendAnalyticsUseCase>();
+    final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
 
     return pipe(discoveryCardObservationUseCase).transform(
       (out) => out

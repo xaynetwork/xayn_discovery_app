@@ -33,7 +33,7 @@ Future<void> setup() async {
   await hiveDb;
   await configureDependencies();
   HomeIndicator.hide();
-  await initServices();
+  initServices();
 }
 
 Widget getApp() {
