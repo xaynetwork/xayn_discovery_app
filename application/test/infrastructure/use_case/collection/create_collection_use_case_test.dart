@@ -25,6 +25,12 @@ void main() {
     uniqueIdHandler = MockUniqueIdHandler();
     createCollectionUseCase =
         CreateCollectionUseCase(collectionsRepository, uniqueIdHandler);
+
+    when(collectionsRepository.isCollectionNameNotValid(collectionName))
+        .thenReturn(false);
+
+    when(collectionsRepository.isCollectionNameUsed(collectionName))
+        .thenReturn(false);
   });
 
   group('Create collection use case', () {
@@ -38,6 +44,8 @@ void main() {
         collectionName,
       ],
       verify: (_) {
+        verify(collectionsRepository.isCollectionNameNotValid(collectionName))
+            .called(1);
         verify(collectionsRepository.isCollectionNameUsed(collectionName))
             .called(1);
         verifyNoMoreInteractions(collectionsRepository);
@@ -53,8 +61,6 @@ void main() {
     useCaseTest(
       'WHEN given a name THEN create the collection, save it and return it',
       setUp: () {
-        when(collectionsRepository.isCollectionNameUsed(collectionName))
-            .thenReturn(false);
         when(collectionsRepository.getLastCollectionIndex())
             .thenReturn(lastCollectionIndex);
         when(uniqueIdHandler.generateUniqueId()).thenReturn(collectionId);
@@ -63,6 +69,7 @@ void main() {
       input: [collectionName],
       verify: (_) {
         verifyInOrder([
+          collectionsRepository.isCollectionNameNotValid(collectionName),
           collectionsRepository.isCollectionNameUsed(collectionName),
           collectionsRepository.getLastCollectionIndex(),
           uniqueIdHandler.generateUniqueId(),

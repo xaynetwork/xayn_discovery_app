@@ -35,7 +35,7 @@ class CollectionListItem extends StatelessWidget {
         ? Thumbnail.memoryImage(collectionImage!)
         : Thumbnail.assetImage(
             R.assets.graphics.formsEmptyCollection,
-            backgroundColor: R.colors.collectionThumbnailBackground,
+            backgroundColor: R.colors.collectionsScreenCard,
           );
 
     final collectionName = Text(

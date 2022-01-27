@@ -71,7 +71,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   @override
   Widget build(BuildContext context) {
     final body = _moveDocumentToCollectionManager == null
-        ? const Center(child: CircularProgressIndicator())
+        ? const SizedBox.shrink()
         : BlocBuilder<MoveDocumentToCollectionManager,
             MoveDocumentToCollectionState>(
             bloc: _moveDocumentToCollectionManager,
@@ -82,7 +82,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
                         .updateSelectedCollection,
                     initialSelectedCollection: state.selectedCollection,
                   )
-                : Container(),
+                : const SizedBox.shrink(),
           );
 
     final header = BottomSheetHeader(

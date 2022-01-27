@@ -70,7 +70,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   @override
   Widget build(BuildContext context) {
     final body = _moveBookmarkToCollectionManager == null
-        ? const Center(child: CircularProgressIndicator())
+        ? const SizedBox.shrink()
         : BlocBuilder<MoveBookmarkToCollectionManager,
             MoveBookmarkToCollectionState>(
             bloc: _moveBookmarkToCollectionManager,
@@ -81,7 +81,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
                         .updateSelectedCollection,
                     initialSelectedCollection: state.selectedCollection,
                   )
-                : Container(),
+                : const SizedBox.shrink(),
           );
 
     final header = BottomSheetHeader(

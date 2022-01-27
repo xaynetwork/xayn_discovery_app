@@ -61,7 +61,9 @@ void main() {
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
       verify(incrementAppSessionUseCase.call(none)).called(1);
-      verify(createOrGetDefaultCollectionUseCase.call(R.strings.defaultCollectionNameReadLater)).called(1);
+      verify(createOrGetDefaultCollectionUseCase
+              .call(R.strings.defaultCollectionNameReadLater))
+          .called(1);
       verify(getAppThemeUseCase.singleOutput(none)).called(1);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);
