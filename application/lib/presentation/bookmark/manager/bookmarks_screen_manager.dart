@@ -173,5 +173,5 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     required UniqueId bookmarkId,
   }) =>
       _bookmarksScreenNavActions.onBookmarkPressed(
-          bookmarkId: bookmarkId, isPrimary: false);
+          bookmarkId: bookmarkId, isPrimary: true);
 }

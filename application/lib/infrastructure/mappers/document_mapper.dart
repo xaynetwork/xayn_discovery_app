@@ -9,9 +9,9 @@ class DocumentMapper extends BaseDbEntityMapper<DocumentWrapper> {
   DocumentWrapper? fromMap(Map? map) {
     if (map == null) return null;
 
-    final json = map[BookmarkMapperFields.json];
+    final json = map[BookmarkMapperFields.json] as Map<dynamic, dynamic>;
 
-    return DocumentWrapper(Document.fromJson(json));
+    return DocumentWrapper(Document.fromJson(json.cast()));
   }
 
   @override

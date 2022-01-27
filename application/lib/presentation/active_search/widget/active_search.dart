@@ -25,8 +25,7 @@ class ActiveSearch extends StatefulWidget {
 class _ActiveSearchState extends State<ActiveSearch>
     with NavBarConfigMixin, CardManagersMixin {
   late final ActiveSearchManager _activeSearchManager = di.get();
-  final Map<Document, Future<CardManagers>> _managerFutures =
-      <Document, Future<CardManagers>>{};
+  final Map<Document, CardManagers> _managers = <Document, CardManagers>{};
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
@@ -49,7 +48,7 @@ class _ActiveSearchState extends State<ActiveSearch>
   @override
   void dispose() {
     _activeSearchManager.close();
-    _managerFutures.clear();
+    _managers.clear();
 
     super.dispose();
   }
@@ -102,31 +101,22 @@ class _ActiveSearchState extends State<ActiveSearch>
     Document document,
     bool isPrimary,
   ) {
-    final managersFuture =
-        _managerFutures.putIfAbsent(document, () => managersOf(document));
-    final card = FutureBuilder<CardManagers>(
-      future: managersFuture,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
-
-        final managers = snapshot.requireData;
-
-        return GestureDetector(
-          onTap: () {
-            final args = DiscoveryCardScreenArgs(
-              isPrimary: true,
-              document: document,
-            );
-            _activeSearchManager.onCardDetailsPressed(args);
-          },
-          child: DiscoveryFeedCard(
-            isPrimary: isPrimary,
-            document: document,
-            imageManager: managers.imageManager,
-            discoveryCardManager: managers.discoveryCardManager,
-          ),
+    final managers =
+        _managers.putIfAbsent(document, () => managersOf(document));
+    final card = GestureDetector(
+      onTap: () {
+        final args = DiscoveryCardScreenArgs(
+          isPrimary: true,
+          document: document,
         );
+        _activeSearchManager.onCardDetailsPressed(args);
       },
+      child: DiscoveryFeedCard(
+        isPrimary: isPrimary,
+        document: document,
+        imageManager: managers.imageManager,
+        discoveryCardManager: managers.discoveryCardManager,
+      ),
     );
 
     return Padding(
