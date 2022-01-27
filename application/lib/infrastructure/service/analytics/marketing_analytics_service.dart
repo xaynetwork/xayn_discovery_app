@@ -27,22 +27,15 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
 
   @factoryMethod
   static MarketingAnalyticsService initialized(PackageInfo packageInfo) {
-    late AppsFlyerOptions options;
-    if (Platform.isIOS) {
-      options = AppsFlyerOptions(
-        showDebug: EnvironmentHelper.kIsDebug,
-        afDevKey: Env.appsflyerDevKey,
-        appId: Env.appStoreNumericalId,
-        disableAdvertisingIdentifier: true,
-      );
-    } else {
-      options = AppsFlyerOptions(
-        showDebug: EnvironmentHelper.kIsDebug,
-        afDevKey: Env.appsflyerDevKey,
-        appId: EnvironmentHelper.kAppId,
-        disableAdvertisingIdentifier: false,
-      );
-    }
+    final appId =
+        Platform.isIOS ? Env.appStoreNumericalId : EnvironmentHelper.kAppId;
+
+    final options = AppsFlyerOptions(
+      showDebug: EnvironmentHelper.kIsDebug,
+      afDevKey: Env.appsflyerDevKey,
+      appId: appId,
+      disableAdvertisingIdentifier: true,
+    );
 
     final appsFlyer = AppsflyerSdk(options);
     appsFlyer.initSdk();
