@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
+import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 const maxDisplayableCollectionName = 20;
 
+class BookmarkToolTipKeys {
+  static const bookmarkedToDefault = TooltipKey('bookmarkedToDefault');
+
+  static TooltipKey getKeyByErrorEnum(BookmarkUseCaseError error) =>
+      _getErrorMap()
+          .keys
+          .toList(growable: false)
+          .firstWhere((it) => it.value == error.name);
+}
+
 final bookmarkMessages = <TooltipKey, TooltipParams>{
-  TooltipKeys.bookmarkedToDefault: _getBookmarkedToDefault(),
+  ...{BookmarkToolTipKeys.bookmarkedToDefault: _getBookmarkedToDefault()},
+  ..._getErrorMap(),
 };
 
 TooltipParams _getBookmarkedToDefault() {
@@ -43,4 +56,19 @@ TooltipParams _getBookmarkedToDefault() {
     label: savedToDefaultString,
     builder: (_) => content,
   );
+}
+
+Map<TooltipKey, TooltipParams> _getErrorMap() {
+  final mapper = di.get<BookmarkErrorsEnumMapper>();
+  final _builder = CustomizedTextualNotification(
+    labelTextStyle: R.styles.tooltipHighlightTextStyle,
+  );
+
+  return {
+    for (final it in BookmarkUseCaseError.values)
+      TooltipKey(it.name): TooltipParams(
+        label: mapper.mapEnumToString(it),
+        builder: (_) => _builder,
+      )
+  };
 }
