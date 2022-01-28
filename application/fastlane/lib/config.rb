@@ -7,7 +7,9 @@ module Config
   ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "api-gw.xaynet.dev",
                    "SEARCH_API_URL_PRODUCTION" => "api-gw.xayn.com",
                    "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
-                   "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com" }
+                   "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com" ,
+                   "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
+                   "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811" }
 
   #ios, android, web
   PLATFORM = "android"

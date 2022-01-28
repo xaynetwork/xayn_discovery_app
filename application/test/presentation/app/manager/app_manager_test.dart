@@ -17,7 +17,6 @@ void main() {
   late MockCreateOrGetDefaultCollectionUseCase
       createOrGetDefaultCollectionUseCase;
   late Collection mockDefaultCollection;
-  late MockCreateDefaultCollectionUseCase createDefaultCollectionUseCase;
 
   setUp(() {
     mockDefaultCollection =
@@ -27,7 +26,6 @@ void main() {
     incrementAppSessionUseCase = MockIncrementAppSessionUseCase();
     createOrGetDefaultCollectionUseCase =
         MockCreateOrGetDefaultCollectionUseCase();
-    createDefaultCollectionUseCase = MockCreateDefaultCollectionUseCase();
 
     when(getAppThemeUseCase.singleOutput(none)).thenAnswer(
       (_) async => AppTheme.system,
@@ -48,14 +46,6 @@ void main() {
         UseCaseResult.success(mockDefaultCollection),
       ],
     );
-
-    when(createDefaultCollectionUseCase
-            .singleOutput(R.strings.defaultCollectionNameReadLater))
-        .thenAnswer(
-      (_) => Future.value(
-        Collection.readLater(name: R.strings.defaultCollectionNameReadLater),
-      ),
-    );
   });
 
   AppManager create() => AppManager(
@@ -63,7 +53,6 @@ void main() {
         listenAppThemeUseCase,
         incrementAppSessionUseCase,
         createOrGetDefaultCollectionUseCase,
-        createDefaultCollectionUseCase,
       );
 
   blocTest<AppManager, AppState>(
@@ -72,14 +61,12 @@ void main() {
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
       verify(incrementAppSessionUseCase.call(none)).called(1);
-      verify(createOrGetDefaultCollectionUseCase.call(any)).called(1);
+      verify(createOrGetDefaultCollectionUseCase
+              .call(R.strings.defaultCollectionNameReadLater))
+          .called(1);
       verify(getAppThemeUseCase.singleOutput(none)).called(1);
-      verify(createDefaultCollectionUseCase.singleOutput(
-        R.strings.defaultCollectionNameReadLater,
-      )).called(1);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);
-      verifyNoMoreInteractions(createDefaultCollectionUseCase);
     },
   );
 }

@@ -76,6 +76,7 @@ jobs:
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release downloadProfile:true flavor:internal
@@ -129,6 +130,7 @@ jobs:
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release downloadProfile:false flavor:beta
@@ -170,6 +172,7 @@ jobs:
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build:release flavor:internal
@@ -211,6 +214,7 @@ jobs:
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build:release flavor:beta
