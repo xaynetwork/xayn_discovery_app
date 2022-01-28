@@ -3,7 +3,11 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 
-const _itemHeight = 150.0;
+class CardWidgetData {
+  const CardWidgetData._();
+
+  static const double cardHeight = 150.0;
+}
 
 class CardWidget extends StatelessWidget {
   final CardData cardData;
@@ -35,7 +39,7 @@ class CardWidget extends StatelessWidget {
     final Widget background = cardData.map(
       personalArea: (data) => SvgPicture.asset(
         data.svgBackgroundPath,
-        height: _itemHeight,
+        height: CardWidgetData.cardHeight,
       ),
       collectionsScreen: (data) => data.backgroundImage != null
           ? ClipRRect(
@@ -44,12 +48,12 @@ class CardWidget extends StatelessWidget {
               child: Image.memory(
                 data.backgroundImage!,
                 fit: BoxFit.cover,
-                height: _itemHeight,
+                height: CardWidgetData.cardHeight,
               ),
             )
           : SvgPicture.asset(
               R.assets.graphics.formsEmptyCollection,
-              height: _itemHeight,
+              height: CardWidgetData.cardHeight,
             ),
     );
 
@@ -73,7 +77,7 @@ class CardWidget extends StatelessWidget {
     );
 
     final item = SizedBox(
-      height: _itemHeight,
+      height: CardWidgetData.cardHeight,
       child: stack,
     );
 
