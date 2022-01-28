@@ -41,8 +41,10 @@ class _CreateCollectionState extends State<_CreateCollection>
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<CreateCollectionManager, CreateCollectionState>(
+      BlocConsumer<CreateCollectionManager, CreateCollectionState>(
         bloc: _createCollectionManager,
+        listenWhen: (_, current) => current.newCollection != null,
+        listener: (context, state) => _closeSheet(state.newCollection!),
         builder: (context, state) {
           final textField = AppTextField(
             hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
@@ -76,13 +78,9 @@ class _CreateCollectionState extends State<_CreateCollection>
         },
       );
 
-  void _onApplyPressed() async {
-    final newCollection = await _createCollectionManager.createCollection();
+  void _onApplyPressed() => _createCollectionManager.createCollection();
 
-    if (newCollection != null) closeSheet(newCollection);
-  }
-
-  void closeSheet(Collection newCollection) {
+  void _closeSheet(Collection newCollection) {
     closeBottomSheet(context);
     if (widget.onApplyPressed != null) widget.onApplyPressed!(newCollection);
   }

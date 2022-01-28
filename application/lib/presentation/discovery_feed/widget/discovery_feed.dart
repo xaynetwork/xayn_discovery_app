@@ -54,7 +54,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       <Document, Future<CardManagers>>{};
   DiscoveryCardController? _currentCardController;
 
-  int _totalResults = 0;
   double _dragDistance = .0;
 
   @override
@@ -234,6 +233,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         bloc: discoveryFeedManager,
         builder: (context, state) {
           final results = state.results;
+          final totalResults = results.length;
+          // ensure that we don't overflow the index.
+          // this is because right now, we always refresh the feed when we
+          // return to it, should solve itself once this is state-managed by
+          // the real engine at some point.
+          final cardIndex = min(totalResults - 1, state.cardIndex);
 
           removeObsoleteCardManagers(state.removedResults);
 
@@ -243,7 +248,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             );
           }
 
-          if (state.results.isEmpty) {
+          if (state.results.isEmpty || cardIndex == -1) {
             return const Center();
           }
 
@@ -256,15 +261,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             NavBarContainer.updateNavBar(context);
           }
 
-          final document = results.elementAt(state.cardIndex);
+          final document = results.elementAt(cardIndex);
 
           managersOf(document).then((it) {
             _managers = it;
             NavBarContainer.updateNavBar(context);
           });
 
-          _totalResults = results.length;
-          _cardViewController.index = min(_totalResults - 1, state.cardIndex);
+          _cardViewController.index = cardIndex;
 
           onIndexChanged(int index) {
             discoveryFeedManager.handleIndexChanged(index);
@@ -290,9 +294,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               results: results,
               isFullScreen: state.isFullScreen,
             ),
-            itemCount: _totalResults,
+            itemCount: totalResults,
             onFinalIndex: discoveryFeedManager.handleLoadMore,
-            onIndexChanged: _totalResults > 0 ? onIndexChanged : null,
+            onIndexChanged: totalResults > 0 ? onIndexChanged : null,
             isFullScreen: state.isFullScreen,
             fullScreenOffsetFraction:
                 _dragDistance / DiscoveryCard.dragThreshold,
@@ -396,9 +400,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         }
       };
 
-  void _onFullScreenDrag(double distance) {
-    setState(() {
-      _dragDistance = distance;
-    });
-  }
+  void _onFullScreenDrag(double distance) =>
+      setState(() => _dragDistance = distance.abs());
 }

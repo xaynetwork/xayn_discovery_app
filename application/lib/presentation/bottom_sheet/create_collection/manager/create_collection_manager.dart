@@ -17,11 +17,12 @@ class CreateCollectionManager extends Cubit<CreateCollectionState>
 
   String? _useCaseError;
   String _collectionName = '';
+  Collection? _collection;
 
   CreateCollectionManager(
     this._createCollectionUseCase,
     this._collectionErrorsEnumMapper,
-  ) : super(const CreateCollectionState());
+  ) : super(CreateCollectionState.initial());
 
   void updateCollectionName(String name) => scheduleComputeState(
         () {
@@ -40,19 +41,18 @@ class CreateCollectionManager extends Cubit<CreateCollectionState>
         ),
       );
 
-  Future<Collection?> createCollection() async {
+  void createCollection() async {
     final useCaseOut =
         await _createCollectionUseCase.call(state.collectionName);
 
-    Collection? _collection;
     useCaseOut.last.fold(
       matchOnError: {
         On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
       },
       defaultOnError: _defaultOnError,
-      onValue: (collection) => _collection = collection,
+      onValue: (collection) =>
+          scheduleComputeState(() => _collection = collection),
     );
-    return _collection;
   }
 
   @override
@@ -60,6 +60,9 @@ class CreateCollectionManager extends Cubit<CreateCollectionState>
     if (_useCaseError != null) {
       return state.copyWith(errorMessage: _useCaseError);
     }
-    return CreateCollectionState(collectionName: _collectionName);
+    if (_collection != null) {
+      return CreateCollectionState.populateCollection(_collection!);
+    }
+    return CreateCollectionState.populateCollectionName(_collectionName);
   }
 }
