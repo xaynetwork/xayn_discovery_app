@@ -37,7 +37,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
       .asBroadcastStream();
 
   Future<UseCaseSink<List<Document>, EngineEvent>> _getUseCaseSink() async {
-    final engine = await di.getAsync<DiscoveryEngine>() as AppDiscoveryEngine;
+    final engine = di.get<DiscoveryEngine>() as AppDiscoveryEngine;
     final randomKeyWordsUseCase = di.get<RandomKeyWordsUseCase>();
     final createHttpRequestUseCase = di.get<CreateHttpRequestUseCase>();
     final connectivityUseCase = di.get<ConnectivityUriUseCase>();

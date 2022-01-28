@@ -64,7 +64,7 @@ void main() async {
   setUp(() async {
     connectivityUseCase = MockConnectivityUseCase();
     mockDiscoveryEngine = MockDiscoveryEngine();
-    engine = AppDiscoveryEngine(TestDiscoveryEngine());
+    engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
     invokeApiEndpointUseCase = MockInvokeBingUseCase();
     feedRepository = MockFeedRepository();
 
@@ -141,7 +141,7 @@ void main() async {
           (documentIds) => Future.value(const ClientEventSucceeded()));
 
       di.registerSingletonAsync<DiscoveryEngine>(
-          () => Future.value(AppDiscoveryEngine(mockDiscoveryEngine)));
+          () => Future.value(AppDiscoveryEngine.test(mockDiscoveryEngine)));
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -170,7 +170,7 @@ void main() async {
         )).thenAnswer((_) => Future.value(const ClientEventSucceeded()));
 
         di.registerSingletonAsync<DiscoveryEngine>(
-            () => Future.value(AppDiscoveryEngine(mockDiscoveryEngine)));
+            () => Future.value(AppDiscoveryEngine.test(mockDiscoveryEngine)));
         // wait for requestFeed to complete
         await manager.stream.firstWhere((it) => it.results.isNotEmpty);
       },
@@ -205,7 +205,7 @@ void main() async {
           .thenAnswer((_) => const Stream.empty());
 
       di.registerSingletonAsync<DiscoveryEngine>(
-          () => Future.value(AppDiscoveryEngine(mockDiscoveryEngine)));
+          () => Future.value(AppDiscoveryEngine.test(mockDiscoveryEngine)));
 
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
