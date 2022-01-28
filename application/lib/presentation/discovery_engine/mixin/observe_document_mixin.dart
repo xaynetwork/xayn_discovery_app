@@ -37,7 +37,7 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
 
   Future<UseCaseSink<DiscoveryCardObservation, EngineEvent>>
       _getUseCaseSink() async {
-    final useCase = await di.getAsync<LogDocumentTimeUseCase>();
+    final useCase = di.get<LogDocumentTimeUseCase>();
     final discoveryCardObservationUseCase =
         di.get<DiscoveryCardObservationUseCase>();
     final discoveryCardMeasuredObservationUseCase =

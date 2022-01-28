@@ -35,14 +35,14 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
       .asBroadcastStream();
 
   Future<UseCaseSink<None, EngineEvent>> _getUseCaseSink() async {
-    final useCase = await di.getAsync<RequestNextFeedBatchUseCase>();
+    final useCase = di.get<RequestNextFeedBatchUseCase>();
     final sink = pipe(useCase);
 
     return sink;
   }
 
   Future<void> _startConsuming() async {
-    final consumeUseCase = await di.getAsync<RequestFeedUseCase>();
+    final consumeUseCase = di.get<RequestFeedUseCase>();
 
     consume(consumeUseCase, initialData: none);
   }

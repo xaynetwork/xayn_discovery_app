@@ -17,13 +17,13 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// What we are awaiting:
 /// - [changeDocumentFeedback] to return an EngineEvent with information about the [Document].
 /// - an implementation for [search].
-@LazySingleton(as: DiscoveryEngine)
+@Singleton(as: DiscoveryEngine)
 class AppDiscoveryEngine implements DiscoveryEngine {
-  final DiscoveryEngine _engine;
+  late final Future<DiscoveryEngine> _engineFuture;
 
   /// temp solution:
   /// Once search is supported, we drop this.
-  final StreamController<EngineEvent> _tempSearchEvents =
+  late final StreamController<EngineEvent> _tempSearchEvents =
       StreamController<EngineEvent>.broadcast();
 
   /// temp solution:
@@ -35,13 +35,23 @@ class AppDiscoveryEngine implements DiscoveryEngine {
       Expando<DocumentFeedbackChange>();
 
   @visibleForTesting
-  AppDiscoveryEngine(this._engine);
+  AppDiscoveryEngine.test(DiscoveryEngine engine)
+      : _engineFuture = Future.value(engine);
 
-  @factoryMethod
-  static Future<AppDiscoveryEngine> create(
-    GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
-    SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
-  ) async {
+  AppDiscoveryEngine({
+    required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+    required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+  }) {
+    _engineFuture = _init(
+      getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
+      saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
+    );
+  }
+
+  Future<DiscoveryEngine> _init({
+    required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+    required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+  }) async {
     await _saveInitialFeedMarket(saveInitialFeedMarketUseCase);
 
     final localMarkets = await getSelectedFeedMarketsUseCase.singleOutput(none);
@@ -54,16 +64,15 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
-      applicationDirectoryPath: '/',
+      applicationDirectoryPath: '/engine/',
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
     );
-    final engine = await DiscoveryEngine.init(configuration: configuration);
 
-    return AppDiscoveryEngine(engine);
+    return await DiscoveryEngine.init(configuration: configuration);
   }
 
-  static Future<void> _saveInitialFeedMarket(
+  Future<void> _saveInitialFeedMarket(
     SaveInitialFeedMarketUseCase useCase,
   ) async {
     final deviceLocale = WidgetsBinding.instance!.window.locale;
@@ -80,18 +89,18 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     FeedMarkets? feedMarkets,
     int? maxItemsPerFeedBatch,
   }) =>
-      _engine.changeConfiguration(
-        feedMarkets: feedMarkets,
-        maxItemsPerFeedBatch: maxItemsPerFeedBatch,
-      );
+      _run((engine) => engine.changeConfiguration(
+            feedMarkets: feedMarkets,
+            maxItemsPerFeedBatch: maxItemsPerFeedBatch,
+          ));
 
   @override
   Future<EngineEvent> changeDocumentFeedback({
     required DocumentId documentId,
     required DocumentFeedback feedback,
   }) async {
-    final engineEvent = await _engine.changeDocumentFeedback(
-        documentId: documentId, feedback: feedback);
+    final engineEvent = await _run((engine) => engine.changeDocumentFeedback(
+        documentId: documentId, feedback: feedback));
 
     _eventMap[engineEvent] = DocumentFeedbackChange(
       documentId: documentId,
@@ -103,15 +112,20 @@ class AppDiscoveryEngine implements DiscoveryEngine {
 
   @override
   Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) =>
-      _engine.closeFeedDocuments(documentIds);
+      _run((engine) => engine.closeFeedDocuments(documentIds));
 
   /// As we also need search events, which are not yet supported, we override
   /// this getter so that it includes our temp search event Stream.
   @override
-  Stream<EngineEvent> get engineEvents => Rx.merge([
-        _engine.engineEvents,
-        _tempSearchEvents.stream,
-      ]);
+  Stream<EngineEvent> get engineEvents =>
+      Stream.fromFuture(_engineFuture).switchMap(
+        (engine) => Rx.merge(
+          [
+            engine.engineEvents,
+            _tempSearchEvents.stream,
+          ],
+        ),
+      );
 
   @override
   Future<EngineEvent> logDocumentTime({
@@ -119,20 +133,21 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     required DocumentViewMode mode,
     required int seconds,
   }) =>
-      _engine.logDocumentTime(
-        documentId: documentId,
-        mode: mode,
-        seconds: seconds,
-      );
+      _run((engine) => engine.logDocumentTime(
+            documentId: documentId,
+            mode: mode,
+            seconds: seconds,
+          ));
 
   @override
-  Future<EngineEvent> requestFeed() => _engine.requestFeed();
+  Future<EngineEvent> requestFeed() => _run((engine) => engine.requestFeed());
 
   @override
-  Future<EngineEvent> requestNextFeedBatch() => _engine.requestNextFeedBatch();
+  Future<EngineEvent> requestNextFeedBatch() =>
+      _run((engine) => engine.requestNextFeedBatch());
 
   @override
-  Future<EngineEvent> resetEngine() => _engine.resetEngine();
+  Future<EngineEvent> resetEngine() => _run((engine) => engine.resetEngine());
 
   Future<EngineEvent> search(String searchTerm) {
     throw UnimplementedError();
@@ -149,8 +164,12 @@ class AppDiscoveryEngine implements DiscoveryEngine {
       _eventMap[engineEvent];
 
   @override
-  Future<void> dispose() => _engine.dispose();
+  Future<void> dispose() => _run((engine) => engine.dispose());
 
   @override
-  Future<EngineEvent> send(ClientEvent event) => _engine.send(event);
+  Future<EngineEvent> send(ClientEvent event) =>
+      _run((engine) => engine.send(event));
+
+  Future<T> _run<T>(Future<T> Function(DiscoveryEngine engine) handler) async =>
+      handler(await _engineFuture);
 }

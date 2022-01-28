@@ -25,7 +25,7 @@ mixin CloseFeedDocumentsMixin<T> on UseCaseBlocHelper<T> {
   }
 
   Future<UseCaseSink<Set<DocumentId>, EngineEvent>> _getUseCaseSink() async {
-    final useCase = await di.getAsync<CloseFeedDocumentsUseCase>();
+    final useCase = di.get<CloseFeedDocumentsUseCase>();
 
     return pipe(useCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
