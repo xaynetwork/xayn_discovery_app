@@ -53,7 +53,7 @@ class TestLogManager extends LogManager {
       : super(initLoggerUseCase);
 }
 
-@LazySingleton(as: DiscoveryEngine)
+@Singleton(as: DiscoveryEngine)
 class TestDiscoveryEngine implements AppDiscoveryEngine {
   final StreamController<EngineEvent> _onEngineEvent =
       StreamController<EngineEvent>.broadcast();
@@ -62,10 +62,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
     _onEngineEvent.close();
   }
 
-  @factoryMethod
-  static Future<TestDiscoveryEngine> create() async {
-    return TestDiscoveryEngine();
-  }
+  TestDiscoveryEngine();
 
   @override
   Future<EngineEvent> changeConfiguration(

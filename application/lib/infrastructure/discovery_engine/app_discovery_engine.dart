@@ -19,7 +19,21 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// - an implementation for [search].
 @Singleton(as: DiscoveryEngine)
 class AppDiscoveryEngine implements DiscoveryEngine {
-  late final Future<DiscoveryEngine> _engineFuture;
+  late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
+  late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
+  Future<DiscoveryEngine>? __engineFuture;
+
+  /// todo: the current test setup for dependency injection is flawed,
+  /// when a dependency is a Singleton and sync, then the default ctr will
+  /// always be run, even if you overwrite a dependency in test.
+  /// We should move to a system with Environments.
+  ///
+  /// when in test, then __engineFuture is provided
+  /// when running normally, then __engineFuture is null, and _init is used
+  Future<DiscoveryEngine> get _engineFuture => __engineFuture ??= _init(
+        getSelectedFeedMarketsUseCase: _getSelectedFeedMarketsUseCase,
+        saveInitialFeedMarketUseCase: _saveInitialFeedMarketUseCase,
+      );
 
   /// temp solution:
   /// Once search is supported, we drop this.
@@ -36,17 +50,13 @@ class AppDiscoveryEngine implements DiscoveryEngine {
 
   @visibleForTesting
   AppDiscoveryEngine.test(DiscoveryEngine engine)
-      : _engineFuture = Future.value(engine);
+      : __engineFuture = Future.value(engine);
 
   AppDiscoveryEngine({
     required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
-  }) {
-    _engineFuture = _init(
-      getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
-      saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
-    );
-  }
+  })  : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
+        _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase;
 
   Future<DiscoveryEngine> _init({
     required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,

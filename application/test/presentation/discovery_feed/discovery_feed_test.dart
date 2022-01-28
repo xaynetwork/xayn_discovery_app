@@ -103,7 +103,8 @@ void main() async {
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
-      di.registerSingletonAsync<DiscoveryEngine>(() => Future.value(engine));
+      di.registerSingleton<DiscoveryEngine>(engine);
+
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -140,8 +141,9 @@ void main() async {
       when(mockDiscoveryEngine.closeFeedDocuments(any)).thenAnswer(
           (documentIds) => Future.value(const ClientEventSucceeded()));
 
-      di.registerSingletonAsync<DiscoveryEngine>(
-          () => Future.value(AppDiscoveryEngine.test(mockDiscoveryEngine)));
+      di.registerSingleton<DiscoveryEngine>(
+          AppDiscoveryEngine.test(mockDiscoveryEngine));
+
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -169,8 +171,9 @@ void main() async {
           seconds: anyNamed('seconds'),
         )).thenAnswer((_) => Future.value(const ClientEventSucceeded()));
 
-        di.registerSingletonAsync<DiscoveryEngine>(
-            () => Future.value(AppDiscoveryEngine.test(mockDiscoveryEngine)));
+        di.registerSingleton<DiscoveryEngine>(
+            AppDiscoveryEngine.test(mockDiscoveryEngine));
+
         // wait for requestFeed to complete
         await manager.stream.firstWhere((it) => it.results.isNotEmpty);
       },
@@ -204,8 +207,8 @@ void main() async {
       when(mockDiscoveryEngine.engineEvents)
           .thenAnswer((_) => const Stream.empty());
 
-      di.registerSingletonAsync<DiscoveryEngine>(
-          () => Future.value(AppDiscoveryEngine.test(mockDiscoveryEngine)));
+      di.registerSingleton<DiscoveryEngine>(
+          AppDiscoveryEngine.test(mockDiscoveryEngine));
 
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
