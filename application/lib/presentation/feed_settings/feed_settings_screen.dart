@@ -42,6 +42,7 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.titleOnly(
             title: R.strings.feedSettingsScreenTitle,

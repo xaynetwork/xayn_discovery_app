@@ -60,6 +60,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.withTrailingIcon(
             title: R.strings.collectionsScreenTitle,
