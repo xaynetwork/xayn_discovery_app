@@ -55,6 +55,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler;
 
   bool _isLoading = false;
+  bool _isBookmarkToggled = false;
+  Object? _error;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -85,28 +87,40 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   Future<bool> toggleBookmarkDocument(Document document) async {
+    scheduleComputeState(() => _isBookmarkToggled = true);
+
     final nextIsBookmarked = !state.isBookmarked;
     final useCaseResults = await (state.isBookmarked
         ? _removeBookmarkUseCase(document.documentUniqueId)
         : _createBookmarkUseCase(
             CreateBookmarkFromDocumentUseCaseIn(document: document),
           ));
-    var hasError = false;
 
-    for (var it in useCaseResults) {
-      it.fold(defaultOnError: (e, s) => hasError = true, onValue: (_) {});
-    }
+    scheduleComputeState(() => _isBookmarkToggled = false);
 
-    if (!hasError) {
-      _sendAnalyticsUseCase(
-        DocumentBookmarkedEvent(
-          document: document,
-          isBookmarked: nextIsBookmarked,
-        ),
-      );
-    }
+    if (hasError(useCaseResults)) return !nextIsBookmarked;
+
+    _sendAnalyticsUseCase(
+      DocumentBookmarkedEvent(
+        document: document,
+        isBookmarked: nextIsBookmarked,
+      ),
+    );
 
     return nextIsBookmarked;
+  }
+
+  bool hasError(List<UseCaseResult> useCaseResults) {
+    var hasError = false;
+    for (var it in useCaseResults) {
+      it.fold(
+          defaultOnError: (e, s) {
+            hasError = true;
+            scheduleComputeState(() => _error = e);
+          },
+          onValue: (_) {});
+    }
+    return hasError;
   }
 
   Future<void> _init() async {
@@ -158,17 +172,24 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           final report = errorReport.of(_updateUri) ??
               errorReport.of(_isBookmarkedHandler);
           logger.e(report!.error);
-
-          return DiscoveryCardState.error();
+          return DiscoveryCardState.error(report.error);
         }
 
-        var nextState = state.copyWith(
+        if (_error != null) {
+          logger.e(_error);
+          final newState = DiscoveryCardState.error(_error);
+          scheduleComputeState(() => _error = null);
+          return newState;
+        }
+
+        var nextState = DiscoveryCardState(
           isComplete: !_isLoading,
         );
 
         if (isBookmarked != null) {
           nextState = nextState.copyWith(
             isBookmarked: isBookmarked,
+            isBookmarkToggled: _isBookmarkToggled,
           );
         }
 

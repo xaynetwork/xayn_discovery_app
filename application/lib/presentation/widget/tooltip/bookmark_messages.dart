@@ -36,12 +36,15 @@ TooltipParams _getBookmarkedToDefault() {
     if (args == null || args.length < 2) return;
     final context = args[0];
     final document = args[1];
+    var onError = args[2];
     if (context is! BuildContext || document is! Document) return;
+    if (onError is! OnMoveDocumentToCollectionError) onError = null;
 
     showAppBottomSheet(
       context,
       builder: (_) => MoveDocumentToCollectionBottomSheet(
         document: document,
+        onError: onError,
       ),
     );
   }

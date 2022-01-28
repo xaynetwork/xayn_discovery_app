@@ -12,10 +12,18 @@ class DiscoveryCardState with _$DiscoveryCardState {
   const factory DiscoveryCardState({
     @Default(false) bool isComplete,
     @Default(false) bool isBookmarked,
+
+    /// Since a special snackbar shows only when the bookmark icon is toggled,
+    /// we use this variable to detect if the isBookmarked change was due to the
+    /// button toggling and was not originated from long pressing the bookmark icon.
+    @Default(false) bool isBookmarkToggled,
+    Object? error,
     ProcessedDocument? processedDocument,
   }) = _DiscoveryCardState;
 
   factory DiscoveryCardState.initial() => const DiscoveryCardState();
 
-  factory DiscoveryCardState.error() => const DiscoveryCardState();
+  factory DiscoveryCardState.error(Object? error) => DiscoveryCardState(
+        error: error,
+      );
 }

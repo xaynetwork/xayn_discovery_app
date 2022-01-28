@@ -11,7 +11,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
@@ -30,6 +29,7 @@ class MoveDocumentToCollectionManager
       _collectionsHandler;
   Collection? _selectedCollection;
   bool _isBookmarked = false;
+  Object? _errorObj;
 
   MoveDocumentToCollectionManager._(
     this._listenCollectionsUseCase,
@@ -94,43 +94,70 @@ class MoveDocumentToCollectionManager
   void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  void onApplyPressed({required Document document}) async {
+  Future<bool> onApplyPressed({required Document document}) async {
     final hasSelected = state.selectedCollection != null;
     final isBookmarked = state.isBookmarked;
     if (!isBookmarked && hasSelected) {
-      _createBookmarkInSelectedCollection(document: document);
+      return _createBookmarkInSelectedCollection(document: document);
     }
     if (isBookmarked && !hasSelected) {
-      _removeBookmarkUseCase.call(document.documentUniqueId);
+      return _removeBookmarkFromSelectedCollection(
+          bookmarkId: document.documentUniqueId);
     }
     if (isBookmarked && hasSelected) {
-      _moveBookmarkToSelectedCollection(bookmarkId: document.documentUniqueId);
+      return _moveBookmarkToSelectedCollection(
+          bookmarkId: document.documentUniqueId);
     }
+    return false;
   }
 
-  void _moveBookmarkToSelectedCollection({required UniqueId bookmarkId}) {
+  Future<bool> _moveBookmarkToSelectedCollection(
+      {required UniqueId bookmarkId}) async {
     final param = MoveBookmarkUseCaseIn(
       bookmarkId: bookmarkId,
       collectionId: state.selectedCollection!.id,
     );
-    _moveBookmarkUseCase.call(param);
+    final result = await _moveBookmarkUseCase.call(param);
+    return hasError(result);
   }
 
-  void _createBookmarkInSelectedCollection({required Document document}) {
+  Future<bool> _removeBookmarkFromSelectedCollection(
+      {required UniqueId bookmarkId}) async {
+    final result = await _removeBookmarkUseCase.call(bookmarkId);
+    return hasError(result);
+  }
+
+  Future<bool> _createBookmarkInSelectedCollection(
+      {required Document document}) async {
     final param = CreateBookmarkFromDocumentUseCaseIn(
       document: document,
       collectionId: state.selectedCollection!.id,
     );
-    _createBookmarkUseCase.call(param);
+    final result = await _createBookmarkUseCase.call(param);
+    return hasError(result);
+  }
+
+  bool hasError(List<UseCaseResult> useCaseResults) {
+    var hasError = false;
+    for (var it in useCaseResults) {
+      it.fold(
+          defaultOnError: (error, _) {
+            hasError = true;
+            scheduleComputeState(() => _errorObj = error);
+          },
+          onValue: (_) {});
+    }
+
+    return hasError;
   }
 
   @override
   Future<MoveDocumentToCollectionState?> computeState() async =>
       fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
-        if (errorReport.isNotEmpty) {
-          final error = errorReport.of(_collectionsHandler)!.error;
-          logger.e(error);
-          return state.copyWith(errorMsg: error.toString());
+        if (errorReport.isNotEmpty || _errorObj != null) {
+          final error = _errorObj ?? errorReport.of(_collectionsHandler)!.error;
+          _errorObj = null;
+          return state.copyWith(errorObj: error);
         }
 
         if (usecaseOut != null) {

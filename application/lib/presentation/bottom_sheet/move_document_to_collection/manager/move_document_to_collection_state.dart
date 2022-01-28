@@ -11,7 +11,7 @@ class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
   const factory MoveDocumentToCollectionState({
     required List<Collection> collections,
     Collection? selectedCollection,
-    String? errorMsg,
+    Object? errorObj,
     @Default(false) bool isBookmarked,
   }) = _MoveDocumentToCollectionState;
 

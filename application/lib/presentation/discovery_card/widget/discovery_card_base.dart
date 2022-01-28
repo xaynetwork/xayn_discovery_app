@@ -1,11 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
@@ -30,7 +32,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
-    extends State<T> {
+    extends State<T> with TooltipStateMixin {
   late final DiscoveryCardManager _discoveryCardManager;
   late final ImageManager _imageManager;
 
@@ -78,14 +80,32 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
+      BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
         bloc: _discoveryCardManager,
         builder: (context, state) => buildFromState(
           context,
           state,
           _buildImage(),
         ),
+        listenWhen: (prev, current) =>
+            hasError(current) || discoveryCardStateListenWhen(prev, current),
+        listener: (context, state) {
+          if (hasError(state)) handleError(state);
+          discoveryCardStateListener();
+        },
       );
+
+  bool hasError(DiscoveryCardState state) => state.error != null;
+
+  void handleError(DiscoveryCardState state) {
+    TooltipKey? key = TooltipUtils.getErrorKey(state.error);
+    if (key != null) showTooltip(key);
+  }
+
+  bool discoveryCardStateListenWhen(
+      DiscoveryCardState prev, DiscoveryCardState curr);
+
+  void discoveryCardStateListener();
 
   Widget buildFromState(
     BuildContext context,

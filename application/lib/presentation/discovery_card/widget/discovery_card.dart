@@ -14,10 +14,10 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 /// the minimum fraction height of the card image.
 /// This value must be in the range of [0.0, 1.0], where 1.0 is the
@@ -114,7 +114,7 @@ class DiscoveryCardController extends ChangeNotifier {
 }
 
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
-    with TickerProviderStateMixin, TooltipStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _openingAnimation;
   late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
@@ -264,22 +264,14 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     );
   }
 
-  void onBookmarkPressed() async {
-    final isBookmarked =
-        await discoveryCardManager.toggleBookmarkDocument(widget.document);
-
-    if (isBookmarked) {
-      showTooltip(
-        TooltipKeys.bookmarkedToDefault,
-        parameters: [context, widget.document],
-      );
-    }
-  }
+  void onBookmarkPressed() =>
+      discoveryCardManager.toggleBookmarkDocument(widget.document);
 
   void onBookmarkLongPressed() => showAppBottomSheet(
         context,
         builder: (_) => MoveDocumentToCollectionBottomSheet(
           document: widget.document,
+          onError: (tooltipKey) => showTooltip(tooltipKey),
         ),
       );
 
@@ -330,6 +322,23 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       },
     );
   }
+
+  @override
+  void discoveryCardStateListener() => showTooltip(
+        BookmarkToolTipKeys.bookmarkedToDefault,
+        parameters: [
+          context,
+          widget.document,
+          (tooltipKey) => showTooltip(tooltipKey),
+        ],
+      );
+
+  @override
+  bool discoveryCardStateListenWhen(
+          DiscoveryCardState previous, DiscoveryCardState current) =>
+      !previous.isBookmarked &&
+      current.isBookmarked &&
+      current.isBookmarkToggled;
 }
 
 class _DiscoveryCardPageState extends _DiscoveryCardState

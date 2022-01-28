@@ -94,21 +94,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
       void onBookmarkPressed() async {
         final managers = await managersOf(document);
-        final isBookmarked = await managers.discoveryCardManager
-            .toggleBookmarkDocument(document);
-
-        if (isBookmarked) {
-          showTooltip(
-            TooltipKeys.bookmarkedToDefault,
-            parameters: [context, document],
-          );
-        }
+        managers.discoveryCardManager.toggleBookmarkDocument(document);
       }
 
       void onBookmarkLongPressed() => showAppBottomSheet(
             context,
             builder: (_) => MoveDocumentToCollectionBottomSheet(
               document: document,
+              onError: (tooltipKey) => showTooltip(tooltipKey),
             ),
           );
 
