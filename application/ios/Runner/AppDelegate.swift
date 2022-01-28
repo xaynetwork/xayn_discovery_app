@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import AppTrackingTransparency
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {

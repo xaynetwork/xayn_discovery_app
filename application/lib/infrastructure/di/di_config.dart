@@ -1,7 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 
 import 'di_config.config.dart';
 
@@ -31,4 +34,10 @@ Future<void> configureDependencies({
   );
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
+}
+
+Future<void> initServices() async {
+  di.get<LogManager>();
+  di.get<MarketingAnalyticsService>();
+  await di.getAsync<AnalyticsNavigatorObserver>();
 }

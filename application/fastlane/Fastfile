@@ -126,6 +126,8 @@ lane :check_config_files do |options|
     "IMAGE_FETCHER_URL_DEBUG" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN",
     "AMPLITUDE_API_KEY_DEBUG" => "AMPLITUDE_API_KEY",
+    "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
+    "APP_STORE_NUMERICAL_ID_DEBUG" => "APP_STORE_NUMERICAL_ID",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -135,6 +137,8 @@ lane :check_config_files do |options|
     "IMAGE_FETCHER_URL_PRODUCTION" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN",
     "AMPLITUDE_API_KEY_PRODUCTION" => "AMPLITUDE_API_KEY",
+    "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
+    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "APP_STORE_NUMERICAL_ID",
   }, Config::ENV_DEFAULTS)
 
   if options[:flavor] != "internal" && options[:release] != "debug"
