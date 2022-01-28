@@ -90,8 +90,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         listenWhen: (prev, current) =>
             hasError(current) || discoveryCardStateListenWhen(prev, current),
         listener: (context, state) {
-          if (hasError(state)) handleError(state);
-          discoveryCardStateListener();
+          if (hasError(state)) {
+            handleError(state);
+          } else {
+            discoveryCardStateListener();
+          }
         },
       );
 
