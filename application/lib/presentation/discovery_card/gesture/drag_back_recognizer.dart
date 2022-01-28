@@ -80,6 +80,8 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
   void onDragUpdate(DragUpdateDetails event) {
     // update the distance
     _distance += event.delta.dx;
+    // ignore right-to-left gestures
+    if (_distance < 0) return;
 
     // test if we dragged far enough
     if (_distance > threshold) {
@@ -97,6 +99,9 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
   }
 
   void onDragEnd(DragEndDetails? event) async {
+    // ignore right-to-left gestures
+    if (_distance < 0) return;
+
     final velocity = event?.primaryVelocity ?? .0;
 
     stopTrackingPointer(_lastPointer!);
