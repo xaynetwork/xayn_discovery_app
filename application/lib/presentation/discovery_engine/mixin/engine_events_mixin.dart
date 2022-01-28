@@ -23,7 +23,7 @@ mixin EngineEventsMixin<T> on UseCaseBlocHelper<T> {
       .asBroadcastStream();
 
   Future<void> _startConsuming() async {
-    final consumeUseCase = await di.getAsync<EngineEventsUseCase>();
+    final consumeUseCase = di.get<EngineEventsUseCase>();
 
     engineEvents = consume(consumeUseCase, initialData: none);
   }

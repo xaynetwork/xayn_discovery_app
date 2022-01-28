@@ -36,7 +36,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       .asBroadcastStream();
 
   Future<UseCaseSink<String, EngineEvent>> _getUseCaseSink() async {
-    final useCase = await di.getAsync<SearchUseCase>();
+    final useCase = di.get<SearchUseCase>();
 
     return pipe(useCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));

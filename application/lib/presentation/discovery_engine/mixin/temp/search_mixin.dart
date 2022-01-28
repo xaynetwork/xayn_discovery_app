@@ -27,7 +27,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   }
 
   Future<UseCaseSink<String, EngineEvent>> _getUseCaseSink() async {
-    final engine = await di.getAsync<DiscoveryEngine>() as AppDiscoveryEngine;
+    final engine = di.get<DiscoveryEngine>() as AppDiscoveryEngine;
     final createHttpRequestUseCase = di.get<CreateHttpRequestUseCase>();
     final connectivityUseCase = di.get<ConnectivityUriUseCase>();
     final invokeApiEndpointUseCase = di.get<InvokeApiEndpointUseCase>();

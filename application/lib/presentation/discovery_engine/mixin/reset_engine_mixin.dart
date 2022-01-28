@@ -25,7 +25,7 @@ mixin ResetEngineMixin<T> on UseCaseBlocHelper<T> {
   }
 
   Future<UseCaseSink<None, EngineEvent>> _getUseCaseSink() async {
-    final useCase = await di.getAsync<ResetEngineUseCase>();
+    final useCase = di.get<ResetEngineUseCase>();
 
     return pipe(useCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
