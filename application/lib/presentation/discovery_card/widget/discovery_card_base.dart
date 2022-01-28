@@ -87,18 +87,16 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
           state,
           _buildImage(),
         ),
-        listenWhen: (prev, current) =>
-            hasError(current) || discoveryCardStateListenWhen(prev, current),
+        listenWhen: (previous, current) =>
+            current.hasError || discoveryCardStateListenWhen(previous, current),
         listener: (context, state) {
-          if (hasError(state)) {
+          if (state.hasError) {
             handleError(state);
           } else {
             discoveryCardStateListener();
           }
         },
       );
-
-  bool hasError(DiscoveryCardState state) => state.error != null;
 
   void handleError(DiscoveryCardState state) {
     TooltipKey? key = TooltipUtils.getErrorKey(state.error);

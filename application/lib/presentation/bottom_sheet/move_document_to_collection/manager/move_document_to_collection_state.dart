@@ -31,3 +31,8 @@ class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
         isBookmarked: isBookmarked,
       );
 }
+
+extension MoveDocumentToCollectionStateExtension
+    on MoveDocumentToCollectionState {
+  bool get hasError => errorObj != null;
+}

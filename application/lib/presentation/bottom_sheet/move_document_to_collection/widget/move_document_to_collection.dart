@@ -82,11 +82,11 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
         : BlocConsumer<MoveDocumentToCollectionManager,
             MoveDocumentToCollectionState>(
             bloc: _moveDocumentToCollectionManager,
-            listenWhen: (prev, curr) =>
-                curr.errorObj != null && widget.onError != null,
             listener: (_, state) {
-              TooltipKey? key = TooltipUtils.getErrorKey(state.errorObj);
-              if (key != null) widget.onError!(key);
+              if (state.hasError && widget.onError != null) {
+                TooltipKey? key = TooltipUtils.getErrorKey(state.errorObj);
+                if (key != null) widget.onError!(key);
+              }
             },
             builder: (_, state) => state.collections.isNotEmpty
                 ? CollectionsListBottomSheet(

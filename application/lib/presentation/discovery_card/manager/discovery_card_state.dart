@@ -27,3 +27,7 @@ class DiscoveryCardState with _$DiscoveryCardState {
         error: error,
       );
 }
+
+extension DiscoveryCardStateExtension on DiscoveryCardState {
+  bool get hasError => error != null;
+}

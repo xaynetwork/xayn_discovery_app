@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
@@ -29,7 +30,7 @@ class MoveDocumentToCollectionManager
       _collectionsHandler;
   Collection? _selectedCollection;
   bool _isBookmarked = false;
-  Object? _errorObj;
+  Object? _error;
 
   MoveDocumentToCollectionManager._(
     this._listenCollectionsUseCase,
@@ -143,7 +144,7 @@ class MoveDocumentToCollectionManager
       it.fold(
           defaultOnError: (error, _) {
             hasError = true;
-            scheduleComputeState(() => _errorObj = error);
+            scheduleComputeState(() => _error = error);
           },
           onValue: (_) {});
     }
@@ -154,10 +155,17 @@ class MoveDocumentToCollectionManager
   @override
   Future<MoveDocumentToCollectionState?> computeState() async =>
       fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
-        if (errorReport.isNotEmpty || _errorObj != null) {
-          final error = _errorObj ?? errorReport.of(_collectionsHandler)!.error;
-          _errorObj = null;
+        if (errorReport.isNotEmpty) {
+          final error = errorReport.of(_collectionsHandler)!.error;
+          logger.e(error);
           return state.copyWith(errorObj: error);
+        }
+
+        if (_error != null) {
+          final newState = state.copyWith(errorObj: _error);
+          logger.e(_error);
+          scheduleComputeState(() => _error = null);
+          return newState;
         }
 
         if (usecaseOut != null) {
