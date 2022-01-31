@@ -33,8 +33,8 @@ void main() {
         () => Future.value(EngineEventsUseCase(engine)));
     di.registerSingletonAsync<ChangeDocumentFeedbackUseCase>(
         () => Future.value(ChangeDocumentFeedbackUseCase(engine)));
-    di.registerLazySingletonAsync<SendAnalyticsUseCase>(
-        () async => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<SendAnalyticsUseCase>(
+        () => SendAnalyticsUseCase(analyticsService));
 
     when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 

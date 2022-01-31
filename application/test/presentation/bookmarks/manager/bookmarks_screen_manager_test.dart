@@ -12,12 +12,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_book
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
+import '../../test_utils/utils.dart';
 import 'bookmarks_screen_manager_test.mocks.dart';
 
 @GenerateMocks([
@@ -35,7 +37,9 @@ void main() {
   late MockBookmarkErrorsEnumMapper bookmarkErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
   late BookmarksScreenManager bookmarksScreenManager;
+  late BookmarksScreenNavActions bookmarksScreenNavActions;
   late BookmarksScreenState populatedState;
+  late CreateDefaultCollectionUseCase createDefaultCollectionUseCase;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
 
@@ -56,28 +60,29 @@ void main() {
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     moveBookmarkUseCase = MockMoveBookmarkUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
+    createDefaultCollectionUseCase = MockCreateDefaultCollectionUseCase();
+    bookmarksScreenNavActions = MockBookmarksScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
 
     when(listenBookmarksUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(listenBookmarksUseCase.transaction(any)).thenAnswer(
-      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks, '')),
+      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks, 'Read Later')),
     );
 
     bookmarksScreenManager = BookmarksScreenManager(
       listenBookmarksUseCase,
       removeBookmarkUseCase,
       moveBookmarkUseCase,
-      //_createDefaultCollectionUseCase
-      null,
+      createDefaultCollectionUseCase,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
-      //_bookmarksScreenNavActions
-      null,
+      bookmarksScreenNavActions,
     );
 
-    populatedState = BookmarksScreenState.populated(bookmarks, timestamp);
+    populatedState =
+        BookmarksScreenState.populated(bookmarks, timestamp, 'Read Later');
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp);
   });

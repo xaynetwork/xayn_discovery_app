@@ -24,6 +24,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_se
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
+import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -37,6 +38,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   ActiveSearchNavActions,
   AppManager,
   AppVersionToMapMapper,
+  BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
   CreateDefaultCollectionUseCase,
