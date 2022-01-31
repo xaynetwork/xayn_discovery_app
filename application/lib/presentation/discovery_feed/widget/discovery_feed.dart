@@ -195,6 +195,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,
         top: false,

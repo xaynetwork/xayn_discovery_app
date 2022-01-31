@@ -352,6 +352,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
   Widget buildFromState(
           BuildContext context, DiscoveryCardState state, Widget image) =>
       Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           bottom: false,
           child: super.buildFromState(context, state, image),
