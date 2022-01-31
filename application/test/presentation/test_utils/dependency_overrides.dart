@@ -136,13 +136,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
 
 @LazySingleton(as: AnalyticsService)
 class TestAnalyticsService implements AnalyticsService {
-  TestAnalyticsService._();
-
-  /// We need the di to generate the exact same thing as in the original AnalyticsService.
-  /// ...which is a Future<AnalyticsService>
-  @factoryMethod
-  static Future<AnalyticsService> initialized() async =>
-      TestAnalyticsService._();
+  TestAnalyticsService();
 
   @override
   Future<void> flush() async {}

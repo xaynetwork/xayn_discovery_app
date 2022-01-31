@@ -48,8 +48,8 @@ void main() {
         DiscoveryCardObservationUseCase());
     di.registerSingleton<DiscoveryCardMeasuredObservationUseCase>(
         DiscoveryCardMeasuredObservationUseCase());
-    di.registerLazySingletonAsync<SendAnalyticsUseCase>(
-        () async => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<SendAnalyticsUseCase>(
+        () => SendAnalyticsUseCase(analyticsService));
 
     when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 

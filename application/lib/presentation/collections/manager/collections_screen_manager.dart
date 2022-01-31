@@ -189,5 +189,6 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
   void onBackNavPressed() => _navActions.onBackNavPressed();
 
   @override
-  void onCollectionPressed(UniqueId collectionId) => _navActions.onCollectionPressed(collectionId);
+  void onCollectionPressed(UniqueId collectionId) =>
+      _navActions.onCollectionPressed(collectionId);
 }

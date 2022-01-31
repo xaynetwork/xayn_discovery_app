@@ -44,6 +44,7 @@ class ListenBookmarksUseCase
       getBookmarksHandler = (_) => _bookmarksRepository.getAll();
     }
 
+    // yield first en empty event that causes to fetch the initial bookmarks and then watch for changes
     yield* Rx.merge([Stream.value(null), _bookmarksRepository.watch()]).map(
       (_) => ListenBookmarksUseCaseOut(
         getBookmarksHandler(param.collectionId),
