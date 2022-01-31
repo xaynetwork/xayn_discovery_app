@@ -30,6 +30,7 @@ class MoveDocumentToCollectionManager
       _collectionsHandler;
   Collection? _selectedCollection;
   bool _isBookmarked = false;
+  bool _shouldClose = false;
   Object? _error;
 
   MoveDocumentToCollectionManager._(
@@ -95,50 +96,46 @@ class MoveDocumentToCollectionManager
   void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  Future<bool> onApplyPressed({required Document document}) async {
+  void onApplyPressed({required Document document}) {
     final hasSelected = state.selectedCollection != null;
     final isBookmarked = state.isBookmarked;
     if (!isBookmarked && hasSelected) {
-      return _createBookmarkInSelectedCollection(document: document);
+      _createBookmarkInSelectedCollection(document: document);
     }
     if (isBookmarked && !hasSelected) {
-      return _removeBookmarkFromSelectedCollection(
+      _removeBookmarkFromSelectedCollection(
           bookmarkId: document.documentUniqueId);
     }
     if (isBookmarked && hasSelected) {
-      return _moveBookmarkToSelectedCollection(
-          bookmarkId: document.documentUniqueId);
+      _moveBookmarkToSelectedCollection(bookmarkId: document.documentUniqueId);
     }
-    return false;
   }
 
-  Future<bool> _moveBookmarkToSelectedCollection(
-      {required UniqueId bookmarkId}) async {
+  void _moveBookmarkToSelectedCollection({required UniqueId bookmarkId}) async {
     final param = MoveBookmarkUseCaseIn(
       bookmarkId: bookmarkId,
       collectionId: state.selectedCollection!.id,
     );
     final result = await _moveBookmarkUseCase.call(param);
-    return hasError(result);
+    handleError(result);
   }
 
-  Future<bool> _removeBookmarkFromSelectedCollection(
+  void _removeBookmarkFromSelectedCollection(
       {required UniqueId bookmarkId}) async {
     final result = await _removeBookmarkUseCase.call(bookmarkId);
-    return hasError(result);
+    handleError(result);
   }
 
-  Future<bool> _createBookmarkInSelectedCollection(
-      {required Document document}) async {
+  void _createBookmarkInSelectedCollection({required Document document}) async {
     final param = CreateBookmarkFromDocumentUseCaseIn(
       document: document,
       collectionId: state.selectedCollection!.id,
     );
     final result = await _createBookmarkUseCase.call(param);
-    return hasError(result);
+    handleError(result);
   }
 
-  bool hasError(List<UseCaseResult> useCaseResults) {
+  void handleError(List<UseCaseResult> useCaseResults) {
     var hasError = false;
     for (var it in useCaseResults) {
       it.fold(
@@ -148,8 +145,7 @@ class MoveDocumentToCollectionManager
           },
           onValue: (_) {});
     }
-
-    return hasError;
+    if (!hasError) scheduleComputeState(() => _shouldClose = true);
   }
 
   @override
@@ -176,6 +172,7 @@ class MoveDocumentToCollectionManager
           collections: _collections,
           selectedCollection: _selectedCollection,
           isBookmarked: _isBookmarked,
+          shouldClose: _shouldClose,
         );
 
         return newState;

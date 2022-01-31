@@ -13,6 +13,7 @@ class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
     Collection? selectedCollection,
     Object? errorObj,
     @Default(false) bool isBookmarked,
+    @Default(false) bool shouldClose,
   }) = _MoveDocumentToCollectionState;
 
   factory MoveDocumentToCollectionState.initial() =>
@@ -24,11 +25,13 @@ class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
     required List<Collection> collections,
     required Collection? selectedCollection,
     required bool isBookmarked,
+    required bool shouldClose,
   }) =>
       MoveDocumentToCollectionState(
         collections: collections,
         selectedCollection: selectedCollection,
         isBookmarked: isBookmarked,
+        shouldClose: shouldClose,
       );
 }
 

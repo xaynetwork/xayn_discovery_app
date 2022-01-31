@@ -86,6 +86,7 @@ void main() {
         collections: [collection1, collection2],
         selectedCollection: null,
         isBookmarked: false,
+        shouldClose: false,
       );
 
       _mockManagerInitMethodCalls();

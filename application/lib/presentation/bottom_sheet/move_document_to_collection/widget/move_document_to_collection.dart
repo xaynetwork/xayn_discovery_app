@@ -88,14 +88,22 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
                 if (key != null) widget.onError!(key);
               }
             },
-            builder: (_, state) => state.collections.isNotEmpty
-                ? CollectionsListBottomSheet(
-                    collections: state.collections,
-                    onSelectCollection: _moveDocumentToCollectionManager!
-                        .updateSelectedCollection,
-                    initialSelectedCollection: state.selectedCollection,
-                  )
-                : const SizedBox.shrink(),
+            builder: (_, state) {
+              if (state.shouldClose) {
+                closeBottomSheet(context);
+              }
+
+              if (state.collections.isNotEmpty) {
+                return CollectionsListBottomSheet(
+                  collections: state.collections,
+                  onSelectCollection: _moveDocumentToCollectionManager!
+                      .updateSelectedCollection,
+                  initialSelectedCollection: state.selectedCollection,
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
           );
 
     final header = BottomSheetHeader(
@@ -109,7 +117,9 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: _onApplyPressed,
+      onApplyPressed: () => _moveDocumentToCollectionManager!.onApplyPressed(
+        document: widget.document,
+      ),
     );
 
     return Column(
@@ -146,11 +156,4 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
           onError: widget.onError,
         ),
       );
-
-  Future<void> _onApplyPressed() async {
-    final hasError = await _moveDocumentToCollectionManager!.onApplyPressed(
-      document: widget.document,
-    );
-    if (!hasError) closeBottomSheet(context);
-  }
 }
