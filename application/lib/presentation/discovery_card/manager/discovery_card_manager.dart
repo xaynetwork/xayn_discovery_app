@@ -98,7 +98,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
     scheduleComputeState(() => _isBookmarkToggled = false);
 
-    if (hasError(useCaseResults)) return !nextIsBookmarked;
+    if (_hasError(useCaseResults)) return !nextIsBookmarked;
 
     _sendAnalyticsUseCase(
       DocumentBookmarkedEvent(
@@ -110,7 +110,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     return nextIsBookmarked;
   }
 
-  bool hasError(List<UseCaseResult> useCaseResults) {
+  bool _hasError(List<UseCaseResult> useCaseResults) {
     var hasError = false;
     for (var it in useCaseResults) {
       it.fold(

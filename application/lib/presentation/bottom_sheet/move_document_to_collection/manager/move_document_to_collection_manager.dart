@@ -117,13 +117,13 @@ class MoveDocumentToCollectionManager
       collectionId: state.selectedCollection!.id,
     );
     final result = await _moveBookmarkUseCase.call(param);
-    handleError(result);
+    _handleError(result);
   }
 
   void _removeBookmarkFromSelectedCollection(
       {required UniqueId bookmarkId}) async {
-    final result = await _removeBookmarkUseCase.call(bookmarkId);
-    handleError(result);
+    final result = await _removeBookmarkUseCase(bookmarkId);
+    _handleError(result);
   }
 
   void _createBookmarkInSelectedCollection({required Document document}) async {
@@ -132,10 +132,10 @@ class MoveDocumentToCollectionManager
       collectionId: state.selectedCollection!.id,
     );
     final result = await _createBookmarkUseCase.call(param);
-    handleError(result);
+    _handleError(result);
   }
 
-  void handleError(List<UseCaseResult> useCaseResults) {
+  void _handleError(List<UseCaseResult> useCaseResults) {
     var hasError = false;
     for (var it in useCaseResults) {
       it.fold(
