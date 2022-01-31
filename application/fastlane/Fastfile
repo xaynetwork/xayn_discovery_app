@@ -17,12 +17,9 @@ import("lib/git.rb")
 ### All the configs are in this file, eventually all project specific parts will move there
 import("lib/config.rb")
 
-
-
-
 # Common checks before running a lane
 before_all do |lane, options|
-  setIfNotSet = lambda{ | option, alt |
+  setIfNotSet = lambda { |option, alt|
     options[option] = options.key?(option) ? options[option] : alt
   }
 
@@ -37,7 +34,10 @@ before_all do |lane, options|
   setIfNotSet.call(:downloadProfile, true)
 
   version_name = gitVersionName()
-  build_number = gitVersionNumber()
+  flavor = options[:flavor]
+  platform = options[:platform]
+  offset = Config::FLAVOR_MATRIX[flavor][platform][Config::Keys::BUILD_NUMBER_OFFSET]
+  build_number = gitVersionNumber().to_i + offset
   setIfNotSet.call(:build_number, build_number)
   setIfNotSet.call(:version_name, version_name)
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
@@ -46,10 +46,10 @@ end
 # Private lanes, that we only call internally, they are nice because they have an own description
 desc "Flutter build"
 private_lane :flutter_build do |options|
-   if options[:clean]
-     clean(options)
-   end
-   build_runner(options)
+  if options[:clean]
+    clean(options)
+  end
+  build_runner(options)
 
   platform = options[:platform]
   target = platform == "android" ? options[:android_output] : platform
@@ -107,7 +107,7 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
-  mode = options[:watch] ? 'watch' : 'build'
+  mode = options[:watch] ? "watch" : "build"
   command = "pub run build_runner #{mode} --delete-conflicting-outputs"
   begin
     flutter(command)
@@ -155,7 +155,7 @@ end
 
 desc "Watch changes for rerunning the build_runner"
 lane :watch do |options|
-  options[:watch] = true;
+  options[:watch] = true
   build_runner(options)
 end
 
