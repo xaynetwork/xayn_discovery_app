@@ -44,7 +44,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         CardManagersMixin,
         TooltipStateMixin {
   late final DiscoveryFeedManager _discoveryFeedManager;
-  CardManagers? _managers;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   DiscoveryCardController? _currentCardController;
@@ -79,9 +78,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     NavBarConfig buildReaderMode() {
       final document = _discoveryFeedManager.state.results
           .elementAt(_discoveryFeedManager.state.cardIndex);
+      final managers = managersOf(document);
 
       void onBookmarkPressed() async {
-        final managers = managersOf(document);
         final isBookmarked = await managers.discoveryCardManager
             .toggleBookmarkDocument(document);
 
@@ -108,40 +107,33 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
-              isLiked: document.isRelevant,
-              onPressed: () {
-                final managers = managersOf(document);
-
+            isLiked: document.isRelevant,
+            onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
-                  document: document,
-                  feedback: document.isRelevant
-                      ? DocumentFeedback.neutral
-                      : DocumentFeedback.positive,
-                );
-              }),
+              document: document,
+              feedback: document.isRelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.positive,
+            ),
+          ),
           buildNavBarItemBookmark(
-            isBookmarked:
-                _managers?.discoveryCardManager.state.isBookmarked ?? false,
+            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
             onPressed: onBookmarkPressed,
             onLongPressed: onBookmarkLongPressed,
           ),
-          buildNavBarItemShare(onPressed: () {
-            final managers = managersOf(document);
-
-            managers.discoveryCardManager.shareUri(document);
-          }),
+          buildNavBarItemShare(
+              onPressed: () =>
+                  managers.discoveryCardManager.shareUri(document)),
           buildNavBarItemDisLike(
-              isDisLiked: document.isIrrelevant,
-              onPressed: () {
-                final managers = managersOf(document);
-
+            isDisLiked: document.isIrrelevant,
+            onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
-                  document: document,
-                  feedback: document.isIrrelevant
-                      ? DocumentFeedback.neutral
-                      : DocumentFeedback.negative,
-                );
-              }),
+              document: document,
+              feedback: document.isIrrelevant
+                  ? DocumentFeedback.neutral
+                  : DocumentFeedback.negative,
+            ),
+          ),
         ],
         isWidthExpanded: true,
       );
@@ -234,18 +226,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             return const Center();
           }
 
-          if (state.isFullScreen) {
-            // always update whenever state changes and when in full screen mode.
-            // the only state update that can happen, is the change in like/dislike
-            // of the presented document.
-            // on that change, we need a redraw to update the like/dislike icons'
-            // selection status.
-            NavBarContainer.updateNavBar(context);
-          }
-
-          final document = results.elementAt(cardIndex);
-
-          final managers = _managers = managersOf(document);
+          NavBarContainer.updateNavBar(context);
 
           NavBarContainer.updateNavBar(context);
 
@@ -264,14 +245,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               isPrimary: true,
               isSwipingEnabled: !state.isFullScreen,
               isFullScreen: state.isFullScreen,
-              managers: managers,
             ),
             secondaryItemBuilder: _itemBuilder(
               results: results,
               isPrimary: false,
               isSwipingEnabled: true,
               isFullScreen: false,
-              managers: managers,
             ),
             boxBorderBuilder: _boxBorderBuilder(
               results: results,
@@ -304,11 +283,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     required bool isPrimary,
     required bool isSwipingEnabled,
     required bool isFullScreen,
-    required CardManagers managers,
   }) =>
       (BuildContext context, int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
+        final managers = managersOf(document);
 
         if (isPrimary) {
           _discoveryFeedManager.handleViewType(
