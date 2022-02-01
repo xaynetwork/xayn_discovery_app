@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
-  Future<UseCaseSink<DocumentFeedbackChange, EngineEvent>>? _useCaseSink;
+  UseCaseSink<DocumentFeedbackChange, EngineEvent>? _useCaseSink;
 
   @override
   Future<void> close() {
@@ -21,13 +21,12 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
   void changeDocumentFeedback({
     required Document document,
     required DocumentFeedback feedback,
-  }) async {
+  }) {
     _useCaseSink ??= _getUseCaseSink();
 
-    final useCaseSink = await _useCaseSink;
     final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
 
-    useCaseSink!(DocumentFeedbackChange(
+    _useCaseSink!(DocumentFeedbackChange(
       documentId: document.documentId,
       feedback: feedback,
     ));
@@ -36,9 +35,8 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
         document: document.copyWith(feedback: feedback)));
   }
 
-  Future<UseCaseSink<DocumentFeedbackChange, EngineEvent>>
-      _getUseCaseSink() async {
-    final useCase = await di.getAsync<ChangeDocumentFeedbackUseCase>();
+  UseCaseSink<DocumentFeedbackChange, EngineEvent> _getUseCaseSink() {
+    final useCase = di.get<ChangeDocumentFeedbackUseCase>();
 
     return pipe(useCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
