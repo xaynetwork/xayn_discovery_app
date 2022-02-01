@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
@@ -22,12 +23,12 @@ import 'collection_use_cases_errors.dart';
 /// It's nullable because in case we want to catch the error with the Future.catchError callback
 /// we can then return null, since when an error occurs no data has been retrieved.
 @injectable
-class GetCollectionCardDataUseCase
+class ListenCollectionCardDataUseCase
     extends UseCase<UniqueId, GetCollectionCardDataUseCaseOut> {
   final BookmarksRepository _bookmarksRepository;
   final CollectionsRepository _collectionsRepository;
 
-  GetCollectionCardDataUseCase(
+  ListenCollectionCardDataUseCase(
     this._bookmarksRepository,
     this._collectionsRepository,
   );
@@ -39,11 +40,20 @@ class GetCollectionCardDataUseCase
     if (collection == null) {
       throw CollectionUseCaseError.tryingToGetCardDataForNotExistingCollection;
     }
-    final bookmarks = _bookmarksRepository.getByCollectionId(param);
-    yield GetCollectionCardDataUseCaseOut(
-      numOfItems: bookmarks.length,
-      image: bookmarks.first.image,
-    );
+
+    yield* Rx.merge([Stream.value(null), _bookmarksRepository.watch()])
+        .map((_) {
+      final bookmarks = _bookmarksRepository.getByCollectionId(param);
+      return GetCollectionCardDataUseCaseOut(
+        numOfItems: bookmarks.length,
+        image: bookmarks.isNotEmpty
+            ? bookmarks
+                .firstWhere((element) => element.image != null,
+                    orElse: () => bookmarks.first)
+                .image
+            : null,
+      );
+    });
   }
 }
 

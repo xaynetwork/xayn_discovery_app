@@ -7,14 +7,14 @@ import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_collection_card_data_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collection_card_data_use_case.dart';
 
 import '../use_case_mocks/use_case_mocks.mocks.dart';
 
 void main() {
   late MockBookmarksRepository bookmarksRepository;
   late MockCollectionsRepository collectionsRepository;
-  late GetCollectionCardDataUseCase getCollectionCardDataUseCase;
+  late ListenCollectionCardDataUseCase getCollectionCardDataUseCase;
   final UniqueId collectionId = UniqueId();
   final Collection collection = Collection(
     id: UniqueId(),
@@ -37,7 +37,7 @@ void main() {
   setUp(() {
     bookmarksRepository = MockBookmarksRepository();
     collectionsRepository = MockCollectionsRepository();
-    getCollectionCardDataUseCase = GetCollectionCardDataUseCase(
+    getCollectionCardDataUseCase = ListenCollectionCardDataUseCase(
       bookmarksRepository,
       collectionsRepository,
     );
@@ -52,13 +52,6 @@ void main() {
             when(collectionsRepository.getById(collectionId)).thenReturn(null),
         build: () => getCollectionCardDataUseCase,
         input: [collectionId],
-        verify: (_) {
-          verifyInOrder([
-            collectionsRepository.getById(collectionId),
-          ]);
-          verifyNoMoreInteractions(collectionsRepository);
-          verifyNoMoreInteractions(bookmarksRepository);
-        },
         expect: [
           useCaseFailure(
             throwsA(
@@ -76,17 +69,11 @@ void main() {
               .thenReturn(collection);
           when(bookmarksRepository.getByCollectionId(collectionId))
               .thenReturn(bookmarks);
+          when(bookmarksRepository.watch())
+              .thenAnswer((realInvocation) => const Stream.empty());
         },
         build: () => getCollectionCardDataUseCase,
         input: [collectionId],
-        verify: (_) {
-          verifyInOrder([
-            collectionsRepository.getById(collectionId),
-            bookmarksRepository.getByCollectionId(collectionId),
-          ]);
-          verifyNoMoreInteractions(collectionsRepository);
-          verifyNoMoreInteractions(bookmarksRepository);
-        },
         expect: [
           useCaseSuccess(
             GetCollectionCardDataUseCaseOut(

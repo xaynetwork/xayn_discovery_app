@@ -14,6 +14,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -66,14 +68,10 @@ class DiscoveryCardScreenArgs {
   const DiscoveryCardScreenArgs({
     required this.isPrimary,
     required this.document,
-    required this.imageManager,
-    required this.discoveryCardManager,
   });
 
   final bool isPrimary;
   final Document document;
-  final ImageManager imageManager;
-  final DiscoveryCardManager discoveryCardManager;
 }
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
@@ -85,8 +83,6 @@ class DiscoveryCardScreen extends DiscoveryCard {
           key: key,
           isPrimary: args.isPrimary,
           document: args.document,
-          imageManager: args.imageManager,
-          discoveryCardManager: args.discoveryCardManager,
         );
 
   @override

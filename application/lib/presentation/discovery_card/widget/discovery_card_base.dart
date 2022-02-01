@@ -114,20 +114,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     Widget image,
   );
 
-  Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
-        colors: [
-          R.colors.swipeCardBackground.withAlpha(120),
-          R.colors.swipeCardBackground.withAlpha(40),
-          R.colors.swipeCardBackground
-              .withAlpha(127 + (128.0 * opacity).floor()),
-          R.colors.swipeCardBackground
-              .withAlpha(127 + (128.0 * opacity).floor()),
-        ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: const [0, 0.15, 0.8, 1],
-      );
-
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
     final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);

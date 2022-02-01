@@ -5,7 +5,6 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 
@@ -57,12 +56,7 @@ void main() {
       'WHEN a collection id is given and repository emits an event THEN usecase emits the list of bookmarks for that collection ',
       setUp: () {
         when(bookmarksRepository.watch()).thenAnswer(
-          (_) => Stream.value(
-            ChangedEvent(
-              id: UniqueId(),
-              newObject: bookmark1,
-            ),
-          ),
+          (_) => const Stream.empty(),
         );
         when(bookmarksRepository.getByCollectionId(collectionId))
             .thenReturn([bookmark1, bookmark2]);
@@ -80,9 +74,7 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ListenBookmarksUseCaseOut(
-            [bookmark1, bookmark2],
-          ),
+          ListenBookmarksUseCaseOut([bookmark1, bookmark2], 'test_collection'),
         )
       ],
     );

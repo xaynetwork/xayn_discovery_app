@@ -11,7 +11,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import 'hive_repository.dart';
 
-@LazySingleton(as: DocumentRepository)
+@Singleton(as: DocumentRepository)
 class HiveDocumentRepository extends HiveRepository<DocumentWrapper>
     implements DocumentRepository {
   final DocumentMapper _mapper;

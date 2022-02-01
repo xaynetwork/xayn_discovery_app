@@ -86,10 +86,10 @@ class Translations {
   String get readingTimeUnitPlural => """minutes""";
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
-  String get personalAreaTitle => """Your Area""";
-  String get personalAreaCollections => """Collections""";
-  String get personalAreaHomeFeed => """Discovery Feed""";
-  String get personalAreaSettings => """Settings""";
+  String get personalAreaTitle => """Your Space""";
+  String get personalAreaCollections => """Collections Settings""";
+  String get personalAreaHomeFeed => """Feed Settings""";
+  String get personalAreaSettings => """App Settings""";
   String get comingSoon => """Coming soon""";
   String get feedSettingsScreenTitle => """Your Discovery Feed""";
   String get feedSettingsScreenContryListHint =>
@@ -167,10 +167,10 @@ Map<String, String> get translationsMap => {
       """readingTimeUnitPlural""": """minutes""",
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
-      """personalAreaTitle""": """Your Area""",
-      """personalAreaCollections""": """Collections""",
-      """personalAreaHomeFeed""": """Discovery Feed""",
-      """personalAreaSettings""": """Settings""",
+      """personalAreaTitle""": """Your Space""",
+      """personalAreaCollections""": """Collections Settings""",
+      """personalAreaHomeFeed""": """Feed Settings""",
+      """personalAreaSettings""": """App Settings""",
       """comingSoon""": """Coming soon""",
       """feedSettingsScreenTitle""": """Your Discovery Feed""",
       """feedSettingsScreenContryListHint""":
