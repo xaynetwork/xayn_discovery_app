@@ -3,7 +3,7 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 
 part 'move_document_to_collection_state.freezed.dart';
 
-/// Represents the state of the [CollectionBottomSheetManager].
+/// Represents the state of the [MoveDocumentToCollectionManager].
 @freezed
 class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
   const MoveDocumentToCollectionState._();

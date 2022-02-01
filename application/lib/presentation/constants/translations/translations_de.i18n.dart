@@ -88,8 +88,8 @@ class TranslationsDe extends Translations {
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Dein Bereich""";
-  String get personalAreaCollections => """Sammlung""";
-  String get personalAreaHomeFeed => """Discovery Feed""";
+  String get personalAreaCollections => """Collections-Einstellungen""";
+  String get personalAreaHomeFeed => """Feed- Einstellungen""";
   String get personalAreaSettings => """Einstellungen""";
   String get comingSoon => """Kommt bald""";
   String get feedSettingsScreenTitle => """Dein Feed""";
@@ -124,12 +124,15 @@ class TranslationsDe extends Translations {
   String get defaultCollectionNameReadLater => """Später lesen""";
   String get bookmarkSnackBarSavedTo => """In %s gespeichert""";
   String get bottomSheetSaveTo => """Speichern in""";
-  String get readerModeBylinePrefix => """by""";
+  String get readerModeBylinePrefix => """von""";
   String get errorMsgCollectionDoesntExist =>
-      """The collection doesn't exist""";
-  String get errorMsgBookmarkDoesntExist => """The bookmark doesn't exist""";
+      """Diese Collection existiert nicht""";
+  String get errorMsgBookmarkDoesntExist =>
+      """Dieses Lesezeichen existiert nicht""";
   String get errorMsgCollectionNameAlreadyUsed =>
-      """This name is already used""";
+      """Der Name ist bereits vergeben""";
+  String get errorMsgCollectionNameIsInvalid =>
+      """The name shouldn't exceed %s characters""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -166,8 +169,8 @@ Map<String, String> get translationsDeMap => {
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Dein Bereich""",
-      """personalAreaCollections""": """Sammlung""",
-      """personalAreaHomeFeed""": """Discovery Feed""",
+      """personalAreaCollections""": """Collections-Einstellungen""",
+      """personalAreaHomeFeed""": """Feed- Einstellungen""",
       """personalAreaSettings""": """Einstellungen""",
       """comingSoon""": """Kommt bald""",
       """feedSettingsScreenTitle""": """Dein Feed""",
@@ -202,8 +205,13 @@ Map<String, String> get translationsDeMap => {
       """defaultCollectionNameReadLater""": """Später lesen""",
       """bookmarkSnackBarSavedTo""": """In %s gespeichert""",
       """bottomSheetSaveTo""": """Speichern in""",
-      """readerModeBylinePrefix""": """by""",
-      """errorMsgCollectionDoesntExist""": """The collection doesn't exist""",
-      """errorMsgBookmarkDoesntExist""": """The bookmark doesn't exist""",
-      """errorMsgCollectionNameAlreadyUsed""": """This name is already used""",
+      """readerModeBylinePrefix""": """von""",
+      """errorMsgCollectionDoesntExist""":
+          """Diese Collection existiert nicht""",
+      """errorMsgBookmarkDoesntExist""":
+          """Dieses Lesezeichen existiert nicht""",
+      """errorMsgCollectionNameAlreadyUsed""":
+          """Der Name ist bereits vergeben""",
+      """errorMsgCollectionNameIsInvalid""":
+          """The name shouldn't exceed %s characters""",
     };

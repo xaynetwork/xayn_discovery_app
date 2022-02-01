@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
+import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class FaviconBar extends StatelessWidget {
@@ -17,19 +18,12 @@ class FaviconBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favicon = provider?.thumbnail == null
-        ? Icon(Icons.web, color: R.colors.icon)
-        : Image.network(
-            provider!.thumbnail!.toString(),
-            width: R.dimen.unit3,
-            height: R.dimen.unit3,
-          );
+        ? Thumbnail.icon(Icons.web)
+        : Thumbnail.networkImage(provider!.thumbnail!.toString());
 
     return Row(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(R.dimen.unit0_5),
-          child: favicon,
-        ),
+        favicon,
         SizedBox(
           width: R.dimen.unit,
         ),
