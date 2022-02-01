@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_or_rename_collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation.dart/delete_collection_confirmation_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class CollectionOptionsBottomSheet extends BottomSheetBase {
