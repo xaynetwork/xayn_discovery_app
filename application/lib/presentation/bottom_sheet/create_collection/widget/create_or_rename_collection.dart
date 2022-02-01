@@ -4,8 +4,8 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_or_rename_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_or_rename_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -14,6 +14,10 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 typedef _OnApplyPressed = Function(Collection)?;
 
+/// Used for creating a new collection or renaming an existing one
+/// When [collectionId] is:
+/// 1) [null]: a new collection is being created
+/// 2) [not null]: an existing collection is being renamed
 class CreateOrRenameCollectionBottomSheet extends BottomSheetBase {
   CreateOrRenameCollectionBottomSheet({
     Key? key,
@@ -49,8 +53,8 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
       di.get();
 
   @override
-  Widget build(BuildContext context) =>
-      BlocConsumer<CreateOrRenameCollectionManager, CreateCollectionState>(
+  Widget build(BuildContext context) => BlocConsumer<
+          CreateOrRenameCollectionManager, CreateOrRenameCollectionState>(
         bloc: _createOrRenameCollectionManager,
         listenWhen: (_, current) => current.newCollection != null,
         listener: (context, state) => _closeSheet(state.newCollection!),
@@ -66,7 +70,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
             child: BottomSheetHeader(
               headerText: widget.collectionId == null
                   ? R.strings.bottomSheetCreateCollectionHeader
-                  : 'Rename collection',
+                  : R.strings.bottomSheetRenameCollectionHeader,
             ),
           );
 
@@ -76,7 +80,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
               buttonData: BottomSheetFooterButton(
                 text: widget.collectionId == null
                     ? R.strings.bottomSheetCreate
-                    : 'Rename',
+                    : R.strings.bottomSheetRename,
                 onPressed: _onApplyPressed,
                 isDisabled: state.collectionName.trim().isEmpty,
               ),
@@ -99,7 +103,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
     if (widget.collectionId == null) {
       _createOrRenameCollectionManager.createCollection();
     } else {
-      // _createOrRenameCollectionManager.renameCollection(widget.collectionId!);
+      _createOrRenameCollectionManager.renameCollection(widget.collectionId!);
     }
   }
 
