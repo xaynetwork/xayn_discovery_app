@@ -52,12 +52,13 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     _appsflyer.logEvent(event.type, event.properties);
   }
 
+  ///For testing purposes we send in-app events when handlers are triggered
+
   _onAppOpenAttribution(res) =>
-      logger.i('Marketing Analytics onAppOpenAttribution: ' + res.toString());
+      _appsflyer.logEvent('onAppOpenAttribution', res);
 
-  _onInstallConversionData(res) => logger
-      .i('Marketing Analytics onInstallConversionData: ' + res.toString());
+  _onInstallConversionData(res) =>
+      _appsflyer.logEvent('onInstallConversionData', res);
 
-  _onDeepLinking(res) =>
-      logger.i('Marketing Analytics onDeepLinking: ' + res.toString());
+  _onDeepLinking(res) => _appsflyer.logEvent('onDeepLinking', res);
 }
