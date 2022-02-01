@@ -12,7 +12,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_book
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
@@ -39,7 +38,6 @@ void main() {
   late BookmarksScreenManager bookmarksScreenManager;
   late BookmarksScreenNavActions bookmarksScreenNavActions;
   late BookmarksScreenState populatedState;
-  late CreateDefaultCollectionUseCase createDefaultCollectionUseCase;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
 
@@ -60,7 +58,6 @@ void main() {
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     moveBookmarkUseCase = MockMoveBookmarkUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
-    createDefaultCollectionUseCase = MockCreateDefaultCollectionUseCase();
     bookmarksScreenNavActions = MockBookmarksScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
 
@@ -75,7 +72,6 @@ void main() {
       listenBookmarksUseCase,
       removeBookmarkUseCase,
       moveBookmarkUseCase,
-      createDefaultCollectionUseCase,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
       bookmarksScreenNavActions,
