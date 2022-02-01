@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -11,7 +14,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
@@ -117,8 +119,13 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: () => _moveDocumentToCollectionManager!.onApplyPressed(
-        document: widget.document,
+      setup: BottomSheetFooterSetup.withOneRaisedButton(
+        buttonData: BottomSheetFooterButton(
+          text: R.strings.bottomSheetApply,
+          onPressed: () => _moveDocumentToCollectionManager!.onApplyPressed(
+            document: widget.document,
+          ),
+        ),
       ),
     );
 
@@ -137,7 +144,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
-      builder: (buildContext) => CreateCollectionBottomSheet(
+      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,

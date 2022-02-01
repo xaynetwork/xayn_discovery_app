@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class BottomSheetFooter extends StatelessWidget {
   const BottomSheetFooter({
     Key? key,
     required this.onCancelPressed,
-    required this.onApplyPressed,
+    required this.setup,
     this.cancelBtnText,
-    this.applyBtnText,
-    this.isApplyDisabled = false,
   }) : super(key: key);
 
+  final BottomSheetFooterSetup setup;
   final VoidCallback onCancelPressed;
-  final VoidCallback onApplyPressed;
   final String? cancelBtnText;
-  final String? applyBtnText;
-  final bool isApplyDisabled;
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +22,58 @@ class BottomSheetFooter extends StatelessWidget {
       cancelBtnText ?? R.strings.bottomSheetCancel,
       onPressed: onCancelPressed,
     );
-    final applyButton = AppRaisedButton.text(
-      text: applyBtnText ?? R.strings.bottomSheetApply,
-      onPressed: isApplyDisabled ? null : onApplyPressed,
-    );
 
     final row = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(child: cancelButton),
-        Expanded(child: applyButton),
+        Expanded(
+          child: cancelButton,
+        ),
+        SizedBox(
+          width: R.dimen.unit0_5,
+        ),
+        ..._buildRaisedButtons(),
       ],
     );
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: R.dimen.unit2),
-      child: row,
+      child: Container(
+        child: row,
+        color: Colors.white,
+      ),
     );
   }
+
+  List<Widget> _buildRaisedButtons() => setup.map(
+        withOneRaisedButton: (it) =>
+            [Expanded(child: _buildRaisedButton(it.buttonData))],
+        withTwoRaisedButtons: (it) => _buildTwoRaisedButtons(it.buttonsData),
+      );
+
+  List<Widget> _buildTwoRaisedButtons(
+          List<BottomSheetFooterButton> buttonsData) =>
+      [
+        Expanded(
+          child: _buildRaisedButton(
+            buttonsData[0],
+          ),
+          flex: 2,
+        ),
+        SizedBox(
+          width: R.dimen.unit0_5,
+        ),
+        Expanded(
+          child: _buildRaisedButton(
+            buttonsData[1],
+          ),
+          flex: 2,
+        ),
+      ];
+
+  Widget _buildRaisedButton(BottomSheetFooterButton buttonData) =>
+      AppRaisedButton.text(
+        text: buttonData.text,
+        onPressed: buttonData.isDisabled ? null : buttonData.onPressed,
+      );
 }
