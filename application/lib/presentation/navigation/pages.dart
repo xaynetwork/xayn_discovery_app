@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
+import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 
@@ -24,7 +25,8 @@ class PageRegistry {
     settings,
     onboarding,
     feedSettings,
-    collections
+    collections,
+    payment,
   };
 
   // Make sure to add the page names in camel case
@@ -37,6 +39,7 @@ class PageRegistry {
     name: "search",
     builder: (_, args) => const ActiveSearch(),
   );
+
   static cardDetails(DiscoveryCardScreenArgs args) => xayn.PageData(
         name: "cardDetails",
         arguments: args,
@@ -83,5 +86,10 @@ class PageRegistry {
   static final collections = xayn.PageData(
     name: "collections",
     builder: (_, args) => const CollectionsScreen(),
+  );
+
+  static final payment = xayn.PageData(
+    name: "payment",
+    builder: (_, args) => const PaymentScreen(),
   );
 }
