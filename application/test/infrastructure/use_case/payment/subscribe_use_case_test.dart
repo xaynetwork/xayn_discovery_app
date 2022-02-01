@@ -61,7 +61,28 @@ void main() {
         paymentService.queryProductDetails({subscriptionId}),
       ]);
       verifyNoMoreInteractions(paymentService);
-      verifyZeroInteractions(mapper);
+    },
+  );
+
+  useCaseTest<SubscribeUseCase, None, None>(
+    'WHEN paymentService finds product THEN call buyNonConsumable',
+    build: () => useCase,
+    setUp: () {
+      when(
+        paymentService.buyNonConsumable(
+            purchaseParam: anyNamed('purchaseParam')),
+      ).thenAnswer((realInvocation) => Future.value(true));
+    },
+    input: {none},
+    expect: [useCaseSuccess(none)],
+    verify: (_) {
+      verifyInOrder([
+        paymentService.isAvailable(),
+        paymentService.queryProductDetails({subscriptionId}),
+        paymentService.buyNonConsumable(
+            purchaseParam: anyNamed('purchaseParam')),
+      ]);
+      verifyNoMoreInteractions(paymentService);
     },
   );
 }
