@@ -33,12 +33,13 @@ TooltipParams _getBookmarkedToDefault() {
       R.strings.bookmarkSnackBarSavedTo.replaceAll('%s', defaultCollectionName);
 
   void onPressed(List? args) {
-    if (args == null || args.length < 2) return;
+    if (args == null || args.length < 3) return;
     final context = args[0];
     final document = args[1];
     var onError = args[2];
-    if (context is! BuildContext || document is! Document) return;
-    if (onError is! OnMoveDocumentToCollectionError) onError = null;
+    if (context is! BuildContext ||
+        document is! Document ||
+        onError is! OnMoveDocumentToCollectionError) return;
 
     showAppBottomSheet(
       context,

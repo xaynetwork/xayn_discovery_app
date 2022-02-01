@@ -20,8 +20,8 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
   MoveDocumentToCollectionBottomSheet({
     Key? key,
     required Document document,
+    required OnMoveDocumentToCollectionError onError,
     Collection? forceSelectCollection,
-    OnMoveDocumentToCollectionError? onError,
   }) : super(
           key: key,
           body: _MoveDocumentToCollection(
@@ -35,13 +35,13 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
 class _MoveDocumentToCollection extends StatefulWidget {
   final Document document;
   final Collection? forceSelectCollection;
-  final OnMoveDocumentToCollectionError? onError;
+  final OnMoveDocumentToCollectionError onError;
 
   const _MoveDocumentToCollection({
     Key? key,
     required this.document,
+    required this.onError,
     this.forceSelectCollection,
-    this.onError,
   }) : super(key: key);
 
   @override
@@ -83,9 +83,9 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
             MoveDocumentToCollectionState>(
             bloc: _moveDocumentToCollectionManager,
             listener: (_, state) {
-              if (state.hasError && widget.onError != null) {
+              if (state.hasError) {
                 TooltipKey? key = TooltipUtils.getErrorKey(state.errorObj);
-                if (key != null) widget.onError!(key);
+                if (key != null) widget.onError(key);
               }
             },
             builder: (_, state) {
