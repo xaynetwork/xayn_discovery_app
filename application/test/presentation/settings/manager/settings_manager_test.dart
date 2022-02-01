@@ -21,8 +21,10 @@ void main() {
   const stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
+    isPaymentEnabled: false,
   );
 
+  late MockFeatureManager featureManager;
   late MockGetAppVersionUseCase getAppVersionUseCase;
   late MockGetAppThemeUseCase getAppThemeUseCase;
   late MockSaveAppThemeUseCase saveAppThemeUseCase;
@@ -33,6 +35,7 @@ void main() {
   late MockShareUriUseCase shareUriUseCase;
 
   setUp(() {
+    featureManager = MockFeatureManager();
     getAppVersionUseCase = MockGetAppVersionUseCase();
     getAppThemeUseCase = MockGetAppThemeUseCase();
     saveAppThemeUseCase = MockSaveAppThemeUseCase();
@@ -51,6 +54,8 @@ void main() {
 
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
+
+    when(featureManager.isPaymentEnabled).thenReturn(false);
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -63,6 +68,7 @@ void main() {
         MockSettingsNavActions(),
         urlOpener,
         shareUriUseCase,
+        featureManager,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

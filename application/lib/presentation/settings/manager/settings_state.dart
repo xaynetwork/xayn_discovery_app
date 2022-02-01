@@ -11,5 +11,6 @@ class SettingsScreenState with _$SettingsScreenState {
   const factory SettingsScreenState.ready({
     required AppTheme theme,
     required AppVersion appVersion,
+    required bool isPaymentEnabled,
   }) = SettingsScreenStateReady;
 }

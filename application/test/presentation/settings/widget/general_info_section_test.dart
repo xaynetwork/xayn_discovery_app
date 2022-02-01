@@ -18,6 +18,7 @@ void main() {
           onCarbonNeutralPressed: () {},
           onTermsPressed: () {},
           onPrivacyPressed: () {},
+          onPaymentPressed: null,
         ),
         initialLinden: linden,
       );
@@ -57,6 +58,7 @@ void main() {
             callbacks[Keys.settingsCarbonNeutral] = true,
         onTermsPressed: () => callbacks[Keys.settingsTermsAndConditions] = true,
         onPrivacyPressed: () => callbacks[Keys.settingsPrivacyPolicy] = true,
+        onPaymentPressed: null,
       );
       await tester.pumpLindenApp(widget, initialLinden: linden);
 
