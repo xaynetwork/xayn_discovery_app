@@ -32,7 +32,7 @@ class CardWidget extends StatelessWidget {
         title: data.title,
         color: data.color,
         svgIconPath: data.svgIconPath,
-        svgBackground: data.svgBackground,
+        svgBackground: data.svgBackgroundPath,
         onPressed: data.onPressed,
       ),
       collectionsScreen: (data) => _buildCollectionsScreenCardContent(
@@ -70,7 +70,7 @@ class CardWidget extends StatelessWidget {
 
     final Widget background = cardData.map(
       personalArea: (data) => SvgPicture.asset(
-        data.svgBackground,
+        data.svgBackgroundPath,
         height: CardWidgetData.cardHeight,
       ),
       collectionsScreen: withBackgroundImage,
@@ -205,9 +205,12 @@ class CardWidget extends StatelessWidget {
         SizedBox(
           width: R.dimen.unit,
         ),
-        Text(
-          providerName ?? '',
-          style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
+        Flexible(
+          child: Text(
+            providerName ?? '',
+            style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         SizedBox(
           width: R.dimen.unit,
@@ -222,6 +225,7 @@ class CardWidget extends StatelessWidget {
         Text(
           timeAgo(created, DateFormat.yMMMMd()),
           style: R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
