@@ -16,9 +16,15 @@ class CreateCollectionUseCase extends UseCase<String, Collection> {
   @override
   Stream<Collection> transaction(String param) async* {
     final collectionNameTrimmed = param.trim();
+    if (_collectionsRepository
+        .isCollectionNameNotValid(collectionNameTrimmed)) {
+      throw CollectionUseCaseError.tryingToCreateCollectionWithInvalidName;
+    }
+
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
       throw CollectionUseCaseError.tryingToCreateCollectionUsingExistingName;
     }
+
     final collectionIndex = _collectionsRepository.getLastCollectionIndex() + 1;
     final id = _uniqueIdHandler.generateUniqueId();
     final collection = Collection(
