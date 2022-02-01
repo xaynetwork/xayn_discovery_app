@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
@@ -11,10 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_purch
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_purchase_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/subscribe_use_case.dart';
-
-part 'payment_screen_manager.freezed.dart';
-
-part 'payment_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
