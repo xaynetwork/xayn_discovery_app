@@ -89,10 +89,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       final document = discoveryFeedManager.state.results
           .elementAt(discoveryFeedManager.state.cardIndex);
 
-      void onBookmarkPressed() async {
-        final managers = await managersOf(document);
-        managers.discoveryCardManager.toggleBookmarkDocument(document);
-      }
+      void onBookmarkPressed() => managersOf(document)
+          .discoveryCardManager
+          .toggleBookmarkDocument(document);
 
       void onBookmarkLongPressed() => showAppBottomSheet(
             context,
