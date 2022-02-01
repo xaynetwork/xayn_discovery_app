@@ -7,7 +7,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 
 mixin ResetEngineMixin<T> on UseCaseBlocHelper<T> {
-  Future<UseCaseSink<None, EngineEvent>>? _useCaseSink;
+  UseCaseSink<None, EngineEvent>? _useCaseSink;
 
   @override
   Future<void> close() {
@@ -16,15 +16,13 @@ mixin ResetEngineMixin<T> on UseCaseBlocHelper<T> {
     return super.close();
   }
 
-  void resetEngine() async {
+  void resetEngine() {
     _useCaseSink ??= _getUseCaseSink();
 
-    final useCaseSink = await _useCaseSink;
-
-    useCaseSink!(none);
+    _useCaseSink!(none);
   }
 
-  Future<UseCaseSink<None, EngineEvent>> _getUseCaseSink() async {
+  UseCaseSink<None, EngineEvent> _getUseCaseSink() {
     final useCase = di.get<ResetEngineUseCase>();
 
     return pipe(useCase)

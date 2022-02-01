@@ -7,24 +7,21 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin EngineEventsMixin<T> on UseCaseBlocHelper<T> {
   late final UseCaseValueStream<EngineEvent> engineEvents;
+  bool _didStartConsuming = false;
 
   @override
-  Future<void> close() {
-    _stream = null;
+  Stream<T> get stream {
+    if (!_didStartConsuming) {
+      _startConsuming();
+    }
 
-    return super.close();
+    return super.stream;
   }
 
-  Stream<T>? _stream;
-
-  @override
-  Stream<T> get stream => _stream ??= Stream.fromFuture(_startConsuming())
-      .asyncExpand((_) => super.stream)
-      .asBroadcastStream();
-
-  Future<void> _startConsuming() async {
+  void _startConsuming() {
     final consumeUseCase = di.get<EngineEventsUseCase>();
 
+    _didStartConsuming = true;
     engineEvents = consume(consumeUseCase, initialData: none);
   }
 }
