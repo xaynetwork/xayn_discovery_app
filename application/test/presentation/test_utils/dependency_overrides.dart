@@ -54,7 +54,7 @@ class TestLogManager extends LogManager {
       : super(initLoggerUseCase);
 }
 
-@Singleton(as: DiscoveryEngine)
+@LazySingleton(as: DiscoveryEngine)
 class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   final StreamController<EngineEvent> _onEngineEvent =
       StreamController<EngineEvent>.broadcast();

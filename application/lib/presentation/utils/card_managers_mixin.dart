@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
@@ -25,17 +24,13 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   }
 
   @mustCallSuper
-  CardManagers managersOf(Document document) {
-    if (!_cardManagers.containsKey(document)) {
-      _cardManagers[document] = CardManagers(
-        imageManager: di.get()
-          ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
-        discoveryCardManager: di.get()..updateDocument(document),
+  CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
+        document,
+        () => CardManagers(
+          imageManager: di.get()..getImage(document.webResource.displayUrl),
+          discoveryCardManager: di.get()..updateDocument(document),
+        ),
       );
-    }
-
-    return _cardManagers[document]!;
-  }
 }
 
 @immutable
