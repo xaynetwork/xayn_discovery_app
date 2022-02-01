@@ -25,7 +25,6 @@ class ActiveSearch extends StatefulWidget {
 class _ActiveSearchState extends State<ActiveSearch>
     with NavBarConfigMixin, CardManagersMixin {
   late final ActiveSearchManager _activeSearchManager = di.get();
-  final Map<Document, CardManagers> _managers = <Document, CardManagers>{};
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
@@ -48,7 +47,6 @@ class _ActiveSearchState extends State<ActiveSearch>
   @override
   void dispose() {
     _activeSearchManager.close();
-    _managers.clear();
 
     super.dispose();
   }
@@ -101,8 +99,7 @@ class _ActiveSearchState extends State<ActiveSearch>
     Document document,
     bool isPrimary,
   ) {
-    final managers =
-        _managers.putIfAbsent(document, () => managersOf(document));
+    final managers = managersOf(document);
     final card = GestureDetector(
       onTap: () {
         final args = DiscoveryCardScreenArgs(
