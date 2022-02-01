@@ -5,6 +5,8 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -114,9 +116,14 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: () =>
-          _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
-        bookmarkId: widget.bookmarkId,
+      setup: BottomSheetFooterSetup.withOneRaisedButton(
+        buttonData: BottomSheetFooterButton(
+          text: R.strings.bottomSheetApply,
+          onPressed: () =>
+              _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
+            bookmarkId: widget.bookmarkId,
+          ),
+        ),
       ),
     );
 
@@ -135,7 +142,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
-      builder: (buildContext) => CreateCollectionBottomSheet(
+      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,
