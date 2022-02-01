@@ -116,7 +116,7 @@ class MoveDocumentToCollectionManager
       bookmarkId: bookmarkId,
       collectionId: state.selectedCollection!.id,
     );
-    final result = await _moveBookmarkUseCase.call(param);
+    final result = await _moveBookmarkUseCase(param);
     _handleError(result);
   }
 
@@ -131,20 +131,19 @@ class MoveDocumentToCollectionManager
       document: document,
       collectionId: state.selectedCollection!.id,
     );
-    final result = await _createBookmarkUseCase.call(param);
+    final result = await _createBookmarkUseCase(param);
     _handleError(result);
   }
 
   void _handleError(List<UseCaseResult> useCaseResults) {
     var hasError = false;
-    for (var it in useCaseResults) {
-      it.fold(
-          defaultOnError: (error, _) {
-            hasError = true;
-            scheduleComputeState(() => _error = error);
-          },
-          onValue: (_) {});
-    }
+    useCaseResults.single.fold(
+        defaultOnError: (error, _) {
+          hasError = true;
+          scheduleComputeState(() => _error = error);
+        },
+        onValue: (_) {});
+
     if (!hasError) scheduleComputeState(() => _shouldClose = true);
   }
 
