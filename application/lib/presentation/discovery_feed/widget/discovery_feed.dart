@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -44,31 +43,23 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         NavBarConfigMixin,
         CardManagersMixin,
         TooltipStateMixin {
-  DiscoveryFeedManager? _discoveryFeedManager;
+  late final DiscoveryFeedManager _discoveryFeedManager;
   CardManagers? _managers;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
-  late final Future<DiscoveryFeedManager> _discoveryCardManagerFuture =
-      di.getAsync();
   DiscoveryCardController? _currentCardController;
 
   double _dragDistance = .0;
 
   @override
   NavBarConfig get navBarConfig {
-    final discoveryFeedManager = _discoveryFeedManager;
-
-    if (discoveryFeedManager == null) {
-      return NavBarConfig.hidden();
-    }
-
     NavBarConfig buildDefault() => NavBarConfig(
           [
             buildNavBarItemHome(
                 isActive: true,
                 onPressed: () {
                   hideTooltip();
-                  discoveryFeedManager.onHomeNavPressed();
+                  _discoveryFeedManager.onHomeNavPressed();
                 }),
             buildNavBarItemSearch(
               isDisabled: true,
@@ -80,14 +71,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
-                discoveryFeedManager.onPersonalAreaNavPressed();
+                _discoveryFeedManager.onPersonalAreaNavPressed();
               },
             ),
           ],
         );
     NavBarConfig buildReaderMode() {
-      final document = discoveryFeedManager.state.results
-          .elementAt(discoveryFeedManager.state.cardIndex);
+      final document = _discoveryFeedManager.state.results
+          .elementAt(_discoveryFeedManager.state.cardIndex);
 
       void onBookmarkPressed() async {
         final managers = managersOf(document);
@@ -114,7 +105,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           buildNavBarItemArrowLeft(onPressed: () async {
             await _currentCardController?.animateToClose();
 
-            discoveryFeedManager.handleNavigateOutOfCard();
+            _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
               isLiked: document.isRelevant,
@@ -156,7 +147,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       );
     }
 
-    return discoveryFeedManager.state.isFullScreen
+    return _discoveryFeedManager.state.isFullScreen
         ? buildReaderMode()
         : buildDefault();
   }
@@ -165,9 +156,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        return _discoveryFeedManager?.handleActivityStatus(true);
+        return _discoveryFeedManager.handleActivityStatus(true);
       default:
-        return _discoveryFeedManager?.handleActivityStatus(false);
+        return _discoveryFeedManager.handleActivityStatus(false);
     }
   }
 
@@ -179,18 +170,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       topPadding = topPadding - R.dimen.unit;
     }
 
-    final feedView = FutureBuilder<DiscoveryFeedManager>(
-      future: _discoveryCardManagerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          _discoveryFeedManager = snapshot.requireData;
-
-          NavBarContainer.updateNavBar(context);
-        }
-
-        return _buildFeedView();
-      },
-    );
+    final feedView = _buildFeedView();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -208,7 +188,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   @override
   void dispose() {
     _cardViewController.dispose();
-    _discoveryFeedManager?.close();
+    _discoveryFeedManager.close();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -219,16 +199,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
 
+    _discoveryFeedManager = di.get();
+
     super.initState();
   }
 
   Widget _buildFeedView() {
     return LayoutBuilder(builder: (context, constraints) {
       final discoveryFeedManager = _discoveryFeedManager;
-
-      if (discoveryFeedManager == null) {
-        return Container();
-      }
 
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
@@ -331,10 +309,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       (BuildContext context, int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
-        final discoveryFeedManager = _discoveryFeedManager!;
 
         if (isPrimary) {
-          discoveryFeedManager.handleViewType(
+          _discoveryFeedManager.handleViewType(
             document,
             isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
           );
@@ -346,7 +323,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                 document: document,
                 discoveryCardManager: managers.discoveryCardManager,
                 imageManager: managers.imageManager,
-                onDiscard: discoveryFeedManager.handleNavigateOutOfCard,
+                onDiscard: _discoveryFeedManager.handleNavigateOutOfCard,
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
                     _currentCardController = controller,
@@ -354,7 +331,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             : GestureDetector(
                 onTap: () {
                   hideTooltip();
-                  discoveryFeedManager.handleNavigateIntoCard();
+                  _discoveryFeedManager.handleNavigateIntoCard();
                 },
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
