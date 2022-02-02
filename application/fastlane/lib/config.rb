@@ -53,8 +53,8 @@ module Config
     },
     "beta" => {
       "ios" => {
-        "id" => "com.xayn.discovery",
-        "name" => "Xayn 3.0",
+        "id" => "com.xayn.search",
+        "name" => "Xayn Beta",
         # Discoveru is correct!! :P
         "appcenter_target" => "Discoveru-App-iOS-beta",
         "appcenter_token" => "APPCENTER_IOS_BETA_TOKEN",
@@ -63,7 +63,7 @@ module Config
       },
       "android" => {
         "id" => "com.xayn.search",
-        "name" => "Xayn 3.0",
+        "name" => "Xayn Beta",
         "appcenter_target" => "Discovery-App-Android-beta",
         "appcenter_token" => "APPCENTER_ANDROID_BETA_TOKEN",
         "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
@@ -101,10 +101,10 @@ module Config
       "adhoc" => true,
     },
     "beta" => {
-      "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
-      "provisioning_profile_name" => "Xayn Discovery AppStore Profile",
+      "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Beta_Profile.mobileprovision",
+      "provisioning_profile_name" => "Xayn Discovery AppStore Beta Profile",
       "provisioning_profiles" => {
-        "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
+        "com.xayn.search" => "Xayn Discovery AppStore Beta Profile",
       },
       "adhoc" => false,
     },
