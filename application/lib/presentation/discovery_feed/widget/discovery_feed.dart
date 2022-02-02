@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -81,8 +80,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           .elementAt(_discoveryFeedManager.state.cardIndex);
       final managers = managersOf(document);
 
-      void onBookmarkPressed() => managers.discoveryCardManager
-          .toggleBookmarkDocument(document);
+      void onBookmarkPressed() =>
+          managers.discoveryCardManager.toggleBookmarkDocument(document);
 
       void onBookmarkLongPressed() => showAppBottomSheet(
             context,
