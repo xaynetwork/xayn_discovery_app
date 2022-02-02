@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
 
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
@@ -32,7 +33,6 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
 
   @visibleForTesting
   AppsFlyerMarketingAnalyticsService(this._appsflyer) {
-    _appsflyer.setPushNotification(true);
     _appsflyer.onAppOpenAttribution(_onAppOpenAttribution);
     _appsflyer.onInstallConversionData(_onInstallConversionData);
     _appsflyer.onDeepLinking(_onDeepLinking);
@@ -71,7 +71,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   @override
   void send(AnalyticsEvent event) {
     logger.i('Marketing Analytics event has been fired: ' + event.type);
-    _appsflyer.logEvent(event.type, event.properties);
+    _appsflyer.logEvent(event.type, event.properties.toSerializableMap());
   }
 
   @override
@@ -118,8 +118,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   /// For testing purposes we send in-app events when [_onAppOpenAttribution] handler is triggered
   _onAppOpenAttribution(DeepLinkResult res) {
     if (res.status == Status.FOUND) {
-      _appsflyer.logEvent(
-          'onAppOpenAttribution', res.deepLink?.clickEvent ?? {});
+      _appsflyer.logEvent('onAppOpenAttribution',
+          res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
   }
 
@@ -132,8 +132,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   _onInstallConversionData(DeepLinkResult res) {
     if (res.status == Status.FOUND) {
-      _appsflyer.logEvent(
-          'onInstallConversionData', res.deepLink?.clickEvent ?? {});
+      _appsflyer.logEvent('onInstallConversionData',
+          res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
   }
 
@@ -146,7 +146,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   _onDeepLinking(DeepLinkResult res) {
     if (res.status == Status.FOUND) {
-      _appsflyer.logEvent('onDeepLinking', res.deepLink?.clickEvent ?? {});
+      _appsflyer.logEvent(
+          'onDeepLinking', res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
   }
 }

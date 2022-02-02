@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
 
 abstract class AnalyticsService {
   Future<void> send(AnalyticsEvent event);
@@ -46,9 +47,7 @@ class AmplitudeAnalyticsService
     safeRun(() async {
       await _amplitude.logEvent(
         event.type,
-        eventProperties: event.properties
-            // this ensures that unserializable objects like i.e. [UniqueId] can tracked in analytics
-            .map((key, value) => MapEntry(key, value.toString())),
+        eventProperties: event.properties.toSerializableMap(),
       );
 
       logger.i('Analytics event has been fired:\n${{
