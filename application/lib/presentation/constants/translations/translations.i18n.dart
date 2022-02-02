@@ -130,7 +130,15 @@ class Translations {
   String get errorMsgCollectionNameAlreadyUsed =>
       """This name is already used""";
   String get errorMsgCollectionNameIsInvalid =>
-      """The name shouldn't exceed %s characters""";
+      """The name can't exceed %s characters""";
+  String get bottomSheetRename => """Rename""";
+  String get bottomSheetDelete => """Delete""";
+  String get bottomSheetDeleteAll => """Delete All""";
+  String get bottomSheetMoveBookmarks => """Move Bookmarks""";
+  String get bottomSheetDeleteCollectionHeader => """Are you sure ?""";
+  String get bottomSheetDeleteCollectionWithBookmarksBody =>
+      """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""";
+  String get bottomSheetRenameCollectionHeader => """Rename collection""";
 }
 
 Map<String, String> get translationsMap => {
@@ -208,5 +216,13 @@ Map<String, String> get translationsMap => {
       """errorMsgBookmarkDoesntExist""": """The bookmark doesn't exist""",
       """errorMsgCollectionNameAlreadyUsed""": """This name is already used""",
       """errorMsgCollectionNameIsInvalid""":
-          """The name shouldn't exceed %s characters""",
+          """The name can't exceed %s characters""",
+      """bottomSheetRename""": """Rename""",
+      """bottomSheetDelete""": """Delete""",
+      """bottomSheetDeleteAll""": """Delete All""",
+      """bottomSheetMoveBookmarks""": """Move Bookmarks""",
+      """bottomSheetDeleteCollectionHeader""": """Are you sure ?""",
+      """bottomSheetDeleteCollectionWithBookmarksBody""":
+          """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""",
+      """bottomSheetRenameCollectionHeader""": """Rename collection""",
     };

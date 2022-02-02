@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -18,7 +18,6 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 /// the minimum fraction height of the card image.
 /// This value must be in the range of [0.0, 1.0], where 1.0 is the
@@ -262,20 +261,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     );
   }
 
-  void onBookmarkPressed() =>
-      discoveryCardManager.toggleBookmarkDocument(widget.document);
-
-  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
-      () => showAppBottomSheet(
-            context,
-            builder: (_) => MoveDocumentToCollectionBottomSheet(
-              document: widget.document,
-              provider: state.processedDocument
-                  ?.getProvider(widget.document.webResource),
-              onError: (tooltipKey) => showTooltip(tooltipKey),
-            ),
-          );
-
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
 
@@ -330,8 +315,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         parameters: [
           context,
           widget.document,
-          discoveryCardManager.state.processedDocument
-              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
