@@ -67,7 +67,6 @@ class __CollectionOptionsState extends State<_CollectionOptions>
       children: [
         SizedBox(height: R.dimen.unit2),
         ...menuOptions.map(_buildRow).toList(),
-        SizedBox(height: R.dimen.unit2),
       ],
     );
   }
