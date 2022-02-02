@@ -5,9 +5,8 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_purchased_subsctiption_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_purchase_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
@@ -16,17 +15,15 @@ import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_s
 class PaymentScreenManager extends Cubit<PaymentScreenState>
     with UseCaseBlocHelper<PaymentScreenState> {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
-  final PurchaseSubscriptionUseCase _subscribeUseCase;
-  final RestorePurchasedSubscriptionUseCase _restorePurchasedSubscription;
-  final ListenSubscriptionPurchaseUseCase _listenSubscriptionPurchaseUseCase;
-  late final UseCaseValueStream<ListenSubscriptionPurchaseOutput>
-      _purchasableProductStatusChangeHandler;
+  final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
+  final CheckSubscriptionActiveUseCase _checkSubscriptionActiveUseCase;
+  late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
+      _purchaseSubscriptionHandler = pipe(_purchaseSubscriptionUseCase);
 
   PaymentScreenManager(
     this._getPurchasableProductUseCase,
-    this._subscribeUseCase,
-    this._restorePurchasedSubscription,
-    this._listenSubscriptionPurchaseUseCase,
+    this._purchaseSubscriptionUseCase,
+    this._checkSubscriptionActiveUseCase,
   ) : super(const PaymentScreenState.initial()) {
     _getSubscriptionProduct();
   }
@@ -34,11 +31,11 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   PurchasableProduct? _subscriptionProduct;
   String? _paymentFlowErrorMsg;
 
-  void subscribe() async {
+  void subscribe() {
     final product = _subscriptionProduct;
     if (product == null || !product.canBePurchased) return;
 
-    await _subscribeUseCase.call(PurchasableIds.subscription);
+    _purchaseSubscriptionHandler(PurchasableIds.subscription);
   }
 
   @override
@@ -46,27 +43,20 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     final product = _subscriptionProduct;
     try {
       if (product == null) return super.computeState();
-      return fold(_purchasableProductStatusChangeHandler)
-          .foldAll((statusUpdate, errorReport) {
+      return fold(_purchaseSubscriptionHandler)
+          .foldAll((final updatedStatus, final errorReport) {
         if (errorReport.isNotEmpty) {
           // map error to the human readable message
+          _paymentFlowErrorMsg = 'should be mapped here';
+          return PaymentScreenState.ready(
+            product: product,
+            errorMsg: _paymentFlowErrorMsg,
+          );
         }
 
-        final updatedProduct = statusUpdate?.map(
-                statusChanged: (statusChanged) =>
-                    statusChanged.productId == product.id
-                        ? product.copyWith(statusChanged.status)
-                        : product,
-                error: (error) {
-                  if (error.productId == product.id) {
-                    _paymentFlowErrorMsg = 'should be mapped here';
-                  }
-                  return product;
-                }) ??
-            product;
-
         return PaymentScreenState.ready(
-          product: updatedProduct,
+          product:
+              updatedStatus == null ? product : product.copyWith(updatedStatus),
           errorMsg: _paymentFlowErrorMsg,
         );
       });
@@ -78,21 +68,21 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   }
 
   void _getSubscriptionProduct() async {
-    _getPurchasableProductUseCase
-        .call(none)
-        .then((results) => results.last.fold(
-              defaultOnError: (object, _) {
-                if (object is PaymentFlowError) {
-                  // map error to the human readable message
-                }
-              },
-              onValue: (PurchasableProduct product) {
-                scheduleComputeState(() => _subscriptionProduct = product);
-              },
-            ));
-
-    _purchasableProductStatusChangeHandler =
-        consume(_listenSubscriptionPurchaseUseCase, initialData: none);
-    _restorePurchasedSubscription.singleOutput(none);
+    final isAvailable = await _checkSubscriptionActiveUseCase
+        .singleOutput(PurchasableIds.subscription);
+    _getPurchasableProductUseCase.call(none).then(
+          (results) => results.last.fold(
+            defaultOnError: (object, _) {
+              if (object is PaymentFlowError) {
+                // map error to the human readable message
+              }
+            },
+            onValue: (PurchasableProduct product) {
+              scheduleComputeState(() => _subscriptionProduct = isAvailable
+                  ? product.copyWith(PurchasableProductStatus.restored)
+                  : product);
+            },
+          ),
+        );
   }
 }
