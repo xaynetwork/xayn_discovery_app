@@ -16,8 +16,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
+import '../../test_utils/utils.dart';
 import 'bookmarks_screen_manager_test.mocks.dart';
 
 @GenerateMocks([
@@ -35,6 +36,7 @@ void main() {
   late MockBookmarkErrorsEnumMapper bookmarkErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
   late BookmarksScreenManager bookmarksScreenManager;
+  late BookmarksScreenNavActions bookmarksScreenNavActions;
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
@@ -56,13 +58,14 @@ void main() {
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     moveBookmarkUseCase = MockMoveBookmarkUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
+    bookmarksScreenNavActions = MockBookmarksScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
 
     when(listenBookmarksUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(listenBookmarksUseCase.transaction(any)).thenAnswer(
-      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks)),
+      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks, 'Read Later')),
     );
 
     bookmarksScreenManager = BookmarksScreenManager(
@@ -71,9 +74,11 @@ void main() {
       moveBookmarkUseCase,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
+      bookmarksScreenNavActions,
     );
 
-    populatedState = BookmarksScreenState.populated(bookmarks, timestamp);
+    populatedState =
+        BookmarksScreenState.populated(bookmarks, timestamp, 'Read Later');
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp);
   });
@@ -151,8 +156,7 @@ void main() {
         setUp: () {
           when(bookmarkErrorsEnumMapper.mapEnumToString(
             BookmarkUseCaseError.tryingToMoveBookmarkToNotExistingCollection,
-          )).thenReturn(
-              Strings.errorMsgTryingToMoveBookmarkToNotExistingCollection);
+          )).thenReturn(R.strings.errorMsgCollectionDoesntExist);
           when(
             moveBookmarkUseCase.call(
               MoveBookmarkUseCaseIn(
@@ -193,7 +197,7 @@ void main() {
           expect(
             manager.state.errorMsg,
             equals(
-              Strings.errorMsgTryingToMoveBookmarkToNotExistingCollection,
+              R.strings.errorMsgCollectionDoesntExist,
             ),
           );
         },
@@ -275,7 +279,7 @@ void main() {
         setUp: () {
           when(bookmarkErrorsEnumMapper.mapEnumToString(
             BookmarkUseCaseError.tryingToRemoveNotExistingBookmark,
-          )).thenReturn(Strings.errorMsgTryingToRemoveNotExistingBookmark);
+          )).thenReturn(R.strings.errorMsgBookmarkDoesntExist);
           when(
             removeBookmarkUseCase.call(
               bookmarks.first.id,
@@ -308,7 +312,7 @@ void main() {
           expect(
             manager.state.errorMsg,
             equals(
-              Strings.errorMsgTryingToRemoveNotExistingBookmark,
+              R.strings.errorMsgBookmarkDoesntExist,
             ),
           );
         },

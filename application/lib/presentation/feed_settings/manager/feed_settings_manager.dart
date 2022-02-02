@@ -1,8 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
+import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 import 'feed_settings_state.dart';
 
@@ -16,79 +22,55 @@ const maxSelectedCountryAmount = 3;
 class FeedSettingsManager extends Cubit<FeedSettingsState>
     with UseCaseBlocHelper
     implements FeedSettingsNavActions {
+  final GetSupportedCountriesUseCase _getSupportedCountriesUseCase;
+  final GetSelectedCountriesUseCase _getSelectedCountriesUseCase;
+  final SaveSelectedCountriesUseCase _saveSelectedFeedMarketsUseCase;
   final FeedSettingsNavActions _navActions;
 
   FeedSettingsManager(
     this._navActions,
+    this._getSupportedCountriesUseCase,
+    this._getSelectedCountriesUseCase,
+    this._saveSelectedFeedMarketsUseCase,
   ) : super(const FeedSettingsState.initial());
 
   final _allCountries = <Country>{};
   final _selectedCountries = <Country>{};
+  TooltipKey? _errorTooltipKey;
 
-  void init() {
-    _allCountries.addAll([
-      Country(
-        name: 'USA',
-        countryCode: 'US',
-        svgFlagAssetPath: R.assets.illustrations.flagUSA,
-        langCode: 'en',
-      ),
-      Country(
-        name: 'Germany',
-        countryCode: 'DE',
-        svgFlagAssetPath: R.assets.illustrations.flagGermany,
-        langCode: 'de',
-      ),
-      Country(
-        name: 'Austria',
-        countryCode: 'AU',
-        svgFlagAssetPath: R.assets.illustrations.flagAustria,
-        langCode: 'de',
-      ),
-      Country(
-        name: 'France',
-        countryCode: 'FR',
-        svgFlagAssetPath: R.assets.illustrations.flagFrance,
-        langCode: 'fr',
-      ),
-      Country(
-        name: 'Belgium',
-        countryCode: 'BE',
-        svgFlagAssetPath: R.assets.illustrations.flagBelgium,
-        langCode: 'fr',
-        language: 'French',
-      ),
-      Country(
-        name: 'Belgium',
-        countryCode: 'BE',
-        svgFlagAssetPath: R.assets.illustrations.flagBelgium,
-        langCode: 'nl',
-        language: 'Dutch',
-      ),
-      Country(
-        name: 'Spain',
-        countryCode: 'SP',
-        svgFlagAssetPath: R.assets.illustrations.flagSpain,
-        langCode: 'SP',
-      ),
-    ]);
-    scheduleComputeState(() => _selectedCountries.add(_allCountries.first));
+  Future<void> init() async {
+    final countries = await _getSupportedCountriesUseCase.singleOutput(none);
+    _allCountries.addAll(countries);
+    final selectedMarkets =
+        await _getSelectedCountriesUseCase.singleOutput(_allCountries);
+
+    scheduleComputeState(() => _selectedCountries.addAll(selectedMarkets));
   }
 
-  void onAddCountryPressed(Country country) {
+  Future<void> onAddCountryPressed(Country country) async {
     if (_selectedCountries.length == maxSelectedCountryAmount) {
-      // todo add error here
+      scheduleComputeState(
+        () => _errorTooltipKey =
+            TooltipKeys.feedSettingsScreenMaxSelectedCountries,
+      );
       return;
     }
-    scheduleComputeState(() => _selectedCountries.add(country));
+    _selectedCountries.add(country);
+    await _saveSelectedFeedMarketsUseCase.singleOutput(_selectedCountries);
+    scheduleComputeState(() {});
   }
 
-  void onRemoveCountryPressed(Country country) {
+  Future<void> onRemoveCountryPressed(Country country) async {
     if (_selectedCountries.length == 1) {
-      // todo add error here
+      scheduleComputeState(
+        () => _errorTooltipKey =
+            TooltipKeys.feedSettingsScreenMinSelectedCountries,
+      );
       return;
     }
-    scheduleComputeState(() => _selectedCountries.remove(country));
+    _selectedCountries.remove(country);
+    await _saveSelectedFeedMarketsUseCase.singleOutput(_selectedCountries);
+    scheduleComputeState(() {});
   }
 
   @override
@@ -99,11 +81,16 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
     final unSelectedCountries = List<Country>.from(_allCountries);
     unSelectedCountries
         .removeWhere((country) => _selectedCountries.contains(country));
-    return FeedSettingsState.ready(
-      maxSelectedCountryAmount: maxSelectedCountryAmount,
-      selectedCountries: _selectedCountries.toList(),
-      unSelectedCountries: unSelectedCountries,
-    );
+    try {
+      return FeedSettingsState.ready(
+        maxSelectedCountryAmount: maxSelectedCountryAmount,
+        selectedCountries: _selectedCountries.toList(),
+        unSelectedCountries: unSelectedCountries,
+        errorKey: _errorTooltipKey,
+      );
+    } finally {
+      _errorTooltipKey = null;
+    }
   }
 
   @override

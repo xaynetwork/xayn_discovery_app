@@ -11,12 +11,18 @@ abstract class Env {
       kReleaseMode ? _EnvProd.searchApiSecretKey : _EnvDev.searchApiSecretKey;
   static const String imageFetcherUrl =
       kReleaseMode ? _EnvProd.imageFetcherUrl : _EnvDev.imageFetcherUrl;
-  static const String instabugToken = EnvironmentHelper.kIsInternal
+  static const String instabugToken = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.instabugToken
       : _EnvProd.instabugToken;
-  static const String amplitudeApiKey = EnvironmentHelper.kIsInternal
+  static const String amplitudeApiKey = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.amplitudeApiKey
       : _EnvProd.amplitudeApiKey;
+  static const String appsflyerDevKey = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.appsflyerDevKey
+      : _EnvProd.appsflyerDevKey;
+  static const String appStoreNumericalId = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.appStoreNumericalId
+      : _EnvProd.appStoreNumericalId;
 }
 
 /// Standard Env config.
@@ -27,6 +33,8 @@ abstract class _EnvDev {
   static const String imageFetcherUrl = __EnvDev.imageFetcherUrl;
   static const String instabugToken = __EnvDev.instabugToken;
   static const String amplitudeApiKey = __EnvDev.amplitudeApiKey;
+  static const String appsflyerDevKey = __EnvDev.appsflyerDevKey;
+  static const String appStoreNumericalId = __EnvDev.appStoreNumericalId;
 }
 
 /// Standard Env config.
@@ -37,4 +45,6 @@ abstract class _EnvProd {
   static const String imageFetcherUrl = __EnvProd.imageFetcherUrl;
   static const String instabugToken = __EnvProd.instabugToken;
   static const String amplitudeApiKey = __EnvProd.amplitudeApiKey;
+  static const String appsflyerDevKey = __EnvProd.appsflyerDevKey;
+  static const String appStoreNumericalId = __EnvProd.appStoreNumericalId;
 }

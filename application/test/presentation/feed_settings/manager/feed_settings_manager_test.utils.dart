@@ -78,4 +78,5 @@ const stateReady = FeedSettingsState.ready(
   maxSelectedCountryAmount: maxSelectedCountryAmount,
   selectedCountries: selectedList,
   unSelectedCountries: unSelectedList,
+  errorKey: null,
 ) as FeedSettingsStateReady;

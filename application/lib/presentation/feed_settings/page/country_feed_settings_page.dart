@@ -43,7 +43,7 @@ class CountryFeedSettingsPage extends StatelessWidget {
           ..._buildActiveCountries(),
           _verticalSpace,
           _buildTitle(R.strings.feedSettingsScreenInActiveCountryListSubtitle),
-          _buildInactiveCountries(),
+          _buildInactiveCountries(context),
         ],
       );
 
@@ -69,7 +69,7 @@ class CountryFeedSettingsPage extends StatelessWidget {
           ))
       .toList();
 
-  Widget _buildInactiveCountries() {
+  Widget _buildInactiveCountries(BuildContext context) {
     final listView = ListView.builder(
       itemBuilder: (_, index) {
         final country = unSelectedCountries[index];
@@ -80,7 +80,7 @@ class CountryFeedSettingsPage extends StatelessWidget {
         );
       },
       itemCount: unSelectedCountries.length,
-      padding: EdgeInsets.only(bottom: R.dimen.navBarHeight + R.dimen.unit2),
+      padding: EdgeInsets.only(bottom: R.dimen.navBarHeight * 2),
     );
     return Expanded(child: listView);
   }

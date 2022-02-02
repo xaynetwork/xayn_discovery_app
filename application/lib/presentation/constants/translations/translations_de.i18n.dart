@@ -56,10 +56,9 @@ class TranslationsDe extends Translations {
   String get languageCode => "de";
   String get your => """Meine""";
   String get activeSearchSearchHint => """Suche""";
-  String get settingsTitle => """Einstellungen""";
+  String get settingsTitle => """Deine Einstellungen""";
   String get settingsSectionTitleAppTheme => """Mein App Theme""";
-  String get settingsSectionScrollDirection =>
-      """Discovery feed Scrollrichtung""";
+  String get settingsSectionScrollDirection => """Feed Scroll-Richtung""";
   String get settingsSectionTitleGeneralInfo => """Generelle Informationen""";
   String get settingsSectionTitleHelpImprove =>
       """Hilf uns besser zu werden!""";
@@ -88,30 +87,60 @@ class TranslationsDe extends Translations {
   String get readingTimeUnitPlural => """minutes""";
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
-  String get personalAreaTitle => """Area""";
-  String get personalAreaCollections => """Sammlung""";
-  String get personalAreaHomeFeed => """Home Feed""";
+  String get personalAreaTitle => """Dein Bereich""";
+  String get personalAreaCollections => """Collections-Einstellungen""";
+  String get personalAreaHomeFeed => """Feed- Einstellungen""";
   String get personalAreaSettings => """Einstellungen""";
   String get comingSoon => """Kommt bald""";
-  String get feedSettingsScreenTitle => """Your home feed""";
+  String get feedSettingsScreenTitle => """Dein Feed""";
   String get feedSettingsScreenContryListHint =>
-      """Choose the countries you would like to receive news from (max. %s)""";
-  String get feedSettingsScreenActiveCountryListSubtitle =>
-      """Active countries""";
+      """Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)""";
+  String get feedSettingsScreenActiveCountryListSubtitle => """Aktive Länder""";
   String get feedSettingsScreenInActiveCountryListSubtitle =>
-      """Inactive countries""";
+      """Inaktive Länder""";
   String get feedSettingsScreenMinSelectedCountriesError =>
-      """There always has to be at least one country selected""";
+      """Wähle mindestens ein Land aus""";
   String get feedSettingsScreenMaxSelectedCountriesError =>
-      """There are already %s countries selected""";
+      """Es sind bereits %s Länder ausgewählt""";
+  String get bottomSheetCancel => """Abbrechen""";
+  String get langNameFrench => """Französisch""";
+  String get langNameDutch => """Niederländisch""";
+  String get langNameEnglish => """Englisch""";
+  String get langNameGerman => """Deutsch""";
+  String get langNamePolish => """Polnisch""";
+  String get langNameSpanish => """Spanisch""";
+  String get bottomSheetApply => """Anwenden""";
+  String get bottomSheetCreate => """Erstellen""";
+  String get bottomSheetCreateCollectionHeader =>
+      """Eine neue Collection erstellen""";
+  String get bottomSheetCreateCollectionTextFieldHint => """Collection-Name""";
+  String get errorMsgTryingToCreateAgainDefaultCollection =>
+      """Du versuchst, eine Default- Collection zu erstellen""";
+  String get errorMsgTryingToRemoveDefaultCollection =>
+      """Die Default-Collection kannst du nicht löschen""";
+  String get articles => """Artikel""";
+  String get article => """Artikel""";
+  String get collectionsScreenTitle => """Deine Collections""";
+  String get defaultCollectionNameReadLater => """Später lesen""";
+  String get bookmarkSnackBarSavedTo => """In %s gespeichert""";
+  String get bottomSheetSaveTo => """Speichern in""";
+  String get readerModeBylinePrefix => """von""";
+  String get errorMsgCollectionDoesntExist =>
+      """Diese Collection existiert nicht""";
+  String get errorMsgBookmarkDoesntExist =>
+      """Dieses Lesezeichen existiert nicht""";
+  String get errorMsgCollectionNameAlreadyUsed =>
+      """Der Name ist bereits vergeben""";
+  String get errorMsgCollectionNameIsInvalid =>
+      """The name shouldn't exceed %s characters""";
 }
 
 Map<String, String> get translationsDeMap => {
       """your""": """Meine""",
       """activeSearchSearchHint""": """Suche""",
-      """settingsTitle""": """Einstellungen""",
+      """settingsTitle""": """Deine Einstellungen""",
       """settingsSectionTitleAppTheme""": """Mein App Theme""",
-      """settingsSectionScrollDirection""": """Discovery feed Scrollrichtung""",
+      """settingsSectionScrollDirection""": """Feed Scroll-Richtung""",
       """settingsSectionTitleGeneralInfo""": """Generelle Informationen""",
       """settingsSectionTitleHelpImprove""": """Hilf uns besser zu werden!""",
       """settingsSectionTitleSpreadTheWord""": """Erzähl es weiter!""",
@@ -139,19 +168,50 @@ Map<String, String> get translationsDeMap => {
       """readingTimeUnitPlural""": """minutes""",
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
-      """personalAreaTitle""": """Area""",
-      """personalAreaCollections""": """Sammlung""",
-      """personalAreaHomeFeed""": """Home Feed""",
+      """personalAreaTitle""": """Dein Bereich""",
+      """personalAreaCollections""": """Collections-Einstellungen""",
+      """personalAreaHomeFeed""": """Feed- Einstellungen""",
       """personalAreaSettings""": """Einstellungen""",
       """comingSoon""": """Kommt bald""",
-      """feedSettingsScreenTitle""": """Your home feed""",
+      """feedSettingsScreenTitle""": """Dein Feed""",
       """feedSettingsScreenContryListHint""":
-          """Choose the countries you would like to receive news from (max. %s)""",
-      """feedSettingsScreenActiveCountryListSubtitle""": """Active countries""",
+          """Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)""",
+      """feedSettingsScreenActiveCountryListSubtitle""": """Aktive Länder""",
       """feedSettingsScreenInActiveCountryListSubtitle""":
-          """Inactive countries""",
+          """Inaktive Länder""",
       """feedSettingsScreenMinSelectedCountriesError""":
-          """There always has to be at least one country selected""",
+          """Wähle mindestens ein Land aus""",
       """feedSettingsScreenMaxSelectedCountriesError""":
-          """There are already %s countries selected""",
+          """Es sind bereits %s Länder ausgewählt""",
+      """bottomSheetCancel""": """Abbrechen""",
+      """langNameFrench""": """Französisch""",
+      """langNameDutch""": """Niederländisch""",
+      """langNameEnglish""": """Englisch""",
+      """langNameGerman""": """Deutsch""",
+      """langNamePolish""": """Polnisch""",
+      """langNameSpanish""": """Spanisch""",
+      """bottomSheetApply""": """Anwenden""",
+      """bottomSheetCreate""": """Erstellen""",
+      """bottomSheetCreateCollectionHeader""":
+          """Eine neue Collection erstellen""",
+      """bottomSheetCreateCollectionTextFieldHint""": """Collection-Name""",
+      """errorMsgTryingToCreateAgainDefaultCollection""":
+          """Du versuchst, eine Default- Collection zu erstellen""",
+      """errorMsgTryingToRemoveDefaultCollection""":
+          """Die Default-Collection kannst du nicht löschen""",
+      """articles""": """Artikel""",
+      """article""": """Artikel""",
+      """collectionsScreenTitle""": """Deine Collections""",
+      """defaultCollectionNameReadLater""": """Später lesen""",
+      """bookmarkSnackBarSavedTo""": """In %s gespeichert""",
+      """bottomSheetSaveTo""": """Speichern in""",
+      """readerModeBylinePrefix""": """von""",
+      """errorMsgCollectionDoesntExist""":
+          """Diese Collection existiert nicht""",
+      """errorMsgBookmarkDoesntExist""":
+          """Dieses Lesezeichen existiert nicht""",
+      """errorMsgCollectionNameAlreadyUsed""":
+          """Der Name ist bereits vergeben""",
+      """errorMsgCollectionNameIsInvalid""":
+          """The name shouldn't exceed %s characters""",
     };

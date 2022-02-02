@@ -9,6 +9,8 @@ import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 import 'hive_repository.dart';
 
+const maxCollectionNameLength = 40;
+
 @Singleton(as: CollectionsRepository)
 class HiveCollectionsRepository extends HiveRepository<Collection>
     implements CollectionsRepository {
@@ -22,11 +24,19 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
   @override
   Box<Record> get box => Hive.box<Record>(BoxNames.collections);
 
+  /// return the list of collection sorted in the following order:
+  /// 1. Default collection
+  /// 2. Other collections ordered alphabetically
   @override
   List<Collection> getAll() {
     final values = super.getAll();
-    values.sort((a, b) => a.index.compareTo(b.index));
-    return values;
+    if (values.isEmpty || values.length == 1) {
+      return values;
+    }
+    final defaultCollection = values.firstWhere((it) => it.isDefault);
+    values.remove(defaultCollection);
+    values.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return [defaultCollection, ...values];
   }
 
   @override
@@ -42,4 +52,8 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
     }
     return false;
   }
+
+  @override
+  bool isCollectionNameNotValid(String name) =>
+      name.trim().length > maxCollectionNameLength || name.trim().isEmpty;
 }

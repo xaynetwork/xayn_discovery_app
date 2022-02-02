@@ -1,8 +1,10 @@
+# Deprecated translation.
+# Later should be removed
 your: 'Meine'
 activeSearchSearchHint: 'Suche'
-settingsTitle: 'Einstellungen'
+settingsTitle: 'Deine Einstellungen'
 settingsSectionTitleAppTheme: 'Mein App Theme'
-settingsSectionScrollDirection: 'Discovery feed Scrollrichtung'
+settingsSectionScrollDirection: 'Feed Scroll-Richtung'
 settingsSectionTitleGeneralInfo: 'Generelle Informationen'
 settingsSectionTitleHelpImprove: 'Hilf uns besser zu werden!'
 settingsSectionTitleSpreadTheWord: 'Erzähl es weiter!'
@@ -30,16 +32,41 @@ readingTimeUnitSingular: 'minute'
 readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
-personalAreaTitle: Area
-personalAreaCollections: Sammlung
-personalAreaHomeFeed: Home Feed
+personalAreaTitle: Dein Bereich
+personalAreaCollections: Collections-Einstellungen
+personalAreaHomeFeed: Feed- Einstellungen
 personalAreaSettings: Einstellungen
 comingSoon: Kommt bald
-feedSettingsScreenTitle: Your home feed
+feedSettingsScreenTitle: Dein Feed
 # %s - those symbols should be in all translations!
-feedSettingsScreenContryListHint: Choose the countries you would like to receive news from (max. %s)
-feedSettingsScreenActiveCountryListSubtitle: Active countries
-feedSettingsScreenInActiveCountryListSubtitle: Inactive countries
-feedSettingsScreenMinSelectedCountriesError: There always has to be at least one country selected
+feedSettingsScreenContryListHint: Wähle die Länder aus, aus denen Du Nachrichten erhalten möchtest (max. %s)
+feedSettingsScreenActiveCountryListSubtitle: Aktive Länder
+feedSettingsScreenInActiveCountryListSubtitle: Inaktive Länder
+feedSettingsScreenMinSelectedCountriesError: Wähle mindestens ein Land aus
 # %s - those symbols should be in all translations!
-feedSettingsScreenMaxSelectedCountriesError: There are already %s countries selected
+feedSettingsScreenMaxSelectedCountriesError: Es sind bereits %s Länder ausgewählt
+bottomSheetCancel: Abbrechen
+langNameFrench: Französisch
+langNameDutch: Niederländisch
+langNameEnglish: Englisch
+langNameGerman: Deutsch
+langNamePolish: Polnisch
+langNameSpanish: Spanisch
+bottomSheetApply: Anwenden
+bottomSheetCreate: Erstellen
+bottomSheetCreateCollectionHeader: Eine neue Collection erstellen
+bottomSheetCreateCollectionTextFieldHint: Collection-Name
+errorMsgTryingToCreateAgainDefaultCollection: Du versuchst, eine Default- Collection zu erstellen
+errorMsgTryingToRemoveDefaultCollection: Die Default-Collection kannst du nicht löschen
+articles: Artikel
+article: Artikel
+collectionsScreenTitle: Deine Collections
+defaultCollectionNameReadLater: Später lesen
+bookmarkSnackBarSavedTo: In %s gespeichert
+bottomSheetSaveTo: Speichern in
+# This is a simple prefix, before the author entry, for example "by " + author name
+readerModeBylinePrefix: von
+errorMsgCollectionDoesntExist: Diese Collection existiert nicht
+errorMsgBookmarkDoesntExist: Dieses Lesezeichen existiert nicht
+errorMsgCollectionNameAlreadyUsed: Der Name ist bereits vergeben
+errorMsgCollectionNameIsInvalid: The name shouldn't exceed %s characters

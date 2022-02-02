@@ -9,14 +9,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 
 mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   Future<UseCaseSink<String, EngineEvent>>? _useCaseSink;
-
-  @override
-  Future<void> close() {
-    _useCaseSink = null;
-    _stream = null;
-
-    return super.close();
-  }
+  bool _didStartConsuming = false;
 
   bool get isLoading => false;
 
@@ -28,23 +21,26 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     useCaseSink!(searchTerm);
   }
 
-  Stream<T>? _stream;
-
   @override
-  Stream<T> get stream => _stream ??= Stream.fromFuture(_startConsuming())
-      .asyncExpand((_) => super.stream)
-      .asBroadcastStream();
+  Stream<T> get stream {
+    if (!_didStartConsuming) {
+      _startConsuming();
+    }
+
+    return super.stream;
+  }
 
   Future<UseCaseSink<String, EngineEvent>> _getUseCaseSink() async {
-    final useCase = await di.getAsync<SearchUseCase>();
+    final useCase = di.get<SearchUseCase>();
 
     return pipe(useCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
-  Future<void> _startConsuming() async {
-    final consumeUseCase = await di.getAsync<RequestFeedUseCase>();
+  void _startConsuming() {
+    final consumeUseCase = di.get<RequestFeedUseCase>();
 
+    _didStartConsuming = true;
     consume(consumeUseCase, initialData: none);
   }
 }

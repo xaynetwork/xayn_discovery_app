@@ -1,34 +1,41 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_collections_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
-import 'package:xayn_discovery_app/presentation/constants/strings.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 @lazySingleton
 class CollectionErrorsEnumMapper {
   String mapEnumToString(CollectionUseCaseError errorEnum) {
     String msg;
 
-    /// TODO replace with the POEditor string in order to have translation
     switch (errorEnum) {
       case CollectionUseCaseError.tryingToCreateCollectionUsingExistingName:
-        msg = Strings.errorMsgTryingToCreateCollectionUsingExistingName;
+        msg = R.strings.errorMsgCollectionNameAlreadyUsed;
         break;
       case CollectionUseCaseError.tryingToCreateAgainDefaultCollection:
-        msg = Strings.errorMsgTryingToCreateAgainDefaultCollection;
+        msg = R.strings.errorMsgTryingToCreateAgainDefaultCollection;
         break;
       case CollectionUseCaseError.tryingToGetCardDataForNotExistingCollection:
-        msg = Strings.errorMsgTryingToGetCardDataForNotExistingCollection;
+        msg = R.strings.errorMsgCollectionDoesntExist;
         break;
       case CollectionUseCaseError.tryingToRemoveDefaultCollection:
-        msg = Strings.errorMsgTryingToRemoveDefaultCollection;
+        msg = R.strings.errorMsgTryingToRemoveDefaultCollection;
         break;
       case CollectionUseCaseError.tryingToRemoveNotExistingCollection:
-        msg = Strings.errorMsgTryingToRemoveNotExistingCollection;
+        msg = R.strings.errorMsgCollectionDoesntExist;
         break;
       case CollectionUseCaseError.tryingToRenameCollectionUsingExistingName:
-        msg = Strings.errorMsgTryingToRenameCollectionUsingExistingName;
+        msg = R.strings.errorMsgCollectionNameAlreadyUsed;
         break;
       case CollectionUseCaseError.tryingToRenameNotExistingCollection:
-        msg = Strings.errorMsgTryingToRenameNotExistingCollection;
+        msg = R.strings.errorMsgCollectionDoesntExist;
+        break;
+      case CollectionUseCaseError.tryingToCreateCollectionWithInvalidName:
+      case CollectionUseCaseError.tryingToRenameCollectionWithInvalidName:
+        msg = R.strings.errorMsgCollectionNameIsInvalid.replaceAll(
+          '%s',
+          maxCollectionNameLength.toString(),
+        );
         break;
     }
     return msg;

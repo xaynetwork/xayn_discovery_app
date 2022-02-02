@@ -1,35 +1,46 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
+import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class FaviconBar extends StatelessWidget {
-  const FaviconBar({
+  const FaviconBar._({
     Key? key,
     this.provider,
+    this.providerName,
+    this.thumbnail,
     required this.datePublished,
-  }) : super(key: key);
+  })  : assert(provider != null || (providerName != null && thumbnail != null),
+            "Need to provide either a WebresourceProvider or directly an cached thumbnail."),
+        super(key: key);
+
+  factory FaviconBar.fromProvider({
+    required WebResourceProvider provider,
+    required DateTime datePublished,
+  }) =>
+      FaviconBar._(
+        provider: provider,
+        datePublished: datePublished,
+      );
 
   final WebResourceProvider? provider;
   final DateTime datePublished;
+  final String? providerName;
+  final Uint8List? thumbnail;
 
   @override
   Widget build(BuildContext context) {
     final favicon = provider?.thumbnail == null
-        ? Icon(Icons.web, color: R.colors.icon)
-        : Image.network(
-            provider!.thumbnail!.toString(),
-            width: R.dimen.unit3,
-            height: R.dimen.unit3,
-          );
+        ? Thumbnail.icon(Icons.web)
+        : Thumbnail.networkImage(provider!.thumbnail!.toString());
 
     return Row(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(R.dimen.unit0_5),
-          child: favicon,
-        ),
+        favicon,
         SizedBox(
           width: R.dimen.unit,
         ),

@@ -1,6 +1,12 @@
-abstract class AnalyticsEvent {
-  final String name;
-  final Map<String, dynamic>? properties;
+const String _kTimestampEntry = 'timeStamp';
 
-  const AnalyticsEvent(this.name, {this.properties});
+abstract class AnalyticsEvent {
+  final String type;
+  final Map<String, dynamic> properties;
+
+  AnalyticsEvent(this.type, {Map<String, dynamic>? properties})
+      : properties = {
+          _kTimestampEntry: DateTime.now().toUtc().toIso8601String(),
+          if (properties != null) ...properties,
+        };
 }

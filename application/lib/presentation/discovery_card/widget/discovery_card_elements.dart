@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
@@ -29,6 +28,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onLikePressed,
     required this.onDislikePressed,
     required this.onBookmarkPressed,
+    required this.onBookmarkLongPressed,
     required this.isBookmarked,
     this.fractionSize = 1.0,
   }) : super(key: key);
@@ -42,6 +42,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
+  final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final double fractionSize;
 
@@ -68,17 +69,18 @@ class DiscoveryCardElements extends StatelessWidget {
         vertical: R.dimen.unit3,
       ),
       child: DiscoveryCardFooter(
-        onSharePressed: () => manager.shareUri(url),
+        onSharePressed: () => manager.shareUri(document),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
         onBookmarkPressed: onBookmarkPressed,
+        onBookmarkLongPressed: onBookmarkLongPressed,
         isBookmarked: isBookmarked,
         document: document,
       ),
     );
 
-    final faviconRow = FaviconBar(
-      provider: provider,
+    final faviconRow = FaviconBar.fromProvider(
+      provider: provider!,
       datePublished: datePublished,
     );
 

@@ -1,9 +1,20 @@
 import 'package:xayn_design/xayn_design.dart'
-    show MessageFactory, TooltipParams, TooltipKey, TextualNotification;
+    show
+        CustomizedTextualNotification,
+        MessageFactory,
+        TextualNotification,
+        TooltipKey,
+        TooltipParams;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 
 class TooltipKeys {
   static const activeSearchDisabled = TooltipKey('activeSearchDisabled');
+  static const feedSettingsScreenMaxSelectedCountries =
+      TooltipKey('feedSettingsScreenMaxSelectedCountries');
+  static const feedSettingsScreenMinSelectedCountries =
+      TooltipKey('feedSettingsScreenMinSelectedCountries');
+  static const bookmarkedToDefault = TooltipKey('bookmarkedToDefault');
 }
 
 abstract class XaynMessageProvider {
@@ -16,12 +27,19 @@ abstract class XaynMessageProvider {
         label: R.strings.comingSoon,
         builder: (_) => _defaultMessage,
       ),
+      TooltipKeys.feedSettingsScreenMinSelectedCountries: TooltipParams(
+        label: R.strings.feedSettingsScreenMinSelectedCountriesError,
+        builder: (_) => CustomizedTextualNotification(
+            labelTextStyle: R.styles.tooltipHighlightTextStyle),
+      ),
     };
 
     return Map.fromEntries(sets.map((it) {
       switch (it) {
         case XaynMessageSet.activeSearch:
           return activeSearchMessages.entries;
+        case XaynMessageSet.bookmark:
+          return bookmarkMessages.entries;
       }
     }).expand((it) => it));
   }
@@ -29,4 +47,5 @@ abstract class XaynMessageProvider {
 
 enum XaynMessageSet {
   activeSearch,
+  bookmark,
 }

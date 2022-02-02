@@ -1,6 +1,10 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
+import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -9,6 +13,8 @@ import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @lazySingleton
 class AppNavigationManager extends xayn.NavigatorManager {
@@ -52,6 +58,37 @@ class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
   void onBackNavPressed() => changeStack((stack) => stack.pop());
 }
 
+@Injectable(as: BookmarksScreenNavActions)
+class BookmarksScreenNavActionsImpl extends BookmarksScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+  final GetDocumentUseCase _getDocumentUseCase;
+
+  BookmarksScreenNavActionsImpl(
+      AppNavigationManager manager, this._getDocumentUseCase)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onBookmarkPressed({
+    required bool isPrimary,
+    required UniqueId bookmarkId,
+  }) {
+    void gotoDiscoveryCardDetails(Document document) => changeStack(
+        (stack) => stack.push(PageRegistry.cardDetails(DiscoveryCardScreenArgs(
+              document: document,
+              isPrimary: isPrimary,
+            ))));
+
+    _getDocumentUseCase.singleOutput(bookmarkId).then(gotoDiscoveryCardDetails,
+        onError: (error, stack) {
+      logger.e("Could not open the Bookmarks Document.", error, stack);
+    });
+  }
+}
+
 @Injectable(as: SettingsNavActions)
 class SettingsNavActionsImpl extends SettingsNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -74,6 +111,22 @@ class FeedSettingsNavActionsImpl extends FeedSettingsNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
+}
+
+@Injectable(as: CollectionsScreenNavActions)
+class CollectionsScreenNavActionsImpl extends CollectionsScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  CollectionsScreenNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onCollectionPressed(UniqueId collectionId) =>
+      changeStack((stack) => stack.push(PageRegistry.bookmarks(collectionId)));
 }
 
 @Injectable(as: ActiveSearchNavActions)
@@ -115,8 +168,7 @@ class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
 
   @override
   void onCollectionsNavPressed() {
-    throw UnimplementedError('Screen not ready yet');
-    // changeStack((stack) => stack.push(PageRegistry.collections));
+    changeStack((stack) => stack.push(PageRegistry.collections));
   }
 
   @override

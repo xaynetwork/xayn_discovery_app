@@ -2,6 +2,9 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
@@ -14,7 +17,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const int _kMaxCardCount = 10;
 
-typedef ObservedViewTypes = Map<Document, DocumentViewMode>;
+typedef ObservedViewTypes = Map<DocumentId, DocumentViewMode>;
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -35,6 +38,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     this._discoveryFeedNavActions,
     this._fetchCardIndexUseCase,
     this._updateCardIndexUseCase,
+    this._sendAnalyticsUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(DiscoveryFeedState.initial()) {
     _init();
@@ -49,45 +53,71 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
   final FetchCardIndexUseCase _fetchCardIndexUseCase;
   final UpdateCardIndexUseCase _updateCardIndexUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final UseCaseValueStream<int> _cardIndexConsumer;
 
-  final ObservedViewTypes _observedViewTypes = {};
+  final ObservedViewTypes _observedViewTypes = <DocumentId, DocumentViewMode>{};
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
+
+    _sendAnalyticsUseCase(DocumentViewModeChangedEvent(
+      document: _observedDocument!,
+      viewMode: DocumentViewMode.reader,
+    ));
   }
 
   void handleNavigateOutOfCard() {
     scheduleComputeState(() => _isFullScreen = false);
+
+    _sendAnalyticsUseCase(DocumentViewModeChangedEvent(
+      document: _observedDocument!,
+      viewMode: DocumentViewMode.story,
+    ));
   }
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
-  void handleIndexChanged(int index) {
+  void handleIndexChanged(int index) async {
     if (index >= state.results.length) return;
 
-    final document = _observedDocument = state.results.elementAt(index);
+    final nextDocument = state.results.elementAt(index);
+    final nextCardIndex = await _updateCardIndexUseCase.singleOutput(index);
+    final didSwipeBefore = _cardIndex != null && _observedDocument != null;
+    final direction = didSwipeBefore
+        ? _cardIndex! < index
+            ? Direction.down
+            : Direction.up
+        : Direction.start;
 
     observeDocument(
-      document: document,
-      mode: _observedViewTypes[document],
+      document: nextDocument,
+      mode: _observedViewTypes[nextDocument.documentId],
     );
 
-    scheduleComputeState(() async =>
-        _cardIndex = await _updateCardIndexUseCase.singleOutput(index));
+    _sendAnalyticsUseCase(DocumentIndexChangedEvent(
+      next: nextDocument,
+      previous: _observedDocument,
+      direction: direction,
+    ));
+
+    scheduleComputeState(() {
+      _cardIndex = nextCardIndex;
+      _observedDocument = nextDocument;
+    });
   }
 
   /// Triggers a new observation for [document], if that document matches
   /// the last known inner document (secondary cards may also trigger).
   /// Use [viewType] to indicate the current view of that same document.
   void handleViewType(Document document, DocumentViewMode mode) {
-    _observedViewTypes[document] = mode;
+    _observedViewTypes[document.documentId] = mode;
 
-    if (document == _observedDocument) {
+    if (document.documentId == _observedDocument?.documentId) {
       observeDocument(
         document: document,
         mode: mode,
@@ -103,9 +133,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// When the app moves into the foreground
   /// - we trigger a new observation with the last known card details
   void handleActivityStatus(bool isAppInForeground) {
+    final observedDocument = _observedDocument;
+
+    if (observedDocument == null) return;
+
     observeDocument(
-      document: isAppInForeground ? _observedDocument : null,
-      mode: isAppInForeground ? _observedViewTypes[_observedDocument] : null,
+      document: isAppInForeground ? observedDocument : null,
+      mode: isAppInForeground
+          ? _observedViewTypes[observedDocument.documentId]
+          : null,
     );
   }
 
@@ -164,7 +200,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
-    if (results.length <= _maxCardCount) {
+    final observedDocument = _observedDocument;
+
+    if (observedDocument == null || results.length <= _maxCardCount) {
       return ResultSets(results: results);
     }
 
@@ -174,7 +212,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         results.take(results.length - _maxCardCount).toSet();
 
     nextResults = nextResults..removeAll(flaggedForDisposal);
-    cardIndex = nextResults.toList().indexOf(_observedDocument!);
+    cardIndex = nextResults.toList().indexOf(observedDocument);
 
     // The number 2 was chosen because we always animate transitions when
     // moving between cards.
@@ -211,11 +249,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   @override
-  void onSearchNavPressed() => _discoveryFeedNavActions.onSearchNavPressed();
+  void onSearchNavPressed() {
+    // detect that we exit the feed screen
+    handleActivityStatus(false);
+
+    _discoveryFeedNavActions.onSearchNavPressed();
+  }
 
   @override
-  void onPersonalAreaNavPressed() =>
-      _discoveryFeedNavActions.onPersonalAreaNavPressed();
+  void onPersonalAreaNavPressed() {
+    // detect that we exit the feed screen
+    handleActivityStatus(false);
+
+    _discoveryFeedNavActions.onPersonalAreaNavPressed();
+  }
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed

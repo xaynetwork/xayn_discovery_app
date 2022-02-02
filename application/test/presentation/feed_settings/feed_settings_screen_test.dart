@@ -24,7 +24,7 @@ void main() {
     await setupWidgetTest();
     manager = MockFeedSettingsManager();
     di.registerSingleton<FeedSettingsManager>(manager);
-    streamController = StreamController<FeedSettingsState>();
+    streamController = StreamController<FeedSettingsState>.broadcast();
 
     when(manager.state).thenReturn(stateReady);
     when(manager.stream).thenAnswer((_) => streamController.stream);
@@ -36,8 +36,12 @@ void main() {
   });
 
   Future<void> openScreen(WidgetTester tester) async {
+    const child = ApplicationTooltipProvider(
+      child: FeedSettingsScreen(),
+      messageFactory: {},
+    );
     await tester.pumpLindenApp(
-      const FeedSettingsScreen(),
+      child,
       initialLinden: Linden(newColors: true),
     );
   }
@@ -99,6 +103,7 @@ void main() {
     (final WidgetTester tester) async {
       await openScreen(tester);
 
+      when(manager.onAddCountryPressed(germany)).thenAnswer((_) async => true);
       await tester.tap(keyGermany.finds());
       verify(manager.onAddCountryPressed(germany));
     },
@@ -109,6 +114,7 @@ void main() {
     (final WidgetTester tester) async {
       await openScreen(tester);
 
+      when(manager.onRemoveCountryPressed(usa)).thenAnswer((_) async => true);
       await tester.tap(keyUsa.finds());
       verify(manager.onRemoveCountryPressed(usa));
     },

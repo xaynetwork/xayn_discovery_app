@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/uri_helper.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
-  late final Map<Document, _CardManagers> _cardManagers = {};
+  late final Map<Document, CardManagers> _cardManagers = {};
 
   @override
   void dispose() {
@@ -20,26 +19,26 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   @mustCallSuper
   void removeObsoleteCardManagers(Iterable<Document> results) {
     for (var key in results) {
-      _cardManagers.remove(key)?.closeAll();
+      _cardManagers.remove(key.documentId)?.closeAll();
     }
   }
 
   @mustCallSuper
-  _CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
-      document,
-      () => _CardManagers(
-            imageManager: di.get()
-              ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
-            discoveryCardManager: di.get()..updateDocument(document),
-          ));
+  CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
+        document,
+        () => CardManagers(
+          imageManager: di.get()..getImage(document.webResource.displayUrl),
+          discoveryCardManager: di.get()..updateDocument(document),
+        ),
+      );
 }
 
 @immutable
-class _CardManagers {
+class CardManagers {
   final DiscoveryCardManager discoveryCardManager;
   final ImageManager imageManager;
 
-  const _CardManagers({
+  const CardManagers({
     required this.imageManager,
     required this.discoveryCardManager,
   });

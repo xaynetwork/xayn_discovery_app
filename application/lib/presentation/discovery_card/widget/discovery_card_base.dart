@@ -31,12 +31,8 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> {
-  late final DiscoveryCardManager _discoveryCardManager;
-  late final ImageManager _imageManager;
-
-  DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
-
-  ImageManager get imageManager => _imageManager;
+  late final DiscoveryCardManager discoveryCardManager;
+  late final ImageManager imageManager;
 
   WebResource get webResource => widget.document.webResource;
 
@@ -50,8 +46,10 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void initState() {
     super.initState();
 
-    _discoveryCardManager = widget.discoveryCardManager ?? di.get();
-    _imageManager = widget.imageManager ?? di.get();
+    discoveryCardManager = widget.discoveryCardManager ?? di.get()
+      ..updateDocument(widget.document);
+    imageManager = widget.imageManager ?? di.get()
+      ..getImage(widget.document.webResource.displayUrl);
   }
 
   @override
@@ -59,11 +57,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.dispose();
 
     if (widget.discoveryCardManager == null) {
-      _discoveryCardManager.close();
+      discoveryCardManager.close();
     }
 
     if (widget.imageManager == null) {
-      _imageManager.close();
+      imageManager.close();
     }
   }
 
@@ -72,14 +70,15 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      _discoveryCardManager.updateDocument(widget.document);
+      discoveryCardManager.updateDocument(widget.document);
+      imageManager.getImage(widget.document.webResource.displayUrl);
     }
   }
 
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-        bloc: _discoveryCardManager,
+        bloc: discoveryCardManager,
         builder: (context, state) => buildFromState(
           context,
           state,
@@ -93,26 +92,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     Widget image,
   );
 
-  Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
-        colors: [
-          R.colors.swipeCardBackground.withAlpha(120),
-          R.colors.swipeCardBackground.withAlpha(40),
-          R.colors.swipeCardBackground
-              .withAlpha(127 + (128.0 * opacity).floor()),
-          R.colors.swipeCardBackground
-              .withAlpha(127 + (128.0 * opacity).floor()),
-        ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: const [0, 0.15, 0.8, 1],
-      );
-
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
     final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);
 
     return CachedImage(
-      imageManager: _imageManager,
+      imageManager: imageManager,
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),

@@ -55,7 +55,7 @@ class Translations {
   String get languageCode => "en";
   String get your => """Your""";
   String get activeSearchSearchHint => """Search""";
-  String get settingsTitle => """Settings""";
+  String get settingsTitle => """Your Settings""";
   String get settingsSectionTitleAppTheme => """Your App Theme""";
   String get settingsSectionScrollDirection =>
       """Discovery feed scroll direction""";
@@ -86,28 +86,57 @@ class Translations {
   String get readingTimeUnitPlural => """minutes""";
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
-  String get personalAreaTitle => """Area""";
-  String get personalAreaCollections => """Collections""";
-  String get personalAreaHomeFeed => """Home Feed""";
-  String get personalAreaSettings => """Settings""";
+  String get personalAreaTitle => """Your Space""";
+  String get personalAreaCollections => """Collections Settings""";
+  String get personalAreaHomeFeed => """Feed Settings""";
+  String get personalAreaSettings => """App Settings""";
   String get comingSoon => """Coming soon""";
-  String get feedSettingsScreenTitle => """Your home feed""";
+  String get feedSettingsScreenTitle => """Your Discovery Feed""";
   String get feedSettingsScreenContryListHint =>
-      """Choose the countries you would like to receive news from (max. %s)""";
+      """Choose the countries to receive news from (max. %s)""";
   String get feedSettingsScreenActiveCountryListSubtitle =>
-      """Active countries""";
+      """Active Countries""";
   String get feedSettingsScreenInActiveCountryListSubtitle =>
-      """Inactive countries""";
+      """Inactive Countries""";
   String get feedSettingsScreenMinSelectedCountriesError =>
-      """There always has to be at least one country selected""";
+      """Select at least one country""";
   String get feedSettingsScreenMaxSelectedCountriesError =>
-      """There are already %s countries selected""";
+      """Your already selected %s countries""";
+  String get bottomSheetCancel => """Cancel""";
+  String get langNameFrench => """French""";
+  String get langNameDutch => """Dutch""";
+  String get langNameEnglish => """English""";
+  String get langNameGerman => """German""";
+  String get langNamePolish => """Polish""";
+  String get langNameSpanish => """Spanish""";
+  String get bottomSheetApply => """Apply""";
+  String get bottomSheetCreate => """Create""";
+  String get bottomSheetCreateCollectionHeader => """Create a new Collection""";
+  String get bottomSheetCreateCollectionTextFieldHint => """Collection name""";
+  String get errorMsgTryingToCreateAgainDefaultCollection =>
+      """You're trying to create a default collection, again""";
+  String get errorMsgTryingToRemoveDefaultCollection =>
+      """You can't remove the default collection""";
+  String get articles => """articles""";
+  String get article => """article""";
+  String get collectionsScreenTitle => """Your Collections""";
+  String get defaultCollectionNameReadLater => """Read later""";
+  String get bookmarkSnackBarSavedTo => """Saved to %s""";
+  String get bottomSheetSaveTo => """Save to""";
+  String get readerModeBylinePrefix => """by""";
+  String get errorMsgCollectionDoesntExist =>
+      """The collection doesn't exist""";
+  String get errorMsgBookmarkDoesntExist => """The bookmark doesn't exist""";
+  String get errorMsgCollectionNameAlreadyUsed =>
+      """This name is already used""";
+  String get errorMsgCollectionNameIsInvalid =>
+      """The name shouldn't exceed %s characters""";
 }
 
 Map<String, String> get translationsMap => {
       """your""": """Your""",
       """activeSearchSearchHint""": """Search""",
-      """settingsTitle""": """Settings""",
+      """settingsTitle""": """Your Settings""",
       """settingsSectionTitleAppTheme""": """Your App Theme""",
       """settingsSectionScrollDirection""":
           """Discovery feed scroll direction""",
@@ -138,19 +167,46 @@ Map<String, String> get translationsMap => {
       """readingTimeUnitPlural""": """minutes""",
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
-      """personalAreaTitle""": """Area""",
-      """personalAreaCollections""": """Collections""",
-      """personalAreaHomeFeed""": """Home Feed""",
-      """personalAreaSettings""": """Settings""",
+      """personalAreaTitle""": """Your Space""",
+      """personalAreaCollections""": """Collections Settings""",
+      """personalAreaHomeFeed""": """Feed Settings""",
+      """personalAreaSettings""": """App Settings""",
       """comingSoon""": """Coming soon""",
-      """feedSettingsScreenTitle""": """Your home feed""",
+      """feedSettingsScreenTitle""": """Your Discovery Feed""",
       """feedSettingsScreenContryListHint""":
-          """Choose the countries you would like to receive news from (max. %s)""",
-      """feedSettingsScreenActiveCountryListSubtitle""": """Active countries""",
+          """Choose the countries to receive news from (max. %s)""",
+      """feedSettingsScreenActiveCountryListSubtitle""": """Active Countries""",
       """feedSettingsScreenInActiveCountryListSubtitle""":
-          """Inactive countries""",
+          """Inactive Countries""",
       """feedSettingsScreenMinSelectedCountriesError""":
-          """There always has to be at least one country selected""",
+          """Select at least one country""",
       """feedSettingsScreenMaxSelectedCountriesError""":
-          """There are already %s countries selected""",
+          """Your already selected %s countries""",
+      """bottomSheetCancel""": """Cancel""",
+      """langNameFrench""": """French""",
+      """langNameDutch""": """Dutch""",
+      """langNameEnglish""": """English""",
+      """langNameGerman""": """German""",
+      """langNamePolish""": """Polish""",
+      """langNameSpanish""": """Spanish""",
+      """bottomSheetApply""": """Apply""",
+      """bottomSheetCreate""": """Create""",
+      """bottomSheetCreateCollectionHeader""": """Create a new Collection""",
+      """bottomSheetCreateCollectionTextFieldHint""": """Collection name""",
+      """errorMsgTryingToCreateAgainDefaultCollection""":
+          """You're trying to create a default collection, again""",
+      """errorMsgTryingToRemoveDefaultCollection""":
+          """You can't remove the default collection""",
+      """articles""": """articles""",
+      """article""": """article""",
+      """collectionsScreenTitle""": """Your Collections""",
+      """defaultCollectionNameReadLater""": """Read later""",
+      """bookmarkSnackBarSavedTo""": """Saved to %s""",
+      """bottomSheetSaveTo""": """Save to""",
+      """readerModeBylinePrefix""": """by""",
+      """errorMsgCollectionDoesntExist""": """The collection doesn't exist""",
+      """errorMsgBookmarkDoesntExist""": """The bookmark doesn't exist""",
+      """errorMsgCollectionNameAlreadyUsed""": """This name is already used""",
+      """errorMsgCollectionNameIsInvalid""":
+          """The name shouldn't exceed %s characters""",
     };

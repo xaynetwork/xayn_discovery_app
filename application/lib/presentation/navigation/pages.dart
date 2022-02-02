@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
+import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
+import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/app_loading/widget/app_loading_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
@@ -23,6 +26,7 @@ class PageRegistry {
     settings,
     onboarding,
     feedSettings,
+    collections
   };
 
   // Make sure to add the page names in camel case
@@ -47,6 +51,15 @@ class PageRegistry {
           args: args!,
         ),
       );
+
+  static bookmarks(UniqueId collectionId) => xayn.PageData(
+        name: "bookmarks",
+        arguments: collectionId,
+        builder: (_, UniqueId? args) => BookmarksScreen(
+          collectionId: args!,
+        ),
+      );
+
   static final personalArea = xayn.PageData(
     name: "personalArea",
     builder: (_, args) => const PersonalAreaScreen(),
@@ -72,5 +85,10 @@ class PageRegistry {
   static final feedSettings = xayn.PageData(
     name: "feedSettings",
     builder: (_, args) => const FeedSettingsScreen(),
+  );
+
+  static final collections = xayn.PageData(
+    name: "collections",
+    builder: (_, args) => const CollectionsScreen(),
   );
 }

@@ -15,14 +15,22 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
+abstract class CollectionsScreenNavActions {
+  void onBackNavPressed();
+
+  void onCollectionPressed(UniqueId collectionId);
+}
+
 @injectable
 class CollectionsScreenManager extends Cubit<CollectionsScreenState>
-    with UseCaseBlocHelper<CollectionsScreenState> {
+    with UseCaseBlocHelper<CollectionsScreenState>
+    implements CollectionsScreenNavActions {
   final CreateCollectionUseCase _createCollectionUseCase;
   final RemoveCollectionUseCase _removeCollectionUseCase;
   final RenameCollectionUseCase _renameCollectionUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final CollectionErrorsEnumMapper _collectionErrorsEnumMapper;
+  final CollectionsScreenNavActions _navActions;
   final DateTimeHandler _dateTimeHandler;
 
   CollectionsScreenManager._(
@@ -31,6 +39,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     this._renameCollectionUseCase,
     this._listenCollectionsUseCase,
     this._collectionErrorsEnumMapper,
+    this._navActions,
     this._dateTimeHandler,
     this._collections,
   ) : super(CollectionsScreenState.initial()) {
@@ -45,6 +54,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     RenameCollectionUseCase renameCollectionUseCase,
     ListenCollectionsUseCase listenCollectionsUseCase,
     CollectionErrorsEnumMapper collectionErrorsEnumMapper,
+    CollectionsScreenNavActions navActions,
     DateTimeHandler dateTimeHandler,
   ) async {
     final collections =
@@ -56,6 +66,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       renameCollectionUseCase,
       listenCollectionsUseCase,
       collectionErrorsEnumMapper,
+      navActions,
       dateTimeHandler,
       collections,
     );
@@ -70,8 +81,9 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
   }
 
-  void createCollection({required String collectionName}) async {
+  Future<Collection?> createCollection({required String collectionName}) async {
     _useCaseError = null;
+    Collection? createdCollection;
     final useCaseOut = await _createCollectionUseCase.call(collectionName);
 
     /// We just need to handle the failure case.
@@ -82,8 +94,11 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       matchOnError: {
         On<CollectionUseCaseError>(_matchOnCollectionUseCaseError)
       },
-      onValue: (_) {},
+      onValue: (collection) => createdCollection = collection,
     );
+    if (_useCaseError == null) {
+      return createdCollection;
+    }
   }
 
   void renameCollection({
@@ -169,4 +184,11 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
           e as CollectionUseCaseError,
         ),
       );
+
+  @override
+  void onBackNavPressed() => _navActions.onBackNavPressed();
+
+  @override
+  void onCollectionPressed(UniqueId collectionId) =>
+      _navActions.onCollectionPressed(collectionId);
 }
