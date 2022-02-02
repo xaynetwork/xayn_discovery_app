@@ -36,24 +36,22 @@ class _CardWidgetTransitionState extends State<CardWidgetTransition> {
   void initState() {
     itemKey = GlobalKey();
     childSize = const Size(
-      CardWidgetData.cardHeight * 2,
+      CardWidgetData.cardWidth,
       CardWidgetData.cardHeight,
     );
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      key: itemKey,
-      child: Hero(
-        tag: itemKey.toString(),
-        child: widget.child,
-        placeholderBuilder: (_, __, widget) => widget,
-      ),
-      onLongPress: () => _animate(),
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        key: itemKey,
+        child: Hero(
+          tag: itemKey.toString(),
+          child: widget.child,
+          placeholderBuilder: (_, __, widget) => widget,
+        ),
+        onLongPress: () => _animate(),
+      );
 
   void _animate() {
     _calculateChildSize();
@@ -102,8 +100,8 @@ class _CardWidgetTransitionState extends State<CardWidgetTransition> {
   _calculateChildSize() {
     final currentContext = itemKey.currentContext;
     if (currentContext == null) return;
-    RenderBox renderBox = currentContext.findRenderObject() as RenderBox;
-    Size size = renderBox.size;
+    final renderBox = currentContext.findRenderObject() as RenderBox;
+    final size = renderBox.size;
     setState(() {
       childSize = size;
     });

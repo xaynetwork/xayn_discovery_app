@@ -11,6 +11,7 @@ class CardWidgetData {
   const CardWidgetData._();
 
   static const double cardHeight = 150.0;
+  static const double cardWidth = cardHeight * 2;
 }
 
 class CardWidget extends StatelessWidget {
