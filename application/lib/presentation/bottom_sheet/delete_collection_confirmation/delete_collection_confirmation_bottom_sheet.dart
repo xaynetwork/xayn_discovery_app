@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/widget/move_bookmarks_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -65,11 +66,11 @@ class _CreateCollectionState extends State<_DeleteCollection>
         buttonsData: [
           BottomSheetFooterButton(
             text: R.strings.bottomSheetMoveBookmarks,
-            onPressed: () => _onSecondApplyPressed(widget.collectionId),
+            onPressed: () => _onMoveBookmarksPressed(widget.collectionId),
           ),
           BottomSheetFooterButton(
             text: R.strings.bottomSheetDeleteAll,
-            onPressed: () => _onApplyPressed(widget.collectionId),
+            onPressed: () => _onDeleteAllPressed(widget.collectionId),
           ),
         ],
       ),
@@ -86,19 +87,22 @@ class _CreateCollectionState extends State<_DeleteCollection>
     );
   }
 
-  void _onApplyPressed(UniqueId collectionId) {
+  void _onDeleteAllPressed(UniqueId collectionId) {
     _deleteCollectionConfirmationManager.removeCollection(
         collectionId: collectionId);
-    _closeSheet();
-  }
-
-  void _onSecondApplyPressed(UniqueId collectionId) {
-    _deleteCollectionConfirmationManager.removeCollection(
-        collectionId: collectionId);
-    _closeSheet();
-  }
-
-  void _closeSheet() {
     closeBottomSheet(context);
+  }
+
+  void _onMoveBookmarksPressed(UniqueId collectionId) async {
+    closeBottomSheet(context);
+    final bookmarksIds = await _deleteCollectionConfirmationManager
+        .retrieveBookmarksIdsByCollectionId(collectionId);
+    showAppBottomSheet(
+      context,
+      builder: (buildContext) => MoveBookmarksToCollectionBottomSheet(
+        bookmarksIds: bookmarksIds,
+        collectionIdToRemove: collectionId,
+      ),
+    );
   }
 }
