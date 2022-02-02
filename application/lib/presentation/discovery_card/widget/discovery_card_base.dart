@@ -1,11 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
@@ -30,7 +33,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
-    extends State<T> {
+    extends State<T> with TooltipStateMixin {
   late final DiscoveryCardManager discoveryCardManager;
   late final ImageManager imageManager;
 
@@ -91,6 +94,25 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     DiscoveryCardState state,
     Widget image,
   );
+
+  void onBookmarkPressed() async {
+    final isBookmarked =
+        await discoveryCardManager.toggleBookmarkDocument(widget.document);
+
+    if (isBookmarked) {
+      showTooltip(
+        TooltipKeys.bookmarkedToDefault,
+        parameters: [context, widget.document],
+      );
+    }
+  }
+
+  void onBookmarkLongPressed() => showAppBottomSheet(
+        context,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
+        ),
+      );
 
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
