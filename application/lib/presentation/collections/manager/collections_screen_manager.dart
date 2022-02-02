@@ -17,6 +17,8 @@ import 'package:xayn_discovery_app/presentation/collections/util/collection_erro
 
 abstract class CollectionsScreenNavActions {
   void onBackNavPressed();
+
+  void onCollectionPressed(UniqueId collectionId);
 }
 
 @injectable
@@ -185,4 +187,8 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
 
   @override
   void onBackNavPressed() => _navActions.onBackNavPressed();
+
+  @override
+  void onCollectionPressed(UniqueId collectionId) =>
+      _navActions.onCollectionPressed(collectionId);
 }

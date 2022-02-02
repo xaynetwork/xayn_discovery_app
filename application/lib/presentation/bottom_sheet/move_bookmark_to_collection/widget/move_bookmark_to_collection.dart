@@ -4,7 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -70,7 +70,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   @override
   Widget build(BuildContext context) {
     final body = _moveBookmarkToCollectionManager == null
-        ? const Center(child: CircularProgressIndicator())
+        ? const SizedBox.shrink()
         : BlocBuilder<MoveBookmarkToCollectionManager,
             MoveBookmarkToCollectionState>(
             bloc: _moveBookmarkToCollectionManager,
@@ -81,21 +81,15 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
                         .updateSelectedCollection,
                     initialSelectedCollection: state.selectedCollection,
                   )
-                : Container(),
+                : const SizedBox.shrink(),
           );
-
-    final scrollableBody = Flexible(
-      child: SingleChildScrollView(
-        controller: getScrollController(context),
-        child: body,
-      ),
-    );
 
     final header = BottomSheetHeader(
       headerText: R.strings.bottomSheetSaveTo,
       actionWidget: AppGhostButton.icon(
         R.assets.icons.plus,
         onPressed: _showAddCollectionBottomSheet,
+        contentPadding: EdgeInsets.zero,
       ),
     );
 
@@ -109,7 +103,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         header,
-        scrollableBody,
+        Flexible(child: body),
         footer,
       ],
     );
@@ -119,8 +113,8 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
-      builder: (buildContext) => AddCollectionBottomSheet(
-        onSheetClosed: (collection) => _onAddCollectionSheetClosed(
+      builder: (buildContext) => CreateCollectionBottomSheet(
+        onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,
         ),

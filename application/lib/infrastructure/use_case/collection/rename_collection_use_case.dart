@@ -17,6 +17,12 @@ class RenameCollectionUseCase
   @override
   Stream<Collection> transaction(RenameCollectionUseCaseParam param) async* {
     final collectionNameTrimmed = param.newName.trim();
+
+    if (_collectionsRepository
+        .isCollectionNameNotValid(collectionNameTrimmed)) {
+      throw CollectionUseCaseError.tryingToRenameCollectionWithInvalidName;
+    }
+
     if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
       throw CollectionUseCaseError.tryingToRenameCollectionUsingExistingName;
     }

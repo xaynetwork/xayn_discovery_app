@@ -21,6 +21,9 @@ void main() {
     collectionsRepository = MockCollectionsRepository();
     renameCollectionUseCase = RenameCollectionUseCase(collectionsRepository);
 
+    when(collectionsRepository.isCollectionNameNotValid(newCollectionName))
+        .thenReturn(false);
+
     when(collectionsRepository.isCollectionNameUsed(newCollectionName))
         .thenReturn(false);
   });
@@ -37,6 +40,9 @@ void main() {
             collectionId: Collection.readLaterId, newName: newCollectionName)
       ],
       verify: (_) {
+        verify(collectionsRepository
+                .isCollectionNameNotValid(newCollectionName))
+            .called(1);
         verify(collectionsRepository.isCollectionNameUsed(newCollectionName))
             .called(1);
         verifyNoMoreInteractions(collectionsRepository);
@@ -60,6 +66,7 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
+          collectionsRepository.isCollectionNameNotValid(newCollectionName),
           collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.getById(collection.id),
         ]);
@@ -85,6 +92,7 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
+          collectionsRepository.isCollectionNameNotValid(newCollectionName),
           collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.getById(collection.id),
           collectionsRepository.save(updatedCollection),

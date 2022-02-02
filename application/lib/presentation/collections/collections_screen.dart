@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/add_collection/widget/add_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
@@ -124,19 +124,26 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
-        builder: (context, cardState) => CardWidget(
-          key: Keys.generateCollectionsScreenCardKey(
+        builder: (context, cardState) {
+          final cardKey = Keys.generateCollectionsScreenCardKey(
             collection.id.toString(),
-          ),
-          cardData: CardData.collectionsScreen(
-            title: collection.name,
-            onPressed: () => throw UnimplementedError(),
-            onLongPressed: () => throw UnimplementedError(),
-            numOfItems: cardState.numOfItems,
-            backgroundImage: cardState.image,
-            color: R.colors.collectionsScreenCard,
-          ),
-        ),
+          );
+          return CardWidget(
+            key: cardKey,
+            cardData: CardData.collectionsScreen(
+              key: cardKey,
+              title: collection.name,
+              onPressed: () =>
+                  _collectionsScreenManager?.onCollectionPressed(collection.id),
+              onLongPressed: () => throw UnimplementedError(),
+              numOfItems: cardState.numOfItems,
+              backgroundImage: cardState.image,
+              color: R.colors.collectionsScreenCard,
+              // Screenwidth - 2 * side paddings
+              cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
+            ),
+          );
+        },
       );
 
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
@@ -146,7 +153,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   _showAddCollectionBottomSheet() {
     showAppBottomSheet(
       context,
-      builder: (buildContext) => AddCollectionBottomSheet(),
+      builder: (buildContext) => CreateCollectionBottomSheet(),
     );
   }
 }

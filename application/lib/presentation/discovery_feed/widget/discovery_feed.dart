@@ -16,8 +16,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -50,8 +50,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   final RatingDialogManager _ratingDialogManager = di.get();
   late final Future<DiscoveryFeedManager> _discoveryCardManagerFuture =
       di.getAsync();
-  final Map<Document, Future<CardManagers>> _managerFutures =
-      <Document, Future<CardManagers>>{};
   DiscoveryCardController? _currentCardController;
 
   double _dragDistance = .0;
@@ -92,7 +90,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           .elementAt(discoveryFeedManager.state.cardIndex);
 
       void onBookmarkPressed() async {
-        final managers = await managersOf(document);
+        final managers = managersOf(document);
         final isBookmarked = await managers.discoveryCardManager
             .toggleBookmarkDocument(document);
 
@@ -120,8 +118,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           }),
           buildNavBarItemLike(
               isLiked: document.isRelevant,
-              onPressed: () async {
-                final managers = await managersOf(document);
+              onPressed: () {
+                final managers = managersOf(document);
 
                 managers.discoveryCardManager.changeDocumentFeedback(
                   document: document,
@@ -136,15 +134,15 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             onPressed: onBookmarkPressed,
             onLongPressed: onBookmarkLongPressed,
           ),
-          buildNavBarItemShare(onPressed: () async {
-            final managers = await managersOf(document);
+          buildNavBarItemShare(onPressed: () {
+            final managers = managersOf(document);
 
             managers.discoveryCardManager.shareUri(document);
           }),
           buildNavBarItemDisLike(
               isDisLiked: document.isIrrelevant,
-              onPressed: () async {
-                final managers = await managersOf(document);
+              onPressed: () {
+                final managers = managersOf(document);
 
                 managers.discoveryCardManager.changeDocumentFeedback(
                   document: document,
@@ -195,6 +193,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,
         top: false,
@@ -210,7 +209,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void dispose() {
     _cardViewController.dispose();
     _discoveryFeedManager?.close();
-    _managerFutures.clear();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -269,10 +267,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
           final document = results.elementAt(cardIndex);
 
-          managersOf(document).then((it) {
-            _managers = it;
-            NavBarContainer.updateNavBar(context);
-          });
+          final managers = _managers = managersOf(document);
+
+          NavBarContainer.updateNavBar(context);
 
           _cardViewController.index = cardIndex;
 
@@ -289,12 +286,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               isPrimary: true,
               isSwipingEnabled: !state.isFullScreen,
               isFullScreen: state.isFullScreen,
+              managers: managers,
             ),
             secondaryItemBuilder: _itemBuilder(
               results: results,
               isPrimary: false,
               isSwipingEnabled: true,
               isFullScreen: false,
+              managers: managers,
             ),
             boxBorderBuilder: _boxBorderBuilder(
               results: results,
@@ -327,13 +326,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     required bool isPrimary,
     required bool isSwipingEnabled,
     required bool isFullScreen,
+    required CardManagers managers,
   }) =>
       (BuildContext context, int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
         final discoveryFeedManager = _discoveryFeedManager!;
-        final managersFuture =
-            _managerFutures.putIfAbsent(document, () => managersOf(document));
 
         if (isPrimary) {
           discoveryFeedManager.handleViewType(
@@ -342,44 +340,37 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           );
         }
 
-        return FutureBuilder<CardManagers>(
-            future: managersFuture,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return Container();
-
-              final managers = snapshot.requireData;
-              final card = isFullScreen
-                  ? DiscoveryCard(
-                      isPrimary: true,
-                      document: document,
-                      discoveryCardManager: managers.discoveryCardManager,
-                      imageManager: managers.imageManager,
-                      onDiscard: discoveryFeedManager.handleNavigateOutOfCard,
-                      onDrag: _onFullScreenDrag,
-                      onController: (controller) =>
-                          _currentCardController = controller,
-                    )
-                  : GestureDetector(
-                      onTap: () {
-                        hideTooltip();
-                        discoveryFeedManager.handleNavigateIntoCard();
-                      },
-                      child: DiscoveryFeedCard(
-                        isPrimary: isPrimary,
-                        document: document,
-                        discoveryCardManager: managers.discoveryCardManager,
-                        imageManager: managers.imageManager,
-                      ),
-                    );
-
-              return SwipeableDiscoveryCard(
-                manager: managers.discoveryCardManager,
-                isPrimary: isPrimary,
+        final card = isFullScreen
+            ? DiscoveryCard(
+                isPrimary: true,
                 document: document,
-                card: card,
-                isSwipingEnabled: isSwipingEnabled,
+                discoveryCardManager: managers.discoveryCardManager,
+                imageManager: managers.imageManager,
+                onDiscard: discoveryFeedManager.handleNavigateOutOfCard,
+                onDrag: _onFullScreenDrag,
+                onController: (controller) =>
+                    _currentCardController = controller,
+              )
+            : GestureDetector(
+                onTap: () {
+                  hideTooltip();
+                  discoveryFeedManager.handleNavigateIntoCard();
+                },
+                child: DiscoveryFeedCard(
+                  isPrimary: isPrimary,
+                  document: document,
+                  discoveryCardManager: managers.discoveryCardManager,
+                  imageManager: managers.imageManager,
+                ),
               );
-            });
+
+        return SwipeableDiscoveryCard(
+          manager: managers.discoveryCardManager,
+          isPrimary: isPrimary,
+          document: document,
+          card: card,
+          isSwipingEnabled: isSwipingEnabled,
+        );
       };
 
   BoxBorder? Function(int) _boxBorderBuilder({

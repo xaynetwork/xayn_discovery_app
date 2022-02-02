@@ -89,8 +89,7 @@ void main() async {
     di.registerSingletonAsync<InvokeApiEndpointUseCase>(
         () => Future.value(invokeApiEndpointUseCase));
     di.registerSingleton<FeedRepository>(feedRepository);
-    di.registerSingletonAsync<AnalyticsService>(
-        () => Future.value(MockAnalyticsService()));
+    di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
 
     manager = await di.getAsync<DiscoveryFeedManager>();
   });

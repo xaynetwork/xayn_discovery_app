@@ -25,13 +25,12 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   }
 
   @mustCallSuper
-  Future<CardManagers> managersOf(Document document) async {
+  CardManagers managersOf(Document document) {
     if (!_cardManagers.containsKey(document)) {
       _cardManagers[document] = CardManagers(
         imageManager: di.get()
           ..getImage(UriHelper.safeUri(document.webResource.displayUrl)),
-        discoveryCardManager: await di.getAsync()
-          ..updateDocument(document),
+        discoveryCardManager: di.get()..updateDocument(document),
       );
     }
 

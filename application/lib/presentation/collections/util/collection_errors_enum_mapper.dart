@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_collections_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
@@ -28,6 +29,13 @@ class CollectionErrorsEnumMapper {
         break;
       case CollectionUseCaseError.tryingToRenameNotExistingCollection:
         msg = R.strings.errorMsgCollectionDoesntExist;
+        break;
+      case CollectionUseCaseError.tryingToCreateCollectionWithInvalidName:
+      case CollectionUseCaseError.tryingToRenameCollectionWithInvalidName:
+        msg = R.strings.errorMsgCollectionNameIsInvalid.replaceAll(
+          '%s',
+          maxCollectionNameLength.toString(),
+        );
         break;
     }
     return msg;

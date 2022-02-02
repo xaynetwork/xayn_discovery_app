@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_scree
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
+import '../../test_utils/utils.dart';
 import 'bookmarks_screen_manager_test.mocks.dart';
 
 @GenerateMocks([
@@ -35,6 +36,7 @@ void main() {
   late MockBookmarkErrorsEnumMapper bookmarkErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
   late BookmarksScreenManager bookmarksScreenManager;
+  late BookmarksScreenNavActions bookmarksScreenNavActions;
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
@@ -56,13 +58,14 @@ void main() {
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     moveBookmarkUseCase = MockMoveBookmarkUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
+    bookmarksScreenNavActions = MockBookmarksScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
 
     when(listenBookmarksUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(listenBookmarksUseCase.transaction(any)).thenAnswer(
-      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks)),
+      (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks, 'Read Later')),
     );
 
     bookmarksScreenManager = BookmarksScreenManager(
@@ -71,9 +74,11 @@ void main() {
       moveBookmarkUseCase,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
+      bookmarksScreenNavActions,
     );
 
-    populatedState = BookmarksScreenState.populated(bookmarks, timestamp);
+    populatedState =
+        BookmarksScreenState.populated(bookmarks, timestamp, 'Read Later');
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp);
   });

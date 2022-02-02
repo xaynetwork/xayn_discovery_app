@@ -33,8 +33,8 @@ readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
 personalAreaTitle: Dein Bereich
-personalAreaCollections: Sammlung
-personalAreaHomeFeed: Discovery Feed
+personalAreaCollections: Collections-Einstellungen
+personalAreaHomeFeed: Feed- Einstellungen
 personalAreaSettings: Einstellungen
 comingSoon: Kommt bald
 feedSettingsScreenTitle: Dein Feed
@@ -65,7 +65,8 @@ defaultCollectionNameReadLater: Später lesen
 bookmarkSnackBarSavedTo: In %s gespeichert
 bottomSheetSaveTo: Speichern in
 # This is a simple prefix, before the author entry, for example "by " + author name
-readerModeBylinePrefix: by
-errorMsgCollectionDoesntExist: The collection doesn't exist
-errorMsgBookmarkDoesntExist: The bookmark doesn't exist
-errorMsgCollectionNameAlreadyUsed: This name is already used
+readerModeBylinePrefix: von
+errorMsgCollectionDoesntExist: Diese Collection existiert nicht
+errorMsgBookmarkDoesntExist: Dieses Lesezeichen existiert nicht
+errorMsgCollectionNameAlreadyUsed: Der Name ist bereits vergeben
+errorMsgCollectionNameIsInvalid: The name shouldn't exceed %s characters
