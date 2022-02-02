@@ -138,7 +138,9 @@ class _CollectionsScreenState extends State<CollectionsScreen>
               title: collection.name,
               onPressed: () =>
                   _collectionsScreenManager?.onCollectionPressed(collection.id),
-              onLongPressed: () => _showCollectionCardOptions(collection.id),
+              onLongPressed: collection.isDefault
+                  ? () {}
+                  : () => _showCollectionCardOptions(collection.id),
               numOfItems: cardState.numOfItems,
               backgroundImage: cardState.image,
               color: R.colors.collectionsScreenCard,
