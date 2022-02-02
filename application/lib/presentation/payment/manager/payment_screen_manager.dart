@@ -8,14 +8,15 @@ import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_purchased_subsctiption_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_purchase_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/subscribe_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
     with UseCaseBlocHelper<PaymentScreenState> {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
-  final SubscribeUseCase _subscribeUseCase;
+  final PurchaseSubscriptionUseCase _subscribeUseCase;
   final RestorePurchasedSubscriptionUseCase _restorePurchasedSubscription;
   final ListenSubscriptionPurchaseUseCase _listenSubscriptionPurchaseUseCase;
   late final UseCaseValueStream<ListenSubscriptionPurchaseOutput>
@@ -37,7 +38,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     final product = _subscriptionProduct;
     if (product == null || !product.canBePurchased) return;
 
-    await _subscribeUseCase.call(none);
+    await _subscribeUseCase.call(PurchasableIds.subscription);
   }
 
   @override
