@@ -18,7 +18,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final SubscribeUseCase _subscribeUseCase;
   final RestorePurchasedSubscriptionUseCase _restorePurchasedSubscription;
   final ListenSubscriptionPurchaseUseCase _listenSubscriptionPurchaseUseCase;
-  late final UseCaseValueStream<PurchasableProductStatus>
+  late final UseCaseValueStream<ListenSubscriptionPurchaseOutput>
       _purchasableProductStatusChangeHandler;
 
   PaymentScreenManager(
@@ -44,14 +44,28 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   FutureOr<PaymentScreenState?> computeState() {
     final product = _subscriptionProduct;
     try {
-      if (product == null) super.computeState();
+      if (product == null) return super.computeState();
       return fold(_purchasableProductStatusChangeHandler)
-          .foldAll((statusOut, errorReport) {
+          .foldAll((statusUpdate, errorReport) {
         if (errorReport.isNotEmpty) {
           // map error to the human readable message
         }
+
+        final updatedProduct = statusUpdate?.map(
+                statusChanged: (statusChanged) =>
+                    statusChanged.productId == product.id
+                        ? product.copyWith(statusChanged.status)
+                        : product,
+                error: (error) {
+                  if (error.productId == product.id) {
+                    _paymentFlowErrorMsg = 'should be mapped here';
+                  }
+                  return product;
+                }) ??
+            product;
+
         return PaymentScreenState.ready(
-          product: statusOut == null ? product! : product!.copyWith(statusOut),
+          product: updatedProduct,
           errorMsg: _paymentFlowErrorMsg,
         );
       });
