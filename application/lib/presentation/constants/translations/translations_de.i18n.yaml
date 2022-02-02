@@ -69,4 +69,11 @@ readerModeBylinePrefix: von
 errorMsgCollectionDoesntExist: Diese Collection existiert nicht
 errorMsgBookmarkDoesntExist: Dieses Lesezeichen existiert nicht
 errorMsgCollectionNameAlreadyUsed: Der Name ist bereits vergeben
-errorMsgCollectionNameIsInvalid: The name shouldn't exceed %s characters
+errorMsgCollectionNameIsInvalid: Der Name darf %s Zeichen nicht überschreiten
+bottomSheetRename: Rename
+bottomSheetDelete: Delete
+bottomSheetDeleteAll: Delete All
+bottomSheetMoveBookmarks: Move Bookmarks
+bottomSheetDeleteCollectionHeader: Are you sure ?
+bottomSheetDeleteCollectionWithBookmarksBody: If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?
+bottomSheetRenameCollectionHeader: Rename collection
