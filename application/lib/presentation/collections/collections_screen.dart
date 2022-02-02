@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_or_rename_collection.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
@@ -116,6 +118,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       card = _buildBaseCard(collection);
     } else {
       card = CardWidgetTransitionWrapper(
+        onAnimationDone: _showCollectionCardOptions(collection.id),
         child: _buildSwipeableCard(collection),
       );
     }
@@ -155,6 +158,15 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     showAppBottomSheet(
       context,
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(),
+    );
+  }
+
+  _showCollectionCardOptions(UniqueId collectionId) {
+    showAppBottomSheet(
+      context,
+      builder: (buildContext) => CollectionOptionsBottomSheet(
+        collectionId: collectionId,
+      ),
     );
   }
 }
