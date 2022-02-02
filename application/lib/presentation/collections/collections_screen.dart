@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_or_rename_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
@@ -153,6 +154,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
 
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
         collectionCard: _buildBaseCard(collection),
+        onSwipeOptionTap: _onSwipeOptionsTap(collection),
       );
 
   _showAddCollectionBottomSheet() {
@@ -170,4 +172,22 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       ),
     );
   }
+
+  Map<SwipeOptionCollectionCard, VoidCallback> _onSwipeOptionsTap(
+          Collection collection) =>
+      {
+        SwipeOptionCollectionCard.edit: () => showAppBottomSheet(
+              context,
+              builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
+                collectionId: collection.id,
+              ),
+            ),
+        SwipeOptionCollectionCard.remove: () => showAppBottomSheet(
+              context,
+              builder: (buildContext) =>
+                  DeleteCollectionConfirmationBottomSheet(
+                collectionId: collection.id,
+              ),
+            ),
+      };
 }
