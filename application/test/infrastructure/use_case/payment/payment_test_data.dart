@@ -38,6 +38,17 @@ PurchaseDetails createPurchase(
   return details;
 }
 
+PurchaseDetails mapStatusToPurchaseDetails(PurchaseStatus status) {
+  switch (status) {
+    case PurchaseStatus.purchased:
+      return purchasedPurchaseDetails;
+    case PurchaseStatus.restored:
+      return restoredPurchaseDetails;
+    default:
+      return createPurchase(status);
+  }
+}
+
 const purchasableProduct = PurchasableProduct(
   id: subscriptionId,
   title: 't',
