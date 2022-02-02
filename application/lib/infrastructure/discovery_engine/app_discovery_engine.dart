@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -18,12 +19,14 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// - [changeDocumentFeedback] to return an EngineEvent with information about the [Document].
 /// - an implementation for [search].
 @LazySingleton(as: DiscoveryEngine)
-class AppDiscoveryEngine implements DiscoveryEngine {
-  final DiscoveryEngine _engine;
+class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
+  late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
+  late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
+  late DiscoveryEngine _engine;
 
   /// temp solution:
   /// Once search is supported, we drop this.
-  final StreamController<EngineEvent> _tempSearchEvents =
+  late final StreamController<EngineEvent> _tempSearchEvents =
       StreamController<EngineEvent>.broadcast();
 
   /// temp solution:
@@ -35,16 +38,37 @@ class AppDiscoveryEngine implements DiscoveryEngine {
       Expando<DocumentFeedbackChange>();
 
   @visibleForTesting
-  AppDiscoveryEngine(this._engine);
+  AppDiscoveryEngine.test(DiscoveryEngine engine) : _engine = engine;
+
+  @visibleForTesting
+  AppDiscoveryEngine(
+      {required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+      required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+      bool initialized = true})
+      : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
+        _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase {
+    if (!initialized) {
+      startInitializing();
+    }
+  }
 
   @factoryMethod
-  static Future<AppDiscoveryEngine> create(
-    GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
-    SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
-  ) async {
-    await _saveInitialFeedMarket(saveInitialFeedMarketUseCase);
+  factory AppDiscoveryEngine.init({
+    required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+    required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+  }) =>
+      AppDiscoveryEngine(
+        getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
+        saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
+        initialized: false,
+      );
 
-    final localMarkets = await getSelectedFeedMarketsUseCase.singleOutput(none);
+  @override
+  Future<void> init() async {
+    await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
+
+    final localMarkets =
+        await _getSelectedFeedMarketsUseCase.singleOutput(none);
 
     final markets = localMarkets
         .map((e) =>
@@ -54,16 +78,15 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
-      applicationDirectoryPath: '/',
+      applicationDirectoryPath: '/engine/',
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
     );
-    final engine = await DiscoveryEngine.init(configuration: configuration);
 
-    return AppDiscoveryEngine(engine);
+    _engine = await DiscoveryEngine.init(configuration: configuration);
   }
 
-  static Future<void> _saveInitialFeedMarket(
+  Future<void> _saveInitialFeedMarket(
     SaveInitialFeedMarketUseCase useCase,
   ) async {
     final deviceLocale = WidgetsBinding.instance!.window.locale;
@@ -80,18 +103,18 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     FeedMarkets? feedMarkets,
     int? maxItemsPerFeedBatch,
   }) =>
-      _engine.changeConfiguration(
-        feedMarkets: feedMarkets,
-        maxItemsPerFeedBatch: maxItemsPerFeedBatch,
-      );
+      safeRun(() => _engine.changeConfiguration(
+            feedMarkets: feedMarkets,
+            maxItemsPerFeedBatch: maxItemsPerFeedBatch,
+          ));
 
   @override
   Future<EngineEvent> changeDocumentFeedback({
     required DocumentId documentId,
     required DocumentFeedback feedback,
   }) async {
-    final engineEvent = await _engine.changeDocumentFeedback(
-        documentId: documentId, feedback: feedback);
+    final engineEvent = await safeRun(() => _engine.changeDocumentFeedback(
+        documentId: documentId, feedback: feedback));
 
     _eventMap[engineEvent] = DocumentFeedbackChange(
       documentId: documentId,
@@ -103,15 +126,17 @@ class AppDiscoveryEngine implements DiscoveryEngine {
 
   @override
   Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) =>
-      _engine.closeFeedDocuments(documentIds);
+      safeRun(() => _engine.closeFeedDocuments(documentIds));
 
   /// As we also need search events, which are not yet supported, we override
   /// this getter so that it includes our temp search event Stream.
   @override
-  Stream<EngineEvent> get engineEvents => Rx.merge([
-        _engine.engineEvents,
-        _tempSearchEvents.stream,
-      ]);
+  Stream<EngineEvent> get engineEvents {
+    final engineEvents = Stream.fromFuture(safeRun(() => _engine.engineEvents))
+        .asyncExpand((events) => events);
+
+    return Rx.merge([engineEvents, _tempSearchEvents.stream]);
+  }
 
   @override
   Future<EngineEvent> logDocumentTime({
@@ -119,20 +144,21 @@ class AppDiscoveryEngine implements DiscoveryEngine {
     required DocumentViewMode mode,
     required int seconds,
   }) =>
-      _engine.logDocumentTime(
-        documentId: documentId,
-        mode: mode,
-        seconds: seconds,
-      );
+      safeRun(() => _engine.logDocumentTime(
+            documentId: documentId,
+            mode: mode,
+            seconds: seconds,
+          ));
 
   @override
-  Future<EngineEvent> requestFeed() => _engine.requestFeed();
+  Future<EngineEvent> requestFeed() => safeRun(() => _engine.requestFeed());
 
   @override
-  Future<EngineEvent> requestNextFeedBatch() => _engine.requestNextFeedBatch();
+  Future<EngineEvent> requestNextFeedBatch() =>
+      safeRun(() => _engine.requestNextFeedBatch());
 
   @override
-  Future<EngineEvent> resetEngine() => _engine.resetEngine();
+  Future<EngineEvent> resetEngine() => safeRun(() => _engine.resetEngine());
 
   Future<EngineEvent> search(String searchTerm) {
     throw UnimplementedError();
@@ -149,8 +175,9 @@ class AppDiscoveryEngine implements DiscoveryEngine {
       _eventMap[engineEvent];
 
   @override
-  Future<void> dispose() => _engine.dispose();
+  Future<void> dispose() => safeRun(() => _engine.dispose());
 
   @override
-  Future<EngineEvent> send(ClientEvent event) => _engine.send(event);
+  Future<EngineEvent> send(ClientEvent event) =>
+      safeRun(() => _engine.send(event));
 }
