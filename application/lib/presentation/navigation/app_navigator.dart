@@ -3,6 +3,7 @@ import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/app_loading/manager/app_loading_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -27,6 +28,19 @@ class AppNavigationManager extends xayn.NavigatorManager {
         ...super.computeInitialPages(),
         if (_featureManager.showOnboardingScreen) PageRegistry.onboarding,
       ];
+}
+
+@Injectable(as: AppLoadingNavActions)
+class AppLoadingNavActionsImpl extends AppLoadingNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  AppLoadingNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onSplashScreenAnimationFinished() =>
+      changeStack((stack) => stack.replace(PageRegistry.discovery));
 }
 
 @Injectable(as: DiscoveryFeedNavActions)
