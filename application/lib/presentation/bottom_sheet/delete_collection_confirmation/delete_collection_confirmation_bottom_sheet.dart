@@ -45,7 +45,8 @@ class _DeleteCollection extends StatefulWidget {
 class _CreateCollectionState extends State<_DeleteCollection>
     with BottomSheetBodyMixin {
   late final DeleteCollectionConfirmationManager
-      _deleteCollectionConfirmationManager = di.get();
+      _deleteCollectionConfirmationManager = di.get()
+        ..init(widget.collectionId);
 
   @override
   Widget build(BuildContext context) {
@@ -88,15 +89,14 @@ class _CreateCollectionState extends State<_DeleteCollection>
   }
 
   void _onDeleteAllPressed(UniqueId collectionId) {
-    _deleteCollectionConfirmationManager.removeCollection(
-        collectionId: collectionId);
+    _deleteCollectionConfirmationManager.deleteAll();
     closeBottomSheet(context);
   }
 
   void _onMoveBookmarksPressed(UniqueId collectionId) async {
     closeBottomSheet(context);
-    final bookmarksIds = await _deleteCollectionConfirmationManager
-        .retrieveBookmarksIdsByCollectionId(collectionId);
+    final bookmarksIds =
+        await _deleteCollectionConfirmationManager.retrieveBookmarksIds();
     showAppBottomSheet(
       context,
       builder: (buildContext) => MoveBookmarksToCollectionBottomSheet(
