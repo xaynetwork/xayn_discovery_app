@@ -19,9 +19,10 @@ class AmplitudeAnalyticsService
   final Amplitude _amplitude;
 
   @visibleForTesting
-  AmplitudeAnalyticsService(
-      {required Amplitude amplitude, bool initialized = true})
-      : _amplitude = amplitude {
+  AmplitudeAnalyticsService({
+    required Amplitude amplitude,
+    bool initialized = true,
+  }) : _amplitude = amplitude {
     if (!initialized) {
       startInitializing();
     }

@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
-  Future<UseCaseSink<DiscoveryCardObservation, EngineEvent>>? _useCaseSink;
+  UseCaseSink<DiscoveryCardObservation, EngineEvent>? _useCaseSink;
 
   @override
   Future<void> close() {
@@ -24,20 +24,17 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   void observeDocument({
     Document? document,
     DocumentViewMode? mode,
-  }) async {
+  }) {
     _useCaseSink ??= _getUseCaseSink();
 
-    final useCaseSink = await _useCaseSink;
-
-    useCaseSink!(DiscoveryCardObservation(
+    _useCaseSink!(DiscoveryCardObservation(
       document: document,
       viewType: mode,
     ));
   }
 
-  Future<UseCaseSink<DiscoveryCardObservation, EngineEvent>>
-      _getUseCaseSink() async {
-    final useCase = await di.getAsync<LogDocumentTimeUseCase>();
+  UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink() {
+    final useCase = di.get<LogDocumentTimeUseCase>();
     final discoveryCardObservationUseCase =
         di.get<DiscoveryCardObservationUseCase>();
     final discoveryCardMeasuredObservationUseCase =

@@ -339,15 +339,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
     with NavBarConfigMixin {
-  DiscoveryCardManager? _discoveryCardManager;
+  late final DiscoveryCardManager _discoveryCardManager;
 
   @override
   void initState() {
-    di.getAsync<DiscoveryCardManager>().then((it) {
-      _discoveryCardManager = it;
-
-      NavBarContainer.updateNavBar(context);
-    });
+    _discoveryCardManager = di.get();
 
     super.initState();
   }
@@ -365,20 +361,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
 
   @override
   NavBarConfig get navBarConfig {
-    final discoveryCardManager = _discoveryCardManager;
-
-    if (discoveryCardManager == null) {
-      return NavBarConfig.hidden();
-    }
-
     return NavBarConfig(
       [
         buildNavBarItemArrowLeft(
-          onPressed: () => discoveryCardManager.onBackNavPressed(),
+          onPressed: () => _discoveryCardManager.onBackNavPressed(),
         ),
         buildNavBarItemLike(
           isLiked: widget.document.isRelevant,
-          onPressed: () => discoveryCardManager.changeDocumentFeedback(
+          onPressed: () => _discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
             feedback: widget.document.isRelevant
                 ? DocumentFeedback.neutral
@@ -386,16 +376,16 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           ),
         ),
         buildNavBarItemBookmark(
-          isBookmarked: discoveryCardManager.state.isBookmarked,
+          isBookmarked: _discoveryCardManager.state.isBookmarked,
           onPressed: onBookmarkPressed,
           onLongPressed: onBookmarkLongPressed,
         ),
         buildNavBarItemShare(
-          onPressed: () => discoveryCardManager.shareUri(widget.document),
+          onPressed: () => _discoveryCardManager.shareUri(widget.document),
         ),
         buildNavBarItemDisLike(
           isDisLiked: widget.document.isIrrelevant,
-          onPressed: () => discoveryCardManager.changeDocumentFeedback(
+          onPressed: () => _discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
             feedback: widget.document.isIrrelevant
                 ? DocumentFeedback.neutral

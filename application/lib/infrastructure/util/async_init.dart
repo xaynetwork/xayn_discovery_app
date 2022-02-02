@@ -27,19 +27,19 @@ mixin AsyncInitMixin {
   /// Run an operation after the initialization in [init] is done.
   @protected
   @mustCallSuper
-  Future<void> safeRun(FutureOr<void> Function() run) async {
+  Future<T> safeRun<T>(FutureOr<T> Function() run) async {
     final ongoingInit = _ongoingInit;
     if (ongoingInit != null &&
         !ongoingInit.isCompleted &&
         !ongoingInit.isCanceled) {
       final completed = await ongoingInit.value;
       if (!completed) {
-        return;
+        throw 'Operation was canceled before safeRun could start.';
       }
     }
 
     if (ongoingInit != null && ongoingInit.isCanceled) {
-      throw "Operation was already canceled but safeRun has been called regardless. Be sure to never cancel any AsyncInitMixin when it is still used.";
+      throw 'Operation was already canceled but safeRun has been called regardless. Be sure to never cancel any AsyncInitMixin when it is still used.';
     }
 
     return run();

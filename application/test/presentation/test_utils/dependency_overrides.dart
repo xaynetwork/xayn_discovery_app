@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connecti
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -54,7 +55,7 @@ class TestLogManager extends LogManager {
 }
 
 @LazySingleton(as: DiscoveryEngine)
-class TestDiscoveryEngine implements AppDiscoveryEngine {
+class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   final StreamController<EngineEvent> _onEngineEvent =
       StreamController<EngineEvent>.broadcast();
 
@@ -62,10 +63,7 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
     _onEngineEvent.close();
   }
 
-  @factoryMethod
-  static Future<TestDiscoveryEngine> create() async {
-    return TestDiscoveryEngine();
-  }
+  TestDiscoveryEngine();
 
   @override
   Future<EngineEvent> changeConfiguration(
@@ -130,6 +128,12 @@ class TestDiscoveryEngine implements AppDiscoveryEngine {
   @override
   Future<EngineEvent> send(ClientEvent event) {
     // TODO: implement send
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> init() {
+    // TODO: implement init
     throw UnimplementedError();
   }
 }

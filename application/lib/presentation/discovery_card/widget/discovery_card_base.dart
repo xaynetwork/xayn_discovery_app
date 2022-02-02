@@ -33,12 +33,8 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> with TooltipStateMixin {
-  late final DiscoveryCardManager _discoveryCardManager;
-  late final ImageManager _imageManager;
-
-  DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
-
-  ImageManager get imageManager => _imageManager;
+  late final DiscoveryCardManager discoveryCardManager;
+  late final ImageManager imageManager;
 
   WebResource get webResource => widget.document.webResource;
 
@@ -52,8 +48,10 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void initState() {
     super.initState();
 
-    _discoveryCardManager = widget.discoveryCardManager ?? di.get();
-    _imageManager = widget.imageManager ?? di.get();
+    discoveryCardManager = widget.discoveryCardManager ?? di.get()
+      ..updateDocument(widget.document);
+    imageManager = widget.imageManager ?? di.get()
+      ..getImage(widget.document.webResource.displayUrl);
   }
 
   @override
@@ -61,11 +59,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.dispose();
 
     if (widget.discoveryCardManager == null) {
-      _discoveryCardManager.close();
+      discoveryCardManager.close();
     }
 
     if (widget.imageManager == null) {
-      _imageManager.close();
+      imageManager.close();
     }
   }
 
@@ -74,14 +72,15 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      _discoveryCardManager.updateDocument(widget.document);
+      discoveryCardManager.updateDocument(widget.document);
+      imageManager.getImage(widget.document.webResource.displayUrl);
     }
   }
 
   @override
   Widget build(BuildContext context) =>
       BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
-        bloc: _discoveryCardManager,
+        bloc: discoveryCardManager,
         builder: (context, state) => buildFromState(
           context,
           state,
@@ -91,14 +90,14 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
             current.hasError || discoveryCardStateListenWhen(previous, current),
         listener: (context, state) {
           if (state.hasError) {
-            handleError(state);
+            _handleError(state);
           } else {
             discoveryCardStateListener();
           }
         },
       );
 
-  void handleError(DiscoveryCardState state) {
+  void _handleError(DiscoveryCardState state) {
     TooltipKey? key = TooltipUtils.getErrorKey(state.error);
     if (key != null) showTooltip(key);
   }
@@ -119,7 +118,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);
 
     return CachedImage(
-      imageManager: _imageManager,
+      imageManager: imageManager,
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),

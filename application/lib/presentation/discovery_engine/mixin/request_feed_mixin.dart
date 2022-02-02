@@ -7,43 +7,37 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/requ
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
-  Future<UseCaseSink<None, EngineEvent>>? _useCaseSink;
+  UseCaseSink<None, EngineEvent>? _useCaseSink;
+  bool _didStartConsuming = false;
 
   bool get isLoading => false;
 
-  @override
-  Future<void> close() {
-    _useCaseSink = null;
-    _stream = null;
-
-    return super.close();
-  }
-
-  void requestNextFeedBatch() async {
+  void requestNextFeedBatch() {
     _useCaseSink ??= _getUseCaseSink();
 
-    final useCaseSink = await _useCaseSink;
-
-    useCaseSink!(none);
+    _useCaseSink!(none);
   }
 
-  Stream<T>? _stream;
-
   @override
-  Stream<T> get stream => _stream ??= Stream.fromFuture(_startConsuming())
-      .asyncExpand((_) => super.stream)
-      .asBroadcastStream();
+  Stream<T> get stream {
+    if (!_didStartConsuming) {
+      _startConsuming();
+    }
 
-  Future<UseCaseSink<None, EngineEvent>> _getUseCaseSink() async {
-    final useCase = await di.getAsync<RequestNextFeedBatchUseCase>();
+    return super.stream;
+  }
+
+  UseCaseSink<None, EngineEvent> _getUseCaseSink() {
+    final useCase = di.get<RequestNextFeedBatchUseCase>();
     final sink = pipe(useCase);
 
     return sink;
   }
 
-  Future<void> _startConsuming() async {
-    final consumeUseCase = await di.getAsync<RequestFeedUseCase>();
+  void _startConsuming() {
+    final consumeUseCase = di.get<RequestFeedUseCase>();
 
+    _didStartConsuming = true;
     consume(consumeUseCase, initialData: none);
   }
 }
