@@ -83,7 +83,7 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
       id: param.document.documentUniqueId,
       title: webResource.title,
       image: image,
-      provider: param.provider,
+      provider: param.provider ?? DocumentProvider(),
       collectionId: param.collectionId,
     );
     yield createBookmarkUseCaseIn;
