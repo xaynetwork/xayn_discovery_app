@@ -34,7 +34,7 @@ TooltipParams _getBookmarkedToDefault() {
       R.strings.bookmarkSnackBarSavedTo.replaceAll('%s', defaultCollectionName);
 
   void onPressed(List? args) {
-    if (args == null || args.length < 3) return;
+    if (args == null || args.length < 4) return;
     final context = args[0];
     final document = args[1];
     final provider = args[2];
