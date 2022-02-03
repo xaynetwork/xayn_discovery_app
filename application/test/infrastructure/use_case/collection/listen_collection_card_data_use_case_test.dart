@@ -23,8 +23,7 @@ void main() {
     name: 'Collection Test',
   );
   final provider = DocumentProvider(
-      name: 'Provider name',
-      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
+      name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
 
   final bookmarks = [
     Bookmark(

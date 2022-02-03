@@ -15,8 +15,7 @@ void main() {
   late MockBookmarksRepository bookmarksRepository;
   late ListenIsBookmarkedUseCase listenIsBookmarkedUseCase;
   final provider = DocumentProvider(
-      name: 'Provider name',
-      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
+      name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
   final bookmark1 = Bookmark(
     id: UniqueId(),
     collectionId: UniqueId(),
