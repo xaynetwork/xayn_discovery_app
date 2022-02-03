@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 /// Represents a document that was:
@@ -15,4 +17,16 @@ class ProcessedDocument {
     required this.processHtmlResult,
     required this.timeToRead,
   });
+
+  DocumentProvider getProvider(WebResource resource) {
+    var favicon = resource.url.resolve('/favicon.ico');
+
+    final link = processHtmlResult.favicon;
+
+    if (link != null) favicon = Uri.parse(link);
+
+    return DocumentProvider(
+        name: processHtmlResult.metadata?.siteName ?? resource.url.host,
+        favicon: favicon);
+  }
 }

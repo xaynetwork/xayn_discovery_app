@@ -81,8 +81,7 @@ class BookmarksScreen extends StatelessWidget with NavBarConfigMixin {
               onLongPressed: () {},
               backgroundImage: bookmark.image,
               created: DateTime.parse(bookmark.createdAt),
-              faviconImage: bookmark.providerThumbnail,
-              providerName: bookmark.providerName,
+              provider: bookmark.provider,
               // Screenwidth - 2 * side paddings
               cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
             ),

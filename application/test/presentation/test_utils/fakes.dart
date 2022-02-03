@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:file/memory.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -45,7 +46,8 @@ final fakeBookmark = Bookmark(
   collectionId: UniqueId(),
   title: 'Bookmark1 title',
   image: Uint8List.fromList([1, 2, 3]),
-  providerName: 'Provider name',
-  providerThumbnail: Uint8List.fromList([4, 5, 6]),
+  provider: DocumentProvider(
+      name: 'Provider name',
+      favicon: Uri.parse('https://www.foo.com/favicon.ico')),
   createdAt: DateTime.now().toUtc().toString(),
 );

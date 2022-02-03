@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:test/test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
@@ -17,7 +18,7 @@ void main() async {
     final id = UniqueId();
     final collectionId = UniqueId();
     final image = Uint8List.fromList([1, 2, 3]);
-    final providerThumbnail = Uint8List.fromList([4, 5, 6]);
+    final favicon = Uri.parse('https://www.foo.com/favicon.ico');
     const createdAt = '2021-12-05';
 
     group('fromMap method:', () {
@@ -27,7 +28,7 @@ void main() async {
         2: bookmarkTitleFromMap,
         3: image,
         4: providerNameFromMap,
-        5: providerThumbnail,
+        5: favicon.toString(),
         6: createdAt,
       };
 
@@ -41,8 +42,8 @@ void main() async {
         expect(bookmark.collectionId, equals(collectionId));
         expect(bookmark.title, equals(bookmarkTitleFromMap));
         expect(bookmark.image, equals(image));
-        expect(bookmark.providerName, equals(providerNameFromMap));
-        expect(bookmark.providerThumbnail, equals(providerThumbnail));
+        expect(bookmark.provider?.name, equals(providerNameFromMap));
+        expect(bookmark.provider?.favicon, equals(favicon));
         expect(bookmark.createdAt, equals(createdAt));
       });
       test('WHEN id is null THEN throw a DbEntityMapperException ', () {
@@ -95,7 +96,7 @@ void main() async {
         mapWithProviderThumbnailNull[5] = null;
         final bookmark = mapper.fromMap(mapWithProviderThumbnailNull)!;
 
-        expect(bookmark.providerThumbnail, null);
+        expect(bookmark.provider?.favicon, null);
       });
 
       test('WHEN createdAt is null THEN throw a DbEntityMapperException', () {
@@ -117,8 +118,7 @@ void main() async {
         collectionId: collectionId,
         title: bookmarkTitleToMap,
         image: image,
-        providerName: providerNameToMap,
-        providerThumbnail: providerThumbnail,
+        provider: DocumentProvider(name: providerNameToMap, favicon: favicon),
         createdAt: createdAt,
       );
 
@@ -131,7 +131,7 @@ void main() async {
             2: bookmarkTitleToMap,
             3: image,
             4: providerNameToMap,
-            5: providerThumbnail,
+            5: favicon.toString(),
             6: createdAt,
           }),
         );

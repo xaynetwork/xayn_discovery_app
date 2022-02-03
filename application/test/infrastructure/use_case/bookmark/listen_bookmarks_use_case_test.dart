@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 
@@ -15,14 +16,16 @@ void main() {
   late MockCollectionsRepository collectionsRepository;
   late ListenBookmarksUseCase listenBookmarksUseCase;
   final collectionId = UniqueId();
+  final provider = DocumentProvider(
+      name: 'Provider name',
+      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
 
   final bookmark1 = Bookmark(
     id: UniqueId(),
     collectionId: collectionId,
     title: 'Bookmark1 title',
     image: Uint8List.fromList([1, 2, 3]),
-    providerName: 'Provider name',
-    providerThumbnail: Uint8List.fromList([4, 5, 6]),
+    provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
   );
 
@@ -31,8 +34,7 @@ void main() {
     collectionId: collectionId,
     title: 'Bookmark2 title',
     image: Uint8List.fromList([1, 2, 3]),
-    providerName: 'Provider name',
-    providerThumbnail: Uint8List.fromList([4, 5, 6]),
+    provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
   );
 
