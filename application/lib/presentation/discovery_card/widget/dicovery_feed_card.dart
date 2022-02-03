@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
@@ -31,8 +31,8 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryFeedCardState();
 }
 
-class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
-    with TooltipStateMixin {
+class _DiscoveryFeedCardState
+    extends DiscoveryCardBaseState<DiscoveryFeedCard> {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
@@ -75,22 +75,31 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
     );
   }
 
-  void onBookmarkPressed() async {
-    final isBookmarked =
-        await discoveryCardManager.toggleBookmarkDocument(widget.document);
-
-    if (isBookmarked) {
-      showTooltip(
-        TooltipKeys.bookmarkedToDefault,
-        parameters: [context, widget.document],
-      );
-    }
-  }
+  void onBookmarkPressed() =>
+      discoveryCardManager.toggleBookmarkDocument(widget.document);
 
   void onBookmarkLongPressed() => showAppBottomSheet(
         context,
         builder: (_) => MoveDocumentToCollectionBottomSheet(
           document: widget.document,
+          onError: (tooltipKey) => showTooltip(tooltipKey),
         ),
       );
+
+  @override
+  void discoveryCardStateListener() => showTooltip(
+        BookmarkToolTipKeys.bookmarkedToDefault,
+        parameters: [
+          context,
+          widget.document,
+          (tooltipKey) => showTooltip(tooltipKey),
+        ],
+      );
+
+  @override
+  bool discoveryCardStateListenWhen(
+          DiscoveryCardState previous, DiscoveryCardState current) =>
+      !previous.isBookmarked &&
+      current.isBookmarked &&
+      current.isBookmarkToggled;
 }

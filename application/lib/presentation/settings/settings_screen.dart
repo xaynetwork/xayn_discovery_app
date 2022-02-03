@@ -36,6 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.titleOnly(
             title: R.strings.settingsTitle,
