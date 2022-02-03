@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
@@ -103,12 +104,16 @@ class MoveDocumentToCollectionManager
   void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  void onApplyPressed({required Document document}) {
+  void onApplyPressed({
+    required Document document,
+    DocumentProvider? provider,
+  }) {
     final hasSelected = state.selectedCollection != null;
     final isBookmarked = state.isBookmarked;
     if (!isBookmarked && hasSelected) {
       final param = CreateBookmarkFromDocumentUseCaseIn(
         document: document,
+        provider: provider,
         collectionId: state.selectedCollection!.id,
       );
       _createBookmarkHandler(param);

@@ -61,7 +61,7 @@ class _DiscoveryFeedCardState
             : DocumentFeedback.negative,
       ),
       onBookmarkPressed: onBookmarkPressed,
-      onBookmarkLongPressed: onBookmarkLongPressed,
+      onBookmarkLongPressed: onBookmarkLongPressed(state),
       isBookmarked: state.isBookmarked,
     );
 
@@ -80,13 +80,16 @@ class _DiscoveryFeedCardState
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-  void onBookmarkLongPressed() => showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          onError: (tooltipKey) => showTooltip(tooltipKey),
-        ),
-      );
+  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
+      () => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: widget.document,
+              provider: state.processedDocument
+                  ?.getProvider(widget.document.webResource),
+              onError: (tooltipKey) => showTooltip(tooltipKey),
+            ),
+          );
 
   @override
   void discoveryCardStateListener() => showTooltip(
@@ -94,6 +97,8 @@ class _DiscoveryFeedCardState
         parameters: [
           context,
           widget.document,
+          discoveryCardManager.state.processedDocument
+              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
