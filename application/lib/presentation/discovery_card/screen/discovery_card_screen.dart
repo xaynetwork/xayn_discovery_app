@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+
+/// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
+class DiscoveryCardScreen extends StatefulWidget {
+  const DiscoveryCardScreen({
+    Key? key,
+    required this.documentId,
+  }) : super(key: key);
+
+  final UniqueId documentId;
+
+  @override
+  State<DiscoveryCardScreen> createState() => _DiscoveryCardScreenState();
+}
+
+class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
+    with NavBarConfigMixin {
+  late final DiscoveryCardScreenManager _discoveryCardScreenManager =
+      di.get(param1: widget.documentId);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  NavBarConfig get navBarConfig => _discoveryCardScreenManager.state.map(
+      initial: (_) => NavBarConfig.backBtn(buildNavBarItemBack(
+          onPressed: _discoveryCardScreenManager.onBackPressed)),
+      populated: (p) => _createDocumentNavbar(p.document));
+
+  NavBarConfig _createDocumentNavbar(Document document) {
+    final cardManagers = di.get<CardManagers>(param1: document);
+    final discoveryCardManager = cardManagers.discoveryCardManager;
+
+    return NavBarConfig(
+      [
+        buildNavBarItemArrowLeft(
+            onPressed: _discoveryCardScreenManager.onBackPressed),
+
+        /// Like and dislike can not be called because the Document is not related to the feed anymore and will not be updated
+        buildNavBarItemShare(
+            onPressed: () => discoveryCardManager.shareUri(document)),
+      ],
+      isWidthExpanded: false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: BlocBuilder<DiscoveryCardScreenManager, DiscoveryCardScreenState>(
+          builder: (context, state) => state.map(
+              populated: (v) => _createCard(v.document),
+              initial: (_) => Container()),
+          bloc: _discoveryCardScreenManager,
+        ),
+      );
+
+  Widget _createCard(Document document) {
+    final cardManagers = di.get<CardManagers>(param1: document);
+
+    return DiscoveryCardStatic(
+      document: document,
+      discoveryCardManager: cardManagers.discoveryCardManager,
+      imageManager: cardManagers.imageManager,
+    );
+  }
+}

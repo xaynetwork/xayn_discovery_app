@@ -103,9 +103,11 @@ class _ActiveSearchState extends State<ActiveSearch>
     final managers = managersOf(document);
     final card = GestureDetector(
       onTap: () {
-        final args = DiscoveryCardScreenArgs(
+        final args = DiscoveryCardStandaloneArgs(
           isPrimary: true,
           document: document,
+          discoveryCardManager: managers.discoveryCardManager,
+          imageManager: managers.imageManager,
         );
         _activeSearchManager.onCardDetailsPressed(args);
       },
