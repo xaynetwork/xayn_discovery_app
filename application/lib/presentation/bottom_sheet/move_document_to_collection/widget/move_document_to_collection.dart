@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
@@ -21,11 +22,13 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
     Key? key,
     required Document document,
     required OnMoveDocumentToCollectionError onError,
+    required DocumentProvider? provider,
     Collection? forceSelectCollection,
   }) : super(
           key: key,
           body: _MoveDocumentToCollection(
             document: document,
+            provider: provider,
             forceSelectCollection: forceSelectCollection,
             onError: onError,
           ),
@@ -34,6 +37,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
 
 class _MoveDocumentToCollection extends StatefulWidget {
   final Document document;
+  final DocumentProvider? provider;
   final Collection? forceSelectCollection;
   final OnMoveDocumentToCollectionError onError;
 
@@ -41,6 +45,7 @@ class _MoveDocumentToCollection extends StatefulWidget {
     Key? key,
     required this.document,
     required this.onError,
+    required this.provider,
     this.forceSelectCollection,
   }) : super(key: key);
 
@@ -152,6 +157,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
         context,
         builder: (_) => MoveDocumentToCollectionBottomSheet(
           document: widget.document,
+          provider: widget.provider,
           forceSelectCollection: newCollection,
           onError: widget.onError,
         ),
