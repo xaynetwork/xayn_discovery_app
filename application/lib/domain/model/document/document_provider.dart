@@ -1,16 +1,11 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class DocumentProvider extends Equatable {
-  final String? name;
-  final Uri? favicon;
+part 'document_provider.freezed.dart';
 
-  const DocumentProvider({
-    this.name,
-    this.favicon,
-  });
-
-  @override
-  List<Object?> get props => [name, favicon];
+@freezed
+class DocumentProvider with _$DocumentProvider {
+  factory DocumentProvider({
+    String? name,
+    Uri? favicon,
+  }) = _DocumentProvider;
 }
