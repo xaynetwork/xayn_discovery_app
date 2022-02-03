@@ -47,7 +47,6 @@ final fakeBookmark = Bookmark(
   title: 'Bookmark1 title',
   image: Uint8List.fromList([1, 2, 3]),
   provider: DocumentProvider(
-      name: 'Provider name',
-      favicon: Uri.parse('https://www.foo.com/favicon.ico')),
+      name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico'),
   createdAt: DateTime.now().toUtc().toString(),
 );

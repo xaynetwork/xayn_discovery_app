@@ -26,7 +26,8 @@ class ProcessedDocument {
     if (link != null) favicon = Uri.parse(link);
 
     return DocumentProvider(
-        name: processHtmlResult.metadata?.siteName ?? resource.url.host,
-        favicon: favicon);
+      name: processHtmlResult.metadata?.siteName ?? resource.url.host,
+      favicon: favicon.toString(),
+    );
   }
 }

@@ -18,7 +18,7 @@ void main() async {
     final id = UniqueId();
     final collectionId = UniqueId();
     final image = Uint8List.fromList([1, 2, 3]);
-    final favicon = Uri.parse('https://www.foo.com/favicon.ico');
+    const favicon = 'https://www.foo.com/favicon.ico';
     const createdAt = '2021-12-05';
 
     group('fromMap method:', () {

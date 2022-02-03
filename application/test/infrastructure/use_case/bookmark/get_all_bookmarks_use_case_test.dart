@@ -20,8 +20,9 @@ void main() {
   final Collection collection =
       Collection(id: collectionId, name: 'Test collection', index: 3);
   final provider = DocumentProvider(
-      name: 'Provider name',
-      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
+    name: 'Provider name',
+    favicon: 'https://www.foo.com/favicon.ico',
+  );
 
   final bookmark1 = Bookmark(
     id: UniqueId(),

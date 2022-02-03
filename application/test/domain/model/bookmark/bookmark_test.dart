@@ -11,8 +11,7 @@ void main() {
     final collectionId = UniqueId();
     final image = Uint8List.fromList([1, 2, 3]);
     final provider = DocumentProvider(
-        name: 'Provider name',
-        favicon: Uri.parse('https://www.foo.com/favicon.ico'));
+        name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
     const bookmarkTitle = 'Bookmark title';
     const createdAt = '2021-12-05';
     test(

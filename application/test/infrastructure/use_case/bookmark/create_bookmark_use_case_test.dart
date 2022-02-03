@@ -21,8 +21,9 @@ void main() {
   const title = 'Bookmark title';
   final image = Uint8List.fromList([1, 2, 3]);
   final provider = DocumentProvider(
-      name: 'Provider name',
-      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
+    name: 'Provider name',
+    favicon: 'https://www.foo.com/favicon.ico',
+  );
 
   final createdBookmark = Bookmark(
     id: bookmarkId,

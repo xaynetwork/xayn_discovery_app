@@ -6,6 +6,6 @@ part 'document_provider.freezed.dart';
 class DocumentProvider with _$DocumentProvider {
   factory DocumentProvider({
     String? name,
-    Uri? favicon,
+    String? favicon,
   }) = _DocumentProvider;
 }
