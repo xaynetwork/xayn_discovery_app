@@ -37,6 +37,8 @@ class _DiscoveryFeedCardState
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
     final timeToRead = state.processedDocument?.timeToRead ?? '';
+    final processedDocument = state.processedDocument;
+    final provider = processedDocument?.getProvider(webResource);
 
     final elements = DiscoveryCardElements(
       manager: discoveryCardManager,
@@ -44,7 +46,7 @@ class _DiscoveryFeedCardState
       title: webResource.title,
       timeToRead: timeToRead,
       url: webResource.url,
-      provider: webResource.provider,
+      provider: provider,
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
         document: widget.document,

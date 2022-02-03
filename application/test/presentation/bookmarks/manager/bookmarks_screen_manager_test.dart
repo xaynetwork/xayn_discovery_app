@@ -6,6 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
@@ -40,6 +41,9 @@ void main() {
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
+  final provider = DocumentProvider(
+      name: 'Provider name',
+      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
 
   final bookmarks = [
     Bookmark(
@@ -47,8 +51,7 @@ void main() {
       collectionId: collectionId,
       title: 'Bookmark1 title',
       image: Uint8List.fromList([1, 2, 3]),
-      providerName: 'Provider name',
-      providerThumbnail: Uint8List.fromList([4, 5, 6]),
+      provider: provider,
       createdAt: DateTime.now().toUtc().toString(),
     )
   ];

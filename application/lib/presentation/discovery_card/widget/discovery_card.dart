@@ -181,6 +181,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     // normalize the animation value to [0.0, 1.0]
     final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
         (1.0 - _kMinImageFractionSize);
+    final processedDocument = state.processedDocument;
+    final provider = processedDocument?.getProvider(webResource);
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
@@ -196,7 +198,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           title: webResource.title,
           timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
-          provider: webResource.provider,
+          provider: provider,
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
             document: widget.document,

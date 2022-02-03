@@ -1,8 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
@@ -42,8 +41,7 @@ class CardWidget extends StatelessWidget {
       bookmark: (data) => _buildBookmarkCardContent(
         title: data.title,
         created: data.created,
-        providerName: data.providerName,
-        faviconData: data.faviconImage,
+        provider: data.provider,
       ),
     );
 
@@ -182,13 +180,12 @@ class CardWidget extends StatelessWidget {
   Widget _buildBookmarkCardContent({
     required String title,
     required DateTime created,
-    String? providerName,
-    Uint8List? faviconData,
+    DocumentProvider? provider,
   }) {
-    final favicon = faviconData == null
+    final favicon = provider?.favicon == null
         ? Icon(Icons.web, color: R.colors.icon)
-        : Image.memory(
-            faviconData,
+        : Image.network(
+            provider!.favicon!.toString(),
             width: R.dimen.unit2,
             height: R.dimen.unit2,
           );
@@ -207,7 +204,7 @@ class CardWidget extends StatelessWidget {
         ),
         Flexible(
           child: Text(
-            providerName ?? '',
+            provider?.name ?? '',
             style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
             overflow: TextOverflow.ellipsis,
           ),

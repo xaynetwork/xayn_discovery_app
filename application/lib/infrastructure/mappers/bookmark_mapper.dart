@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
@@ -27,7 +28,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
 
     /// The [providerThumbnail] field is nullable
     final providerThumbnail =
-        map[BookmarkMapperFields.providerThumbnail] as Uint8List?;
+        map[BookmarkMapperFields.providerThumbnail] as String?;
 
     final createdAt =
         map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
@@ -37,8 +38,10 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
       collectionId: UniqueId.fromTrustedString(collectionId),
       title: title,
       image: image,
-      providerName: providerName,
-      providerThumbnail: providerThumbnail,
+      provider: DocumentProvider(
+          name: providerName,
+          favicon:
+              providerThumbnail != null ? Uri.parse(providerThumbnail) : null),
       createdAt: createdAt,
     );
   }
@@ -49,8 +52,9 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         BookmarkMapperFields.collectionId: entity.collectionId.value,
         BookmarkMapperFields.title: entity.title,
         BookmarkMapperFields.image: entity.image,
-        BookmarkMapperFields.providerName: entity.providerName,
-        BookmarkMapperFields.providerThumbnail: entity.providerThumbnail,
+        BookmarkMapperFields.providerName: entity.provider?.name,
+        BookmarkMapperFields.providerThumbnail:
+            entity.provider?.favicon.toString(),
         BookmarkMapperFields.createdAt: entity.createdAt,
       };
 

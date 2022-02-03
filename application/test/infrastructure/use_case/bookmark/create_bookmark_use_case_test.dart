@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 
@@ -19,16 +20,16 @@ void main() {
   final collectionId = UniqueId();
   const title = 'Bookmark title';
   final image = Uint8List.fromList([1, 2, 3]);
-  const providerName = 'Provider name';
-  final providerThumbnail = Uint8List.fromList([4, 5, 6]);
+  final provider = DocumentProvider(
+      name: 'Provider name',
+      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
 
   final createdBookmark = Bookmark(
     id: bookmarkId,
     collectionId: collectionId,
     title: title,
     image: image,
-    providerName: providerName,
-    providerThumbnail: providerThumbnail,
+    provider: provider,
     createdAt: dateTime.toUtc().toString(),
   );
 
@@ -54,8 +55,7 @@ void main() {
           collectionId: collectionId,
           title: title,
           image: image,
-          providerName: providerName,
-          providerThumbnail: providerThumbnail,
+          provider: provider,
         )
       ],
       verify: (_) {

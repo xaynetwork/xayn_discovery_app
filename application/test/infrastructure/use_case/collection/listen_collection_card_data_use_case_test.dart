@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collection_card_data_use_case.dart';
@@ -21,6 +22,9 @@ void main() {
     index: 2,
     name: 'Collection Test',
   );
+  final provider = DocumentProvider(
+      name: 'Provider name',
+      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
 
   final bookmarks = [
     Bookmark(
@@ -28,8 +32,7 @@ void main() {
       collectionId: collectionId,
       title: 'Bookmark1 title',
       image: Uint8List.fromList([1, 2, 3]),
-      providerName: 'Provider name',
-      providerThumbnail: Uint8List.fromList([4, 5, 6]),
+      provider: provider,
       createdAt: DateTime.now().toUtc().toString(),
     )
   ];
