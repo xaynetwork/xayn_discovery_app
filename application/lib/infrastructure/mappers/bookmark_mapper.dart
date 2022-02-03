@@ -27,8 +27,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
     final providerName = map[BookmarkMapperFields.providerName];
 
     /// The [providerThumbnail] field is nullable
-    final providerThumbnail =
-        map[BookmarkMapperFields.providerThumbnail] as String?;
+    final favicon = map[BookmarkMapperFields.providerThumbnail] as Uri?;
 
     final createdAt =
         map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
@@ -38,10 +37,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
       collectionId: UniqueId.fromTrustedString(collectionId),
       title: title,
       image: image,
-      provider: DocumentProvider(
-          name: providerName,
-          favicon:
-              providerThumbnail != null ? Uri.parse(providerThumbnail) : null),
+      provider: DocumentProvider(name: providerName, favicon: favicon),
       createdAt: createdAt,
     );
   }
@@ -53,8 +49,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         BookmarkMapperFields.title: entity.title,
         BookmarkMapperFields.image: entity.image,
         BookmarkMapperFields.providerName: entity.provider?.name,
-        BookmarkMapperFields.providerThumbnail:
-            entity.provider?.favicon.toString(),
+        BookmarkMapperFields.providerThumbnail: entity.provider?.favicon,
         BookmarkMapperFields.createdAt: entity.createdAt,
       };
 
