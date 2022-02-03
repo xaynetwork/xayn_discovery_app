@@ -10,18 +10,28 @@ import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookma
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
-class BookmarksScreen extends StatelessWidget with NavBarConfigMixin {
+class BookmarksScreen extends StatefulWidget {
   final UniqueId collectionId;
 
-  BookmarksScreen({Key? key, required this.collectionId}) : super(key: key);
+  const BookmarksScreen({Key? key, required this.collectionId})
+      : super(key: key);
 
+  @override
+  State<BookmarksScreen> createState() => _BookmarksScreenState();
+}
+
+class _BookmarksScreenState extends State<BookmarksScreen>
+    with NavBarConfigMixin {
   late final _bookmarkManager =
-      di.get<BookmarksScreenManager>(param1: collectionId);
+      di.get<BookmarksScreenManager>(param1: widget.collectionId);
+  final VoidCallback _dispose =
+      CardManagers.registerCardManagerCacheInDi('bookmarks');
 
   @override
   Widget build(BuildContext context) {
@@ -99,5 +109,11 @@ class BookmarksScreen extends StatelessWidget with NavBarConfigMixin {
         bookmarkId: bookmarkId,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _dispose();
+    super.dispose();
   }
 }

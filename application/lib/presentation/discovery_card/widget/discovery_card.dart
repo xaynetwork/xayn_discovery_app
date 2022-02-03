@@ -62,25 +62,35 @@ abstract class DiscoveryCardNavActions {
 }
 
 @immutable
-class DiscoveryCardScreenArgs {
-  const DiscoveryCardScreenArgs({
+class DiscoveryCardStandaloneArgs {
+  const DiscoveryCardStandaloneArgs({
     required this.isPrimary,
     required this.document,
+    required this.discoveryCardManager,
+    required this.imageManager,
+    this.onDiscard,
   });
 
   final bool isPrimary;
   final Document document;
+
+  final DiscoveryCardManager discoveryCardManager;
+  final ImageManager imageManager;
+  final VoidCallback? onDiscard;
 }
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
-class DiscoveryCardScreen extends DiscoveryCard {
-  DiscoveryCardScreen({
+class DiscoveryCardStandalone extends DiscoveryCard {
+  DiscoveryCardStandalone({
     Key? key,
-    required DiscoveryCardScreenArgs args,
+    required DiscoveryCardStandaloneArgs args,
   }) : super(
           key: key,
           isPrimary: args.isPrimary,
           document: args.document,
+          discoveryCardManager: args.discoveryCardManager,
+          imageManager: args.imageManager,
+          onDiscard: args.onDiscard,
         );
 
   @override

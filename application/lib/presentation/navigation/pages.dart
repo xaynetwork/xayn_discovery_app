@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
-import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
+import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
@@ -25,8 +26,7 @@ class PageRegistry {
     settings,
     onboarding,
     feedSettings,
-    collections,
-    payment,
+    collections
   };
 
   // Make sure to add the page names in camel case
@@ -40,11 +40,21 @@ class PageRegistry {
     builder: (_, args) => const ActiveSearch(),
   );
 
-  static cardDetails(DiscoveryCardScreenArgs args) => xayn.PageData(
-        name: "cardDetails",
+  static cardDetailsStandalone(DiscoveryCardStandaloneArgs args) =>
+      xayn.PageData(
+        name: "cardDetailsStandalone",
         arguments: args,
-        builder: (_, DiscoveryCardScreenArgs? args) => DiscoveryCardScreen(
+        builder: (_, DiscoveryCardStandaloneArgs? args) =>
+            DiscoveryCardStandalone(
           args: args!,
+        ),
+      );
+
+  static cardDetails(UniqueId documentId) => xayn.PageData(
+        name: "cardDetails",
+        arguments: documentId,
+        builder: (_, UniqueId? args) => DiscoveryCardScreen(
+          documentId: args!,
         ),
       );
 
