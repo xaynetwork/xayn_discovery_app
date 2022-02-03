@@ -21,8 +21,7 @@ void main() {
       Collection(id: collectionIdToRemove, name: 'Collection name', index: 1);
   final collectionIdMoveBookmarksTo = UniqueId();
   final provider = DocumentProvider(
-      name: 'Provider name',
-      favicon: Uri.parse('https://www.foo.com/favicon.ico'));
+      name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
   final bookmark1 = Bookmark(
     id: UniqueId(),
     collectionId: collectionIdToRemove,
