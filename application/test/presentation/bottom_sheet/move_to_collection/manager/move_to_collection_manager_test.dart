@@ -16,7 +16,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 
 import '../../../test_utils/fakes.dart';
-import 'move_document_to_collection_manager_test.mocks.dart';
+import 'move_to_collection_manager_test.mocks.dart';
 
 @GenerateMocks([
   ListenCollectionsUseCase,
