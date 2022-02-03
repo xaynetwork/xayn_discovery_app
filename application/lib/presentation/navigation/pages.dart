@@ -37,7 +37,6 @@ class PageRegistry {
   );
   static final discovery = xayn.PageData(
     name: "discovery",
-    // isInitial: true,
     builder: (_, args) => const DiscoveryFeed(),
   );
   static final search = xayn.PageData(
