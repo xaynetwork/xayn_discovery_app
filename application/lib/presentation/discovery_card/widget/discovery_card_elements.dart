@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
@@ -24,20 +25,20 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.timeToRead,
     required this.url,
     required this.datePublished,
-    this.provider,
     required this.onLikePressed,
     required this.onDislikePressed,
     required this.onBookmarkPressed,
     required this.onBookmarkLongPressed,
     required this.isBookmarked,
     this.fractionSize = 1.0,
+    this.provider,
   }) : super(key: key);
   final DiscoveryCardManager manager;
   final Document document;
   final String title;
   final String timeToRead;
   final Uri url;
-  final WebResourceProvider? provider;
+  final DocumentProvider? provider;
   final DateTime datePublished;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
@@ -80,7 +81,7 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     final faviconRow = FaviconBar.fromProvider(
-      provider: provider!,
+      provider: provider,
       datePublished: datePublished,
     );
 
@@ -102,7 +103,7 @@ class DiscoveryCardElements extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (provider != null) faviconRow,
+          if (provider?.favicon != null) faviconRow,
           Expanded(child: titleAndTimeToRead),
           ClipRRect(
             child: SizedBox(
