@@ -28,6 +28,12 @@ class MoveDocumentToCollectionManager
   late List<Collection> _collections;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
       _collectionsHandler;
+
+  late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn, Bookmark>
+      _createBookmarkHandler;
+  late final UseCaseSink<UniqueId, Bookmark> _removeBookmarkHandler;
+  late final UseCaseSink<MoveBookmarkUseCaseIn, Bookmark> _moveBookmarkHandler;
+
   Collection? _selectedCollection;
   bool _isBookmarked = false;
 
@@ -66,6 +72,9 @@ class MoveDocumentToCollectionManager
 
   void _init() async {
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
+    _createBookmarkHandler = pipe(_createBookmarkUseCase);
+    _moveBookmarkHandler = pipe(_moveBookmarkUseCase);
+    _removeBookmarkHandler = pipe(_removeBookmarkUseCase);
   }
 
   Future<void> updateInitialSelectedCollection({
@@ -94,53 +103,63 @@ class MoveDocumentToCollectionManager
   void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  void onApplyPressed({required Document document}) async {
+  void onApplyPressed({required Document document}) {
     final hasSelected = state.selectedCollection != null;
     final isBookmarked = state.isBookmarked;
     if (!isBookmarked && hasSelected) {
-      _createBookmarkInSelectedCollection(document: document);
+      final param = CreateBookmarkFromDocumentUseCaseIn(
+        document: document,
+        collectionId: state.selectedCollection!.id,
+      );
+      _createBookmarkHandler(param);
     }
     if (isBookmarked && !hasSelected) {
-      _removeBookmarkUseCase.call(document.documentUniqueId);
+      _removeBookmarkHandler(document.documentUniqueId);
     }
     if (isBookmarked && hasSelected) {
-      _moveBookmarkToSelectedCollection(bookmarkId: document.documentUniqueId);
+      final param = MoveBookmarkUseCaseIn(
+        bookmarkId: document.documentUniqueId,
+        collectionId: state.selectedCollection!.id,
+      );
+      _moveBookmarkHandler(param);
     }
-  }
-
-  void _moveBookmarkToSelectedCollection({required UniqueId bookmarkId}) {
-    final param = MoveBookmarkUseCaseIn(
-      bookmarkId: bookmarkId,
-      collectionId: state.selectedCollection!.id,
-    );
-    _moveBookmarkUseCase.call(param);
-  }
-
-  void _createBookmarkInSelectedCollection({required Document document}) {
-    final param = CreateBookmarkFromDocumentUseCaseIn(
-      document: document,
-      collectionId: state.selectedCollection!.id,
-    );
-    _createBookmarkUseCase.call(param);
   }
 
   @override
-  Future<MoveDocumentToCollectionState?> computeState() async =>
-      fold(_collectionsHandler).foldAll((usecaseOut, errorReport) {
+  Future<MoveDocumentToCollectionState?> computeState() async => fold4(
+        _collectionsHandler,
+        _createBookmarkHandler,
+        _moveBookmarkHandler,
+        _removeBookmarkHandler,
+      ).foldAll((
+        collectionHandlerOut,
+        createBookmarkOut,
+        moveBookmarkOut,
+        removeBookmarkOut,
+        errorReport,
+      ) {
         if (errorReport.isNotEmpty) {
-          final error = errorReport.of(_collectionsHandler)!.error;
-          logger.e(error);
-          return state.copyWith(errorMsg: error.toString());
+          final report = errorReport.of(_collectionsHandler) ??
+              errorReport.of(_createBookmarkHandler) ??
+              errorReport.of(_moveBookmarkHandler) ??
+              errorReport.of(_removeBookmarkHandler);
+          logger.e(report!.error);
+          return state.copyWith(errorObj: report.error);
         }
 
-        if (usecaseOut != null) {
-          _collections = usecaseOut.collections;
+        if (collectionHandlerOut != null) {
+          _collections = collectionHandlerOut.collections;
         }
+
+        final _shouldClose = createBookmarkOut != null ||
+            moveBookmarkOut != null ||
+            removeBookmarkOut != null;
 
         final newState = MoveDocumentToCollectionState.populated(
           collections: _collections,
           selectedCollection: _selectedCollection,
           isBookmarked: _isBookmarked,
+          shouldClose: _shouldClose,
         );
 
         return newState;

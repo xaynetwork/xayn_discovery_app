@@ -54,6 +54,7 @@ class _ActiveSearchState extends State<ActiveSearch>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _buildListView(),
     );
   }
