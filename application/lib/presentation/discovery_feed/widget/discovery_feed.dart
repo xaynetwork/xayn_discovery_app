@@ -80,22 +80,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           .elementAt(_discoveryFeedManager.state.cardIndex);
       final managers = managersOf(document);
 
-      void onBookmarkPressed() async {
-        final isBookmarked = await managers.discoveryCardManager
-            .toggleBookmarkDocument(document);
-
-        if (isBookmarked) {
-          showTooltip(
-            TooltipKeys.bookmarkedToDefault,
-            parameters: [context, document],
-          );
-        }
-      }
+      void onBookmarkPressed() =>
+          managers.discoveryCardManager.toggleBookmarkDocument(document);
 
       void onBookmarkLongPressed() => showAppBottomSheet(
             context,
             builder: (_) => MoveDocumentToCollectionBottomSheet(
               document: document,
+              onError: (tooltipKey) => showTooltip(tooltipKey),
             ),
           );
 
@@ -225,8 +217,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           if (state.results.isEmpty || cardIndex == -1) {
             return const Center();
           }
-
-          NavBarContainer.updateNavBar(context);
 
           NavBarContainer.updateNavBar(context);
 

@@ -55,6 +55,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       builder: (_, __) => _buildScreen(),
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppToolbar(
         appToolbarData: AppToolbarData.titleOnly(
           title: R.strings.personalAreaTitle,
