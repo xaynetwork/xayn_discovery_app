@@ -85,7 +85,10 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void toggleBookmarkDocument(Document document) => _toggleBookmarkHandler(
-        CreateBookmarkFromDocumentUseCaseIn(document: document),
+        CreateBookmarkFromDocumentUseCaseIn(
+          document: document,
+          provider: state.processedDocument?.getProvider(document.webResource),
+        ),
       );
 
   Future<void> _init() async {
