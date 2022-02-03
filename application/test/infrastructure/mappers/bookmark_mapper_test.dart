@@ -28,7 +28,7 @@ void main() async {
         2: bookmarkTitleFromMap,
         3: image,
         4: providerNameFromMap,
-        5: favicon.toString(),
+        5: favicon,
         6: createdAt,
       };
 
@@ -131,7 +131,7 @@ void main() async {
             2: bookmarkTitleToMap,
             3: image,
             4: providerNameToMap,
-            5: favicon.toString(),
+            5: favicon,
             6: createdAt,
           }),
         );
