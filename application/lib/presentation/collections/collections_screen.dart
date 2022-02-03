@@ -178,14 +178,13 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       {
         SwipeOptionCollectionCard.edit: () => showAppBottomSheet(
               context,
-              builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
+              builder: (_) => CreateOrRenameCollectionBottomSheet(
                 collectionId: collection.id,
               ),
             ),
         SwipeOptionCollectionCard.remove: () => showAppBottomSheet(
               context,
-              builder: (buildContext) =>
-                  DeleteCollectionConfirmationBottomSheet(
+              builder: (_) => DeleteCollectionConfirmationBottomSheet(
                 collectionId: collection.id,
               ),
             ),
