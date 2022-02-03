@@ -3,10 +3,12 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+
+import 'messages.dart';
 
 const maxDisplayableCollectionName = 20;
 
@@ -39,7 +41,7 @@ TooltipParams _getBookmarkedToDefault() {
     var onError = args[2];
     if (context is! BuildContext ||
         document is! Document ||
-        onError is! OnMoveDocumentToCollectionError) return;
+        onError is! OnToolTipError) return;
 
     showAppBottomSheet(
       context,

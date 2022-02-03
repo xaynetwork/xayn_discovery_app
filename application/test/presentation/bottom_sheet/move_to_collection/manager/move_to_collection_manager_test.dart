@@ -12,8 +12,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmar
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 
 import '../../../test_utils/fakes.dart';
 import 'move_document_to_collection_manager_test.mocks.dart';
@@ -36,8 +36,8 @@ void main() {
     late MockGetBookmarkUseCase getBookmarkUseCase;
     late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
 
-    late MoveDocumentToCollectionState populatedState;
-    late MoveDocumentToCollectionManager moveDocumentToCollectionManager;
+    late MoveToCollectionState populatedState;
+    late MoveToCollectionManager moveDocumentToCollectionManager;
 
     final collection1 =
         Collection(id: UniqueId(), name: 'Collection1 name', index: 0);
@@ -81,8 +81,8 @@ void main() {
           .thenAnswer((_) => Stream.value(fakeBookmark));
     }
 
-    Future<MoveDocumentToCollectionManager> createManager() async =>
-        await MoveDocumentToCollectionManager.create(
+    Future<MoveToCollectionManager> createManager() async =>
+        await MoveToCollectionManager.create(
           getAllCollectionsUseCase,
           listenCollectionsUseCase,
           moveBookmarkUseCase,
@@ -100,7 +100,7 @@ void main() {
       getBookmarkUseCase = MockGetBookmarkUseCase();
       getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
 
-      populatedState = MoveDocumentToCollectionState.populated(
+      populatedState = MoveToCollectionState.populated(
         collections: [collection1, collection2],
         selectedCollection: null,
         isBookmarked: false,
@@ -111,7 +111,7 @@ void main() {
       moveDocumentToCollectionManager = await createManager();
     });
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN MoveDocumentToCollectionManager is created THEN get values and emit MoveDocumentToCollectionStatePopulated ',
       build: () => moveDocumentToCollectionManager,
       expect: () => [
@@ -127,7 +127,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN update Initial Selected Collection method is called AND bookmark is found THEN update isBookmarked state',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
@@ -153,7 +153,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN update Initial Selected Collection method is called AND no bookmark found THEN do not update isBookmarked state',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
@@ -173,7 +173,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN update Initial Selected Collection method is called with forceSelectCollection AND no bookmark found THEN update collection state with false isBookmarked',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
@@ -202,7 +202,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN update Initial Selected Collection method is called with forceSelectCollection AND bookmark is found THEN update collection state with true isBookmarked',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
@@ -231,7 +231,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = false and selectedCollection != null THEN call CreateBookmarkFromDocumentUseCase ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
@@ -239,7 +239,7 @@ void main() {
         isBookmarked: false,
       ),
       act: (manager) {
-        manager.onApplyPressed(document: fakeDocument);
+        manager.onApplyToDocumentPressed(document: fakeDocument);
       },
       verify: (manager) {
         verifyInOrder([
@@ -254,7 +254,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = true and selectedCollection != null THEN call MoveBookmarkUseCase ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
@@ -262,7 +262,7 @@ void main() {
         isBookmarked: true,
       ),
       act: (manager) {
-        manager.onApplyPressed(document: fakeDocument);
+        manager.onApplyToDocumentPressed(document: fakeDocument);
       },
       verify: (manager) {
         verifyInOrder([
@@ -277,7 +277,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = true and selectedCollection = null THEN call RemoveBookmarkUseCase ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
@@ -285,7 +285,7 @@ void main() {
         isBookmarked: true,
       ),
       act: (manager) {
-        manager.onApplyPressed(document: fakeDocument);
+        manager.onApplyToDocumentPressed(document: fakeDocument);
       },
       verify: (manager) {
         verifyInOrder([
@@ -300,7 +300,7 @@ void main() {
       },
     );
 
-    blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
+    blocTest<MoveToCollectionManager, MoveToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = false and selectedCollection = null THEN do not expect calls ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
@@ -308,7 +308,7 @@ void main() {
         isBookmarked: false,
       ),
       act: (manager) {
-        manager.onApplyPressed(document: fakeDocument);
+        manager.onApplyToDocumentPressed(document: fakeDocument);
       },
       expect: () => [],
       verify: (manager) {
