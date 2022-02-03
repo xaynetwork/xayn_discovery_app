@@ -213,7 +213,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 : DocumentFeedback.negative,
           ),
           onBookmarkPressed: onBookmarkPressed,
-          onBookmarkLongPressed: onBookmarkLongPressed,
+          onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
@@ -265,13 +265,16 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-  void onBookmarkLongPressed() => showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          onError: (tooltipKey) => showTooltip(tooltipKey),
-        ),
-      );
+  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
+      () => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: widget.document,
+              provider: state.processedDocument
+                  ?.getProvider(widget.document.webResource),
+              onError: (tooltipKey) => showTooltip(tooltipKey),
+            ),
+          );
 
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
@@ -327,6 +330,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         parameters: [
           context,
           widget.document,
+          discoveryCardManager.state.processedDocument
+              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
@@ -380,7 +385,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         buildNavBarItemBookmark(
           isBookmarked: _discoveryCardManager.state.isBookmarked,
           onPressed: onBookmarkPressed,
-          onLongPressed: onBookmarkLongPressed,
+          onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
         ),
         buildNavBarItemShare(
           onPressed: () => _discoveryCardManager.shareUri(widget.document),
