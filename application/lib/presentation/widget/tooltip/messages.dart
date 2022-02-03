@@ -7,6 +7,7 @@ import 'package:xayn_design/xayn_design.dart'
         TooltipParams;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/collection_messages.dart';
 
 class TooltipKeys {
   static const activeSearchDisabled = TooltipKey('activeSearchDisabled');
@@ -14,7 +15,6 @@ class TooltipKeys {
       TooltipKey('feedSettingsScreenMaxSelectedCountries');
   static const feedSettingsScreenMinSelectedCountries =
       TooltipKey('feedSettingsScreenMinSelectedCountries');
-  static const bookmarkedToDefault = TooltipKey('bookmarkedToDefault');
 }
 
 abstract class XaynMessageProvider {
@@ -40,6 +40,8 @@ abstract class XaynMessageProvider {
           return activeSearchMessages.entries;
         case XaynMessageSet.bookmark:
           return bookmarkMessages.entries;
+        case XaynMessageSet.collection:
+          return collectionMessages.entries;
       }
     }).expand((it) => it));
   }
@@ -48,4 +50,5 @@ abstract class XaynMessageProvider {
 enum XaynMessageSet {
   activeSearch,
   bookmark,
+  collection,
 }

@@ -61,6 +61,24 @@ void main() {
       when(listenCollectionsUseCase.transform(any)).thenAnswer(
         (_) => const Stream.empty(),
       );
+
+      when(moveBookmarkUseCase.transform(any))
+          .thenAnswer((invocation) => invocation.positionalArguments.first);
+
+      when(removeBookmarkUseCase.transform(any))
+          .thenAnswer((invocation) => invocation.positionalArguments.first);
+
+      when(createBookmarkFromDocumentUseCase.transform(any))
+          .thenAnswer((invocation) => invocation.positionalArguments.first);
+
+      when(removeBookmarkUseCase.transaction(any))
+          .thenAnswer((_) => Stream.value(fakeBookmark));
+
+      when(moveBookmarkUseCase.transaction(any))
+          .thenAnswer((_) => Stream.value(fakeBookmark));
+
+      when(createBookmarkFromDocumentUseCase.transaction(any))
+          .thenAnswer((_) => Stream.value(fakeBookmark));
     }
 
     Future<MoveDocumentToCollectionManager> createManager() async =>
@@ -86,6 +104,7 @@ void main() {
         collections: [collection1, collection2],
         selectedCollection: null,
         isBookmarked: false,
+        shouldClose: false,
       );
 
       _mockManagerInitMethodCalls();
@@ -215,11 +234,6 @@ void main() {
     blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = false and selectedCollection != null THEN call CreateBookmarkFromDocumentUseCase ',
       build: () => moveDocumentToCollectionManager,
-      setUp: () {
-        when(createBookmarkFromDocumentUseCase.call(any)).thenAnswer(
-          (_) => Future.value([UseCaseResult.success(bookmark)]),
-        );
-      },
       seed: () => populatedState.copyWith(
         selectedCollection: collection2,
         isBookmarked: false,
@@ -229,7 +243,10 @@ void main() {
       },
       verify: (manager) {
         verifyInOrder([
-          createBookmarkFromDocumentUseCase.call(any),
+          createBookmarkFromDocumentUseCase.transform(any),
+          moveBookmarkUseCase.transform(any),
+          removeBookmarkUseCase.transform(any),
+          createBookmarkFromDocumentUseCase.transaction(any),
         ]);
         verifyNoMoreInteractions(removeBookmarkUseCase);
         verifyNoMoreInteractions(moveBookmarkUseCase);
@@ -240,11 +257,6 @@ void main() {
     blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = true and selectedCollection != null THEN call MoveBookmarkUseCase ',
       build: () => moveDocumentToCollectionManager,
-      setUp: () {
-        when(moveBookmarkUseCase.call(any)).thenAnswer(
-          (_) => Future.value([UseCaseResult.success(bookmark)]),
-        );
-      },
       seed: () => populatedState.copyWith(
         selectedCollection: collection2,
         isBookmarked: true,
@@ -254,7 +266,10 @@ void main() {
       },
       verify: (manager) {
         verifyInOrder([
-          moveBookmarkUseCase.call(any),
+          createBookmarkFromDocumentUseCase.transform(any),
+          moveBookmarkUseCase.transform(any),
+          removeBookmarkUseCase.transform(any),
+          moveBookmarkUseCase.transaction(any),
         ]);
         verifyNoMoreInteractions(moveBookmarkUseCase);
         verifyNoMoreInteractions(removeBookmarkUseCase);
@@ -265,11 +280,6 @@ void main() {
     blocTest<MoveDocumentToCollectionManager, MoveDocumentToCollectionState>(
       'WHEN onApplyPressed is called with isBookmarked = true and selectedCollection = null THEN call RemoveBookmarkUseCase ',
       build: () => moveDocumentToCollectionManager,
-      setUp: () {
-        when(removeBookmarkUseCase.call(any)).thenAnswer(
-          (_) => Future.value([UseCaseResult.success(bookmark)]),
-        );
-      },
       seed: () => populatedState.copyWith(
         selectedCollection: null,
         isBookmarked: true,
@@ -279,7 +289,10 @@ void main() {
       },
       verify: (manager) {
         verifyInOrder([
-          removeBookmarkUseCase.call(any),
+          createBookmarkFromDocumentUseCase.transform(any),
+          moveBookmarkUseCase.transform(any),
+          removeBookmarkUseCase.transform(any),
+          removeBookmarkUseCase.transaction(any),
         ]);
         verifyNoMoreInteractions(moveBookmarkUseCase);
         verifyNoMoreInteractions(removeBookmarkUseCase);
@@ -299,6 +312,11 @@ void main() {
       },
       expect: () => [],
       verify: (manager) {
+        verifyInOrder([
+          createBookmarkFromDocumentUseCase.transform(any),
+          moveBookmarkUseCase.transform(any),
+          removeBookmarkUseCase.transform(any),
+        ]);
         verifyNoMoreInteractions(moveBookmarkUseCase);
         verifyNoMoreInteractions(removeBookmarkUseCase);
         verifyNoMoreInteractions(createBookmarkFromDocumentUseCase);

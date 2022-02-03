@@ -108,6 +108,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen>
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: R.colors.onboardingTutorialBackground,
       body: SafeArea(
         child: stack,
