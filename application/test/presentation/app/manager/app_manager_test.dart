@@ -27,6 +27,7 @@ void main() {
     createOrGetDefaultCollectionUseCase =
         MockCreateOrGetDefaultCollectionUseCase();
 
+    when(getAppThemeUseCase.appTheme).thenReturn(AppTheme.system);
     when(getAppThemeUseCase.singleOutput(none)).thenAnswer(
       (_) async => AppTheme.system,
     );
@@ -60,6 +61,7 @@ void main() {
     build: create,
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
+      verify(getAppThemeUseCase.appTheme).called(1);
       verify(incrementAppSessionUseCase.call(none)).called(1);
       verify(createOrGetDefaultCollectionUseCase
               .call(R.strings.defaultCollectionNameReadLater))
