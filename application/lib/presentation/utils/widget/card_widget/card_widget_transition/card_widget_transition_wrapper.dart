@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition.dart';
+
+import 'card_widget_transition_manager.dart';
 
 /// When long pressing the wrapped widget move/animate it to the center
 /// of the screen and add a transparent layer as background.
@@ -13,10 +16,10 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_wi
 /// Please note: since this widget uses the [onLongPressed] callback provided
 /// by the [GestureDetector], the child passed to this widget must not have its on
 /// [onLongPressed] enabled, otherwise the animation is not triggered.
-class CardWidgetTransition extends StatefulWidget {
+class CardWidgetTransitionWrapper extends StatefulWidget {
   final Widget child;
   final VoidCallback? onAnimationDone;
-  const CardWidgetTransition({
+  const CardWidgetTransitionWrapper({
     required this.child,
     this.onAnimationDone,
     Key? key,
@@ -25,11 +28,14 @@ class CardWidgetTransition extends StatefulWidget {
         );
 
   @override
-  _CardWidgetTransitionState createState() => _CardWidgetTransitionState();
+  _CardWidgetTransitionWrapperState createState() =>
+      _CardWidgetTransitionWrapperState();
 }
 
-class _CardWidgetTransitionState extends State<CardWidgetTransition> {
+class _CardWidgetTransitionWrapperState
+    extends State<CardWidgetTransitionWrapper> {
   late final GlobalKey itemKey;
+  late final CardWidgetTransitionManager manager;
   late Size childSize;
 
   @override
@@ -39,6 +45,7 @@ class _CardWidgetTransitionState extends State<CardWidgetTransition> {
       CardWidgetData.cardWidth,
       CardWidgetData.cardHeight,
     );
+    manager = di.get<CardWidgetTransitionManager>();
     super.initState();
   }
 
@@ -55,43 +62,16 @@ class _CardWidgetTransitionState extends State<CardWidgetTransition> {
 
   void _animate() {
     _calculateChildSize();
-    final hero = Hero(
-      tag: itemKey.toString(),
 
-      /// Needed for adding an opaque background to the card
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: R.styles.roundBorder1_5,
-          color: Colors.white,
-        ),
-        child: SizedBox(
-          height: childSize.height,
-          width: childSize.width,
-          child: widget.child,
-        ),
+    manager.onLongPressed(
+      CardWidgetTransitionArgs(
+        child: widget.child,
+        childSize: childSize,
+        heroTag: itemKey.toString(),
+        onTransparentLayerTap: () => manager.onClosePressed(),
       ),
     );
-    final scaffold = Scaffold(
-      backgroundColor: R.colors.bottomSheetBarrierColor,
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          hero,
-        ],
-      ),
-    );
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (_, __, ___) => scaffold,
-      ),
-    );
+
     if (widget.onAnimationDone != null) {
       widget.onAnimationDone!();
     }
