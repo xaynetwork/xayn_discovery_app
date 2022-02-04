@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_or_rename_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class CollectionOptionsBottomSheet extends BottomSheetBase {
   CollectionOptionsBottomSheet({
-    required UniqueId collectionId,
+    required Collection collection,
     VoidCallback? onSystemPop,
     Key? key,
   }) : super(
           key: key,
           body: _CollectionOptions(
-            collectionId: collectionId,
+            collection: collection,
             onSystemPop: onSystemPop,
           ),
         );
@@ -21,10 +21,10 @@ class CollectionOptionsBottomSheet extends BottomSheetBase {
 
 class _CollectionOptions extends StatefulWidget {
   final VoidCallback? onSystemPop;
-  final UniqueId collectionId;
+  final Collection collection;
   const _CollectionOptions({
     this.onSystemPop,
-    required this.collectionId,
+    required this.collection,
   });
   @override
   __CollectionOptionsState createState() => __CollectionOptionsState();
@@ -43,7 +43,7 @@ class __CollectionOptionsState extends State<_CollectionOptions>
             showAppBottomSheet(
               context,
               builder: (context) => CreateOrRenameCollectionBottomSheet(
-                collectionId: widget.collectionId,
+                collection: widget.collection,
               ),
             );
           }),
@@ -55,7 +55,7 @@ class __CollectionOptionsState extends State<_CollectionOptions>
           showAppBottomSheet(
             context,
             builder: (context) => DeleteCollectionConfirmationBottomSheet(
-              collectionId: widget.collectionId,
+              collectionId: widget.collection.id,
             ),
           );
         },
