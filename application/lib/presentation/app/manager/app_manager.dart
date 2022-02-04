@@ -20,7 +20,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._listenAppThemeUseCase,
     this._incrementAppSessionUseCase,
     this._createOrGetDefaultCollectionUseCase,
-  ) : super(AppState.empty()) {
+  ) : super(AppState(appTheme: _getAppThemeUseCase.appTheme)) {
     _init();
   }
 
