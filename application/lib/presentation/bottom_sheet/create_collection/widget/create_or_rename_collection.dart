@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_or_rename_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_or_rename_collection_state.dart';
@@ -21,13 +20,13 @@ typedef _OnApplyPressed = Function(Collection)?;
 class CreateOrRenameCollectionBottomSheet extends BottomSheetBase {
   CreateOrRenameCollectionBottomSheet({
     Key? key,
-    UniqueId? collectionId,
+    Collection? collection,
     _OnApplyPressed onApplyPressed,
   }) : super(
           key: key,
           body: _CreateOrRenameCollection(
             onApplyPressed: onApplyPressed,
-            collectionId: collectionId,
+            collection: collection,
           ),
         );
 }
@@ -35,12 +34,12 @@ class CreateOrRenameCollectionBottomSheet extends BottomSheetBase {
 class _CreateOrRenameCollection extends StatefulWidget {
   const _CreateOrRenameCollection({
     Key? key,
-    this.collectionId,
+    this.collection,
     this.onApplyPressed,
   }) : super(key: key);
 
   final _OnApplyPressed onApplyPressed;
-  final UniqueId? collectionId;
+  final Collection? collection;
 
   @override
   _CreateOrRenameCollectionState createState() =>
@@ -51,6 +50,26 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
     with BottomSheetBodyMixin {
   late final CreateOrRenameCollectionManager _createOrRenameCollectionManager =
       di.get();
+  late final TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    _textEditingController = TextEditingController();
+    _maybeSetInitialCollectionName();
+    super.initState();
+  }
+
+  /// If widget.collection is not null it means that an existing
+  /// collection is being renamed. In this case:
+  /// 1) Update the collection name in the state through the manager
+  /// 2) Show in the input field the name of the collection being renamed
+  void _maybeSetInitialCollectionName() {
+    if (widget.collection != null) {
+      final collectionName = widget.collection!.name;
+      _createOrRenameCollectionManager.updateCollectionName(collectionName);
+      _textEditingController.text = collectionName;
+    }
+  }
 
   @override
   Widget build(BuildContext context) => BlocConsumer<
@@ -60,6 +79,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
         listener: (context, state) => _closeSheet(state.newCollection!),
         builder: (context, state) {
           final textField = AppTextField(
+            controller: _textEditingController,
             hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
             onChanged: _createOrRenameCollectionManager.updateCollectionName,
             errorText: state.errorMessage,
@@ -68,7 +88,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
           final header = Padding(
             padding: EdgeInsets.symmetric(vertical: R.dimen.unit),
             child: BottomSheetHeader(
-              headerText: widget.collectionId == null
+              headerText: widget.collection == null
                   ? R.strings.bottomSheetCreateCollectionHeader
                   : R.strings.bottomSheetRenameCollectionHeader,
             ),
@@ -78,7 +98,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
             onCancelPressed: () => closeBottomSheet(context),
             setup: BottomSheetFooterSetup.withOneRaisedButton(
               buttonData: BottomSheetFooterButton(
-                text: widget.collectionId == null
+                text: widget.collection == null
                     ? R.strings.bottomSheetCreate
                     : R.strings.bottomSheetRename,
                 onPressed: _onApplyPressed,
@@ -100,10 +120,10 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
       );
 
   void _onApplyPressed() {
-    if (widget.collectionId == null) {
+    if (widget.collection == null) {
       _createOrRenameCollectionManager.createCollection();
     } else {
-      _createOrRenameCollectionManager.renameCollection(widget.collectionId!);
+      _createOrRenameCollectionManager.renameCollection(widget.collection!.id);
     }
   }
 
