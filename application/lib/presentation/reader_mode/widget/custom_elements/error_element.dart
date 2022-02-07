@@ -8,6 +8,8 @@ import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elemen
 const String _kUnableToLoad = 'Unable to load this website';
 
 /// Temporary Widget, proper website error screens are up for design.
+/// For now, we use this Widget as a way to inform of any errors while testing
+/// various site providers.
 class ErrorElement extends CustomElement {
   const ErrorElement({
     Key? key,
