@@ -37,15 +37,26 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   Widget build(BuildContext context) {
     return BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
       builder: (ctx, state) => Scaffold(
-          appBar: AppToolbar(
-            appToolbarData: AppToolbarData.titleOnly(
-                title:
-                    state.collectionName ?? R.strings.personalAreaCollections),
-          ),
-          body: _buildScreen(state)),
+        appBar: AppToolbar(
+          appToolbarData: AppToolbarData.titleOnly(
+              title: state.collectionName ?? R.strings.personalAreaCollections),
+        ),
+        body:
+            state.bookmarks.isEmpty ? _buildEmptyScreen() : _buildScreen(state),
+      ),
       bloc: _bookmarkManager,
     );
   }
+
+  Widget _buildEmptyScreen() => Padding(
+        child: Center(
+          child: Text(
+            R.strings.bookmarkScreenNoArticles,
+            style: R.styles.appScreenHeadline,
+          ),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+      );
 
   Widget _buildScreen(BookmarksScreenState state) {
     final list = ListView.builder(
@@ -53,17 +64,10 @@ class _BookmarksScreenState extends State<BookmarksScreen>
           _createBookmarkCard(context, state.bookmarks[i]),
       itemCount: state.bookmarks.length,
     );
-    final sidePadding = R.dimen.unit3;
-    final withPadding = Padding(
+    return Padding(
       child: list,
-      padding: EdgeInsets.fromLTRB(
-        sidePadding,
-        0,
-        sidePadding,
-        0,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
     );
-    return withPadding;
   }
 
   @override
