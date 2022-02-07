@@ -29,6 +29,7 @@ void main() {
       version: '1.2.3',
       build: '321',
     ),
+    isPaymentEnabled: false,
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 

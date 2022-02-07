@@ -37,6 +37,8 @@ class _DiscoveryFeedCardState
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
     final timeToRead = state.processedDocument?.timeToRead ?? '';
+    final processedDocument = state.processedDocument;
+    final provider = processedDocument?.getProvider(webResource);
 
     final elements = DiscoveryCardElements(
       manager: discoveryCardManager,
@@ -44,7 +46,7 @@ class _DiscoveryFeedCardState
       title: webResource.title,
       timeToRead: timeToRead,
       url: webResource.url,
-      provider: webResource.provider,
+      provider: provider,
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
         document: widget.document,
@@ -59,7 +61,7 @@ class _DiscoveryFeedCardState
             : DocumentFeedback.negative,
       ),
       onBookmarkPressed: onBookmarkPressed,
-      onBookmarkLongPressed: onBookmarkLongPressed,
+      onBookmarkLongPressed: onBookmarkLongPressed(state),
       isBookmarked: state.isBookmarked,
     );
 
@@ -78,13 +80,16 @@ class _DiscoveryFeedCardState
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-  void onBookmarkLongPressed() => showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          onError: (tooltipKey) => showTooltip(tooltipKey),
-        ),
-      );
+  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
+      () => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: widget.document,
+              provider: state.processedDocument
+                  ?.getProvider(widget.document.webResource),
+              onError: (tooltipKey) => showTooltip(tooltipKey),
+            ),
+          );
 
   @override
   void discoveryCardStateListener() => showTooltip(
@@ -92,6 +97,8 @@ class _DiscoveryFeedCardState
         parameters: [
           context,
           widget.document,
+          discoveryCardManager.state.processedDocument
+              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
