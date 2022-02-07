@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_or_rename_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/manager/create_or_rename_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 typedef _OnApplyPressed = Function(Collection)?;
 
 /// Used for creating a new collection or renaming an existing one
-/// When [collectionId] is:
+/// When [collection] is:
 /// 1) [null]: a new collection is being created
 /// 2) [not null]: an existing collection is being renamed
 class CreateOrRenameCollectionBottomSheet extends BottomSheetBase {

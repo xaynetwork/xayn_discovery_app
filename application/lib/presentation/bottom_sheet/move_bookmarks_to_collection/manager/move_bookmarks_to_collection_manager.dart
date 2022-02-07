@@ -18,49 +18,36 @@ class MoveBookmarksToCollectionManager
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final MoveBookmarksUseCase _moveBookmarksUseCase;
   final RemoveCollectionUseCase _removeCollectionUseCase;
+  final GetAllCollectionsUseCase _getAllCollectionsUseCase;
 
-  late List<Collection> _collections;
+  List<Collection> _collections = [];
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
       _collectionsHandler;
   Collection? _selectedCollection;
 
-  MoveBookmarksToCollectionManager._(
+  MoveBookmarksToCollectionManager(
     this._listenCollectionsUseCase,
     this._moveBookmarksUseCase,
     this._removeCollectionUseCase,
-    this._collections,
-    this._selectedCollection,
+    this._getAllCollectionsUseCase,
   ) : super(MoveBookmarksToCollectionState.initial()) {
     _init();
   }
 
-  @factoryMethod
-  static Future<MoveBookmarksToCollectionManager> create(
-    GetAllCollectionsUseCase getAllCollectionsUseCase,
-    ListenCollectionsUseCase listenCollectionsUseCase,
-    RemoveCollectionUseCase removeCollectionUseCase,
-    MoveBookmarksUseCase moveBookmarksUseCase,
-  ) async {
-    final collections =
-        (await getAllCollectionsUseCase.singleOutput(none)).collections;
-    final selectedCollection = collections.first;
-
-    return MoveBookmarksToCollectionManager._(
-      listenCollectionsUseCase,
-      moveBookmarksUseCase,
-      removeCollectionUseCase,
-      collections,
-      selectedCollection,
-    );
-  }
-
-  void _init() async {
+  void _init() {
     _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
   }
 
-  void removeCollectionFromList(UniqueId collectionId) => scheduleComputeState(
-        () => _collections.removeWhere((element) => element.id == collectionId),
-      );
+  void enteringScreen({
+    required UniqueId collectionIdToRemove,
+    Collection? selectedCollection,
+  }) async {
+    _collections =
+        (await _getAllCollectionsUseCase.singleOutput(none)).collections;
+    final selectedCollection = _collections.first;
+    _collections.removeWhere((element) => element.id == collectionIdToRemove);
+    updateSelectedCollection(selectedCollection);
+  }
 
   void updateSelectedCollection(Collection? collection) {
     if (collection != null) {

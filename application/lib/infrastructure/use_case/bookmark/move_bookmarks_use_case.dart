@@ -18,8 +18,8 @@ class MoveBookmarksUseCase
   Stream<MoveBookmarksUseCaseOut> transaction(
     MoveBookmarksUseCaseIn param,
   ) async* {
-    List<Bookmark> updatedBookmarks = [];
-    for (var bookmarkId in param.bookmarkIds) {
+    final List<Bookmark> updatedBookmarks = [];
+    for (final bookmarkId in param.bookmarkIds) {
       final updatedBookmark = await _moveBookmarkUseCase.singleOutput(
         MoveBookmarkUseCaseIn(
           bookmarkId: bookmarkId,
@@ -42,7 +42,7 @@ class MoveBookmarksUseCaseIn extends Equatable {
   });
 
   @override
-  List<Object?> get props => [bookmarkIds, collectionId];
+  List<Object> get props => [bookmarkIds, collectionId];
 }
 
 class MoveBookmarksUseCaseOut extends Equatable {
@@ -53,5 +53,5 @@ class MoveBookmarksUseCaseOut extends Equatable {
   });
 
   @override
-  List<Object?> get props => [updatedBookmarks];
+  List<Object> get props => [updatedBookmarks];
 }

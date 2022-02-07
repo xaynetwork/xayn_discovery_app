@@ -4,7 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_or_rename_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_manager.dart';
@@ -49,45 +49,38 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     with BottomSheetBodyMixin {
-  MoveBookmarksToCollectionManager? _moveBookmarksToCollectionManager;
+  final MoveBookmarksToCollectionManager _moveBookmarksToCollectionManager =
+      di.get();
 
   @override
   void initState() {
-    di.getAsync<MoveBookmarksToCollectionManager>().then(
-      (it) {
-        it.removeCollectionFromList(widget.collectionIdToRemove);
-        it.updateSelectedCollection(widget.forceSelectCollection);
-
-        setState(
-          () => _moveBookmarksToCollectionManager = it,
-        );
-      },
+    _moveBookmarksToCollectionManager.enteringScreen(
+      collectionIdToRemove: widget.collectionIdToRemove,
+      selectedCollection: widget.forceSelectCollection,
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    _moveBookmarksToCollectionManager?.close();
+    _moveBookmarksToCollectionManager.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final body = _moveBookmarksToCollectionManager == null
-        ? const SizedBox.shrink()
-        : BlocBuilder<MoveBookmarksToCollectionManager,
-            MoveBookmarksToCollectionState>(
-            bloc: _moveBookmarksToCollectionManager,
-            builder: (_, state) => state.collections.isNotEmpty
-                ? CollectionsListBottomSheet(
-                    collections: state.collections,
-                    onSelectCollection: _moveBookmarksToCollectionManager!
-                        .updateSelectedCollection,
-                    initialSelectedCollection: state.selectedCollection,
-                  )
-                : const SizedBox.shrink(),
-          );
+    final body = BlocBuilder<MoveBookmarksToCollectionManager,
+        MoveBookmarksToCollectionState>(
+      bloc: _moveBookmarksToCollectionManager,
+      builder: (_, state) => state.collections.isNotEmpty
+          ? CollectionsListBottomSheet(
+              collections: state.collections,
+              onSelectCollection:
+                  _moveBookmarksToCollectionManager.updateSelectedCollection,
+              initialSelectedCollection: state.selectedCollection,
+            )
+          : const SizedBox.shrink(),
+    );
 
     final header = BottomSheetHeader(
       headerText: R.strings.bottomSheetSaveTo,
@@ -143,7 +136,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       );
 
   _onApplyPressed() async {
-    await _moveBookmarksToCollectionManager!.onApplyPressed(
+    await _moveBookmarksToCollectionManager.onApplyPressed(
       bookmarksIds: widget.bookmarksIds,
       collectionIdToRemove: widget.collectionIdToRemove,
     );
