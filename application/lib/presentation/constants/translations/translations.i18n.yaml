@@ -69,4 +69,13 @@ readerModeBylinePrefix: by
 errorMsgCollectionDoesntExist: The collection doesn't exist
 errorMsgBookmarkDoesntExist: The bookmark doesn't exist
 errorMsgCollectionNameAlreadyUsed: This name is already used
-errorMsgCollectionNameIsInvalid: The name shouldn't exceed %s characters
+errorMsgCollectionNameIsInvalid: The name can't exceed %s characters
+bottomSheetRename: Rename
+bottomSheetDelete: Delete
+bottomSheetDeleteAll: Delete All
+bottomSheetMoveBookmarks: Move Bookmarks
+bottomSheetDeleteCollectionHeader: Are you sure ?
+bottomSheetDeleteCollectionWithBookmarksBody: If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?
+bottomSheetRenameCollectionHeader: Rename collection
+settingsXaynPremium: Xayn Premium
+settingsSectionSubscription: Subscription

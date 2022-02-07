@@ -20,6 +20,8 @@ abstract class SettingsNavActions {
   void onPaymentNavPressed();
 
   void onBackNavPressed();
+
+  void onSubscribePressed();
 }
 
 @lazySingleton
@@ -105,4 +107,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   @override
   void onPaymentNavPressed() => _settingsNavActions.onPaymentNavPressed();
+
+  @override
+  void onSubscribePressed() => _settingsNavActions.onSubscribePressed();
 }
