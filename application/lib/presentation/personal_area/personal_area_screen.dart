@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/subscription_trial_banner.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
@@ -50,9 +51,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocBuilder<PersonalAreaManager, None>(
+    final bloc = BlocBuilder<PersonalAreaManager, PersonalAreaState>(
       bloc: _manager,
-      builder: (_, __) => _buildScreen(),
+      builder: (_, state) => _buildScreen(state.trialEndDate),
     );
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -65,10 +66,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     );
   }
 
-  Widget _buildScreen() {
+  Widget _buildScreen(DateTime? trialEndDate) {
     final column = Column(
       mainAxisSize: MainAxisSize.min,
-      children: _buildItems(),
+      children: _buildItems(trialEndDate),
     );
     final bottomPadding = R.dimen.navBarHeight + R.dimen.unit2;
     final sidePadding = R.dimen.unit3;
@@ -84,7 +85,8 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     return SingleChildScrollView(child: withPadding);
   }
 
-  List<Widget> _buildItems() => [
+  List<Widget> _buildItems(DateTime? trialEndDate) => [
+        if (trialEndDate != null) _buildTrialBanner(trialEndDate),
         _buildCollection(),
         _buildHomeFeed(),
         _buildSettings(),
@@ -94,6 +96,11 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
                 child: e,
               ))
           .toList();
+
+  Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
+        trialEndDate: trialEndDate,
+        onPressed: () {},
+      );
 
   CardWidget _buildCollection() => CardWidget(
         key: Keys.personalAreaCardCollections,

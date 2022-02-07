@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
@@ -19,7 +19,7 @@ import '../test_utils/utils.dart';
 import '../test_utils/widget_test_utils.dart';
 
 void main() {
-  late StreamController<None> streamController;
+  late StreamController<PersonalAreaState> streamController;
   late MockPersonalAreaManager manager;
   late final tooltipController = ApplicationTooltipController();
 
@@ -27,8 +27,8 @@ void main() {
     await setupWidgetTest();
     manager = MockPersonalAreaManager();
     di.registerSingleton<PersonalAreaManager>(manager);
-    when(manager.state).thenReturn(none);
-    streamController = StreamController<None>();
+    when(manager.state).thenReturn(PersonalAreaState.initial());
+    streamController = StreamController<PersonalAreaState>();
     when(manager.stream).thenAnswer((_) => streamController.stream);
   });
 
