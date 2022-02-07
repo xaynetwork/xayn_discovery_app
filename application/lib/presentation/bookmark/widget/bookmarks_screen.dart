@@ -32,19 +32,34 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
   final VoidCallback _dispose =
       CardManagers.registerCardManagerCacheInDi('bookmarks');
+  GlobalKey? _animatedWidgetKey;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
-      builder: (ctx, state) => Scaffold(
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-              title: state.collectionName ?? R.strings.personalAreaCollections),
+    return Stack(
+      children: [
+        BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
+          builder: (ctx, state) => Scaffold(
+              appBar: AppToolbar(
+                appToolbarData: AppToolbarData.titleOnly(
+                    title: state.collectionName ??
+                        R.strings.personalAreaCollections),
+              ),
+              body: state.bookmarks.isEmpty
+                  ? _buildEmptyScreen()
+                  : _buildScreen(state)),
+          bloc: _bookmarkManager,
         ),
-        body:
-            state.bookmarks.isEmpty ? _buildEmptyScreen() : _buildScreen(state),
-      ),
-      bloc: _bookmarkManager,
+        if (_animatedWidgetKey != null)
+          AnimatedCard(
+            childKey: _animatedWidgetKey!,
+            onTapOutside: () {
+              setState(() {
+                _animatedWidgetKey = null;
+              });
+            },
+          ),
+      ],
     );
   }
 
@@ -75,33 +90,41 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         onPressed: _bookmarkManager.onBackNavPressed,
       ));
 
-  Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) =>
-      Padding(
-        padding: EdgeInsets.only(bottom: R.dimen.unit2),
-        child: SwipeableBookmarkCard(
-          onMove: (UniqueId bookmarkId) {
-            _showMoveBookmarkBottomSheet(context, bookmarkId);
-          },
-          onDelete: (UniqueId bookmarkId) {
-            _bookmarkManager.removeBookmark(bookmarkId);
-          },
-          bookmarkId: bookmark.id,
-          child: CardWidget(
-            cardData: CardData.bookmark(
-              key: Key(bookmark.title),
-              title: bookmark.title,
-              onPressed: () => _bookmarkManager.onBookmarkPressed(
-                  bookmarkId: bookmark.id, isPrimary: false),
-              onLongPressed: () {},
-              backgroundImage: bookmark.image,
-              created: DateTime.parse(bookmark.createdAt),
-              provider: bookmark.provider,
-              // Screenwidth - 2 * side paddings
-              cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
-            ),
+  final _keys = <UniqueId, GlobalKey>{};
+
+  Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) {
+    final childGlobalKey = _keys.putIfAbsent(bookmark.id, () => GlobalKey());
+    return Padding(
+      padding: EdgeInsets.only(bottom: R.dimen.unit2),
+      child: SwipeableBookmarkCard(
+        onMove: (UniqueId bookmarkId) {
+          _showMoveBookmarkBottomSheet(context, bookmarkId);
+        },
+        onDelete: (UniqueId bookmarkId) {
+          _bookmarkManager.removeBookmark(bookmarkId);
+        },
+        bookmarkId: bookmark.id,
+        child: CardWidget(
+          cardData: CardData.bookmark(
+            key: childGlobalKey,
+            title: bookmark.title,
+            onPressed: () => _bookmarkManager.onBookmarkPressed(
+                bookmarkId: bookmark.id, isPrimary: false),
+            onLongPressed: () {
+              setState(() {
+                _animatedWidgetKey = childGlobalKey;
+              });
+            },
+            backgroundImage: bookmark.image,
+            created: DateTime.parse(bookmark.createdAt),
+            provider: bookmark.provider,
+            // Screenwidth - 2 * side paddings
+            cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
           ),
         ),
-      );
+      ),
+    );
+  }
 
   void _showMoveBookmarkBottomSheet(
     BuildContext context,
@@ -119,5 +142,101 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   void dispose() {
     _dispose();
     super.dispose();
+  }
+}
+
+class AnimatedCard extends StatefulWidget {
+  final GlobalKey childKey;
+  final VoidCallback onTapOutside;
+
+  const AnimatedCard({
+    Key? key,
+    required this.childKey,
+    required this.onTapOutside,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedCard> createState() => _AnimatedCardState();
+}
+
+class _AnimatedCardState extends State<AnimatedCard>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 300));
+  final _stackKey = GlobalKey();
+  Animation<double>? _animation;
+
+  Offset? _childPosition;
+
+  @override
+  void initState() {
+    _checkPositions();
+    super.initState();
+  }
+
+  void _checkPositions() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      final childRenderBox =
+          widget.childKey.currentContext?.findRenderObject() as RenderBox?;
+      final stackRenderBox =
+          _stackKey.currentContext?.findRenderObject() as RenderBox?;
+      if (childRenderBox == null || stackRenderBox == null) {
+        _checkPositions();
+        return;
+      }
+
+      _childPosition = childRenderBox.localToGlobal(Offset.zero);
+      final childHeight = childRenderBox.size.height;
+      final childWidth = childRenderBox.size.width;
+      final stackHeight = stackRenderBox.size.height;
+      setState(() {
+        _animation = Tween<double>(
+                begin: _childPosition!.dy,
+                end: stackHeight / 2 - childHeight / 2)
+            .animate(CurvedAnimation(
+          parent: _controller,
+          curve: Curves.easeIn,
+        ));
+        _controller.forward();
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = _animation;
+    final child = widget.childKey.currentWidget;
+
+    if (animation == null || child == null) {
+      return Stack(
+        key: _stackKey,
+        children: const [],
+      );
+    }
+
+    return GestureDetector(
+      onTap: () {
+        _controller.reverse().then((_) => widget.onTapOutside());
+      },
+      child: Container(
+        /// needs to be animated
+        color: Colors.black87,
+        child: Stack(
+          key: _stackKey,
+          children: [
+            AnimatedBuilder(
+              animation: animation,
+              builder: (BuildContext context, Widget? _) {
+                return Positioned(
+                  left: _childPosition!.dx,
+                  top: animation.value,
+                  child: child,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
