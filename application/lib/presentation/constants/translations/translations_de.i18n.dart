@@ -141,6 +141,10 @@ class TranslationsDe extends Translations {
   String get bottomSheetDeleteCollectionWithBookmarksBody =>
       """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""";
   String get bottomSheetRenameCollectionHeader => """Rename collection""";
+  String get settingsXaynPremium => """Xayn Premium""";
+  String get settingsSectionSubscription => """Subscription""";
+  String get trialBannerSubscribeNow => """Subscribe Now""";
+  String get bookmarkScreenNoArticles => """No Articles""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -230,4 +234,8 @@ Map<String, String> get translationsDeMap => {
       """bottomSheetDeleteCollectionWithBookmarksBody""":
           """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""",
       """bottomSheetRenameCollectionHeader""": """Rename collection""",
+      """settingsXaynPremium""": """Xayn Premium""",
+      """settingsSectionSubscription""": """Subscription""",
+      """trialBannerSubscribeNow""": """Subscribe Now""",
+      """bookmarkScreenNoArticles""": """No Articles""",
     };
