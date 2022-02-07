@@ -16,11 +16,11 @@ class CardWidgetData {
 class CardWidget extends StatelessWidget {
   final CardData cardData;
 
-  const CardWidget({
+  CardWidget({
     required this.cardData,
     Key? key,
   }) : super(
-          key: key,
+          key: key ?? cardData.key,
         );
 
   @override
@@ -101,8 +101,11 @@ class CardWidget extends StatelessWidget {
       child: stack,
     );
 
-    final onLongPressed =
-        cardData.mapOrNull(collectionsScreen: (data) => data.onLongPressed);
+    final onLongPressed = cardData.map(
+      collectionsScreen: (data) => data.onLongPressed,
+      bookmark: (data) => data.onLongPressed,
+      personalArea: (data) => null,
+    );
 
     return AppGhostButton(
       contentPadding: EdgeInsets.zero,
