@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/subscription_trial_banner.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
 
 class SubscriptionSection extends StatelessWidget {
   final DateTime? trialEndDate;
