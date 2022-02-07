@@ -56,5 +56,5 @@ class GetAllBookmarksUseCaseOut extends Equatable {
   const GetAllBookmarksUseCaseOut(this.bookmarks);
 
   @override
-  List<Object?> get props => [bookmarks];
+  List<Object> get props => [bookmarks];
 }

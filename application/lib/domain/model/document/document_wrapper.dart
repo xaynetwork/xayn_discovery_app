@@ -15,5 +15,5 @@ class DocumentWrapper extends Equatable implements DbEntity {
   final Document document;
 
   @override
-  List<Object?> get props => [document];
+  List<Object> get props => [document];
 }

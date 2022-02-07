@@ -25,5 +25,5 @@ class ListenCollectionsUseCaseOut extends Equatable {
   const ListenCollectionsUseCaseOut(this.collections);
 
   @override
-  List<Object?> get props => collections;
+  List<Object> get props => collections;
 }

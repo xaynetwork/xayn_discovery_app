@@ -33,7 +33,7 @@ class RemoveBookmarskUseCaseIn extends Equatable {
   const RemoveBookmarskUseCaseIn({required this.bookmarksIds});
 
   @override
-  List<Object?> get props => [bookmarksIds];
+  List<Object> get props => [bookmarksIds];
 }
 
 class RemoveBookmarskUseCaseOut extends Equatable {
@@ -44,5 +44,5 @@ class RemoveBookmarskUseCaseOut extends Equatable {
   });
 
   @override
-  List<Object?> get props => [removedBookmarks];
+  List<Object> get props => [removedBookmarks];
 }
