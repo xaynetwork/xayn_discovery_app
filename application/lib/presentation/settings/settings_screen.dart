@@ -85,6 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   Widget _buildSubscriptionSection() => SubscriptionSection(
+        trialEndDate: DateTime.now().add(const Duration(
+            days: 6)), // TODO: The date will come from somewhere else
         onSubscribePressed: _manager.onSubscribePressed,
       );
 
