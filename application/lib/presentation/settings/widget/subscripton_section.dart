@@ -14,10 +14,8 @@ class SubscriptionSection extends StatelessWidget {
     required this.onSubscribePressed,
   }) : super(key: key);
 
-  bool get _showTrialBanner => trialEndDate?.isAfter(DateTime.now()) ?? false;
-
   @override
-  Widget build(BuildContext context) => _showTrialBanner
+  Widget build(BuildContext context) => trialEndDate != null
       ? SettingsSection.custom(
           title: R.strings.settingsSectionSubscription,
           topPadding: 0,
