@@ -143,6 +143,8 @@ class TranslationsDe extends Translations {
   String get bottomSheetRenameCollectionHeader => """Rename collection""";
   String get settingsXaynPremium => """Xayn Premium""";
   String get settingsSectionSubscription => """Subscription""";
+  String get trialBannerSubscribeNow => """Subscribe Now""";
+  String get bookmarkScreenNoArticles => """No Articles""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -234,4 +236,6 @@ Map<String, String> get translationsDeMap => {
       """bottomSheetRenameCollectionHeader""": """Rename collection""",
       """settingsXaynPremium""": """Xayn Premium""",
       """settingsSectionSubscription""": """Subscription""",
+      """trialBannerSubscribeNow""": """Subscribe Now""",
+      """bookmarkScreenNoArticles""": """No Articles""",
     };

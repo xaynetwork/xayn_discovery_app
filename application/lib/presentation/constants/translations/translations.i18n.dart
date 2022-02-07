@@ -141,6 +141,8 @@ class Translations {
   String get bottomSheetRenameCollectionHeader => """Rename collection""";
   String get settingsXaynPremium => """Xayn Premium""";
   String get settingsSectionSubscription => """Subscription""";
+  String get trialBannerSubscribeNow => """Subscribe Now""";
+  String get bookmarkScreenNoArticles => """No Articles""";
 }
 
 Map<String, String> get translationsMap => {
@@ -229,4 +231,6 @@ Map<String, String> get translationsMap => {
       """bottomSheetRenameCollectionHeader""": """Rename collection""",
       """settingsXaynPremium""": """Xayn Premium""",
       """settingsSectionSubscription""": """Subscription""",
+      """trialBannerSubscribeNow""": """Subscribe Now""",
+      """bookmarkScreenNoArticles""": """No Articles""",
     };

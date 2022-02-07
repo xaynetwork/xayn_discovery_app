@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/subscription_trial_banner.dart';
 
 class SubscriptionSection extends StatelessWidget {
   final DateTime? trialEndDate;
@@ -20,7 +21,7 @@ class SubscriptionSection extends StatelessWidget {
       ? SettingsSection.custom(
           title: R.strings.settingsSectionSubscription,
           topPadding: 0,
-          child: _buildTrialBanner(),
+          child: _buildTrialBanner(trialEndDate!),
         )
       : SettingsSection(
           title: R.strings.settingsSectionSubscription,
@@ -41,7 +42,6 @@ class SubscriptionSection extends StatelessWidget {
         ),
       ));
 
-  Widget _buildTrialBanner() => Container(
-        height: 80,
-      );
+  Widget _buildTrialBanner(DateTime trialEndDate) =>
+      SubscriptionTrialBanner(trialEndDate: trialEndDate);
 }
