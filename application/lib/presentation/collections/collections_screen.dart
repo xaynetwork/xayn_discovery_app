@@ -126,13 +126,11 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
         builder: (context, cardState) {
-          final cardKey = Keys.generateCollectionsScreenCardKey(
-            collection.id.toString(),
-          );
           return CardWidget(
-            key: cardKey,
             cardData: CardData.collectionsScreen(
-              key: cardKey,
+              key: Keys.generateCollectionsScreenCardKey(
+                collection.id.toString(),
+              ),
               title: collection.name,
               onPressed: () =>
                   _collectionsScreenManager?.onCollectionPressed(collection.id),
