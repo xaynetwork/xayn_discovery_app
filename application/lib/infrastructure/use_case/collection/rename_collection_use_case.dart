@@ -50,5 +50,5 @@ class RenameCollectionUseCaseParam extends Equatable {
   });
 
   @override
-  List<Object?> get props => [collectionId, newName];
+  List<Object> get props => [collectionId, newName];
 }
