@@ -22,6 +22,7 @@ void main() {
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
+    trialEndDate: null,
   );
 
   late MockFeatureManager featureManager;

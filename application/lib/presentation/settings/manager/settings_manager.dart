@@ -88,10 +88,12 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   Future<SettingsScreenState?> computeState() async {
     if (!_initDone) return null;
+    // TODO: The `trialEndDate` will come from somewhere else
     SettingsScreenState buildReady() => SettingsScreenState.ready(
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
+          trialEndDate: DateTime.now().add(const Duration(days: 6)),
         );
     return fold(_appThemeHandler).foldAll((appTheme, _) async {
       if (appTheme != null) {

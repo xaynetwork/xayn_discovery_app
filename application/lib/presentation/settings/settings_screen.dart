@@ -68,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: child,
         );
     final children = [
-      _buildSubscriptionSection(),
+      _buildSubscriptionSection(state.trialEndDate),
       _buildAppThemeSection(state.theme),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
@@ -84,9 +84,9 @@ class _SettingsScreenState extends State<SettingsScreen>
     return SingleChildScrollView(child: column);
   }
 
-  Widget _buildSubscriptionSection() => SubscriptionSection(
-        trialEndDate: DateTime.now().add(const Duration(
-            days: 6)), // TODO: The date will come from somewhere else
+  Widget _buildSubscriptionSection(DateTime? trialEndDate) =>
+      SubscriptionSection(
+        trialEndDate: trialEndDate,
         onSubscribePressed: _manager.onSubscribePressed,
       );
 
