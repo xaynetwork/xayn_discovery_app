@@ -26,12 +26,10 @@ class SubscriptionSection extends StatelessWidget {
       : SettingsSection(
           title: R.strings.settingsSectionSubscription,
           topPadding: 0,
-          items: [
-            _getXaynPremium(),
-          ],
+          items: [_buildXaynPremium()],
         );
 
-  SettingsCardData _getXaynPremium() =>
+  SettingsCardData _buildXaynPremium() =>
       SettingsCardData.fromTile(SettingsTileData(
         title: R.strings.settingsXaynPremium,
         svgIconPath: R.assets.icons.diamond,

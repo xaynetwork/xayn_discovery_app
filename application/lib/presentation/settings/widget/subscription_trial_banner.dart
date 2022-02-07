@@ -12,55 +12,60 @@ class SubscriptionTrialBanner extends StatelessWidget {
     required this.onPressed,
   }) : super(key: key);
 
+  String get _trialText => 'Your trial ends in 1 day';
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       child: Container(
-        height: 72,
+        height: R.dimen.unit9,
         child: _buildTile(),
         decoration: BoxDecoration(
-          color: R.linden.colors.settingsCardBackground,
-          borderRadius: R.linden.styles.roundBorder,
+          color: R.colors.settingsCardBackground,
+          borderRadius: R.styles.roundBorder,
         ),
       ),
-      borderRadius: R.linden.styles.roundBorder,
+      borderRadius: R.styles.roundBorder,
     );
   }
 
   Widget _buildTile() {
     final icon = Center(
       child: Padding(
-        padding: EdgeInsets.only(right: R.linden.dimen.unit2),
+        padding: EdgeInsets.only(right: R.dimen.unit2),
         child: SvgPicture.asset(
-          R.linden.assets.icons.diamond,
-          color: R.linden.colors.primaryAction,
-          width: R.linden.dimen.unit3,
-          height: R.linden.dimen.unit3,
+          R.assets.icons.diamond,
+          color: R.colors.primaryAction,
+          width: R.dimen.unit3,
+          height: R.dimen.unit3,
         ),
       ),
     );
+
     final spacing = SizedBox(
       width: R.dimen.unit0_5,
       height: R.dimen.unit0_5,
     );
+
     final title = Text(
-      'Your trial ends in 1 day',
+      _trialText,
       style: R.styles.newSettingsSectionTitle,
     );
+
     final subtitle = Row(
       children: [
         Text(
           R.strings.trialBannerSubscribeNow,
           style: R.styles.appThumbnailText?.copyWith(
-            color: R.linden.colors.primaryAction,
+            color: R.colors.primaryAction,
           ),
         ),
         spacing,
         SvgPicture.asset(
-          R.linden.assets.icons.arrowRight,
-          color: R.linden.colors.primaryAction,
-          width: R.linden.dimen.unit1_5,
-          height: R.linden.dimen.unit1_5,
+          R.assets.icons.arrowRight,
+          color: R.colors.primaryAction,
+          width: R.dimen.unit1_5,
+          height: R.dimen.unit1_5,
         ),
       ],
     );
@@ -84,8 +89,8 @@ class SubscriptionTrialBanner extends StatelessWidget {
     return AppGhostButton(
       child: Padding(
         padding: EdgeInsets.only(
-          left: R.linden.dimen.unit2,
-          right: R.linden.dimen.unit0_5,
+          left: R.dimen.unit2,
+          right: R.dimen.unit0_5,
         ),
         child: row,
       ),
