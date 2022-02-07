@@ -16,10 +16,17 @@ class SubscriptionTrialBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stack = Stack(
+      children: [
+        _buildDecoration(),
+        _buildTile(),
+      ],
+    );
+
     return ClipRRect(
       child: Container(
         height: R.dimen.unit9,
-        child: _buildTile(),
+        child: stack,
         decoration: BoxDecoration(
           color: R.colors.settingsCardBackground,
           borderRadius: R.styles.roundBorder,
@@ -28,6 +35,14 @@ class SubscriptionTrialBanner extends StatelessWidget {
       borderRadius: R.styles.roundBorder,
     );
   }
+
+  Widget _buildDecoration() => Positioned(
+        top: 0,
+        right: 0,
+        child: SvgPicture.asset(
+          R.assets.icons.premiumDecoration,
+        ),
+      );
 
   Widget _buildTile() {
     final icon = Center(
