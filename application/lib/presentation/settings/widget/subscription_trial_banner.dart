@@ -4,10 +4,12 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class SubscriptionTrialBanner extends StatelessWidget {
   final DateTime trialEndDate;
+  final VoidCallback onPressed;
 
   const SubscriptionTrialBanner({
     Key? key,
     required this.trialEndDate,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -79,12 +81,15 @@ class SubscriptionTrialBanner extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
     );
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: R.linden.dimen.unit2,
-        right: R.linden.dimen.unit0_5,
+    return AppGhostButton(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: R.linden.dimen.unit2,
+          right: R.linden.dimen.unit0_5,
+        ),
+        child: row,
       ),
-      child: row,
+      onPressed: onPressed,
     );
   }
 }

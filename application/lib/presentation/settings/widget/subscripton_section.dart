@@ -42,6 +42,8 @@ class SubscriptionSection extends StatelessWidget {
         ),
       ));
 
-  Widget _buildTrialBanner(DateTime trialEndDate) =>
-      SubscriptionTrialBanner(trialEndDate: trialEndDate);
+  Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
+        trialEndDate: trialEndDate,
+        onPressed: onSubscribePressed,
+      );
 }
