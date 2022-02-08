@@ -85,6 +85,14 @@ Sanity checks (options: coverage:[true/FALSE])
 
 Build and publish (i.e fastlane publish platform:ios build:release flavor:beta)
 
+### update_assets
+
+```sh
+[bundle exec] fastlane update_assets
+```
+
+Update the assets folder based on the Assets Manifest from xayn_discovery_engine
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
