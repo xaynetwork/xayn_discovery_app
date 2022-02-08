@@ -35,6 +35,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     _appsflyer.onAppOpenAttribution(_onAppOpenAttribution);
     _appsflyer.onInstallConversionData(_onInstallConversionData);
     _appsflyer.onDeepLinking(_onDeepLinking);
+    _appsflyer.setMinTimeBetweenSessions(5);
   }
 
   @factoryMethod
