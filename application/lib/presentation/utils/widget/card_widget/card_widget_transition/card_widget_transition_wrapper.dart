@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition.dart';
-
-import 'card_widget_transition_manager.dart';
 
 /// When long pressing the wrapped widget move/animate it to the center
 /// of the screen and add a transparent layer as background.
@@ -35,7 +32,7 @@ class CardWidgetTransitionWrapper extends StatefulWidget {
 class _CardWidgetTransitionWrapperState
     extends State<CardWidgetTransitionWrapper> {
   late final GlobalKey itemKey;
-  late final CardWidgetTransitionManager manager;
+
   late Size childSize;
 
   @override
@@ -45,7 +42,6 @@ class _CardWidgetTransitionWrapperState
       CardWidgetData.cardWidth,
       CardWidgetData.cardHeight,
     );
-    manager = di.get<CardWidgetTransitionManager>();
     super.initState();
   }
 
@@ -62,13 +58,18 @@ class _CardWidgetTransitionWrapperState
 
   void _animate() {
     _calculateChildSize();
-
-    manager.onLongPressed(
-      CardWidgetTransitionArgs(
-        child: widget.child,
-        childSize: childSize,
-        heroTag: itemKey.toString(),
-        onTransparentLayerTap: () => manager.onClosePressed(),
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (_, __, ___) => CardWidgetTransition(
+          args: CardWidgetTransitionArgs(
+            child: widget.child,
+            childSize: childSize,
+            heroTag: itemKey.toString(),
+            onTransparentLayerTap: () => Navigator.pop(context),
+          ),
+        ),
       ),
     );
 
