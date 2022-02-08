@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 class SubscriptionTrialBanner extends StatelessWidget {
   final DateTime trialEndDate;
@@ -11,8 +12,6 @@ class SubscriptionTrialBanner extends StatelessWidget {
     required this.trialEndDate,
     required this.onPressed,
   }) : super(key: key);
-
-  String get _trialText => 'Your trial ends in 1 day';
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +62,7 @@ class SubscriptionTrialBanner extends StatelessWidget {
     );
 
     final title = Text(
-      _trialText,
+      trialEndDate.trialEndDateString,
       style: R.styles.newSettingsSectionTitle,
     );
 
