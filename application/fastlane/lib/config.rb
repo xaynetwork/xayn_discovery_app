@@ -13,7 +13,10 @@ module Config
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
-                   "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
+                   "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev",
+                   "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
+                   "APPLE_VERIFY_RECEIPT_URL_DEBUG" => "https://sandbox.itunes.apple.com/verifyReceipt",
+                   "APPLE_VERIFY_RECEIPT_URL_PRODUCTION" => "https://buy.itunes.apple.com/verifyReceipt" }
 
   #ios, android, web
   PLATFORM = "android"

@@ -1,5 +1,6 @@
 import 'package:envify/envify.dart';
 import 'package:flutter/foundation.dart';
+import 'package:xayn_discovery_app/domain/model/apple_verify_receipt_credentials.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 part 'env.g.dart';
@@ -23,6 +24,17 @@ abstract class Env {
   static const String appStoreNumericalId = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.appStoreNumericalId
       : _EnvProd.appStoreNumericalId;
+
+  static late final AppleVerifyReceiptCredentials
+      appleVerifyReceiptCredentials = EnvironmentHelper.kIsProductionFlavor
+          ? AppleVerifyReceiptCredentials(
+              Uri.parse(_EnvProd.appleVerifyReceiptUrl),
+              _EnvProd.appleVerifyReceiptPass,
+            )
+          : AppleVerifyReceiptCredentials(
+              Uri.parse(_EnvDev.appleVerifyReceiptUrl),
+              _EnvDev.appleVerifyReceiptPass,
+            );
 }
 
 /// Standard Env config.
@@ -35,6 +47,8 @@ abstract class _EnvDev {
   static const String amplitudeApiKey = __EnvDev.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvDev.appsflyerDevKey;
   static const String appStoreNumericalId = __EnvDev.appStoreNumericalId;
+  static const String appleVerifyReceiptPass = __EnvDev.appleVerifyReceiptPass;
+  static const String appleVerifyReceiptUrl = __EnvDev.appleVerifyReceiptUrl;
 }
 
 /// Standard Env config.
@@ -47,4 +61,6 @@ abstract class _EnvProd {
   static const String amplitudeApiKey = __EnvProd.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvProd.appsflyerDevKey;
   static const String appStoreNumericalId = __EnvProd.appStoreNumericalId;
+  static const String appleVerifyReceiptPass = __EnvProd.appleVerifyReceiptPass;
+  static const String appleVerifyReceiptUrl = __EnvProd.appleVerifyReceiptUrl;
 }

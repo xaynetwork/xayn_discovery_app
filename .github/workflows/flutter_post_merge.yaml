@@ -13,7 +13,7 @@ on:
         required: true
         default: 'ios_internal android_internal'
 concurrency:
-  group:  ${{ github.workflow }}-${{  github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{  github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 env:
@@ -77,6 +77,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          APPLE_VERIFY_RECEIPT_PASS_DEBUG: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_DEBUG }}
+          APPLE_VERIFY_RECEIPT_PASS_PRODUCTION: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release downloadProfile:true flavor:internal
@@ -131,6 +133,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          APPLE_VERIFY_RECEIPT_PASS_DEBUG: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_DEBUG }}
+          APPLE_VERIFY_RECEIPT_PASS_PRODUCTION: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build:release downloadProfile:false flavor:beta
@@ -173,6 +177,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          APPLE_VERIFY_RECEIPT_PASS_DEBUG: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_DEBUG }}
+          APPLE_VERIFY_RECEIPT_PASS_PRODUCTION: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build:release flavor:internal
@@ -215,6 +221,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          APPLE_VERIFY_RECEIPT_PASS_DEBUG: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_DEBUG }}
+          APPLE_VERIFY_RECEIPT_PASS_PRODUCTION: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_PRODUCTION }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build:release flavor:beta

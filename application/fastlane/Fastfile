@@ -139,6 +139,8 @@ lane :check_config_files do |options|
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_DEBUG" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "APPLE_VERIFY_RECEIPT_URL_DEBUG" => "APPLE_VERIFY_RECEIPT_URL",
+    "APPLE_VERIFY_RECEIPT_PASS_DEBUG" => "APPLE_VERIFY_RECEIPT_PASS",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -151,6 +153,8 @@ lane :check_config_files do |options|
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_PRODUCTION" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "APPLE_VERIFY_RECEIPT_URL_PRODUCTION" => "APPLE_VERIFY_RECEIPT_URL",
+    "APPLE_VERIFY_RECEIPT_PASS_PRODUCTION" => "APPLE_VERIFY_RECEIPT_PASS",
   }, Config::ENV_DEFAULTS)
 
   if options[:flavor] != "internal" && options[:release] != "debug"
