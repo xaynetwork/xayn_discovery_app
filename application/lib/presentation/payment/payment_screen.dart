@@ -41,7 +41,7 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
     final bloc = BlocBuilder<PaymentScreenManager, PaymentScreenState>(
       bloc: manager,
       builder: (_, state) => state.map(
-        initial: (_) => const Center(),
+        initial: (_) => const Center(child: CircularProgressIndicator()),
         error: _buildErrorScreen,
         ready: _buildScreen,
       ),
