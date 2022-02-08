@@ -10,7 +10,7 @@ extension DateTimeExtension on DateTime {
 
   bool get isToday => calculateDifferenceInDays(DateTime.now()) == 0;
 
-  bool get isTommorow => calculateDifferenceInDays(DateTime.now()) == 1;
+  bool get isTomorrow => calculateDifferenceInDays(DateTime.now()) == 1;
 
   String get trialEndDateString {
     final now = DateTime.now();
@@ -22,7 +22,7 @@ extension DateTimeExtension on DateTime {
       return R.strings.trialBannerEndsToday;
     }
 
-    if (isTommorow) {
+    if (isTomorrow) {
       return R.strings.trialBannerEndsTomorrow;
     }
 
