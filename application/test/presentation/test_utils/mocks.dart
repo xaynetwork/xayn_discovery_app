@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
@@ -46,6 +47,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
+  Client,
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   DbEntityMapToFeedMarketMapper,
