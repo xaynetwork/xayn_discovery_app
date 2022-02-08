@@ -1,6 +1,7 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
+import 'translations.i18n.dart';
 
 String get _languageCode => 'en';
 String _plural(int count,
@@ -49,8 +50,8 @@ String _cardinal(
       other: other,
     );
 
-class Translations {
-  const Translations();
+class TranslationsEn extends Translations {
+  const TranslationsEn();
   String get locale => "en";
   String get languageCode => "en";
   String get your => """Your""";
@@ -130,22 +131,10 @@ class Translations {
   String get errorMsgCollectionNameAlreadyUsed =>
       """This name is already used""";
   String get errorMsgCollectionNameIsInvalid =>
-      """The name can't exceed %s characters""";
-  String get bottomSheetRename => """Rename""";
-  String get bottomSheetDelete => """Delete""";
-  String get bottomSheetDeleteAll => """Delete All""";
-  String get bottomSheetMoveBookmarks => """Move Bookmarks""";
-  String get bottomSheetDeleteCollectionHeader => """Are you sure ?""";
-  String get bottomSheetDeleteCollectionWithBookmarksBody =>
-      """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""";
-  String get bottomSheetRenameCollectionHeader => """Rename collection""";
-  String get settingsXaynPremium => """Xayn Premium""";
-  String get settingsSectionSubscription => """Subscription""";
-  String get trialBannerSubscribeNow => """Subscribe Now""";
-  String get bookmarkScreenNoArticles => """No Articles""";
+      """The name shouldn't exceed %s characters""";
 }
 
-Map<String, String> get translationsMap => {
+Map<String, String> get translationsEnMap => {
       """your""": """Your""",
       """activeSearchSearchHint""": """Search""",
       """settingsTitle""": """Your Settings""",
@@ -220,17 +209,5 @@ Map<String, String> get translationsMap => {
       """errorMsgBookmarkDoesntExist""": """The bookmark doesn't exist""",
       """errorMsgCollectionNameAlreadyUsed""": """This name is already used""",
       """errorMsgCollectionNameIsInvalid""":
-          """The name can't exceed %s characters""",
-      """bottomSheetRename""": """Rename""",
-      """bottomSheetDelete""": """Delete""",
-      """bottomSheetDeleteAll""": """Delete All""",
-      """bottomSheetMoveBookmarks""": """Move Bookmarks""",
-      """bottomSheetDeleteCollectionHeader""": """Are you sure ?""",
-      """bottomSheetDeleteCollectionWithBookmarksBody""":
-          """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""",
-      """bottomSheetRenameCollectionHeader""": """Rename collection""",
-      """settingsXaynPremium""": """Xayn Premium""",
-      """settingsSectionSubscription""": """Subscription""",
-      """trialBannerSubscribeNow""": """Subscribe Now""",
-      """bookmarkScreenNoArticles""": """No Articles""",
+          """The name shouldn't exceed %s characters""",
     };

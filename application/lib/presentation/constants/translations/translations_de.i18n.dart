@@ -132,7 +132,19 @@ class TranslationsDe extends Translations {
   String get errorMsgCollectionNameAlreadyUsed =>
       """Der Name ist bereits vergeben""";
   String get errorMsgCollectionNameIsInvalid =>
-      """The name shouldn't exceed %s characters""";
+      """Der Name darf %s Zeichen nicht überschreiten""";
+  String get bottomSheetRename => """Rename""";
+  String get bottomSheetDelete => """Delete""";
+  String get bottomSheetDeleteAll => """Delete All""";
+  String get bottomSheetMoveBookmarks => """Move Bookmarks""";
+  String get bottomSheetDeleteCollectionHeader => """Are you sure ?""";
+  String get bottomSheetDeleteCollectionWithBookmarksBody =>
+      """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""";
+  String get bottomSheetRenameCollectionHeader => """Rename collection""";
+  String get settingsXaynPremium => """Xayn Premium""";
+  String get settingsSectionSubscription => """Subscription""";
+  String get trialBannerSubscribeNow => """Subscribe Now""";
+  String get bookmarkScreenNoArticles => """No Articles""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -213,5 +225,17 @@ Map<String, String> get translationsDeMap => {
       """errorMsgCollectionNameAlreadyUsed""":
           """Der Name ist bereits vergeben""",
       """errorMsgCollectionNameIsInvalid""":
-          """The name shouldn't exceed %s characters""",
+          """Der Name darf %s Zeichen nicht überschreiten""",
+      """bottomSheetRename""": """Rename""",
+      """bottomSheetDelete""": """Delete""",
+      """bottomSheetDeleteAll""": """Delete All""",
+      """bottomSheetMoveBookmarks""": """Move Bookmarks""",
+      """bottomSheetDeleteCollectionHeader""": """Are you sure ?""",
+      """bottomSheetDeleteCollectionWithBookmarksBody""":
+          """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""",
+      """bottomSheetRenameCollectionHeader""": """Rename collection""",
+      """settingsXaynPremium""": """Xayn Premium""",
+      """settingsSectionSubscription""": """Subscription""",
+      """trialBannerSubscribeNow""": """Subscribe Now""",
+      """bookmarkScreenNoArticles""": """No Articles""",
     };
