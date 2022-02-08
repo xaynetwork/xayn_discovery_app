@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
@@ -12,32 +13,27 @@ import '../../test_utils/utils.dart';
 
 void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;
-  late MockGetAppThemeUseCase getAppThemeUseCase;
   late MockIncrementAppSessionUseCase incrementAppSessionUseCase;
   late MockCreateOrGetDefaultCollectionUseCase
       createOrGetDefaultCollectionUseCase;
+  late MockAppSettingsRepository appSettingsRepository;
   late Collection mockDefaultCollection;
 
   setUp(() {
     mockDefaultCollection =
         Collection.readLater(name: 'mock default collection');
     listenAppThemeUseCase = MockListenAppThemeUseCase();
-    getAppThemeUseCase = MockGetAppThemeUseCase();
     incrementAppSessionUseCase = MockIncrementAppSessionUseCase();
     createOrGetDefaultCollectionUseCase =
         MockCreateOrGetDefaultCollectionUseCase();
+    appSettingsRepository = MockAppSettingsRepository();
 
-    when(getAppThemeUseCase.appTheme).thenReturn(AppTheme.system);
-    when(getAppThemeUseCase.singleOutput(none)).thenAnswer(
-      (_) async => AppTheme.system,
-    );
+    when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
+
     when(incrementAppSessionUseCase.call(none)).thenAnswer(
       (_) async => const [
         UseCaseResult.success(none),
       ],
-    );
-    when(getAppThemeUseCase.transform(any)).thenAnswer(
-      (_) => const Stream.empty(),
     );
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
@@ -50,10 +46,10 @@ void main() {
   });
 
   AppManager create() => AppManager(
-        getAppThemeUseCase,
         listenAppThemeUseCase,
         incrementAppSessionUseCase,
         createOrGetDefaultCollectionUseCase,
+        appSettingsRepository,
       );
 
   blocTest<AppManager, AppState>(
@@ -61,13 +57,11 @@ void main() {
     build: create,
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
-      verify(getAppThemeUseCase.appTheme).called(1);
+      verify(appSettingsRepository.settings).called(1);
       verify(incrementAppSessionUseCase.call(none)).called(1);
       verify(createOrGetDefaultCollectionUseCase
               .call(R.strings.defaultCollectionNameReadLater))
           .called(1);
-      verify(getAppThemeUseCase.singleOutput(none)).called(1);
-      verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);
     },
   );

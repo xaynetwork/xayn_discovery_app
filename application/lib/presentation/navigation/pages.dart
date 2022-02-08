@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/presentation/active_search/widget/active_sear
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
-import 'package:xayn_discovery_app/presentation/app_loading/widget/app_loading_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
@@ -13,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_scr
 import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
+import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
 
 class PageRegistry {
   PageRegistry._();
@@ -21,7 +21,7 @@ class PageRegistry {
 
   /// Always also add a page to this pages set
   static final Set<xayn.UntypedPageData> pages = {
-    appLoading,
+    splashScreen,
     discovery,
     search,
     personalArea,
@@ -32,10 +32,10 @@ class PageRegistry {
   };
 
   // Make sure to add the page names in camel case
-  static final appLoading = xayn.PageData(
-    name: "appLoading",
+  static final splashScreen = xayn.PageData(
+    name: "splashScreen",
     isInitial: true,
-    builder: (_, args) => const AppLoadingScreen(),
+    builder: (_, args) => const SplashScreen(),
   );
   static final discovery = xayn.PageData(
     name: "discovery",

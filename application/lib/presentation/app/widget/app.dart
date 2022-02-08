@@ -79,8 +79,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       builder: (_, state) {
         // Update initial linden with correct brightness.
         // This needs to happen in the builder to avoid "white flash" issue in dark mode.
-        final newLinden = R.linden.updateBrightness(state.appTheme.brightness);
-        R.updateLinden(newLinden);
+        _updateBrightnessIfNeeded(state.appTheme);
 
         return Provider<ApplicationTooltipController>.value(
           value: _applicationTooltipController,
@@ -89,6 +88,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       },
       listener: (_, state) => _changeBrightness(state.appTheme),
     );
+  }
+
+  void _updateBrightnessIfNeeded(AppTheme appTheme) {
+    if (R.brightness != appTheme.brightness) {
+      final newLinden = R.linden.updateBrightness(appTheme.brightness);
+      R.updateLinden(newLinden);
+    }
   }
 
   void _changeBrightness(AppTheme appTheme) {

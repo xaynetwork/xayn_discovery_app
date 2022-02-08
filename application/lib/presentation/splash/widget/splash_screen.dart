@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/app_loading/manager/app_loading_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
 
-class AppLoadingScreen extends StatefulWidget {
-  const AppLoadingScreen({Key? key}) : super(key: key);
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<AppLoadingScreen> createState() => _AppLoadingScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _AppLoadingScreenState extends State<AppLoadingScreen>
+class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
 
-  late final _appLoadingScreenManager = di.get<AppLoadingScreenManager>();
+  late final _splashScreenManager = di.get<SplashScreenManager>();
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _AppLoadingScreenState extends State<AppLoadingScreen>
 
   void _animationStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      _appLoadingScreenManager.onSplashScreenAnimationFinished();
+      _splashScreenManager.onSplashScreenAnimationFinished();
     }
   }
 }
