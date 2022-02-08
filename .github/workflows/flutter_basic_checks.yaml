@@ -47,6 +47,8 @@ jobs:
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           FASTLANE_SKIP_UPDATE_CHECK: '1'
+          APPLE_VERIFY_RECEIPT_PASS_DEBUG: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_DEBUG }}
+          APPLE_VERIFY_RECEIPT_PASS_PRODUCTION: ${{ secrets.APPLE_VERIFY_RECEIPT_PASS_PRODUCTION }}
         working-directory: ./application
         run: |
           sudo chmod -R a+w /var/lib/gems/
