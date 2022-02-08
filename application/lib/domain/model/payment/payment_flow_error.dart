@@ -4,4 +4,5 @@ enum PaymentFlowError {
   productNotFound,
   itemAlreadyOwned,
   paymentFailed,
+  checkSubscriptionActiveFailed,
 }
