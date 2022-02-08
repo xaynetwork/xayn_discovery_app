@@ -28,9 +28,8 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
   });
 
   @factoryMethod
-  DirectUriUseCase.standard({required this.client})
-      : headers = CommonHttpRequestParams.httpRequestHeaders,
-        cacheManager = AppImageCacheManager();
+  DirectUriUseCase.standard({required this.client, required this.cacheManager})
+      : headers = CommonHttpRequestParams.httpRequestHeaders;
 
   @override
   Stream<CacheManagerEvent> transaction(Uri param) async* {
@@ -73,6 +72,7 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
   }
 }
 
+@LazySingleton(as: ImageCacheManager)
 class AppImageCacheManager extends CacheManager with ImageCacheManager {
   static const key = 'libAppCachedImageData';
 
