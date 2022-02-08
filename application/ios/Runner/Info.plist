@@ -29,12 +29,12 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoadsForMedia</key>
-        <true/>
-        <key>NSAllowsArbitraryLoadsInWebContent</key>
-        <true/>
-    </dict>
+	<dict>
+		<key>NSAllowsArbitraryLoadsForMedia</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -51,8 +51,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
-    <string>Xayn Discovery needs access to the microphone to be able to attach voice notes.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Xayn Discovery needs access to your photo library for you to be able to attach images.</string>
+	<string>Xayn Discovery needs access to the microphone to be able to attach voice notes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Xayn Discovery needs access to your photo library for you to be able to attach images.</string>
+	<key>NSAdvertisingAttributionReportEndpoint</key>
+	<string>https://appsflyer-skadnetwork.com/</string>
 </dict>
 </plist>
