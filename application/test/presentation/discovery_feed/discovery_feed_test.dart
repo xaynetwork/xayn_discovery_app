@@ -42,16 +42,18 @@ void main() async {
   createFakeDocument() => Document(
         documentId: DocumentId(),
         feedback: DocumentFeedback.neutral,
-        webResource: WebResource(
-          displayUrl: Uri.parse('https://displayUrl.test.xayn.com'),
+        resource: NewsResource(
+          sourceUrl: Uri.parse('https://xayn.com'),
           snippet: 'snippet',
           title: 'title',
           url: Uri.parse('https://url.test.xayn.com'),
           datePublished: DateTime.parse("2021-01-01 00:00:00.000Z"),
-          provider: const WebResourceProvider(
-            name: "provider",
-            thumbnail: null,
-          ),
+          thumbnail: null,
+          language: '',
+          country: '',
+          topic: '',
+          score: null,
+          rank: 0,
         ),
         nonPersonalizedRank: 0,
         personalizedRank: 0,

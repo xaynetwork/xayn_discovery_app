@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// These are random keywords, real keywords are to be provided by the
@@ -52,7 +52,7 @@ class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
     }
 
     final words = nextResults
-        .map((it) => it.webResource.snippet)
+        .map((it) => it.resource.snippet)
         .join(' ')
         .split(RegExp(r'[\s]+'))
         .where((it) => it.length >= 5)

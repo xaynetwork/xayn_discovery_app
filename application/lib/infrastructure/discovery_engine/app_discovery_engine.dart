@@ -81,6 +81,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: '/engine/',
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
+      // TODO change to ENV
+      assetsUrl: "https://ai-assets.xaynet.dev",
     );
 
     _engine = await DiscoveryEngine.init(configuration: configuration);
