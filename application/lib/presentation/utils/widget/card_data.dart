@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 
 part 'card_data.freezed.dart';
 
@@ -34,8 +35,7 @@ class CardData with _$CardData {
     required VoidCallback onLongPressed,
     required DateTime created,
     required double cardWidth,
-    String? providerName,
-    Uint8List? faviconImage,
+    DocumentProvider? provider,
     Uint8List? backgroundImage,
   }) = _CardDataBookmark;
 }

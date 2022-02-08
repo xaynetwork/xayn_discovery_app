@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 
 import '../unique_id.dart';
 
@@ -17,8 +18,7 @@ class Bookmark extends DbEntity with _$Bookmark {
     required UniqueId collectionId,
     required Uint8List? image,
     required String title,
-    required String? providerName,
-    required Uint8List? providerThumbnail,
+    required DocumentProvider? provider,
 
     /// To store as UTC value
     required String createdAt,

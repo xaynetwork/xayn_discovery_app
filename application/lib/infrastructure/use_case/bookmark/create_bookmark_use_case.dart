@@ -5,6 +5,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/cache_manager/cache_manager_event.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -57,8 +58,7 @@ class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
       collectionId: param.collectionId,
       title: param.title,
       image: param.image,
-      providerName: param.providerName,
-      providerThumbnail: param.providerThumbnail,
+      provider: param.provider,
       createdAt: dateTime.toUtc().toString(),
     );
     _bookmarksRepository.save(bookmark);
@@ -78,15 +78,12 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
       CreateBookmarkFromDocumentUseCaseIn param) async* {
     final webResource = param.document.webResource;
     final image = await _getImageData(webResource.displayUrl);
-    final thumbnailUri = webResource.provider?.thumbnail;
-    final providerThumbnail = await _getImageData(thumbnailUri);
 
     final createBookmarkUseCaseIn = CreateBookmarkUseCaseIn(
       id: param.document.documentUniqueId,
       title: webResource.title,
       image: image,
-      providerName: webResource.provider?.name,
-      providerThumbnail: providerThumbnail,
+      provider: param.provider ?? DocumentProvider(),
       collectionId: param.collectionId,
     );
     yield createBookmarkUseCaseIn;
@@ -108,26 +105,26 @@ class CreateBookmarkUseCaseIn {
   final UniqueId id;
   final String title;
   final Uint8List? image;
-  final String? providerName;
-  final Uint8List? providerThumbnail;
+  final DocumentProvider? provider;
   final UniqueId collectionId;
 
   CreateBookmarkUseCaseIn({
     required this.id,
     required this.title,
     required this.image,
-    required this.providerName,
-    required this.providerThumbnail,
+    required this.provider,
     this.collectionId = Collection.readLaterId,
   });
 }
 
 class CreateBookmarkFromDocumentUseCaseIn {
   final Document document;
+  final DocumentProvider? provider;
   final UniqueId collectionId;
 
   CreateBookmarkFromDocumentUseCaseIn({
     required this.document,
+    this.provider,
     this.collectionId = Collection.readLaterId,
   });
 }

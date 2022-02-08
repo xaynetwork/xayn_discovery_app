@@ -36,6 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.titleOnly(
             title: R.strings.settingsTitle,
@@ -67,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         );
     final children = [
       _buildAppThemeSection(state.theme),
-      _buildGeneralSection(),
+      _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
       _buildAppVersion(state.appVersion),
@@ -86,12 +87,15 @@ class _SettingsScreenState extends State<SettingsScreen>
         onSelected: _manager.saveTheme,
       );
 
-  Widget _buildGeneralSection() => SettingsGeneralInfoSection(
+  Widget _buildGeneralSection(bool isPaymentEnabled) =>
+      SettingsGeneralInfoSection(
         onAboutPressed: () => _manager.openUrl(Urls.aboutXayn),
         onCarbonNeutralPressed: () => _manager.openUrl(Urls.carbonNeutral),
         onImprintPressed: () => _manager.openUrl(Urls.imprint),
         onPrivacyPressed: () => _manager.openUrl(Urls.privacyPolicy),
         onTermsPressed: () => _manager.openUrl(Urls.termsAndConditions),
+        onPaymentPressed:
+            isPaymentEnabled ? _manager.onPaymentNavPressed : null,
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(

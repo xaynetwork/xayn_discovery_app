@@ -60,6 +60,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.withTrailingIcon(
             title: R.strings.collectionsScreenTitle,
@@ -125,13 +126,11 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
         builder: (context, cardState) {
-          final cardKey = Keys.generateCollectionsScreenCardKey(
-            collection.id.toString(),
-          );
           return CardWidget(
-            key: cardKey,
             cardData: CardData.collectionsScreen(
-              key: cardKey,
+              key: Keys.generateCollectionsScreenCardKey(
+                collection.id.toString(),
+              ),
               title: collection.name,
               onPressed: () =>
                   _collectionsScreenManager?.onCollectionPressed(collection.id),

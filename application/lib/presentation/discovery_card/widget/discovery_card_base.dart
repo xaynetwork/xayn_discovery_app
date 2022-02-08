@@ -1,11 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
@@ -30,13 +33,9 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
-    extends State<T> {
-  late final DiscoveryCardManager _discoveryCardManager;
-  late final ImageManager _imageManager;
-
-  DiscoveryCardManager get discoveryCardManager => _discoveryCardManager;
-
-  ImageManager get imageManager => _imageManager;
+    extends State<T> with TooltipStateMixin {
+  late final DiscoveryCardManager discoveryCardManager;
+  late final ImageManager imageManager;
 
   WebResource get webResource => widget.document.webResource;
 
@@ -50,8 +49,10 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void initState() {
     super.initState();
 
-    _discoveryCardManager = widget.discoveryCardManager ?? di.get();
-    _imageManager = widget.imageManager ?? di.get();
+    discoveryCardManager = widget.discoveryCardManager ?? di.get()
+      ..updateDocument(widget.document);
+    imageManager = widget.imageManager ?? di.get()
+      ..getImage(widget.document.webResource.displayUrl);
   }
 
   @override
@@ -59,11 +60,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.dispose();
 
     if (widget.discoveryCardManager == null) {
-      _discoveryCardManager.close();
+      discoveryCardManager.close();
     }
 
     if (widget.imageManager == null) {
-      _imageManager.close();
+      imageManager.close();
     }
   }
 
@@ -72,20 +73,40 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      _discoveryCardManager.updateDocument(widget.document);
+      discoveryCardManager.updateDocument(widget.document);
+      imageManager.getImage(widget.document.webResource.displayUrl);
     }
   }
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
-        bloc: _discoveryCardManager,
+      BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
+        bloc: discoveryCardManager,
         builder: (context, state) => buildFromState(
           context,
           state,
           _buildImage(),
         ),
+        listenWhen: (previous, current) =>
+            current.hasError || discoveryCardStateListenWhen(previous, current),
+        listener: (context, state) {
+          if (state.hasError) {
+            _handleError(state);
+          } else {
+            discoveryCardStateListener();
+          }
+        },
       );
+
+  void _handleError(DiscoveryCardState state) {
+    TooltipKey? key = TooltipUtils.getErrorKey(state.error);
+    if (key != null) showTooltip(key);
+  }
+
+  bool discoveryCardStateListenWhen(
+      DiscoveryCardState prev, DiscoveryCardState curr);
+
+  void discoveryCardStateListener();
 
   Widget buildFromState(
     BuildContext context,
@@ -93,12 +114,26 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     Widget image,
   );
 
+  void onBookmarkPressed() =>
+      discoveryCardManager.toggleBookmarkDocument(widget.document);
+
+  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
+      () => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: widget.document,
+              provider: state.processedDocument
+                  ?.getProvider(widget.document.webResource),
+              onError: (tooltipKey) => showTooltip(tooltipKey),
+            ),
+          );
+
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
     final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);
 
     return CachedImage(
-      imageManager: _imageManager,
+      imageManager: imageManager,
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),

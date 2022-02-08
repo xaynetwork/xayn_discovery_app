@@ -5,7 +5,10 @@ import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.da
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
@@ -36,6 +39,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// It is easier to support end expand
 @GenerateMocks([
   ActiveSearchNavActions,
+  AppImageCacheManager,
   AppManager,
   AppVersionToMapMapper,
   BookmarksScreenNavActions,
@@ -59,12 +63,15 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetSelectedCountriesUseCase,
   GetStoredAppVersionUseCase,
   GetSupportedCountriesUseCase,
+  IAPErrorToPaymentFlowErrorMapper,
   InAppReview,
   IncrementAppSessionUseCase,
   ListenAppThemeUseCase,
   MapToAppVersionMapper,
+  PaymentService,
   PersonalAreaManager,
   PersonalAreaNavActions,
+  PurchasableProductMapper,
   SaveAppThemeUseCase,
   SaveCurrentAppVersion,
   SaveSelectedCountriesUseCase,
@@ -72,7 +79,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SettingsScreenManager,
   ShareUriUseCase,
   UrlOpener,
-  AppImageCacheManager,
 ])
 class Mocks {
   Mocks._();

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       param:
-        description: 'Manually run releases choose one or many of: ios_internal, android_internal, none'
+        description: 'Manually run releases choose one or many of: ios_internal, android_internal, ios_beta, android_beta, none'
         required: true
         default: 'ios_internal android_internal'
 concurrency:
@@ -28,7 +28,7 @@ env:
 
 jobs:
   publish_ios_internal:
-    name: Publish iOS
+    name: Publish iOS Internal
     if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_internal'))
     runs-on: macos-latest
     steps:
@@ -207,7 +207,7 @@ jobs:
         timeout-minutes: 20
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}
+          APPCENTER_ANDROID_BETA_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}
           SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}

@@ -19,7 +19,7 @@ void main() {
     engine = MockDiscoveryEngine();
     di
       ..unregister<DiscoveryEngine>()
-      ..registerFactoryAsync<DiscoveryEngine>(() => Future.value(engine));
+      ..registerSingleton<DiscoveryEngine>(engine);
   });
 
   blocTest<ActiveSearchManager, ActiveSearchState>(

@@ -21,6 +21,8 @@ class ImageManager extends Cubit<ImageManagerState>
   }
 
   void getImage(Uri uri) {
+    if (uri == _lastUri) return;
+
     _lastUri = uri;
     _imageFromCacheHandler(uri);
   }

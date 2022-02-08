@@ -67,10 +67,7 @@ class _CachedImageState extends State<CachedImage> {
 
   @override
   void didUpdateWidget(CachedImage oldWidget) {
-    if (oldWidget.uri != widget.uri ||
-        oldWidget.width != widget.width ||
-        oldWidget.height != widget.height ||
-        oldWidget.fit != widget.fit) {
+    if (oldWidget.uri != widget.uri) {
       _imageManager.getImage(widget.uri);
     }
 

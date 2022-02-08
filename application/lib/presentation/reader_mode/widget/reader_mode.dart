@@ -104,6 +104,18 @@ class _ReaderModeState extends State<ReaderMode> {
           return loading;
         }
 
+        final textColor = R.styles.readerModeTextStyle?.color;
+        final htmlColor = textColor != null
+            ? 'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha / 0xff})'
+            : 'rgba(255,255,255,1.0)';
+
+        overrideLinkStyle(element) => element.localName?.toLowerCase() == 'a'
+            ? {
+                'text-decoration': 'none',
+                'color': htmlColor,
+              }
+            : null;
+
         _readerModeController.loadUri(uri);
 
         return readability.ReaderMode(
@@ -121,6 +133,7 @@ class _ReaderModeState extends State<ReaderMode> {
             return _onProcessedHtml(result);
           },
           onScroll: widget.onScroll,
+          customStylesBuilder: overrideLinkStyle,
         );
       },
     );
@@ -155,6 +168,12 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   final EdgeInsets padding;
 
   _ReaderModeWidgetFactory({required this.padding});
+
+  /// This property is actually used for link callbacks,
+  /// we don't want to follow links, so this is set to be null.
+  /// Simply remove this override to re-enable links, when needed.
+  @override
+  GestureTapCallback? gestureTapCallback(String url) => null;
 
   @override
   Widget buildBodyWidget(BuildContext context, Widget child) =>

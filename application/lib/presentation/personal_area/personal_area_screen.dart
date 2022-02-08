@@ -55,6 +55,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       builder: (_, __) => _buildScreen(),
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppToolbar(
         appToolbarData: AppToolbarData.titleOnly(
           title: R.strings.personalAreaTitle,
@@ -95,7 +96,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           .toList();
 
   CardWidget _buildCollection() => CardWidget(
-        key: Keys.personalAreaCardCollections,
         cardData: CardData.personalArea(
           title: R.strings.personalAreaCollections,
           color: R.colors.personalAreaCollections,
@@ -107,7 +107,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       );
 
   CardWidget _buildHomeFeed() => CardWidget(
-        key: Keys.personalAreaCardHomeFeed,
         cardData: CardData.personalArea(
           title: R.strings.personalAreaHomeFeed,
           color: R.colors.personalAreaHomeFeed,
@@ -119,7 +118,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       );
 
   CardWidget _buildSettings() => CardWidget(
-        key: Keys.personalAreaCardSettings,
         cardData: CardData.personalArea(
           title: R.strings.personalAreaSettings,
           color: R.colors.personalAreaSettings,

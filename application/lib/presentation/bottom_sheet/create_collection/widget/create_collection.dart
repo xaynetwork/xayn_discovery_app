@@ -61,7 +61,7 @@ class _CreateCollectionState extends State<_CreateCollection>
 
           final footer = BottomSheetFooter(
             onCancelPressed: () => closeBottomSheet(context),
-            onApplyPressed: _onApplyPressed,
+            onApplyPressed: _createCollectionManager.createCollection,
             isApplyDisabled: state.collectionName.trim().isEmpty,
             applyBtnText: R.strings.bottomSheetCreate,
           );
@@ -77,8 +77,6 @@ class _CreateCollectionState extends State<_CreateCollection>
           );
         },
       );
-
-  void _onApplyPressed() => _createCollectionManager.createCollection();
 
   void _closeSheet(Collection newCollection) {
     closeBottomSheet(context);

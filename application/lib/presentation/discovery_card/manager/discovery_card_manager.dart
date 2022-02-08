@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/docum
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
@@ -47,12 +47,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final ShareUriUseCase _shareUriUseCase;
   final ListenIsBookmarkedUseCase _listenIsBookmarkedUseCase;
   final DiscoveryCardNavActions _discoveryCardNavActions;
-  final CreateBookmarkFromDocumentUseCase _createBookmarkUseCase;
-  final RemoveBookmarkUseCase _removeBookmarkUseCase;
+  final ToggleBookmarkUseCase _toggleBookmarkUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final UseCaseSink<Uri, ProcessedDocument> _updateUri;
   late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler;
+  late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn,
+      ToggleBookmarkUseCaseOut> _toggleBookmarkHandler;
 
   bool _isLoading = false;
 
@@ -64,14 +65,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._shareUriUseCase,
     this._discoveryCardNavActions,
     this._listenIsBookmarkedUseCase,
-    this._createBookmarkUseCase,
-    this._removeBookmarkUseCase,
+    this._toggleBookmarkUseCase,
     this._sendAnalyticsUseCase,
   ) : super(DiscoveryCardState.initial()) {
     _init();
   }
 
-  void updateDocument(Document document) async {
+  void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
 
     /// Update the uri which contains the news article
@@ -84,33 +84,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
   }
 
-  Future<bool> toggleBookmarkDocument(Document document) async {
-    final nextIsBookmarked = !state.isBookmarked;
-    final useCaseResults = await (state.isBookmarked
-        ? _removeBookmarkUseCase(document.documentUniqueId)
-        : _createBookmarkUseCase(
-            CreateBookmarkFromDocumentUseCaseIn(document: document),
-          ));
-    var hasError = false;
-
-    for (var it in useCaseResults) {
-      it.fold(defaultOnError: (e, s) => hasError = true, onValue: (_) {});
-    }
-
-    if (!hasError) {
-      _sendAnalyticsUseCase(
-        DocumentBookmarkedEvent(
+  void toggleBookmarkDocument(Document document) => _toggleBookmarkHandler(
+        CreateBookmarkFromDocumentUseCaseIn(
           document: document,
-          isBookmarked: nextIsBookmarked,
+          provider: state.processedDocument?.getProvider(document.webResource),
         ),
       );
-    }
-
-    return nextIsBookmarked;
-  }
 
   Future<void> _init() async {
     _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);
+    _toggleBookmarkHandler = pipe(_toggleBookmarkUseCase);
 
     /// html reader mode elements:
     ///
@@ -148,22 +131,27 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   @override
-  Future<DiscoveryCardState?> computeState() async =>
-      fold2(_updateUri, _isBookmarkedHandler).foldAll((
+  Future<DiscoveryCardState?> computeState() async => fold3(
+        _updateUri,
+        _isBookmarkedHandler,
+        _toggleBookmarkHandler,
+      ).foldAll((
         processedDocument,
         isBookmarked,
+        toggleBookmark,
         errorReport,
       ) {
         if (errorReport.isNotEmpty) {
           final report = errorReport.of(_updateUri) ??
-              errorReport.of(_isBookmarkedHandler);
+              errorReport.of(_isBookmarkedHandler) ??
+              errorReport.of(_toggleBookmarkHandler);
           logger.e(report!.error);
-
-          return DiscoveryCardState.error();
+          return DiscoveryCardState.error(report.error);
         }
 
-        var nextState = state.copyWith(
+        var nextState = DiscoveryCardState(
           isComplete: !_isLoading,
+          isBookmarkToggled: toggleBookmark != null,
         );
 
         if (isBookmarked != null) {
@@ -176,6 +164,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           nextState = nextState.copyWith(
             processedDocument: processedDocument,
           );
+        }
+
+        if (toggleBookmark != null) {
+          final event = DocumentBookmarkedEvent(
+            document: toggleBookmark.document,
+            isBookmarked: toggleBookmark.isBookmarked,
+          );
+          _sendAnalyticsUseCase(event);
         }
 
         return nextState;
