@@ -18,16 +18,19 @@ final iapError = IAPError(source: 'source', code: 'code', message: 'message');
 final restoredPurchaseDetails = createPurchase(PurchaseStatus.restored);
 final purchasedPurchaseDetails = createPurchase(PurchaseStatus.purchased);
 
+const serverVerificationData = 'serverVerificationData';
+
 PurchaseDetails createPurchase(
   PurchaseStatus status, {
   String id = subscriptionId,
+  bool pendingCompletePurchase = false,
 }) {
   final details = PurchaseDetails(
     productID: id,
     status: status,
     verificationData: PurchaseVerificationData(
       localVerificationData: 'localVerificationData',
-      serverVerificationData: 'serverVerificationData',
+      serverVerificationData: serverVerificationData,
       source: 'source',
     ),
     transactionDate: 'transactionDate',
@@ -35,6 +38,7 @@ PurchaseDetails createPurchase(
   if (status == PurchaseStatus.error) {
     details.error = iapError;
   }
+  details.pendingCompletePurchase = pendingCompletePurchase;
   return details;
 }
 
