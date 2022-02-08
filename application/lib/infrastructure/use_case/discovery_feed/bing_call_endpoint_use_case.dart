@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Mock implementation,
 /// This will be deprecated once the real discovery engine is available.
@@ -54,13 +55,22 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
 
       final document = Document(
         documentId: DocumentId(),
-        webResource: WebResource(
-          displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
+        resource: NewsResource(
+          // TODO the domain of the provider
+          sourceUrl: Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
           datePublished: DateTime.parse(it['datePublished'] as String),
-          provider: getProvider(it),
+          thumbnail: Uri.parse(it['provider'][0]['image']['thumbnail']
+                  ['contentUrl'] as String? ??
+              ""),
+          country: '',
+          topic: '',
+          rank: 0,
+          language: '',
+          score: null,
+          // provider: getProvider(it),
         ),
         isActive: true,
         feedback: DocumentFeedback.neutral,
@@ -75,28 +85,28 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
   }
 }
 
-WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
-  if (map.containsKey('provider')) {
-    String? providerName;
-    String? providerLogoUrl;
-
-    try {
-      providerName = map['provider'][0]['name'] as String?;
-      providerLogoUrl =
-          map['provider'][0]['image']['thumbnail']['contentUrl'] as String?;
-      // ignore: empty_catches
-    } catch (e) {} //TODO: add logger call
-
-    return providerName != null
-        ? WebResourceProvider(
-            name: providerName,
-            thumbnail: providerLogoUrl == null
-                ? null
-                : Uri.parse('$providerLogoUrl?w=64'),
-          )
-        : null;
-  }
-}
+// WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
+//   if (map.containsKey('provider')) {
+//     String? providerName;
+//     String? providerLogoUrl;
+//
+//     try {
+//       providerName = map['provider'][0]['name'] as String?;
+//       providerLogoUrl =
+//           map['provider'][0]['image']['thumbnail']['contentUrl'] as String?;
+//       // ignore: empty_catches
+//     } catch (e) {} //TODO: add logger call
+//
+//     return providerName != null
+//         ? WebResourceProvider(
+//             name: providerName,
+//             thumbnail: providerLogoUrl == null
+//                 ? null
+//                 : Uri.parse('$providerLogoUrl?w=64'),
+//           )
+//         : null;
+//   }
+// }
 
 /// A standalone Function which can be used in combination with [compute].
 Map<String, dynamic> _decodeJson(String raw) =>

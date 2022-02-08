@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../../test_utils/utils.dart';
 import 'observe_document_mixin_test.mocks.dart';
@@ -25,16 +26,18 @@ void main() {
     personalizedRank: 0,
     nonPersonalizedRank: 0,
     isActive: true,
-    webResource: WebResource(
+    resource: NewsResource(
       title: '',
       snippet: '',
       url: Uri.base,
-      displayUrl: Uri.base,
+      sourceUrl: Uri.base,
       datePublished: DateTime(2022),
-      provider: WebResourceProvider(
-        name: '',
-        thumbnail: Uri.base,
-      ),
+      thumbnail: Uri.base,
+      language: '',
+      country: '',
+      topic: '',
+      score: null,
+      rank: 0,
     ),
   );
 

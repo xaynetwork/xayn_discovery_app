@@ -82,7 +82,7 @@ class _DiscoveryFeedCardState
           context,
           widget.document,
           discoveryCardManager.state.processedDocument
-              ?.getProvider(widget.document.webResource),
+              ?.getProvider(widget.document.resource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
