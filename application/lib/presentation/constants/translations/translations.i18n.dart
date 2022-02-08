@@ -147,6 +147,19 @@ class Translations {
   String get trialBannerEndsTomorrow => """Your trial ends tomorrow""";
   String get trialBannerEndsToday => """Your trial ends today""";
   String get trialBannerExpired => """Your trial expired""";
+  String get subscriptionHeader => """Get unlimited content for just""";
+  String get subscriptionPricingError =>
+      """Unable to retrieve pricing details""";
+  String get subscriptionPerk1 => """Personalized stream""";
+  String get subscriptionPerk2 => """No ads""";
+  String get subscriptionPerk3 => """No tracking""";
+  String get subscriptionPerk4 => """Carbon neutral""";
+  String get subscriptionPerk5 => """Cancel any time""";
+  String get subscriptionSubscribeNow => """Subscribe Now""";
+  String get subscriptionRestore => """Restore subscription""";
+  String get subscriptionPromoCode => """I have a promo code""";
+  String get subscriptionDisclaimer =>
+      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
 }
 
 Map<String, String> get translationsMap => {
@@ -241,4 +254,16 @@ Map<String, String> get translationsMap => {
       """trialBannerEndsTomorrow""": """Your trial ends tomorrow""",
       """trialBannerEndsToday""": """Your trial ends today""",
       """trialBannerExpired""": """Your trial expired""",
+      """subscriptionHeader""": """Get unlimited content for just""",
+      """subscriptionPricingError""": """Unable to retrieve pricing details""",
+      """subscriptionPerk1""": """Personalized stream""",
+      """subscriptionPerk2""": """No ads""",
+      """subscriptionPerk3""": """No tracking""",
+      """subscriptionPerk4""": """Carbon neutral""",
+      """subscriptionPerk5""": """Cancel any time""",
+      """subscriptionSubscribeNow""": """Subscribe Now""",
+      """subscriptionRestore""": """Restore subscription""",
+      """subscriptionPromoCode""": """I have a promo code""",
+      """subscriptionDisclaimer""":
+          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
     };
