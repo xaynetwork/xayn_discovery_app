@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
 
 abstract class MarketingAnalyticsService {
@@ -60,7 +59,6 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
       /// ignore onAppOpenAttribution (registerOnAppOpenAttributionCallback flag)!
       ///
       registerOnDeepLinkingCallback: false,
-
       registerConversionDataCallback: false,
       registerOnAppOpenAttributionCallback: false,
     );
