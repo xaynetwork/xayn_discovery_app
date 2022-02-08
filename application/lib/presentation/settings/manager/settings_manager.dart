@@ -12,10 +12,13 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_th
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 abstract class SettingsNavActions {
+  void onPaymentNavPressed();
+
   void onBackNavPressed();
 }
 
@@ -23,6 +26,7 @@ abstract class SettingsNavActions {
 class SettingsScreenManager extends Cubit<SettingsScreenState>
     with UseCaseBlocHelper<SettingsScreenState>
     implements SettingsNavActions {
+  final FeatureManager _featureManager;
   final GetAppVersionUseCase _getAppVersionUseCase;
   final GetAppThemeUseCase _getAppThemeUseCase;
   final SaveAppThemeUseCase _saveAppThemeUseCase;
@@ -43,6 +47,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._settingsNavActions,
     this._urlOpener,
     this._shareUriUseCase,
+    this._featureManager,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -84,6 +89,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     SettingsScreenState buildReady() => SettingsScreenState.ready(
           theme: _theme,
           appVersion: _appVersion,
+          isPaymentEnabled: _featureManager.isPaymentEnabled,
         );
     return fold(_appThemeHandler).foldAll((appTheme, _) async {
       if (appTheme != null) {
@@ -96,4 +102,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   @override
   void onBackNavPressed() => _settingsNavActions.onBackNavPressed();
+
+  @override
+  void onPaymentNavPressed() => _settingsNavActions.onPaymentNavPressed();
 }

@@ -30,6 +30,9 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get showOnboardingScreen => isEnabled(Feature.onBoarding);
 
+  bool get isPaymentEnabled =>
+      EnvironmentHelper.kIsDebug || isEnabled(Feature.payment);
+
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
         featureMap: Map.from(_featureMap),

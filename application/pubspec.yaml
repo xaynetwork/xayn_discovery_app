@@ -37,6 +37,7 @@ dependencies:
   http: 0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: 7.1.0
+  in_app_purchase: 2.0.1
   in_app_review: 2.0.3
   i18n: 4.0.0-alpha.0
   injectable: 1.5.0
@@ -70,7 +71,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 279e565481b941453e4127a97b104a573155df62
+      ref: 2f33f1c1c830b0215313fedddae779c5f6a102f0
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -80,7 +81,7 @@ dependencies:
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
-      ref: 3a5896b7259c012fc6b408b1cd8a5578cc7c33a3
+      ref: dd41fca0f847f3a0ff220220b01195ce083a835e
   xayn_swipe_it: 1.0.3
 
 dependency_overrides:
