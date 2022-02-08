@@ -37,9 +37,9 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   late final DiscoveryCardManager discoveryCardManager;
   late final ImageManager imageManager;
 
-  WebResource get webResource => widget.document.webResource;
+  NewsResource get webResource => widget.document.resource;
 
-  String get imageUrl => webResource.displayUrl.toString();
+  String get imageUrl => webResource.url.toString();
 
   String get snippet => webResource.snippet;
 
@@ -52,7 +52,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     discoveryCardManager = widget.discoveryCardManager ?? di.get()
       ..updateDocument(widget.document);
     imageManager = widget.imageManager ?? di.get()
-      ..getImage(widget.document.webResource.displayUrl);
+      ..getImage(widget.document.resource.url);
   }
 
   @override
@@ -74,7 +74,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
       discoveryCardManager.updateDocument(widget.document);
-      imageManager.getImage(widget.document.webResource.displayUrl);
+      imageManager.getImage(widget.document.resource.sourceUrl);
     }
   }
 
@@ -123,7 +123,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
             builder: (_) => MoveDocumentToCollectionBottomSheet(
               document: widget.document,
               provider: state.processedDocument
-                  ?.getProvider(widget.document.webResource),
+                  ?.getProvider(widget.document.resource),
               onError: (tooltipKey) => showTooltip(tooltipKey),
             ),
           );

@@ -76,8 +76,8 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
   @override
   Stream<CreateBookmarkUseCaseIn> transaction(
       CreateBookmarkFromDocumentUseCaseIn param) async* {
-    final webResource = param.document.webResource;
-    final image = await _getImageData(webResource.displayUrl);
+    final webResource = param.document.resource;
+    final image = await _getImageData(webResource.url);
 
     final createBookmarkUseCaseIn = CreateBookmarkUseCaseIn(
       id: param.document.documentUniqueId,

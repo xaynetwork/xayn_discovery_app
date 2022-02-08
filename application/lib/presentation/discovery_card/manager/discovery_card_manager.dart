@@ -77,11 +77,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _isBookmarkedHandler(document.documentUniqueId);
 
     /// Update the uri which contains the news article
-    _updateUri(document.webResource.url);
+    _updateUri(document.resource.url);
   }
 
   void shareUri(Document document) {
-    _shareUriUseCase.call(document.webResource.url);
+    _shareUriUseCase.call(document.resource.url);
 
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
   }
@@ -89,7 +89,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void toggleBookmarkDocument(Document document) => _toggleBookmarkHandler(
         CreateBookmarkFromDocumentUseCaseIn(
           document: document,
-          provider: state.processedDocument?.getProvider(document.webResource),
+          provider: state.processedDocument?.getProvider(document.resource),
         ),
       );
 
@@ -98,7 +98,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       document: document,
       feedback: DocumentFeedback.positive,
     );
-    openExternalUrl(document.webResource.url.toString());
+    openExternalUrl(document.resource.url.toString());
   }
 
   Future<void> _init() async {
