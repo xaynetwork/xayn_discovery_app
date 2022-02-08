@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:injectable/injectable.dart';
 
@@ -22,10 +25,20 @@ class PaymentService {
         autoConsume: autoConsume,
       );
 
+  /// This method contains an extra code.
+  /// It's needed due to bug, described here: https://github.com/flutter/flutter/issues/60763#issuecomment-705833964%20%20%20%20%5B1%5D:%20https://github.com/flutter/flutter/issues/60763
+  /// Solution in this comment: https://github.com/flutter/flutter/issues/60763#issuecomment-705833964
   Future<bool> buyNonConsumable({
     required PurchaseParam purchaseParam,
-  }) =>
-      _appPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+  }) async {
+    if (Platform.isIOS) {
+      var transactions = await SKPaymentQueueWrapper().transactions();
+      for (final skPaymentTransactionWrapper in transactions) {
+        SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
+      }
+    }
+    return _appPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+  }
 
   Future<void> completePurchase(PurchaseDetails purchase) =>
       _appPurchase.completePurchase(purchase);
