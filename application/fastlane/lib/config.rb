@@ -12,7 +12,8 @@ module Config
                    "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
-                   "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811" }
+                   "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
+                   "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
 
   #ios, android, web
   PLATFORM = "android"
@@ -53,8 +54,8 @@ module Config
     },
     "beta" => {
       "ios" => {
-        "id" => "com.xayn.search",
-        "name" => "Xayn Beta",
+        "id" => "com.xayn.discovery",
+        "name" => "Xayn 3.0",
         # Discoveru is correct!! :P
         "appcenter_target" => "Discoveru-App-iOS-beta",
         "appcenter_token" => "APPCENTER_IOS_BETA_TOKEN",
@@ -63,7 +64,7 @@ module Config
       },
       "android" => {
         "id" => "com.xayn.search",
-        "name" => "Xayn Beta",
+        "name" => "Xayn 3.0",
         "appcenter_target" => "Discovery-App-Android-beta",
         "appcenter_token" => "APPCENTER_ANDROID_BETA_TOKEN",
         "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
@@ -101,10 +102,10 @@ module Config
       "adhoc" => true,
     },
     "beta" => {
-      "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Beta_Profile.mobileprovision",
-      "provisioning_profile_name" => "Xayn Discovery AppStore Beta Profile",
+      "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
+      "provisioning_profile_name" => "Xayn Discovery AppStore Profile",
       "provisioning_profiles" => {
-        "com.xayn.search" => "Xayn Discovery AppStore Beta Profile",
+        "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
       },
       "adhoc" => false,
     },
