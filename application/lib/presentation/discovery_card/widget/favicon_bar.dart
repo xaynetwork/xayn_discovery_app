@@ -30,27 +30,27 @@ class FaviconBar extends StatelessWidget {
         ? Thumbnail.icon(Icons.web)
         : Thumbnail.networkImage(provider!.favicon.toString());
 
+    final providerNameAndDatePublished = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          provider?.name ?? '',
+          style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          timeAgo(datePublished, DateFormat.yMMMMd()),
+          style: R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
+        ),
+      ],
+    );
+
     return Row(
       children: [
         favicon,
-        SizedBox(
-          width: R.dimen.unit,
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              provider?.name ?? '',
-              style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
-            ),
-            Text(
-              timeAgo(datePublished, DateFormat.yMMMMd()),
-              style:
-                  R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
-            ),
-          ],
-        )
+        SizedBox(width: R.dimen.unit),
+        Expanded(child: providerNameAndDatePublished),
       ],
     );
   }

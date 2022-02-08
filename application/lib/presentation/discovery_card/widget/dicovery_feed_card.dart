@@ -58,6 +58,8 @@ class _DiscoveryFeedCardState
             ? DocumentFeedback.neutral
             : DocumentFeedback.negative,
       ),
+      onOpenUrl: () => discoveryCardManager
+          .openUrl(widget.document.webResource.url.toString()),
       onBookmarkPressed: onBookmarkPressed,
       onBookmarkLongPressed: onBookmarkLongPressed(state),
       isBookmarked: state.isBookmarked,
