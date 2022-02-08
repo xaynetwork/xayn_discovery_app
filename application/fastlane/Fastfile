@@ -13,6 +13,7 @@
 import("../ios/fastlane/Fastfile")
 import("lib/properties.rb")
 import("lib/git.rb")
+import("lib/download_utils.rb")
 
 ### All the configs are in this file, eventually all project specific parts will move there
 import("lib/config.rb")
@@ -32,6 +33,7 @@ before_all do |lane, options|
   setIfNotSet.call(:coverage, false)
   ## downloading the iOS adhoc profile
   setIfNotSet.call(:downloadProfile, true)
+  setIfNotSet.call(:update_assets, false)
 
   version_name = gitVersionName()
   flavor = options[:flavor]
@@ -40,7 +42,12 @@ before_all do |lane, options|
   build_number = gitVersionNumber().to_i + offset
   setIfNotSet.call(:build_number, build_number)
   setIfNotSet.call(:version_name, version_name)
+  options[:env] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
+  options[:env].merge!(ENV.to_h)
+  if is_ci
+    UI.success "Env:\n#{JSON.pretty_generate(options[:env])}"
+  end
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
@@ -107,6 +114,9 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
+  if options[:update_assets]
+    update_assets(options)
+  end
   mode = options[:watch] ? "watch" : "build"
   command = "pub run build_runner #{mode} --delete-conflicting-outputs"
   begin
@@ -128,6 +138,7 @@ lane :check_config_files do |options|
     "AMPLITUDE_API_KEY_DEBUG" => "AMPLITUDE_API_KEY",
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_DEBUG" => "APP_STORE_NUMERICAL_ID",
+    "AI_ASSETS_URL" => "AI_ASSETS_URL",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -139,6 +150,7 @@ lane :check_config_files do |options|
     "AMPLITUDE_API_KEY_PRODUCTION" => "AMPLITUDE_API_KEY",
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_PRODUCTION" => "APP_STORE_NUMERICAL_ID",
+    "AI_ASSETS_URL" => "AI_ASSETS_URL",
   }, Config::ENV_DEFAULTS)
 
   if options[:flavor] != "internal" && options[:release] != "debug"
@@ -219,6 +231,15 @@ lane :publish do |options|
   end
 end
 
+desc "Update the assets folder based on the Assets Manifest from xayn_discovery_engine"
+lane :update_assets do |options|
+  manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
+  manifestPath["file://"] = ""
+  raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
+  UI.user_error!("No AI_ASSETS_URL provided!") unless options[:env].key?("AI_ASSETS_URL")
+  downloadAssetsFromManifest(manifestPath, options[:env]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
+end
+
 # Private helper methods
 def flutter(args)
   Dir.chdir("..") do
@@ -244,4 +265,21 @@ def uploadToAppCenter(token, appName, path, version)
     destinations: Config::APPCENTER_DEFAULT_TARGET,
     notify_testers: true,
   )
+end
+
+def pathFromDependency(dependency)
+  properties = loadProperties("../.packages", ":")
+  path = properties[dependency]
+  raise "Can not find #{dependency} in ../.packages " if (path == nil)
+  return path
+end
+
+def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
+  file = File.read(manifestPath)
+  data_hash = JSON.parse(file)
+  data_hash["assets"].each { |a|
+    suffix = a["url_suffix"]
+    checksum = a["checksum"]
+    downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
+  }
 end
