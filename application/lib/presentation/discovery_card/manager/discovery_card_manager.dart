@@ -161,7 +161,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         var nextState = DiscoveryCardState(
           isComplete: !_isLoading,
-          isBookmarkToggled: toggleBookmark != null,
         );
 
         if (isBookmarked != null) {
@@ -176,7 +175,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           );
         }
 
-        if (toggleBookmark != null) {
+        if (toggleBookmark != null &&
+            nextState.isBookmarked == toggleBookmark.isBookmarked) {
+          nextState = nextState.copyWith(
+            isBookmarkToggled: toggleBookmark.isBookmarked,
+          );
           final event = DocumentBookmarkedEvent(
             document: toggleBookmark.document,
             isBookmarked: toggleBookmark.isBookmarked,

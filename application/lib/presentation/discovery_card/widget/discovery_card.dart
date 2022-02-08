@@ -322,7 +322,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 
   @override
-  void discoveryCardStateListener() => showTooltip(
+  void discoveryCardStateListener(DiscoveryCardState state) {
+    if (state.isBookmarkToggled) {
+      showTooltip(
         BookmarkToolTipKeys.bookmarkedToDefault,
         parameters: [
           context,
@@ -330,13 +332,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
-
-  @override
-  bool discoveryCardStateListenWhen(
-          DiscoveryCardState previous, DiscoveryCardState current) =>
-      !previous.isBookmarked &&
-      current.isBookmarked &&
-      current.isBookmarkToggled;
+    }
+  }
 }
 
 class _DiscoveryCardPageState extends _DiscoveryCardState

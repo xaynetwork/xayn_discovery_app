@@ -87,13 +87,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
           state,
           _buildImage(),
         ),
-        listenWhen: (previous, current) =>
-            current.hasError || discoveryCardStateListenWhen(previous, current),
         listener: (context, state) {
           if (state.hasError) {
             _handleError(state);
           } else {
-            discoveryCardStateListener();
+            discoveryCardStateListener(state);
           }
         },
       );
@@ -103,10 +101,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     if (key != null) showTooltip(key);
   }
 
-  bool discoveryCardStateListenWhen(
-      DiscoveryCardState prev, DiscoveryCardState curr);
-
-  void discoveryCardStateListener();
+  void discoveryCardStateListener(DiscoveryCardState state);
 
   Widget buildFromState(
     BuildContext context,
