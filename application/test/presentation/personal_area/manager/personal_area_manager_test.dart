@@ -1,16 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 import '../../test_utils/utils.dart';
 
 void main() {
   late MockPersonalAreaNavActions actions;
   late PersonalAreaManager manager;
-  const initialState = none;
+  final initialState = PersonalAreaState(trialEndDate: subscriptionEndDate);
 
   setUp(() {
     actions = MockPersonalAreaNavActions();

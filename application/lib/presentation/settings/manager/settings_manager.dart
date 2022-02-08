@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_u
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 abstract class SettingsNavActions {
@@ -88,12 +89,11 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   Future<SettingsScreenState?> computeState() async {
     if (!_initDone) return null;
-    // TODO: The `trialEndDate` will come from somewhere else
     SettingsScreenState buildReady() => SettingsScreenState.ready(
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
-          trialEndDate: DateTime.now().add(const Duration(days: 6)),
+          trialEndDate: subscriptionEndDate,
         );
     return fold(_appThemeHandler).foldAll((appTheme, _) async {
       if (appTheme != null) {
