@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
+import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -53,7 +54,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final DiscoveryCardNavActions _discoveryCardNavActions;
   final ToggleBookmarkUseCase _toggleBookmarkUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
-  final GetExplicitDocumentFeedbackUseCase _getExplicitDocumentFeedbackUseCase;
+  final CrudExplicitDocumentFeedbackUseCase
+      _crudExplicitDocumentFeedbackUseCase;
 
   /// html reader mode elements:
   ///
@@ -94,9 +96,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn,
           ToggleBookmarkUseCaseOut> _toggleBookmarkHandler =
       pipe(_toggleBookmarkUseCase);
-  late final UseCaseSink<DocumentId, DocumentFeedback>
-      _getExplicitDocumentFeedbackHandler =
-      pipe(_getExplicitDocumentFeedbackUseCase);
+  late final UseCaseSink<CrudExplicitDocumentFeedbackUseCaseIn,
+          ExplicitDocumentFeedback> _crudExplicitDocumentFeedbackHandler =
+      pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
 
@@ -110,12 +112,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._listenIsBookmarkedUseCase,
     this._toggleBookmarkUseCase,
     this._sendAnalyticsUseCase,
-    this._getExplicitDocumentFeedbackUseCase,
+    this._crudExplicitDocumentFeedbackUseCase,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
-    _getExplicitDocumentFeedbackHandler(document.documentId);
+    _crudExplicitDocumentFeedbackHandler(
+      CrudExplicitDocumentFeedbackUseCaseIn.watch(
+        ExplicitDocumentFeedback(id: document.documentId.uniqueId),
+      ),
+    );
 
     /// Update the uri which contains the news article
     _updateUri(document.webResource.url);
@@ -162,7 +168,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         _updateUri,
         _isBookmarkedHandler,
         _toggleBookmarkHandler,
-        _getExplicitDocumentFeedbackHandler,
+        _crudExplicitDocumentFeedbackHandler,
       ).foldAll((
         processedDocument,
         isBookmarked,
@@ -196,7 +202,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         if (explicitDocumentFeedback != null) {
           nextState = nextState.copyWith(
-            explicitDocumentFeedback: explicitDocumentFeedback,
+            explicitDocumentFeedback: explicitDocumentFeedback.feedback,
           );
         }
 

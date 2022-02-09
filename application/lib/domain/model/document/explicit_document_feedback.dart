@@ -10,6 +10,6 @@ class ExplicitDocumentFeedback extends DbEntity
     with _$ExplicitDocumentFeedback {
   factory ExplicitDocumentFeedback({
     required UniqueId id,
-    required DocumentFeedback feedback,
+    @Default(DocumentFeedback.neutral) DocumentFeedback feedback,
   }) = _ExplicitDocumentFeedback;
 }
