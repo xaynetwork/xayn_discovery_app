@@ -47,4 +47,10 @@ class BugReportingService {
 
   void reportCrash(Object error, StackTrace stackTrace) =>
       CrashReporting.reportCrash(error, stackTrace);
+
+  void reportHandledCrash(
+    dynamic exception, [
+    StackTrace? stack,
+  ]) =>
+      CrashReporting.reportHandledCrash(exception, stack);
 }
