@@ -15,7 +15,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// a threshold, how long a user should observe a document, before it becomes
 /// implicitly liked.
-const int _kThresholdDurationSecondsImplicitLike = 10;
+const int _kThresholdDurationSecondsImplicitLike = 5;
 
 mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<DiscoveryCardObservation, EngineEvent>? _useCaseSink;
