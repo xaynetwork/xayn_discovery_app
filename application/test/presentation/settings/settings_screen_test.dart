@@ -169,7 +169,7 @@ void main() {
         manager.stream,
 
         // actual click happened here
-        manager.openUrl(url),
+        manager.openExternalUrl(url),
       ]);
       verifyNoMoreInteractions(manager);
     }

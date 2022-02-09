@@ -72,8 +72,8 @@ class _DiscoveryCardStaticState
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),
-          onOpenUrl: () => discoveryCardManager
-              .openUrl(widget.document.webResource.url.toString()),
+          onOpenUrl: () =>
+              discoveryCardManager.openWebResourceUrl(widget.document),
           onBookmarkPressed: onBookmarkPressed,
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
