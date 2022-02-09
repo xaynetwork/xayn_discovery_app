@@ -96,9 +96,8 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       },
       onValue: (collection) => createdCollection = collection,
     );
-    if (_useCaseError == null) {
-      return createdCollection;
-    }
+
+    return _useCaseError == null ? createdCollection : null;
   }
 
   void renameCollection({

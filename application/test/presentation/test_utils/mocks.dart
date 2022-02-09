@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mockito/annotations.dart';
+import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -79,6 +80,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SettingsScreenManager,
   ShareUriUseCase,
   UrlOpener,
+  AppSettingsRepository,
 ])
 class Mocks {
   Mocks._();

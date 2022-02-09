@@ -76,26 +76,26 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
 }
 
 WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
-  if (map.containsKey('provider')) {
-    String? providerName;
-    String? providerLogoUrl;
+  if (!map.containsKey('provider')) return null;
 
-    try {
-      providerName = map['provider'][0]['name'] as String?;
-      providerLogoUrl =
-          map['provider'][0]['image']['thumbnail']['contentUrl'] as String?;
-      // ignore: empty_catches
-    } catch (e) {} //TODO: add logger call
+  String? providerName;
+  String? providerLogoUrl;
 
-    return providerName != null
-        ? WebResourceProvider(
-            name: providerName,
-            thumbnail: providerLogoUrl == null
-                ? null
-                : Uri.parse('$providerLogoUrl?w=64'),
-          )
-        : null;
-  }
+  try {
+    providerName = map['provider'][0]['name'] as String?;
+    providerLogoUrl =
+        map['provider'][0]['image']['thumbnail']['contentUrl'] as String?;
+    // ignore: empty_catches
+  } catch (e) {} //TODO: add logger call
+
+  return providerName != null
+      ? WebResourceProvider(
+          name: providerName,
+          thumbnail: providerLogoUrl == null
+              ? null
+              : Uri.parse('$providerLogoUrl?w=64'),
+        )
+      : null;
 }
 
 /// A standalone Function which can be used in combination with [compute].
