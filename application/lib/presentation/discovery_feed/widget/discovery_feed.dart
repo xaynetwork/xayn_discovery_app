@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
@@ -108,6 +109,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               feedback: document.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
+              context: FeedbackContext.explicit,
             ),
           ),
           buildNavBarItemBookmark(
@@ -126,6 +128,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               feedback: document.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,
+              context: FeedbackContext.explicit,
             ),
           ),
         ],

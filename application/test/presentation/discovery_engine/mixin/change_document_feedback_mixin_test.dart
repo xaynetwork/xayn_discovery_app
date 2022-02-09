@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
@@ -59,6 +60,7 @@ void main() {
     act: (bloc) => bloc.changeDocumentFeedback(
       document: fakeDocument,
       feedback: DocumentFeedback.positive,
+      context: FeedbackContext.explicit,
     ),
     verify: (manager) {
       verify(engine.engineEvents);
