@@ -127,7 +127,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     );
   }
 
-  Widget _buildBaseCard(Collection collection) =>
+  Widget _buildBaseCard(Collection collection, [VoidCallback? onLongPress]) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
         builder: (context, cardState) {
@@ -139,7 +139,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
               title: collection.name,
               onPressed: () =>
                   _collectionsScreenManager?.onCollectionPressed(collection.id),
-              onLongPressed: () => _showCollectionCardOptions(collection),
+              onLongPressed: onLongPress,
               numOfItems: cardState.numOfItems,
               backgroundImage: cardState.image,
               color: R.colors.collectionsScreenCard,
@@ -151,7 +151,10 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       );
 
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
-        collectionCard: _buildBaseCard(collection),
+        collectionCard: _buildBaseCard(
+          collection,
+          () => _showCollectionCardOptions(collection),
+        ),
       );
 
   _showAddCollectionBottomSheet() {
