@@ -3,16 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
@@ -56,11 +56,11 @@ class _MoveDocumentToCollection extends StatefulWidget {
 
 class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     with BottomSheetBodyMixin {
-  MoveDocumentToCollectionManager? _moveDocumentToCollectionManager;
+  MoveToCollectionManager? _moveDocumentToCollectionManager;
 
   @override
   void initState() {
-    di.getAsync<MoveDocumentToCollectionManager>().then(
+    di.getAsync<MoveToCollectionManager>().then(
       (it) async {
         await it.updateInitialSelectedCollection(
           bookmarkId: widget.document.documentUniqueId,
@@ -84,8 +84,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   Widget build(BuildContext context) {
     final body = _moveDocumentToCollectionManager == null
         ? const SizedBox.shrink()
-        : BlocConsumer<MoveDocumentToCollectionManager,
-            MoveDocumentToCollectionState>(
+        : BlocConsumer<MoveToCollectionManager, MoveToCollectionState>(
             bloc: _moveDocumentToCollectionManager,
             listener: (_, state) {
               if (state.hasError) {
@@ -122,8 +121,10 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: () => _moveDocumentToCollectionManager!.onApplyPressed(
+      onApplyPressed: () =>
+          _moveDocumentToCollectionManager!.onApplyToDocumentPressed(
         document: widget.document,
+        provider: widget.provider,
       ),
     );
 

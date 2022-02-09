@@ -111,7 +111,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       context,
       builder: (_) => MoveBookmarkToCollectionBottomSheet(
         bookmarkId: bookmarkId,
-        onError: (tooltipKey) => showTooltip(context, tooltipKey),
+        onError: showTooltip,
       ),
     );
   }
