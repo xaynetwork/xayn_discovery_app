@@ -78,20 +78,21 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           }
         }
 
-        final subscriptionProduct = _subscriptionProduct = isAvailable == true
-            ? product?.copyWith(PurchasableProductStatus.restored)
-            : product;
-
-        if (subscriptionProduct == null) return super.computeState();
-
-        return PaymentScreenState.ready(
-          product: status == null
-              ? subscriptionProduct
-              : subscriptionProduct.copyWith(status),
-          errorMsg: errors.isNotEmpty
-              ? errors.map((e) => e.toString()).join('\r')
-              : null,
+        final subscriptionProduct = product?.copyWith(
+          status ??
+              (isAvailable == true
+                  ? PurchasableProductStatus.restored
+                  : product.status),
         );
+
+        if (subscriptionProduct != null) {
+          return PaymentScreenState.ready(
+            product: subscriptionProduct,
+            errorMsg: errors.isNotEmpty
+                ? errors.map((e) => e.toString()).join('\r')
+                : null,
+          );
+        }
       });
 
   void _logError(String prefix, Object error) => logger.e('$prefix: $error');
