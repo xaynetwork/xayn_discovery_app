@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -52,11 +53,50 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final DiscoveryCardNavActions _discoveryCardNavActions;
   final ToggleBookmarkUseCase _toggleBookmarkUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final GetExplicitDocumentFeedbackUseCase _getExplicitDocumentFeedbackUseCase;
 
-  late final UseCaseSink<Uri, ProcessedDocument> _updateUri;
-  late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler;
+  /// html reader mode elements:
+  ///
+  /// - loads the source html
+  ///   * emits a loading state while the source html is loading
+  /// - transforms the loaded html into reader mode html
+  /// - extracts lists of html elements from the html tree, to display in story mode
+  late final UseCaseSink<Uri, ProcessedDocument> _updateUri =
+      pipe(_connectivityUseCase).transform(
+    (out) => out
+        .distinct()
+        .followedBy(_loadHtmlUseCase)
+        .scheduleComputeState(
+          consumeEvent: (it) => !it.isCompleted,
+          run: (it) => _isLoading = !it.isCompleted,
+        )
+        .map(
+          (it) => ReadabilityConfig(
+            uri: it.uri,
+            html: it.html,
+            disableJsonLd: true,
+            classesToPreserve: const [],
+          ),
+        )
+        .followedBy(_readabilityUseCase)
+        .map(
+          (it) => ReadingTimeInput(
+            processHtmlResult: it,
+            lang: _kReadingTimeLanguage,
+            singleUnit: R.strings.readingTimeUnitSingular,
+            pluralUnit: R.strings.readingTimeUnitPlural,
+          ),
+        )
+        .followedBy(_injectReaderMetaDataUseCase),
+  );
+  late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler =
+      pipe(_listenIsBookmarkedUseCase);
   late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn,
-      ToggleBookmarkUseCaseOut> _toggleBookmarkHandler;
+          ToggleBookmarkUseCaseOut> _toggleBookmarkHandler =
+      pipe(_toggleBookmarkUseCase);
+  late final UseCaseSink<DocumentId, DocumentFeedback>
+      _getExplicitDocumentFeedbackHandler =
+      pipe(_getExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
 
@@ -70,12 +110,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._listenIsBookmarkedUseCase,
     this._toggleBookmarkUseCase,
     this._sendAnalyticsUseCase,
-  ) : super(DiscoveryCardState.initial()) {
-    _init();
-  }
+    this._getExplicitDocumentFeedbackUseCase,
+  ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
+    _getExplicitDocumentFeedbackHandler(document.documentId);
 
     /// Update the uri which contains the news article
     _updateUri(document.webResource.url);
@@ -112,58 +152,22 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     changeDocumentFeedback(
       document: document,
       feedback: DocumentFeedback.positive,
+      context: FeedbackContext.implicit,
     );
     openExternalUrl(document.webResource.url.toString());
   }
 
-  Future<void> _init() async {
-    _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);
-    _toggleBookmarkHandler = pipe(_toggleBookmarkUseCase);
-
-    /// html reader mode elements:
-    ///
-    /// - loads the source html
-    ///   * emits a loading state while the source html is loading
-    /// - transforms the loaded html into reader mode html
-    /// - extracts lists of html elements from the html tree, to display in story mode
-    _updateUri = pipe(_connectivityUseCase).transform(
-      (out) => out
-          .distinct()
-          .followedBy(_loadHtmlUseCase)
-          .scheduleComputeState(
-            consumeEvent: (it) => !it.isCompleted,
-            run: (it) => _isLoading = !it.isCompleted,
-          )
-          .map(
-            (it) => ReadabilityConfig(
-              uri: it.uri,
-              html: it.html,
-              disableJsonLd: true,
-              classesToPreserve: const [],
-            ),
-          )
-          .followedBy(_readabilityUseCase)
-          .map(
-            (it) => ReadingTimeInput(
-              processHtmlResult: it,
-              lang: _kReadingTimeLanguage,
-              singleUnit: R.strings.readingTimeUnitSingular,
-              pluralUnit: R.strings.readingTimeUnitPlural,
-            ),
-          )
-          .followedBy(_injectReaderMetaDataUseCase),
-    );
-  }
-
   @override
-  Future<DiscoveryCardState?> computeState() async => fold3(
+  Future<DiscoveryCardState?> computeState() async => fold4(
         _updateUri,
         _isBookmarkedHandler,
         _toggleBookmarkHandler,
+        _getExplicitDocumentFeedbackHandler,
       ).foldAll((
         processedDocument,
         isBookmarked,
         toggleBookmark,
+        explicitDocumentFeedback,
         errorReport,
       ) {
         if (errorReport.isNotEmpty) {
@@ -190,15 +194,23 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           );
         }
 
+        if (explicitDocumentFeedback != null) {
+          nextState = nextState.copyWith(
+            explicitDocumentFeedback: explicitDocumentFeedback,
+          );
+        }
+
         if (toggleBookmark != null &&
             nextState.isBookmarked == toggleBookmark.isBookmarked) {
           nextState = nextState.copyWith(
             isBookmarkToggled: toggleBookmark.isBookmarked,
           );
+
           final event = DocumentBookmarkedEvent(
             document: toggleBookmark.document,
             isBookmarked: toggleBookmark.isBookmarked,
           );
+          
           _sendAnalyticsUseCase(event);
         }
 

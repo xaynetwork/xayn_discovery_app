@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'package:xayn_design/xayn_design.dart';
@@ -16,6 +15,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onBookmarkLongPressed,
     required this.isBookmarked,
     required this.document,
+    required this.explicitDocumentFeedback,
   }) : super(key: key);
 
   final VoidCallback onSharePressed;
@@ -25,11 +25,12 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final Document document;
+  final DocumentFeedback explicitDocumentFeedback;
 
   @override
   Widget build(BuildContext context) {
     final likeButton = AppGhostButton.icon(
-      document.isRelevant
+      explicitDocumentFeedback == DocumentFeedback.positive
           ? R.assets.icons.thumbsUpActive
           : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
@@ -50,7 +51,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final dislikeButton = AppGhostButton.icon(
-      document.isIrrelevant
+      explicitDocumentFeedback == DocumentFeedback.negative
           ? R.assets.icons.thumbsDownActive
           : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,

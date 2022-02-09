@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
@@ -102,11 +101,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
-            isLiked: document.isRelevant,
+            isLiked: managers.discoveryCardManager.state.isRelevant,
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
               document: document,
-              feedback: document.isRelevant
+              feedback: managers.discoveryCardManager.state.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
               context: FeedbackContext.explicit,
@@ -121,11 +120,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               onPressed: () =>
                   managers.discoveryCardManager.shareUri(document)),
           buildNavBarItemDisLike(
-            isDisLiked: document.isIrrelevant,
+            isDisLiked: managers.discoveryCardManager.state.isIrrelevant,
             onPressed: () =>
                 managers.discoveryCardManager.changeDocumentFeedback(
               document: document,
-              feedback: document.isIrrelevant
+              feedback: managers.discoveryCardManager.state.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,
               context: FeedbackContext.explicit,
@@ -319,6 +318,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           manager: managers.discoveryCardManager,
           isPrimary: isPrimary,
           document: document,
+          explicitDocumentFeedback:
+              managers.discoveryCardManager.state.explicitDocumentFeedback,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
         );
@@ -331,8 +332,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       (int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
+        final managers = managersOf(document);
 
-        switch (document.feedback) {
+        switch (managers.discoveryCardManager.state.explicitDocumentFeedback) {
           case DocumentFeedback.neutral:
             return null;
           case DocumentFeedback.positive:

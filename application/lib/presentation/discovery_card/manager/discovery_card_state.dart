@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 part 'discovery_card_state.freezed.dart';
 
@@ -19,6 +20,8 @@ class DiscoveryCardState with _$DiscoveryCardState {
     @Default(false) bool isBookmarkToggled,
     Object? error,
     ProcessedDocument? processedDocument,
+    @Default(DocumentFeedback.neutral)
+        DocumentFeedback explicitDocumentFeedback,
   }) = _DiscoveryCardState;
 
   factory DiscoveryCardState.initial() => const DiscoveryCardState();
@@ -26,6 +29,13 @@ class DiscoveryCardState with _$DiscoveryCardState {
   factory DiscoveryCardState.error(Object? error) => DiscoveryCardState(
         error: error,
       );
+
+  bool get isNeutral => explicitDocumentFeedback == DocumentFeedback.neutral;
+
+  bool get isRelevant => explicitDocumentFeedback == DocumentFeedback.positive;
+
+  bool get isIrrelevant =>
+      explicitDocumentFeedback == DocumentFeedback.negative;
 }
 
 extension DiscoveryCardStateExtension on DiscoveryCardState {
