@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_scr
 import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
+import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
 
 class PageRegistry {
   PageRegistry._();
@@ -20,6 +21,7 @@ class PageRegistry {
 
   /// Always also add a page to this pages set
   static final Set<xayn.UntypedPageData> pages = {
+    splashScreen,
     discovery,
     search,
     personalArea,
@@ -30,9 +32,13 @@ class PageRegistry {
   };
 
   // Make sure to add the page names in camel case
+  static final splashScreen = xayn.PageData(
+    name: "splashScreen",
+    isInitial: true,
+    builder: (_, args) => const SplashScreen(),
+  );
   static final discovery = xayn.PageData(
     name: "discovery",
-    isInitial: true,
     builder: (_, args) => const DiscoveryFeed(),
   );
   static final search = xayn.PageData(
