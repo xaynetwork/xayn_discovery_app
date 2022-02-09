@@ -38,10 +38,7 @@ class BottomSheetFooter extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: R.dimen.unit2),
-      child: Container(
-        child: row,
-        color: Colors.white,
-      ),
+      child: row,
     );
   }
 
