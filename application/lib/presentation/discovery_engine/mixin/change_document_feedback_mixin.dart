@@ -22,6 +22,8 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
     required Document document,
     required DocumentFeedback feedback,
   }) {
+    if (document.feedback == feedback) return;
+
     _useCaseSink ??= _getUseCaseSink();
 
     final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -30,6 +31,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onBookmarkPressed,
     required this.onBookmarkLongPressed,
     required this.isBookmarked,
+    required this.onOpenUrl,
     this.fractionSize = 1.0,
     this.provider,
   }) : super(key: key);
@@ -43,6 +45,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
+  final VoidCallback onOpenUrl;
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final double fractionSize;
@@ -85,6 +88,24 @@ class DiscoveryCardElements extends StatelessWidget {
       datePublished: datePublished,
     );
 
+    final openUrlIcon = IconButton(
+      onPressed: onOpenUrl,
+      icon: SvgPicture.asset(
+        R.assets.icons.globe,
+        color: R.colors.brightIcon,
+      ),
+    );
+
+    final cardHeader = Row(
+      children: [
+        if (provider?.favicon != null)
+          Expanded(child: faviconRow)
+        else
+          const Spacer(),
+        openUrlIcon,
+      ],
+    );
+
     final titleAndTimeToRead = Wrap(
       runAlignment: WrapAlignment.end,
       runSpacing: R.dimen.unit,
@@ -103,7 +124,7 @@ class DiscoveryCardElements extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (provider?.favicon != null) faviconRow,
+          cardHeader,
           Expanded(child: titleAndTimeToRead),
           ClipRRect(
             child: SizedBox(
