@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -84,14 +85,28 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _shareUriUseCase.call(document.webResource.url);
 
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
+
+    changeDocumentFeedback(
+      document: document,
+      feedback: DocumentFeedback.positive,
+      context: FeedbackContext.implicit,
+    );
   }
 
-  void toggleBookmarkDocument(Document document) => _toggleBookmarkHandler(
-        CreateBookmarkFromDocumentUseCaseIn(
-          document: document,
-          provider: state.processedDocument?.getProvider(document.webResource),
-        ),
-      );
+  void toggleBookmarkDocument(Document document) {
+    _toggleBookmarkHandler(
+      CreateBookmarkFromDocumentUseCaseIn(
+        document: document,
+        provider: state.processedDocument?.getProvider(document.webResource),
+      ),
+    );
+
+    changeDocumentFeedback(
+      document: document,
+      feedback: DocumentFeedback.positive,
+      context: FeedbackContext.implicit,
+    );
+  }
 
   void openWebResourceUrl(Document document) {
     changeDocumentFeedback(
