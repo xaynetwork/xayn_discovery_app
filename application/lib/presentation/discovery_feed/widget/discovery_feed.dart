@@ -333,8 +333,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
         final managers = managersOf(document);
+        final state = managers.discoveryCardManager.state;
 
-        switch (managers.discoveryCardManager.state.explicitDocumentFeedback) {
+        switch (state.explicitDocumentFeedback) {
           case DocumentFeedback.neutral:
             return null;
           case DocumentFeedback.positive:
