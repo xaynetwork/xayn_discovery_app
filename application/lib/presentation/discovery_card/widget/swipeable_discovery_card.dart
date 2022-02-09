@@ -6,7 +6,6 @@ import 'package:xayn_swipe_it/xayn_swipe_it.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 const double _kSwipeOpenToPosition = 0.35;
 const double _kMinFlingVelocity = 250.0;
@@ -18,6 +17,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     Key? key,
     required this.manager,
     required this.document,
+    required this.explicitDocumentFeedback,
     required this.card,
     required this.isPrimary,
     this.isSwipingEnabled = true,
@@ -25,6 +25,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
 
   final DiscoveryCardManager manager;
   final Document document;
+  final DocumentFeedback explicitDocumentFeedback;
   final Widget card;
   final bool isPrimary;
   final bool isSwipingEnabled;
@@ -36,11 +37,15 @@ class SwipeableDiscoveryCard extends StatelessWidget {
 
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
         optionsLeft: isPrimary
-            ? [document.isRelevant ? SwipeOption.neutral : SwipeOption.like]
+            ? [
+                explicitDocumentFeedback == DocumentFeedback.positive
+                    ? SwipeOption.neutral
+                    : SwipeOption.like
+              ]
             : const [],
         optionsRight: isPrimary
             ? [
-                document.isIrrelevant
+                explicitDocumentFeedback == DocumentFeedback.negative
                     ? SwipeOption.neutral
                     : SwipeOption.dislike
               ]

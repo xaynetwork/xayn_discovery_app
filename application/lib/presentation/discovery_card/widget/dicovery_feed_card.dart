@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -42,6 +41,7 @@ class _DiscoveryFeedCardState
     final elements = DiscoveryCardElements(
       manager: discoveryCardManager,
       document: widget.document,
+      explicitDocumentFeedback: state.explicitDocumentFeedback,
       title: webResource.title,
       timeToRead: timeToRead,
       url: webResource.url,
@@ -49,14 +49,14 @@ class _DiscoveryFeedCardState
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
         document: widget.document,
-        feedback: widget.document.isRelevant
+        feedback: state.isRelevant
             ? DocumentFeedback.neutral
             : DocumentFeedback.positive,
         context: FeedbackContext.explicit,
       ),
       onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
           document: widget.document,
-          feedback: widget.document.isIrrelevant
+          feedback: state.isIrrelevant
               ? DocumentFeedback.neutral
               : DocumentFeedback.negative,
           context: FeedbackContext.explicit),

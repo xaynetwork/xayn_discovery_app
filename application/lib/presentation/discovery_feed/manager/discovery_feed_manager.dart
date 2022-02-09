@@ -40,9 +40,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     this._updateCardIndexUseCase,
     this._sendAnalyticsUseCase,
   )   : _maxCardCount = _kMaxCardCount,
-        super(DiscoveryFeedState.initial()) {
-    _init();
-  }
+        super(DiscoveryFeedState.initial());
 
   final DiscoveryEngine _engine;
 
@@ -55,7 +53,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final UpdateCardIndexUseCase _updateCardIndexUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
-  late final UseCaseValueStream<int> _cardIndexConsumer;
+  late final UseCaseValueStream<int> _cardIndexConsumer =
+      consume(_fetchCardIndexUseCase, initialData: none)
+          .transform((out) => out.take(1));
 
   final ObservedViewTypes _observedViewTypes = <DocumentId, DocumentViewMode>{};
   Document? _observedDocument;
@@ -266,11 +266,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
-  }
-
-  void _init() {
-    _cardIndexConsumer = consume(_fetchCardIndexUseCase, initialData: none)
-        .transform((out) => out.take(1));
   }
 }
 
