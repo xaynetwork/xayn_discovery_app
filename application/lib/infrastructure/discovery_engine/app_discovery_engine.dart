@@ -113,8 +113,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required DocumentId documentId,
     required DocumentFeedback feedback,
   }) async {
-    final engineEvent = await safeRun(() => _engine.changeDocumentFeedback(
-        documentId: documentId, feedback: feedback));
+    final engineEvent = await safeRun(
+      () => _engine.changeDocumentFeedback(
+        documentId: documentId,
+        feedback: feedback,
+      ),
+    );
 
     _eventMap[engineEvent] = DocumentFeedbackChange(
       documentId: documentId,

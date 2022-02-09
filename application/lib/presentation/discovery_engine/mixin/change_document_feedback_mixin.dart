@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_feedback_changed_event.dart';
@@ -21,6 +22,7 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
   void changeDocumentFeedback({
     required Document document,
     required DocumentFeedback feedback,
+    required FeedbackContext context,
   }) {
     if (document.feedback == feedback) return;
 
@@ -33,8 +35,12 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
       feedback: feedback,
     ));
 
-    sendAnalyticsUseCase(DocumentFeedbackChangedEvent(
-        document: document.copyWith(feedback: feedback)));
+    sendAnalyticsUseCase(
+      DocumentFeedbackChangedEvent(
+        document: document.copyWith(feedback: feedback),
+        context: context,
+      ),
+    );
   }
 
   UseCaseSink<DocumentFeedbackChange, EngineEvent> _getUseCaseSink() {
