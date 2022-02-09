@@ -4,13 +4,14 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
 class CardWidgetData {
   const CardWidgetData._();
 
   static const double cardHeight = 150.0;
+  static const double cardWidth = cardHeight * 2;
 }
 
 class CardWidget extends StatelessWidget {

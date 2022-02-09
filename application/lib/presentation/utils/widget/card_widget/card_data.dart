@@ -21,10 +21,10 @@ class CardData with _$CardData {
     required Key key,
     required String title,
     required VoidCallback onPressed,
-    required VoidCallback onLongPressed,
     required int numOfItems,
     required Color color,
     required double cardWidth,
+    VoidCallback? onLongPressed,
     Uint8List? backgroundImage,
   }) = _CardDataCollectionsScreen;
 
