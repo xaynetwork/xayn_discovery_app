@@ -96,7 +96,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
 
           final footer = BottomSheetFooter(
             onCancelPressed: () => closeBottomSheet(context),
-            setup: BottomSheetFooterSetup.withOneRaisedButton(
+            setup: BottomSheetFooterSetup.row(
               buttonData: BottomSheetFooterButton(
                 text: widget.collection == null
                     ? R.strings.bottomSheetCreate
