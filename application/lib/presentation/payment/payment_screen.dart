@@ -41,24 +41,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget _buildScreen(PaymentScreenStateReady state) {
     final product = state.product;
-    late String status;
-    switch (product.status) {
-      case PurchasableProductStatus.purchasable:
-        status = 'purchasable';
-        break;
-      case PurchasableProductStatus.purchased:
-        status = 'purchased';
-        break;
-      case PurchasableProductStatus.pending:
-        status = 'pending';
-        break;
-      case PurchasableProductStatus.restored:
-        status = 'restored';
-        break;
-      case PurchasableProductStatus.canceled:
-        status = 'canceled';
-        break;
-    }
+    final status = product.status.name;
+
     final tile = ListTile(
       title: Text(
         product.title,
