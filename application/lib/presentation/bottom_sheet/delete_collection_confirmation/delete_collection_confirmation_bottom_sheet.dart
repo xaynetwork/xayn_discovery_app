@@ -63,7 +63,7 @@ class _CreateCollectionState extends State<_DeleteCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      setup: BottomSheetFooterSetup.withTwoRaisedButtons(
+      setup: BottomSheetFooterSetup.column(
         buttonsData: [
           BottomSheetFooterButton(
             text: R.strings.bottomSheetMoveBookmarks,
