@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
@@ -75,12 +76,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     return BlocConsumer<AppManager, AppState>(
       bloc: _appManager,
-      builder: (_, __) => Provider<ApplicationTooltipController>.value(
-        value: _applicationTooltipController,
-        child: materialApp,
-      ),
+      builder: (_, state) {
+        // Update initial linden with correct brightness.
+        // This needs to happen in the builder to avoid "white flash" issue in dark mode.
+        _updateBrightnessIfNeeded(state.appTheme);
+
+        return Provider<ApplicationTooltipController>.value(
+          value: _applicationTooltipController,
+          child: materialApp,
+        );
+      },
       listener: (_, state) => _changeBrightness(state.appTheme),
     );
+  }
+
+  void _updateBrightnessIfNeeded(AppTheme appTheme) {
+    if (R.brightness != appTheme.brightness) {
+      final newLinden = R.linden.updateBrightness(appTheme.brightness);
+      R.updateLinden(newLinden);
+    }
   }
 
   void _changeBrightness(AppTheme appTheme) {
