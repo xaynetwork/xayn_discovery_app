@@ -327,6 +327,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         parameters: [
           context,
           widget.document,
+          discoveryCardManager.state.processedDocument
+              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
