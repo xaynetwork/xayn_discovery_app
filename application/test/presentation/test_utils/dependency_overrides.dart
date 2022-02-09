@@ -120,6 +120,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
       EngineEvent engineEvent) {
     // TODO: implement resolveChangeDocumentFeedbackParameters
+    return null;
   }
 
   @override
