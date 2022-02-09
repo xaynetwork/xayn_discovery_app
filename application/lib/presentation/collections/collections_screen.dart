@@ -15,7 +15,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -116,10 +115,11 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     if (collection.isDefault) {
       card = _buildBaseCard(collection);
     } else {
-      card = CardWidgetTransitionWrapper(
-        onAnimationDone: _showCollectionCardOptions(collection),
-        child: _buildSwipeableCard(collection),
-      );
+      // card = CardWidgetTransitionWrapper(
+      //   onAnimationDone: _showCollectionCardOptions(collection),
+      //   child: _buildSwipeableCard(collection),
+      // );
+      card = _buildSwipeableCard(collection);
     }
     return Padding(
       padding: EdgeInsets.only(bottom: R.dimen.unit2),
@@ -139,6 +139,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
               title: collection.name,
               onPressed: () =>
                   _collectionsScreenManager?.onCollectionPressed(collection.id),
+              onLongPressed: () => _showCollectionCardOptions(collection),
               numOfItems: cardState.numOfItems,
               backgroundImage: cardState.image,
               color: R.colors.collectionsScreenCard,
