@@ -93,7 +93,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      setup: BottomSheetFooterSetup.withOneRaisedButton(
+      setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
           onPressed: _onApplyPressed,

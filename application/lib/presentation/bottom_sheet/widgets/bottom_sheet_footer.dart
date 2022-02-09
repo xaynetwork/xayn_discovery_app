@@ -23,50 +23,55 @@ class BottomSheetFooter extends StatelessWidget {
       onPressed: onCancelPressed,
     );
 
-    final row = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: cancelButton,
-        ),
-        SizedBox(
-          width: R.dimen.unit0_5,
-        ),
-        ..._buildRaisedButtons(),
-      ],
+    final buttonsDisposal = setup.map(
+      row: (it) => _buildRow(
+        cancelButton,
+        it.buttonData,
+      ),
+      column: (it) => _buildColumn(
+        cancelButton,
+        it.buttonsData,
+      ),
     );
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: R.dimen.unit2),
-      child: row,
+      child: buttonsDisposal,
     );
   }
 
-  List<Widget> _buildRaisedButtons() => setup.map(
-        withOneRaisedButton: (it) =>
-            [Expanded(child: _buildRaisedButton(it.buttonData))],
-        withTwoRaisedButtons: (it) => _buildTwoRaisedButtons(it.buttonsData),
+  Widget _buildRow(Widget cancelButton, BottomSheetFooterButton buttonData) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: cancelButton,
+          ),
+          SizedBox(
+            width: R.dimen.unit0_5,
+          ),
+          Expanded(
+            child: _buildRaisedButton(buttonData),
+          ),
+        ],
       );
 
-  List<Widget> _buildTwoRaisedButtons(
-          List<BottomSheetFooterButton> buttonsData) =>
-      [
-        Expanded(
-          child: _buildRaisedButton(
-            buttonsData[0],
+  Widget _buildColumn(
+          Widget cancelButton, List<BottomSheetFooterButton> buttonsData) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildRaisedButton(buttonsData[0]),
+          SizedBox(
+            height: R.dimen.unit0_5,
           ),
-          flex: 2,
-        ),
-        SizedBox(
-          width: R.dimen.unit0_5,
-        ),
-        Expanded(
-          child: _buildRaisedButton(
-            buttonsData[1],
+          _buildRaisedButton(buttonsData[1]),
+          SizedBox(
+            height: R.dimen.unit0_5,
           ),
-          flex: 2,
-        ),
-      ];
+          cancelButton,
+        ],
+      );
 
   Widget _buildRaisedButton(BottomSheetFooterButton buttonData) =>
       AppRaisedButton.text(
