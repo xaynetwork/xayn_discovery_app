@@ -1,12 +1,14 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -31,7 +33,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         EngineEventsMixin<DiscoveryFeedState>,
         RequestFeedMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
-        ObserveDocumentMixin<DiscoveryFeedState>
+        ObserveDocumentMixin<DiscoveryFeedState>,
+        ChangeDocumentFeedbackMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._engine,
@@ -63,12 +66,20 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   bool _isFullScreen = false;
 
   void handleNavigateIntoCard() {
+    final document = _observedDocument!;
+
     scheduleComputeState(() => _isFullScreen = true);
 
     _sendAnalyticsUseCase(DocumentViewModeChangedEvent(
-      document: _observedDocument!,
+      document: document,
       viewMode: DocumentViewMode.reader,
     ));
+
+    changeDocumentFeedback(
+      document: document,
+      feedback: DocumentFeedback.positive,
+      context: FeedbackContext.implicit,
+    );
   }
 
   void handleNavigateOutOfCard() {
