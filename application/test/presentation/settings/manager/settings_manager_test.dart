@@ -179,7 +179,7 @@ void main() {
       final manager = create();
 
       expect(
-        () => manager.openUrl(url),
+        () => manager.openExternalUrl(url),
         returnsNormally,
       );
       verify(urlOpener.openUrl(url));
@@ -190,7 +190,7 @@ void main() {
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'GIVEN string with url WHEN openUrl method called THEN call ___ useCase',
     build: () => create(),
-    act: (manager) => manager.openUrl('https://xayn.com'),
+    act: (manager) => manager.openExternalUrl('https://xayn.com'),
     //default one, emitted when manager created
     expect: () => [stateReady],
     verify: (manager) {

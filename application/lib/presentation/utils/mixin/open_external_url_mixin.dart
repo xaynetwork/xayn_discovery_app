@@ -8,7 +8,7 @@ mixin OpenExternalUrlMixin<T> on UseCaseBlocHelper<T> {
   final _sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
   final _urlOpener = di.get<UrlOpener>();
 
-  void openUrl(String url) {
+  void openExternalUrl(String url) {
     _urlOpener.openUrl(url);
     _sendAnalyticsUseCase(
       OpenExternalUrlEvent(
