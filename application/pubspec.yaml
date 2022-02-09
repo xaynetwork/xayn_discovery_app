@@ -46,6 +46,7 @@ dependencies:
   json_annotation: 4.3.0
   json_serializable: 6.0.0
   logger: 1.1.0
+  lottie: 1.2.1
   package_info_plus: 1.3.0
   path_provider: 2.0.5
   provider: 6.0.1
@@ -135,6 +136,10 @@ flutter:
     - packages/xayn_design/assets/illustrations/flag_switzerland.svg
     - packages/xayn_design/assets/illustrations/flag_uk.svg
     - packages/xayn_design/assets/illustrations/flag_usa.svg
+
+    # lottie
+    - packages/xayn_design/assets/lottie/splash_screen.json
+    - packages/xayn_design/assets/lottie/splash_screen_dark.json
 
     # graphics
     - packages/xayn_design/assets/graphics/forms_green.svg
