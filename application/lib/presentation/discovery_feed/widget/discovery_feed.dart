@@ -87,6 +87,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             context,
             builder: (_) => MoveDocumentToCollectionBottomSheet(
               document: document,
+              provider: managers.discoveryCardManager.state.processedDocument
+                  ?.getProvider(document.webResource),
               onError: (tooltipKey) => showTooltip(tooltipKey),
             ),
           );

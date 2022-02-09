@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -14,11 +14,10 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 /// the minimum fraction height of the card image.
 /// This value must be in the range of [0.0, 1.0], where 1.0 is the
@@ -63,25 +62,35 @@ abstract class DiscoveryCardNavActions {
 }
 
 @immutable
-class DiscoveryCardScreenArgs {
-  const DiscoveryCardScreenArgs({
+class DiscoveryCardStandaloneArgs {
+  const DiscoveryCardStandaloneArgs({
     required this.isPrimary,
     required this.document,
+    required this.discoveryCardManager,
+    required this.imageManager,
+    this.onDiscard,
   });
 
   final bool isPrimary;
   final Document document;
+
+  final DiscoveryCardManager discoveryCardManager;
+  final ImageManager imageManager;
+  final VoidCallback? onDiscard;
 }
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
-class DiscoveryCardScreen extends DiscoveryCard {
-  DiscoveryCardScreen({
+class DiscoveryCardStandalone extends DiscoveryCard {
+  DiscoveryCardStandalone({
     Key? key,
-    required DiscoveryCardScreenArgs args,
+    required DiscoveryCardStandaloneArgs args,
   }) : super(
           key: key,
           isPrimary: args.isPrimary,
           document: args.document,
+          discoveryCardManager: args.discoveryCardManager,
+          imageManager: args.imageManager,
+          onDiscard: args.onDiscard,
         );
 
   @override
@@ -181,6 +190,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     // normalize the animation value to [0.0, 1.0]
     final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
         (1.0 - _kMinImageFractionSize);
+    final processedDocument = state.processedDocument;
+    final provider = processedDocument?.getProvider(webResource);
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
@@ -196,7 +207,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           title: webResource.title,
           timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
-          provider: webResource.provider,
+          provider: provider,
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
@@ -211,7 +222,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 : DocumentFeedback.negative,
           ),
           onBookmarkPressed: onBookmarkPressed,
-          onBookmarkLongPressed: onBookmarkLongPressed,
+          onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
         );
@@ -259,17 +270,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       ),
     );
   }
-
-  void onBookmarkPressed() =>
-      discoveryCardManager.toggleBookmarkDocument(widget.document);
-
-  void onBookmarkLongPressed() => showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          onError: (tooltipKey) => showTooltip(tooltipKey),
-        ),
-      );
 
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
@@ -378,7 +378,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         buildNavBarItemBookmark(
           isBookmarked: _discoveryCardManager.state.isBookmarked,
           onPressed: onBookmarkPressed,
-          onLongPressed: onBookmarkLongPressed,
+          onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
         ),
         buildNavBarItemShare(
           onPressed: () => _discoveryCardManager.shareUri(widget.document),

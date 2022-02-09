@@ -1,0 +1,73 @@
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
+import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
+import 'analytics_service_test_utils.dart';
+import 'marketing_analytics_service_test.mocks.dart';
+
+@GenerateMocks([AppsflyerSdk])
+void main() async {
+  late MockAppsflyerSdk appsFlyer;
+  late MarketingAnalyticsService marketingAnalyticsService;
+
+  const mockUID = '123';
+  const mockLanguage = 'en';
+  final mockInAppEvent = FakeAnalyticsEvent();
+
+  setUp(() {
+    appsFlyer = MockAppsflyerSdk();
+    marketingAnalyticsService = AppsFlyerMarketingAnalyticsService(appsFlyer);
+  });
+
+  group('Marketing Analytics Service', () {
+    test('getUID', () {
+      when(appsFlyer.getAppsFlyerUID()).thenAnswer(
+        (_) async => mockUID,
+      );
+
+      final actual = marketingAnalyticsService.getUID();
+      expect(actual, completion(equals(mockUID)));
+    });
+
+    test('send', () {
+      when(appsFlyer.logEvent(any, any)).thenAnswer(
+        (_) async => true,
+      );
+
+      marketingAnalyticsService.send(mockInAppEvent);
+      verify(appsFlyer.logEvent(
+        mockInAppEvent.type,
+        mockInAppEvent.properties.toSerializableMap(),
+      )).called(1);
+    });
+
+    test('optOut is true', () {
+      marketingAnalyticsService.optOut(true);
+      verify(appsFlyer.stop(true)).called(1);
+      verify(appsFlyer.enableLocationCollection(false)).called(1);
+    });
+
+    test('optOut is false', () {
+      marketingAnalyticsService.optOut(false);
+      verify(appsFlyer.stop(false)).called(1);
+      verify(appsFlyer.enableLocationCollection(true)).called(1);
+    });
+
+    test('setCurrentDeviceLanguage', () {
+      marketingAnalyticsService.setCurrentDeviceLanguage(mockLanguage);
+      verify(appsFlyer.setCurrentDeviceLanguage(mockLanguage)).called(1);
+    });
+
+    test('setPushNotification to true', () {
+      marketingAnalyticsService.setPushNotification(true);
+      verify(appsFlyer.setPushNotification(true)).called(1);
+    });
+
+    test('setPushNotification to false', () {
+      marketingAnalyticsService.setPushNotification(false);
+      verify(appsFlyer.setPushNotification(false)).called(1);
+    });
+  });
+}

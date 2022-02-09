@@ -1,26 +1,26 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
 class CardWidgetData {
   const CardWidgetData._();
 
   static const double cardHeight = 150.0;
+  static const double cardWidth = cardHeight * 2;
 }
 
 class CardWidget extends StatelessWidget {
   final CardData cardData;
 
-  const CardWidget({
+  CardWidget({
     required this.cardData,
-    Key? key,
   }) : super(
-          key: key,
+          key: cardData.key,
         );
 
   @override
@@ -42,8 +42,7 @@ class CardWidget extends StatelessWidget {
       bookmark: (data) => _buildBookmarkCardContent(
         title: data.title,
         created: data.created,
-        providerName: data.providerName,
-        faviconData: data.faviconImage,
+        provider: data.provider,
       ),
     );
 
@@ -102,8 +101,11 @@ class CardWidget extends StatelessWidget {
       child: stack,
     );
 
-    final onLongPressed =
-        cardData.mapOrNull(collectionsScreen: (data) => data.onLongPressed);
+    final onLongPressed = cardData.map(
+      collectionsScreen: (data) => data.onLongPressed,
+      bookmark: (data) => data.onLongPressed,
+      personalArea: (data) => null,
+    );
 
     return AppGhostButton(
       contentPadding: EdgeInsets.zero,
@@ -182,15 +184,15 @@ class CardWidget extends StatelessWidget {
   Widget _buildBookmarkCardContent({
     required String title,
     required DateTime created,
-    String? providerName,
-    Uint8List? faviconData,
+    DocumentProvider? provider,
   }) {
-    final favicon = faviconData == null
+    final favicon = provider?.favicon == null
         ? Icon(Icons.web, color: R.colors.icon)
-        : Image.memory(
-            faviconData,
+        : Image.network(
+            provider!.favicon!.toString(),
             width: R.dimen.unit2,
             height: R.dimen.unit2,
+            errorBuilder: (_, __, ___) => Thumbnail.icon(Icons.web),
           );
 
     final firstRow = Row(
@@ -207,7 +209,7 @@ class CardWidget extends StatelessWidget {
         ),
         Flexible(
           child: Text(
-            providerName ?? '',
+            provider?.name ?? '',
             style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
             overflow: TextOverflow.ellipsis,
           ),

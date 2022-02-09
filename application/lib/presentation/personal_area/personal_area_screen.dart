@@ -7,8 +7,8 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
@@ -96,7 +96,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           .toList();
 
   CardWidget _buildCollection() => CardWidget(
-        key: Keys.personalAreaCardCollections,
         cardData: CardData.personalArea(
           title: R.strings.personalAreaCollections,
           color: R.colors.personalAreaCollections,
@@ -108,7 +107,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       );
 
   CardWidget _buildHomeFeed() => CardWidget(
-        key: Keys.personalAreaCardHomeFeed,
         cardData: CardData.personalArea(
           title: R.strings.personalAreaHomeFeed,
           color: R.colors.personalAreaHomeFeed,
@@ -120,7 +118,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       );
 
   CardWidget _buildSettings() => CardWidget(
-        key: Keys.personalAreaCardSettings,
         cardData: CardData.personalArea(
           title: R.strings.personalAreaSettings,
           color: R.colors.personalAreaSettings,

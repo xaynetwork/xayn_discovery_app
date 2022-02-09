@@ -9,6 +9,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
   final VoidCallback onImprintPressed;
   final VoidCallback onPrivacyPressed;
   final VoidCallback onTermsPressed;
+  final VoidCallback? onPaymentPressed;
 
   const SettingsGeneralInfoSection({
     Key? key,
@@ -17,6 +18,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
     required this.onImprintPressed,
     required this.onPrivacyPressed,
     required this.onTermsPressed,
+    required this.onPaymentPressed,
   }) : super(key: key);
 
   String get arrowRightIcon => R.assets.icons.arrowRight;
@@ -30,6 +32,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
           _getImprint(),
           _getPrivacyPolicy(),
           _getTC(),
+          if (onPaymentPressed != null) _getPayment(),
         ],
       );
 
@@ -83,6 +86,16 @@ class SettingsGeneralInfoSection extends StatelessWidget {
           key: Keys.settingsTermsAndConditions,
           svgIconPath: arrowRightIcon,
           onPressed: onTermsPressed,
+        ),
+      ));
+
+  SettingsCardData _getPayment() => SettingsCardData.fromTile(SettingsTileData(
+        title: 'PAYMENT WIP',
+        svgIconPath: R.assets.icons.lightening,
+        action: SettingsTileActionIcon(
+          key: const Key('payment key'),
+          svgIconPath: arrowRightIcon,
+          onPressed: onPaymentPressed!,
         ),
       ));
 }

@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -35,19 +36,22 @@ TooltipParams _getBookmarkedToDefault() {
       R.strings.bookmarkSnackBarSavedTo.replaceAll('%s', defaultCollectionName);
 
   void onPressed(List? args) {
-    if (args == null || args.length < 3) return;
+    if (args == null || args.length < 4) return;
     final context = args[0];
     final document = args[1];
-    var onError = args[2];
+    final provider = args[2];
+    final onError = args[3];
     if (context is! BuildContext ||
         document is! Document ||
-        onError is! OnToolTipError) return;
+        onError is! OnToolTipError ||
+        provider is! DocumentProvider?) return;
 
     showAppBottomSheet(
       context,
       builder: (_) => MoveDocumentToCollectionBottomSheet(
         document: document,
         onError: onError,
+        provider: provider,
       ),
     );
   }

@@ -2,29 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
 
 class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
   MoveDocumentToCollectionBottomSheet({
     Key? key,
     required Document document,
-    required OnToolTipError onError,
+    required OnMoveDocumentToCollectionError onError,
+    required DocumentProvider? provider,
     Collection? forceSelectCollection,
   }) : super(
           key: key,
           body: _MoveDocumentToCollection(
             document: document,
+            provider: provider,
             forceSelectCollection: forceSelectCollection,
             onError: onError,
           ),
@@ -33,13 +37,15 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
 
 class _MoveDocumentToCollection extends StatefulWidget {
   final Document document;
+  final DocumentProvider? provider;
   final Collection? forceSelectCollection;
-  final OnToolTipError onError;
+  final OnMoveDocumentToCollectionError onError;
 
   const _MoveDocumentToCollection({
     Key? key,
     required this.document,
     required this.onError,
+    required this.provider,
     this.forceSelectCollection,
   }) : super(key: key);
 
@@ -50,11 +56,11 @@ class _MoveDocumentToCollection extends StatefulWidget {
 
 class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     with BottomSheetBodyMixin {
-  MoveToCollectionManager? _moveDocumentToCollectionManager;
+  MoveDocumentToCollectionManager? _moveDocumentToCollectionManager;
 
   @override
   void initState() {
-    di.getAsync<MoveToCollectionManager>().then(
+    di.getAsync<MoveDocumentToCollectionManager>().then(
       (it) async {
         await it.updateInitialSelectedCollection(
           bookmarkId: widget.document.documentUniqueId,
@@ -78,7 +84,8 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   Widget build(BuildContext context) {
     final body = _moveDocumentToCollectionManager == null
         ? const SizedBox.shrink()
-        : BlocConsumer<MoveToCollectionManager, MoveToCollectionState>(
+        : BlocConsumer<MoveDocumentToCollectionManager,
+            MoveDocumentToCollectionState>(
             bloc: _moveDocumentToCollectionManager,
             listener: (_, state) {
               if (state.hasError) {
@@ -115,8 +122,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: () =>
-          _moveDocumentToCollectionManager!.onApplyToDocumentPressed(
+      onApplyPressed: () => _moveDocumentToCollectionManager!.onApplyPressed(
         document: widget.document,
       ),
     );
@@ -151,6 +157,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
         context,
         builder: (_) => MoveDocumentToCollectionBottomSheet(
           document: widget.document,
+          provider: widget.provider,
           forceSelectCollection: newCollection,
           onError: widget.onError,
         ),

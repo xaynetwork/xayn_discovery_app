@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -8,7 +7,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -37,6 +36,8 @@ class _DiscoveryFeedCardState
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
     final timeToRead = state.processedDocument?.timeToRead ?? '';
+    final processedDocument = state.processedDocument;
+    final provider = processedDocument?.getProvider(webResource);
 
     final elements = DiscoveryCardElements(
       manager: discoveryCardManager,
@@ -44,7 +45,7 @@ class _DiscoveryFeedCardState
       title: webResource.title,
       timeToRead: timeToRead,
       url: webResource.url,
-      provider: webResource.provider,
+      provider: provider,
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
         document: widget.document,
@@ -59,7 +60,7 @@ class _DiscoveryFeedCardState
             : DocumentFeedback.negative,
       ),
       onBookmarkPressed: onBookmarkPressed,
-      onBookmarkLongPressed: onBookmarkLongPressed,
+      onBookmarkLongPressed: onBookmarkLongPressed(state),
       isBookmarked: state.isBookmarked,
     );
 
@@ -75,23 +76,14 @@ class _DiscoveryFeedCardState
     );
   }
 
-  void onBookmarkPressed() =>
-      discoveryCardManager.toggleBookmarkDocument(widget.document);
-
-  void onBookmarkLongPressed() => showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          onError: (tooltipKey) => showTooltip(tooltipKey),
-        ),
-      );
-
   @override
   void discoveryCardStateListener() => showTooltip(
         BookmarkToolTipKeys.bookmarkedToDefault,
         parameters: [
           context,
           widget.document,
+          discoveryCardManager.state.processedDocument
+              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );

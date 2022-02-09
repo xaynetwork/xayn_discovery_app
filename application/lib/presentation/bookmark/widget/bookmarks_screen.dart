@@ -10,33 +10,53 @@ import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookma
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
-class BookmarksScreen extends StatelessWidget
-    with NavBarConfigMixin, TooltipStatelessMixin {
+class BookmarksScreen extends StatefulWidget {
   final UniqueId collectionId;
 
-  BookmarksScreen({Key? key, required this.collectionId}) : super(key: key);
+  const BookmarksScreen({Key? key, required this.collectionId})
+      : super(key: key);
 
+  @override
+  State<BookmarksScreen> createState() => _BookmarksScreenState();
+}
+
+class _BookmarksScreenState extends State<BookmarksScreen>
+    with NavBarConfigMixin, TooltipStateMixin {
   late final _bookmarkManager =
-      di.get<BookmarksScreenManager>(param1: collectionId);
+      di.get<BookmarksScreenManager>(param1: widget.collectionId);
+  final VoidCallback _dispose =
+      CardManagers.registerCardManagerCacheInDi('bookmarks');
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
       builder: (ctx, state) => Scaffold(
-          appBar: AppToolbar(
-            appToolbarData: AppToolbarData.titleOnly(
-                title:
-                    state.collectionName ?? R.strings.personalAreaCollections),
-          ),
-          body: _buildScreen(state)),
+        appBar: AppToolbar(
+          appToolbarData: AppToolbarData.titleOnly(
+              title: state.collectionName ?? R.strings.personalAreaCollections),
+        ),
+        body:
+            state.bookmarks.isEmpty ? _buildEmptyScreen() : _buildScreen(state),
+      ),
       bloc: _bookmarkManager,
     );
   }
+
+  Widget _buildEmptyScreen() => Padding(
+        child: Center(
+          child: Text(
+            R.strings.bookmarkScreenNoArticles,
+            style: R.styles.appScreenHeadline,
+          ),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+      );
 
   Widget _buildScreen(BookmarksScreenState state) {
     final list = ListView.builder(
@@ -44,17 +64,10 @@ class BookmarksScreen extends StatelessWidget
           _createBookmarkCard(context, state.bookmarks[i]),
       itemCount: state.bookmarks.length,
     );
-    final sidePadding = R.dimen.unit3;
-    final withPadding = Padding(
+    return Padding(
       child: list,
-      padding: EdgeInsets.fromLTRB(
-        sidePadding,
-        0,
-        sidePadding,
-        0,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
     );
-    return withPadding;
   }
 
   @override
@@ -82,8 +95,7 @@ class BookmarksScreen extends StatelessWidget
               onLongPressed: () {},
               backgroundImage: bookmark.image,
               created: DateTime.parse(bookmark.createdAt),
-              faviconImage: bookmark.providerThumbnail,
-              providerName: bookmark.providerName,
+              provider: bookmark.provider,
               // Screenwidth - 2 * side paddings
               cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
             ),
@@ -102,5 +114,11 @@ class BookmarksScreen extends StatelessWidget
         onError: (tooltipKey) => showTooltip(context, tooltipKey),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _dispose();
+    super.dispose();
   }
 }
