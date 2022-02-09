@@ -99,7 +99,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
         trialEndDate: trialEndDate,
-        onPressed: () {},
+        onPressed: () {}, // TODO: Show the payment screen
       );
 
   CardWidget _buildCollection() => CardWidget(
