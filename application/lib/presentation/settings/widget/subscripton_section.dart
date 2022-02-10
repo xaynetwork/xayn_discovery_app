@@ -7,11 +7,13 @@ import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_tri
 class SubscriptionSection extends StatelessWidget {
   final DateTime? trialEndDate;
   final VoidCallback onSubscribePressed;
+  final VoidCallback onShowDetailsPressed;
 
   const SubscriptionSection({
     Key? key,
     required this.trialEndDate,
     required this.onSubscribePressed,
+    required this.onShowDetailsPressed,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class SubscriptionSection extends StatelessWidget {
         action: SettingsTileActionIcon(
           key: Keys.settingsSubscriptionPremium,
           svgIconPath: R.assets.icons.arrowRight,
-          onPressed: onSubscribePressed,
+          onPressed: onShowDetailsPressed,
         ),
       ));
 

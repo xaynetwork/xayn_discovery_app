@@ -4,6 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/subscription_details/widget/subscription_details.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -88,6 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       SubscriptionSection(
         trialEndDate: trialEndDate,
         onSubscribePressed: _manager.onSubscribePressed,
+        onShowDetailsPressed: _showSubscriptionDetailsBottomSheet,
       );
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
@@ -127,4 +129,11 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
+
+  void _showSubscriptionDetailsBottomSheet() => showAppBottomSheet(
+        context,
+        builder: (buildContext) => SubscriptionDetailsBottomSheet(
+          onDonePressed: () {},
+        ),
+      );
 }
