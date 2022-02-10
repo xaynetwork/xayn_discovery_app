@@ -32,7 +32,7 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
     final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
     final willUpdateEngine = document.feedback != feedback;
 
-    // always allow implicit feedback changes
+    // always allow explicit feedback changes
     await _maybeUpdateExplicitDocumentFeedback(
       document: document,
       feedback: feedback,
