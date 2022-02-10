@@ -72,6 +72,8 @@ class _DiscoveryCardStaticState
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),
+          onOpenUrl: () =>
+              discoveryCardManager.openWebResourceUrl(widget.document),
           onBookmarkPressed: onBookmarkPressed,
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
@@ -150,19 +152,18 @@ class _DiscoveryCardStaticState
   }
 
   @override
-  void discoveryCardStateListener() => showTooltip(
+  void discoveryCardStateListener(DiscoveryCardState state) {
+    if (state.isBookmarkToggled) {
+      showTooltip(
         BookmarkToolTipKeys.bookmarkedToDefault,
         parameters: [
           context,
           widget.document,
+          discoveryCardManager.state.processedDocument
+              ?.getProvider(widget.document.webResource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );
-
-  @override
-  bool discoveryCardStateListenWhen(
-          DiscoveryCardState previous, DiscoveryCardState current) =>
-      !previous.isBookmarked &&
-      current.isBookmarked &&
-      current.isBookmarkToggled;
+    }
+  }
 }

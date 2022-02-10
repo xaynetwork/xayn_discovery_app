@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -67,6 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: child,
         );
     final children = [
+      _buildSubscriptionSection(state.trialEndDate),
       _buildAppThemeSection(state.theme),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
@@ -82,6 +84,12 @@ class _SettingsScreenState extends State<SettingsScreen>
     return SingleChildScrollView(child: column);
   }
 
+  Widget _buildSubscriptionSection(DateTime? trialEndDate) =>
+      SubscriptionSection(
+        trialEndDate: trialEndDate,
+        onSubscribePressed: _manager.onSubscribePressed,
+      );
+
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
         theme: appTheme,
         onSelected: _manager.saveTheme,
@@ -89,11 +97,12 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onAboutPressed: () => _manager.openUrl(Urls.aboutXayn),
-        onCarbonNeutralPressed: () => _manager.openUrl(Urls.carbonNeutral),
-        onImprintPressed: () => _manager.openUrl(Urls.imprint),
-        onPrivacyPressed: () => _manager.openUrl(Urls.privacyPolicy),
-        onTermsPressed: () => _manager.openUrl(Urls.termsAndConditions),
+        onAboutPressed: () => _manager.openExternalUrl(Urls.aboutXayn),
+        onCarbonNeutralPressed: () =>
+            _manager.openExternalUrl(Urls.carbonNeutral),
+        onImprintPressed: () => _manager.openExternalUrl(Urls.imprint),
+        onPrivacyPressed: () => _manager.openExternalUrl(Urls.privacyPolicy),
+        onTermsPressed: () => _manager.openExternalUrl(Urls.termsAndConditions),
         onPaymentPressed:
             isPaymentEnabled ? _manager.onPaymentNavPressed : null,
       );
