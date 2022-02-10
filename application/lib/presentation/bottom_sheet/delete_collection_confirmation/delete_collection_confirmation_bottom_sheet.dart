@@ -21,11 +21,14 @@ class DeleteCollectionConfirmationBottomSheet extends BottomSheetBase {
     Key? key,
     required UniqueId collectionId,
     _OnApplyPressed onApplyPressed,
+    VoidCallback? onSystemPop,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _DeleteCollection(
             onApplyPressed: onApplyPressed,
             collectionId: collectionId,
+            onSystemPop: onSystemPop,
           ),
         );
 }
@@ -35,10 +38,12 @@ class _DeleteCollection extends StatefulWidget {
     Key? key,
     required this.collectionId,
     this.onApplyPressed,
+    this.onSystemPop,
   }) : super(key: key);
 
   final _OnApplyPressed onApplyPressed;
   final UniqueId collectionId;
+  final VoidCallback? onSystemPop;
 
   @override
   _CreateCollectionState createState() => _CreateCollectionState();
@@ -70,7 +75,10 @@ class _CreateCollectionState extends State<_DeleteCollection>
                 );
 
           final footer = BottomSheetFooter(
-            onCancelPressed: () => closeBottomSheet(context),
+            onCancelPressed: () {
+              closeBottomSheet(context);
+              widget.onSystemPop?.call();
+            },
             setup: state.bookmarksIds.isNotEmpty
                 ? _buildFooterSetupForCollectionWithItems(state.bookmarksIds)
                 : _buildFooterSetupForCollectionWithNoItems(),
@@ -116,11 +124,13 @@ class _CreateCollectionState extends State<_DeleteCollection>
       );
 
   void _onDeleteAllPressed() {
+    widget.onSystemPop?.call();
     _deleteCollectionConfirmationManager.deleteAll();
     closeBottomSheet(context);
   }
 
   void _onDeleteCollectionPressed() {
+    widget.onSystemPop?.call();
     _deleteCollectionConfirmationManager.deleteCollection();
     closeBottomSheet(context);
   }
@@ -132,9 +142,11 @@ class _CreateCollectionState extends State<_DeleteCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
+      showBarrierColor: false,
       builder: (buildContext) => MoveBookmarksToCollectionBottomSheet(
         bookmarksIds: bookmarksToMove,
         collectionIdToRemove: collectionId,
+        onSystemPop: widget.onSystemPop,
       ),
     );
   }
