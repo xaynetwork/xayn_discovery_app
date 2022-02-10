@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class PaymentScreen extends StatefulWidget {
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
   late final manager = di.get<PaymentScreenManager>();
 
   @override
@@ -25,6 +26,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void blocListener(BuildContext context, PaymentScreenState state) {
+      state.whenOrNull(ready: (
+        final PurchasableProduct product,
+        final String? errorMsg,
+      ) {
+        if (errorMsg != null) {
+          _showPaymentError(errorMsg);
+        }
+      });
+    }
+
     final bloc = BlocBuilder<PaymentScreenManager, PaymentScreenState>(
       bloc: manager,
       builder: (_, state) => state.map(
@@ -34,7 +46,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
     return Scaffold(
       appBar: const AppToolbar(title: 'Payment screen'),
-      body: bloc,
+      body: BlocListener(
+        bloc: manager,
+        child: bloc,
+        listener: blocListener,
+      ),
     );
   }
 
@@ -70,5 +86,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ],
     );
     return Center(child: column);
+  }
+
+  void _showPaymentError(String paymentErrorMsg) {
+    registerTooltip(
+      key: TooltipKeys.paymentError,
+      params: TooltipParams(
+        label: paymentErrorMsg,
+        builder: (_) => const TextualNotification(),
+      ),
+    );
+    showTooltip(TooltipKeys.paymentError);
   }
 }
