@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -64,7 +65,7 @@ class CrudExplicitDocumentFeedbackUseCase extends UseCase<
 
 enum _Operation { watch, store, remove }
 
-class CrudExplicitDocumentFeedbackUseCaseIn {
+class CrudExplicitDocumentFeedbackUseCaseIn extends Equatable {
   final _Operation operation;
   final ExplicitDocumentFeedback explicitDocumentFeedback;
 
@@ -77,4 +78,8 @@ class CrudExplicitDocumentFeedbackUseCaseIn {
   const CrudExplicitDocumentFeedbackUseCaseIn.remove(
       this.explicitDocumentFeedback)
       : operation = _Operation.remove;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [operation, explicitDocumentFeedback];
 }
