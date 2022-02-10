@@ -22,6 +22,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef UriHandler = void Function(Uri uri);
@@ -38,7 +39,8 @@ const String _kReadingTimeLanguage = 'en-US';
 class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with
         UseCaseBlocHelper<DiscoveryCardState>,
-        ChangeDocumentFeedbackMixin<DiscoveryCardState>
+        ChangeDocumentFeedbackMixin<DiscoveryCardState>,
+        OpenExternalUrlMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
@@ -90,6 +92,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           provider: state.processedDocument?.getProvider(document.webResource),
         ),
       );
+
+  void openWebResourceUrl(Document document) {
+    changeDocumentFeedback(
+      document: document,
+      feedback: DocumentFeedback.positive,
+    );
+    openExternalUrl(document.webResource.url.toString());
+  }
 
   Future<void> _init() async {
     _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);

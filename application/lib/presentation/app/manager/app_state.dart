@@ -10,8 +10,4 @@ class AppState with _$AppState {
   const factory AppState({
     required AppTheme appTheme,
   }) = _AppState;
-
-  factory AppState.empty() => const AppState(
-        appTheme: AppTheme.system,
-      );
 }

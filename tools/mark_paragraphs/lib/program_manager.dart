@@ -83,7 +83,7 @@ class ProgramManager extends Cubit<ProgramState>
           .followedBy(InvokeBingUseCase())
           .where((it) => it.results.isNotEmpty)
           .expand((it) => it.results)
-          .map((it) => it.webResource.url)
+          .map((it) => it.resource.url)
           .followedBy(LoadHtmlUseCase.standard(client: Client()))
           .where((it) => it.isCompleted)
           .map(_createReadabilityConfig)

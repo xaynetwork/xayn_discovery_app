@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
 
 @lazySingleton
 class AppNavigationManager extends xayn.NavigatorManager {
@@ -25,6 +26,19 @@ class AppNavigationManager extends xayn.NavigatorManager {
         ...super.computeInitialPages(),
         if (_featureManager.showOnboardingScreen) PageRegistry.onboarding,
       ];
+}
+
+@Injectable(as: SplashScreenNavActions)
+class SplashScreenNavActionsImpl extends SplashScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  SplashScreenNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onSplashScreenAnimationFinished() =>
+      changeStack((stack) => stack.replace(PageRegistry.discovery));
 }
 
 @Injectable(as: DiscoveryFeedNavActions)
