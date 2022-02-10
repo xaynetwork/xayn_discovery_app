@@ -61,6 +61,8 @@ class ErrorElement extends CustomElement {
         style: R.styles.dialogTitleSmall,
       );
     }
+
+    return null;
   }
 
   Widget _buildBody() {
