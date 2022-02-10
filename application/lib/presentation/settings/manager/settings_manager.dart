@@ -15,7 +15,6 @@ import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
-import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 abstract class SettingsNavActions {
   void onPaymentNavPressed();
