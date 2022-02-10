@@ -1,22 +1,23 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 import '../../test_utils/utils.dart';
 
 void main() {
   late MockPersonalAreaNavActions actions;
   late PersonalAreaManager manager;
-  const initialState = none;
+  final initialState = PersonalAreaState(trialEndDate: subscriptionEndDate);
 
   setUp(() {
     actions = MockPersonalAreaNavActions();
     manager = PersonalAreaManager(actions);
   });
 
-  blocTest<PersonalAreaManager, None>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN manager is created THEN state is initial',
     build: () => manager,
     verify: (manager) {
@@ -24,7 +25,7 @@ void main() {
     },
   );
 
-  blocTest<PersonalAreaManager, None>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onHomeNavPressed is called THEN redirected to action',
     build: () => manager,
     act: (manager) => manager.onHomeNavPressed(),
@@ -34,7 +35,7 @@ void main() {
     },
   );
 
-  blocTest<PersonalAreaManager, None>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onActiveSearchNavPressed is called THEN redirected to action',
     build: () => manager,
     act: (manager) => manager.onActiveSearchNavPressed(),
@@ -44,7 +45,7 @@ void main() {
     },
   );
 
-  blocTest<PersonalAreaManager, None>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onCollectionsNavPressed is called THEN redirected to action',
     build: () => manager,
     act: (manager) => manager.onCollectionsNavPressed(),
@@ -54,7 +55,7 @@ void main() {
     },
   );
 
-  blocTest<PersonalAreaManager, None>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onHomeFeedSettingsNavPressed is called THEN redirected to action',
     build: () => manager,
     act: (manager) => manager.onHomeFeedSettingsNavPressed(),
@@ -64,7 +65,7 @@ void main() {
     },
   );
 
-  blocTest<PersonalAreaManager, None>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onSettingsNavPressed is called THEN redirected to action',
     build: () => manager,
     act: (manager) => manager.onSettingsNavPressed(),
