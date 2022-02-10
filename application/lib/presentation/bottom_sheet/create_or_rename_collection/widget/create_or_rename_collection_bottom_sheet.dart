@@ -21,12 +21,15 @@ class CreateOrRenameCollectionBottomSheet extends BottomSheetBase {
   CreateOrRenameCollectionBottomSheet({
     Key? key,
     Collection? collection,
+    VoidCallback? onSystemPop,
     _OnApplyPressed onApplyPressed,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _CreateOrRenameCollection(
             onApplyPressed: onApplyPressed,
             collection: collection,
+            onSystemPop: onSystemPop,
           ),
         );
 }
@@ -36,10 +39,12 @@ class _CreateOrRenameCollection extends StatefulWidget {
     Key? key,
     this.collection,
     this.onApplyPressed,
+    this.onSystemPop,
   }) : super(key: key);
 
   final _OnApplyPressed onApplyPressed;
   final Collection? collection;
+  final VoidCallback? onSystemPop;
 
   @override
   _CreateOrRenameCollectionState createState() =>
@@ -95,7 +100,10 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
           );
 
           final footer = BottomSheetFooter(
-            onCancelPressed: () => closeBottomSheet(context),
+            onCancelPressed: () {
+              widget.onSystemPop?.call();
+              closeBottomSheet(context);
+            },
             setup: BottomSheetFooterSetup.row(
               buttonData: BottomSheetFooterButton(
                 text: widget.collection == null
@@ -131,5 +139,10 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
   void _closeSheet(Collection newCollection) {
     closeBottomSheet(context);
     widget.onApplyPressed?.call(newCollection);
+
+    /// If the renaming is going on then call the onSystemPop if not null
+    if (widget.collection != null) {
+      widget.onSystemPop?.call();
+    }
   }
 }

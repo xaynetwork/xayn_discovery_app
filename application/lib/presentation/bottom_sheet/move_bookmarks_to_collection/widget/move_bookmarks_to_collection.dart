@@ -20,12 +20,15 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
     required List<UniqueId> bookmarksIds,
     required UniqueId collectionIdToRemove,
     Collection? forceSelectCollection,
+    VoidCallback? onSystemPop,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _MoveBookmarkToCollection(
             bookmarksIds: bookmarksIds,
             collectionIdToRemove: collectionIdToRemove,
             forceSelectCollection: forceSelectCollection,
+            onSystemPop: onSystemPop,
           ),
         );
 }
@@ -34,12 +37,14 @@ class _MoveBookmarkToCollection extends StatefulWidget {
   final Collection? forceSelectCollection;
   final List<UniqueId> bookmarksIds;
   final UniqueId collectionIdToRemove;
+  final VoidCallback? onSystemPop;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarksIds,
     required this.collectionIdToRemove,
     this.forceSelectCollection,
+    this.onSystemPop,
   }) : super(key: key);
 
   @override
@@ -92,7 +97,10 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     );
 
     final footer = BottomSheetFooter(
-      onCancelPressed: () => closeBottomSheet(context),
+      onCancelPressed: () {
+        widget.onSystemPop?.call();
+        closeBottomSheet(context);
+      },
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
@@ -116,7 +124,9 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
+      showBarrierColor: false,
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
+        onSystemPop: widget.onSystemPop,
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,
@@ -128,14 +138,17 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
       showAppBottomSheet(
         context,
+        showBarrierColor: false,
         builder: (_) => MoveBookmarksToCollectionBottomSheet(
           bookmarksIds: widget.bookmarksIds,
           forceSelectCollection: newCollection,
           collectionIdToRemove: widget.collectionIdToRemove,
+          onSystemPop: widget.onSystemPop,
         ),
       );
 
   _onApplyPressed() async {
+    widget.onSystemPop?.call();
     await _moveBookmarksToCollectionManager.onApplyPressed(
       bookmarksIds: widget.bookmarksIds,
       collectionIdToRemove: widget.collectionIdToRemove,
