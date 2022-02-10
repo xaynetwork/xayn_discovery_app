@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
-import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 
 class TrialExpired extends StatelessWidget {
+  final PurchasableProduct _product;
   late final PaymentScreenManager _paymentScreenManager = di.get();
 
   TrialExpired({
     Key? key,
-  }) : super(key: key);
+    required PurchasableProduct product,
+  })  : _product = product,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final spacer2_5 = SizedBox(height: R.dimen.unit2_5);
-    final payment = BlocBuilder<PaymentScreenManager, PaymentScreenState>(
-      bloc: _paymentScreenManager,
-      builder: (context, state) => state.map(
-        initial: (_) => _buildPricingError(),
-        ready: _buildPricing,
-      ),
-    );
 
     return SingleChildScrollView(
       child: Padding(
@@ -31,7 +26,7 @@ class TrialExpired extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildTitle(),
-            payment,
+            _buildPricing(),
             _buildPerks(),
             spacer2_5,
             _buildSubscribeNow(),
@@ -48,14 +43,9 @@ class TrialExpired extends StatelessWidget {
         style: R.styles.subscriptionModalTitle,
       );
 
-  Widget _buildPricing(PaymentScreenStateReady state) => Text(
-        state.product.price,
+  Widget _buildPricing() => Text(
+        _product.price,
         style: R.styles.subscriptionModalPrice,
-      );
-
-  Widget _buildPricingError() => Text(
-        R.strings.subscriptionPricingError,
-        style: R.styles.subscriptionModalPricingDetailsError,
       );
 
   Widget _buildPerks() => SettingsSection(

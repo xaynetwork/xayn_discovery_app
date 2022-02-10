@@ -85,6 +85,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
                   : product.status),
         );
 
+        // todo subscriptionProduct could be null, and errors not, so we need to maybe make PaymentScreenState.product optional
         if (subscriptionProduct != null) {
           return PaymentScreenState.ready(
             product: subscriptionProduct,
