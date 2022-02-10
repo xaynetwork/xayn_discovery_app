@@ -27,31 +27,33 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
     required DocumentFeedback feedback,
     required FeedbackContext context,
   }) async {
-    if (document.feedback == feedback) return;
-
     _useCaseSink ??= _getUseCaseSink();
 
     final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
+    final willUpdateEngine = document.feedback != feedback;
 
+    // always allow implicit feedback changes
     await _maybeUpdateExplicitDocumentFeedback(
       document: document,
       feedback: feedback,
       context: context,
     );
 
-    _useCaseSink!(
-      DocumentFeedbackChange(
-        documentId: document.documentId,
-        feedback: feedback,
-      ),
-    );
+    if (willUpdateEngine) {
+      _useCaseSink!(
+        DocumentFeedbackChange(
+          documentId: document.documentId,
+          feedback: feedback,
+        ),
+      );
 
-    sendAnalyticsUseCase(
-      DocumentFeedbackChangedEvent(
-        document: document.copyWith(feedback: feedback),
-        context: context,
-      ),
-    );
+      sendAnalyticsUseCase(
+        DocumentFeedbackChangedEvent(
+          document: document.copyWith(feedback: feedback),
+          context: context,
+        ),
+      );
+    }
   }
 
   Future<void> _maybeUpdateExplicitDocumentFeedback({
