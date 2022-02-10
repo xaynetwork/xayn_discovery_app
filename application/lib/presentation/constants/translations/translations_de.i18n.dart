@@ -1,7 +1,6 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
-
 import 'translations.i18n.dart';
 
 String get _languageCode => 'de';
@@ -173,29 +172,20 @@ class TranslationsDe extends Translations {
       """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
       """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
-  PaymentErrorTranslationsDe get PaymentError =>
-      PaymentErrorTranslationsDe(this);
-  AnotherContextTranslationsDe get AnotherContext =>
-      AnotherContextTranslationsDe(this);
-  String get paymentFlowErrorProductNotFound => """Product not found :(""";
-  String get paymentFlowErrorItemAlreadyOwned =>
-      """You have been already subscribed""";
-  String get paymentFlowErrorPaymentFailed => """Payment transaction failed""";
+  PaymentFlowErrorTranslationsDe get paymentFlowError =>
+      PaymentFlowErrorTranslationsDe(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
       """Do you really want to delete this collection?""";
 }
 
-class PaymentErrorTranslationsDe extends PaymentErrorTranslations {
+class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
   final TranslationsDe _parent;
-  const PaymentErrorTranslationsDe(this._parent) : super(_parent);
-  String get paymentFlowErrorUnknown => """Unknown error occurred""";
-}
-
-class AnotherContextTranslationsDe extends AnotherContextTranslations {
-  final TranslationsDe _parent;
-  const AnotherContextTranslationsDe(this._parent) : super(_parent);
-  String get paymentFlowErrorStoreNotAvailable =>
-      """The store is not available right now""";
+  const PaymentFlowErrorTranslationsDe(this._parent) : super(_parent);
+  String get unknown => """Unknown error occurred""";
+  String get storeNotAvailable => """The store is not available right now""";
+  String get productNotFound => """Product not found :(""";
+  String get itemAlreadyOwned => """You have been already subscribed""";
+  String get transactionFailed => """Payment transaction failed""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -314,13 +304,14 @@ Map<String, String> get translationsDeMap => {
           """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
           """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
-      """PaymentError.paymentFlowErrorUnknown""": """Unknown error occurred""",
-      """AnotherContext.paymentFlowErrorStoreNotAvailable""":
+      """paymentFlowError.unknown""": """Unknown error occurred""",
+      """paymentFlowError.storeNotAvailable""":
           """The store is not available right now""",
-      """paymentFlowErrorProductNotFound""": """Product not found :(""",
-      """paymentFlowErrorItemAlreadyOwned""":
+      """paymentFlowError.productNotFound""": """Product not found :(""",
+      """paymentFlowError.itemAlreadyOwned""":
           """You have been already subscribed""",
-      """paymentFlowErrorPaymentFailed""": """Payment transaction failed""",
+      """paymentFlowError.transactionFailed""":
+          """Payment transaction failed""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
     };
