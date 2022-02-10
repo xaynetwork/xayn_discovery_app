@@ -170,28 +170,20 @@ class Translations {
       """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
       """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
-  PaymentErrorTranslations get PaymentError => PaymentErrorTranslations(this);
-  AnotherContextTranslations get AnotherContext =>
-      AnotherContextTranslations(this);
-  String get paymentFlowErrorProductNotFound => """Product not found :(""";
-  String get paymentFlowErrorItemAlreadyOwned =>
-      """You have been already subscribed""";
-  String get paymentFlowErrorPaymentFailed => """Payment transaction failed""";
+  PaymentFlowErrorTranslations get paymentFlowError =>
+      PaymentFlowErrorTranslations(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
       """Do you really want to delete this collection?""";
 }
 
-class PaymentErrorTranslations {
+class PaymentFlowErrorTranslations {
   final Translations _parent;
-  const PaymentErrorTranslations(this._parent);
-  String get paymentFlowErrorUnknown => """Unknown error occurred""";
-}
-
-class AnotherContextTranslations {
-  final Translations _parent;
-  const AnotherContextTranslations(this._parent);
-  String get paymentFlowErrorStoreNotAvailable =>
-      """The store is not available right now""";
+  const PaymentFlowErrorTranslations(this._parent);
+  String get unknown => """Unknown error occurred""";
+  String get storeNotAvailable => """The store is not available right now""";
+  String get productNotFound => """Product not found :(""";
+  String get itemAlreadyOwned => """You have been already subscribed""";
+  String get transactionFailed => """Payment transaction failed""";
 }
 
 Map<String, String> get translationsMap => {
@@ -307,13 +299,14 @@ Map<String, String> get translationsMap => {
           """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
           """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
-      """PaymentError.paymentFlowErrorUnknown""": """Unknown error occurred""",
-      """AnotherContext.paymentFlowErrorStoreNotAvailable""":
+      """paymentFlowError.unknown""": """Unknown error occurred""",
+      """paymentFlowError.storeNotAvailable""":
           """The store is not available right now""",
-      """paymentFlowErrorProductNotFound""": """Product not found :(""",
-      """paymentFlowErrorItemAlreadyOwned""":
+      """paymentFlowError.productNotFound""": """Product not found :(""",
+      """paymentFlowError.itemAlreadyOwned""":
           """You have been already subscribed""",
-      """paymentFlowErrorPaymentFailed""": """Payment transaction failed""",
+      """paymentFlowError.transactionFailed""":
+          """Payment transaction failed""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
     };
