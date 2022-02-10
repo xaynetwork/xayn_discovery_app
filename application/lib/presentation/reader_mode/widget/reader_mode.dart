@@ -149,6 +149,8 @@ class _ReaderModeState extends State<ReaderMode> {
       case 'error':
         return ErrorElement(element: element);
     }
+
+    return null;
   }
 
   Future<readability.ProcessHtmlResult> _onProcessedHtml(
