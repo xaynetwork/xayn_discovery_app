@@ -102,3 +102,21 @@ subscriptionRenewsMonthlyText: 'The subscription renews monthly on: %s'
 promoCodeValidUntilText: 'Your promo code is valid until: %s'
 subscriptionPlatformInfoApple: Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.
 subscriptionPlatformInfoGoogle: Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.
+PaymentError:
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the unknown error occurred during payment operation
+  paymentFlowErrorUnknown: Unknown error occurred
+AnotherContext:
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the GooglePlay or AppStore is not available for some reason
+  paymentFlowErrorStoreNotAvailable: The store is not available right now
+# DO NOT TRANSLATE THIS FOR NOW!
+# Error msg, shown when the subscription details can not be received
+paymentFlowErrorProductNotFound: 'Product not found :('
+# DO NOT TRANSLATE THIS FOR NOW!
+# Error msg, shown when the item (subscription) was already paid before
+paymentFlowErrorItemAlreadyOwned: You have been already subscribed
+# DO NOT TRANSLATE THIS FOR NOW!
+# Error msg, shown when some issue happened during the payment transaction
+paymentFlowErrorPaymentFailed: Payment transaction failed
+bottomSheetDeleteCollectionWithNoItemsBody: Do you really want to delete this collection?

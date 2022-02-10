@@ -79,6 +79,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
         listener: (context, state) => _closeSheet(state.newCollection!),
         builder: (context, state) {
           final textField = AppTextField(
+            autofocus: true,
             controller: _textEditingController,
             hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
             onChanged: _createOrRenameCollectionManager.updateCollectionName,
