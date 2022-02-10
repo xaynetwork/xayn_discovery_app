@@ -216,7 +216,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
             document: toggleBookmark.document,
             isBookmarked: toggleBookmark.isBookmarked,
           );
-          
+
           _sendAnalyticsUseCase(event);
         }
 
