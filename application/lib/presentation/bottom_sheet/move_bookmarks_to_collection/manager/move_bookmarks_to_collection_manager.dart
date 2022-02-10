@@ -44,9 +44,16 @@ class MoveBookmarksToCollectionManager
   }) async {
     _collections =
         (await _getAllCollectionsUseCase.singleOutput(none)).collections;
-    final selectedCollection = _collections.first;
     _collections.removeWhere((element) => element.id == collectionIdToRemove);
-    updateSelectedCollection(selectedCollection);
+    scheduleComputeState(
+      () {
+        if (selectedCollection != null) {
+          _selectedCollection = selectedCollection;
+        } else {
+          _selectedCollection = _collections.first;
+        }
+      },
+    );
   }
 
   void updateSelectedCollection(Collection? collection) {
