@@ -15,6 +15,7 @@ class TooltipKeys {
       TooltipKey('feedSettingsScreenMaxSelectedCountries');
   static const feedSettingsScreenMinSelectedCountries =
       TooltipKey('feedSettingsScreenMinSelectedCountries');
+  static const paymentError = TooltipKey('paymentError');
 }
 
 abstract class XaynMessageProvider {
