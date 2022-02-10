@@ -12,6 +12,7 @@ class CollectionOptionsBottomSheet extends BottomSheetBase {
     Key? key,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _CollectionOptions(
             collection: collection,
             onSystemPop: onSystemPop,
@@ -42,7 +43,9 @@ class __CollectionOptionsState extends State<_CollectionOptions>
             closeBottomSheet(context);
             showAppBottomSheet(
               context,
+              showBarrierColor: false,
               builder: (context) => CreateOrRenameCollectionBottomSheet(
+                onSystemPop: widget.onSystemPop,
                 collection: widget.collection,
               ),
             );
@@ -54,8 +57,10 @@ class __CollectionOptionsState extends State<_CollectionOptions>
           closeBottomSheet(context);
           showAppBottomSheet(
             context,
+            showBarrierColor: false,
             builder: (context) => DeleteCollectionConfirmationBottomSheet(
               collectionId: widget.collection.id,
+              onSystemPop: widget.onSystemPop,
             ),
           );
         },

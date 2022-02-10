@@ -43,8 +43,9 @@ class MoveBookmarksToCollectionManager
       ..addAll(useCaseResult.collections);
 
     _collections.removeWhere((element) => element.id == collectionIdToRemove);
-    scheduleComputeState(() => _selectedCollection =
-        _selectedCollection != null ? selectedCollection : _collections.first);
+    scheduleComputeState(
+      () => _selectedCollection = selectedCollection ?? _collections.first,
+    );
   }
 
   void updateSelectedCollection(Collection? collection) {
