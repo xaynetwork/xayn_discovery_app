@@ -52,3 +52,5 @@ enum XaynMessageSet {
   bookmark,
   collection,
 }
+
+typedef OnToolTipError = void Function(TooltipKey);

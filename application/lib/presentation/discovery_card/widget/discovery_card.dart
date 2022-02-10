@@ -19,8 +19,6 @@ import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
-/// the minimum fraction height of the card image.
-/// This value must be in the range of [0.0, 1.0], where 1.0 is the
 /// maximum context height.
 const double _kMinImageFractionSize = .4;
 
