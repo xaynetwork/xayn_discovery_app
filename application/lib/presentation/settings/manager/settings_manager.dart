@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 abstract class SettingsNavActions {
   void onPaymentNavPressed();
@@ -90,7 +91,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
-          trialEndDate: null,
+          trialEndDate: subscriptionEndDate,
         );
     return fold(_appThemeHandler).foldAll((appTheme, _) async {
       if (appTheme != null) {
