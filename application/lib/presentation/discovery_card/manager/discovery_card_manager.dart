@@ -5,14 +5,13 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
@@ -21,7 +20,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readabili
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef UriHandler = void Function(Uri uri);
@@ -38,7 +39,8 @@ const String _kReadingTimeLanguage = 'en-US';
 class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with
         UseCaseBlocHelper<DiscoveryCardState>,
-        ChangeDocumentFeedbackMixin<DiscoveryCardState>
+        ChangeDocumentFeedbackMixin<DiscoveryCardState>,
+        OpenExternalUrlMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
@@ -90,6 +92,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           provider: state.processedDocument?.getProvider(document.webResource),
         ),
       );
+
+  void openWebResourceUrl(Document document) {
+    changeDocumentFeedback(
+      document: document,
+      feedback: DocumentFeedback.positive,
+    );
+    openExternalUrl(document.webResource.url.toString());
+  }
 
   Future<void> _init() async {
     _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);

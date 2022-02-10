@@ -18,9 +18,8 @@ class HiveDB {
   static Future<HiveDB> init(String? path) async {
     final isPersistedOnDisk = path != null;
 
-    if (isPersistedOnDisk) {
-      Hive.init(path!);
-    }
+    if (isPersistedOnDisk) Hive.init(path);
+
     registerHiveAdapters();
 
     await _openBoxes(inMemory: !isPersistedOnDisk);

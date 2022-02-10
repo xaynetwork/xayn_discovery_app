@@ -3,19 +3,19 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
-import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 abstract class SettingsNavActions {
   void onPaymentNavPressed();
@@ -27,7 +27,9 @@ abstract class SettingsNavActions {
 
 @lazySingleton
 class SettingsScreenManager extends Cubit<SettingsScreenState>
-    with UseCaseBlocHelper<SettingsScreenState>
+    with
+        UseCaseBlocHelper<SettingsScreenState>,
+        OpenExternalUrlMixin<SettingsScreenState>
     implements SettingsNavActions {
   final FeatureManager _featureManager;
   final GetAppVersionUseCase _getAppVersionUseCase;
@@ -37,7 +39,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final BugReportingService _bugReportingService;
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
-  final UrlOpener _urlOpener;
   final ShareUriUseCase _shareUriUseCase;
 
   SettingsScreenManager(
@@ -48,7 +49,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._bugReportingService,
     this._extractLogUseCase,
     this._settingsNavActions,
-    this._urlOpener,
     this._shareUriUseCase,
     this._featureManager,
   ) : super(const SettingsScreenState.initial()) {
@@ -83,8 +83,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       );
 
   void shareApp() => _shareUriUseCase.call(Uri.parse(Urls.download));
-
-  void openUrl(String url) => _urlOpener.openUrl(url);
 
   @override
   Future<SettingsScreenState?> computeState() async {

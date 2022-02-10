@@ -4,8 +4,8 @@ publish_to: 'none'
 version: 0.0.1
 
 environment:
-  sdk: '>=2.14.0 <3.0.0'
-  flutter: '>=2.8.1'
+  sdk: '>=2.16.0 <3.0.0'
+  flutter: '>=2.10.0'
 
 # Please list dependencies alphabetically!
 dependencies:
@@ -71,7 +71,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 2f33f1c1c830b0215313fedddae779c5f6a102f0
+      ref: 1e9f69afc02622e9b377ff6c292ea7ca01de3685
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
@@ -167,4 +167,5 @@ flutter:
     - packages/xayn_design/assets/icons/bookmark_active.svg
     - packages/xayn_design/assets/icons/plus.svg
     - packages/xayn_design/assets/icons/check.svg
+    - packages/xayn_design/assets/icons/globe.svg
     - packages/xayn_design/assets/icons/premium_decoration.svg
