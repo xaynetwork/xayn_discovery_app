@@ -4,7 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/subscription_details/widget/subscription_details.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -133,7 +134,8 @@ class _SettingsScreenState extends State<SettingsScreen>
   void _showSubscriptionDetailsBottomSheet() => showAppBottomSheet(
         context,
         builder: (buildContext) => SubscriptionDetailsBottomSheet(
-          onDonePressed: () {},
+          subscriptionType: SubscriptionType.paid,
+          endDate: subscriptionEndDate,
         ),
       );
 }
