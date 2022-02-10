@@ -173,6 +173,29 @@ class TranslationsDe extends Translations {
       """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
       """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
+  PaymentErrorTranslationsDe get PaymentError =>
+      PaymentErrorTranslationsDe(this);
+  AnotherContextTranslationsDe get AnotherContext =>
+      AnotherContextTranslationsDe(this);
+  String get paymentFlowErrorProductNotFound => """Product not found :(""";
+  String get paymentFlowErrorItemAlreadyOwned =>
+      """You have been already subscribed""";
+  String get paymentFlowErrorPaymentFailed => """Payment transaction failed""";
+  String get bottomSheetDeleteCollectionWithNoItemsBody =>
+      """Do you really want to delete this collection?""";
+}
+
+class PaymentErrorTranslationsDe extends PaymentErrorTranslations {
+  final TranslationsDe _parent;
+  const PaymentErrorTranslationsDe(this._parent) : super(_parent);
+  String get paymentFlowErrorUnknown => """Unknown error occurred""";
+}
+
+class AnotherContextTranslationsDe extends AnotherContextTranslations {
+  final TranslationsDe _parent;
+  const AnotherContextTranslationsDe(this._parent) : super(_parent);
+  String get paymentFlowErrorStoreNotAvailable =>
+      """The store is not available right now""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -291,4 +314,13 @@ Map<String, String> get translationsDeMap => {
           """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
           """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
+      """PaymentError.paymentFlowErrorUnknown""": """Unknown error occurred""",
+      """AnotherContext.paymentFlowErrorStoreNotAvailable""":
+          """The store is not available right now""",
+      """paymentFlowErrorProductNotFound""": """Product not found :(""",
+      """paymentFlowErrorItemAlreadyOwned""":
+          """You have been already subscribed""",
+      """paymentFlowErrorPaymentFailed""": """Payment transaction failed""",
+      """bottomSheetDeleteCollectionWithNoItemsBody""":
+          """Do you really want to delete this collection?""",
     };

@@ -170,6 +170,28 @@ class Translations {
       """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
       """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
+  PaymentErrorTranslations get PaymentError => PaymentErrorTranslations(this);
+  AnotherContextTranslations get AnotherContext =>
+      AnotherContextTranslations(this);
+  String get paymentFlowErrorProductNotFound => """Product not found :(""";
+  String get paymentFlowErrorItemAlreadyOwned =>
+      """You have been already subscribed""";
+  String get paymentFlowErrorPaymentFailed => """Payment transaction failed""";
+  String get bottomSheetDeleteCollectionWithNoItemsBody =>
+      """Do you really want to delete this collection?""";
+}
+
+class PaymentErrorTranslations {
+  final Translations _parent;
+  const PaymentErrorTranslations(this._parent);
+  String get paymentFlowErrorUnknown => """Unknown error occurred""";
+}
+
+class AnotherContextTranslations {
+  final Translations _parent;
+  const AnotherContextTranslations(this._parent);
+  String get paymentFlowErrorStoreNotAvailable =>
+      """The store is not available right now""";
 }
 
 Map<String, String> get translationsMap => {
@@ -285,4 +307,13 @@ Map<String, String> get translationsMap => {
           """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
           """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
+      """PaymentError.paymentFlowErrorUnknown""": """Unknown error occurred""",
+      """AnotherContext.paymentFlowErrorStoreNotAvailable""":
+          """The store is not available right now""",
+      """paymentFlowErrorProductNotFound""": """Product not found :(""",
+      """paymentFlowErrorItemAlreadyOwned""":
+          """You have been already subscribed""",
+      """paymentFlowErrorPaymentFailed""": """Payment transaction failed""",
+      """bottomSheetDeleteCollectionWithNoItemsBody""":
+          """Do you really want to delete this collection?""",
     };
