@@ -81,3 +81,7 @@ settingsXaynPremium: Xayn Premium
 settingsSectionSubscription: Subscription
 trialBannerSubscribeNow: Subscribe Now
 bookmarkScreenNoArticles: No Articles
+trialBannerEndsIn: Your trial ends in %s days
+trialBannerEndsTomorrow: Your trial ends tomorrow
+trialBannerEndsToday: Your trial ends today
+trialBannerExpired: Your trial expired
