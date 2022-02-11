@@ -90,7 +90,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
-          trialEndDate: null, //subscriptionEndDate,
+          trialEndDate: null,
         );
     return fold(_appThemeHandler).foldAll((appTheme, _) async {
       if (appTheme != null) {
