@@ -26,6 +26,9 @@ class Keys {
   static const Key settingsScrollDirectionHorizontal =
       Key('settings_scroll_direction_horizontal');
 
+  static const Key settingsSubscriptionPremium =
+      Key('settings_subscription_premium');
+
   static const Key settingsAboutXayn = Key('settings_about_xayn');
   static const Key settingsCarbonNeutral = Key('settings_carbon_neutral');
   static const Key settingsImprint = Key('settings_imprint');

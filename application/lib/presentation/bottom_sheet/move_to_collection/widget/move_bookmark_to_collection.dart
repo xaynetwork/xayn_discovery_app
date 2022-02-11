@@ -5,22 +5,26 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/manager/move_bookmark_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarkToCollectionBottomSheet({
     Key? key,
     required UniqueId bookmarkId,
+    required OnToolTipError onError,
     Collection? forceSelectCollection,
   }) : super(
           key: key,
           body: _MoveBookmarkToCollection(
             bookmarkId: bookmarkId,
+            onError: onError,
             forceSelectCollection: forceSelectCollection,
           ),
         );
@@ -29,10 +33,12 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
 class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId bookmarkId;
   final Collection? forceSelectCollection;
+  final OnToolTipError onError;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarkId,
+    required this.onError,
     this.forceSelectCollection,
   }) : super(key: key);
 
@@ -43,11 +49,11 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     with BottomSheetBodyMixin {
-  MoveBookmarkToCollectionManager? _moveBookmarkToCollectionManager;
+  MoveToCollectionManager? _moveBookmarkToCollectionManager;
 
   @override
   void initState() {
-    di.getAsync<MoveBookmarkToCollectionManager>().then(
+    di.getAsync<MoveToCollectionManager>().then(
       (it) async {
         await it.updateInitialSelectedCollection(
           bookmarkId: widget.bookmarkId,
@@ -71,17 +77,30 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   Widget build(BuildContext context) {
     final body = _moveBookmarkToCollectionManager == null
         ? const SizedBox.shrink()
-        : BlocBuilder<MoveBookmarkToCollectionManager,
-            MoveBookmarkToCollectionState>(
+        : BlocConsumer<MoveToCollectionManager, MoveToCollectionState>(
             bloc: _moveBookmarkToCollectionManager,
-            builder: (_, state) => state.collections.isNotEmpty
-                ? CollectionsListBottomSheet(
-                    collections: state.collections,
-                    onSelectCollection: _moveBookmarkToCollectionManager!
-                        .updateSelectedCollection,
-                    initialSelectedCollection: state.selectedCollection,
-                  )
-                : const SizedBox.shrink(),
+            listener: (_, state) {
+              if (state.hasError) {
+                TooltipKey? key = TooltipUtils.getErrorKey(state.errorObj);
+                if (key != null) widget.onError(key);
+              }
+            },
+            builder: (_, state) {
+              if (state.shouldClose) {
+                closeBottomSheet(context);
+              }
+
+              if (state.collections.isNotEmpty) {
+                return CollectionsListBottomSheet(
+                  collections: state.collections,
+                  onSelectCollection: _moveBookmarkToCollectionManager!
+                      .updateSelectedCollection,
+                  initialSelectedCollection: state.selectedCollection,
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
           );
 
     final header = BottomSheetHeader(
@@ -95,7 +114,10 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () => closeBottomSheet(context),
-      onApplyPressed: _onApplyPressed,
+      onApplyPressed: () =>
+          _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
+        bookmarkId: widget.bookmarkId,
+      ),
     );
 
     return Column(
@@ -128,13 +150,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
         builder: (_) => MoveBookmarkToCollectionBottomSheet(
           bookmarkId: widget.bookmarkId,
           forceSelectCollection: newCollection,
+          onError: widget.onError,
         ),
       );
-
-  _onApplyPressed() {
-    closeBottomSheet(context);
-    _moveBookmarkToCollectionManager!.onApplyPressed(
-      bookmarkId: widget.bookmarkId,
-    );
-  }
 }

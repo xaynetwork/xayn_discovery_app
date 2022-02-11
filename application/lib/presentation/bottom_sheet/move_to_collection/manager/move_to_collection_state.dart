@@ -1,33 +1,32 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 
-part 'move_document_to_collection_state.freezed.dart';
+part 'move_to_collection_state.freezed.dart';
 
-/// Represents the state of the [MoveDocumentToCollectionManager].
+/// Represents the state of the [MoveToCollectionManager].
 @freezed
-class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
-  const MoveDocumentToCollectionState._();
+class MoveToCollectionState with _$MoveToCollectionState {
+  const MoveToCollectionState._();
 
-  const factory MoveDocumentToCollectionState({
+  const factory MoveToCollectionState({
     required List<Collection> collections,
     Collection? selectedCollection,
     Object? errorObj,
     @Default(false) bool isBookmarked,
     @Default(false) bool shouldClose,
-  }) = _MoveDocumentToCollectionState;
+  }) = _MoveToCollectionState;
 
-  factory MoveDocumentToCollectionState.initial() =>
-      const MoveDocumentToCollectionState(
+  factory MoveToCollectionState.initial() => const MoveToCollectionState(
         collections: [],
       );
 
-  factory MoveDocumentToCollectionState.populated({
+  factory MoveToCollectionState.populated({
     required List<Collection> collections,
     required Collection? selectedCollection,
     required bool isBookmarked,
     required bool shouldClose,
   }) =>
-      MoveDocumentToCollectionState(
+      MoveToCollectionState(
         collections: collections,
         selectedCollection: selectedCollection,
         isBookmarked: isBookmarked,
@@ -35,7 +34,6 @@ class MoveDocumentToCollectionState with _$MoveDocumentToCollectionState {
       );
 }
 
-extension MoveDocumentToCollectionStateExtension
-    on MoveDocumentToCollectionState {
+extension MoveDocumentToCollectionStateExtension on MoveToCollectionState {
   bool get hasError => errorObj != null;
 }

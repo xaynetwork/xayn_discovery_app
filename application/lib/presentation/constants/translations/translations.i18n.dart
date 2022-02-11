@@ -143,6 +143,10 @@ class Translations {
   String get settingsSectionSubscription => """Subscription""";
   String get trialBannerSubscribeNow => """Subscribe Now""";
   String get bookmarkScreenNoArticles => """No Articles""";
+  String get trialBannerEndsIn => """Your trial ends in %s days""";
+  String get trialBannerEndsTomorrow => """Your trial ends tomorrow""";
+  String get trialBannerEndsToday => """Your trial ends today""";
+  String get trialBannerExpired => """Your trial expired""";
 }
 
 Map<String, String> get translationsMap => {
@@ -233,4 +237,8 @@ Map<String, String> get translationsMap => {
       """settingsSectionSubscription""": """Subscription""",
       """trialBannerSubscribeNow""": """Subscribe Now""",
       """bookmarkScreenNoArticles""": """No Articles""",
+      """trialBannerEndsIn""": """Your trial ends in %s days""",
+      """trialBannerEndsTomorrow""": """Your trial ends tomorrow""",
+      """trialBannerEndsToday""": """Your trial ends today""",
+      """trialBannerExpired""": """Your trial expired""",
     };

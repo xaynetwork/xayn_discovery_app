@@ -24,13 +24,13 @@ import '../test_utils/widget_test_utils.dart';
 void main() {
   late StreamController<SettingsScreenState> streamController;
   const stateReady = SettingsScreenState.ready(
-    theme: AppTheme.system,
-    appVersion: AppVersion(
-      version: '1.2.3',
-      build: '321',
-    ),
-    isPaymentEnabled: false,
-  ) as SettingsScreenStateReady;
+      theme: AppTheme.system,
+      appVersion: AppVersion(
+        version: '1.2.3',
+        build: '321',
+      ),
+      isPaymentEnabled: false,
+      trialEndDate: null) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 
   setUp(() async {
