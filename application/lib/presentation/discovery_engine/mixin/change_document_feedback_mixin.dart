@@ -29,30 +29,41 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
   }) async {
     _useCaseSink ??= _getUseCaseSink();
 
-    final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
-    final willUpdateEngine = document.feedback != feedback;
+    final isExplicit = context == FeedbackContext.explicit;
+    final isNeutral = document.feedback == DocumentFeedback.neutral;
 
-    // always allow explicit feedback changes
-    await _maybeUpdateExplicitDocumentFeedback(
-      document: document,
-      feedback: feedback,
-      context: context,
-    );
-
-    if (willUpdateEngine) {
-      _useCaseSink!(
-        DocumentFeedbackChange(
-          documentId: document.documentId,
-          feedback: feedback,
-        ),
+    // when explicit, then always propagate the feedback,
+    // when implicit, only propagate when neutral.
+    // should a user explicitly dislike a Document,
+    // and then trigger an implicit like, then it will _not_ propagate.
+    if (isExplicit || isNeutral) {
+      await _maybeUpdateExplicitDocumentFeedback(
+        document: document,
+        feedback: feedback,
+        context: context,
       );
 
-      sendAnalyticsUseCase(
-        DocumentFeedbackChangedEvent(
-          document: document.copyWith(feedback: feedback),
-          context: context,
-        ),
-      );
+      // updating the engine and sending analytics, should only
+      // propagate _if_ the value actually changes.
+      final willUpdateEngine = document.feedback != feedback;
+
+      if (willUpdateEngine) {
+        final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
+
+        _useCaseSink!(
+          DocumentFeedbackChange(
+            documentId: document.documentId,
+            feedback: feedback,
+          ),
+        );
+
+        sendAnalyticsUseCase(
+          DocumentFeedbackChangedEvent(
+            document: document.copyWith(feedback: feedback),
+            context: context,
+          ),
+        );
+      }
     }
   }
 

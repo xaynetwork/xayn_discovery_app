@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
@@ -102,13 +101,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           }),
           buildNavBarItemLike(
             isLiked: managers.discoveryCardManager.state.isRelevant,
-            onPressed: () =>
-                managers.discoveryCardManager.changeDocumentFeedback(
+            onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
               feedback: managers.discoveryCardManager.state.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
-              context: FeedbackContext.explicit,
             ),
           ),
           buildNavBarItemBookmark(
@@ -121,13 +118,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   managers.discoveryCardManager.shareUri(document)),
           buildNavBarItemDisLike(
             isDisLiked: managers.discoveryCardManager.state.isIrrelevant,
-            onPressed: () =>
-                managers.discoveryCardManager.changeDocumentFeedback(
+            onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
               feedback: managers.discoveryCardManager.state.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,
-              context: FeedbackContext.explicit,
             ),
           ),
         ],

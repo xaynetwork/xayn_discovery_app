@@ -1,6 +1,8 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
@@ -9,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/docum
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -18,6 +21,10 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const int _kMaxCardCount = 10;
+
+/// a threshold, how long a user should observe a document, before it becomes
+/// implicitly liked.
+const int _kThresholdDurationSecondsImplicitLike = 5;
 
 typedef ObservedViewTypes = Map<DocumentId, DocumentViewMode>;
 
@@ -33,7 +40,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         EngineEventsMixin<DiscoveryFeedState>,
         RequestFeedMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
-        ObserveDocumentMixin<DiscoveryFeedState>
+        ObserveDocumentMixin<DiscoveryFeedState>,
+        ChangeDocumentFeedbackMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._engine,
@@ -111,6 +119,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     observeDocument(
       document: nextDocument,
       mode: _currentViewMode(nextDocument.documentId),
+      onObservation: _onObservation,
     );
 
     _sendAnalyticsUseCase(DocumentIndexChangedEvent(
@@ -138,6 +147,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       observeDocument(
         document: document,
         mode: mode,
+        onObservation: _onObservation,
       );
     }
   }
@@ -159,6 +169,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       mode: isAppInForeground
           ? _currentViewMode(observedDocument.documentId)
           : null,
+      onObservation: _onObservation,
     );
   }
 
@@ -289,6 +300,22 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
+  }
+
+  /// secondary observation action, check if we should implicitly like the [Document]
+  void _onObservation(DiscoveryCardMeasuredObservation observation) {
+    final document = observation.document!;
+    final isCardOpened = observation.viewType != DocumentViewMode.story;
+    final isObservedLongEnough = observation.duration.inSeconds >=
+        _kThresholdDurationSecondsImplicitLike;
+
+    if (isCardOpened && isObservedLongEnough) {
+      changeDocumentFeedback(
+        document: document,
+        feedback: DocumentFeedback.positive,
+        context: FeedbackContext.implicit,
+      );
+    }
   }
 }
 

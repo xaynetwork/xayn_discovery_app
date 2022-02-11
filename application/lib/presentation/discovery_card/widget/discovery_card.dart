@@ -370,12 +370,11 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         ),
         buildNavBarItemLike(
           isLiked: _discoveryCardManager.state.isRelevant,
-          onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+          onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
             feedback: _discoveryCardManager.state.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
-            context: FeedbackContext.explicit,
           ),
         ),
         buildNavBarItemBookmark(
@@ -388,12 +387,11 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         ),
         buildNavBarItemDisLike(
           isDisLiked: _discoveryCardManager.state.isIrrelevant,
-          onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+          onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
             feedback: _discoveryCardManager.state.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
-            context: FeedbackContext.explicit,
           ),
         ),
       ],
