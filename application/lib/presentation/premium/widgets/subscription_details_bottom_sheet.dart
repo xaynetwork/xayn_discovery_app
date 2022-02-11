@@ -42,17 +42,20 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   @override
   Widget build(BuildContext context) {
     final spacer0_5 = SizedBox(height: R.dimen.unit0_5);
+    final spacer1_5 = SizedBox(height: R.dimen.unit1_5);
     final spacer2 = SizedBox(height: R.dimen.unit2);
+    final spacer3 = SizedBox(height: R.dimen.unit3);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        spacer3,
         _buildHeader(),
         spacer0_5,
         _buildTitle(),
         spacer2,
         _buildInfo(),
-        spacer2,
+        spacer1_5,
         _buildFooter(),
         spacer2,
         _buildDoneButton(context),
@@ -60,19 +63,25 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
     );
   }
 
-  Widget _buildHeader() => Text(R.strings.settingsSubscribedToHeader);
+  Widget _buildHeader() => Text(
+        R.strings.settingsSubscribedToHeader,
+        style: R.styles.appHighlightText,
+      );
 
   Widget _buildTitle() => Text(
         R.strings.settingsXaynPremium,
-        style: R.styles.appBodyText,
+        style: R.styles.appScreenHeadline,
       );
 
   Widget _buildInfo() {
     final dateString = endDate.shortDateFormat;
-    final infoString = R.strings.subscriptionRenewsMonthlyText
-        .replaceFirst('%s', '__${dateString}__');
+    final infoString = subscriptionType == SubscriptionType.paid
+        ? R.strings.subscriptionRenewsMonthlyText
+        : R.strings.promoCodeValidUntilText;
+    final infoStringWithDate =
+        infoString.replaceFirst('%s', '__${dateString}__');
     return SuperRichText(
-      text: infoString,
+      text: infoStringWithDate,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: R.styles.appBodyText,
