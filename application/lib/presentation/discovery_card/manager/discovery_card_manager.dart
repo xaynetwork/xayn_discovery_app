@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -109,7 +110,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         )
         .cast<AnalyticsEvent>()
         .followedBy(_sendAnalyticsUseCase),
-  );
+  )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   late final UseCaseSink<CrudExplicitDocumentFeedbackUseCaseIn,
           ExplicitDocumentFeedback> _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
@@ -193,15 +194,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   @override
-  Future<DiscoveryCardState?> computeState() async => fold4(
+  Future<DiscoveryCardState?> computeState() async => fold3(
         _updateUri,
         _isBookmarkedHandler,
-        _toggleBookmarkHandler,
         _crudExplicitDocumentFeedbackHandler,
       ).foldAll((
         processedDocument,
         isBookmarked,
-        toggleBookmark,
         explicitDocumentFeedback,
         errorReport,
       ) {
