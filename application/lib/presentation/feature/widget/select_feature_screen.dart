@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/enum_utils.dart';
 
 const kFeatureScreenWaitDuration = Duration(seconds: 3);
 
@@ -137,7 +136,7 @@ class _FeaturesList extends StatelessWidget {
   Widget _buildItem(Feature feature, bool isEnabled) => MaterialButton(
         color: isEnabled ? Colors.green : Colors.grey,
         onPressed: () => featureManager.flipFlopFeature(feature),
-        child: Text(describeEnum(feature)),
+        child: Text(feature.name),
       );
 
   Widget continueButton() => MaterialButton(
