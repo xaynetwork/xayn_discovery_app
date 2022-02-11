@@ -55,20 +55,21 @@ class _DiscoveryCardStaticState
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           document: widget.document,
+          explicitDocumentFeedback: state.explicitDocumentFeedback,
           title: webResource.title,
           timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
           provider: provider,
           datePublished: webResource.datePublished,
-          onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
+          onLikePressed: () => discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: widget.document.isRelevant
+            feedback: state.explicitDocumentFeedback.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
           ),
-          onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
+          onDislikePressed: () => discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: widget.document.isIrrelevant
+            feedback: state.explicitDocumentFeedback.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),

@@ -6,8 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
+import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -19,15 +23,24 @@ import '../../test_utils/fakes.dart';
 import '../../test_utils/utils.dart';
 import 'change_document_feedback_mixin_test.mocks.dart';
 
-@GenerateMocks([AnalyticsService])
+@GenerateMocks([
+  AnalyticsService,
+  CrudExplicitDocumentFeedbackUseCase,
+])
 void main() {
   late MockDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
-  final controller = StreamController<EngineEvent>();
+  late MockCrudExplicitDocumentFeedbackUseCase
+      crudExplicitDocumentFeedbackUseCase;
+  final controller = StreamController<EngineEvent>.broadcast();
 
   setUp(() async {
     engine = MockDiscoveryEngine();
     analyticsService = MockAnalyticsService();
+    crudExplicitDocumentFeedbackUseCase =
+        MockCrudExplicitDocumentFeedbackUseCase();
+
+    di.allowReassignment = true;
 
     di.registerSingletonAsync<EngineEventsUseCase>(
         () => Future.value(EngineEventsUseCase(engine)));
@@ -35,6 +48,8 @@ void main() {
         () => Future.value(ChangeDocumentFeedbackUseCase(engine)));
     di.registerLazySingleton<SendAnalyticsUseCase>(
         () => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<CrudExplicitDocumentFeedbackUseCase>(
+        () => crudExplicitDocumentFeedbackUseCase);
 
     when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 
@@ -51,6 +66,14 @@ void main() {
         return Future.value(event);
       },
     );
+
+    when(crudExplicitDocumentFeedbackUseCase.singleOutput(any))
+        .thenAnswer((realInvocation) async {
+      final param = realInvocation.positionalArguments.first
+          as CrudExplicitDocumentFeedbackUseCaseIn;
+
+      return param.explicitDocumentFeedback;
+    });
   });
 
   blocTest<_TestBloc, bool>(
@@ -59,6 +82,7 @@ void main() {
     act: (bloc) => bloc.changeDocumentFeedback(
       document: fakeDocument,
       feedback: DocumentFeedback.positive,
+      context: FeedbackContext.explicit,
     ),
     verify: (manager) {
       verify(engine.engineEvents);
@@ -67,6 +91,45 @@ void main() {
         feedback: DocumentFeedback.positive,
       ));
       verifyNoMoreInteractions(engine);
+    },
+    expect: () => [true],
+  );
+
+  blocTest<_TestBloc, bool>(
+    'WHEN changing explicit feedback THEN expect explicit document feedback ',
+    build: () => _TestBloc(),
+    act: (bloc) => bloc.changeDocumentFeedback(
+      document: fakeDocument,
+      feedback: DocumentFeedback.positive,
+      context: FeedbackContext.explicit,
+    ),
+    verify: (manager) {
+      verify(
+        crudExplicitDocumentFeedbackUseCase.singleOutput(
+          CrudExplicitDocumentFeedbackUseCaseIn.store(
+            ExplicitDocumentFeedback(
+              id: fakeDocument.documentId.uniqueId,
+              feedback: DocumentFeedback.positive,
+            ),
+          ),
+        ),
+      );
+      verifyNoMoreInteractions(crudExplicitDocumentFeedbackUseCase);
+    },
+    expect: () => [true],
+  );
+
+  blocTest<_TestBloc, bool>(
+    'WHEN changing implicit feedback THEN expect implicit document feedback ',
+    build: () => _TestBloc(),
+    act: (bloc) => bloc.changeDocumentFeedback(
+      document: fakeDocument,
+      feedback: DocumentFeedback.positive,
+      context: FeedbackContext.implicit,
+    ),
+    verify: (manager) {
+      verifyNever(crudExplicitDocumentFeedbackUseCase.singleOutput(any));
+      verifyNoMoreInteractions(crudExplicitDocumentFeedbackUseCase);
     },
     expect: () => [true],
   );
