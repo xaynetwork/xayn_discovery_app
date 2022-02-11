@@ -5,6 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -50,6 +51,8 @@ void main() {
         DiscoveryCardMeasuredObservationUseCase());
     di.registerLazySingleton<SendAnalyticsUseCase>(
         () => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<ChangeDocumentFeedbackUseCase>(
+        () => ChangeDocumentFeedbackUseCase(engine));
 
     when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 

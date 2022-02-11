@@ -101,11 +101,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
-            isLiked: document.isRelevant,
-            onPressed: () =>
-                managers.discoveryCardManager.changeDocumentFeedback(
+            isLiked: managers
+                .discoveryCardManager.state.explicitDocumentFeedback.isRelevant,
+            onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
-              feedback: document.isRelevant
+              feedback: managers.discoveryCardManager.state
+                      .explicitDocumentFeedback.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
             ),
@@ -119,11 +120,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               onPressed: () =>
                   managers.discoveryCardManager.shareUri(document)),
           buildNavBarItemDisLike(
-            isDisLiked: document.isIrrelevant,
-            onPressed: () =>
-                managers.discoveryCardManager.changeDocumentFeedback(
+            isDisLiked: managers.discoveryCardManager.state
+                .explicitDocumentFeedback.isIrrelevant,
+            onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
-              feedback: document.isIrrelevant
+              feedback: managers.discoveryCardManager.state
+                      .explicitDocumentFeedback.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,
             ),
@@ -316,6 +318,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           manager: managers.discoveryCardManager,
           isPrimary: isPrimary,
           document: document,
+          explicitDocumentFeedback:
+              managers.discoveryCardManager.state.explicitDocumentFeedback,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
         );
@@ -328,8 +332,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       (int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
+        final managers = managersOf(document);
+        final state = managers.discoveryCardManager.state;
 
-        switch (document.feedback) {
+        switch (state.explicitDocumentFeedback) {
           case DocumentFeedback.neutral:
             return null;
           case DocumentFeedback.positive:

@@ -22,6 +22,7 @@ class DiscoveryCardElements extends StatelessWidget {
     Key? key,
     required this.manager,
     required this.document,
+    required this.explicitDocumentFeedback,
     required this.title,
     required this.timeToRead,
     required this.url,
@@ -37,6 +38,7 @@ class DiscoveryCardElements extends StatelessWidget {
   }) : super(key: key);
   final DiscoveryCardManager manager;
   final Document document;
+  final DocumentFeedback explicitDocumentFeedback;
   final String title;
   final String timeToRead;
   final Uri url;
@@ -80,6 +82,7 @@ class DiscoveryCardElements extends StatelessWidget {
         onBookmarkLongPressed: onBookmarkLongPressed,
         isBookmarked: isBookmarked,
         document: document,
+        explicitDocumentFeedback: explicitDocumentFeedback,
       ),
     );
 
