@@ -8,3 +8,11 @@ extension DocumentExtension on Document {
 extension DocumentIdUtils on DocumentId {
   UniqueId get uniqueId => UniqueId.fromTrustedString(toString());
 }
+
+extension DocumentFeedbackExtension on DocumentFeedback {
+  bool get isNeutral => this == DocumentFeedback.neutral;
+
+  bool get isRelevant => this == DocumentFeedback.positive;
+
+  bool get isIrrelevant => this == DocumentFeedback.negative;
+}

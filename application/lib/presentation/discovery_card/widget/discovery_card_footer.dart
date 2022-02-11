@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'package:xayn_design/xayn_design.dart';
@@ -30,7 +31,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final likeButton = AppGhostButton.icon(
-      explicitDocumentFeedback == DocumentFeedback.positive
+      explicitDocumentFeedback.isRelevant
           ? R.assets.icons.thumbsUpActive
           : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
@@ -51,7 +52,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final dislikeButton = AppGhostButton.icon(
-      explicitDocumentFeedback == DocumentFeedback.negative
+      explicitDocumentFeedback.isIrrelevant
           ? R.assets.icons.thumbsDownActive
           : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,

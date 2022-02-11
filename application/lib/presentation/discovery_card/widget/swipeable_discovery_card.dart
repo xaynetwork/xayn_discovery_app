@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
@@ -37,14 +38,14 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
         optionsLeft: isPrimary
             ? [
-                explicitDocumentFeedback == DocumentFeedback.positive
+                explicitDocumentFeedback.isRelevant
                     ? SwipeOption.neutral
                     : SwipeOption.like
               ]
             : const [],
         optionsRight: isPrimary
             ? [
-                explicitDocumentFeedback == DocumentFeedback.negative
+                explicitDocumentFeedback.isIrrelevant
                     ? SwipeOption.neutral
                     : SwipeOption.dislike
               ]

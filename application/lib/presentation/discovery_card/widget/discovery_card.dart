@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
@@ -210,14 +211,14 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
-            feedback: state.isRelevant
+            feedback: state.explicitDocumentFeedback.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
             context: FeedbackContext.explicit,
           ),
           onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
-            feedback: state.isIrrelevant
+            feedback: state.explicitDocumentFeedback.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
             context: FeedbackContext.explicit,
@@ -369,12 +370,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           onPressed: () => _discoveryCardManager.onBackNavPressed(),
         ),
         buildNavBarItemLike(
-          isLiked: _discoveryCardManager.state.isRelevant,
+          isLiked:
+              _discoveryCardManager.state.explicitDocumentFeedback.isRelevant,
           onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: _discoveryCardManager.state.isRelevant
-                ? DocumentFeedback.neutral
-                : DocumentFeedback.positive,
+            feedback:
+                _discoveryCardManager.state.explicitDocumentFeedback.isRelevant
+                    ? DocumentFeedback.neutral
+                    : DocumentFeedback.positive,
           ),
         ),
         buildNavBarItemBookmark(
@@ -386,10 +389,12 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           onPressed: () => _discoveryCardManager.shareUri(widget.document),
         ),
         buildNavBarItemDisLike(
-          isDisLiked: _discoveryCardManager.state.isIrrelevant,
+          isDisLiked:
+              _discoveryCardManager.state.explicitDocumentFeedback.isIrrelevant,
           onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: _discoveryCardManager.state.isIrrelevant
+            feedback: _discoveryCardManager
+                    .state.explicitDocumentFeedback.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),

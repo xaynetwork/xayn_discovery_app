@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -48,13 +49,13 @@ class _DiscoveryFeedCardState
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
-        feedback: state.isRelevant
+        feedback: state.explicitDocumentFeedback.isRelevant
             ? DocumentFeedback.neutral
             : DocumentFeedback.positive,
       ),
       onDislikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
-        feedback: state.isIrrelevant
+        feedback: state.explicitDocumentFeedback.isIrrelevant
             ? DocumentFeedback.neutral
             : DocumentFeedback.negative,
       ),

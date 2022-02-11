@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -62,13 +63,13 @@ class _DiscoveryCardStaticState
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: state.isRelevant
+            feedback: state.explicitDocumentFeedback.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
           ),
           onDislikePressed: () => discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: state.isIrrelevant
+            feedback: state.explicitDocumentFeedback.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),

@@ -30,13 +30,12 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
     _useCaseSink ??= _getUseCaseSink();
 
     final isExplicit = context == FeedbackContext.explicit;
-    final isNeutral = document.feedback == DocumentFeedback.neutral;
 
     // when explicit, then always propagate the feedback,
     // when implicit, only propagate when neutral.
     // should a user explicitly dislike a Document,
     // and then trigger an implicit like, then it will _not_ propagate.
-    if (isExplicit || isNeutral) {
+    if (isExplicit || document.feedback.isNeutral) {
       await _maybeUpdateExplicitDocumentFeedback(
         document: document,
         feedback: feedback,

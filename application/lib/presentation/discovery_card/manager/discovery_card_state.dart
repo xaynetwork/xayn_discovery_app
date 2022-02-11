@@ -29,13 +29,6 @@ class DiscoveryCardState with _$DiscoveryCardState {
   factory DiscoveryCardState.error(Object? error) => DiscoveryCardState(
         error: error,
       );
-
-  bool get isNeutral => explicitDocumentFeedback == DocumentFeedback.neutral;
-
-  bool get isRelevant => explicitDocumentFeedback == DocumentFeedback.positive;
-
-  bool get isIrrelevant =>
-      explicitDocumentFeedback == DocumentFeedback.negative;
 }
 
 extension DiscoveryCardStateExtension on DiscoveryCardState {

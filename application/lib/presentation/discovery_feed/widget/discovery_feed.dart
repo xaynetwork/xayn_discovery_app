@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
@@ -100,10 +101,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
-            isLiked: managers.discoveryCardManager.state.isRelevant,
+            isLiked: managers
+                .discoveryCardManager.state.explicitDocumentFeedback.isRelevant,
             onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
-              feedback: managers.discoveryCardManager.state.isRelevant
+              feedback: managers.discoveryCardManager.state
+                      .explicitDocumentFeedback.isRelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.positive,
             ),
@@ -117,10 +120,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
               onPressed: () =>
                   managers.discoveryCardManager.shareUri(document)),
           buildNavBarItemDisLike(
-            isDisLiked: managers.discoveryCardManager.state.isIrrelevant,
+            isDisLiked: managers.discoveryCardManager.state
+                .explicitDocumentFeedback.isIrrelevant,
             onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
-              feedback: managers.discoveryCardManager.state.isIrrelevant
+              feedback: managers.discoveryCardManager.state
+                      .explicitDocumentFeedback.isIrrelevant
                   ? DocumentFeedback.neutral
                   : DocumentFeedback.negative,
             ),

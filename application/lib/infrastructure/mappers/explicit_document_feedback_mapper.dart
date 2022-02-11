@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -30,9 +31,9 @@ class ExplicitDocumentFeedbackMapper
   DbEntityMap toMap(ExplicitDocumentFeedback entity) => {
         ExplicitDocumentFeedbackMapperFields.id: entity.id.value,
         ExplicitDocumentFeedbackMapperFields.feedback:
-            entity.feedback == DocumentFeedback.negative
+            entity.feedback.isIrrelevant
                 ? -1
-                : entity.feedback == DocumentFeedback.neutral
+                : entity.feedback.isNeutral
                     ? 0
                     : 1,
       };
