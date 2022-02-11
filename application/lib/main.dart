@@ -1,6 +1,8 @@
 import 'dart:async' show Zone, runZonedGuarded;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:home_indicator/home_indicator.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:xayn_design/xayn_design.dart';
@@ -34,6 +36,12 @@ Future<void> setup() async {
   await configureDependencies();
   HomeIndicator.hide();
   initServices();
+  if (kReleaseMode) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
 }
 
 Widget getApp() {
