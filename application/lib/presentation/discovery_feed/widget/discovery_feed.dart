@@ -14,6 +14,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_font/edit_reader_mode_font.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
@@ -42,11 +44,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         WidgetsBindingObserver,
         NavBarConfigMixin,
         CardManagersMixin,
-        TooltipStateMixin {
+        TooltipStateMixin,
+        OverlayStateMixin {
   late final DiscoveryFeedManager _discoveryFeedManager;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   DiscoveryCardController? _currentCardController;
+  late final FeatureManager _featureManager = di.get<FeatureManager>();
 
   double _dragDistance = .0;
 
@@ -97,7 +101,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         [
           buildNavBarItemArrowLeft(onPressed: () async {
             await _currentCardController?.animateToClose();
-
+            removeOverlay();
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
@@ -118,6 +122,19 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           buildNavBarItemShare(
               onPressed: () =>
                   managers.discoveryCardManager.shareUri(document)),
+          if (_featureManager.isReaderModeSettingsEnabled)
+            buildNavBarItemEditFont(
+              onPressed: () => toggleOverlay(
+                (_) => Positioned(
+                  bottom: MediaQuery.of(context).padding.bottom +
+                      R.dimen.bottomBarDockedHeight +
+                      R.dimen.unit2_5,
+                  right: R.dimen.unit2,
+                  width: R.dimen.unit22,
+                  child: const EditReaderModeFontMenu(),
+                ),
+              ),
+            ),
           buildNavBarItemDisLike(
             isDisLiked: document.isIrrelevant,
             onPressed: () =>
@@ -158,7 +175,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
     final feedView = _buildFeedView();
 
-    return Scaffold(
+    final body = Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,
@@ -168,6 +185,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           child: feedView,
         ),
       ),
+    );
+
+    return WillPopScope(
+      onWillPop: () async {
+        removeOverlay();
+        return false;
+      },
+      child: body,
     );
   }
 
