@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
@@ -93,14 +94,28 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   );
   late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler =
       pipe(_listenIsBookmarkedUseCase);
-  late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn,
-          ToggleBookmarkUseCaseOut> _toggleBookmarkHandler =
-      pipe(_toggleBookmarkUseCase);
+  late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn, AnalyticsEvent>
+      _toggleBookmarkHandler = pipe(_toggleBookmarkUseCase).transform(
+    (out) => out
+        .scheduleComputeState(
+          consumeEvent: (_) => false,
+          run: (it) => _isBookmarked = it.isBookmarked,
+        )
+        .map(
+          (it) => DocumentBookmarkedEvent(
+            document: it.document,
+            isBookmarked: it.isBookmarked,
+          ),
+        )
+        .cast<AnalyticsEvent>()
+        .followedBy(_sendAnalyticsUseCase),
+  );
   late final UseCaseSink<CrudExplicitDocumentFeedbackUseCaseIn,
           ExplicitDocumentFeedback> _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
+  bool _isBookmarked = false;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -127,6 +142,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _updateUri(document.webResource.url);
   }
 
+  void onFeedback({
+    required Document document,
+    required DocumentFeedback feedback,
+  }) =>
+      changeDocumentFeedback(
+        document: document,
+        feedback: feedback,
+        context: FeedbackContext.explicit,
+      );
+
   void shareUri(Document document) {
     _shareUriUseCase.call(document.webResource.url);
 
@@ -140,6 +165,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void toggleBookmarkDocument(Document document) {
+    final isBookmarked = state.isBookmarked;
+
     _toggleBookmarkHandler(
       CreateBookmarkFromDocumentUseCaseIn(
         document: document,
@@ -147,11 +174,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       ),
     );
 
-    changeDocumentFeedback(
-      document: document,
-      feedback: DocumentFeedback.positive,
-      context: FeedbackContext.implicit,
-    );
+    if (!isBookmarked) {
+      changeDocumentFeedback(
+        document: document,
+        feedback: DocumentFeedback.positive,
+        context: FeedbackContext.implicit,
+      );
+    }
   }
 
   void openWebResourceUrl(Document document) {
@@ -206,19 +235,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           );
         }
 
-        if (toggleBookmark != null &&
-            nextState.isBookmarked == toggleBookmark.isBookmarked) {
-          nextState = nextState.copyWith(
-            isBookmarkToggled: toggleBookmark.isBookmarked,
-          );
-
-          final event = DocumentBookmarkedEvent(
-            document: toggleBookmark.document,
-            isBookmarked: toggleBookmark.isBookmarked,
-          );
-
-          _sendAnalyticsUseCase(event);
-        }
+        nextState = nextState.copyWith(
+          isBookmarkToggled: _isBookmarked,
+        );
 
         return nextState;
       });

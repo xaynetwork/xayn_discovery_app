@@ -13,9 +13,8 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-/// a threshold, how long a user should observe a document, before it becomes
-/// implicitly liked.
-const int _kThresholdDurationSecondsImplicitLike = 5;
+typedef OnObservation = void Function(
+    DiscoveryCardMeasuredObservation observation);
 
 mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<DiscoveryCardObservation, EngineEvent>? _useCaseSink;
@@ -30,8 +29,9 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   void observeDocument({
     Document? document,
     DocumentViewMode? mode,
+    OnObservation? onObservation,
   }) {
-    _useCaseSink ??= _getUseCaseSink();
+    _useCaseSink ??= _getUseCaseSink(onObservation);
 
     _useCaseSink!(DiscoveryCardObservation(
       document: document,
@@ -39,7 +39,8 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
     ));
   }
 
-  UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink() {
+  UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink(
+      OnObservation? onObservation) {
     final useCase = di.get<LogDocumentTimeUseCase>();
     final discoveryCardObservationUseCase =
         di.get<DiscoveryCardObservationUseCase>();
@@ -60,9 +61,10 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
           .followedBy(discoveryCardMeasuredObservationUseCase)
           .where((it) => it.document != null && it.viewType != null)
           .doOnData(
-            _onDuration(
+            _onObservation(
               sendAnalyticsUseCase: sendAnalyticsUseCase,
               changeDocumentFeedbackUseCase: changeDocumentFeedbackUseCase,
+              onObservation: onObservation,
             ),
           )
           .map((it) => LogData(
@@ -74,15 +76,13 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
     )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
-  void Function(DiscoveryCardMeasuredObservation) _onDuration({
+  void Function(DiscoveryCardMeasuredObservation) _onObservation({
     required SendAnalyticsUseCase sendAnalyticsUseCase,
     required ChangeDocumentFeedbackUseCase changeDocumentFeedbackUseCase,
+    OnObservation? onObservation,
   }) =>
       (DiscoveryCardMeasuredObservation observation) {
         final document = observation.document!;
-        final isCardOpened = observation.viewType != DocumentViewMode.story;
-        final isObservedLongEnough = observation.duration.inSeconds >=
-            _kThresholdDurationSecondsImplicitLike;
 
         sendAnalyticsUseCase(
           DocumentTimeSpentEvent(
@@ -91,11 +91,6 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
               viewMode: observation.viewType!),
         );
 
-        if (isCardOpened && isObservedLongEnough) {
-          changeDocumentFeedbackUseCase.singleOutput(DocumentFeedbackChange(
-            documentId: document.documentId,
-            feedback: DocumentFeedback.positive,
-          ));
-        }
+        onObservation?.call(observation);
       };
 }

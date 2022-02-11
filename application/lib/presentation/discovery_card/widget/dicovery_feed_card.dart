@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -47,19 +46,18 @@ class _DiscoveryFeedCardState
       url: webResource.url,
       provider: provider,
       datePublished: webResource.datePublished,
-      onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
+      onLikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
         feedback: state.isRelevant
             ? DocumentFeedback.neutral
             : DocumentFeedback.positive,
-        context: FeedbackContext.explicit,
       ),
-      onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
-          document: widget.document,
-          feedback: state.isIrrelevant
-              ? DocumentFeedback.neutral
-              : DocumentFeedback.negative,
-          context: FeedbackContext.explicit),
+      onDislikePressed: () => discoveryCardManager.onFeedback(
+        document: widget.document,
+        feedback: state.isIrrelevant
+            ? DocumentFeedback.neutral
+            : DocumentFeedback.negative,
+      ),
       onOpenUrl: () => discoveryCardManager.openWebResourceUrl(widget.document),
       onBookmarkPressed: onBookmarkPressed,
       onBookmarkLongPressed: onBookmarkLongPressed(state),
