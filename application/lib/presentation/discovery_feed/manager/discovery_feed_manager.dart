@@ -1,7 +1,9 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -39,6 +41,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     this._fetchCardIndexUseCase,
     this._updateCardIndexUseCase,
     this._sendAnalyticsUseCase,
+    this._crudExplicitDocumentFeedbackUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(DiscoveryFeedState.initial());
 
@@ -52,10 +55,21 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   final FetchCardIndexUseCase _fetchCardIndexUseCase;
   final UpdateCardIndexUseCase _updateCardIndexUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final CrudExplicitDocumentFeedbackUseCase
+      _crudExplicitDocumentFeedbackUseCase;
 
   late final UseCaseValueStream<int> _cardIndexConsumer =
       consume(_fetchCardIndexUseCase, initialData: none)
           .transform((out) => out.take(1));
+
+  /// When explicit feedback changes, we need to emit a new state,
+  /// so that the feed can redraw like/dislike borders.
+  /// This consumer watches all the active feed Documents.
+  late final UseCaseValueStream<ExplicitDocumentFeedback>
+      _crudExplicitDocumentFeedbackConsumer = consume(
+    _crudExplicitDocumentFeedbackUseCase,
+    initialData: CrudExplicitDocumentFeedbackUseCaseIn.watchAll(),
+  );
 
   final ObservedViewTypes _observedViewTypes = <DocumentId, DocumentViewMode>{};
   Document? _observedDocument;
@@ -155,11 +169,13 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   }
 
   @override
-  Future<DiscoveryFeedState?> computeState() async => fold2(
+  Future<DiscoveryFeedState?> computeState() async => fold3(
         _cardIndexConsumer,
+        _crudExplicitDocumentFeedbackConsumer,
         engineEvents,
       ).foldAll((
         cardIndex,
+        explicitDocumentFeedback,
         engineEvent,
         errorReport,
       ) async {
@@ -196,6 +212,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isInErrorState: errorReport.isNotEmpty,
           isFullScreen: _isFullScreen,
           cardIndex: _cardIndex!,
+          latestExplicitDocumentFeedback: explicitDocumentFeedback,
         );
 
         // guard against same-state emission
