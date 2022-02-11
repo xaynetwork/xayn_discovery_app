@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 

@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_gradient_provider.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
@@ -33,7 +34,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
-    extends State<T> with TooltipStateMixin {
+    extends State<T> with TooltipStateMixin, DiscoveryCardGradientProvider {
   late final DiscoveryCardManager discoveryCardManager;
   late final ImageManager imageManager;
 
