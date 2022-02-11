@@ -96,7 +96,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
     observeDocument(
       document: nextDocument,
-      mode: _observedViewTypes[nextDocument.documentId],
+      mode: _currentViewMode(nextDocument.documentId),
     );
 
     _sendAnalyticsUseCase(DocumentIndexChangedEvent(
@@ -115,9 +115,12 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   /// the last known inner document (secondary cards may also trigger).
   /// Use [viewType] to indicate the current view of that same document.
   void handleViewType(Document document, DocumentViewMode mode) {
+    final activeMode = _currentViewMode(document.documentId);
+
     _observedViewTypes[document.documentId] = mode;
 
-    if (document.documentId == _observedDocument?.documentId) {
+    if (document.documentId == _observedDocument?.documentId &&
+        activeMode != mode) {
       observeDocument(
         document: document,
         mode: mode,
@@ -140,7 +143,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     observeDocument(
       document: isAppInForeground ? observedDocument : null,
       mode: isAppInForeground
-          ? _observedViewTypes[observedDocument.documentId]
+          ? _currentViewMode(observedDocument.documentId)
           : null,
     );
   }
@@ -198,6 +201,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
       });
+
+  DocumentViewMode _currentViewMode(DocumentId id) =>
+      _observedViewTypes[id] ?? DocumentViewMode.story;
 
   Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
     final observedDocument = _observedDocument;
