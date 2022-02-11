@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_gradient_provider.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -14,7 +15,7 @@ class CardWidgetData {
   static const double cardWidth = cardHeight * 2;
 }
 
-class CardWidget extends StatelessWidget {
+class CardWidget extends StatelessWidget with DiscoveryCardGradientProvider {
   final CardData cardData;
 
   CardWidget({
@@ -52,7 +53,7 @@ class CardWidget extends StatelessWidget {
                 UnterDenLinden.getLinden(context).styles.roundBorder1_5,
             child: Container(
               foregroundDecoration: BoxDecoration(
-                gradient: buildGradient(opacity: 0.5),
+                gradient: buildGradient(),
               ),
               child: Image.memory(
                 data.backgroundImage!,
@@ -246,15 +247,3 @@ class CardWidget extends StatelessWidget {
     );
   }
 }
-
-Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
-      colors: [
-        R.colors.swipeCardBackground.withAlpha(120),
-        R.colors.swipeCardBackground.withAlpha(40),
-        R.colors.swipeCardBackground.withAlpha(127 + (128.0 * opacity).floor()),
-        R.colors.swipeCardBackground.withAlpha(127 + (128.0 * opacity).floor()),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      stops: const [0, 0.15, 0.8, 1],
-    );

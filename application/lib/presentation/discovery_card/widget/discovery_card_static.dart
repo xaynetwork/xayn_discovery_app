@@ -86,6 +86,12 @@ class _DiscoveryCardStaticState
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset =
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
+        final maskedImage = Container(
+          foregroundDecoration: BoxDecoration(
+            gradient: buildGradient(),
+          ),
+          child: image,
+        );
 
         return Stack(
           children: [
@@ -104,7 +110,7 @@ class _DiscoveryCardStaticState
                 alignment: Alignment.topCenter,
                 child: Stack(
                   children: [
-                    image,
+                    maskedImage,
                     elements,
                   ],
                 ),
