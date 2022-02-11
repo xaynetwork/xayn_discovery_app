@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 enum SubscriptionType {
@@ -16,13 +17,11 @@ class SubscriptionDetailsBottomSheet extends BottomSheetBase {
     Key? key,
     required SubscriptionType subscriptionType,
     required DateTime endDate,
-    required VoidCallback onCancelSubscriptionPressed,
   }) : super(
           key: key,
           body: _SubscriptionDetails(
             subscriptionType: subscriptionType,
             endDate: endDate,
-            onCancelSubscriptionPressed: onCancelSubscriptionPressed,
           ),
         );
 }
@@ -30,19 +29,16 @@ class SubscriptionDetailsBottomSheet extends BottomSheetBase {
 class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   final SubscriptionType subscriptionType;
   final DateTime endDate;
-  final VoidCallback onCancelSubscriptionPressed;
 
   const _SubscriptionDetails({
     Key? key,
     required this.subscriptionType,
     required this.endDate,
-    required this.onCancelSubscriptionPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final spacer0_5 = SizedBox(height: R.dimen.unit0_5);
-    final spacer1_5 = SizedBox(height: R.dimen.unit1_5);
     final spacer2 = SizedBox(height: R.dimen.unit2);
     final spacer3 = SizedBox(height: R.dimen.unit3);
     return Column(
@@ -55,7 +51,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
         _buildTitle(),
         spacer2,
         _buildInfo(),
-        spacer1_5,
+        spacer2,
         _buildFooter(),
         spacer2,
         _buildDoneButton(context),
@@ -98,23 +94,22 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
     final footerString = Platform.isIOS
         ? R.strings.subscriptionPlatformInfoApple
         : R.strings.subscriptionPlatformInfoGoogle;
-    final richText = SuperRichText(
+    final url = Platform.isIOS
+        ? Urls.subscriptionCancelApple
+        : Urls.subscriptionCancelGoogle;
+    return SuperRichText(
       text: footerString,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: R.styles.dialogBodySmall,
       othersMarkers: [
-        MarkerText(
+        MarkerText.withUrl(
           marker: '__',
+          urls: [url],
           style:
               R.styles.dialogBodySmall!.copyWith(color: R.colors.primaryAction),
         ),
       ],
-    );
-    return AppGhostButton(
-      contentPadding: EdgeInsets.zero,
-      child: richText,
-      onPressed: onCancelSubscriptionPressed,
     );
   }
 

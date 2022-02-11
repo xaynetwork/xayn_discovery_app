@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -138,10 +136,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         builder: (buildContext) => SubscriptionDetailsBottomSheet(
           subscriptionType: SubscriptionType.paid,
           endDate: subscriptionEndDate,
-          onCancelSubscriptionPressed: () => _manager.openExternalUrl(
-              Platform.isIOS
-                  ? Urls.subscriptionCancelApple
-                  : Urls.subscriptionCancelGoogle),
         ),
       );
 }
