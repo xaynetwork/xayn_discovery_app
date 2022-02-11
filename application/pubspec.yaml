@@ -57,6 +57,10 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/story.git
       ref: cd93531ce08e4afd4490d8bc5f436432a8c0bacd
+  super_rich_text:
+    git:
+      url: git@github.com:Bestfastfire/super_rich_text.git
+      ref: f9d3963421682e2e0dd99c1ab553b99e38766ea1
   url_launcher: 6.0.18
   uuid: 3.0.5
   version: 2.0.0
