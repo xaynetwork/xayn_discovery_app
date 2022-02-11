@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dar
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
-  late final Map<Document, CardManagers> _cardManagers = {};
+  late final Map<DocumentId, CardManagers> _cardManagers = {};
 
   @override
   void dispose() {
@@ -28,7 +28,7 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
 
   @mustCallSuper
   CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
-        document,
+        document.documentId,
         () => CardManagers(
           imageManager: di.get()..getImage(document.webResource.displayUrl),
           discoveryCardManager: di.get()..updateDocument(document),

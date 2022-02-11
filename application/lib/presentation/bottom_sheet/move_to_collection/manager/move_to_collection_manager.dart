@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
@@ -11,22 +12,20 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmar
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_document_to_collection/manager/move_document_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 
 @injectable
-class MoveDocumentToCollectionManager
-    extends Cubit<MoveDocumentToCollectionState>
-    with UseCaseBlocHelper<MoveDocumentToCollectionState> {
+class MoveToCollectionManager extends Cubit<MoveToCollectionState>
+    with UseCaseBlocHelper<MoveToCollectionState> {
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final MoveBookmarkUseCase _moveBookmarkUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
   final CreateBookmarkFromDocumentUseCase _createBookmarkUseCase;
   final GetBookmarkUseCase _getBookmarkUseCase;
 
-  late List<Collection> _collections;
+  late final List<Collection> _collections;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
       _collectionsHandler;
 
@@ -38,19 +37,19 @@ class MoveDocumentToCollectionManager
   Collection? _selectedCollection;
   bool _isBookmarked = false;
 
-  MoveDocumentToCollectionManager._(
+  MoveToCollectionManager._(
     this._listenCollectionsUseCase,
     this._moveBookmarkUseCase,
     this._removeBookmarkUseCase,
     this._getBookmarkUseCase,
     this._createBookmarkUseCase,
     this._collections,
-  ) : super(MoveDocumentToCollectionState.initial()) {
+  ) : super(MoveToCollectionState.initial()) {
     _init();
   }
 
   @factoryMethod
-  static Future<MoveDocumentToCollectionManager> create(
+  static Future<MoveToCollectionManager> create(
     GetAllCollectionsUseCase getAllCollectionsUseCase,
     ListenCollectionsUseCase listenCollectionsUseCase,
     MoveBookmarkUseCase moveBookmarkUseCase,
@@ -61,7 +60,7 @@ class MoveDocumentToCollectionManager
     final collections =
         (await getAllCollectionsUseCase.singleOutput(none)).collections;
 
-    return MoveDocumentToCollectionManager._(
+    return MoveToCollectionManager._(
       listenCollectionsUseCase,
       moveBookmarkUseCase,
       removeBookmarkUseCase,
@@ -104,7 +103,7 @@ class MoveDocumentToCollectionManager
   void updateSelectedCollection(Collection? collection) =>
       scheduleComputeState(() => _selectedCollection = collection);
 
-  void onApplyPressed({
+  void onApplyToDocumentPressed({
     required Document document,
     DocumentProvider? provider,
   }) {
@@ -122,16 +121,28 @@ class MoveDocumentToCollectionManager
       _removeBookmarkHandler(document.documentUniqueId);
     }
     if (isBookmarked && hasSelected) {
-      final param = MoveBookmarkUseCaseIn(
-        bookmarkId: document.documentUniqueId,
-        collectionId: state.selectedCollection!.id,
-      );
-      _moveBookmarkHandler(param);
+      _moveBookmark(bookmarkId: document.documentUniqueId);
     }
   }
 
+  void onApplyToBookmarkPressed({required UniqueId bookmarkId}) {
+    if (state.selectedCollection == null) {
+      _removeBookmarkHandler(bookmarkId);
+    } else {
+      _moveBookmark(bookmarkId: bookmarkId);
+    }
+  }
+
+  void _moveBookmark({required UniqueId bookmarkId}) {
+    final param = MoveBookmarkUseCaseIn(
+      bookmarkId: bookmarkId,
+      collectionId: state.selectedCollection!.id,
+    );
+    _moveBookmarkHandler(param);
+  }
+
   @override
-  Future<MoveDocumentToCollectionState?> computeState() async => fold4(
+  Future<MoveToCollectionState?> computeState() async => fold4(
         _collectionsHandler,
         _createBookmarkHandler,
         _moveBookmarkHandler,
@@ -160,7 +171,7 @@ class MoveDocumentToCollectionManager
             moveBookmarkOut != null ||
             removeBookmarkOut != null;
 
-        final newState = MoveDocumentToCollectionState.populated(
+        final newState = MoveToCollectionState.populated(
           collections: _collections,
           selectedCollection: _selectedCollection,
           isBookmarked: _isBookmarked,

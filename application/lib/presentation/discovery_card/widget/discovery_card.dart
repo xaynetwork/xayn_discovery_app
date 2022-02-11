@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -19,8 +20,6 @@ import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
-/// the minimum fraction height of the card image.
-/// This value must be in the range of [0.0, 1.0], where 1.0 is the
 /// maximum context height.
 const double _kMinImageFractionSize = .4;
 
@@ -204,6 +203,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           document: widget.document,
+          explicitDocumentFeedback: state.explicitDocumentFeedback,
           title: webResource.title,
           timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
@@ -211,15 +211,17 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           datePublished: webResource.datePublished,
           onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
-            feedback: widget.document.isRelevant
+            feedback: state.explicitDocumentFeedback.isRelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.positive,
+            context: FeedbackContext.explicit,
           ),
           onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
             document: widget.document,
-            feedback: widget.document.isIrrelevant
+            feedback: state.explicitDocumentFeedback.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
+            context: FeedbackContext.explicit,
           ),
           onOpenUrl: () =>
               discoveryCardManager.openWebResourceUrl(widget.document),
@@ -368,12 +370,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           onPressed: () => _discoveryCardManager.onBackNavPressed(),
         ),
         buildNavBarItemLike(
-          isLiked: widget.document.isRelevant,
-          onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+          isLiked:
+              _discoveryCardManager.state.explicitDocumentFeedback.isRelevant,
+          onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: widget.document.isRelevant
-                ? DocumentFeedback.neutral
-                : DocumentFeedback.positive,
+            feedback:
+                _discoveryCardManager.state.explicitDocumentFeedback.isRelevant
+                    ? DocumentFeedback.neutral
+                    : DocumentFeedback.positive,
           ),
         ),
         buildNavBarItemBookmark(
@@ -385,10 +389,12 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           onPressed: () => _discoveryCardManager.shareUri(widget.document),
         ),
         buildNavBarItemDisLike(
-          isDisLiked: widget.document.isIrrelevant,
-          onPressed: () => _discoveryCardManager.changeDocumentFeedback(
+          isDisLiked:
+              _discoveryCardManager.state.explicitDocumentFeedback.isIrrelevant,
+          onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: widget.document.isIrrelevant
+            feedback: _discoveryCardManager
+                    .state.explicitDocumentFeedback.isIrrelevant
                 ? DocumentFeedback.neutral
                 : DocumentFeedback.negative,
           ),

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -19,6 +20,7 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     required bool isComplete,
     @Default(false) bool isFullScreen,
     required bool isInErrorState,
+    ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
   }) = _DiscoveryFeedState;
 
   factory DiscoveryFeedState.initial() => const DiscoveryFeedState(
@@ -32,6 +34,7 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
       isInErrorState == other.isInErrorState &&
+      latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(results, other.results) &&
       _setEquality.equals(removedResults, other.removedResults);
 }

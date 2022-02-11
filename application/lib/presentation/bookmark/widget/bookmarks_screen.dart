@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookmark_card.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmark_to_collection/widget/move_bookmark_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
@@ -27,7 +27,7 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen>
-    with NavBarConfigMixin {
+    with NavBarConfigMixin, TooltipStateMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
   final VoidCallback _dispose =
@@ -111,6 +111,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       context,
       builder: (_) => MoveBookmarkToCollectionBottomSheet(
         bookmarkId: bookmarkId,
+        onError: showTooltip,
       ),
     );
   }
