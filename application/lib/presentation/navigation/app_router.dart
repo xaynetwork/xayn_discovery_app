@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_design/xayn_design.dart' hide NavBarObserver;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -32,12 +33,14 @@ class AppRouter extends xayn.NavigatorDelegate {
         ),
       ],
     );
-    return MaterialApp(
-      theme: R.linden.themeData,
-      home: NavBarContainer(
-        child: ApplicationTooltipProvider(
-          messageFactory: XaynMessageProvider.of(XaynMessageSet.values),
-          child: stack,
+    return InAppNotification(
+      child: MaterialApp(
+        theme: R.linden.themeData,
+        home: NavBarContainer(
+          child: ApplicationTooltipProvider(
+            messageFactory: XaynMessageProvider.of(XaynMessageSet.values),
+            child: stack,
+          ),
         ),
       ),
     );
