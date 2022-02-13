@@ -6,14 +6,16 @@ import 'package:xayn_discovery_app/presentation/widget/selectable_chip.dart';
 
 const _kDividerThickness = 1.0;
 
-class EditReaderModeFontMenu extends StatefulWidget {
-  const EditReaderModeFontMenu({Key? key}) : super(key: key);
+class EditReaderModeSettingsMenu extends StatefulWidget {
+  const EditReaderModeSettingsMenu({Key? key}) : super(key: key);
 
   @override
-  _EditReaderModeFontMenuState createState() => _EditReaderModeFontMenuState();
+  _EditReaderModeSettingsMenuState createState() =>
+      _EditReaderModeSettingsMenuState();
 }
 
-class _EditReaderModeFontMenuState extends State<EditReaderModeFontMenu> {
+class _EditReaderModeSettingsMenuState
+    extends State<EditReaderModeSettingsMenu> {
   ReaderModeFontStyle selectedFontStyle = ReaderModeFontStyle.serif;
   ReaderModeFontSize selectedFontSize = ReaderModeFontSize.medium;
   ReaderModeBackgroundColor selectedBackgroundColor =
@@ -74,7 +76,8 @@ class _EditReaderModeFontMenuState extends State<EditReaderModeFontMenu> {
     );
 
     return Material(
-      elevation: R.dimen.unit0_5,
+      elevation: R.dimen.unit5,
+      shadowColor: R.colors.shadowTransparent,
       borderRadius: R.styles.roundBorder,
       clipBehavior: Clip.antiAlias,
       color: R.colors.background,

@@ -15,7 +15,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
-import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_font/edit_reader_mode_font.dart';
+import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
@@ -127,12 +127,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             buildNavBarItemEditFont(
               onPressed: () => toggleOverlay(
                 (_) => Positioned(
-                  bottom: MediaQuery.of(context).padding.bottom +
+                  bottom: MediaQuery.of(context).viewInsets.bottom +
                       R.dimen.bottomBarDockedHeight +
-                      R.dimen.unit2_5,
+                      R.dimen.unit4_25,
                   right: R.dimen.unit2,
                   width: R.dimen.unit22,
-                  child: const EditReaderModeFontMenu(),
+                  child: const EditReaderModeSettingsMenu(),
                 ),
               ),
             ),
