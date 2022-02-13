@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
+import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
 typedef ScrollHandler = void Function(double position);
@@ -134,9 +136,21 @@ class _ReaderModeState extends State<ReaderMode> {
           },
           onScroll: widget.onScroll,
           customStylesBuilder: overrideLinkStyle,
+          customWidgetBuilder: _customElements,
         );
       },
     );
+  }
+
+  Widget? _customElements(dom.Element element) {
+    final name = element.localName?.toLowerCase();
+
+    switch (name) {
+      case 'error':
+        return ErrorElement(element: element);
+    }
+
+    return null;
   }
 
   Future<readability.ProcessHtmlResult> _onProcessedHtml(
