@@ -8,9 +8,9 @@ part 'bottom_sheet_footer_data.freezed.dart';
 class BottomSheetFooterSetup with _$BottomSheetFooterSetup {
   const factory BottomSheetFooterSetup.row({
     required BottomSheetFooterButton buttonData,
-  }) = _BottomSheetFooterSetupTwoButtons;
+  }) = _BottomSheetFooterSetupRow;
 
   const factory BottomSheetFooterSetup.column({
     required List<BottomSheetFooterButton> buttonsData,
-  }) = _BottomSheetFooterSetupThreeButtons;
+  }) = _BottomSheetFooterSetupColumn;
 }

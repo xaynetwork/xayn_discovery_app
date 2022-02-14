@@ -20,9 +20,10 @@ class MoveBookmarksToCollectionManager
   final RemoveCollectionUseCase _removeCollectionUseCase;
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
 
-  List<Collection> _collections = [];
+  final List<Collection> _collections = [];
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
-      _collectionsHandler;
+      _collectionsHandler =
+      consume(_listenCollectionsUseCase, initialData: none);
   Collection? _selectedCollection;
 
   MoveBookmarksToCollectionManager(
@@ -30,36 +31,25 @@ class MoveBookmarksToCollectionManager
     this._moveBookmarksUseCase,
     this._removeCollectionUseCase,
     this._getAllCollectionsUseCase,
-  ) : super(MoveBookmarksToCollectionState.initial()) {
-    _init();
-  }
-
-  void _init() {
-    _collectionsHandler = consume(_listenCollectionsUseCase, initialData: none);
-  }
+  ) : super(MoveBookmarksToCollectionState.initial());
 
   void enteringScreen({
     required UniqueId collectionIdToRemove,
     Collection? selectedCollection,
   }) async {
-    _collections =
-        (await _getAllCollectionsUseCase.singleOutput(none)).collections;
+    final useCaseResult = await _getAllCollectionsUseCase.singleOutput(none);
+    _collections
+      ..clear()
+      ..addAll(useCaseResult.collections);
+
     _collections.removeWhere((element) => element.id == collectionIdToRemove);
-    scheduleComputeState(
-      () {
-        if (selectedCollection != null) {
-          _selectedCollection = selectedCollection;
-        } else {
-          _selectedCollection = _collections.first;
-        }
-      },
-    );
+    scheduleComputeState(() => _selectedCollection =
+        _selectedCollection != null ? selectedCollection : _collections.first);
   }
 
   void updateSelectedCollection(Collection? collection) {
-    if (collection != null) {
-      scheduleComputeState(() => _selectedCollection = collection);
-    }
+    if (collection == null) return;
+    scheduleComputeState(() => _selectedCollection = collection);
   }
 
   Future<void> onApplyPressed({
@@ -89,7 +79,9 @@ class MoveBookmarksToCollectionManager
         }
 
         if (usecaseOut != null) {
-          _collections = usecaseOut.collections;
+          _collections
+            ..clear()
+            ..addAll(usecaseOut.collections);
         }
 
         final newState = MoveBookmarksToCollectionState.populated(

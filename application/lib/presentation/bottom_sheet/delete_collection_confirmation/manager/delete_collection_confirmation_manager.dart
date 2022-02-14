@@ -19,22 +19,15 @@ class DeleteCollectionConfirmationManager
 
   late UniqueId _collectionId;
   late final UseCaseSink<GetAllBookmarksUseCaseIn, GetAllBookmarksUseCaseOut>
-      _getBookmarksHandler;
-  List<UniqueId> _bookmarksIds = [];
+      _getBookmarksHandler = pipe(_getAllBookmarksUseCase);
+
+  final List<UniqueId> _bookmarksIds = [];
 
   DeleteCollectionConfirmationManager(
     this._removeCollectionUseCase,
     this._getAllBookmarksUseCase,
     this._removeBookmarskUseCase,
-  ) : super(DeleteCollectionConfirmationState.initial()) {
-    _init();
-  }
-
-  void _init() {
-    _getBookmarksHandler = pipe(
-      _getAllBookmarksUseCase,
-    );
-  }
+  ) : super(DeleteCollectionConfirmationState.initial());
 
   void enteringScreen(UniqueId collectionId) {
     _collectionId = collectionId;
@@ -70,7 +63,11 @@ class DeleteCollectionConfirmationManager
         }
 
         if (usecaseOut != null) {
-          _bookmarksIds = usecaseOut.bookmarks.map((e) => e.id).toList();
+          _bookmarksIds
+            ..clear()
+            ..addAll(
+              usecaseOut.bookmarks.map((e) => e.id).toList(),
+            );
         }
 
         final newState = DeleteCollectionConfirmationState.populated(

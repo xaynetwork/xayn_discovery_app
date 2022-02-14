@@ -116,10 +116,6 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     if (collection.isDefault) {
       card = _buildBaseCard(collection);
     } else {
-      // card = CardWidgetTransitionWrapper(
-      //   onAnimationDone: _showCollectionCardOptions(collection),
-      //   child: _buildSwipeableCard(collection),
-      // );
       card = _buildSwipeableCard(collection);
     }
     return Padding(
