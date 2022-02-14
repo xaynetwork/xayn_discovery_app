@@ -115,8 +115,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   /// users, which already have the mobile app installed.
   ///
   /// For testing purposes we send in-app events when [_onAppOpenAttribution] handler is triggered
-  _onAppOpenAttribution(DeepLinkResult res) {
-    if (res.status == Status.FOUND) {
+  _onAppOpenAttribution(dynamic res) {
+    if (res is DeepLinkResult && res.status == Status.FOUND) {
       _appsflyer.logEvent('onAppOpenAttribution',
           res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
@@ -129,8 +129,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   /// For testing purposes we send in-app events when [_onInstallConversionData] handler is triggered
   ///
-  _onInstallConversionData(DeepLinkResult res) {
-    if (res.status == Status.FOUND) {
+  _onInstallConversionData(dynamic res) {
+    if (res is DeepLinkResult && res.status == Status.FOUND) {
       _appsflyer.logEvent('onInstallConversionData',
           res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
@@ -143,8 +143,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   /// For testing purposes we send in-app events when [_onDeepLinking] handler is triggered
   ///
-  _onDeepLinking(DeepLinkResult res) {
-    if (res.status == Status.FOUND) {
+  _onDeepLinking(dynamic res) {
+    if (res is DeepLinkResult && res.status == Status.FOUND) {
       _appsflyer.logEvent(
           'onDeepLinking', res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
