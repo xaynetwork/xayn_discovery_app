@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -47,19 +49,25 @@ class CardWidget extends StatelessWidget {
       ),
     );
 
-    Widget withBackgroundImage(data) {
-      final image = Image.memory(
-        data.backgroundImage!,
-        fit: BoxFit.cover,
-        width: data.cardWidth,
-        height: CardWidgetData.cardHeight,
-      );
+    /// Refactored signature to get rid of dynamic type
+    Widget withBackgroundImage({
+      Uint8List? backgroundImage,
+      double? width,
+    }) {
+      buildMemoryImage(Uint8List bytes) => Image.memory(
+            bytes,
+            fit: BoxFit.cover,
+            width: width,
+            height: CardWidgetData.cardHeight,
+          );
 
-      return data.backgroundImage != null
+      return backgroundImage != null
           ? ClipRRect(
               borderRadius:
                   UnterDenLinden.getLinden(context).styles.roundBorder1_5,
-              child: DiscoveryCardHeadlineImage(child: image),
+              child: DiscoveryCardHeadlineImage(
+                child: buildMemoryImage(backgroundImage),
+              ),
             )
           : SvgPicture.asset(
               R.assets.graphics.formsEmptyCollection,
@@ -72,8 +80,14 @@ class CardWidget extends StatelessWidget {
         data.svgBackgroundPath,
         height: CardWidgetData.cardHeight,
       ),
-      collectionsScreen: withBackgroundImage,
-      bookmark: withBackgroundImage,
+      collectionsScreen: (it) => withBackgroundImage(
+        backgroundImage: it.backgroundImage,
+        width: it.cardWidth,
+      ),
+      bookmark: (it) => withBackgroundImage(
+        backgroundImage: it.backgroundImage,
+        width: it.cardWidth,
+      ),
     );
 
     double? noFill(data) => data.backgroundImage != null ? 0.0 : null;
