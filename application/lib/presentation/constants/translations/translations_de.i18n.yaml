@@ -3,14 +3,14 @@
 your: 'Meine'
 activeSearchSearchHint: 'Suche'
 settingsTitle: 'Deine Einstellungen'
-settingsSectionTitleAppTheme: 'Mein App Theme'
+settingsSectionTitleAppTheme: 'Dein App Look'
 settingsSectionScrollDirection: 'Feed Scroll-Richtung'
 settingsSectionTitleGeneralInfo: 'Generelle Informationen'
 settingsSectionTitleHelpImprove: 'Hilf uns besser zu werden!'
 settingsSectionTitleSpreadTheWord: 'Erzähl es weiter!'
-settingsAppThemeSystem: 'System Standard'
+settingsAppThemeSystem: 'Telefonstandard'
 settingsAppThemeLight: 'Light mode'
-settingsAppThemeDark: 'Dunkler Modus'
+settingsAppThemeDark: 'Dark mode'
 settingsScrollDirectionVertical: 'Vertikal'
 settingsScrollDirectionHorizontal: 'Horizontal'
 settingsAboutXayn: 'Über Xayn'
@@ -33,8 +33,8 @@ readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
 personalAreaTitle: Dein Bereich
-personalAreaCollections: Collections-Einstellungen
-personalAreaHomeFeed: Feed- Einstellungen
+personalAreaCollections: Deine Collections
+personalAreaHomeFeed: Discovery Feed einrichten
 personalAreaSettings: Einstellungen
 comingSoon: Kommt bald
 feedSettingsScreenTitle: Dein Feed
@@ -70,52 +70,53 @@ errorMsgCollectionDoesntExist: Diese Collection existiert nicht
 errorMsgBookmarkDoesntExist: Dieses Lesezeichen existiert nicht
 errorMsgCollectionNameAlreadyUsed: Der Name ist bereits vergeben
 errorMsgCollectionNameIsInvalid: Der Name darf %s Zeichen nicht überschreiten
-bottomSheetRename: Rename
-bottomSheetDelete: Delete
-bottomSheetDeleteAll: Delete All
-bottomSheetMoveBookmarks: Move Bookmarks
-bottomSheetDeleteCollectionHeader: Are you sure ?
-bottomSheetDeleteCollectionWithBookmarksBody: If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?
-bottomSheetRenameCollectionHeader: Rename collection
+bottomSheetRename: Umbenennen
+bottomSheetDelete: Löschen
+bottomSheetDeleteAll: Alle löschen
+bottomSheetMoveBookmarks: Verschieben
+bottomSheetDeleteCollectionHeader: Wirklich löschen?
+bottomSheetDeleteCollectionWithBookmarksBody: Wenn Du diese Sammlung löschst, werden auch alle Artikel im Ordner gelöscht. Möchtest Du fortfahren oder vorher alle Artikel verschieben?
+bottomSheetRenameCollectionHeader: Collection umbennen
 settingsXaynPremium: Xayn Premium
-settingsSectionSubscription: Subscription
-trialBannerSubscribeNow: Subscribe Now
-bookmarkScreenNoArticles: No Articles
-trialBannerEndsIn: Your trial ends in %s days
-trialBannerEndsTomorrow: Your trial ends tomorrow
-trialBannerEndsToday: Your trial ends today
-trialBannerExpired: Your trial expired
-subscriptionHeader: Get unlimited content for just
-subscriptionPricingError: Unable to retrieve pricing details
-subscriptionPerk1: Personalized stream
-subscriptionPerk2: No ads
-subscriptionPerk3: No tracking
-subscriptionPerk4: Carbon neutral
-subscriptionPerk5: Cancel any time
-subscriptionSubscribeNow: Subscribe Now
-subscriptionRestore: Restore subscription
-subscriptionPromoCode: I have a promo code
-subscriptionDisclaimer: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
-settingsSubscribedToHeader: You are subscribed to
-doneButtonTitle: Done
-subscriptionRenewsMonthlyText: 'The subscription renews monthly on: %s'
-promoCodeValidUntilText: 'Your promo code is valid until: %s'
-subscriptionPlatformInfoApple: Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.
-subscriptionPlatformInfoGoogle: Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.
+settingsSectionSubscription: Abo
+trialBannerSubscribeNow: Jetzt abonnieren
+bookmarkScreenNoArticles: Keine Artikel
+trialBannerEndsIn: Deine Testversion ended in %s Tagen
+trialBannerEndsTomorrow: Deine Testversion ended morgen
+trialBannerEndsToday: Deine Testversion ended heute
+trialBannerExpired: Deine Testversion ist vorbei
+subscriptionHeader: Hol Dir unbegrenzte Inhalte für
+subscriptionPricingError: Preisinfos können nicht abgerufen werden
+subscriptionPerk1: Personalisierter Stream
+subscriptionPerk2: Ohne Werbung
+subscriptionPerk3: Ohne Tracking
+subscriptionPerk4: Carbonneutral
+subscriptionPerk5: Jederzeit kündbar
+subscriptionSubscribeNow: Jetzt abonnieren
+subscriptionRestore: Abo wiederherstellen
+subscriptionPromoCode: Ich habe einen Promo-code
+subscriptionDisclaimer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.\n"
+settingsSubscribedToHeader: Du hast
+doneButtonTitle: Fertig
+subscriptionRenewsMonthlyText: 'Dein Abo erneuert sich am: %s'
+promoCodeValidUntilText: 'Dein Promo-Code ist noch gültig bis: %s'
+subscriptionPlatformInfoApple: Via Apple App Store abonniert. Du kannst Dein Abo im __Apple App Store__ verwalten.
+subscriptionPlatformInfoGoogle: Via Google Play Store abonniert. Du kannst Dein Abo im __Google Play Store__ verwalten.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation
-  unknown: Unknown error occurred
+  unknown: Unbekannter Fehler
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the GooglePlay or AppStore is not available for some reason
-  storeNotAvailable: The store is not available right now
+  storeNotAvailable: Der Store ist gerade nicht erreichbar
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the subscription details can not be received
-  productNotFound: 'Product not found :('
+  productNotFound: 'Produkt nicht gefunden :('
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the item (subscription) was already paid before
-  itemAlreadyOwned: You have been already subscribed
+  itemAlreadyOwned: Du bist bereits abonniert
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
-  transactionFailed: Payment transaction failed
-bottomSheetDeleteCollectionWithNoItemsBody: Do you really want to delete this collection?
+  transactionFailed: Zahlungsvorgang fehlgeschlagen
+bottomSheetDeleteCollectionWithNoItemsBody: Willst Du diese Sammlung wirklich löschen?
+bottomSheetMoveSingleBookmark: Move to another collection
