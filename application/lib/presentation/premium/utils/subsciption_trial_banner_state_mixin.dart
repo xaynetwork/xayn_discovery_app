@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
-const kTrialBannerDisplayDuration = Duration(seconds: 3);
+const _kTrialBannerDisplayDuration = Duration(seconds: 3);
 
 mixin SubscriptionTrialBannerStateMixin<T extends StatefulWidget> on State<T> {
   void showTrialBanner([VoidCallback? onTap]) => InAppNotification.show(
@@ -16,6 +16,6 @@ mixin SubscriptionTrialBannerStateMixin<T extends StatefulWidget> on State<T> {
         ),
         context: context,
         onTap: onTap,
-        duration: kTrialBannerDisplayDuration,
+        duration: _kTrialBannerDisplayDuration,
       );
 }
