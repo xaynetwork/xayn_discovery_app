@@ -3,14 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
-enum SubscriptionType {
-  paid,
-  promoCode,
-}
+const String _kTextPlaceholder = '__';
 
 class SubscriptionDetailsBottomSheet extends BottomSheetBase {
   SubscriptionDetailsBottomSheet({
@@ -74,8 +72,8 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
     final infoString = subscriptionType == SubscriptionType.paid
         ? R.strings.subscriptionRenewsMonthlyText
         : R.strings.promoCodeValidUntilText;
-    final infoStringWithDate =
-        infoString.replaceFirst('%s', '__${dateString}__');
+    final infoStringWithDate = infoString.replaceFirst(
+        '%s', '$_kTextPlaceholder$dateString$_kTextPlaceholder');
     return SuperRichText(
       text: infoStringWithDate,
       maxLines: 2,
@@ -83,7 +81,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       style: R.styles.appBodyText,
       othersMarkers: [
         MarkerText(
-          marker: '__',
+          marker: _kTextPlaceholder,
           style: R.styles.appBodyText!.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
@@ -104,7 +102,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       style: R.styles.dialogBodySmall,
       othersMarkers: [
         MarkerText.withUrl(
-          marker: '__',
+          marker: _kTextPlaceholder,
           urls: [url],
           style:
               R.styles.dialogBodySmall!.copyWith(color: R.colors.primaryAction),
