@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/selectable_chip.dart';
@@ -53,6 +55,7 @@ class _EditReaderModeSettingsMenuState
 
     final editBackgroundColorRow = _buildPaddedRow(
         children: ReaderModeBackgroundColor.values
+            .skipWhile((it) => it == ReaderModeBackgroundColor.system)
             .map(
               (it) => SelectableChip.container(
                 color: it.color,

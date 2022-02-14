@@ -9,4 +9,5 @@ abstract class BoxNames {
   static const feed = 'feed';
   static const feedSettings = 'feedSettings';
   static const explicitDocumentFeedback = 'explicitDocumentFeedback';
+  static const readerModeSettings = 'readerModeSettings';
 }

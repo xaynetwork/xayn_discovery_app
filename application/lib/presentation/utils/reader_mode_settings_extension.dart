@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
   Color get color {
     switch (this) {
-      case ReaderModeBackgroundColor.black:
-        return R.colors.readerModeBlackBackgroundColor;
       case ReaderModeBackgroundColor.white:
         return R.colors.readerModeWhiteBackgroundColor;
       case ReaderModeBackgroundColor.beige:
         return R.colors.readerModeBeigeBackgroundColor;
+      case ReaderModeBackgroundColor.black:
+      default:
+        return R.colors.readerModeBlackBackgroundColor;
     }
   }
 
@@ -20,6 +23,7 @@ extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
       case ReaderModeBackgroundColor.beige:
         return R.colors.chipBorderColor;
       case ReaderModeBackgroundColor.black:
+      default:
         return null;
     }
   }
