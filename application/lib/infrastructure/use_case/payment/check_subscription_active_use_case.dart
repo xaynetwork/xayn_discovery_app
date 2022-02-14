@@ -56,35 +56,38 @@ class CheckSubscriptionActiveUseCase
 
     if (!_isIOS) {
       yield filtered.isNotEmpty;
-    } else {
-      if (filtered.isEmpty) {
-        yield false;
-        return;
-      }
-      // for Android this is not critical, to call completePurchase.
-      // but for iOs - it is.
-      // If we will NOT make this call, the number of restored purchase
-      // will grow with every call of `restorePurchases` method.
-      for (final purchase in filtered) {
-        if (purchase.pendingCompletePurchase) {
-          _paymentService.completePurchase(purchase);
-        }
-      }
-
-      final verificationData =
-          filtered.first.verificationData.serverVerificationData;
-
-      final subscriptionExpireDate =
-          await _iOsSubscriptionCheckHelper.getSubscriptionExpireDate(
-        serverVerificationData: verificationData,
-        credentials: Env.appleVerifyReceiptCredentials,
-      );
-      if (subscriptionExpireDate == null) {
-        yield false;
-        return;
-      }
-      final isBeforeToday = DateTime.now().isBefore(subscriptionExpireDate);
-      yield isBeforeToday;
+      return;
     }
+
+    // All further steps are just for IOS
+
+    if (filtered.isEmpty) {
+      yield false;
+      return;
+    }
+    // for Android this is not critical, to call completePurchase.
+    // but for iOs - it is.
+    // If we will NOT make this call, the number of restored purchase
+    // will grow with every call of `restorePurchases` method.
+    for (final purchase in filtered) {
+      if (purchase.pendingCompletePurchase) {
+        _paymentService.completePurchase(purchase);
+      }
+    }
+
+    final verificationData =
+        filtered.first.verificationData.serverVerificationData;
+
+    final subscriptionExpireDate =
+        await _iOsSubscriptionCheckHelper.getSubscriptionExpireDate(
+      serverVerificationData: verificationData,
+      credentials: Env.appleVerifyReceiptCredentials,
+    );
+    if (subscriptionExpireDate == null) {
+      yield false;
+      return;
+    }
+    final isBeforeToday = DateTime.now().isBefore(subscriptionExpireDate);
+    yield isBeforeToday;
   }
 }
