@@ -60,7 +60,7 @@ class Translations {
   String get settingsSectionScrollDirection =>
       """Discovery feed scroll direction""";
   String get settingsSectionTitleGeneralInfo => """General information""";
-  String get settingsSectionTitleHelpImprove => """Help Us Improve!""";
+  String get settingsSectionTitleHelpImprove => """Help us improve!""";
   String get settingsSectionTitleSpreadTheWord => """Spread the Word""";
   String get settingsAppThemeSystem => """System default""";
   String get settingsAppThemeLight => """Light mode""";
@@ -87,8 +87,8 @@ class Translations {
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Your Space""";
-  String get personalAreaCollections => """Collections Settings""";
-  String get personalAreaHomeFeed => """Feed Settings""";
+  String get personalAreaCollections => """Your Collections""";
+  String get personalAreaHomeFeed => """Discovery Feed Setup""";
   String get personalAreaSettings => """App Settings""";
   String get comingSoon => """Coming soon""";
   String get feedSettingsScreenTitle => """Your Discovery Feed""";
@@ -134,10 +134,10 @@ class Translations {
   String get bottomSheetRename => """Rename""";
   String get bottomSheetDelete => """Delete""";
   String get bottomSheetDeleteAll => """Delete All""";
-  String get bottomSheetMoveBookmarks => """Move Bookmarks""";
+  String get bottomSheetMoveBookmarks => """Move""";
   String get bottomSheetDeleteCollectionHeader => """Are you sure ?""";
   String get bottomSheetDeleteCollectionWithBookmarksBody =>
-      """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""";
+      """If you delete this collection every article in this folder will be deleted too. Do you want to proceed, or do you want to move all articles before?""";
   String get bottomSheetRenameCollectionHeader => """Rename collection""";
   String get settingsXaynPremium => """Xayn Premium""";
   String get settingsSectionSubscription => """Subscription""";
@@ -150,7 +150,7 @@ class Translations {
   String get subscriptionHeader => """Get unlimited content for just""";
   String get subscriptionPricingError =>
       """Unable to retrieve pricing details""";
-  String get subscriptionPerk1 => """Personalized stream""";
+  String get subscriptionPerk1 => """Personalised stream""";
   String get subscriptionPerk2 => """No ads""";
   String get subscriptionPerk3 => """No tracking""";
   String get subscriptionPerk4 => """Carbon neutral""";
@@ -174,6 +174,7 @@ class Translations {
       PaymentFlowErrorTranslations(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
       """Do you really want to delete this collection?""";
+  String get bottomSheetMoveSingleBookmark => """Move to another collection""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -194,7 +195,7 @@ Map<String, String> get translationsMap => {
       """settingsSectionScrollDirection""":
           """Discovery feed scroll direction""",
       """settingsSectionTitleGeneralInfo""": """General information""",
-      """settingsSectionTitleHelpImprove""": """Help Us Improve!""",
+      """settingsSectionTitleHelpImprove""": """Help us improve!""",
       """settingsSectionTitleSpreadTheWord""": """Spread the Word""",
       """settingsAppThemeSystem""": """System default""",
       """settingsAppThemeLight""": """Light mode""",
@@ -221,8 +222,8 @@ Map<String, String> get translationsMap => {
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Your Space""",
-      """personalAreaCollections""": """Collections Settings""",
-      """personalAreaHomeFeed""": """Feed Settings""",
+      """personalAreaCollections""": """Your Collections""",
+      """personalAreaHomeFeed""": """Discovery Feed Setup""",
       """personalAreaSettings""": """App Settings""",
       """comingSoon""": """Coming soon""",
       """feedSettingsScreenTitle""": """Your Discovery Feed""",
@@ -265,10 +266,10 @@ Map<String, String> get translationsMap => {
       """bottomSheetRename""": """Rename""",
       """bottomSheetDelete""": """Delete""",
       """bottomSheetDeleteAll""": """Delete All""",
-      """bottomSheetMoveBookmarks""": """Move Bookmarks""",
+      """bottomSheetMoveBookmarks""": """Move""",
       """bottomSheetDeleteCollectionHeader""": """Are you sure ?""",
       """bottomSheetDeleteCollectionWithBookmarksBody""":
-          """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""",
+          """If you delete this collection every article in this folder will be deleted too. Do you want to proceed, or do you want to move all articles before?""",
       """bottomSheetRenameCollectionHeader""": """Rename collection""",
       """settingsXaynPremium""": """Xayn Premium""",
       """settingsSectionSubscription""": """Subscription""",
@@ -280,7 +281,7 @@ Map<String, String> get translationsMap => {
       """trialBannerExpired""": """Your trial expired""",
       """subscriptionHeader""": """Get unlimited content for just""",
       """subscriptionPricingError""": """Unable to retrieve pricing details""",
-      """subscriptionPerk1""": """Personalized stream""",
+      """subscriptionPerk1""": """Personalised stream""",
       """subscriptionPerk2""": """No ads""",
       """subscriptionPerk3""": """No tracking""",
       """subscriptionPerk4""": """Carbon neutral""",
@@ -309,4 +310,5 @@ Map<String, String> get translationsMap => {
           """Payment transaction failed""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
+      """bottomSheetMoveSingleBookmark""": """Move to another collection""",
     };
