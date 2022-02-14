@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_gradient_provider.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -15,7 +15,7 @@ class CardWidgetData {
   static const double cardWidth = cardHeight * 2;
 }
 
-class CardWidget extends StatelessWidget with DiscoveryCardGradientProvider {
+class CardWidget extends StatelessWidget {
   final CardData cardData;
 
   CardWidget({
@@ -47,26 +47,25 @@ class CardWidget extends StatelessWidget with DiscoveryCardGradientProvider {
       ),
     );
 
-    Widget withBackgroundImage(data) => data.backgroundImage != null
-        ? ClipRRect(
-            borderRadius:
-                UnterDenLinden.getLinden(context).styles.roundBorder1_5,
-            child: Container(
-              foregroundDecoration: BoxDecoration(
-                gradient: buildGradient(),
-              ),
-              child: Image.memory(
-                data.backgroundImage!,
-                fit: BoxFit.cover,
-                width: data.cardWidth,
-                height: CardWidgetData.cardHeight,
-              ),
-            ),
-          )
-        : SvgPicture.asset(
-            R.assets.graphics.formsEmptyCollection,
-            height: CardWidgetData.cardHeight,
-          );
+    Widget withBackgroundImage(data) {
+      final image = Image.memory(
+        data.backgroundImage!,
+        fit: BoxFit.cover,
+        width: data.cardWidth,
+        height: CardWidgetData.cardHeight,
+      );
+
+      return data.backgroundImage != null
+          ? ClipRRect(
+              borderRadius:
+                  UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+              child: DiscoveryCardHeadlineImage(child: image),
+            )
+          : SvgPicture.asset(
+              R.assets.graphics.formsEmptyCollection,
+              height: CardWidgetData.cardHeight,
+            );
+    }
 
     final Widget background = cardData.map(
       personalArea: (data) => SvgPicture.asset(
