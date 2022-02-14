@@ -64,11 +64,10 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
   /// 1) Update the collection name in the state through the manager
   /// 2) Show in the input field the name of the collection being renamed
   void _maybeSetInitialCollectionName() {
-    if (widget.collection != null) {
-      final collectionName = widget.collection!.name;
-      _createOrRenameCollectionManager.updateCollectionName(collectionName);
-      _textEditingController.text = collectionName;
-    }
+    final collectionName = widget.collection?.name;
+    if (collectionName == null) return;
+    _createOrRenameCollectionManager.updateCollectionName(collectionName);
+    _textEditingController.text = collectionName;
   }
 
   @override
@@ -121,15 +120,16 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
       );
 
   void _onApplyPressed() {
-    if (widget.collection == null) {
-      _createOrRenameCollectionManager.createCollection();
+    final collectionId = widget.collection?.id;
+    if (collectionId != null) {
+      _createOrRenameCollectionManager.renameCollection(collectionId);
     } else {
-      _createOrRenameCollectionManager.renameCollection(widget.collection!.id);
+      _createOrRenameCollectionManager.createCollection();
     }
   }
 
   void _closeSheet(Collection newCollection) {
     closeBottomSheet(context);
-    if (widget.onApplyPressed != null) widget.onApplyPressed!(newCollection);
+    widget.onApplyPressed?.call(newCollection);
   }
 }

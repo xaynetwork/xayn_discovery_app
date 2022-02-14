@@ -18,9 +18,10 @@ class CreateOrRenameCollectionManager
   final CreateCollectionUseCase _createCollectionUseCase;
   final RenameCollectionUseCase _renameCollectionUseCase;
   final CollectionErrorsEnumMapper _collectionErrorsEnumMapper;
-  late UseCaseSink<String, Collection> _createCollectionHandler;
-  late UseCaseSink<RenameCollectionUseCaseParam, Collection>
-      _renameCollectionHandler;
+  late final UseCaseSink<String, Collection> _createCollectionHandler =
+      pipe(_createCollectionUseCase);
+  late final UseCaseSink<RenameCollectionUseCaseParam, Collection>
+      _renameCollectionHandler = pipe(_renameCollectionUseCase);
 
   String _collectionName = '';
   bool _checkForError = false;
@@ -29,14 +30,7 @@ class CreateOrRenameCollectionManager
     this._createCollectionUseCase,
     this._collectionErrorsEnumMapper,
     this._renameCollectionUseCase,
-  ) : super(CreateOrRenameCollectionState.initial()) {
-    _init();
-  }
-
-  void _init() {
-    _createCollectionHandler = pipe(_createCollectionUseCase);
-    _renameCollectionHandler = pipe(_renameCollectionUseCase);
-  }
+  ) : super(CreateOrRenameCollectionState.initial());
 
   void updateCollectionName(String name) =>
       scheduleComputeState(() => _collectionName = name);
@@ -48,9 +42,12 @@ class CreateOrRenameCollectionManager
 
   void renameCollection(UniqueId collectionId) async {
     _checkForError = true;
+    final param = RenameCollectionUseCaseParam(
+      collectionId: collectionId,
+      newName: state.collectionName,
+    );
     _renameCollectionHandler(
-      RenameCollectionUseCaseParam(
-          collectionId: collectionId, newName: state.collectionName),
+      param,
     );
   }
 

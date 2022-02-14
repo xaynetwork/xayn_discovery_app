@@ -63,13 +63,11 @@ class SwipeableCollectionCard extends StatelessWidget {
   void _onOptionsTap(SwipeOptionCollectionCard option) {
     switch (option) {
       case SwipeOptionCollectionCard.edit:
-        final onTap = onSwipeOptionTap[SwipeOptionCollectionCard.edit];
-        onTap!();
+        onSwipeOptionTap[SwipeOptionCollectionCard.edit]?.call();
         return;
 
       case SwipeOptionCollectionCard.remove:
-        final onTap = onSwipeOptionTap[SwipeOptionCollectionCard.remove];
-        onTap!();
+        onSwipeOptionTap[SwipeOptionCollectionCard.remove]?.call();
         return;
     }
   }
