@@ -11,4 +11,8 @@ class PaymentScreenState with _$PaymentScreenState {
     required PurchasableProduct product,
     required String? errorMsg,
   }) = PaymentScreenStateReady;
+
+  const factory PaymentScreenState.error({
+    required String errorMsg,
+  }) = PaymentScreenStateError;
 }
