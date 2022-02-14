@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -178,8 +179,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         : .0;
     final feedView = _buildFeedView();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
+    final body = Scaffold(
+      /// resizing the scaffold is set to false since the keyboard could be
+      /// triggered when creating a collection from the bottom sheet and the
+      /// feed should look the same in that process
+      ///
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,
         top: Platform.isAndroid,
