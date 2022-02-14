@@ -9,9 +9,9 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
@@ -40,7 +40,8 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 }
 
 class _DiscoveryCardStaticState
-    extends DiscoveryCardBaseState<DiscoveryCardStatic> {
+    extends DiscoveryCardBaseState<DiscoveryCardStatic>
+    with OnBookmarkChangedMixin<DiscoveryCardStatic> {
   double _scrollOffset = .0;
 
   @override
@@ -153,18 +154,6 @@ class _DiscoveryCardStaticState
   }
 
   @override
-  void discoveryCardStateListener(DiscoveryCardState state) {
-    if (state.isBookmarkToggled) {
-      showTooltip(
-        BookmarkToolTipKeys.bookmarkedToDefault,
-        parameters: [
-          context,
-          widget.document,
-          discoveryCardManager.state.processedDocument
-              ?.getProvider(widget.document.webResource),
-          (tooltipKey) => showTooltip(tooltipKey),
-        ],
-      );
-    }
-  }
+  void discoveryCardStateListener(DiscoveryCardState state) =>
+      onBookmarkChanged(state);
 }
