@@ -16,19 +16,19 @@ class CheckSubscriptionActiveUseCase
     extends UseCase<PurchasableProductId, bool> {
   final PaymentService _paymentService;
   final AppleVerifyReceiptHelper _iOsSubscriptionCheckHelper;
-  final bool _isIOs;
+  final bool _isIOS;
 
   CheckSubscriptionActiveUseCase(
     this._paymentService,
     this._iOsSubscriptionCheckHelper,
-  ) : _isIOs = Platform.isIOS;
+  ) : _isIOS = Platform.isIOS;
 
   @visibleForTesting
   CheckSubscriptionActiveUseCase.test(
     this._paymentService,
     this._iOsSubscriptionCheckHelper, {
-    required bool isIos,
-  }) : _isIOs = isIos;
+    required bool isIOS,
+  }) : _isIOS = isIOS;
 
   /// yield [true] if subscription for [PurchasableProduct] with id[param]
   /// is active (restored)
@@ -54,7 +54,7 @@ class CheckSubscriptionActiveUseCase
         .timeout(const Duration(milliseconds: 5000), onTimeout: () => []);
     final filtered = purchases.where(checkIfAvailable);
 
-    if (!_isIOs) {
+    if (!_isIOS) {
       yield filtered.isNotEmpty;
     } else {
       if (filtered.isEmpty) {
