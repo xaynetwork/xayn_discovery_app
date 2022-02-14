@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
@@ -41,6 +42,7 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
       bloc: manager,
       builder: (_, state) => state.map(
         initial: (_) => const Center(),
+        error: _buildErrorScreen,
         ready: _buildScreen,
       ),
     );
@@ -97,5 +99,10 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
       ),
     );
     showTooltip(TooltipKeys.paymentError);
+  }
+
+  Widget _buildErrorScreen(PaymentScreenStateError stateError) {
+    final text = Text(stateError.errorMsg);
+    return Center(child: text);
   }
 }
