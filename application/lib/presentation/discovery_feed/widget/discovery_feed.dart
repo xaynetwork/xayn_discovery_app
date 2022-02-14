@@ -97,11 +97,22 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             ),
           );
 
+      void onEditReaderModeSettingsPressed() => toggleOverlay(
+            (_) => Positioned(
+              bottom: MediaQuery.of(context).viewInsets.bottom +
+                  R.dimen.bottomBarDockedHeight +
+                  R.dimen.unit4_25,
+              right: R.dimen.unit2,
+              width: R.dimen.unit22,
+              child: const EditReaderModeSettingsMenu(),
+            ),
+          );
+
       return NavBarConfig(
         [
           buildNavBarItemArrowLeft(onPressed: () async {
-            await _currentCardController?.animateToClose();
             removeOverlay();
+            await _currentCardController?.animateToClose();
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
@@ -125,16 +136,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   managers.discoveryCardManager.shareUri(document)),
           if (_featureManager.isReaderModeSettingsEnabled)
             buildNavBarItemEditFont(
-              onPressed: () => toggleOverlay(
-                (_) => Positioned(
-                  bottom: MediaQuery.of(context).viewInsets.bottom +
-                      R.dimen.bottomBarDockedHeight +
-                      R.dimen.unit4_25,
-                  right: R.dimen.unit2,
-                  width: R.dimen.unit22,
-                  child: const EditReaderModeSettingsMenu(),
-                ),
-              ),
+              onPressed: onEditReaderModeSettingsPressed,
             ),
           buildNavBarItemDisLike(
             isDisLiked: managers.discoveryCardManager.state

@@ -5,11 +5,10 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 class SelectableChip extends StatelessWidget {
   SelectableChip.container({
     Key? key,
-    Color? selectBackgroundColor,
     required Color color,
+    required this.onTap,
     Color? borderColor,
     this.isSelected = false,
-    required this.onTap,
   })  : child = const SizedBox.shrink(),
         backgroundColor = color,
         padding = null,
@@ -27,11 +26,10 @@ class SelectableChip extends StatelessWidget {
 
   SelectableChip.svg({
     Key? key,
-    Color? selectBackgroundColor,
-    this.isSelected = false,
-    EdgeInsets? padding,
     required String svgPath,
     required this.onTap,
+    this.isSelected = false,
+    EdgeInsets? padding,
   })  : child = SvgPicture.asset(
           svgPath,
           color: isSelected ? R.colors.iconInverse : R.colors.icon,

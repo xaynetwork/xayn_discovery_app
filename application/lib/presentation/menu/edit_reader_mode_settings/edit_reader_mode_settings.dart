@@ -16,9 +16,9 @@ class EditReaderModeSettingsMenu extends StatefulWidget {
 
 class _EditReaderModeSettingsMenuState
     extends State<EditReaderModeSettingsMenu> {
-  ReaderModeFontStyle selectedFontStyle = ReaderModeFontStyle.serif;
-  ReaderModeFontSize selectedFontSize = ReaderModeFontSize.medium;
-  ReaderModeBackgroundColor selectedBackgroundColor =
+  ReaderModeFontStyle _selectedFontStyle = ReaderModeFontStyle.serif;
+  ReaderModeFontSize _selectedFontSize = ReaderModeFontSize.medium;
+  ReaderModeBackgroundColor _selectedBackgroundColor =
       ReaderModeBackgroundColor.white;
 
   @override
@@ -28,8 +28,8 @@ class _EditReaderModeSettingsMenuState
           .map(
             (it) => SelectableChip.svg(
               svgPath: it.svgPath,
-              isSelected: it == selectedFontStyle,
-              onTap: () => setState(() => selectedFontStyle = it),
+              isSelected: it == _selectedFontStyle,
+              onTap: () => setState(() => _selectedFontStyle = it),
             ),
           )
           .toList(),
@@ -44,8 +44,8 @@ class _EditReaderModeSettingsMenuState
                 horizontal: R.dimen.unit0_5,
               ),
               svgPath: it.svgPath,
-              isSelected: it == selectedFontSize,
-              onTap: () => setState(() => selectedFontSize = it),
+              isSelected: it == _selectedFontSize,
+              onTap: () => setState(() => _selectedFontSize = it),
             ),
           )
           .toList(),
@@ -57,8 +57,8 @@ class _EditReaderModeSettingsMenuState
               (it) => SelectableChip.container(
                 color: it.color,
                 borderColor: it.borderColor,
-                isSelected: it == selectedBackgroundColor,
-                onTap: () => setState(() => selectedBackgroundColor = it),
+                isSelected: it == _selectedBackgroundColor,
+                onTap: () => setState(() => _selectedBackgroundColor = it),
               ),
             )
             .toList());
