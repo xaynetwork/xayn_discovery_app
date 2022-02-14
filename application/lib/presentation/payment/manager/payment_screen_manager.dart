@@ -90,14 +90,16 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
                   : product.status),
         );
 
-        // todo subscriptionProduct could be null, and errors not, so we need to maybe make PaymentScreenState.product optional
-        if (subscriptionProduct != null) {
-          final paymentFlowError =
-              errors.firstWhereOrNull((element) => element is PaymentFlowError)
-                  as PaymentFlowError?;
-          final paymentFlowErrorMsg = paymentFlowError == null
-              ? null
-              : _errorMessageMapper.map(paymentFlowError);
+        final paymentFlowError =
+            errors.firstWhereOrNull((element) => element is PaymentFlowError)
+                as PaymentFlowError?;
+        final paymentFlowErrorMsg = paymentFlowError == null
+            ? null
+            : _errorMessageMapper.map(paymentFlowError);
+
+        if (subscriptionProduct == null && paymentFlowErrorMsg != null) {
+          return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
+        } else if (subscriptionProduct != null) {
           return PaymentScreenState.ready(
             product: subscriptionProduct,
             errorMsg: paymentFlowErrorMsg,
