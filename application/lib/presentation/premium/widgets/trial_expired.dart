@@ -12,9 +12,10 @@ class TrialExpired extends StatelessWidget {
   /// Handler for when the subscribe button was tapped.
   final VoidCallback _onSubscribe;
 
-  /// Only applicable in [TrialExpired.embedded].
   /// Handler for when the cancel button was tapped.
   /// Use this to close the bottom sheet when it fires.
+  /// If omitted, then the cancel button is not shown,
+  /// which is only for the full screen version.
   final VoidCallback? _onCancel;
 
   /// Handler for when the promo code button was tapped.
