@@ -25,12 +25,12 @@ void main() {
     useCaseAndroid = CheckSubscriptionActiveUseCase.test(
       paymentService,
       verifyReceiptHelper,
-      isIos: false,
+      isIOS: false,
     );
     useCaseIOs = CheckSubscriptionActiveUseCase.test(
       paymentService,
       verifyReceiptHelper,
-      isIos: true,
+      isIOS: true,
     );
   });
 
