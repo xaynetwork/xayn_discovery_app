@@ -66,7 +66,10 @@ class _DiscoveryFeedCardState
     );
 
     return Stack(
-      children: [DiscoveryCardHeadlineImage(child: image), elements],
+      children: [
+        DiscoveryCardHeadlineImage(child: image),
+        elements,
+      ],
     );
   }
 
