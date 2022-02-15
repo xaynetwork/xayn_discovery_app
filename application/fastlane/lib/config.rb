@@ -3,6 +3,26 @@ module Config
     BUILD_NUMBER_OFFSET = "build_number_offset"
   end
 
+  ###
+  ### All possible options should be described in this module
+  ###
+  module Options
+    ANDROID_OUTPUT = :android_output
+    BUILD = :build
+    BUILD_NUMBER = :build_number
+    CLEAN = :clean
+    COVERAGE = :coverage
+    DOWNLOAD_PROFILE = :downloadProfile
+    ENV = :env
+    FLAVOR = :flavor
+    PLATFORM = :platform
+    RELEASE = :release
+    UPDATE_ASSETS = :update_assets
+    UPLOAD_TO_APPCENTER = :upload_to_appcenter
+    VERSION_NAME = :version_name
+    WATCH = :watch
+  end
+
   #release, debug
   BUILD = "debug"
 
