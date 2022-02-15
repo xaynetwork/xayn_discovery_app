@@ -14,6 +14,11 @@ module Config
     PRODUCTION = "production"
   end
 
+  module AndroidOutputs
+    APK = "apk"
+    APP_BUNDLE = "appbundle"
+  end
+
   ###
   ### All possible options should be described in this module
   ###
@@ -46,9 +51,6 @@ module Config
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
-
-  #apk, appbundle
-  ANDROID_OUTPUT = "apk"
 
   # Carefull to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...

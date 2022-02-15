@@ -21,6 +21,7 @@ import("lib/config.rb")
 Options = Config::Options
 Platforms = Config::Platforms
 Flavors = Config::Flavors
+AndroidOutputs = Config::AndroidOutputs
 
 # Common checks before running a lane
 before_all do |lane, options|
@@ -31,7 +32,7 @@ before_all do |lane, options|
   # set default values
   setIfNotSet.call(Options::CLEAN, true)
   setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
-  setIfNotSet.call(Options::ANDROID_OUTPUT, Config::ANDROID_OUTPUT)
+  setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
   setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
   setIfNotSet.call(Options::BUILD, Config::BUILD)
   setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, true)
