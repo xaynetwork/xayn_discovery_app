@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+
+const _pendingTransactionForSameProduct = 'storekit_duplicate_product_object';
 
 /// This class is just a proxy for [InAppPurchase].
 /// I created it, in order to be able to mock the behaviour in the useCases.
@@ -13,8 +17,12 @@ import 'package:injectable/injectable.dart';
 /// The issue described here: https://github.com/dart-lang/mockito/issues/338
 @lazySingleton
 class PaymentService {
+  final BugReportingService _bugReportingService;
+
   /// This class is the only one place where we use [InAppPurchase]
   late final _appPurchase = InAppPurchase.instance;
+
+  PaymentService(this._bugReportingService);
 
   Future<bool> buyConsumable({
     required PurchaseParam purchaseParam,
@@ -37,7 +45,15 @@ class PaymentService {
         SKPaymentQueueWrapper().finishTransaction(skPaymentTransactionWrapper);
       }
     }
-    return _appPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    try {
+      return await _appPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    } on PlatformException catch (e, trace) {
+      if (e.code != _pendingTransactionForSameProduct) {
+        _bugReportingService.reportHandledCrash(e, trace);
+        rethrow;
+      }
+      return false;
+    }
   }
 
   Future<void> completePurchase(PurchaseDetails purchase) =>
