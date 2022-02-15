@@ -16,7 +16,6 @@ module Config
     ENV = :env
     FLAVOR = :flavor
     PLATFORM = :platform
-    RELEASE = :release
     UPDATE_ASSETS = :update_assets
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
     VERSION_NAME = :version_name
