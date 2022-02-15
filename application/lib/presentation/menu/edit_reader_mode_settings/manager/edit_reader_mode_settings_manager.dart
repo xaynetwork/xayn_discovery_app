@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
-@singleton
+@injectable
 class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
     with UseCaseBlocHelper<EditReaderModeSettingsState> {
   final SaveReaderModeBackgroundColorUseCase

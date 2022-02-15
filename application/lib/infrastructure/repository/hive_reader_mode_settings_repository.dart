@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dar
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 /// Hive's [ReaderModeSettings] repository implementation.
-@Singleton(as: ReaderModeSettingsRepository)
+@LazySingleton(as: ReaderModeSettingsRepository)
 class HiveReaderModeSettingsRepository
     extends HiveRepository<ReaderModeSettings>
     implements ReaderModeSettingsRepository {
