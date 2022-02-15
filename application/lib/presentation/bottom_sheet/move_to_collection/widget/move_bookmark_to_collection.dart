@@ -5,8 +5,8 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -22,26 +22,31 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
     required UniqueId bookmarkId,
     required OnToolTipError onError,
     Collection? forceSelectCollection,
+    VoidCallback? onSystemPop,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _MoveBookmarkToCollection(
             bookmarkId: bookmarkId,
             onError: onError,
             forceSelectCollection: forceSelectCollection,
+            onSystemPop: onSystemPop,
           ),
         );
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId bookmarkId;
-  final Collection? forceSelectCollection;
   final OnToolTipError onError;
+  final Collection? forceSelectCollection;
+  final VoidCallback? onSystemPop;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarkId,
     required this.onError,
     this.forceSelectCollection,
+    this.onSystemPop,
   }) : super(key: key);
 
   @override
@@ -90,6 +95,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
             builder: (_, state) {
               if (state.shouldClose) {
                 closeBottomSheet(context);
+                widget.onSystemPop?.call();
               }
 
               if (state.collections.isNotEmpty) {
@@ -115,14 +121,18 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     );
 
     final footer = BottomSheetFooter(
-      onCancelPressed: () => closeBottomSheet(context),
+      onCancelPressed: () {
+        closeBottomSheet(context);
+        widget.onSystemPop?.call();
+      },
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
-          onPressed: () =>
-              _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
-            bookmarkId: widget.bookmarkId,
-          ),
+          onPressed: () {
+            _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
+              bookmarkId: widget.bookmarkId,
+            );
+          },
         ),
       ),
     );
@@ -142,11 +152,13 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
+      showBarrierColor: widget.onSystemPop == null,
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,
         ),
+        onSystemPop: widget.onSystemPop,
       ),
     );
   }
@@ -154,10 +166,12 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
       showAppBottomSheet(
         context,
+        showBarrierColor: widget.onSystemPop == null,
         builder: (_) => MoveBookmarkToCollectionBottomSheet(
           bookmarkId: widget.bookmarkId,
           forceSelectCollection: newCollection,
           onError: widget.onError,
+          onSystemPop: widget.onSystemPop,
         ),
       );
 }
