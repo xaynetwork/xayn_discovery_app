@@ -79,7 +79,7 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
-          fastlane publish platform:ios build:release download_profile:true flavor:internal
+          fastlane publish platform:ios release_build:true download_profile:true flavor:internal
 
   publish_ios_beta:
     name: Publish iOS Beta
@@ -133,7 +133,7 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
-          fastlane publish platform:ios build:release download_profile:false flavor:beta
+          fastlane publish platform:ios release_build:true download_profile:false flavor:beta
 
   publish_android_internal:
     name: Publish Android Internal
@@ -175,7 +175,7 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build:release flavor:internal
+          fastlane publish platform:android release_build:true flavor:internal
 
   publish_android_beta:
     name: Publish Android Beta
@@ -217,4 +217,4 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build:release flavor:beta
+          fastlane publish platform:android release_build:true flavor:beta
