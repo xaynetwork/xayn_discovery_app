@@ -15,7 +15,9 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
@@ -43,10 +45,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         WidgetsBindingObserver,
         NavBarConfigMixin,
         CardManagersMixin,
-        TooltipStateMixin {
+        TooltipStateMixin,
+        SubscriptionTrialBannerStateMixin {
   late final DiscoveryFeedManager _discoveryFeedManager;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
+  final FeatureManager _featureManager = di.get();
   DiscoveryCardController? _currentCardController;
 
   double _dragDistance = .0;
@@ -62,12 +66,18 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   _discoveryFeedManager.onHomeNavPressed();
                 }),
             buildNavBarItemSearch(
-              isDisabled: true,
-              onPressed: () => showTooltip(
-                TooltipKeys.activeSearchDisabled,
-                style: TooltipStyle.arrowDown,
-              ),
-            ),
+                isDisabled: true,
+                onPressed: () {
+                  showTooltip(
+                    TooltipKeys.activeSearchDisabled,
+                    style: TooltipStyle.arrowDown,
+                  );
+
+                  // TODO: For testing purposes only. Call it from the correct place.
+                  if (_featureManager.canShowTrialBannerNotification) {
+                    showTrialBanner();
+                  }
+                }),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
