@@ -3,11 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
@@ -67,12 +67,8 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
 
     return Stack(
       children: [
-        Container(
-            foregroundDecoration: BoxDecoration(
-              gradient: buildGradient(),
-            ),
-            child: image),
-        elements
+        DiscoveryCardHeadlineImage(child: image),
+        elements,
       ],
     );
   }

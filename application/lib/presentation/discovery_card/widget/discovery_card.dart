@@ -10,13 +10,13 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
@@ -194,12 +194,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
-        final maskedImage = Container(
-          foregroundDecoration: BoxDecoration(
-            gradient: buildGradient(opacity: _openingAnimation.value),
-          ),
-          child: image,
-        );
+        final maskedImage = DiscoveryCardHeadlineImage(child: image);
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           document: widget.document,

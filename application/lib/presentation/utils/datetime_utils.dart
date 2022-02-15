@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 // TODO: This is for testing purposes only. Will eventually be replaced by Andrii's logic.
@@ -29,4 +30,6 @@ extension DateTimeExtension on DateTime {
     final days = calculateDifferenceInDays(now);
     return R.strings.trialBannerEndsIn.replaceFirst('%s', days.toString());
   }
+
+  String get shortDateFormat => DateFormat('dd.MM.yyyy').format(this);
 }
