@@ -8,6 +8,12 @@ module Config
     IOS = "ios"
   end
 
+  module Flavors
+    INTERNAL = "internal"
+    BETA = "beta"
+    PRODUCTION = "production"
+  end
+
   ###
   ### All possible options should be described in this module
   ###
@@ -19,6 +25,7 @@ module Config
     COVERAGE = :coverage
     DOWNLOAD_PROFILE = :download_profile
     ENV = :env
+    # Available variants: Flavors
     FLAVOR = :flavor
     # Available variants: Platforms
     PLATFORM = :platform
@@ -43,9 +50,6 @@ module Config
   #apk, appbundle
   ANDROID_OUTPUT = "apk"
 
-  #internal, beta, production
-  FLAVOR = "internal"
-
   # Carefull to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...
   # beta      :   10001, 10002, 10003, ... 10479, ... |  ^^close beta
@@ -56,7 +60,7 @@ module Config
   betaBuildNumberOffset = 10000
 
   FLAVOR_MATRIX = {
-    "internal" => {
+    Flavors::INTERNAL => {
       Platforms::IOS => {
         "id" => "com.xayn.discovery.internal",
         "name" => "Discovery",
@@ -74,7 +78,7 @@ module Config
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
     },
-    "beta" => {
+    Flavors::BETA => {
       Platforms::IOS => {
         "id" => "com.xayn.discovery",
         "name" => "Xayn 3.0",
@@ -93,7 +97,7 @@ module Config
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
     },
-    "production" => {
+    Flavors::PRODUCTION => {
       Platforms::IOS => {
         "id" => "com.xayn.search",
         "name" => "Discovery App",
@@ -106,16 +110,16 @@ module Config
   }
 
   ANDROID_BUILD_CONFIG = {
-    "internal" => {
+    Flavors::INTERNAL => {
       "key_alias" => "release_internal",
     },
-    "beta" => {
+    Flavors::BETA => {
       "key_alias" => "release_beta",
     },
   }
 
   IOS_BUILD_CONFIG = {
-    "internal" => {
+    Flavors::INTERNAL => {
       "provisioning_profile_path" => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
       "provisioning_profile_name" => "Xayn Discovery Internal Adhoc Profile",
       "provisioning_profiles" => {
@@ -123,7 +127,7 @@ module Config
       },
       "adhoc" => true,
     },
-    "beta" => {
+    Flavors::BETA => {
       "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
       "provisioning_profile_name" => "Xayn Discovery AppStore Profile",
       "provisioning_profiles" => {
