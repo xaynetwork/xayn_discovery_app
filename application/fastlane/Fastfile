@@ -19,6 +19,7 @@ import("lib/download_utils.rb")
 import("lib/config.rb")
 
 Options = Config::Options
+Platforms = Config::Platforms
 
 # Common checks before running a lane
 before_all do |lane, options|
@@ -26,8 +27,9 @@ before_all do |lane, options|
     options[option] = options.key?(option) ? options[option] : alt
   }
 
+  # set default values
   setIfNotSet.call(Options::CLEAN, true)
-  setIfNotSet.call(Options::PLATFORM, Config::PLATFORM)
+  setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
   setIfNotSet.call(Options::ANDROID_OUTPUT, Config::ANDROID_OUTPUT)
   setIfNotSet.call(Options::FLAVOR, Config::FLAVOR)
   setIfNotSet.call(Options::BUILD, Config::BUILD)
@@ -61,9 +63,9 @@ private_lane :flutter_build do |options|
   build_runner(options)
 
   platform = options[Options::PLATFORM]
-  target = platform == "android" ? options[Options::ANDROID_OUTPUT] : platform
+  target = platform == Platforms::ANDROID ? options[Options::ANDROID_OUTPUT] : platform
   type = options[Options::BUILD] == "release" ? "--release" : "--debug"
-  codesign = platform == "ios" ? "--no-codesign" : ""
+  codesign = platform == Platforms::IOS ? "--no-codesign" : ""
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform]["name"]
   appId = Config::FLAVOR_MATRIX[flavor][platform]["id"]
@@ -75,7 +77,7 @@ private_lane :flutter_build do |options|
     "USER_FLAVOR" => flavor,
   }
 
-  if platform == "ios"
+  if platform == Platforms::IOS
     defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor]["provisioning_profile_name"]
   end
   dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
@@ -213,11 +215,11 @@ lane :publish do |options|
   appcenter_token = config["appcenter_token"]
   appcenter_buildfile = config["appcenter_buildfile"]
 
-  if platform == "android"
+  if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
   end
   flutter_build(options)
-  if platform == "ios"
+  if platform == Platforms::IOS
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
     end
