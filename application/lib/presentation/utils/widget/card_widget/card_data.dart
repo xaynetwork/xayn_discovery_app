@@ -32,9 +32,9 @@ class CardData with _$CardData {
     required Key key,
     required String title,
     required VoidCallback onPressed,
-    required VoidCallback onLongPressed,
     required DateTime created,
     required double cardWidth,
+    VoidCallback? onLongPressed,
     DocumentProvider? provider,
     Uint8List? backgroundImage,
   }) = _CardDataBookmark;
