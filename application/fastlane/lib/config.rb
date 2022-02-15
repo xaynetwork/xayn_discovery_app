@@ -23,10 +23,14 @@ module Config
   ### All possible options should be described in this module
   ###
   module Options
+    # Available variants: AndroidOutputs
     ANDROID_OUTPUT = :android_output
     BUILD_NUMBER = :build_number
+    # Available variants: true / false
     CLEAN = :clean
+    # Available variants: true / false
     COVERAGE = :coverage
+    # Available variants: true / false
     DOWNLOAD_PROFILE = :download_profile
     ENV = :env
     # Available variants: Flavors
@@ -36,8 +40,10 @@ module Config
     # Available variants: true / false
     RELEASE_BUILD = :release_build
     UPDATE_ASSETS = :update_assets
+    # Available variants: true / false
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
     VERSION_NAME = :version_name
+    # Available variants: true / false
     WATCH = :watch
   end
 
