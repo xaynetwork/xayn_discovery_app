@@ -12,7 +12,7 @@ module Config
     BUILD_NUMBER = :build_number
     CLEAN = :clean
     COVERAGE = :coverage
-    DOWNLOAD_PROFILE = :downloadProfile
+    DOWNLOAD_PROFILE = :download_profile
     ENV = :env
     FLAVOR = :flavor
     PLATFORM = :platform
