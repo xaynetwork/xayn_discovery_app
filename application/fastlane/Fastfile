@@ -155,7 +155,7 @@ lane :check_config_files do |options|
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
   }, Config::ENV_DEFAULTS)
 
-  if options[Options::FLAVOR] != "internal" && options[Options::RELEASE] != "debug"
+  if options[Options::FLAVOR] != "internal" && options[Options::BUILD] != "debug"
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   else
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
