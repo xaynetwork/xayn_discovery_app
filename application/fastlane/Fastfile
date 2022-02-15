@@ -182,7 +182,9 @@ lane :clean do |options|
   flutter("clean")
 end
 
-desc "Sanity checks (options: coverage:[true/FALSE])"
+desc "Sanity checks (options: coverage:[true/FALSE])\n" \
+     "Available options:\n" \
+     "   - #{Options::COVERAGE}"
 lane :check do |options|
   pub_get(options)
   if Dir.glob("../**/env.g.dart").empty?
@@ -208,7 +210,17 @@ lane :check do |options|
   end
 end
 
-desc "Build and publish (i.e fastlane publish platform:ios release_build:true flavor:beta)"
+desc "Build and publish \n" \
+     "Available options:\n" \
+     "   - #{Options::ANDROID_OUTPUT}\n"\
+     "   - #{Options::CLEAN}\n"\
+     "   - #{Options::COVERAGE}\n"\
+     "   - #{Options::DOWNLOAD_PROFILE}\n"\
+     "   - #{Options::FLAVOR}\n"\
+     "   - #{Options::PLATFORM}\n"\
+     "   - #{Options::RELEASE_BUILD}\n"\
+     "   - #{Options::UPDATE_ASSETS}\n"\
+     "   - #{Options::UPLOAD_TO_APPCENTER}"
 lane :publish do |options|
   platform = options[Options::PLATFORM]
   flavor = options[Options::FLAVOR]

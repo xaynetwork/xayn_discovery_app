@@ -76,6 +76,8 @@ Flutter clean
 ```
 
 Sanity checks (options: coverage:[true/FALSE])
+Available options:
+   - coverage
 
 ### publish
 
@@ -83,7 +85,17 @@ Sanity checks (options: coverage:[true/FALSE])
 [bundle exec] fastlane publish
 ```
 
-Build and publish (i.e fastlane publish platform:ios release_build:true flavor:beta)
+Build and publish 
+Available options:
+   - android_output
+   - clean
+   - coverage
+   - download_profile
+   - flavor
+   - platform
+   - release_build
+   - update_assets
+   - upload_to_appcenter
 
 ### update_assets
 
