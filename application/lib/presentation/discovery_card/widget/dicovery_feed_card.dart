@@ -6,8 +6,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
@@ -29,8 +29,8 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryFeedCardState();
 }
 
-class _DiscoveryFeedCardState
-    extends DiscoveryCardBaseState<DiscoveryFeedCard> {
+class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
+    with OnBookmarkChangedMixin<DiscoveryFeedCard> {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
@@ -74,18 +74,6 @@ class _DiscoveryFeedCardState
   }
 
   @override
-  void discoveryCardStateListener(DiscoveryCardState state) {
-    if (state.isBookmarkToggled) {
-      showTooltip(
-        BookmarkToolTipKeys.bookmarkedToDefault,
-        parameters: [
-          context,
-          widget.document,
-          discoveryCardManager.state.processedDocument
-              ?.getProvider(widget.document.webResource),
-          (tooltipKey) => showTooltip(tooltipKey),
-        ],
-      );
-    }
-  }
+  void discoveryCardStateListener(DiscoveryCardState state) =>
+      onBookmarkChanged(state);
 }
