@@ -83,7 +83,7 @@ Sanity checks (options: coverage:[true/FALSE])
 [bundle exec] fastlane publish
 ```
 
-Build and publish (i.e fastlane publish platform:ios build:release flavor:beta)
+Build and publish (i.e fastlane publish platform:ios release_build:true flavor:beta)
 
 ### update_assets
 

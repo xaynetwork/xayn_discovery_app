@@ -24,7 +24,6 @@ module Config
   ###
   module Options
     ANDROID_OUTPUT = :android_output
-    BUILD = :build
     BUILD_NUMBER = :build_number
     CLEAN = :clean
     COVERAGE = :coverage
@@ -34,14 +33,13 @@ module Config
     FLAVOR = :flavor
     # Available variants: Platforms
     PLATFORM = :platform
+    # Available variants: true / false
+    RELEASE_BUILD = :release_build
     UPDATE_ASSETS = :update_assets
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
     VERSION_NAME = :version_name
     WATCH = :watch
   end
-
-  #release, debug
-  BUILD = "debug"
 
   # env defaults that will be used when no ENV variables are provided
   ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "api-gw.xaynet.dev",
