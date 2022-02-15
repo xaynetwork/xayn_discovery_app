@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -67,6 +68,9 @@ class PurchaseSubscriptionUseCase
                   status = PurchasableProductStatus.restored;
                   break;
                 case PurchaseStatus.canceled:
+                  if (Platform.isIOS) {
+                    _paymentService.completePurchase(subscription);
+                  }
                   status = PurchasableProductStatus.canceled;
                   break;
               }
