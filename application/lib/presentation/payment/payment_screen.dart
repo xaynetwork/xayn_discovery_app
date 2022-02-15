@@ -53,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       trailing: Text(
         product.price,
-        style: R.styles.appHeadlineText?.copyWith(color: R.colors.accent),
+        style: R.styles.appHeadlineText.copyWith(color: R.colors.accent),
       ),
     );
 

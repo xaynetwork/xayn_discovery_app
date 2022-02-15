@@ -70,7 +70,7 @@ class SubscriptionTrialBanner extends StatelessWidget {
       children: [
         Text(
           R.strings.trialBannerSubscribeNow,
-          style: R.styles.appThumbnailText?.copyWith(
+          style: R.styles.appThumbnailText.copyWith(
             color: R.colors.primaryAction,
           ),
         ),
