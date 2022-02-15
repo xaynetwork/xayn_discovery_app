@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -14,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
+import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -88,6 +91,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       SubscriptionSection(
         trialEndDate: trialEndDate,
         onSubscribePressed: _manager.onSubscribePressed,
+        onShowDetailsPressed: _showSubscriptionDetailsBottomSheet,
       );
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
@@ -127,4 +131,12 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
+
+  void _showSubscriptionDetailsBottomSheet() => showAppBottomSheet(
+        context,
+        builder: (buildContext) => SubscriptionDetailsBottomSheet(
+          subscriptionType: SubscriptionType.paid,
+          endDate: subscriptionEndDate,
+        ),
+      );
 }
