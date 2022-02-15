@@ -22,7 +22,7 @@ private_lane :ios_create_ipa do |options|
   isAdhoc = flavorConfig["adhoc"]
   provisioning_profile_path = flavorConfig["provisioning_profile_path"]
   provisioning_profiles = flavorConfig["provisioning_profiles"]
-  shouldDownloadProfile = options[:downloadProfile]
+  shouldDownloadProfile = options[:download_profile]
 
   UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
   if shouldDownloadProfile
