@@ -43,7 +43,6 @@ class SwipeableBookmarkCard extends StatelessWidget {
       waitBeforeClosingDuration: Duration.zero,
     );
     return SizedBox(
-      /// TODO use PR of Carmine to generalize size
       height: CardWidgetData.cardHeight,
       child: ClipRRect(
         borderRadius: R.styles.roundBorder1_5,

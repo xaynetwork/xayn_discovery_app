@@ -7,12 +7,15 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookmark_card.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/bookmark_options/bookmarks_options_menu.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -27,7 +30,7 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen>
-    with NavBarConfigMixin, TooltipStateMixin {
+    with NavBarConfigMixin, TooltipStateMixin, CardWidgetTransitionMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
   final VoidCallback _dispose =
@@ -60,8 +63,10 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   Widget _buildScreen(BookmarksScreenState state) {
     final list = ListView.builder(
-      itemBuilder: (context, i) =>
-          _createBookmarkCard(context, state.bookmarks[i]),
+      itemBuilder: (context, i) => CardWidgetTransitionWrapper(
+        onAnimationDone: () => _showBookmarkCardOptions(state.bookmarks[i].id),
+        child: _createBookmarkCard(context, state.bookmarks[i]),
+      ),
       itemCount: state.bookmarks.length,
     );
     return Padding(
@@ -92,7 +97,6 @@ class _BookmarksScreenState extends State<BookmarksScreen>
               title: bookmark.title,
               onPressed: () => _bookmarkManager.onBookmarkPressed(
                   bookmarkId: bookmark.id, isPrimary: false),
-              onLongPressed: () {},
               backgroundImage: bookmark.image,
               created: DateTime.parse(bookmark.createdAt),
               provider: bookmark.provider,
@@ -120,5 +124,21 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   void dispose() {
     _dispose();
     super.dispose();
+  }
+
+  _showBookmarkCardOptions(
+    UniqueId bookmarkId,
+  ) {
+    showAppBottomSheet(
+      context,
+      showBarrierColor: false,
+      builder: (buildContext) => BookmarkOptionsBottomSheet(
+        bookmarkId: bookmarkId,
+        onError: showTooltip,
+
+        /// Close the route with the focused card
+        onSystemPop: closeCardWidgetTransition,
+      ),
+    );
   }
 }
