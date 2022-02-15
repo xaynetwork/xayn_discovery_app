@@ -3,6 +3,11 @@ module Config
     BUILD_NUMBER_OFFSET = "build_number_offset"
   end
 
+  module Platforms
+    ANDROID = "android"
+    IOS = "ios"
+  end
+
   ###
   ### All possible options should be described in this module
   ###
@@ -15,6 +20,7 @@ module Config
     DOWNLOAD_PROFILE = :download_profile
     ENV = :env
     FLAVOR = :flavor
+    # Available variants: Platforms
     PLATFORM = :platform
     UPDATE_ASSETS = :update_assets
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
@@ -34,9 +40,6 @@ module Config
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
 
-  #ios, android, web
-  PLATFORM = "android"
-
   #apk, appbundle
   ANDROID_OUTPUT = "apk"
 
@@ -54,7 +57,7 @@ module Config
 
   FLAVOR_MATRIX = {
     "internal" => {
-      "ios" => {
+      Platforms::IOS => {
         "id" => "com.xayn.discovery.internal",
         "name" => "Discovery",
         "appcenter_target" => "Discovery-App-internal",
@@ -62,7 +65,7 @@ module Config
         "appcenter_buildfile" => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
-      "android" => {
+      Platforms::ANDROID => {
         "id" => "com.xayn.discovery.internal",
         "name" => "Discovery",
         "appcenter_target" => "Discovery-App-Android-internal",
@@ -72,7 +75,7 @@ module Config
       },
     },
     "beta" => {
-      "ios" => {
+      Platforms::IOS => {
         "id" => "com.xayn.discovery",
         "name" => "Xayn 3.0",
         # Discoveru is correct!! :P
@@ -81,7 +84,7 @@ module Config
         "appcenter_buildfile" => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
-      "android" => {
+      Platforms::ANDROID => {
         "id" => "com.xayn.search",
         "name" => "Xayn 3.0",
         "appcenter_target" => "Discovery-App-Android-beta",
@@ -91,11 +94,11 @@ module Config
       },
     },
     "production" => {
-      "ios" => {
+      Platforms::IOS => {
         "id" => "com.xayn.search",
         "name" => "Discovery App",
       },
-      "android" => {
+      Platforms::ANDROID => {
         "id" => "com.xayn.search",
         "name" => "Discovery App",
       },
