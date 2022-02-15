@@ -162,6 +162,16 @@ class TranslationsDe extends Translations {
   String get subscriptionPromoCode => """I have a promo code""";
   String get subscriptionDisclaimer =>
       """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
+  String get settingsSubscribedToHeader => """You are subscribed to""";
+  String get doneButtonTitle => """Done""";
+  String get subscriptionRenewsMonthlyText =>
+      """The subscription renews monthly on: %s""";
+  String get promoCodeValidUntilText =>
+      """Your promo code is valid until: %s""";
+  String get subscriptionPlatformInfoApple =>
+      """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
+  String get subscriptionPlatformInfoGoogle =>
+      """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -271,4 +281,13 @@ Map<String, String> get translationsDeMap => {
       """subscriptionPromoCode""": """I have a promo code""",
       """subscriptionDisclaimer""":
           """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
+      """settingsSubscribedToHeader""": """You are subscribed to""",
+      """doneButtonTitle""": """Done""",
+      """subscriptionRenewsMonthlyText""":
+          """The subscription renews monthly on: %s""",
+      """promoCodeValidUntilText""": """Your promo code is valid until: %s""",
+      """subscriptionPlatformInfoApple""":
+          """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
+      """subscriptionPlatformInfoGoogle""":
+          """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
     };

@@ -11,6 +11,7 @@ const FeatureMap kInitialFeatureMap = {
   Feature.readerModeSettings: false,
   Feature.featuresScreen:
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+  Feature.trialBannerNotification: true,
 };
 
 @lazySingleton
@@ -35,6 +36,9 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPaymentEnabled =>
       EnvironmentHelper.kIsDebug || isEnabled(Feature.payment);
+
+  bool get canShowTrialBannerNotification =>
+      isEnabled(Feature.trialBannerNotification);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(

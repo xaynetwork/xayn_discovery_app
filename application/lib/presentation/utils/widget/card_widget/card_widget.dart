@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -46,34 +49,45 @@ class CardWidget extends StatelessWidget {
       ),
     );
 
-    Widget withBackgroundImage(data) => data.backgroundImage != null
-        ? ClipRRect(
-            borderRadius:
-                UnterDenLinden.getLinden(context).styles.roundBorder1_5,
-            child: Container(
-              foregroundDecoration: BoxDecoration(
-                gradient: buildGradient(opacity: 0.5),
-              ),
-              child: Image.memory(
-                data.backgroundImage!,
-                fit: BoxFit.cover,
-                width: data.cardWidth,
-                height: CardWidgetData.cardHeight,
-              ),
-            ),
-          )
-        : SvgPicture.asset(
-            R.assets.graphics.formsEmptyCollection,
+    /// Refactored signature to get rid of dynamic type
+    Widget withBackgroundImage({
+      Uint8List? backgroundImage,
+      double? width,
+    }) {
+      buildMemoryImage(Uint8List bytes) => Image.memory(
+            bytes,
+            fit: BoxFit.cover,
+            width: width,
             height: CardWidgetData.cardHeight,
           );
+
+      return backgroundImage != null
+          ? ClipRRect(
+              borderRadius:
+                  UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+              child: DiscoveryCardHeadlineImage(
+                child: buildMemoryImage(backgroundImage),
+              ),
+            )
+          : SvgPicture.asset(
+              R.assets.graphics.formsEmptyCollection,
+              height: CardWidgetData.cardHeight,
+            );
+    }
 
     final Widget background = cardData.map(
       personalArea: (data) => SvgPicture.asset(
         data.svgBackgroundPath,
         height: CardWidgetData.cardHeight,
       ),
-      collectionsScreen: withBackgroundImage,
-      bookmark: withBackgroundImage,
+      collectionsScreen: (it) => withBackgroundImage(
+        backgroundImage: it.backgroundImage,
+        width: it.cardWidth,
+      ),
+      bookmark: (it) => withBackgroundImage(
+        backgroundImage: it.backgroundImage,
+        width: it.cardWidth,
+      ),
     );
 
     double? noFill(data) => data.backgroundImage != null ? 0.0 : null;
@@ -246,15 +260,3 @@ class CardWidget extends StatelessWidget {
     );
   }
 }
-
-Gradient buildGradient({double opacity = 1.0}) => LinearGradient(
-      colors: [
-        R.colors.swipeCardBackground.withAlpha(120),
-        R.colors.swipeCardBackground.withAlpha(40),
-        R.colors.swipeCardBackground.withAlpha(127 + (128.0 * opacity).floor()),
-        R.colors.swipeCardBackground.withAlpha(127 + (128.0 * opacity).floor()),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      stops: const [0, 0.15, 0.8, 1],
-    );

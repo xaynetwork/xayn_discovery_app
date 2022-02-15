@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:instabug_flutter/Instabug.dart';
 import 'package:provider/provider.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -83,7 +84,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
         return Provider<ApplicationTooltipController>.value(
           value: _applicationTooltipController,
-          child: materialApp,
+          child: InAppNotification(child: materialApp),
         );
       },
       listener: (_, state) => _changeBrightness(state.appTheme),

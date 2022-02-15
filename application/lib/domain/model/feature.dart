@@ -3,6 +3,7 @@ enum Feature {
   featuresScreen,
   payment,
   readerModeSettings,
+  trialBannerNotification,
 }
 
 typedef FeatureMap = Map<Feature, bool>;

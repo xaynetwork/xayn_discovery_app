@@ -5,12 +5,12 @@ import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 class SubscriptionTrialBanner extends StatelessWidget {
   final DateTime trialEndDate;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const SubscriptionTrialBanner({
     Key? key,
     required this.trialEndDate,
-    required this.onPressed,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -100,15 +100,19 @@ class SubscriptionTrialBanner extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
     );
 
-    return AppGhostButton(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: R.dimen.unit2,
-          right: R.dimen.unit0_5,
-        ),
-        child: row,
+    final padding = Padding(
+      padding: EdgeInsets.only(
+        left: R.dimen.unit2,
+        right: R.dimen.unit0_5,
       ),
-      onPressed: onPressed,
+      child: row,
     );
+    final embedInButton = onPressed != null;
+    return embedInButton
+        ? AppGhostButton(
+            child: padding,
+            onPressed: onPressed,
+          )
+        : padding;
   }
 }

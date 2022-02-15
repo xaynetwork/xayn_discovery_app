@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
-import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 import '../../test_utils/utils.dart';
 import 'settings_manager_test.mocks.dart';
@@ -26,11 +25,11 @@ import 'settings_manager_test.mocks.dart';
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
-  final stateReady = SettingsScreenState.ready(
+  const stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
-    trialEndDate: subscriptionEndDate,
+    trialEndDate: null,
   );
 
   late MockFeatureManager featureManager;
