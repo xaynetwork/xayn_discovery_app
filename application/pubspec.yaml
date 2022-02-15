@@ -37,6 +37,7 @@ dependencies:
   http: 0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: 7.1.0
+  in_app_notification: 1.0.1
   in_app_purchase: 2.0.1
   in_app_review: 2.0.3
   i18n: 4.0.0-alpha.0
