@@ -28,7 +28,6 @@ class ReaderModeSettings extends DbEntity with _$ReaderModeSettings {
         readerModeFontStyle: readerModeFontStyle,
       );
 
-  //TODO: reader mode initial should be edited to match the default
   factory ReaderModeSettings.initial() => ReaderModeSettings._(
         id: ReaderModeSettings.globalId,
         readerModeBackgroundColor: ReaderModeBackgroundColor.system,

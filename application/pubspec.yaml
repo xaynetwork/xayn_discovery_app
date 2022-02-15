@@ -113,6 +113,12 @@ flutter:
           weight: 400
         - asset: packages/xayn_design/assets/fonts/NotoSans-Bold.ttf
           weight: 700
+    - family: NotoSerif
+      fonts:
+        - asset: packages/xayn_design/assets/fonts/NotoSerif-Regular.ttf
+          weight: 400
+        - asset: packages/xayn_design/assets/fonts/NotoSerif-Bold.ttf
+          weight: 700
     - family: Roboto
       fonts:
         - asset: packages/xayn_design/assets/fonts/KFOmCnqEu92Fr1Me5WZLCzYlKw.ttf

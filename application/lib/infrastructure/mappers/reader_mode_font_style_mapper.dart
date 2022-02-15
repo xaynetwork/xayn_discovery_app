@@ -2,8 +2,8 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
 
-const int _serif = 0;
-const int _sansSerif = 1;
+const int _sans = 0;
+const int _serif = 1;
 
 @singleton
 class IntToReaderModeFontStyleMapper
@@ -13,11 +13,11 @@ class IntToReaderModeFontStyleMapper
   @override
   ReaderModeFontStyle map(int? input) {
     switch (input) {
-      case _sansSerif:
-        return ReaderModeFontStyle.sansSerif;
       case _serif:
-      default:
         return ReaderModeFontStyle.serif;
+      case _sans:
+      default:
+        return ReaderModeFontStyle.sans;
     }
   }
 }
@@ -30,11 +30,11 @@ class ReaderModeFontStyleToIntMapper
   @override
   int map(ReaderModeFontStyle input) {
     switch (input) {
-      case ReaderModeFontStyle.sansSerif:
-        return _sansSerif;
       case ReaderModeFontStyle.serif:
-      default:
         return _serif;
+      case ReaderModeFontStyle.sans:
+      default:
+        return _sans;
     }
   }
 }
