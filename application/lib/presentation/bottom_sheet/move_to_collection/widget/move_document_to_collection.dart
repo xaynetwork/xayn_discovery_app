@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
@@ -25,13 +25,13 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
     required Document document,
     required OnMoveDocumentToCollectionError onError,
     required DocumentProvider? provider,
-    Collection? forceSelectCollection,
+    UniqueId? initialSelectedCollectionId,
   }) : super(
           key: key,
           body: _MoveDocumentToCollection(
             document: document,
             provider: provider,
-            forceSelectCollection: forceSelectCollection,
+            initialSelectedCollectionId: initialSelectedCollectionId,
             onError: onError,
           ),
         );
@@ -40,7 +40,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
 class _MoveDocumentToCollection extends StatefulWidget {
   final Document document;
   final DocumentProvider? provider;
-  final Collection? forceSelectCollection;
+  final UniqueId? initialSelectedCollectionId;
   final OnMoveDocumentToCollectionError onError;
 
   const _MoveDocumentToCollection({
@@ -48,7 +48,7 @@ class _MoveDocumentToCollection extends StatefulWidget {
     required this.document,
     required this.onError,
     required this.provider,
-    this.forceSelectCollection,
+    this.initialSelectedCollectionId,
   }) : super(key: key);
 
   @override
@@ -66,7 +66,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
       (it) async {
         await it.updateInitialSelectedCollection(
           bookmarkId: widget.document.documentUniqueId,
-          forceSelectCollection: widget.forceSelectCollection,
+          initialSelectedCollectionId: widget.initialSelectedCollectionId,
         );
         setState(
           () => _moveDocumentToCollectionManager = it,
@@ -104,7 +104,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
                   collections: state.collections,
                   onSelectCollection: _moveDocumentToCollectionManager!
                       .updateSelectedCollection,
-                  initialSelectedCollection: state.selectedCollection,
+                  initialSelectedCollectionId: state.selectedCollectionId,
                 );
               }
 
@@ -153,20 +153,20 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
-          collection,
+          collection.id,
         ),
       ),
     );
   }
 
   void _onAddCollectionSheetClosed(
-          BuildContext context, Collection newCollection) =>
+          BuildContext context, UniqueId newCollectionId) =>
       showAppBottomSheet(
         context,
         builder: (_) => MoveDocumentToCollectionBottomSheet(
           document: widget.document,
           provider: widget.provider,
-          forceSelectCollection: newCollection,
+          initialSelectedCollectionId: newCollectionId,
           onError: widget.onError,
         ),
       );

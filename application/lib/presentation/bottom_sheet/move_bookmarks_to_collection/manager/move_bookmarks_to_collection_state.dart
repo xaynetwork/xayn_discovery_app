@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'move_bookmarks_to_collection_state.freezed.dart';
 
@@ -12,8 +13,8 @@ class MoveBookmarksToCollectionState with _$MoveBookmarksToCollectionState {
     /// List of collections
     required List<Collection> collections,
 
-    /// Selected collection to save at
-    Collection? selectedCollection,
+    /// Selected collection id to save at
+    UniqueId? selectedCollectionId,
 
     /// Error Message
     String? errorMsg,
@@ -26,10 +27,10 @@ class MoveBookmarksToCollectionState with _$MoveBookmarksToCollectionState {
 
   factory MoveBookmarksToCollectionState.populated({
     required List<Collection> collections,
-    required Collection? selectedCollection,
+    required UniqueId? selectedCollectionId,
   }) =>
       MoveBookmarksToCollectionState(
         collections: collections,
-        selectedCollection: selectedCollection,
+        selectedCollectionId: selectedCollectionId,
       );
 }
