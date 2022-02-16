@@ -221,7 +221,10 @@ desc "Build and publish \n" \
      "   - #{Options::PLATFORM}\n"\
      "   - #{Options::RELEASE_BUILD}\n"\
      "   - #{Options::UPDATE_ASSETS}\n"\
-     "   - #{Options::UPLOAD_TO_APPCENTER}"
+     "   - #{Options::UPLOAD_TO_APPCENTER}\n"\
+     "   - #{Options::KEY_FILE}\n"\
+     "   - #{Options::KEY_ID}\n"\
+     "   - #{Options::ISSUER_ID}\n"
 lane :publish do |options|
   platform = options[Options::PLATFORM]
   flavor = options[Options::FLAVOR]
