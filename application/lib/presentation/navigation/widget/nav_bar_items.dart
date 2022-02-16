@@ -57,6 +57,16 @@ NavBarItemIconButton buildNavBarItemShare({
       key: Keys.navBarItemShare,
     );
 
+NavBarItemIconButton buildNavBarItemEditFont({
+  required VoidCallback onPressed,
+}) =>
+    NavBarItemIconButton(
+      svgIconPath: R.linden.assets.icons.text,
+      isHighlighted: false,
+      onPressed: onPressed,
+      key: Keys.navBarItemEditFontSize,
+    );
+
 NavBarItemIconButton buildNavBarItemHome({
   required VoidCallback onPressed,
   bool isActive = false,
