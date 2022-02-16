@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
@@ -21,7 +20,7 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
     Key? key,
     required UniqueId bookmarkId,
     required OnToolTipError onError,
-    Collection? forceSelectCollection,
+    UniqueId? initialSelectedCollection,
     VoidCallback? onSystemPop,
   }) : super(
           key: key,
@@ -29,7 +28,7 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
           body: _MoveBookmarkToCollection(
             bookmarkId: bookmarkId,
             onError: onError,
-            forceSelectCollection: forceSelectCollection,
+            initialSelectedCollection: initialSelectedCollection,
             onSystemPop: onSystemPop,
           ),
         );
@@ -38,14 +37,14 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
 class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId bookmarkId;
   final OnToolTipError onError;
-  final Collection? forceSelectCollection;
+  final UniqueId? initialSelectedCollection;
   final VoidCallback? onSystemPop;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarkId,
     required this.onError,
-    this.forceSelectCollection,
+    this.initialSelectedCollection,
     this.onSystemPop,
   }) : super(key: key);
 
@@ -64,7 +63,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       (it) async {
         await it.updateInitialSelectedCollection(
           bookmarkId: widget.bookmarkId,
-          forceSelectCollection: widget.forceSelectCollection,
+          initialSelectedCollectionId: widget.initialSelectedCollection,
         );
         setState(
           () => _moveBookmarkToCollectionManager = it,
@@ -103,7 +102,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
                   collections: state.collections,
                   onSelectCollection: _moveBookmarkToCollectionManager!
                       .updateSelectedCollection,
-                  initialSelectedCollection: state.selectedCollection,
+                  initialSelectedCollectionId: state.selectedCollectionId,
                 );
               }
 
@@ -156,20 +155,20 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
-          collection,
+          collection.id,
         ),
         onSystemPop: widget.onSystemPop,
       ),
     );
   }
 
-  _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
+  _onAddCollectionSheetClosed(BuildContext context, UniqueId newCollectionId) =>
       showAppBottomSheet(
         context,
         showBarrierColor: widget.onSystemPop == null,
         builder: (_) => MoveBookmarkToCollectionBottomSheet(
           bookmarkId: widget.bookmarkId,
-          forceSelectCollection: newCollection,
+          initialSelectedCollection: newCollectionId,
           onError: widget.onError,
           onSystemPop: widget.onSystemPop,
         ),
