@@ -1,6 +1,16 @@
 module Config
   module Keys
     BUILD_NUMBER_OFFSET = "build_number_offset"
+    ID = "id"
+    NAME = "name"
+    APPCENTER_TARGET = "appcenter_target"
+    APPCENTER_TOKEN = "appcenter_token"
+    APPCENTER_FILEPATH = "appcenter_buildfile"
+    KEY_ALIAS = "key_alias"
+    PROVISIONING_PROFILE_PATH = "provisioning_profile_path"
+    PROVISIONING_PROFILE_NAME = "provisioning_profile_name"
+    PROVISIONING_PROFILES = "provisioning_profiles"
+    ADHOC = "adhoc"
   end
 
   module Platforms
@@ -68,78 +78,78 @@ module Config
   FLAVOR_MATRIX = {
     Flavors::INTERNAL => {
       Platforms::IOS => {
-        "id" => "com.xayn.discovery.internal",
-        "name" => "Discovery",
-        "appcenter_target" => "Discovery-App-internal",
-        "appcenter_token" => "APPCENTER_IOS_INTERNAL_TOKEN",
-        "appcenter_buildfile" => "build/discovery-app.ipa",
+        Keys::ID => "com.xayn.discovery.internal",
+        Keys::NAME => "Discovery",
+        Keys::APPCENTER_TARGET => "Discovery-App-internal",
+        Keys::APPCENTER_TOKEN => "APPCENTER_IOS_INTERNAL_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
       Platforms::ANDROID => {
-        "id" => "com.xayn.discovery.internal",
-        "name" => "Discovery",
-        "appcenter_target" => "Discovery-App-Android-internal",
-        "appcenter_token" => "APPCENTER_ANDROID_INTERNAL_TOKEN",
-        "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
+        Keys::ID => "com.xayn.discovery.internal",
+        Keys::NAME => "Discovery",
+        Keys::APPCENTER_TARGET => "Discovery-App-Android-internal",
+        Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_INTERNAL_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
     },
     Flavors::BETA => {
       Platforms::IOS => {
-        "id" => "com.xayn.discovery",
-        "name" => "Xayn 3.0",
+        Keys::ID => "com.xayn.discovery",
+        Keys::NAME => "Xayn 3.0",
         # Discoveru is correct!! :P
-        "appcenter_target" => "Discoveru-App-iOS-beta",
-        "appcenter_token" => "APPCENTER_IOS_BETA_TOKEN",
-        "appcenter_buildfile" => "build/discovery-app.ipa",
+        Keys::APPCENTER_TARGET => "Discoveru-App-iOS-beta",
+        Keys::APPCENTER_TOKEN => "APPCENTER_IOS_BETA_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
       Platforms::ANDROID => {
-        "id" => "com.xayn.search",
-        "name" => "Xayn 3.0",
-        "appcenter_target" => "Discovery-App-Android-beta",
-        "appcenter_token" => "APPCENTER_ANDROID_BETA_TOKEN",
-        "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
+        Keys::ID => "com.xayn.search",
+        Keys::NAME => "Xayn 3.0",
+        Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
+        Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
     },
     Flavors::PRODUCTION => {
       Platforms::IOS => {
-        "id" => "com.xayn.search",
-        "name" => "Discovery App",
+        Keys::ID => "com.xayn.search",
+        Keys::NAME => "Discovery App",
       },
       Platforms::ANDROID => {
-        "id" => "com.xayn.search",
-        "name" => "Discovery App",
+        Keys::ID => "com.xayn.search",
+        Keys::NAME => "Discovery App",
       },
     },
   }
 
   ANDROID_BUILD_CONFIG = {
     Flavors::INTERNAL => {
-      "key_alias" => "release_internal",
+      Keys::KEY_ALIAS => "release_internal",
     },
     Flavors::BETA => {
-      "key_alias" => "release_beta",
+      Keys::KEY_ALIAS => "release_beta",
     },
   }
 
   IOS_BUILD_CONFIG = {
     Flavors::INTERNAL => {
-      "provisioning_profile_path" => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
-      "provisioning_profile_name" => "Xayn Discovery Internal Adhoc Profile",
-      "provisioning_profiles" => {
+      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
+      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery Internal Adhoc Profile",
+      Keys::PROVISIONING_PROFILES => {
         "com.xayn.discovery.internal" => "Xayn Discovery Internal Adhoc Profile",
       },
-      "adhoc" => true,
+      Keys::ADHOC => true,
     },
     Flavors::BETA => {
-      "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
-      "provisioning_profile_name" => "Xayn Discovery AppStore Profile",
-      "provisioning_profiles" => {
+      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
+      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Profile",
+      Keys::PROVISIONING_PROFILES => {
         "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
       },
-      "adhoc" => false,
+      Keys::ADHOC => false,
     },
   }
 
