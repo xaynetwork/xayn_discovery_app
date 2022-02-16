@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -46,7 +47,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         NavBarConfigMixin,
         CardManagersMixin,
         TooltipStateMixin,
-        SubscriptionTrialBannerStateMixin {
+        SubscriptionTrialBannerStateMixin,
+        OverlayStateMixin {
   late final DiscoveryFeedManager _discoveryFeedManager;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
@@ -104,11 +106,22 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             ),
           );
 
+      void onEditReaderModeSettingsPressed() => toggleOverlay(
+            (_) => Positioned(
+              bottom: MediaQuery.of(context).viewInsets.bottom +
+                  R.dimen.bottomBarDockedHeight +
+                  R.dimen.unit4_25,
+              right: R.dimen.unit2,
+              width: R.dimen.unit22,
+              child: const EditReaderModeSettingsMenu(),
+            ),
+          );
+
       return NavBarConfig(
         [
           buildNavBarItemArrowLeft(onPressed: () async {
+            removeOverlay();
             await _currentCardController?.animateToClose();
-
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
@@ -130,6 +143,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           buildNavBarItemShare(
               onPressed: () =>
                   managers.discoveryCardManager.shareUri(document)),
+          if (_featureManager.isReaderModeSettingsEnabled)
+            buildNavBarItemEditFont(
+              onPressed: onEditReaderModeSettingsPressed,
+            ),
           buildNavBarItemDisLike(
             isDisLiked: managers.discoveryCardManager.state
                 .explicitDocumentFeedback.isIrrelevant,
@@ -170,8 +187,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         : .0;
     final feedView = _buildFeedView();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
+    final body = Scaffold(
+      /// resizing the scaffold is set to false since the keyboard could be
+      /// triggered when creating a collection from the bottom sheet and the
+      /// feed should look the same in that process
+      ///
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,
         top: Platform.isAndroid,
@@ -180,6 +201,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           child: feedView,
         ),
       ),
+    );
+
+    return WillPopScope(
+      onWillPop: () async {
+        removeOverlay();
+        return false;
+      },
+      child: body,
     );
   }
 

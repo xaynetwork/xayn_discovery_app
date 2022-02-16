@@ -2,6 +2,7 @@ enum Feature {
   onBoarding,
   featuresScreen,
   payment,
+  readerModeSettings,
   trialBannerNotification,
 }
 

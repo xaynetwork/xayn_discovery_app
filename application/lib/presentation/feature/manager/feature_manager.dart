@@ -8,6 +8,7 @@ import 'feature_manager_state.dart';
 
 const FeatureMap kInitialFeatureMap = {
   Feature.onBoarding: false,
+  Feature.readerModeSettings: false,
   Feature.featuresScreen:
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.trialBannerNotification: true,
@@ -30,6 +31,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
 
   bool get showOnboardingScreen => isEnabled(Feature.onBoarding);
+
+  bool get isReaderModeSettingsEnabled => isEnabled(Feature.readerModeSettings);
 
   bool get isPaymentEnabled =>
       EnvironmentHelper.kIsDebug || isEnabled(Feature.payment);
