@@ -23,5 +23,5 @@ class GetAllCollectionsUseCaseOut extends Equatable {
   const GetAllCollectionsUseCaseOut(this.collections);
 
   @override
-  List<Object?> get props => collections;
+  List<Object> get props => collections;
 }

@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
@@ -26,6 +29,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _checkSubscriptionActiveUseCase,
     initialData: PurchasableIds.subscription,
   );
+  final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
   late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
       _purchaseSubscriptionHandler = pipe(_purchaseSubscriptionUseCase);
   PurchasableProduct? _subscriptionProduct;
@@ -34,6 +38,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
     this._checkSubscriptionActiveUseCase,
+    this._errorMessageMapper,
   ) : super(const PaymentScreenState.initial());
 
   void subscribe() {
@@ -85,13 +90,19 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
                   : product.status),
         );
 
-        // todo subscriptionProduct could be null, and errors not, so we need to maybe make PaymentScreenState.product optional
-        if (subscriptionProduct != null) {
+        final paymentFlowError =
+            errors.firstWhereOrNull((element) => element is PaymentFlowError)
+                as PaymentFlowError?;
+        final paymentFlowErrorMsg = paymentFlowError == null
+            ? null
+            : _errorMessageMapper.map(paymentFlowError);
+
+        if (subscriptionProduct == null && paymentFlowErrorMsg != null) {
+          return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
+        } else if (subscriptionProduct != null) {
           return PaymentScreenState.ready(
             product: subscriptionProduct,
-            errorMsg: errors.isNotEmpty
-                ? errors.map((e) => e.toString()).join('\r')
-                : null,
+            errorMsg: paymentFlowErrorMsg,
           );
         }
       });

@@ -13,5 +13,5 @@ class UniqueId extends Equatable {
   const UniqueId.fromTrustedString(String uniqueId) : value = uniqueId;
 
   @override
-  List<Object?> get props => [value];
+  List<Object> get props => [value];
 }

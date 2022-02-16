@@ -57,15 +57,15 @@ class TranslationsDe extends Translations {
   String get your => """Meine""";
   String get activeSearchSearchHint => """Suche""";
   String get settingsTitle => """Deine Einstellungen""";
-  String get settingsSectionTitleAppTheme => """Mein App Theme""";
+  String get settingsSectionTitleAppTheme => """Dein App Look""";
   String get settingsSectionScrollDirection => """Feed Scroll-Richtung""";
   String get settingsSectionTitleGeneralInfo => """Generelle Informationen""";
   String get settingsSectionTitleHelpImprove =>
       """Hilf uns besser zu werden!""";
   String get settingsSectionTitleSpreadTheWord => """Erzähl es weiter!""";
-  String get settingsAppThemeSystem => """System Standard""";
+  String get settingsAppThemeSystem => """Telefonstandard""";
   String get settingsAppThemeLight => """Light mode""";
-  String get settingsAppThemeDark => """Dunkler Modus""";
+  String get settingsAppThemeDark => """Dark mode""";
   String get settingsScrollDirectionVertical => """Vertikal""";
   String get settingsScrollDirectionHorizontal => """Horizontal""";
   String get settingsAboutXayn => """Über Xayn""";
@@ -88,8 +88,8 @@ class TranslationsDe extends Translations {
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Dein Bereich""";
-  String get personalAreaCollections => """Collections-Einstellungen""";
-  String get personalAreaHomeFeed => """Feed- Einstellungen""";
+  String get personalAreaCollections => """Deine Collections""";
+  String get personalAreaHomeFeed => """Discovery Feed einrichten""";
   String get personalAreaSettings => """Einstellungen""";
   String get comingSoon => """Kommt bald""";
   String get feedSettingsScreenTitle => """Dein Feed""";
@@ -133,59 +133,75 @@ class TranslationsDe extends Translations {
       """Der Name ist bereits vergeben""";
   String get errorMsgCollectionNameIsInvalid =>
       """Der Name darf %s Zeichen nicht überschreiten""";
-  String get bottomSheetRename => """Rename""";
-  String get bottomSheetDelete => """Delete""";
-  String get bottomSheetDeleteAll => """Delete All""";
-  String get bottomSheetMoveBookmarks => """Move Bookmarks""";
-  String get bottomSheetDeleteCollectionHeader => """Are you sure ?""";
+  String get bottomSheetRename => """Umbenennen""";
+  String get bottomSheetDelete => """Löschen""";
+  String get bottomSheetDeleteAll => """Alle löschen""";
+  String get bottomSheetMoveBookmarks => """Verschieben""";
+  String get bottomSheetDeleteCollectionHeader => """Wirklich löschen?""";
   String get bottomSheetDeleteCollectionWithBookmarksBody =>
-      """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""";
-  String get bottomSheetRenameCollectionHeader => """Rename collection""";
+      """Wenn Du diese Sammlung löschst, werden auch alle Artikel im Ordner gelöscht. Möchtest Du fortfahren oder vorher alle Artikel verschieben?""";
+  String get bottomSheetRenameCollectionHeader => """Collection umbennen""";
   String get settingsXaynPremium => """Xayn Premium""";
-  String get settingsSectionSubscription => """Subscription""";
-  String get trialBannerSubscribeNow => """Subscribe Now""";
-  String get bookmarkScreenNoArticles => """No Articles""";
-  String get trialBannerEndsIn => """Your trial ends in %s days""";
-  String get trialBannerEndsTomorrow => """Your trial ends tomorrow""";
-  String get trialBannerEndsToday => """Your trial ends today""";
-  String get trialBannerExpired => """Your trial expired""";
-  String get subscriptionHeader => """Get unlimited content for just""";
+  String get settingsSectionSubscription => """Abo""";
+  String get trialBannerSubscribeNow => """Jetzt abonnieren""";
+  String get bookmarkScreenNoArticles => """Keine Artikel""";
+  String get trialBannerEndsIn => """Deine Testversion ended in %s Tagen""";
+  String get trialBannerEndsTomorrow => """Deine Testversion ended morgen""";
+  String get trialBannerEndsToday => """Deine Testversion ended heute""";
+  String get trialBannerExpired => """Deine Testversion ist vorbei""";
+  String get subscriptionHeader => """Hol Dir unbegrenzte Inhalte für""";
   String get subscriptionPricingError =>
-      """Unable to retrieve pricing details""";
-  String get subscriptionPerk1 => """Personalized stream""";
-  String get subscriptionPerk2 => """No ads""";
-  String get subscriptionPerk3 => """No tracking""";
-  String get subscriptionPerk4 => """Carbon neutral""";
-  String get subscriptionPerk5 => """Cancel any time""";
-  String get subscriptionSubscribeNow => """Subscribe Now""";
-  String get subscriptionRestore => """Restore subscription""";
-  String get subscriptionPromoCode => """I have a promo code""";
+      """Preisinfos können nicht abgerufen werden""";
+  String get subscriptionPerk1 => """Personalisierter Stream""";
+  String get subscriptionPerk2 => """Ohne Werbung""";
+  String get subscriptionPerk3 => """Ohne Tracking""";
+  String get subscriptionPerk4 => """Carbonneutral""";
+  String get subscriptionPerk5 => """Jederzeit kündbar""";
+  String get subscriptionSubscribeNow => """Jetzt abonnieren""";
+  String get subscriptionRestore => """Abo wiederherstellen""";
+  String get subscriptionPromoCode => """Ich habe einen Promo-code""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
-  String get settingsSubscribedToHeader => """You are subscribed to""";
-  String get doneButtonTitle => """Done""";
+      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
+""";
+  String get settingsSubscribedToHeader => """Du hast""";
+  String get doneButtonTitle => """Fertig""";
   String get subscriptionRenewsMonthlyText =>
-      """The subscription renews monthly on: %s""";
+      """Dein Abo erneuert sich am: %s""";
   String get promoCodeValidUntilText =>
-      """Your promo code is valid until: %s""";
+      """Dein Promo-Code ist noch gültig bis: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
+      """Via Apple App Store abonniert. Du kannst Dein Abo im __Apple App Store__ verwalten.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
+      """Via Google Play Store abonniert. Du kannst Dein Abo im __Google Play Store__ verwalten.""";
+  PaymentFlowErrorTranslationsDe get paymentFlowError =>
+      PaymentFlowErrorTranslationsDe(this);
+  String get bottomSheetDeleteCollectionWithNoItemsBody =>
+      """Willst Du diese Sammlung wirklich löschen?""";
+  String get bottomSheetMoveSingleBookmark => """Move to another collection""";
+}
+
+class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
+  final TranslationsDe _parent;
+  const PaymentFlowErrorTranslationsDe(this._parent) : super(_parent);
+  String get unknown => """Unbekannter Fehler""";
+  String get storeNotAvailable => """Der Store ist gerade nicht erreichbar""";
+  String get productNotFound => """Produkt nicht gefunden :(""";
+  String get itemAlreadyOwned => """Du bist bereits abonniert""";
+  String get transactionFailed => """Zahlungsvorgang fehlgeschlagen""";
 }
 
 Map<String, String> get translationsDeMap => {
       """your""": """Meine""",
       """activeSearchSearchHint""": """Suche""",
       """settingsTitle""": """Deine Einstellungen""",
-      """settingsSectionTitleAppTheme""": """Mein App Theme""",
+      """settingsSectionTitleAppTheme""": """Dein App Look""",
       """settingsSectionScrollDirection""": """Feed Scroll-Richtung""",
       """settingsSectionTitleGeneralInfo""": """Generelle Informationen""",
       """settingsSectionTitleHelpImprove""": """Hilf uns besser zu werden!""",
       """settingsSectionTitleSpreadTheWord""": """Erzähl es weiter!""",
-      """settingsAppThemeSystem""": """System Standard""",
+      """settingsAppThemeSystem""": """Telefonstandard""",
       """settingsAppThemeLight""": """Light mode""",
-      """settingsAppThemeDark""": """Dunkler Modus""",
+      """settingsAppThemeDark""": """Dark mode""",
       """settingsScrollDirectionVertical""": """Vertikal""",
       """settingsScrollDirectionHorizontal""": """Horizontal""",
       """settingsAboutXayn""": """Über Xayn""",
@@ -208,8 +224,8 @@ Map<String, String> get translationsDeMap => {
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Dein Bereich""",
-      """personalAreaCollections""": """Collections-Einstellungen""",
-      """personalAreaHomeFeed""": """Feed- Einstellungen""",
+      """personalAreaCollections""": """Deine Collections""",
+      """personalAreaHomeFeed""": """Discovery Feed einrichten""",
       """personalAreaSettings""": """Einstellungen""",
       """comingSoon""": """Kommt bald""",
       """feedSettingsScreenTitle""": """Dein Feed""",
@@ -253,41 +269,53 @@ Map<String, String> get translationsDeMap => {
           """Der Name ist bereits vergeben""",
       """errorMsgCollectionNameIsInvalid""":
           """Der Name darf %s Zeichen nicht überschreiten""",
-      """bottomSheetRename""": """Rename""",
-      """bottomSheetDelete""": """Delete""",
-      """bottomSheetDeleteAll""": """Delete All""",
-      """bottomSheetMoveBookmarks""": """Move Bookmarks""",
-      """bottomSheetDeleteCollectionHeader""": """Are you sure ?""",
+      """bottomSheetRename""": """Umbenennen""",
+      """bottomSheetDelete""": """Löschen""",
+      """bottomSheetDeleteAll""": """Alle löschen""",
+      """bottomSheetMoveBookmarks""": """Verschieben""",
+      """bottomSheetDeleteCollectionHeader""": """Wirklich löschen?""",
       """bottomSheetDeleteCollectionWithBookmarksBody""":
-          """If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?""",
-      """bottomSheetRenameCollectionHeader""": """Rename collection""",
+          """Wenn Du diese Sammlung löschst, werden auch alle Artikel im Ordner gelöscht. Möchtest Du fortfahren oder vorher alle Artikel verschieben?""",
+      """bottomSheetRenameCollectionHeader""": """Collection umbennen""",
       """settingsXaynPremium""": """Xayn Premium""",
-      """settingsSectionSubscription""": """Subscription""",
-      """trialBannerSubscribeNow""": """Subscribe Now""",
-      """bookmarkScreenNoArticles""": """No Articles""",
-      """trialBannerEndsIn""": """Your trial ends in %s days""",
-      """trialBannerEndsTomorrow""": """Your trial ends tomorrow""",
-      """trialBannerEndsToday""": """Your trial ends today""",
-      """trialBannerExpired""": """Your trial expired""",
-      """subscriptionHeader""": """Get unlimited content for just""",
-      """subscriptionPricingError""": """Unable to retrieve pricing details""",
-      """subscriptionPerk1""": """Personalized stream""",
-      """subscriptionPerk2""": """No ads""",
-      """subscriptionPerk3""": """No tracking""",
-      """subscriptionPerk4""": """Carbon neutral""",
-      """subscriptionPerk5""": """Cancel any time""",
-      """subscriptionSubscribeNow""": """Subscribe Now""",
-      """subscriptionRestore""": """Restore subscription""",
-      """subscriptionPromoCode""": """I have a promo code""",
+      """settingsSectionSubscription""": """Abo""",
+      """trialBannerSubscribeNow""": """Jetzt abonnieren""",
+      """bookmarkScreenNoArticles""": """Keine Artikel""",
+      """trialBannerEndsIn""": """Deine Testversion ended in %s Tagen""",
+      """trialBannerEndsTomorrow""": """Deine Testversion ended morgen""",
+      """trialBannerEndsToday""": """Deine Testversion ended heute""",
+      """trialBannerExpired""": """Deine Testversion ist vorbei""",
+      """subscriptionHeader""": """Hol Dir unbegrenzte Inhalte für""",
+      """subscriptionPricingError""":
+          """Preisinfos können nicht abgerufen werden""",
+      """subscriptionPerk1""": """Personalisierter Stream""",
+      """subscriptionPerk2""": """Ohne Werbung""",
+      """subscriptionPerk3""": """Ohne Tracking""",
+      """subscriptionPerk4""": """Carbonneutral""",
+      """subscriptionPerk5""": """Jederzeit kündbar""",
+      """subscriptionSubscribeNow""": """Jetzt abonnieren""",
+      """subscriptionRestore""": """Abo wiederherstellen""",
+      """subscriptionPromoCode""": """Ich habe einen Promo-code""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
-      """settingsSubscribedToHeader""": """You are subscribed to""",
-      """doneButtonTitle""": """Done""",
-      """subscriptionRenewsMonthlyText""":
-          """The subscription renews monthly on: %s""",
-      """promoCodeValidUntilText""": """Your promo code is valid until: %s""",
+          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
+""",
+      """settingsSubscribedToHeader""": """Du hast""",
+      """doneButtonTitle""": """Fertig""",
+      """subscriptionRenewsMonthlyText""": """Dein Abo erneuert sich am: %s""",
+      """promoCodeValidUntilText""":
+          """Dein Promo-Code ist noch gültig bis: %s""",
       """subscriptionPlatformInfoApple""":
-          """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
+          """Via Apple App Store abonniert. Du kannst Dein Abo im __Apple App Store__ verwalten.""",
       """subscriptionPlatformInfoGoogle""":
-          """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
+          """Via Google Play Store abonniert. Du kannst Dein Abo im __Google Play Store__ verwalten.""",
+      """paymentFlowError.unknown""": """Unbekannter Fehler""",
+      """paymentFlowError.storeNotAvailable""":
+          """Der Store ist gerade nicht erreichbar""",
+      """paymentFlowError.productNotFound""": """Produkt nicht gefunden :(""",
+      """paymentFlowError.itemAlreadyOwned""": """Du bist bereits abonniert""",
+      """paymentFlowError.transactionFailed""":
+          """Zahlungsvorgang fehlgeschlagen""",
+      """bottomSheetDeleteCollectionWithNoItemsBody""":
+          """Willst Du diese Sammlung wirklich löschen?""",
+      """bottomSheetMoveSingleBookmark""": """Move to another collection""",
     };

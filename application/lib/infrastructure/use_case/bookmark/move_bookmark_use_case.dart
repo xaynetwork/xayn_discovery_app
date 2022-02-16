@@ -47,5 +47,5 @@ class MoveBookmarkUseCaseIn extends Equatable {
   });
 
   @override
-  List<Object?> get props => [bookmarkId, collectionId];
+  List<Object> get props => [bookmarkId, collectionId];
 }

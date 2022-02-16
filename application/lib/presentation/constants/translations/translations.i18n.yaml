@@ -6,7 +6,7 @@ settingsTitle: 'Your Settings'
 settingsSectionTitleAppTheme: 'Your App Theme'
 settingsSectionScrollDirection: 'Discovery feed scroll direction'
 settingsSectionTitleGeneralInfo: 'General information'
-settingsSectionTitleHelpImprove: 'Help Us Improve!'
+settingsSectionTitleHelpImprove: 'Help us improve!'
 settingsSectionTitleSpreadTheWord: 'Spread the Word'
 settingsAppThemeSystem: 'System default'
 settingsAppThemeLight: 'Light mode'
@@ -33,8 +33,8 @@ readingTimeUnitPlural: 'minutes'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
 personalAreaTitle: Your Space
-personalAreaCollections: Collections Settings
-personalAreaHomeFeed: Feed Settings
+personalAreaCollections: Your Collections
+personalAreaHomeFeed: Discovery Feed Setup
 personalAreaSettings: App Settings
 comingSoon: Coming soon
 feedSettingsScreenTitle: Your Discovery Feed
@@ -73,9 +73,9 @@ errorMsgCollectionNameIsInvalid: The name can't exceed %s characters
 bottomSheetRename: Rename
 bottomSheetDelete: Delete
 bottomSheetDeleteAll: Delete All
-bottomSheetMoveBookmarks: Move Bookmarks
+bottomSheetMoveBookmarks: Move
 bottomSheetDeleteCollectionHeader: Are you sure ?
-bottomSheetDeleteCollectionWithBookmarksBody: If you delete this collection every article in this folder will be deleted too. Do you want to proceed with deleting the collection entirely or do you want to move all articles before?
+bottomSheetDeleteCollectionWithBookmarksBody: If you delete this collection every article in this folder will be deleted too. Do you want to proceed, or do you want to move all articles before?
 bottomSheetRenameCollectionHeader: Rename collection
 settingsXaynPremium: Xayn Premium
 settingsSectionSubscription: Subscription
@@ -87,7 +87,7 @@ trialBannerEndsToday: Your trial ends today
 trialBannerExpired: Your trial expired
 subscriptionHeader: Get unlimited content for just
 subscriptionPricingError: Unable to retrieve pricing details
-subscriptionPerk1: Personalized stream
+subscriptionPerk1: Personalised stream
 subscriptionPerk2: No ads
 subscriptionPerk3: No tracking
 subscriptionPerk4: Carbon neutral
@@ -102,3 +102,21 @@ subscriptionRenewsMonthlyText: 'The subscription renews monthly on: %s'
 promoCodeValidUntilText: 'Your promo code is valid until: %s'
 subscriptionPlatformInfoApple: Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.
 subscriptionPlatformInfoGoogle: Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.
+paymentFlowError:
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the unknown error occurred during payment operation
+  unknown: Unknown error occurred
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the GooglePlay or AppStore is not available for some reason
+  storeNotAvailable: The store is not available right now
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the subscription details can not be received
+  productNotFound: 'Product not found :('
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the item (subscription) was already paid before
+  itemAlreadyOwned: You have been already subscribed
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when some issue happened during the payment transaction
+  transactionFailed: Payment transaction failed
+bottomSheetDeleteCollectionWithNoItemsBody: Do you really want to delete this collection?
+bottomSheetMoveSingleBookmark: Move to another collection

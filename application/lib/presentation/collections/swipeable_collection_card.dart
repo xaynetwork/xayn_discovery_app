@@ -9,18 +9,22 @@ enum SwipeOptionCollectionCard {
   remove,
 }
 
+typedef OnSwipeOptionTap = Map<SwipeOptionCollectionCard, VoidCallback>;
+
 const double _kSwipeOpenToPosition = 0.35;
 const double _kMinFlingVelocity = 250.0;
 
 class SwipeableCollectionCard extends StatelessWidget {
   const SwipeableCollectionCard({
     required this.collectionCard,
+    required this.onSwipeOptionTap,
     this.cardHeight = CardWidgetData.cardHeight,
     Key? key,
   }) : super(key: key);
 
   final Widget collectionCard;
   final double cardHeight;
+  final OnSwipeOptionTap onSwipeOptionTap;
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +62,13 @@ class SwipeableCollectionCard extends StatelessWidget {
 
   void _onOptionsTap(SwipeOptionCollectionCard option) {
     switch (option) {
-
-      ///TODO Both will be implemented when the proper
-      ///bottom sheet for these scenarios will be ready
       case SwipeOptionCollectionCard.edit:
-        throw UnimplementedError();
+        onSwipeOptionTap[SwipeOptionCollectionCard.edit]?.call();
+        return;
 
       case SwipeOptionCollectionCard.remove:
-        throw UnimplementedError();
+        onSwipeOptionTap[SwipeOptionCollectionCard.remove]?.call();
+        return;
     }
   }
 

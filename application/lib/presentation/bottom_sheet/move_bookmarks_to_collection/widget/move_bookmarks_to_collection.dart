@@ -7,41 +7,44 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
-class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
-  MoveBookmarkToCollectionBottomSheet({
+class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
+  MoveBookmarksToCollectionBottomSheet({
     Key? key,
-    required UniqueId bookmarkId,
-    required OnToolTipError onError,
+    required List<UniqueId> bookmarksIds,
+    required UniqueId collectionIdToRemove,
     Collection? forceSelectCollection,
+    VoidCallback? onSystemPop,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _MoveBookmarkToCollection(
-            bookmarkId: bookmarkId,
-            onError: onError,
+            bookmarksIds: bookmarksIds,
+            collectionIdToRemove: collectionIdToRemove,
             forceSelectCollection: forceSelectCollection,
+            onSystemPop: onSystemPop,
           ),
         );
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
-  final UniqueId bookmarkId;
   final Collection? forceSelectCollection;
-  final OnToolTipError onError;
+  final List<UniqueId> bookmarksIds;
+  final UniqueId collectionIdToRemove;
+  final VoidCallback? onSystemPop;
 
   const _MoveBookmarkToCollection({
     Key? key,
-    required this.bookmarkId,
-    required this.onError,
+    required this.bookmarksIds,
+    required this.collectionIdToRemove,
     this.forceSelectCollection,
+    this.onSystemPop,
   }) : super(key: key);
 
   @override
@@ -51,59 +54,38 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     with BottomSheetBodyMixin {
-  MoveToCollectionManager? _moveBookmarkToCollectionManager;
+  final MoveBookmarksToCollectionManager _moveBookmarksToCollectionManager =
+      di.get();
 
   @override
   void initState() {
-    di.getAsync<MoveToCollectionManager>().then(
-      (it) async {
-        await it.updateInitialSelectedCollection(
-          bookmarkId: widget.bookmarkId,
-          forceSelectCollection: widget.forceSelectCollection,
-        );
-        setState(
-          () => _moveBookmarkToCollectionManager = it,
-        );
-      },
+    _moveBookmarksToCollectionManager.enteringScreen(
+      collectionIdToRemove: widget.collectionIdToRemove,
+      selectedCollection: widget.forceSelectCollection,
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    _moveBookmarkToCollectionManager?.close();
+    _moveBookmarksToCollectionManager.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final body = _moveBookmarkToCollectionManager == null
-        ? const SizedBox.shrink()
-        : BlocConsumer<MoveToCollectionManager, MoveToCollectionState>(
-            bloc: _moveBookmarkToCollectionManager,
-            listener: (_, state) {
-              if (state.hasError) {
-                TooltipKey? key = TooltipUtils.getErrorKey(state.errorObj);
-                if (key != null) widget.onError(key);
-              }
-            },
-            builder: (_, state) {
-              if (state.shouldClose) {
-                closeBottomSheet(context);
-              }
-
-              if (state.collections.isNotEmpty) {
-                return CollectionsListBottomSheet(
-                  collections: state.collections,
-                  onSelectCollection: _moveBookmarkToCollectionManager!
-                      .updateSelectedCollection,
-                  initialSelectedCollection: state.selectedCollection,
-                );
-              }
-
-              return const SizedBox.shrink();
-            },
-          );
+    final body = BlocBuilder<MoveBookmarksToCollectionManager,
+        MoveBookmarksToCollectionState>(
+      bloc: _moveBookmarksToCollectionManager,
+      builder: (_, state) => state.collections.isNotEmpty
+          ? CollectionsListBottomSheet(
+              collections: state.collections,
+              onSelectCollection:
+                  _moveBookmarksToCollectionManager.updateSelectedCollection,
+              initialSelectedCollection: state.selectedCollection,
+            )
+          : const SizedBox.shrink(),
+    );
 
     final header = BottomSheetHeader(
       headerText: R.strings.bottomSheetSaveTo,
@@ -115,14 +97,14 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     );
 
     final footer = BottomSheetFooter(
-      onCancelPressed: () => closeBottomSheet(context),
+      onCancelPressed: () {
+        widget.onSystemPop?.call();
+        closeBottomSheet(context);
+      },
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
-          onPressed: () =>
-              _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
-            bookmarkId: widget.bookmarkId,
-          ),
+          onPressed: _onApplyPressed,
         ),
       ),
     );
@@ -142,7 +124,9 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
+      showBarrierColor: false,
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
+        onSystemPop: widget.onSystemPop,
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
           collection,
@@ -154,10 +138,21 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
       showAppBottomSheet(
         context,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.bookmarkId,
+        showBarrierColor: false,
+        builder: (_) => MoveBookmarksToCollectionBottomSheet(
+          bookmarksIds: widget.bookmarksIds,
           forceSelectCollection: newCollection,
-          onError: widget.onError,
+          collectionIdToRemove: widget.collectionIdToRemove,
+          onSystemPop: widget.onSystemPop,
         ),
       );
+
+  _onApplyPressed() async {
+    widget.onSystemPop?.call();
+    await _moveBookmarksToCollectionManager.onApplyPressed(
+      bookmarksIds: widget.bookmarksIds,
+      collectionIdToRemove: widget.collectionIdToRemove,
+    );
+    closeBottomSheet(context);
+  }
 }

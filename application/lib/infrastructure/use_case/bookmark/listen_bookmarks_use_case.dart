@@ -70,5 +70,5 @@ class ListenBookmarksUseCaseOut extends Equatable {
   const ListenBookmarksUseCaseOut(this.bookmarks, this.collectionName);
 
   @override
-  List<Object?> get props => [bookmarks, collectionName];
+  List<Object> get props => [bookmarks, collectionName];
 }
