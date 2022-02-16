@@ -20,11 +20,11 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
   final SaveReaderModeFontStyleUseCase _saveReaderModeFontStyleUseCase;
 
   late final UseCaseSink<ReaderModeBackgroundColor, ReaderModeBackgroundColor>
-      _saveBackgroundColorHandler;
+      _saveBackgroundColorHandler = pipe(_saveReaderModeBackgroundColorUseCase);
   late final UseCaseSink<ReaderModeFontSize, ReaderModeFontSize>
-      _saveFontSizeHandler;
+      _saveFontSizeHandler = pipe(_saveReaderModeFontSizeUseCase);
   late final UseCaseSink<ReaderModeFontStyle, ReaderModeFontStyle>
-      _saveFontStyleHandler;
+      _saveFontStyleHandler = pipe(_saveReaderModeFontStyleUseCase);
 
   EditReaderModeSettingsManager(
     this._saveReaderModeFontSizeUseCase,
@@ -38,15 +38,7 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
               readerModeSettingsRepository.settings.readerModeFontSize,
           readerModeBackgroundColor:
               readerModeSettingsRepository.settings.readerModeBackgroundColor,
-        )) {
-    _init();
-  }
-
-  void _init() {
-    _saveBackgroundColorHandler = pipe(_saveReaderModeBackgroundColorUseCase);
-    _saveFontSizeHandler = pipe(_saveReaderModeFontSizeUseCase);
-    _saveFontStyleHandler = pipe(_saveReaderModeFontStyleUseCase);
-  }
+        ));
 
   void onBackgroundColorPressed(ReaderModeBackgroundColor backgroundColor) =>
       _saveBackgroundColorHandler(backgroundColor);
