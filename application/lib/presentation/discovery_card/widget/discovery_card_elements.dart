@@ -122,7 +122,12 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     final elements = Padding(
-      padding: EdgeInsets.all(R.dimen.unit3),
+      padding: EdgeInsets.fromLTRB(
+        R.dimen.unit3,
+        mediaQuery.padding.top,
+        R.dimen.unit3,
+        R.dimen.unit3,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
