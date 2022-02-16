@@ -317,6 +317,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final document = results.elementAt(normalizedIndex);
         final managers = managersOf(document);
 
+        onTapPrimary() {
+          hideTooltip();
+
+          _discoveryFeedManager.handleNavigateIntoCard();
+        }
+
+        onTapSecondary() => _cardViewController.jump(JumpDirection.down);
+
         if (isPrimary) {
           _discoveryFeedManager.handleViewType(
             document,
@@ -336,10 +344,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                     _currentCardController = controller,
               )
             : GestureDetector(
-                onTap: () {
-                  hideTooltip();
-                  _discoveryFeedManager.handleNavigateIntoCard();
-                },
+                onTap: isPrimary ? onTapPrimary : onTapSecondary,
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,
