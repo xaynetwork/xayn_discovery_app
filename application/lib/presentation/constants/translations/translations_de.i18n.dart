@@ -188,6 +188,8 @@ class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nicht gefunden :(""";
   String get itemAlreadyOwned => """Du bist bereits abonniert""";
   String get transactionFailed => """Zahlungsvorgang fehlgeschlagen""";
+  String get checkSubscriptionActiveFailed =>
+      """Check active subscription failed. Please try again later""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -315,6 +317,8 @@ Map<String, String> get translationsDeMap => {
       """paymentFlowError.itemAlreadyOwned""": """Du bist bereits abonniert""",
       """paymentFlowError.transactionFailed""":
           """Zahlungsvorgang fehlgeschlagen""",
+      """paymentFlowError.checkSubscriptionActiveFailed""":
+          """Check active subscription failed. Please try again later""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Willst Du diese Sammlung wirklich löschen?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
