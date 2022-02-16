@@ -3,10 +3,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
-typedef OnSelectCollection = void Function(Collection?);
+typedef OnSelectCollection = void Function(UniqueId?);
 
 class CollectionListItem extends StatelessWidget {
   final Collection collection;
@@ -57,7 +58,7 @@ class CollectionListItem extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: () => onSelectCollection(isSelected ? null : collection),
+      onTap: () => onSelectCollection(isSelected ? null : collection.id),
       child: row,
     );
   }

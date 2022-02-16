@@ -24,7 +24,7 @@ class MoveBookmarksToCollectionManager
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
       _collectionsHandler =
       consume(_listenCollectionsUseCase, initialData: none);
-  Collection? _selectedCollection;
+  UniqueId? _selectedCollectionId;
 
   MoveBookmarksToCollectionManager(
     this._listenCollectionsUseCase,
@@ -35,7 +35,7 @@ class MoveBookmarksToCollectionManager
 
   void enteringScreen({
     required UniqueId collectionIdToRemove,
-    Collection? selectedCollection,
+    UniqueId? selectedCollectionId,
   }) async {
     final useCaseResult = await _getAllCollectionsUseCase.singleOutput(none);
     _collections
@@ -44,13 +44,14 @@ class MoveBookmarksToCollectionManager
 
     _collections.removeWhere((element) => element.id == collectionIdToRemove);
     scheduleComputeState(
-      () => _selectedCollection = selectedCollection ?? _collections.first,
+      () =>
+          _selectedCollectionId = selectedCollectionId ?? _collections.first.id,
     );
   }
 
-  void updateSelectedCollection(Collection? collection) {
-    if (collection == null) return;
-    scheduleComputeState(() => _selectedCollection = collection);
+  void updateSelectedCollection(UniqueId? collectionId) {
+    if (collectionId == null) return;
+    scheduleComputeState(() => _selectedCollectionId = collectionId);
   }
 
   Future<void> onApplyPressed({
@@ -60,7 +61,7 @@ class MoveBookmarksToCollectionManager
     await _moveBookmarksUseCase.call(
       MoveBookmarksUseCaseIn(
         bookmarkIds: bookmarksIds,
-        collectionId: state.selectedCollection!.id,
+        collectionId: state.selectedCollectionId!,
       ),
     );
     _removeCollectionUseCase.call(
@@ -87,7 +88,7 @@ class MoveBookmarksToCollectionManager
 
         final newState = MoveBookmarksToCollectionState.populated(
           collections: _collections,
-          selectedCollection: _selectedCollection,
+          selectedCollectionId: _selectedCollectionId,
         );
 
         return newState;

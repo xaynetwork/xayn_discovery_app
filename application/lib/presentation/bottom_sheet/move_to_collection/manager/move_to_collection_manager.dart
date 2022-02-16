@@ -34,7 +34,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
   late final UseCaseSink<UniqueId, Bookmark> _removeBookmarkHandler;
   late final UseCaseSink<MoveBookmarkUseCaseIn, Bookmark> _moveBookmarkHandler;
 
-  Collection? _selectedCollection;
+  UniqueId? _selectedCollectionId;
   bool _isBookmarked = false;
 
   MoveToCollectionManager._(
@@ -79,14 +79,14 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
 
   Future<void> updateInitialSelectedCollection({
     required UniqueId bookmarkId,
-    Collection? forceSelectCollection,
+    UniqueId? initialSelectedCollectionId,
   }) async {
     late Bookmark bookmark;
 
     try {
       bookmark = await _getBookmarkUseCase.singleOutput(bookmarkId);
     } catch (_) {
-      updateSelectedCollection(forceSelectCollection);
+      updateSelectedCollection(initialSelectedCollectionId);
       return;
     }
 
@@ -96,24 +96,25 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
 
     scheduleComputeState(() {
       _isBookmarked = true;
-      _selectedCollection = forceSelectCollection ?? selectedCollection;
+      _selectedCollectionId =
+          initialSelectedCollectionId ?? selectedCollection.id;
     });
   }
 
-  void updateSelectedCollection(Collection? collection) =>
-      scheduleComputeState(() => _selectedCollection = collection);
+  void updateSelectedCollection(UniqueId? collectionId) =>
+      scheduleComputeState(() => _selectedCollectionId = collectionId);
 
   void onApplyToDocumentPressed({
     required Document document,
     DocumentProvider? provider,
   }) {
-    final hasSelected = state.selectedCollection != null;
+    final hasSelected = state.selectedCollectionId != null;
     final isBookmarked = state.isBookmarked;
     if (!isBookmarked && hasSelected) {
       final param = CreateBookmarkFromDocumentUseCaseIn(
         document: document,
         provider: provider,
-        collectionId: state.selectedCollection!.id,
+        collectionId: state.selectedCollectionId!,
       );
       _createBookmarkHandler(param);
     }
@@ -126,7 +127,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
   }
 
   void onApplyToBookmarkPressed({required UniqueId bookmarkId}) {
-    if (state.selectedCollection == null) {
+    if (state.selectedCollectionId == null) {
       _removeBookmarkHandler(bookmarkId);
     } else {
       _moveBookmark(bookmarkId: bookmarkId);
@@ -136,7 +137,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
   void _moveBookmark({required UniqueId bookmarkId}) {
     final param = MoveBookmarkUseCaseIn(
       bookmarkId: bookmarkId,
-      collectionId: state.selectedCollection!.id,
+      collectionId: state.selectedCollectionId!,
     );
     _moveBookmarkHandler(param);
   }
@@ -173,7 +174,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
 
         final newState = MoveToCollectionState.populated(
           collections: _collections,
-          selectedCollection: _selectedCollection,
+          selectedCollectionId: _selectedCollectionId,
           isBookmarked: _isBookmarked,
           shouldClose: _shouldClose,
         );
