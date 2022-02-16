@@ -12,6 +12,7 @@ void main() {
     R.strings.paymentFlowError.productNotFound,
     R.strings.paymentFlowError.itemAlreadyOwned,
     R.strings.paymentFlowError.transactionFailed,
+    R.strings.paymentFlowError.checkSubscriptionActiveFailed,
   ];
 
   test(
