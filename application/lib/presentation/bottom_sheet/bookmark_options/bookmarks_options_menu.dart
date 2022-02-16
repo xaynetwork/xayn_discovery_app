@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_card_options/menu_option.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import '../../bookmark/manager/bookmarks_screen_manager.dart';
@@ -83,12 +84,9 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
         text,
       ],
     );
-    return InkWell(
+    return BottomSheetClickableOption(
+      child: row,
       onTap: menuOption.onPressed,
-      child: SizedBox(
-        child: row,
-        height: R.dimen.unit6,
-      ),
     );
   }
 
