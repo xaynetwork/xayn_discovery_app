@@ -180,27 +180,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   Widget build(BuildContext context) {
-    // Reduce the top padding when notch is present.
-    final topPadding = Platform.isIOS
-        ? (MediaQuery.of(context).padding.top - R.dimen.unit)
-            .clamp(.0, double.maxFinite)
-        : .0;
-    final feedView = _buildFeedView();
-
     final body = Scaffold(
       /// resizing the scaffold is set to false since the keyboard could be
       /// triggered when creating a collection from the bottom sheet and the
       /// feed should look the same in that process
       ///
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        bottom: false,
-        top: Platform.isAndroid,
-        child: Padding(
-          padding: EdgeInsets.only(top: topPadding),
-          child: feedView,
-        ),
-      ),
+      body: _buildFeedView(),
     );
 
     return WillPopScope(
