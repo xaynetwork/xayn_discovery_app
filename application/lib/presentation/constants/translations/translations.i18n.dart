@@ -185,6 +185,8 @@ class PaymentFlowErrorTranslations {
   String get productNotFound => """Product not found :(""";
   String get itemAlreadyOwned => """You have been already subscribed""";
   String get transactionFailed => """Payment transaction failed""";
+  String get checkSubscriptionActiveFailed =>
+      """Check active subscription failed. Please try again later""";
 }
 
 Map<String, String> get translationsMap => {
@@ -308,6 +310,8 @@ Map<String, String> get translationsMap => {
           """You have been already subscribed""",
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
+      """paymentFlowError.checkSubscriptionActiveFailed""":
+          """Check active subscription failed. Please try again later""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
