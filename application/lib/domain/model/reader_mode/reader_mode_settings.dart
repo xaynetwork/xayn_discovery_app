@@ -10,29 +10,29 @@ part 'reader_mode_settings.freezed.dart';
 @freezed
 class ReaderModeSettings extends DbEntity with _$ReaderModeSettings {
   factory ReaderModeSettings._({
-    required ReaderModeBackgroundColor readerModeBackgroundColor,
-    required ReaderModeFontSize readerModeFontSize,
-    required ReaderModeFontStyle readerModeFontStyle,
+    required ReaderModeBackgroundColor backgroundColor,
+    required ReaderModeFontSize fontSize,
+    required ReaderModeFontStyle fontStyle,
     required UniqueId id,
   }) = _ReaderModeSettings;
 
   factory ReaderModeSettings.global({
-    required ReaderModeBackgroundColor readerModeBackgroundColor,
-    required ReaderModeFontSize readerModeFontSize,
-    required ReaderModeFontStyle readerModeFontStyle,
+    required ReaderModeBackgroundColor backgroundColor,
+    required ReaderModeFontSize fontSize,
+    required ReaderModeFontStyle fontStyle,
   }) =>
       ReaderModeSettings._(
         id: ReaderModeSettings.globalId,
-        readerModeBackgroundColor: readerModeBackgroundColor,
-        readerModeFontSize: readerModeFontSize,
-        readerModeFontStyle: readerModeFontStyle,
+        backgroundColor: backgroundColor,
+        fontSize: fontSize,
+        fontStyle: fontStyle,
       );
 
   factory ReaderModeSettings.initial() => ReaderModeSettings._(
         id: ReaderModeSettings.globalId,
-        readerModeBackgroundColor: ReaderModeBackgroundColor.system,
-        readerModeFontSize: ReaderModeFontSize.medium,
-        readerModeFontStyle: ReaderModeFontStyle.serif,
+        backgroundColor: ReaderModeBackgroundColor.system,
+        fontSize: ReaderModeFontSize.medium,
+        fontStyle: ReaderModeFontStyle.sans,
       );
 
   static UniqueId globalId =

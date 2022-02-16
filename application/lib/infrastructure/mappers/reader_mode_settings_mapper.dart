@@ -35,9 +35,9 @@ class ReaderModeSettingsMapper extends BaseDbEntityMapper<ReaderModeSettings> {
         .map(map[ReaderModeSettingsFields.readerModeFontStyle]);
 
     return ReaderModeSettings.global(
-      readerModeBackgroundColor: readerModeBackgroundColor,
-      readerModeFontSize: readerModeFontSize,
-      readerModeFontStyle: readerModeFontStyle,
+      backgroundColor: readerModeBackgroundColor,
+      fontSize: readerModeFontSize,
+      fontStyle: readerModeFontStyle,
     );
   }
 
