@@ -96,6 +96,10 @@ Available options:
    - release_build
    - update_assets
    - upload_to_appcenter
+   - keyFile
+   - keyId
+   - issuerId
+
 
 ### update_assets
 
