@@ -13,16 +13,19 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-# import("../fastlane/lib/config.rb")
+import("../fastlane/lib/config.rb")
+
+Keys = Config::Keys
+Options = Config::Options
 
 desc "Create a signed IPA package"
 private_lane :ios_create_ipa do |options|
-  flavor = options[:flavor]
+  flavor = options[Options::FLAVOR]
   flavorConfig = Config::IOS_BUILD_CONFIG[flavor]
-  isAdhoc = flavorConfig["adhoc"]
-  provisioning_profile_path = flavorConfig["provisioning_profile_path"]
-  provisioning_profiles = flavorConfig["provisioning_profiles"]
-  shouldDownloadProfile = options[:download_profile]
+  isAdhoc = flavorConfig[Keys::ADHOC]
+  provisioning_profile_path = flavorConfig[Keys::PROVISIONING_PROFILE_PATH]
+  provisioning_profiles = flavorConfig[Keys::PROVISIONING_PROFILES]
+  shouldDownloadProfile = options[Options::DOWNLOAD_PROFILE]
 
   UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
   if shouldDownloadProfile
@@ -93,13 +96,13 @@ end
 
 desc "Create an app store connect api key "
 lane :create_appstore_api_key do |options|
-  UI.user_error!("keyFile missing - No p8 key file provided. Create and download keys here:  https://appstoreconnect.apple.com/access/api !") unless options[:keyFile]
-  UI.user_error!("keyId missing") unless options[:keyId]
-  UI.user_error!("issuerId missing") unless options[:issuerId]
+  UI.user_error!("keyFile missing - No p8 key file provided. Create and download keys here:  https://appstoreconnect.apple.com/access/api !") unless options[Options::KEY_FILE]
+  UI.user_error!("keyId missing") unless options[Options::KEY_ID]
+  UI.user_error!("issuerId missing") unless options[Options::ISSUER_ID]
 
-  keyfile = options[:keyFile]
-  keyId = options[:keyId]
-  issuerId = options[:issuerId]
+  keyfile = options[Options::KEY_FILE]
+  keyId = options[Options::KEY_ID]
+  issuerId = options[Options::ISSUER_ID]
   keyContent = sh("base64 ../#{keyfile}")
 
   key = app_store_connect_api_key(

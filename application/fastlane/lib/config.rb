@@ -45,6 +45,9 @@ module Config
     ENV = :env
     # Available variants: Flavors
     FLAVOR = :flavor
+    ISSUER_ID = :issuerId
+    KEY_FILE = :keyFile
+    KEY_ID = :keyId
     # Available variants: Platforms
     PLATFORM = :platform
     # Available variants: true / false
