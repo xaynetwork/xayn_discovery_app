@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_card_options/menu_option.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class CollectionOptionsBottomSheet extends BottomSheetBase {
@@ -89,12 +90,9 @@ class __CollectionOptionsState extends State<_CollectionOptions>
         text,
       ],
     );
-    return InkWell(
+    return BottomSheetClickableOption(
+      child: row,
       onTap: menuOption.onPressed,
-      child: SizedBox(
-        child: row,
-        height: R.dimen.unit6,
-      ),
     );
   }
 }
