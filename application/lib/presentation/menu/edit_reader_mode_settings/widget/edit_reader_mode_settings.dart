@@ -63,13 +63,13 @@ class _EditReaderModeSettingsMenuState
 
           final editBackgroundColorRow = _buildPaddedRow(
               children: ReaderModeBackgroundColor.values
-                  .skipWhile((it) => it.isDefault())
+                  .skipWhile((it) => it.isDefault)
                   .map(
                     (it) => SelectableChip.container(
                       color: it.color,
                       borderColor: it.borderColor,
                       isSelected:
-                          it == state.readerModeBackgroundColor.mapIfDefault(),
+                          it == state.readerModeBackgroundColor.mapIfDefault,
                       onTap: () => _editReaderModeSettingsManager
                           .onBackgroundColorPressed(it),
                     ),

@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
   Color get color {
-    switch (mapIfDefault()) {
+    switch (mapIfDefault) {
       case ReaderModeBackgroundColor.white:
         return R.colors.readerModeWhiteBackgroundColor;
       case ReaderModeBackgroundColor.beige:
@@ -18,7 +18,7 @@ extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
   }
 
   Color? get borderColor {
-    switch (mapIfDefault()) {
+    switch (mapIfDefault) {
       case ReaderModeBackgroundColor.white:
       case ReaderModeBackgroundColor.beige:
         return R.colors.chipBorderColor;
@@ -29,7 +29,7 @@ extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
   }
 
   Color get textColor {
-    switch (mapIfDefault()) {
+    switch (mapIfDefault) {
       case ReaderModeBackgroundColor.white:
       case ReaderModeBackgroundColor.beige:
         return R.colors.readerModeTextDarkColor;
@@ -39,10 +39,10 @@ extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
     }
   }
 
-  bool isDefault() => this == ReaderModeBackgroundColor.system;
+  bool get isDefault => this == ReaderModeBackgroundColor.system;
 
-  ReaderModeBackgroundColor mapIfDefault() {
-    if (isDefault()) {
+  ReaderModeBackgroundColor get mapIfDefault {
+    if (isDefault) {
       return R.isDarkMode
           ? ReaderModeBackgroundColor.black
           : ReaderModeBackgroundColor.white;

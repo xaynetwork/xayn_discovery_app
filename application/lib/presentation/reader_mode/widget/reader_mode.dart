@@ -167,7 +167,7 @@ class _ReaderModeState extends State<ReaderMode> {
   String _getHtmlColorString(ReaderModeSettings settings) {
     final textColor = settings.readerModeBackgroundColor.textColor;
     final htmlColor =
-        'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha / 0xff})';
+        'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha ~/ 0xff})';
     return htmlColor;
   }
 

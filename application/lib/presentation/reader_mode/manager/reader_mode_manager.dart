@@ -55,7 +55,10 @@ class ReaderModeManager extends Cubit<ReaderModeState>
         }
 
         if (readerModeSettings != null) {
-          return state.copyWith(readerModeSettings: readerModeSettings);
+          return state.copyWith(
+            readerModeSettings: readerModeSettings,
+            uri: uri,
+          );
         }
 
         if (uri != null) {
