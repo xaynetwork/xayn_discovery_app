@@ -47,6 +47,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       url: webResource.url,
       provider: provider,
       datePublished: webResource.datePublished,
+      isFullScreen: false,
       onLikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
         feedback: state.explicitDocumentFeedback.isRelevant
