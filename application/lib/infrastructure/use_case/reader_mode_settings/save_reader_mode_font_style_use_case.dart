@@ -13,7 +13,7 @@ class SaveReaderModeFontStyleUseCase
   @override
   Stream<ReaderModeFontStyle> transaction(ReaderModeFontStyle param) async* {
     final settings = _repository.settings;
-    final updateSettings = settings.copyWith(readerModeFontStyle: param);
+    final updateSettings = settings.copyWith(fontStyle: param);
     _repository.save(updateSettings);
     yield param;
   }

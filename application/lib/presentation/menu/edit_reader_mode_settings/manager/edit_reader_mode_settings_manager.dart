@@ -32,12 +32,10 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
     this._saveReaderModeFontStyleUseCase,
     ReaderModeSettingsRepository readerModeSettingsRepository,
   ) : super(EditReaderModeSettingsState(
-          readerModeFontStyle:
-              readerModeSettingsRepository.settings.readerModeFontStyle,
-          readerModeFontSize:
-              readerModeSettingsRepository.settings.readerModeFontSize,
+          readerModeFontStyle: readerModeSettingsRepository.settings.fontStyle,
+          readerModeFontSize: readerModeSettingsRepository.settings.fontSize,
           readerModeBackgroundColor:
-              readerModeSettingsRepository.settings.readerModeBackgroundColor,
+              readerModeSettingsRepository.settings.backgroundColor,
         ));
 
   void onBackgroundColorPressed(ReaderModeBackgroundColor backgroundColor) =>

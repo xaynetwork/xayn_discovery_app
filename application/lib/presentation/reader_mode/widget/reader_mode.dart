@@ -138,7 +138,7 @@ class _ReaderModeState extends State<ReaderMode> {
         );
 
         return ColoredBox(
-          color: fontSettings.readerModeBackgroundColor.color,
+          color: fontSettings.backgroundColor.color,
           child: readerMode,
         );
       },
@@ -157,15 +157,15 @@ class _ReaderModeState extends State<ReaderMode> {
   }
 
   TextStyle _getReaderModeStyle(ReaderModeSettings settings) {
-    final fontSize = settings.readerModeFontSize.textStyle;
-    final fontStyle = settings.readerModeFontStyle.textStyle;
+    final fontSize = settings.fontSize.textStyle;
+    final fontStyle = settings.fontStyle.textStyle;
     final readerModeTextStyle = fontSize.merge(fontStyle);
-    final textColor = settings.readerModeBackgroundColor.textColor;
+    final textColor = settings.backgroundColor.textColor;
     return readerModeTextStyle.copyWith(color: textColor);
   }
 
   String _getHtmlColorString(ReaderModeSettings settings) {
-    final textColor = settings.readerModeBackgroundColor.textColor;
+    final textColor = settings.backgroundColor.textColor;
     final htmlColor =
         'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha ~/ 0xff})';
     return htmlColor;

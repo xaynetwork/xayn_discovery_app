@@ -14,7 +14,7 @@ class SaveReaderModeBackgroundColorUseCase
   Stream<ReaderModeBackgroundColor> transaction(
       ReaderModeBackgroundColor param) async* {
     final settings = _repository.settings;
-    final updateSettings = settings.copyWith(readerModeBackgroundColor: param);
+    final updateSettings = settings.copyWith(backgroundColor: param);
     _repository.save(updateSettings);
     yield param;
   }

@@ -28,11 +28,11 @@ class ReaderModeSettingsMapper extends BaseDbEntityMapper<ReaderModeSettings> {
     if (map == null) return null;
 
     final readerModeBackgroundColor = _intToBackgroundColorMapper
-        .map(map[ReaderModeSettingsFields.readerModeBackgroundColor]);
-    final readerModeFontSize = _intToFontSizeMapper
-        .map(map[ReaderModeSettingsFields.readerModeFontSize]);
-    final readerModeFontStyle = _intToFontStyleMapper
-        .map(map[ReaderModeSettingsFields.readerModeFontStyle]);
+        .map(map[ReaderModeSettingsFields.backgroundColor]);
+    final readerModeFontSize =
+        _intToFontSizeMapper.map(map[ReaderModeSettingsFields.fontSize]);
+    final readerModeFontStyle =
+        _intToFontStyleMapper.map(map[ReaderModeSettingsFields.fontStyle]);
 
     return ReaderModeSettings.global(
       backgroundColor: readerModeBackgroundColor,
@@ -43,19 +43,19 @@ class ReaderModeSettingsMapper extends BaseDbEntityMapper<ReaderModeSettings> {
 
   @override
   DbEntityMap toMap(ReaderModeSettings entity) => {
-        ReaderModeSettingsFields.readerModeBackgroundColor:
-            _backgroundColorToIntMapper.map(entity.readerModeBackgroundColor),
-        ReaderModeSettingsFields.readerModeFontSize:
-            _fontSizeToIntMapper.map(entity.readerModeFontSize),
-        ReaderModeSettingsFields.readerModeFontStyle:
-            _fontStyleToIntMapper.map(entity.readerModeFontStyle),
+        ReaderModeSettingsFields.backgroundColor:
+            _backgroundColorToIntMapper.map(entity.backgroundColor),
+        ReaderModeSettingsFields.fontSize:
+            _fontSizeToIntMapper.map(entity.fontSize),
+        ReaderModeSettingsFields.fontStyle:
+            _fontStyleToIntMapper.map(entity.fontStyle),
       };
 }
 
 abstract class ReaderModeSettingsFields {
   ReaderModeSettingsFields._();
 
-  static const int readerModeBackgroundColor = 0;
-  static const int readerModeFontSize = 1;
-  static const int readerModeFontStyle = 2;
+  static const int backgroundColor = 0;
+  static const int fontSize = 1;
+  static const int fontStyle = 2;
 }

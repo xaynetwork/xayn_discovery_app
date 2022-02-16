@@ -13,7 +13,7 @@ class SaveReaderModeFontSizeUseCase
   @override
   Stream<ReaderModeFontSize> transaction(ReaderModeFontSize param) async* {
     final settings = _repository.settings;
-    final updateSettings = settings.copyWith(readerModeFontSize: param);
+    final updateSettings = settings.copyWith(fontSize: param);
     _repository.save(updateSettings);
     yield param;
   }
