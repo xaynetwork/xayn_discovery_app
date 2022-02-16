@@ -60,7 +60,7 @@ class SelectableChip extends StatelessWidget {
     return InkWell(
       borderRadius: R.styles.roundBorderBottomBarMenuSection,
       onTap: onTap,
-      child: Container(
+      child: Ink(
         width: width,
         height: height,
         padding: padding,
