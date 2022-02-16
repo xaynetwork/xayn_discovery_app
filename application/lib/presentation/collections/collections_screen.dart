@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_collection/widget/create_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
@@ -14,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
@@ -29,7 +32,11 @@ class CollectionsScreen extends StatefulWidget {
 }
 
 class _CollectionsScreenState extends State<CollectionsScreen>
-    with NavBarConfigMixin, CollectionCardManagersMixin, BottomSheetBodyMixin {
+    with
+        NavBarConfigMixin,
+        CollectionCardManagersMixin,
+        BottomSheetBodyMixin,
+        CardWidgetTransitionMixin {
   CollectionsScreenManager? _collectionsScreenManager;
 
   @override
@@ -116,6 +123,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       card = _buildBaseCard(collection);
     } else {
       card = CardWidgetTransitionWrapper(
+        onAnimationDone: () => _showCollectionCardOptions(collection),
         child: _buildSwipeableCard(collection),
       );
     }
@@ -125,7 +133,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     );
   }
 
-  Widget _buildBaseCard(Collection collection) =>
+  Widget _buildBaseCard(Collection collection, [VoidCallback? onLongPress]) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
         builder: (context, cardState) {
@@ -148,13 +156,47 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       );
 
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
-        collectionCard: _buildBaseCard(collection),
+        collectionCard: _buildBaseCard(
+          collection,
+          () => _showCollectionCardOptions(collection),
+        ),
+        onSwipeOptionTap: _onSwipeOptionsTap(collection),
       );
 
   _showAddCollectionBottomSheet() {
     showAppBottomSheet(
       context,
-      builder: (buildContext) => CreateCollectionBottomSheet(),
+      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(),
     );
   }
+
+  _showCollectionCardOptions(Collection collection) {
+    showAppBottomSheet(
+      context,
+      showBarrierColor: false,
+      builder: (buildContext) => CollectionOptionsBottomSheet(
+        collection: collection,
+
+        /// Close the route with the focused card
+        onSystemPop: closeCardWidgetTransition,
+      ),
+    );
+  }
+
+  Map<SwipeOptionCollectionCard, VoidCallback> _onSwipeOptionsTap(
+          Collection collection) =>
+      {
+        SwipeOptionCollectionCard.edit: () => showAppBottomSheet(
+              context,
+              builder: (_) => CreateOrRenameCollectionBottomSheet(
+                collection: collection,
+              ),
+            ),
+        SwipeOptionCollectionCard.remove: () => showAppBottomSheet(
+              context,
+              builder: (_) => DeleteCollectionConfirmationBottomSheet(
+                collectionId: collection.id,
+              ),
+            ),
+      };
 }
