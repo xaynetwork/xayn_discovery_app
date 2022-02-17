@@ -238,21 +238,21 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
             _kMinImageFractionSize * constraints.maxHeight);
-        final headlineHeight = constraints.maxHeight * _openingAnimation.value;
 
         return Stack(
           alignment: Alignment.topCenter,
           children: [
             _buildReaderMode(
               processHtmlResult: state.processedDocument?.processHtmlResult,
-              headlineHeight: headlineHeight,
+              headlineHeight: constraints.maxHeight * _kMinImageFractionSize +
+                  R.dimen.unit2,
             ),
             Positioned(
               top: -outerScrollOffset,
               left: 0,
               right: 0,
               child: Container(
-                height: headlineHeight,
+                height: constraints.maxHeight * _openingAnimation.value,
                 alignment: Alignment.topCenter,
                 child: Stack(
                   alignment: Alignment.topCenter,

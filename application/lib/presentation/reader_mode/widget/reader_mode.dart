@@ -137,6 +137,7 @@ class _ReaderModeState extends State<ReaderMode> {
           textStyle: R.styles.readerModeTextStyle,
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
+          rendererPadding: widget.padding,
           factoryBuilder: () => _ReaderModeWidgetFactory(
             onPadding: _paddingController.stream,
           ),
@@ -200,19 +201,6 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   /// Simply remove this override to re-enable links, when needed.
   @override
   GestureTapCallback? gestureTapCallback(String url) => null;
-
-  @override
-  Widget buildBodyWidget(BuildContext context, Widget child) =>
-      super.buildBodyWidget(
-        context,
-        StreamBuilder<EdgeInsets>(
-          stream: onPadding,
-          builder: (context, snapshot) => Padding(
-            padding: snapshot.data ?? EdgeInsets.zero,
-            child: child,
-          ),
-        ),
-      );
 
   @override
   Widget? buildImageWidget(
