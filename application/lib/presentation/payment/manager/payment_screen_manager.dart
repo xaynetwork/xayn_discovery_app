@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
@@ -25,9 +26,9 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _getPurchasableProductUseCase,
     initialData: none,
   );
-  late final UseCaseValueStream<bool> _checkSubscriptionActiveHandler = consume(
+  late final UseCaseSink<PurchasableProductId, bool>
+      _checkSubscriptionActiveHandler = pipe(
     _checkSubscriptionActiveUseCase,
-    initialData: PurchasableIds.subscription,
   );
   final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
   late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
@@ -39,7 +40,9 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._purchaseSubscriptionUseCase,
     this._checkSubscriptionActiveUseCase,
     this._errorMessageMapper,
-  ) : super(const PaymentScreenState.initial());
+  ) : super(const PaymentScreenState.initial()) {
+    _checkActiveSubscription();
+  }
 
   void subscribe() {
     final product = _subscriptionProduct;
@@ -83,11 +86,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           }
         }
 
-        final subscriptionProduct = product?.copyWith(
-          status ??
-              (isAvailable == true
-                  ? PurchasableProductStatus.restored
-                  : product.status),
+        _subscriptionProduct = getUpdatedProduct(
+          _subscriptionProduct ?? product,
+          status,
+          isAvailable,
         );
 
         final paymentFlowError =
@@ -97,16 +99,47 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
             ? null
             : _errorMessageMapper.map(paymentFlowError);
 
-        if (subscriptionProduct == null && paymentFlowErrorMsg != null) {
+        if (_subscriptionProduct == null && paymentFlowErrorMsg != null) {
           return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
-        } else if (subscriptionProduct != null) {
-          _subscriptionProduct = subscriptionProduct;
+        } else if (_subscriptionProduct != null) {
           return PaymentScreenState.ready(
-            product: subscriptionProduct,
+            product: _subscriptionProduct!,
             errorMsg: paymentFlowErrorMsg,
           );
         }
       });
 
   void _logError(String prefix, Object error) => logger.e('$prefix: $error');
+
+  /// This method is complex, due to issues with the ios part
+  /// of the `in_app_purchase` package + our limitations in terms of serverless
+  @visibleForTesting
+  PurchasableProduct? getUpdatedProduct(
+    PurchasableProduct? product,
+    PurchasableProductStatus? status,
+    bool? isAvailable,
+  ) {
+    if (product == null) return null;
+    late final PurchasableProductStatus newStatus;
+    if (isAvailable == false &&
+        status?.wasPurchased == true &&
+        product.status.isPending == false) {
+      newStatus = PurchasableProductStatus.purchasable;
+    } else if (status == null && isAvailable == null) {
+      newStatus = PurchasableProductStatus.pending;
+    } else if (isAvailable == true || status?.isPurchased == true) {
+      newStatus = PurchasableProductStatus.purchased;
+    } else if (status != null && status.isCanceled) {
+      newStatus = status;
+    } else {
+      newStatus = product.status.isPending
+          ? PurchasableProductStatus.purchasable
+          : status ?? product.status;
+    }
+
+    return product.copyWith(newStatus);
+  }
+
+  void _checkActiveSubscription() =>
+      _checkSubscriptionActiveHandler(PurchasableIds.subscription);
 }
