@@ -10,8 +10,6 @@ import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
-const kSettingsKey = 0;
-
 /// Hive's [AppSettings] repository implementation.
 @Singleton(as: FeedRepository)
 class HiveFeedRepository extends HiveRepository<Feed>
