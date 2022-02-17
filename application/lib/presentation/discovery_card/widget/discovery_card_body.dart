@@ -48,11 +48,11 @@ class SnippetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final highlightedTextStyle = R.styles.snippetTextStyle?.copyWith(
+    final highlightedTextStyle = R.styles.snippetTextStyle.copyWith(
       backgroundColor: backgroundColor,
     );
 
-    final roundedHighlightsTextStyle = highlightedTextStyle?.copyWith(
+    final roundedHighlightsTextStyle = highlightedTextStyle.copyWith(
         backgroundColor: null,
         background: Paint()
           ..color = backgroundColor

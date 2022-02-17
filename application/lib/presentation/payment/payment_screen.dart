@@ -71,7 +71,7 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
       ),
       trailing: Text(
         product.price,
-        style: R.styles.appHeadlineText?.copyWith(color: R.colors.accent),
+        style: R.styles.appHeadlineText.copyWith(color: R.colors.accent),
       ),
     );
 
