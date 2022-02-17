@@ -289,31 +289,23 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,
     required double headlineHeight,
-  }) {
-    final readerMode = ReaderMode(
-      title: title,
-      processHtmlResult: processHtmlResult,
-      padding: EdgeInsets.only(
-        left: R.dimen.unit3,
-        right: R.dimen.unit3,
-        // todo: bottom offset should compensate for the NavBar, so we need to calculate it
-        bottom: R.dimen.unit12,
-        top: headlineHeight,
-      ),
-      onProcessedHtml: () => _openingAnimation.animateTo(
-        _kMinImageFractionSize,
-        curve: Curves.fastOutSlowIn,
-      ),
-      onScroll: (position) => setState(() => _scrollOffset = position),
-    );
-
-    return ClipRRect(
-      child: OverflowBox(
-        alignment: Alignment.topCenter,
-        child: readerMode,
-      ),
-    );
-  }
+  }) =>
+      ReaderMode(
+        title: title,
+        processHtmlResult: processHtmlResult,
+        padding: EdgeInsets.only(
+          left: R.dimen.unit3,
+          right: R.dimen.unit3,
+          // todo: bottom offset should compensate for the NavBar, so we need to calculate it
+          bottom: R.dimen.unit12,
+          top: headlineHeight,
+        ),
+        onProcessedHtml: () => _openingAnimation.animateTo(
+          _kMinImageFractionSize,
+          curve: Curves.fastOutSlowIn,
+        ),
+        onScroll: (position) => setState(() => _scrollOffset = position),
+      );
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
