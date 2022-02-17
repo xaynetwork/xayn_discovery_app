@@ -150,8 +150,8 @@ class CardWidget extends StatelessWidget {
     );
     final titleText = Text(
       title,
-      style: R.styles.appHeadlineText
-          ?.copyWith(color: R.colors.primaryTextInverse),
+      style:
+          R.styles.appHeadlineText.copyWith(color: R.colors.primaryTextInverse),
     );
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,8 +172,8 @@ class CardWidget extends StatelessWidget {
   }) {
     final titleText = Text(
       title,
-      style: R.styles.appHeadlineText
-          ?.copyWith(color: R.colors.primaryTextInverse),
+      style:
+          R.styles.appHeadlineText.copyWith(color: R.colors.primaryTextInverse),
     );
 
     final articleText =
@@ -181,7 +181,7 @@ class CardWidget extends StatelessWidget {
 
     final numOfItemsText = Text(
       numOfItems.toString() + ' ' + articleText,
-      style: R.styles.appBodyText?.copyWith(color: R.colors.primaryTextInverse),
+      style: R.styles.appBodyText.copyWith(color: R.colors.primaryTextInverse),
     );
 
     final row = Row(
@@ -224,7 +224,7 @@ class CardWidget extends StatelessWidget {
         Flexible(
           child: Text(
             provider?.name ?? '',
-            style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
+            style: R.styles.appThumbnailText.copyWith(color: Colors.white),
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -233,14 +233,14 @@ class CardWidget extends StatelessWidget {
         ),
         Text(
           '•',
-          style: R.styles.appThumbnailText?.copyWith(color: Colors.white),
+          style: R.styles.appThumbnailText.copyWith(color: Colors.white),
         ),
         SizedBox(
           width: R.dimen.unit,
         ),
         Text(
           timeAgo(created, DateFormat.yMMMMd()),
-          style: R.styles.appThumbnailTextLight?.copyWith(color: Colors.white),
+          style: R.styles.appThumbnailTextLight.copyWith(color: Colors.white),
           overflow: TextOverflow.ellipsis,
         ),
       ],
@@ -250,8 +250,8 @@ class CardWidget extends StatelessWidget {
       title,
       maxLines: 3,
       overflow: TextOverflow.ellipsis,
-      style: R.styles.appHeadlineText
-          ?.copyWith(color: R.colors.primaryTextInverse),
+      style:
+          R.styles.appHeadlineText.copyWith(color: R.colors.primaryTextInverse),
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

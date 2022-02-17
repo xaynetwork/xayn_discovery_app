@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
+import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
 typedef ScrollHandler = void Function(double position);
@@ -104,28 +106,24 @@ class _ReaderModeState extends State<ReaderMode> {
       bloc: _readerModeManager,
       builder: (context, state) {
         final uri = state.uri;
+        final fontSettings = state.readerModeSettings;
 
         if (uri == null) {
           return loading;
         }
 
-        final textColor = R.styles.readerModeTextStyle?.color;
-        final htmlColor = textColor != null
-            ? 'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha / 0xff})'
-            : 'rgba(255,255,255,1.0)';
-
         overrideLinkStyle(element) => element.localName?.toLowerCase() == 'a'
             ? {
                 'text-decoration': 'none',
-                'color': htmlColor,
+                'color': _getHtmlColorString(fontSettings),
               }
             : null;
 
         _readerModeController.loadUri(uri);
 
-        return readability.ReaderMode(
+        final readerMode = readability.ReaderMode(
           controller: _readerModeController,
-          textStyle: R.styles.readerModeTextStyle,
+          textStyle: _getReaderModeStyle(fontSettings),
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
           rendererPadding: widget.padding,
@@ -140,6 +138,11 @@ class _ReaderModeState extends State<ReaderMode> {
           customStylesBuilder: overrideLinkStyle,
           customWidgetBuilder: _customElements,
         );
+
+        return ColoredBox(
+          color: fontSettings.backgroundColor.color,
+          child: readerMode,
+        );
       },
     );
   }
@@ -153,6 +156,21 @@ class _ReaderModeState extends State<ReaderMode> {
     }
 
     return null;
+  }
+
+  TextStyle _getReaderModeStyle(ReaderModeSettings settings) {
+    final fontSize = settings.fontSize.textStyle;
+    final fontStyle = settings.fontStyle.textStyle;
+    final readerModeTextStyle = fontSize.merge(fontStyle);
+    final textColor = settings.backgroundColor.textColor;
+    return readerModeTextStyle.copyWith(color: textColor);
+  }
+
+  String _getHtmlColorString(ReaderModeSettings settings) {
+    final textColor = settings.backgroundColor.textColor;
+    final htmlColor =
+        'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha ~/ 0xff})';
+    return htmlColor;
   }
 
   Future<readability.ProcessHtmlResult> _onProcessedHtml(
