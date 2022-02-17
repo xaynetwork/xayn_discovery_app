@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
@@ -61,6 +63,7 @@ class _ReaderModeState extends State<ReaderMode> {
   @override
   void initState() {
     super.initState();
+
     _updateCardData();
   }
 
@@ -123,9 +126,8 @@ class _ReaderModeState extends State<ReaderMode> {
           textStyle: _getReaderModeStyle(fontSettings),
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
-          factoryBuilder: () => _ReaderModeWidgetFactory(
-            padding: widget.padding,
-          ),
+          rendererPadding: widget.padding,
+          factoryBuilder: () => _ReaderModeWidgetFactory(),
           loadingBuilder: () => loading,
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
@@ -197,25 +199,11 @@ class _ReaderModeState extends State<ReaderMode> {
 
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
-  final EdgeInsets padding;
-
-  _ReaderModeWidgetFactory({required this.padding});
-
   /// This property is actually used for link callbacks,
   /// we don't want to follow links, so this is set to be null.
   /// Simply remove this override to re-enable links, when needed.
   @override
   GestureTapCallback? gestureTapCallback(String url) => null;
-
-  @override
-  Widget buildBodyWidget(BuildContext context, Widget child) =>
-      super.buildBodyWidget(
-        context,
-        Padding(
-          padding: padding,
-          child: child,
-        ),
-      );
 
   @override
   Widget? buildImageWidget(
