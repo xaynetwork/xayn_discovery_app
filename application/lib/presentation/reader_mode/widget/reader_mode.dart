@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
@@ -55,10 +57,15 @@ class ReaderMode extends StatefulWidget {
 class _ReaderModeState extends State<ReaderMode> {
   late final ReaderModeManager _readerModeManager = di.get();
   late final _readerModeController = readability.ReaderModeController();
+  late final StreamController<EdgeInsets> _paddingController =
+      StreamController<EdgeInsets>();
 
   @override
   void initState() {
     super.initState();
+
+    _paddingController.add(widget.padding);
+
     _updateCardData();
   }
 
@@ -66,6 +73,7 @@ class _ReaderModeState extends State<ReaderMode> {
   void dispose() {
     super.dispose();
 
+    _paddingController.close();
     _readerModeManager.close();
     _readerModeController.dispose();
   }
@@ -75,6 +83,10 @@ class _ReaderModeState extends State<ReaderMode> {
     if (oldWidget.title != widget.title ||
         oldWidget.processHtmlResult != widget.processHtmlResult) {
       _updateCardData();
+    }
+
+    if (oldWidget.padding != widget.padding) {
+      _paddingController.add(widget.padding);
     }
 
     super.didUpdateWidget(oldWidget);
@@ -108,7 +120,7 @@ class _ReaderModeState extends State<ReaderMode> {
 
         final textColor = R.styles.readerModeTextStyle?.color;
         final htmlColor = textColor != null
-            ? 'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha / 0xff})'
+            ? 'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha ~/ 0xff})'
             : 'rgba(255,255,255,1.0)';
 
         overrideLinkStyle(element) => element.localName?.toLowerCase() == 'a'
@@ -126,7 +138,7 @@ class _ReaderModeState extends State<ReaderMode> {
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
           factoryBuilder: () => _ReaderModeWidgetFactory(
-            padding: widget.padding,
+            onPadding: _paddingController.stream,
           ),
           loadingBuilder: () => loading,
           onProcessedHtml: (result) async {
@@ -179,9 +191,9 @@ class _ReaderModeState extends State<ReaderMode> {
 
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
-  final EdgeInsets padding;
+  final Stream<EdgeInsets> onPadding;
 
-  _ReaderModeWidgetFactory({required this.padding});
+  _ReaderModeWidgetFactory({required this.onPadding});
 
   /// This property is actually used for link callbacks,
   /// we don't want to follow links, so this is set to be null.
@@ -190,14 +202,17 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   GestureTapCallback? gestureTapCallback(String url) => null;
 
   @override
-  Widget buildBodyWidget(BuildContext context, Widget child) =>
-      super.buildBodyWidget(
-        context,
-        Padding(
-          padding: padding,
-          child: child,
-        ),
-      );
+  Widget buildBodyWidget(BuildContext context, Widget child) {
+    return super.buildBodyWidget(
+      context,
+      StreamBuilder<EdgeInsets>(
+          stream: onPadding,
+          builder: (context, snapshot) => Padding(
+                padding: snapshot.data ?? EdgeInsets.zero,
+                child: child,
+              )),
+    );
+  }
 
   @override
   Widget? buildImageWidget(

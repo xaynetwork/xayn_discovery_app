@@ -231,6 +231,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
             _kMinImageFractionSize * mediaQuery.size.height);
+        final headlineHeight = constraints.maxHeight * _openingAnimation.value;
 
         return Stack(
           children: [
@@ -238,8 +239,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 child: _buildReaderMode(
               processHtmlResult: state.processedDocument?.processHtmlResult,
               size: mediaQuery.size,
-              headlineHeight: constraints.maxHeight * _kMinImageFractionSize +
-                  R.dimen.unit2,
+              headlineHeight: headlineHeight + R.dimen.unit2,
               isBookmarked: state.isBookmarked,
             )),
             Positioned(
@@ -247,7 +247,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
               left: 0,
               right: 0,
               child: Container(
-                height: constraints.maxHeight * _openingAnimation.value,
+                height: headlineHeight,
                 alignment: Alignment.topCenter,
                 child: Stack(
                   children: [
