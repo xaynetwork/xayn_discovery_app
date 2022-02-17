@@ -193,6 +193,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
+    final size = MediaQuery.of(context).size;
     // normalize the animation value to [0.0, 1.0]
     final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
         (1.0 - _kMinImageFractionSize);
@@ -244,9 +245,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           children: [
             _buildReaderMode(
               processHtmlResult: state.processedDocument?.processHtmlResult,
-              width: MediaQuery.of(context).size.width,
-              headlineHeight: constraints.maxHeight * _kMinImageFractionSize +
-                  R.dimen.unit2,
+              width: size.width,
+              headlineHeight:
+                  size.height * _kMinImageFractionSize + R.dimen.unit2,
             ),
             Positioned(
               top: -outerScrollOffset,
