@@ -82,7 +82,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       othersMarkers: [
         MarkerText(
           marker: _kTextPlaceholder,
-          style: R.styles.appBodyText!.copyWith(fontWeight: FontWeight.bold),
+          style: R.styles.appBodyText.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -105,7 +105,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
           marker: _kTextPlaceholder,
           urls: [url],
           style:
-              R.styles.dialogBodySmall!.copyWith(color: R.colors.primaryAction),
+              R.styles.dialogBodySmall.copyWith(color: R.colors.primaryAction),
         ),
       ],
     );

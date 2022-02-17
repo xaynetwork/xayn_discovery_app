@@ -1,0 +1,4 @@
+enum ReaderModeFontStyle {
+  sans,
+  serif,
+}
