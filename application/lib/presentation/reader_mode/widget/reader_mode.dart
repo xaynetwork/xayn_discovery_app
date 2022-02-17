@@ -202,17 +202,17 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   GestureTapCallback? gestureTapCallback(String url) => null;
 
   @override
-  Widget buildBodyWidget(BuildContext context, Widget child) {
-    return super.buildBodyWidget(
-      context,
-      StreamBuilder<EdgeInsets>(
+  Widget buildBodyWidget(BuildContext context, Widget child) =>
+      super.buildBodyWidget(
+        context,
+        StreamBuilder<EdgeInsets>(
           stream: onPadding,
           builder: (context, snapshot) => Padding(
-                padding: snapshot.data ?? EdgeInsets.zero,
-                child: child,
-              )),
-    );
-  }
+            padding: snapshot.data ?? EdgeInsets.zero,
+            child: child,
+          ),
+        ),
+      );
 
   @override
   Widget? buildImageWidget(

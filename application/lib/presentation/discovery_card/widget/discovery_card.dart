@@ -185,7 +185,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    final mediaQuery = MediaQuery.of(context);
     // normalize the animation value to [0.0, 1.0]
     final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
         (1.0 - _kMinImageFractionSize);
@@ -230,7 +229,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         // to park the image only just outside the visible range at max, when it finally animates back,
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
-            _kMinImageFractionSize * mediaQuery.size.height);
+            _kMinImageFractionSize * constraints.maxHeight);
         final headlineHeight = constraints.maxHeight * _openingAnimation.value;
 
         return Stack(
@@ -238,7 +237,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             Positioned.fill(
                 child: _buildReaderMode(
               processHtmlResult: state.processedDocument?.processHtmlResult,
-              size: mediaQuery.size,
+              size: constraints.biggest,
               headlineHeight: headlineHeight + R.dimen.unit2,
               isBookmarked: state.isBookmarked,
             )),
@@ -290,8 +289,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       title: title,
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
-        left: R.dimen.unit2,
-        right: R.dimen.unit2,
+        left: R.dimen.unit3,
+        right: R.dimen.unit3,
         // todo: bottom offset should compensate for the NavBar, so we need to calculate it
         bottom: R.dimen.unit12,
         top: headlineHeight,
