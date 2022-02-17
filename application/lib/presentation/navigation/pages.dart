@@ -37,10 +37,16 @@ class PageRegistry {
     isInitial: true,
     builder: (_, args) => const SplashScreen(),
   );
+
+  /// Using a global key prevents rebuilding the [DiscoveryFeed]
+  /// when device orientation changes. This also fixes an issue
+  /// with playing videos in full screen mode.
+  static final discoveryFeedKey = GlobalKey();
   static final discovery = xayn.PageData(
     name: "discovery",
-    builder: (_, args) => const DiscoveryFeed(),
+    builder: (_, args) => DiscoveryFeed(key: discoveryFeedKey),
   );
+
   static final search = xayn.PageData(
     name: "search",
     builder: (_, args) => const ActiveSearch(),
