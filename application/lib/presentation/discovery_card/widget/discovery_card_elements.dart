@@ -142,20 +142,20 @@ class DiscoveryCardElements extends StatelessWidget {
         R.dimen.unit3,
         R.dimen.unit3,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          cardHeader,
-          Expanded(child: titleAndTimeToRead),
-          ClipRRect(
-            child: SizedBox(
+      child: ClipRRect(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            cardHeader,
+            Expanded(child: titleAndTimeToRead),
+            SizedBox(
               width: double.infinity,
               height: R.dimen.unit12 * fractionSize,
               child: actionButtonRow,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
 
