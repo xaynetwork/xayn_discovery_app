@@ -120,7 +120,7 @@ class _ReaderModeState extends State<ReaderMode> {
 
         final textColor = R.styles.readerModeTextStyle?.color;
         final htmlColor = textColor != null
-            ? 'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha ~/ 0xff})'
+            ? 'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha / 0xff})'
             : 'rgba(255,255,255,1.0)';
 
         overrideLinkStyle(element) => element.localName?.toLowerCase() == 'a'
