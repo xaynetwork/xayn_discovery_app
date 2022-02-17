@@ -33,7 +33,6 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onBookmarkLongPressed,
     required this.isBookmarked,
     required this.onOpenUrl,
-    this.isFullScreen = true,
     this.fractionSize = 1.0,
     this.provider,
   }) : super(key: key);
@@ -51,7 +50,6 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onOpenUrl;
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
-  final bool isFullScreen;
   final double fractionSize;
 
   @override
