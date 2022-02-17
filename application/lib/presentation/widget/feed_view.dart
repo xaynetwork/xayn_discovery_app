@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-const Curve _kAnimationCurve = Curves.elasticOut;
+const Curve _kAnimationCurve = Curves.easeOut;
 const Curve _kAnimationSnapCurve = Curves.linearToEaseOut;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit;
