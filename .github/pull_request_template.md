@@ -7,7 +7,8 @@
 
 ### How to test 🥼 🔬
 
-- A brief description of the steps required for proper testing
+- [ ] step №1
+- [ ] step №2
 
 ----------
 
@@ -21,6 +22,6 @@
 
 ### References 📝 🔗
 
-- [source name](<!-- (link here) -->)
+- [JIRA](https://xainag.atlassian.net/browse/TB-XXXX)
 
 ----------
