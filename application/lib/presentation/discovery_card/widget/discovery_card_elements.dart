@@ -121,8 +121,27 @@ class DiscoveryCardElements extends StatelessWidget {
       ],
     );
 
+    // fractionSize animates between [.0, 1.0]
+    // - it is 1.0 when in feed view
+    // - and 0.0 in card view (reader mode)
+    // this calculation factors in fractionSize, so that we get an animation
+    // when the view mode changes: in card view, we need to move down, for as
+    // much as the height of the topmost element (menu, iOS notch, ...)
+    // as in card view, we render behind the topmost element, but in feed view,
+    // we render below.
+    // So paddingDeltaFraction represents the delta.
+    final paddingDelta = mediaQuery.padding.top - R.dimen.unit3;
+    final paddingDeltaFraction = (1.0 - fractionSize) * paddingDelta;
+    final paddingTop =
+        (R.dimen.unit3 + paddingDeltaFraction).clamp(.0, double.maxFinite);
+
     final elements = Padding(
-      padding: EdgeInsets.all(R.dimen.unit3),
+      padding: EdgeInsets.fromLTRB(
+        R.dimen.unit3,
+        paddingTop,
+        R.dimen.unit3,
+        R.dimen.unit3,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,

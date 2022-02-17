@@ -102,7 +102,7 @@ void main() {
 
       populatedState = MoveToCollectionState.populated(
         collections: [collection1, collection2],
-        selectedCollection: null,
+        selectedCollectionId: null,
         isBookmarked: false,
         shouldClose: false,
       );
@@ -142,7 +142,7 @@ void main() {
         populatedState,
         populatedState.copyWith(
           isBookmarked: true,
-          selectedCollection: collection1,
+          selectedCollectionId: collection1.id,
         )
       ],
       verify: (manager) {
@@ -174,7 +174,7 @@ void main() {
     );
 
     blocTest<MoveToCollectionManager, MoveToCollectionState>(
-      'WHEN update Initial Selected Collection method is called with forceSelectCollection AND no bookmark found THEN update collection state with false isBookmarked',
+      'WHEN update Initial Selected Collection method is called with initialSelectedCollectionId AND no bookmark found THEN update collection state with false isBookmarked',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
         when(getBookmarkUseCase.singleOutput(bookmark.id)).thenAnswer(
@@ -184,13 +184,13 @@ void main() {
       act: (manager) {
         manager.updateInitialSelectedCollection(
           bookmarkId: bookmark.id,
-          forceSelectCollection: collection2,
+          initialSelectedCollectionId: collection2.id,
         );
       },
       expect: () => [
         populatedState,
         populatedState.copyWith(
-          selectedCollection: collection2,
+          selectedCollectionId: collection2.id,
           isBookmarked: false,
         ),
       ],
@@ -203,7 +203,7 @@ void main() {
     );
 
     blocTest<MoveToCollectionManager, MoveToCollectionState>(
-      'WHEN update Initial Selected Collection method is called with forceSelectCollection AND bookmark is found THEN update collection state with true isBookmarked',
+      'WHEN update Initial Selected Collection method is called with initialSelectedCollectionId AND bookmark is found THEN update collection state with true isBookmarked',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
         when(getBookmarkUseCase.singleOutput(bookmark.id)).thenAnswer(
@@ -213,13 +213,13 @@ void main() {
       act: (manager) {
         manager.updateInitialSelectedCollection(
           bookmarkId: bookmark.id,
-          forceSelectCollection: collection2,
+          initialSelectedCollectionId: collection2.id,
         );
       },
       expect: () => [
         populatedState,
         populatedState.copyWith(
-          selectedCollection: collection2,
+          selectedCollectionId: collection2.id,
           isBookmarked: true,
         ),
       ],
@@ -235,7 +235,7 @@ void main() {
       'WHEN onApplyPressed is called with isBookmarked = false and selectedCollection != null THEN call CreateBookmarkFromDocumentUseCase ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
-        selectedCollection: collection2,
+        selectedCollectionId: collection2.id,
         isBookmarked: false,
       ),
       act: (manager) {
@@ -258,7 +258,7 @@ void main() {
       'WHEN onApplyPressed is called with isBookmarked = true and selectedCollection != null THEN call MoveBookmarkUseCase ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
-        selectedCollection: collection2,
+        selectedCollectionId: collection2.id,
         isBookmarked: true,
       ),
       act: (manager) {
@@ -281,7 +281,7 @@ void main() {
       'WHEN onApplyPressed is called with isBookmarked = true and selectedCollection = null THEN call RemoveBookmarkUseCase ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
-        selectedCollection: null,
+        selectedCollectionId: null,
         isBookmarked: true,
       ),
       act: (manager) {
@@ -304,7 +304,7 @@ void main() {
       'WHEN onApplyPressed is called with isBookmarked = false and selectedCollection = null THEN do not expect calls ',
       build: () => moveDocumentToCollectionManager,
       seed: () => populatedState.copyWith(
-        selectedCollection: null,
+        selectedCollectionId: null,
         isBookmarked: false,
       ),
       act: (manager) {

@@ -1,70 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_card_options/menu_option.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-class CollectionOptionsBottomSheet extends BottomSheetBase {
-  CollectionOptionsBottomSheet({
-    required Collection collection,
+import '../../bookmark/manager/bookmarks_screen_manager.dart';
+
+class BookmarkOptionsBottomSheet extends BottomSheetBase {
+  BookmarkOptionsBottomSheet({
+    required UniqueId bookmarkId,
+    required Function(TooltipKey) onError,
     required VoidCallback onSystemPop,
     Key? key,
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
-          body: _CollectionOptions(
-            collection: collection,
+          body: _BookmarkOptions(
+            bookmarkId: bookmarkId,
+            onError: onError,
             onSystemPop: onSystemPop,
           ),
         );
 }
 
-class _CollectionOptions extends StatefulWidget {
+class _BookmarkOptions extends StatefulWidget {
+  final UniqueId bookmarkId;
+  final Function(TooltipKey) onError;
   final VoidCallback? onSystemPop;
-  final Collection collection;
-  const _CollectionOptions({
+  const _BookmarkOptions({
+    required this.bookmarkId,
+    required this.onError,
     this.onSystemPop,
-    required this.collection,
   });
   @override
-  __CollectionOptionsState createState() => __CollectionOptionsState();
+  __BookmarkOptionsState createState() => __BookmarkOptionsState();
 }
 
-class __CollectionOptionsState extends State<_CollectionOptions>
+class __BookmarkOptionsState extends State<_BookmarkOptions>
     with BottomSheetBodyMixin {
+  late final _bookmarkManager = di.get<BookmarksScreenManager>();
   @override
   Widget build(BuildContext context) {
     final menuOptions = [
       MenuOption(
-          svgIconPath: R.assets.icons.edit,
-          text: R.strings.bottomSheetRename,
+          svgIconPath: R.assets.icons.move,
+          text: R.strings.bottomSheetMoveSingleBookmark,
           onPressed: () {
             closeBottomSheet(context);
-            showAppBottomSheet(
-              context,
-              showBarrierColor: false,
-              builder: (context) => CreateOrRenameCollectionBottomSheet(
-                onSystemPop: widget.onSystemPop,
-                collection: widget.collection,
-              ),
-            );
+            _showMoveBookmarkBottomSheet(context, widget.bookmarkId);
           }),
       MenuOption(
         svgIconPath: R.assets.icons.trash,
         text: R.strings.bottomSheetDelete,
         onPressed: () {
           closeBottomSheet(context);
-          showAppBottomSheet(
-            context,
-            showBarrierColor: false,
-            builder: (context) => DeleteCollectionConfirmationBottomSheet(
-              collectionId: widget.collection.id,
-              onSystemPop: widget.onSystemPop,
-            ),
-          );
+          widget.onSystemPop?.call();
+          _bookmarkManager.removeBookmark(widget.bookmarkId);
         },
       ),
     ];
@@ -93,6 +87,21 @@ class __CollectionOptionsState extends State<_CollectionOptions>
     return BottomSheetClickableOption(
       child: row,
       onTap: menuOption.onPressed,
+    );
+  }
+
+  void _showMoveBookmarkBottomSheet(
+    BuildContext context,
+    UniqueId bookmarkId,
+  ) {
+    showAppBottomSheet(
+      context,
+      showBarrierColor: false,
+      builder: (_) => MoveBookmarkToCollectionBottomSheet(
+        bookmarkId: bookmarkId,
+        onError: widget.onError,
+        onSystemPop: widget.onSystemPop,
+      ),
     );
   }
 }

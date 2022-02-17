@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'move_to_collection_state.freezed.dart';
 
@@ -10,7 +11,7 @@ class MoveToCollectionState with _$MoveToCollectionState {
 
   const factory MoveToCollectionState({
     required List<Collection> collections,
-    Collection? selectedCollection,
+    UniqueId? selectedCollectionId,
     Object? errorObj,
     @Default(false) bool isBookmarked,
     @Default(false) bool shouldClose,
@@ -22,13 +23,13 @@ class MoveToCollectionState with _$MoveToCollectionState {
 
   factory MoveToCollectionState.populated({
     required List<Collection> collections,
-    required Collection? selectedCollection,
+    required UniqueId? selectedCollectionId,
     required bool isBookmarked,
     required bool shouldClose,
   }) =>
       MoveToCollectionState(
         collections: collections,
-        selectedCollection: selectedCollection,
+        selectedCollectionId: selectedCollectionId,
         isBookmarked: isBookmarked,
         shouldClose: shouldClose,
       );

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -21,27 +20,32 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
     Key? key,
     required UniqueId bookmarkId,
     required OnToolTipError onError,
-    Collection? forceSelectCollection,
+    UniqueId? initialSelectedCollection,
+    VoidCallback? onSystemPop,
   }) : super(
           key: key,
+          onSystemPop: onSystemPop,
           body: _MoveBookmarkToCollection(
             bookmarkId: bookmarkId,
             onError: onError,
-            forceSelectCollection: forceSelectCollection,
+            initialSelectedCollection: initialSelectedCollection,
+            onSystemPop: onSystemPop,
           ),
         );
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId bookmarkId;
-  final Collection? forceSelectCollection;
   final OnToolTipError onError;
+  final UniqueId? initialSelectedCollection;
+  final VoidCallback? onSystemPop;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarkId,
     required this.onError,
-    this.forceSelectCollection,
+    this.initialSelectedCollection,
+    this.onSystemPop,
   }) : super(key: key);
 
   @override
@@ -59,7 +63,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       (it) async {
         await it.updateInitialSelectedCollection(
           bookmarkId: widget.bookmarkId,
-          forceSelectCollection: widget.forceSelectCollection,
+          initialSelectedCollectionId: widget.initialSelectedCollection,
         );
         setState(
           () => _moveBookmarkToCollectionManager = it,
@@ -90,6 +94,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
             builder: (_, state) {
               if (state.shouldClose) {
                 closeBottomSheet(context);
+                widget.onSystemPop?.call();
               }
 
               if (state.collections.isNotEmpty) {
@@ -97,7 +102,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
                   collections: state.collections,
                   onSelectCollection: _moveBookmarkToCollectionManager!
                       .updateSelectedCollection,
-                  initialSelectedCollection: state.selectedCollection,
+                  initialSelectedCollectionId: state.selectedCollectionId,
                 );
               }
 
@@ -115,14 +120,18 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     );
 
     final footer = BottomSheetFooter(
-      onCancelPressed: () => closeBottomSheet(context),
+      onCancelPressed: () {
+        closeBottomSheet(context);
+        widget.onSystemPop?.call();
+      },
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
-          onPressed: () =>
-              _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
-            bookmarkId: widget.bookmarkId,
-          ),
+          onPressed: () {
+            _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
+              bookmarkId: widget.bookmarkId,
+            );
+          },
         ),
       ),
     );
@@ -142,22 +151,26 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
     closeBottomSheet(context);
     showAppBottomSheet(
       context,
+      showBarrierColor: widget.onSystemPop == null,
       builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
-          collection,
+          collection.id,
         ),
+        onSystemPop: widget.onSystemPop,
       ),
     );
   }
 
-  _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
+  _onAddCollectionSheetClosed(BuildContext context, UniqueId newCollectionId) =>
       showAppBottomSheet(
         context,
+        showBarrierColor: widget.onSystemPop == null,
         builder: (_) => MoveBookmarkToCollectionBottomSheet(
           bookmarkId: widget.bookmarkId,
-          forceSelectCollection: newCollection,
+          initialSelectedCollection: newCollectionId,
           onError: widget.onError,
+          onSystemPop: widget.onSystemPop,
         ),
       );
 }

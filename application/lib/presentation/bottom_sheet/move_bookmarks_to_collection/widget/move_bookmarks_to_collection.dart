@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_button_data.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
@@ -19,7 +18,7 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
     Key? key,
     required List<UniqueId> bookmarksIds,
     required UniqueId collectionIdToRemove,
-    Collection? forceSelectCollection,
+    UniqueId? initialSelectedCollection,
     VoidCallback? onSystemPop,
   }) : super(
           key: key,
@@ -27,23 +26,23 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
           body: _MoveBookmarkToCollection(
             bookmarksIds: bookmarksIds,
             collectionIdToRemove: collectionIdToRemove,
-            forceSelectCollection: forceSelectCollection,
+            initialSelectedCollection: initialSelectedCollection,
             onSystemPop: onSystemPop,
           ),
         );
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
-  final Collection? forceSelectCollection;
   final List<UniqueId> bookmarksIds;
   final UniqueId collectionIdToRemove;
+  final UniqueId? initialSelectedCollection;
   final VoidCallback? onSystemPop;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarksIds,
     required this.collectionIdToRemove,
-    this.forceSelectCollection,
+    this.initialSelectedCollection,
     this.onSystemPop,
   }) : super(key: key);
 
@@ -61,7 +60,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   void initState() {
     _moveBookmarksToCollectionManager.enteringScreen(
       collectionIdToRemove: widget.collectionIdToRemove,
-      selectedCollection: widget.forceSelectCollection,
+      selectedCollectionId: widget.initialSelectedCollection,
     );
     super.initState();
   }
@@ -82,7 +81,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
               collections: state.collections,
               onSelectCollection:
                   _moveBookmarksToCollectionManager.updateSelectedCollection,
-              initialSelectedCollection: state.selectedCollection,
+              initialSelectedCollectionId: state.selectedCollectionId,
             )
           : const SizedBox.shrink(),
     );
@@ -129,19 +128,19 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
         onSystemPop: widget.onSystemPop,
         onApplyPressed: (collection) => _onAddCollectionSheetClosed(
           buildContext,
-          collection,
+          collection.id,
         ),
       ),
     );
   }
 
-  _onAddCollectionSheetClosed(BuildContext context, Collection newCollection) =>
+  _onAddCollectionSheetClosed(BuildContext context, UniqueId newCollectionId) =>
       showAppBottomSheet(
         context,
         showBarrierColor: false,
         builder: (_) => MoveBookmarksToCollectionBottomSheet(
           bookmarksIds: widget.bookmarksIds,
-          forceSelectCollection: newCollection,
+          initialSelectedCollection: newCollectionId,
           collectionIdToRemove: widget.collectionIdToRemove,
           onSystemPop: widget.onSystemPop,
         ),

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -24,6 +23,8 @@ import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+const _kTopPaddingAnimationCurve = Curves.fastLinearToSlowEaseIn;
 
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
@@ -180,35 +181,37 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   Widget build(BuildContext context) {
-    // Reduce the top padding when notch is present.
-    final topPadding = Platform.isIOS
-        ? (MediaQuery.of(context).padding.top - R.dimen.unit)
-            .clamp(.0, double.maxFinite)
-        : .0;
-    final feedView = _buildFeedView();
+    return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
+      bloc: _discoveryFeedManager,
+      builder: (context, state) {
+        // this is for:
+        // - any menu bar
+        // - the iOS notch
+        // - etc...
+        final topPadding =
+            state.isFullScreen ? .0 : MediaQuery.of(context).padding.top;
+        final body = Scaffold(
+          /// resizing the scaffold is set to false since the keyboard could be
+          /// triggered when creating a collection from the bottom sheet and the
+          /// feed should look the same in that process
+          ///
+          resizeToAvoidBottomInset: false,
+          body: AnimatedPadding(
+            duration: R.animations.cardOpenTransitionDuration,
+            curve: _kTopPaddingAnimationCurve,
+            padding: EdgeInsets.only(top: topPadding),
+            child: _buildFeedView(state),
+          ),
+        );
 
-    final body = Scaffold(
-      /// resizing the scaffold is set to false since the keyboard could be
-      /// triggered when creating a collection from the bottom sheet and the
-      /// feed should look the same in that process
-      ///
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        bottom: false,
-        top: Platform.isAndroid,
-        child: Padding(
-          padding: EdgeInsets.only(top: topPadding),
-          child: feedView,
-        ),
-      ),
-    );
-
-    return WillPopScope(
-      onWillPop: () async {
-        removeOverlay();
-        return false;
+        return WillPopScope(
+          onWillPop: () async {
+            removeOverlay();
+            return false;
+          },
+          child: body,
+        );
       },
-      child: body,
     );
   }
 
@@ -231,74 +234,66 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     super.initState();
   }
 
-  Widget _buildFeedView() {
+  Widget _buildFeedView(DiscoveryFeedState state) {
     return LayoutBuilder(builder: (context, constraints) {
-      final discoveryFeedManager = _discoveryFeedManager;
-
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
 
-      return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
-        bloc: discoveryFeedManager,
-        builder: (context, state) {
-          final results = state.results;
-          final totalResults = results.length;
-          // ensure that we don't overflow the index.
-          // this is because right now, we always refresh the feed when we
-          // return to it, should solve itself once this is state-managed by
-          // the real engine at some point.
-          final cardIndex = min(totalResults - 1, state.cardIndex);
+      final results = state.results;
+      final totalResults = results.length;
+      // ensure that we don't overflow the index.
+      // this is because right now, we always refresh the feed when we
+      // return to it, should solve itself once this is state-managed by
+      // the real engine at some point.
+      final cardIndex = min(totalResults - 1, state.cardIndex);
 
-          removeObsoleteCardManagers(state.removedResults);
+      removeObsoleteCardManagers(state.removedResults);
 
-          if (!state.isComplete && state.results.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      if (!state.isComplete && state.results.isEmpty) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
 
-          if (state.results.isEmpty || cardIndex == -1) {
-            return const Center();
-          }
+      if (state.results.isEmpty || cardIndex == -1) {
+        return const Center();
+      }
 
-          NavBarContainer.updateNavBar(context);
+      NavBarContainer.updateNavBar(context);
 
-          _cardViewController.index = cardIndex;
+      _cardViewController.index = cardIndex;
 
-          onIndexChanged(int index) {
-            discoveryFeedManager.handleIndexChanged(index);
-            _ratingDialogManager.handleIndexChanged(index);
-          }
+      onIndexChanged(int index) {
+        _discoveryFeedManager.handleIndexChanged(index);
+        _ratingDialogManager.handleIndexChanged(index);
+      }
 
-          return FeedView(
-            key: Keys.feedView,
-            cardViewController: _cardViewController,
-            itemBuilder: _itemBuilder(
-              results: results,
-              isPrimary: true,
-              isSwipingEnabled: !state.isFullScreen,
-              isFullScreen: state.isFullScreen,
-            ),
-            secondaryItemBuilder: _itemBuilder(
-              results: results,
-              isPrimary: false,
-              isSwipingEnabled: true,
-              isFullScreen: false,
-            ),
-            boxBorderBuilder: _boxBorderBuilder(
-              results: results,
-              isFullScreen: state.isFullScreen,
-            ),
-            itemCount: totalResults,
-            onFinalIndex: discoveryFeedManager.handleLoadMore,
-            onIndexChanged: totalResults > 0 ? onIndexChanged : null,
-            isFullScreen: state.isFullScreen,
-            fullScreenOffsetFraction:
-                _dragDistance / DiscoveryCard.dragThreshold,
-            notchSize: notchSize,
-            cardIdentifierBuilder: _createUniqueCardIdentity(results),
-          );
-        },
+      return FeedView(
+        key: Keys.feedView,
+        cardViewController: _cardViewController,
+        itemBuilder: _itemBuilder(
+          results: results,
+          isPrimary: true,
+          isSwipingEnabled: !state.isFullScreen,
+          isFullScreen: state.isFullScreen,
+        ),
+        secondaryItemBuilder: _itemBuilder(
+          results: results,
+          isPrimary: false,
+          isSwipingEnabled: true,
+          isFullScreen: false,
+        ),
+        boxBorderBuilder: _boxBorderBuilder(
+          results: results,
+          isFullScreen: state.isFullScreen,
+        ),
+        itemCount: totalResults,
+        onFinalIndex: _discoveryFeedManager.handleLoadMore,
+        onIndexChanged: totalResults > 0 ? onIndexChanged : null,
+        isFullScreen: state.isFullScreen,
+        fullScreenOffsetFraction: _dragDistance / DiscoveryCard.dragThreshold,
+        notchSize: notchSize,
+        cardIdentifierBuilder: _createUniqueCardIdentity(results),
       );
     });
   }
@@ -322,6 +317,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final document = results.elementAt(normalizedIndex);
         final managers = managersOf(document);
 
+        onTapPrimary() {
+          hideTooltip();
+
+          _discoveryFeedManager.handleNavigateIntoCard();
+        }
+
+        onTapSecondary() => _cardViewController.jump(JumpDirection.down);
+
         if (isPrimary) {
           _discoveryFeedManager.handleViewType(
             document,
@@ -341,10 +344,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                     _currentCardController = controller,
               )
             : GestureDetector(
-                onTap: () {
-                  hideTooltip();
-                  _discoveryFeedManager.handleNavigateIntoCard();
-                },
+                onTap: isPrimary ? onTapPrimary : onTapSecondary,
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,
