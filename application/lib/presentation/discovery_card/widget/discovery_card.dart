@@ -238,6 +238,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 child: _buildReaderMode(
               processHtmlResult: state.processedDocument?.processHtmlResult,
               size: mediaQuery.size,
+              headlineHeight: constraints.maxHeight * _kMinImageFractionSize +
+                  R.dimen.unit2,
               isBookmarked: state.isBookmarked,
             )),
             Positioned(
@@ -281,6 +283,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,
     required Size size,
+    required double headlineHeight,
     required bool isBookmarked,
   }) {
     final readerMode = ReaderMode(
@@ -291,7 +294,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         right: R.dimen.unit2,
         // todo: bottom offset should compensate for the NavBar, so we need to calculate it
         bottom: R.dimen.unit12,
-        top: size.height * _kMinImageFractionSize,
+        top: headlineHeight,
       ),
       onProcessedHtml: () => _openingAnimation.animateTo(
         _kMinImageFractionSize,
