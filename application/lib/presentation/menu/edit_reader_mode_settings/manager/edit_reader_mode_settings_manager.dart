@@ -59,8 +59,7 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
               errorReport.of(_saveFontSizeHandler) ??
               errorReport.of(_saveFontStyleHandler);
           logger.e(report!.error);
-          //todo: handle error in a separate PR
-          return state;
+          return state.copyWith(error: report.error);
         }
 
         return EditReaderModeSettingsState(
