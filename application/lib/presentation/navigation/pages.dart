@@ -14,6 +14,9 @@ import 'package:xayn_discovery_app/presentation/personal_area/personal_area_scre
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
 
+/// IMPORTANT NOTE: do not use `const` keyword with the ScreenWidgets
+/// Reason: the `const` word prevent screen from the reloading
+/// when the system language changed
 class PageRegistry {
   PageRegistry._();
 
@@ -35,7 +38,8 @@ class PageRegistry {
   static final splashScreen = xayn.PageData(
     name: "splashScreen",
     isInitial: true,
-    builder: (_, args) => const SplashScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => SplashScreen(),
   );
 
   /// Using a global key prevents rebuilding the [DiscoveryFeed]
@@ -49,7 +53,8 @@ class PageRegistry {
 
   static final search = xayn.PageData(
     name: "search",
-    builder: (_, args) => const ActiveSearch(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => ActiveSearch(),
   );
 
   static cardDetailsStandalone(DiscoveryCardStandaloneArgs args) =>
@@ -80,15 +85,18 @@ class PageRegistry {
 
   static final personalArea = xayn.PageData(
     name: "personalArea",
-    builder: (_, args) => const PersonalAreaScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => PersonalAreaScreen(),
   );
   static final settings = xayn.PageData(
     name: "settings",
-    builder: (_, args) => const SettingsScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => SettingsScreen(),
   );
   static final onboarding = xayn.PageData(
     name: "onboarding",
-    builder: (_, args) => const OnBoardingScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => OnBoardingScreen(),
     pageBuilder: (_, widget) => xayn.CustomTransitionPage(
       name: "onboarding",
       child: widget,
@@ -102,16 +110,19 @@ class PageRegistry {
 
   static final feedSettings = xayn.PageData(
     name: "feedSettings",
-    builder: (_, args) => const FeedSettingsScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => FeedSettingsScreen(),
   );
 
   static final collections = xayn.PageData(
     name: "collections",
-    builder: (_, args) => const CollectionsScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => CollectionsScreen(),
   );
 
   static final payment = xayn.PageData(
     name: "payment",
-    builder: (_, args) => const PaymentScreen(),
+    //ignore: prefer_const_constructors
+    builder: (_, args) => PaymentScreen(),
   );
 }
