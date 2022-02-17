@@ -57,14 +57,10 @@ class ReaderMode extends StatefulWidget {
 class _ReaderModeState extends State<ReaderMode> {
   late final ReaderModeManager _readerModeManager = di.get();
   late final _readerModeController = readability.ReaderModeController();
-  late final StreamController<EdgeInsets> _paddingController =
-      StreamController<EdgeInsets>();
 
   @override
   void initState() {
     super.initState();
-
-    _paddingController.add(widget.padding);
 
     _updateCardData();
   }
@@ -73,7 +69,6 @@ class _ReaderModeState extends State<ReaderMode> {
   void dispose() {
     super.dispose();
 
-    _paddingController.close();
     _readerModeManager.close();
     _readerModeController.dispose();
   }
@@ -83,10 +78,6 @@ class _ReaderModeState extends State<ReaderMode> {
     if (oldWidget.title != widget.title ||
         oldWidget.processHtmlResult != widget.processHtmlResult) {
       _updateCardData();
-    }
-
-    if (oldWidget.padding != widget.padding) {
-      _paddingController.add(widget.padding);
     }
 
     super.didUpdateWidget(oldWidget);
@@ -138,9 +129,7 @@ class _ReaderModeState extends State<ReaderMode> {
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
           rendererPadding: widget.padding,
-          factoryBuilder: () => _ReaderModeWidgetFactory(
-            onPadding: _paddingController.stream,
-          ),
+          factoryBuilder: () => _ReaderModeWidgetFactory(),
           loadingBuilder: () => loading,
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
@@ -192,10 +181,6 @@ class _ReaderModeState extends State<ReaderMode> {
 
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
-  final Stream<EdgeInsets> onPadding;
-
-  _ReaderModeWidgetFactory({required this.onPadding});
-
   /// This property is actually used for link callbacks,
   /// we don't want to follow links, so this is set to be null.
   /// Simply remove this override to re-enable links, when needed.
