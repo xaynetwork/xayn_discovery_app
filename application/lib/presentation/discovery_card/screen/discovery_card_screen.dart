@@ -57,14 +57,22 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: BlocBuilder<DiscoveryCardScreenManager, DiscoveryCardScreenState>(
+  Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.only(top: topPadding),
+        child:
+            BlocBuilder<DiscoveryCardScreenManager, DiscoveryCardScreenState>(
           builder: (context, state) => state.map(
               populated: (v) => _createCard(v.document),
               initial: (_) => Container()),
           bloc: _discoveryCardScreenManager,
         ),
-      );
+      ),
+    );
+  }
 
   Widget _createCard(Document document) {
     final cardManagers = di.get<CardManagers>(param1: document);
