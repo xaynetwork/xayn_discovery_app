@@ -22,7 +22,8 @@ void main() {
   const ReaderModeBackgroundColor mockBackgroundColor =
       ReaderModeBackgroundColor.beige;
   const ReaderModeFontSize mockFontSize = ReaderModeFontSize.large;
-  ReaderModeSettings mockReaderModeSettings = ReaderModeSettings.initial();
+  final ReaderModeSettings mockReaderModeSettings =
+      ReaderModeSettings.initial();
 
   setUp(() {
     saveReaderModeFontStyleUseCase = MockSaveReaderModeFontStyleUseCase();
