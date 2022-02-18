@@ -80,7 +80,7 @@ class EditReaderModeSettingsMenu extends StatelessWidget {
             end: R.dimen.unit2,
             width: R.dimen.unit22,
             onClose: onCloseMenu,
-            errorStr: state.error != null
+            errorMessage: state.error != null
                 ? R.strings.readerModeSettingsErrorChangesNotApplied
                 : null,
           );
