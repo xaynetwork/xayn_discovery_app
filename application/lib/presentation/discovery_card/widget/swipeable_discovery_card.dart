@@ -54,7 +54,10 @@ class SwipeableDiscoveryCard extends StatelessWidget {
         minFlingDragDistanceFraction: .333,
         onFling: isPrimary ? (options) => options.first : null,
         opensToPosition: _kSwipeOpenToPosition,
-        child: child,
+        child: ClipRRect(
+          child: card,
+          borderRadius: BorderRadius.circular(R.dimen.unit1_5),
+        ),
         onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
         optionBuilder: optionsBuilder,
         waitBeforeClosingDuration: Duration.zero,
