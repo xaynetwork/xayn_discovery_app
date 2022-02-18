@@ -39,7 +39,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
   Widget _buildWithTextOnly(Text text) => SizedBox(
         height: R.dimen.unit12,
         child: Container(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: text,
         ),
       );
