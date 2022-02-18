@@ -28,9 +28,9 @@ BuildTypes = Config::BuildTypes
 
 # Common checks before running a lane
 before_all do |lane, options|
-  allowedOptions = Options.constants.map {|c|  Options.const_get(c) }
+  allowedOptions = Options.constants.map { |c| Options.const_get(c) }
   options.each do |k, v|
-     UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
+    UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
   end
 
   setIfNotSet = lambda { |option, alt|
@@ -56,6 +56,10 @@ before_all do |lane, options|
   build_number = gitVersionNumber().to_i + offset
   setIfNotSet.call(Options::BUILD_NUMBER, build_number)
   setIfNotSet.call(Options::VERSION_NAME, version_name)
+  revenueCatSDKKeyAndroid = Config::FLAVOR_MATRIX[flavor][Platforms::ANDROID][Config::Keys::REVENUE_CAT_SDK_KEY]
+  revenueCatSDKKeyIOS = Config::FLAVOR_MATRIX[flavor][Platforms::IOS][Config::Keys::REVENUE_CAT_SDK_KEY]
+  Config::ENV_DEFAULTS["REVENUE_CAT_SDK_KEY_ANDROID"] = revenueCatSDKKeyAndroid
+  Config::ENV_DEFAULTS["REVENUE_CAT_SDK_KEY_IOS"] = revenueCatSDKKeyIOS
   options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
   options[_Options::ENV].merge!(ENV.to_h)
@@ -157,6 +161,8 @@ lane :check_config_files do |options|
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_DEBUG" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
+    "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -169,6 +175,8 @@ lane :check_config_files do |options|
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_PRODUCTION" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
+    "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
   }, Config::ENV_DEFAULTS)
 
   if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
@@ -305,4 +313,3 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
     downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
   }
 end
-
