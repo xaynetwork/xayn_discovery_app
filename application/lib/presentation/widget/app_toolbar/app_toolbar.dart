@@ -17,7 +17,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
     final title = appToolbarData.title;
     final text = Text(title, style: R.styles.appHeadlineText);
     final content = appToolbarData.map(
-      titleOnly: (_) => text,
+      titleOnly: (_) => _buildWithTextOnly(text),
       withTrailingIcon: (data) => _buildWithTrailingIcon(
         text: text,
         iconPath: data.iconPath,
@@ -35,6 +35,14 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
+
+  Widget _buildWithTextOnly(Text text) => SizedBox(
+        height: R.dimen.unit12,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          child: text,
+        ),
+      );
 
   Widget _buildWithTrailingIcon({
     required Text text,
