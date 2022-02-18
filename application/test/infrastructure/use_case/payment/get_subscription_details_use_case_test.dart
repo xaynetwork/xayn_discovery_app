@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
@@ -20,40 +19,17 @@ void main() {
     mapper = MockPurchasableProductMapper();
     useCase = GetSubscriptionDetailsUseCase(paymentService, mapper);
 
-    when(paymentService.isAvailable()).thenAnswer((_) => Future.value(true));
-    when(paymentService.queryProductDetails({subscriptionId})).thenAnswer(
-      (_) async => ProductDetailsResponse(
-        notFoundIDs: [],
-        productDetails: [productDetails],
-      ),
+    when(paymentService.getProducts([subscriptionId])).thenAnswer(
+      (_) async => [product],
     );
-    when(mapper.map(productDetails)).thenReturn(purchasableProduct);
+    when(mapper.map(product)).thenReturn(purchasableProduct);
   });
-
-  useCaseTest<GetSubscriptionDetailsUseCase, None, PurchasableProduct>(
-      'WHEN paymentService not available THEN throw storeNotAvailable error',
-      setUp: () {
-        when(paymentService.isAvailable()).thenAnswer((_) async => false);
-      },
-      build: () => useCase,
-      input: {none},
-      expect: [
-        useCaseFailure(throwsA(PaymentFlowError.storeNotAvailable)),
-      ],
-      verify: (_) {
-        verifyZeroInteractions(mapper);
-        verify(paymentService.isAvailable());
-        verifyNoMoreInteractions(paymentService);
-      });
 
   useCaseTest<GetSubscriptionDetailsUseCase, None, PurchasableProduct>(
     'WHEN paymentService can not find product THEN throw productNotFound error',
     setUp: () {
-      when(paymentService.queryProductDetails({subscriptionId})).thenAnswer(
-        (_) async => ProductDetailsResponse(
-          notFoundIDs: [subscriptionId],
-          productDetails: [],
-        ),
+      when(paymentService.getProducts([subscriptionId])).thenAnswer(
+        (_) async => [],
       );
     },
     build: () => useCase,
@@ -62,10 +38,7 @@ void main() {
       useCaseFailure(throwsA(PaymentFlowError.productNotFound)),
     ],
     verify: (_) {
-      verifyInOrder([
-        paymentService.isAvailable(),
-        paymentService.queryProductDetails({subscriptionId}),
-      ]);
+      verify(paymentService.getProducts([subscriptionId]));
       verifyNoMoreInteractions(paymentService);
       verifyZeroInteractions(mapper);
     },
@@ -80,9 +53,8 @@ void main() {
     ],
     verify: (_) {
       verifyInOrder([
-        paymentService.isAvailable(),
-        paymentService.queryProductDetails({subscriptionId}),
-        mapper.map(productDetails),
+        paymentService.getProducts([subscriptionId]),
+        mapper.map(product),
       ]);
       verifyNoMoreInteractions(mapper);
       verifyNoMoreInteractions(paymentService);
