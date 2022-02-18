@@ -77,7 +77,7 @@ class EditReaderModeSettingsMenu extends StatelessWidget {
             bottom: MediaQuery.of(context).viewInsets.bottom +
                 R.dimen.bottomBarDockedHeight +
                 R.dimen.unit4_25,
-            right: R.dimen.unit2,
+            end: R.dimen.unit2,
             width: R.dimen.unit22,
             onClose: onCloseMenu,
             errorStr: state.error != null
