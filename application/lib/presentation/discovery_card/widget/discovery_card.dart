@@ -193,6 +193,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
+    final size = MediaQuery.of(context).size;
     // normalize the animation value to [0.0, 1.0]
     final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
         (1.0 - _kMinImageFractionSize);
@@ -244,8 +245,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           children: [
             _buildReaderMode(
               processHtmlResult: state.processedDocument?.processHtmlResult,
-              headlineHeight: constraints.maxHeight * _kMinImageFractionSize +
-                  R.dimen.unit2,
+              width: size.width,
+              headlineHeight:
+                  size.height * _kMinImageFractionSize + R.dimen.unit2,
             ),
             Positioned(
               top: -outerScrollOffset,
@@ -288,24 +290,34 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,
+    required double width,
     required double headlineHeight,
-  }) =>
-      ReaderMode(
-        title: title,
-        processHtmlResult: processHtmlResult,
-        padding: EdgeInsets.only(
-          left: R.dimen.unit3,
-          right: R.dimen.unit3,
-          // todo: bottom offset should compensate for the NavBar, so we need to calculate it
-          bottom: R.dimen.unit12,
-          top: headlineHeight,
-        ),
-        onProcessedHtml: () => _openingAnimation.animateTo(
-          _kMinImageFractionSize,
-          curve: Curves.fastOutSlowIn,
-        ),
-        onScroll: (position) => setState(() => _scrollOffset = position),
-      );
+  }) {
+    final readerMode = ReaderMode(
+      title: title,
+      processHtmlResult: processHtmlResult,
+      padding: EdgeInsets.only(
+        left: R.dimen.unit3,
+        right: R.dimen.unit3,
+        // todo: bottom offset should compensate for the NavBar, so we need to calculate it
+        bottom: R.dimen.unit15,
+        top: headlineHeight,
+      ),
+      onProcessedHtml: () => _openingAnimation.animateTo(
+        _kMinImageFractionSize,
+        curve: Curves.fastOutSlowIn,
+      ),
+      onScroll: (position) => setState(() => _scrollOffset = position),
+    );
+
+    return ClipRRect(
+      child: OverflowBox(
+        alignment: Alignment.topCenter,
+        maxWidth: width,
+        child: readerMode,
+      ),
+    );
+  }
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>

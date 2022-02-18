@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -24,8 +25,6 @@ import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-const _kTopPaddingAnimationCurve = Curves.fastLinearToSlowEaseIn;
-
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
@@ -51,6 +50,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         SubscriptionTrialBannerStateMixin,
         OverlayStateMixin {
   late final DiscoveryFeedManager _discoveryFeedManager;
+  late final StreamSubscription<BuildContext> _navBarUpdateListener;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   final FeatureManager _featureManager = di.get();
@@ -183,17 +183,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           // - any menu bar
           // - the iOS notch
           // - etc...
-          final topPadding =
-              state.isFullScreen ? .0 : MediaQuery.of(context).padding.top;
+          final topPadding = MediaQuery.of(context).viewPadding.top;
           return Scaffold(
             /// resizing the scaffold is set to false since the keyboard could be
             /// triggered when creating a collection from the bottom sheet and the
             /// feed should look the same in that process
             ///
             resizeToAvoidBottomInset: false,
-            body: AnimatedPadding(
-              duration: R.animations.cardOpenTransitionDuration,
-              curve: _kTopPaddingAnimationCurve,
+            body: Padding(
               padding: EdgeInsets.only(top: topPadding),
               child: _buildFeedView(state),
             ),
@@ -205,6 +202,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void dispose() {
     _cardViewController.dispose();
     _discoveryFeedManager.close();
+    _navBarUpdateListener.cancel();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -217,11 +215,17 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
     _discoveryFeedManager = di.get();
 
+    _navBarUpdateListener = _discoveryFeedManager.stream
+        .map((state) => state.isFullScreen)
+        .distinct()
+        .map((_) => context)
+        .listen(NavBarContainer.updateNavBar);
+
     super.initState();
   }
 
   Widget _buildFeedView(DiscoveryFeedState state) {
-    return LayoutBuilder(builder: (context, constraints) {
+    return LayoutBuilder(builder: (_, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
 
@@ -244,8 +248,6 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       if (state.results.isEmpty || cardIndex == -1) {
         return const Center();
       }
-
-      NavBarContainer.updateNavBar(context);
 
       _cardViewController.index = cardIndex;
 

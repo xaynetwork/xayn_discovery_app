@@ -128,10 +128,10 @@ class _DiscoveryCardStaticState
       title: title,
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
-        left: R.dimen.unit2,
-        right: R.dimen.unit2,
+        left: R.dimen.unit3,
+        right: R.dimen.unit3,
         // todo: bottom offset should compensate for the NavBar, so we need to calculate it
-        bottom: R.dimen.unit12,
+        bottom: R.dimen.unit15,
         top: size.height * _kImageFractionSize,
       ),
       onScroll: (position) => setState(() => _scrollOffset = position),
