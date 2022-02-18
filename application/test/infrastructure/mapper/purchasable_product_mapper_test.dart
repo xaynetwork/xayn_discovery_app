@@ -1,43 +1,43 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:in_app_purchase/in_app_purchase.dart' hide PurchaseStatus;
+import 'package:purchases_flutter/models/product_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 
 void main() {
   final mapper = PurchasableProductMapper();
 
-  final details = <ProductDetails>[
-    ProductDetails(
-      id: 'id_0',
-      title: 'title_0',
-      description: 'description_0',
-      price: 'price_0',
-      rawPrice: 0,
-      currencyCode: 'code_0',
+  const details = <Product>[
+    Product(
+      'id_0',
+      'description_0',
+      'title_0',
+      0.0,
+      'price_0',
+      'code_0',
     ),
-    ProductDetails(
-      id: 'id_1',
-      title: 'title_1',
-      description: 'description_1',
-      price: 'price_1',
-      rawPrice: 1,
-      currencyCode: 'code_1',
+    Product(
+      'id_1',
+      'description_1',
+      'title_1',
+      1.0,
+      'price_1',
+      'code_1',
     ),
-    ProductDetails(
-      id: 'id_2',
-      title: 'title_2',
-      description: 'description_2',
-      price: 'price_2',
-      rawPrice: 2,
-      currencyCode: 'code_2',
+    Product(
+      'id_2',
+      'description_2',
+      'title_2',
+      2.0,
+      'price_2',
+      'code_2',
     ),
-    ProductDetails(
-      id: 'id_3',
-      title: 'title_3',
-      description: 'description_3',
-      price: 'price_3',
-      rawPrice: 3,
-      currencyCode: 'code_3',
+    Product(
+      'id_3',
+      'description_3',
+      'title_3',
+      3.0,
+      'price_3',
+      'code_3',
     ),
   ];
 
