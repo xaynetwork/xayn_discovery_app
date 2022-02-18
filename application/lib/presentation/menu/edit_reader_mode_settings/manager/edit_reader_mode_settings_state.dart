@@ -12,5 +12,6 @@ class EditReaderModeSettingsState with _$EditReaderModeSettingsState {
     required ReaderModeBackgroundColor readerModeBackgroundColor,
     required ReaderModeFontSize readerModeFontSize,
     required ReaderModeFontStyle readerModeFontStyle,
+    Object? error,
   }) = _EditReaderModeSettingsState;
 }
