@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-const Curve _kAnimationCurve = Curves.easeOut;
+const Curve _kAnimationCurveIn = Curves.linearToEaseOut;
+const Curve _kAnimationCurveOut = Curves.bounceOut;
 const Curve _kAnimationSnapCurve = Curves.linearToEaseOut;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit;
@@ -59,7 +60,7 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CardView(
         animationDuration: R.animations.feedTransitionDuration,
-        animationCurve: _kAnimationCurve,
+        animationCurve: isFullScreen ? _kAnimationCurveIn : _kAnimationCurveOut,
         animateToSnapDuration: R.animations.unit3,
         animateToSnapCurve: _kAnimationSnapCurve,
         scrollDirection: scrollDirection,
