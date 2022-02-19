@@ -22,5 +22,6 @@ abstract class AnalyticsEvent {
                 },
               )
               .toList(growable: false),
+          if (properties != null) ...properties,
         };
 }
