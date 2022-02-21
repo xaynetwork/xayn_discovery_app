@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
@@ -10,20 +11,11 @@ import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/m
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/selectable_chip.dart';
 
-const _kDividerThickness = 1.0;
+class EditReaderModeSettingsMenu extends StatelessWidget {
+  EditReaderModeSettingsMenu({Key? key, this.onCloseMenu}) : super(key: key);
 
-class EditReaderModeSettingsMenu extends StatefulWidget {
-  const EditReaderModeSettingsMenu({Key? key}) : super(key: key);
-
-  @override
-  _EditReaderModeSettingsMenuState createState() =>
-      _EditReaderModeSettingsMenuState();
-}
-
-class _EditReaderModeSettingsMenuState
-    extends State<EditReaderModeSettingsMenu> {
-  late final EditReaderModeSettingsManager _editReaderModeSettingsManager =
-      di.get();
+  final EditReaderModeSettingsManager _editReaderModeSettingsManager = di.get();
+  final VoidCallback? onCloseMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -76,34 +68,24 @@ class _EditReaderModeSettingsMenuState
                   )
                   .toList());
 
-          final column = Column(
+          return AppMenu(
             children: [
-              SizedBox(height: R.dimen.unit3),
               editFontStyleRow,
-              _buildDivider(),
               editFontSizeRow,
-              _buildDivider(),
-              editBackgroundColorRow,
-              SizedBox(height: R.dimen.unit3),
+              editBackgroundColorRow
             ],
-          );
-
-          return Material(
-            elevation: R.dimen.unit5,
-            shadowColor: R.colors.shadowTransparent,
-            borderRadius: R.styles.roundBorder,
-            clipBehavior: Clip.antiAlias,
-            color: R.colors.background,
-            child: column,
+            bottom: MediaQuery.of(context).viewInsets.bottom +
+                R.dimen.bottomBarDockedHeight +
+                R.dimen.unit4_25,
+            end: R.dimen.unit2,
+            width: R.dimen.unit22,
+            onClose: onCloseMenu,
+            errorMessage: state.error != null
+                ? R.strings.readerModeSettingsErrorChangesNotApplied
+                : null,
           );
         });
   }
-
-  Widget _buildDivider() => Divider(
-        color: R.colors.menuDividerColor,
-        height: R.dimen.unit4,
-        thickness: _kDividerThickness,
-      );
 
   Widget _buildPaddedRow({required List<Widget> children}) => Padding(
         padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),

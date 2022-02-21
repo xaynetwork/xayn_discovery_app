@@ -108,13 +108,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           );
 
       void onEditReaderModeSettingsPressed() => toggleOverlay(
-            (_) => Positioned(
-              bottom: MediaQuery.of(context).viewInsets.bottom +
-                  R.dimen.bottomBarDockedHeight +
-                  R.dimen.unit4_25,
-              right: R.dimen.unit2,
-              width: R.dimen.unit22,
-              child: const EditReaderModeSettingsMenu(),
+            (_) => EditReaderModeSettingsMenu(
+              onCloseMenu: removeOverlay,
             ),
           );
 
@@ -180,37 +175,28 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
-      bloc: _discoveryFeedManager,
-      builder: (context, state) {
-        // this is for:
-        // - any menu bar
-        // - the iOS notch
-        // - etc...
-        final topPadding = MediaQuery.of(context).viewPadding.top;
-        final body = Scaffold(
-          /// resizing the scaffold is set to false since the keyboard could be
-          /// triggered when creating a collection from the bottom sheet and the
-          /// feed should look the same in that process
-          ///
-          resizeToAvoidBottomInset: false,
-          body: Padding(
-            padding: EdgeInsets.only(top: topPadding),
-            child: _buildFeedView(state),
-          ),
-        );
-
-        return WillPopScope(
-          onWillPop: () async {
-            removeOverlay();
-            return false;
-          },
-          child: body,
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) =>
+      BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
+        bloc: _discoveryFeedManager,
+        builder: (context, state) {
+          // this is for:
+          // - any menu bar
+          // - the iOS notch
+          // - etc...
+          final topPadding = MediaQuery.of(context).viewPadding.top;
+          return Scaffold(
+            /// resizing the scaffold is set to false since the keyboard could be
+            /// triggered when creating a collection from the bottom sheet and the
+            /// feed should look the same in that process
+            ///
+            resizeToAvoidBottomInset: false,
+            body: Padding(
+              padding: EdgeInsets.only(top: topPadding),
+              child: _buildFeedView(state),
+            ),
+          );
+        },
+      );
 
   @override
   void dispose() {
