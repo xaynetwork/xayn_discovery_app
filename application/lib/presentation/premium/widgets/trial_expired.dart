@@ -92,7 +92,9 @@ class TrialExpired extends StatelessWidget {
               child: TextButton(
                   child: Text(
                     R.strings.bottomSheetCancel,
-                    style: R.styles.appSecondaryButtonText,
+                    style: R.styles.mBoldStyle.copyWith(
+                      color: R.colors.secondaryActionText,
+                    ),
                   ),
                   onPressed: _onCancel),
             ),
@@ -112,7 +114,10 @@ class TrialExpired extends StatelessWidget {
         child: TextButton(
           child: Text(
             R.strings.subscriptionPromoCode,
-            style: R.styles.appLinkText,
+            style: R.styles.sBoldStyle.copyWith(
+              decoration: TextDecoration.underline,
+              color: R.colors.secondaryText,
+            ),
           ),
           onPressed: _onPromoCode,
         ),

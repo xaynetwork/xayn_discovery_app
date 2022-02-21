@@ -50,7 +50,7 @@ class CountryItem extends StatelessWidget {
   Widget _buildName() {
     final countryName = Text(
       country.name,
-      style: R.styles.appSmallHeadlineText,
+      style: R.styles.mBoldStyle,
     );
     final children = <Widget>[
       countryName,

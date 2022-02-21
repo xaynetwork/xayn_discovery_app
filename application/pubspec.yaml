@@ -44,7 +44,7 @@ dependencies:
   injectable: 1.5.3
   instabug_flutter: 10.11.0
   intl: 0.17.0
-  json_annotation: 4.4.0
+  json_annotation: 4.3.0
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
@@ -74,9 +74,10 @@ dependencies:
       url: git@github.com:xaynetwork/xayn_card_view.git
       ref: 9de4fdba40c4e2c9acbdd107042c672e293da0ed
   xayn_design:
-    git:
-      url: git@github.com:xaynetwork/xayn_design.git
-      ref: 2ebbecb4ffb85ad87e2102910bf164d527637977
+    path: ../../xayn_design
+    # git:
+    #   url: git@github.com:xaynetwork/xayn_design.git
+    #   ref: 2ebbecb4ffb85ad87e2102910bf164d527637977
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git

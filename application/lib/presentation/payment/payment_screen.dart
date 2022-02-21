@@ -63,7 +63,7 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
     final tile = ListTile(
       title: Text(
         product.title,
-        style: R.styles.appHeadlineText,
+        style: R.styles.lBoldStyle,
       ),
       subtitle: Text(
         product.description,
@@ -71,7 +71,7 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
       ),
       trailing: Text(
         product.price,
-        style: R.styles.appHeadlineText.copyWith(color: R.colors.accent),
+        style: R.styles.lBoldStyle.copyWith(color: R.colors.accent),
       ),
     );
 
