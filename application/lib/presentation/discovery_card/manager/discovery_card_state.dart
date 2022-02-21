@@ -20,8 +20,7 @@ class DiscoveryCardState with _$DiscoveryCardState {
     @Default(false) bool isBookmarkToggled,
     Object? error,
     ProcessedDocument? processedDocument,
-    @Default(DocumentFeedback.neutral)
-        DocumentFeedback explicitDocumentFeedback,
+    @Default(UserReaction.neutral) UserReaction explicitDocumentUserReaction,
   }) = _DiscoveryCardState;
 
   factory DiscoveryCardState.initial() => const DiscoveryCardState();

@@ -41,7 +41,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         RequestFeedMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>,
-        ChangeDocumentFeedbackMixin<DiscoveryFeedState>
+        ChangeUserReactionMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._engine,
@@ -208,7 +208,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
               .map(
                 (it) => it.documentId == changeDocumentFeedbackParams.documentId
                     ? it.copyWith(
-                        feedback: changeDocumentFeedbackParams.feedback)
+                        userReaction: changeDocumentFeedbackParams.userReaction)
                     : it,
               )
               .toSet();
@@ -310,9 +310,9 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         _kThresholdDurationSecondsImplicitLike;
 
     if (isCardOpened && isObservedLongEnough) {
-      changeDocumentFeedback(
+      changeUserReaction(
         document: document,
-        feedback: DocumentFeedback.positive,
+        userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
       );
     }
