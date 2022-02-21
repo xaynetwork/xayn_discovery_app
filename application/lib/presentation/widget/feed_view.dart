@@ -2,15 +2,12 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-const Curve _kAnimationCurve = Curves.elasticOut;
+const Curve _kAnimationCurveIn = Curves.linearToEaseOut;
+const Curve _kAnimationCurveOut = Curves.elasticOut;
 const Curve _kAnimationSnapCurve = Curves.linearToEaseOut;
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
 final double _kItemSpacing = R.dimen.unit;
-final EdgeInsets _kPadding = EdgeInsets.only(
-  left: R.dimen.unit,
-  right: R.dimen.unit,
-  top: R.dimen.unit / 2,
-);
+final EdgeInsets _kPadding = EdgeInsets.symmetric(horizontal: R.dimen.unit);
 
 /// Extended version of [ListView] intended to display [DiscoveryCard]s.
 /// All items are displayed full screen with vertical scrolling.
@@ -63,7 +60,7 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CardView(
         animationDuration: R.animations.feedTransitionDuration,
-        animationCurve: _kAnimationCurve,
+        animationCurve: isFullScreen ? _kAnimationCurveIn : _kAnimationCurveOut,
         animateToSnapDuration: R.animations.unit3,
         animateToSnapCurve: _kAnimationSnapCurve,
         scrollDirection: scrollDirection,
