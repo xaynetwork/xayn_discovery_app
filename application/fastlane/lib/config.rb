@@ -1,10 +1,100 @@
 module Config
   module Keys
     BUILD_NUMBER_OFFSET = "build_number_offset"
+    ID = "id"
+    NAME = "name"
+    APPCENTER_TARGET = "appcenter_target"
+    APPCENTER_TOKEN = "appcenter_token"
+    APPCENTER_FILEPATH = "appcenter_buildfile"
+    KEY_ALIAS = "key_alias"
+    PROVISIONING_PROFILE_PATH = "provisioning_profile_path"
+    PROVISIONING_PROFILE_NAME = "provisioning_profile_name"
+    PROVISIONING_PROFILES = "provisioning_profiles"
+    ADHOC = "adhoc"
   end
 
-  #release, debug
-  BUILD = "debug"
+  module Platforms
+    ANDROID = "android"
+    IOS = "ios"
+  end
+
+  module Flavors
+    INTERNAL = "internal"
+    BETA = "beta"
+    PRODUCTION = "production"
+  end
+
+  module AndroidOutputs
+    APK = "apk"
+    APP_BUNDLE = "appbundle"
+  end
+
+  module BuildTypes
+    DEBUG = "debug"
+    RELEASE = "release"
+  end
+
+  ###
+  ### All possible options should be described in this module
+  ###
+  module Options
+    def self.doc_ANDROID_OUTPUT() 'apk, appbundle' end
+    ANDROID_OUTPUT = :android_output
+
+    BUILD_NUMBER = :build_number
+
+    def self.doc_CLEAN() 'true, false' end
+    CLEAN = :clean
+
+    def self.doc_COVERAGE() 'true, false' end
+    COVERAGE = :coverage
+
+    def self.doc_DOWNLOAD_PROFILE() 'true, false' end
+    DOWNLOAD_PROFILE = :download_profile
+
+    def self.doc_FLAVOR() 'internal, beta' end
+    FLAVOR = :flavor
+
+    ISSUER_ID = :issuerId
+
+    KEY_FILE = :keyFile
+
+    KEY_ID = :keyId
+
+    def self.doc_PLATFORM() 'ios, android' end
+    PLATFORM = :platform
+    
+    def self.doc_BUILD_TYPE() 'debug, release' end
+    BUILD_TYPE = :build_type
+    
+    def self.doc_UPDATE_ASSETS() 'true, false' end
+    UPDATE_ASSETS = :update_assets
+    
+    def self.doc_UPLOAD_TO_APPCENTER() 'true, false' end
+    UPLOAD_TO_APPCENTER = :upload_to_appcenter
+    
+    VERSION_NAME = :version_name
+    
+    def self.doc_WATCH() 'true, false' end
+    WATCH = :watch
+
+    def self.help()
+        Options.constants.map { |o|
+          doc = ""
+          begin
+            method = Options.method("doc_#{o.to_s}".to_sym)
+            doc = ": [#{method.call}]" if method
+          rescue
+          end
+          " - #{Options.const_get(o).to_s} #{doc}\n"
+        }.reduce("", :+)
+    end
+  end
+
+  # Options not passed by the user to a lane
+  module InternalOptions
+    ENV = :env
+  end
 
   # env defaults that will be used when no ENV variables are provided
   ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "api-gw.xaynet.dev",
@@ -14,15 +104,6 @@ module Config
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
-
-  #ios, android, web
-  PLATFORM = "android"
-
-  #apk, appbundle
-  ANDROID_OUTPUT = "apk"
-
-  #internal, beta, production
-  FLAVOR = "internal"
 
   # Carefull to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...
@@ -34,80 +115,80 @@ module Config
   betaBuildNumberOffset = 10000
 
   FLAVOR_MATRIX = {
-    "internal" => {
-      "ios" => {
-        "id" => "com.xayn.discovery.internal",
-        "name" => "Discovery",
-        "appcenter_target" => "Discovery-App-internal",
-        "appcenter_token" => "APPCENTER_IOS_INTERNAL_TOKEN",
-        "appcenter_buildfile" => "build/discovery-app.ipa",
+    Flavors::INTERNAL => {
+      Platforms::IOS => {
+        Keys::ID => "com.xayn.discovery.internal",
+        Keys::NAME => "Discovery",
+        Keys::APPCENTER_TARGET => "Discovery-App-internal",
+        Keys::APPCENTER_TOKEN => "APPCENTER_IOS_INTERNAL_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
-      "android" => {
-        "id" => "com.xayn.discovery.internal",
-        "name" => "Discovery",
-        "appcenter_target" => "Discovery-App-Android-internal",
-        "appcenter_token" => "APPCENTER_ANDROID_INTERNAL_TOKEN",
-        "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
+      Platforms::ANDROID => {
+        Keys::ID => "com.xayn.discovery.internal",
+        Keys::NAME => "Discovery",
+        Keys::APPCENTER_TARGET => "Discovery-App-Android-internal",
+        Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_INTERNAL_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
     },
-    "beta" => {
-      "ios" => {
-        "id" => "com.xayn.discovery",
-        "name" => "Xayn 3.0",
+    Flavors::BETA => {
+      Platforms::IOS => {
+        Keys::ID => "com.xayn.discovery",
+        Keys::NAME => "Xayn 3.0",
         # Discoveru is correct!! :P
-        "appcenter_target" => "Discoveru-App-iOS-beta",
-        "appcenter_token" => "APPCENTER_IOS_BETA_TOKEN",
-        "appcenter_buildfile" => "build/discovery-app.ipa",
+        Keys::APPCENTER_TARGET => "Discoveru-App-iOS-beta",
+        Keys::APPCENTER_TOKEN => "APPCENTER_IOS_BETA_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
-      "android" => {
-        "id" => "com.xayn.search",
-        "name" => "Xayn 3.0",
-        "appcenter_target" => "Discovery-App-Android-beta",
-        "appcenter_token" => "APPCENTER_ANDROID_BETA_TOKEN",
-        "appcenter_buildfile" => "build/app/outputs/flutter-apk/app-release.apk",
+      Platforms::ANDROID => {
+        Keys::ID => "com.xayn.search",
+        Keys::NAME => "Xayn 3.0",
+        Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
+        Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
+        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
     },
-    "production" => {
-      "ios" => {
-        "id" => "com.xayn.search",
-        "name" => "Discovery App",
+    Flavors::PRODUCTION => {
+      Platforms::IOS => {
+        Keys::ID => "com.xayn.search",
+        Keys::NAME => "Discovery App",
       },
-      "android" => {
-        "id" => "com.xayn.search",
-        "name" => "Discovery App",
+      Platforms::ANDROID => {
+        Keys::ID => "com.xayn.search",
+        Keys::NAME => "Discovery App",
       },
     },
   }
 
   ANDROID_BUILD_CONFIG = {
-    "internal" => {
-      "key_alias" => "release_internal",
+    Flavors::INTERNAL => {
+      Keys::KEY_ALIAS => "release_internal",
     },
-    "beta" => {
-      "key_alias" => "release_beta",
+    Flavors::BETA => {
+      Keys::KEY_ALIAS => "release_beta",
     },
   }
 
   IOS_BUILD_CONFIG = {
-    "internal" => {
-      "provisioning_profile_path" => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
-      "provisioning_profile_name" => "Xayn Discovery Internal Adhoc Profile",
-      "provisioning_profiles" => {
+    Flavors::INTERNAL => {
+      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
+      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery Internal Adhoc Profile",
+      Keys::PROVISIONING_PROFILES => {
         "com.xayn.discovery.internal" => "Xayn Discovery Internal Adhoc Profile",
       },
-      "adhoc" => true,
+      Keys::ADHOC => true,
     },
-    "beta" => {
-      "provisioning_profile_path" => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
-      "provisioning_profile_name" => "Xayn Discovery AppStore Profile",
-      "provisioning_profiles" => {
+    Flavors::BETA => {
+      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
+      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Profile",
+      Keys::PROVISIONING_PROFILES => {
         "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
       },
-      "adhoc" => false,
+      Keys::ADHOC => false,
     },
   }
 
