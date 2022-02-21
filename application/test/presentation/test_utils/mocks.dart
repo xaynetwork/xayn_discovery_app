@@ -71,7 +71,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetSelectedCountriesUseCase,
   GetStoredAppVersionUseCase,
   GetSupportedCountriesUseCase,
-  IAPErrorToPaymentFlowErrorMapper,
+  PurchasesErrorCodeToPaymentFlowErrorMapper,
   InAppReview,
   IncrementAppSessionUseCase,
   ListenAppThemeUseCase,
