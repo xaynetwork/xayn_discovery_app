@@ -15,14 +15,14 @@ void main() {
 
   void _setUpSuccess() => when(engine.changeUserReaction(
               documentId: anyNamed('documentId'),
-              userReaction: anyNamed('feedback')))
+              userReaction: anyNamed('userReaction')))
           .thenAnswer(
         (_) => Future.value(const ClientEventSucceeded()),
       );
 
   void _setUpFailure() => when(engine.changeUserReaction(
               documentId: anyNamed('documentId'),
-              userReaction: anyNamed('feedback')))
+              userReaction: anyNamed('userReaction')))
           .thenAnswer(
         (_) => Future.value(const EngineExceptionRaised(
             EngineExceptionReason.wrongEventInResponse)),
