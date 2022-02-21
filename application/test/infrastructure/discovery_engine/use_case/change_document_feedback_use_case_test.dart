@@ -13,16 +13,16 @@ void main() {
     engine = MockDiscoveryEngine();
   });
 
-  void _setUpSuccess() => when(engine.changeDocumentFeedback(
+  void _setUpSuccess() => when(engine.changeUserReaction(
               documentId: anyNamed('documentId'),
-              feedback: anyNamed('feedback')))
+              userReaction: anyNamed('feedback')))
           .thenAnswer(
         (_) => Future.value(const ClientEventSucceeded()),
       );
 
-  void _setUpFailure() => when(engine.changeDocumentFeedback(
+  void _setUpFailure() => when(engine.changeUserReaction(
               documentId: anyNamed('documentId'),
-              feedback: anyNamed('feedback')))
+              userReaction: anyNamed('feedback')))
           .thenAnswer(
         (_) => Future.value(const EngineExceptionRaised(
             EngineExceptionReason.wrongEventInResponse)),
@@ -36,7 +36,7 @@ void main() {
       input: [
         DocumentFeedbackChange(
           documentId: DocumentId(),
-          feedback: DocumentFeedback.positive,
+          userReaction: UserReaction.positive,
         )
       ],
       expect: [useCaseSuccess(const ClientEventSucceeded())],
@@ -49,7 +49,7 @@ void main() {
       input: [
         DocumentFeedbackChange(
           documentId: DocumentId(),
-          feedback: DocumentFeedback.positive,
+          userReaction: UserReaction.positive,
         )
       ],
       expect: [

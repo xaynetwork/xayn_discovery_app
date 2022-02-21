@@ -9,10 +9,10 @@ extension DocumentIdUtils on DocumentId {
   UniqueId get uniqueId => UniqueId.fromTrustedString(toString());
 }
 
-extension DocumentFeedbackExtension on DocumentFeedback {
-  bool get isNeutral => this == DocumentFeedback.neutral;
+extension DocumentFeedbackExtension on UserReaction {
+  bool get isNeutral => this == UserReaction.neutral;
 
-  bool get isRelevant => this == DocumentFeedback.positive;
+  bool get isRelevant => this == UserReaction.positive;
 
-  bool get isIrrelevant => this == DocumentFeedback.negative;
+  bool get isIrrelevant => this == UserReaction.negative;
 }

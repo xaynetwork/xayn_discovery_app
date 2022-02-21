@@ -81,6 +81,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: '/engine/',
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
+      assetsUrl: '',
+      manifest: Manifest(const []),
     );
 
     _engine = await DiscoveryEngine.init(configuration: configuration);
@@ -109,20 +111,20 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
           ));
 
   @override
-  Future<EngineEvent> changeDocumentFeedback({
+  Future<EngineEvent> changeUserReaction({
     required DocumentId documentId,
-    required DocumentFeedback feedback,
+    required UserReaction userReaction,
   }) async {
     final engineEvent = await safeRun(
-      () => _engine.changeDocumentFeedback(
+      () => _engine.changeUserReaction(
         documentId: documentId,
-        feedback: feedback,
+        userReaction: userReaction,
       ),
     );
 
     _eventMap[engineEvent] = DocumentFeedbackChange(
       documentId: documentId,
-      feedback: feedback,
+      userReaction: userReaction,
     );
 
     return engineEvent;
@@ -160,9 +162,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   @override
   Future<EngineEvent> requestNextFeedBatch() =>
       safeRun(() => _engine.requestNextFeedBatch());
-
-  @override
-  Future<EngineEvent> resetEngine() => safeRun(() => _engine.resetEngine());
 
   Future<EngineEvent> search(String searchTerm) {
     throw UnimplementedError();
