@@ -67,7 +67,9 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
       ),
       subtitle: Text(
         product.description,
-        style: R.styles.appCaptionText,
+        style: R.styles.sStyle.copyWith(
+          color: R.colors.secondaryText,
+        ),
       ),
       trailing: Text(
         product.price,

@@ -60,7 +60,9 @@ class CountryItem extends StatelessWidget {
     if (languageName != null) {
       final language = Text(
         languageName,
-        style: R.styles.appCaptionText,
+        style: R.styles.sStyle.copyWith(
+          color: R.colors.secondaryText,
+        ),
       );
       children.add(language);
     }
