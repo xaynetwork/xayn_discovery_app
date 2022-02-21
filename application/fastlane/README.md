@@ -87,21 +87,21 @@ Available options:
 
 Build and publish 
 Available options:
- - clean : [true, false]
- - platform 
- - android_output : [apk, appbundle]
- - flavor : [ios, android]
- - release_build 
- - build_number 
- - coverage : [true, false]
- - download_profile : [true, false]
- - update_assets 
- - watch 
- - upload_to_appcenter 
+ - watch : [true, false]
  - version_name 
  - keyFile 
  - keyId 
+ - build_number 
  - issuerId 
+ - clean : [true, false]
+ - platform : [ios, android]
+ - android_output : [apk, appbundle]
+ - flavor : [internal, beta]
+ - build_type : [debug, release]
+ - upload_to_appcenter : [true, false]
+ - coverage : [true, false]
+ - download_profile : [true, false]
+ - update_assets : [true, false]
 
 
 ### update_assets
