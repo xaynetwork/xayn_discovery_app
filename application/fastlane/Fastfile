@@ -78,7 +78,7 @@ private_lane :flutter_build do |options|
   end
   dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
 
-  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]} --dart-define=USER_APP_ID=#{appId} --dart-define=USER_APP_NAME=\"#{appName}\" #{dartDefines}")
+  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} #{dartDefines}")
 end
 
 desc "Prepare internal key.properties"
