@@ -20,12 +20,18 @@ import("lib/config.rb")
 
 Keys = Config::Keys
 Options = Config::Options
+_Options = Config::InternalOptions
 Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
 
 # Common checks before running a lane
 before_all do |lane, options|
+  allowedOptions = Options.constants.map {|c|  Options.const_get(c) }
+  options.each do |k, v|
+     UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
+  end
+
   setIfNotSet = lambda { |option, alt|
     options[option] = options.key?(option) ? options[option] : alt
   }
@@ -49,11 +55,11 @@ before_all do |lane, options|
   build_number = gitVersionNumber().to_i + offset
   setIfNotSet.call(Options::BUILD_NUMBER, build_number)
   setIfNotSet.call(Options::VERSION_NAME, version_name)
-  options[Options::ENV] = Config::ENV_DEFAULTS.to_h
+  options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
-  options[Options::ENV].merge!(ENV.to_h)
+  options[_Options::ENV].merge!(ENV.to_h)
   if is_ci
-    UI.success "Env:\n#{JSON.pretty_generate(options[Options::ENV])}"
+    UI.success "Env:\n#{JSON.pretty_generate(options[_Options::ENV])}"
   end
 end
 
@@ -213,18 +219,7 @@ end
 
 desc "Build and publish \n" \
      "Available options:\n" \
-     "   - #{Options::ANDROID_OUTPUT}\n"\
-     "   - #{Options::CLEAN}\n"\
-     "   - #{Options::COVERAGE}\n"\
-     "   - #{Options::DOWNLOAD_PROFILE}\n"\
-     "   - #{Options::FLAVOR}\n"\
-     "   - #{Options::PLATFORM}\n"\
-     "   - #{Options::RELEASE_BUILD}\n"\
-     "   - #{Options::UPDATE_ASSETS}\n"\
-     "   - #{Options::UPLOAD_TO_APPCENTER}\n"\
-     "   - #{Options::KEY_FILE}\n"\
-     "   - #{Options::KEY_ID}\n"\
-     "   - #{Options::ISSUER_ID}\n"
+     "#{Options::help()}"
 lane :publish do |options|
   platform = options[Options::PLATFORM]
   flavor = options[Options::FLAVOR]
@@ -258,8 +253,8 @@ lane :update_assets do |options|
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
   manifestPath["file://"] = ""
   raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
-  UI.user_error!("No AI_ASSETS_URL provided!") unless options[Options::ENV].key?("AI_ASSETS_URL")
-  downloadAssetsFromManifest(manifestPath, options[Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
+  UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
+  downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
 end
 
 # Private helper methods
@@ -305,3 +300,4 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
     downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
   }
 end
+
