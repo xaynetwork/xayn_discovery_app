@@ -33,22 +33,27 @@ module Config
   ### All possible options should be described in this module
   ###
   module Options
-    # Available variants: AndroidOutputs
+    def self.doc_ANDROID_OUTPUT() 'apk, appbundle' end
     ANDROID_OUTPUT = :android_output
     BUILD_NUMBER = :build_number
-    # Available variants: true / false
+
+    def self.doc_CLEAN() 'true, false' end
     CLEAN = :clean
-    # Available variants: true / false
+
+    def self.doc_COVERAGE() 'true, false' end
     COVERAGE = :coverage
-    # Available variants: true / false
+
+    def self.doc_DOWNLOAD_PROFILE() 'true, false' end
     DOWNLOAD_PROFILE = :download_profile
-    ENV = :env
-    # Available variants: Flavors
+
+    def self.doc_FLAVOR() 'internal, beta' end
     FLAVOR = :flavor
+
     ISSUER_ID = :issuerId
     KEY_FILE = :keyFile
     KEY_ID = :keyId
-    # Available variants: Platforms
+
+    def self.doc_FLAVOR() 'ios, android' end
     PLATFORM = :platform
     # Available variants: true / false
     RELEASE_BUILD = :release_build
@@ -58,6 +63,23 @@ module Config
     VERSION_NAME = :version_name
     # Available variants: true / false
     WATCH = :watch
+
+    def self.help()
+        Options.constants.map { |o|
+          doc = ""
+          begin
+            method = Options.method("doc_#{o.to_s}".to_sym)
+            doc = ": [#{method.call}]" if method
+          rescue
+          end
+          " - #{Options.const_get(o).to_s} #{doc}\n"
+        }.reduce("", :+)
+    end
+  end
+
+  # Options not passed by the user to a lane
+  module InternalOptions
+    ENV = :env
   end
 
   # env defaults that will be used when no ENV variables are provided
