@@ -40,6 +40,7 @@ module Config
   module Options
     def self.doc_ANDROID_OUTPUT() 'apk, appbundle' end
     ANDROID_OUTPUT = :android_output
+
     BUILD_NUMBER = :build_number
 
     def self.doc_CLEAN() 'true, false' end
@@ -55,18 +56,26 @@ module Config
     FLAVOR = :flavor
 
     ISSUER_ID = :issuerId
+
     KEY_FILE = :keyFile
+
     KEY_ID = :keyId
 
-    def self.doc_FLAVOR() 'ios, android' end
+    def self.doc_PLATFORM() 'ios, android' end
     PLATFORM = :platform
+    
     def self.doc_BUILD_TYPE() 'debug, release' end
     BUILD_TYPE = :build_type
+    
+    def self.doc_UPDATE_ASSETS() 'true, false' end
     UPDATE_ASSETS = :update_assets
-    # Available variants: true / false
+    
+    def self.doc_UPLOAD_TO_APPCENTER() 'true, false' end
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
+    
     VERSION_NAME = :version_name
-    # Available variants: true / false
+    
+    def self.doc_WATCH() 'true, false' end
     WATCH = :watch
 
     def self.help()
