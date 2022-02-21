@@ -29,6 +29,11 @@ module Config
     APP_BUNDLE = "appbundle"
   end
 
+  module BuildTypes
+    DEBUG = "debug"
+    RELEASE = "release"
+  end
+
   ###
   ### All possible options should be described in this module
   ###
@@ -55,8 +60,8 @@ module Config
 
     def self.doc_FLAVOR() 'ios, android' end
     PLATFORM = :platform
-    # Available variants: true / false
-    RELEASE_BUILD = :release_build
+    def self.doc_BUILD_TYPE() 'debug, release' end
+    BUILD_TYPE = :build_type
     UPDATE_ASSETS = :update_assets
     # Available variants: true / false
     UPLOAD_TO_APPCENTER = :upload_to_appcenter

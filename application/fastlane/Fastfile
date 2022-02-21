@@ -24,6 +24,7 @@ _Options = Config::InternalOptions
 Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
+BuildTypes = Config::BuildTypes
 
 # Common checks before running a lane
 before_all do |lane, options|
@@ -41,7 +42,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
   setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
   setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
-  setIfNotSet.call(Options::RELEASE_BUILD, false)
+  setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
   setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, true)
   setIfNotSet.call(Options::COVERAGE, false)
   ## downloading the iOS adhoc profile
@@ -73,7 +74,7 @@ private_lane :flutter_build do |options|
 
   platform = options[Options::PLATFORM]
   target = platform == Platforms::ANDROID ? options[Options::ANDROID_OUTPUT] : platform
-  type = options[Options::RELEASE_BUILD] ? "--release" : "--debug"
+  type = options[Options::BUILD_TYPE] == BuildTypes::RELEASE ? "--release" : "--debug"
   codesign = platform == Platforms::IOS ? "--no-codesign" : ""
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
@@ -166,7 +167,7 @@ lane :check_config_files do |options|
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
   }, Config::ENV_DEFAULTS)
 
-  if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::RELEASE_BUILD]
+  if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   else
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
