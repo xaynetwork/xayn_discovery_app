@@ -1,0 +1,30 @@
+# This is the gitleaks configuration file.
+# Here it is possible to add rules by using regex in order to find secrets like keys etc.
+# For more information please visit: https://github.com/zricethezav/gitleaks#configuration
+
+# Just few links that might be useful for learning more and testing regex:
+#
+# 1) https://www.geeksforgeeks.org/write-regular-expressions => how to write a regular expression.
+# 2) https://regex101.com => for testing and debugging regex. It also provides an explanation of the regex used.
+
+title = "gitleaks config"
+
+[[rules]]
+id = "search-api-secret-key"
+description = "SEARCH_API_SECRET_KEY"
+regex = '''(?i)['\"]?search(.*)api(.*)secret(.*)[key|debug|production]?['\"]?(\s*)(=|>|:=|\|\|:|<=|=>|:)(\s*)['\"]?([a-z0-9]{60})['\"]?'''
+
+[[rules]]
+id = "instabug-token"
+description = "INSTABUG_TOKEN"
+regex = '''(?i)['\"]?instabug(.*)token(.*)[debug|production]?['\"]?(\s*)(=|>|:=|\|\|:|<=|=>|:)(\s*)['\"]?([a-z0-9]{32})['\"]?'''
+
+[[rules]]
+id = "amplitude-api-key"
+description = "AMPLITUDE_API_KEY"
+regex = '''(?i)['\"]?amplitude(.*)api(.*)key(.*)[debug|production]?['\"]?(\s*)(=|>|:=|\|\|:|<=|=>|:)(\s*)['\"]?([a-z0-9]{32})['\"]?'''
+
+[[rules]]
+id = "appsflyer-key"
+description = "APPSFLYER-KEY"
+regex = '''(?i)['\"]?appsflyer(.*)[dev]?(.*)key(.*)[debug|production]?['\"]?(\s*)(=|>|:=|\|\|:|<=|=>|:)(\s*)['\"]?([a-z0-9]{32})['\"]?'''
