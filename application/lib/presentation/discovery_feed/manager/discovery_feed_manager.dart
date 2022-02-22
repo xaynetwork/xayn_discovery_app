@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -196,21 +195,22 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
         if (_cardIndex == null) return null;
 
-        final processEngineEvent = _processEngineEvent(engineEvent);
+        final foldEngineEvent = _foldEngineEvent(engineEvent);
 
-        final results = processEngineEvent(
-          whenFeedRequestSucceeded: (event) =>
-              {...state.results, ...event.items},
-          whenDocumentsUpdated: (event) => state.results
-              .map((it) =>
-                  event.items.firstWhereOrNull(
-                      (item) => item.documentId == it.documentId) ??
-                  it)
+        final results = foldEngineEvent(
+          feedRequestSucceeded: (event) => {...state.results, ...event.items},
+          documentsUpdated: (event) => state.results
+              .map(
+                (it) => event.items.firstWhere(
+                  (item) => item.documentId == it.documentId,
+                  orElse: () => it,
+                ),
+              )
               .toSet(),
           orElse: () => state.results,
         );
 
-        final sets = await _maybeReduceCardCount(results.toSet());
+        final sets = await _maybeReduceCardCount(results);
 
         final nextState = DiscoveryFeedState(
           results: sets.results,
@@ -227,18 +227,18 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Set<Document> Function({
-    required OnFeedRequestSucceeded whenFeedRequestSucceeded,
-    required OnDocumentsUpdated whenDocumentsUpdated,
+    required OnFeedRequestSucceeded feedRequestSucceeded,
+    required OnDocumentsUpdated documentsUpdated,
     required OnNonMatchedEngineEvent orElse,
-  }) _processEngineEvent(EngineEvent? event) => ({
-        required OnFeedRequestSucceeded whenFeedRequestSucceeded,
-        required OnDocumentsUpdated whenDocumentsUpdated,
+  }) _foldEngineEvent(EngineEvent? event) => ({
+        required OnFeedRequestSucceeded feedRequestSucceeded,
+        required OnDocumentsUpdated documentsUpdated,
         required OnNonMatchedEngineEvent orElse,
       }) {
         if (event is FeedRequestSucceeded) {
-          return whenFeedRequestSucceeded(event);
+          return feedRequestSucceeded(event);
         } else if (event is DocumentsUpdated) {
-          return whenDocumentsUpdated(event);
+          return documentsUpdated(event);
         }
 
         return orElse();
