@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
-import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
@@ -20,14 +19,6 @@ import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'fakes.dart';
-
-@Injectable(as: InvokeApiEndpointUseCase)
-class TestBingClient extends InvokeApiEndpointUseCase {
-  @override
-  Stream<ApiEndpointResponse> transaction(Uri param) {
-    return Stream.value(ApiEndpointResponse.complete([fakeDocument]));
-  }
-}
 
 @Injectable(as: ConnectivityUriUseCase)
 class AlwaysConnectedConnectivityUseCase extends ConnectivityUriUseCase {
