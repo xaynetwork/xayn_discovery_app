@@ -2,6 +2,7 @@ import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -14,6 +15,8 @@ abstract class AnalyticsService {
 }
 
 @LazySingleton(as: AnalyticsService)
+@defaultEnvironment
+@test
 class AmplitudeAnalyticsService
     with AsyncInitMixin
     implements AnalyticsService {
@@ -57,4 +60,15 @@ class AmplitudeAnalyticsService
       }}');
     });
   }
+}
+
+/// Amplitude is disabled in debug mode
+@LazySingleton(as: AnalyticsService)
+@debug
+class AnalyticsServiceDebugMode implements AnalyticsService {
+  @override
+  Future<void> send(AnalyticsEvent event) async {}
+
+  @override
+  Future<void> flush() async {}
 }
