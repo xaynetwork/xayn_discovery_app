@@ -23,6 +23,9 @@ abstract class Env {
   static const String appStoreNumericalId = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.appStoreNumericalId
       : _EnvProd.appStoreNumericalId;
+  static const String aiAssetsUrl = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.aiAssetsUrl
+      : _EnvProd.aiAssetsUrl;
 }
 
 /// Standard Env config.
@@ -35,6 +38,7 @@ abstract class _EnvDev {
   static const String amplitudeApiKey = __EnvDev.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvDev.appsflyerDevKey;
   static const String appStoreNumericalId = __EnvDev.appStoreNumericalId;
+  static const String aiAssetsUrl = __EnvDev.aiAssetsUrl;
 }
 
 /// Standard Env config.
@@ -47,4 +51,5 @@ abstract class _EnvProd {
   static const String amplitudeApiKey = __EnvProd.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvProd.appsflyerDevKey;
   static const String appStoreNumericalId = __EnvProd.appStoreNumericalId;
+  static const String aiAssetsUrl = __EnvProd.aiAssetsUrl;
 }
