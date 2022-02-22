@@ -11,8 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_in
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart'
-    hide logger;
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// A temporary wrapper for the [DiscoveryEngine].
 /// Once the engine is ready, we can remove this class.
