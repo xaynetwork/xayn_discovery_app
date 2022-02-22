@@ -7,12 +7,10 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
-import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_call_endpoint_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -27,7 +25,6 @@ import 'discovery_feed_test.mocks.dart';
 /// the temporary test mixins.
 @GenerateMocks([
   AppDiscoveryEngine,
-  InvokeBingUseCase,
   ConnectivityUseCase,
   FeedRepository,
   AnalyticsService,
@@ -36,7 +33,6 @@ void main() async {
   late AppDiscoveryEngine engine;
   late MockDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
-  late MockInvokeBingUseCase invokeApiEndpointUseCase;
   late MockConnectivityUseCase connectivityUseCase;
   late DiscoveryFeedManager manager;
 
@@ -66,7 +62,6 @@ void main() async {
     connectivityUseCase = MockConnectivityUseCase();
     mockDiscoveryEngine = MockDiscoveryEngine();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
-    invokeApiEndpointUseCase = MockInvokeBingUseCase();
     feedRepository = MockFeedRepository();
 
     setupWidgetTest();
@@ -79,17 +74,11 @@ void main() async {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(connectivityUseCase.transaction(any)).thenAnswer(
         (invocation) => Stream.value(invocation.positionalArguments.first));
-    when(invokeApiEndpointUseCase.transform(any))
-        .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(invokeApiEndpointUseCase.transaction(any)).thenAnswer((_) =>
-        Stream.value(
-            ApiEndpointResponse.complete([fakeDocumentA, fakeDocumentB])));
 
     await configureTestDependencies();
 
     di.registerSingletonAsync<ConnectivityUseCase>(
         () => Future.value(connectivityUseCase));
-    di.registerSingleton<InvokeApiEndpointUseCase>(invokeApiEndpointUseCase);
     di.registerSingleton<FeedRepository>(feedRepository);
     di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
 
