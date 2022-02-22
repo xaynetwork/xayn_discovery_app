@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
@@ -10,7 +11,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart'
+    hide logger;
 
 /// A temporary wrapper for the [DiscoveryEngine].
 /// Once the engine is ready, we can remove this class.
@@ -74,18 +77,22 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         .map((e) =>
             FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
         .toSet();
+    final dir = await getApplicationDocumentsDirectory();
 
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
-      applicationDirectoryPath: '/engine/',
+      applicationDirectoryPath: dir.path,
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
-      assetsUrl: '',
-      manifest: Manifest(const []),
+      assetsUrl: 'https://ai-assets.xaynet.dev',
+      manifest: await FlutterManifestReader().read(),
     );
 
-    _engine = await DiscoveryEngine.init(configuration: configuration);
+    _engine = await DiscoveryEngine.init(configuration: configuration)
+        .catchError((e) {
+      logger.e('OH MY GOD NO!!! $e');
+    });
   }
 
   Future<void> _saveInitialFeedMarket(
