@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart' hide logger;
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const double kSearchCardHeightRatio = 0.64;
 
