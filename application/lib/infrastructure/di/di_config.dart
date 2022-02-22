@@ -16,6 +16,8 @@ const String releaseEnvironmentName = 'releaseEnvironment';
 
 const String debugEnvironmentName = 'debugEnvironment';
 
+const String debugEnvironmentName = 'debugEnvironment';
+
 /// Acts as a "joint" environment for dev and prod
 /// When required, use [Environment.test] to create test specific DI,
 /// and use [defaultEnvironment] to create an equivalent for dev/prod.
@@ -25,6 +27,9 @@ const Environment releaseEnvironment = Environment(releaseEnvironmentName);
 const Environment debugEnvironment = Environment(debugEnvironmentName);
 
 const Environment testEnvironment = Environment(Environment.test);
+
+/// Environment for debug mode only
+const Environment debug = Environment(debugEnvironmentName);
 
 /// Boilerplate setup for DI.
 @InjectableInit(
