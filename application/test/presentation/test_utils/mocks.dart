@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_f
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
@@ -28,6 +29,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
@@ -53,6 +57,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
+  CheckSubscriptionActiveUseCase,
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   DbEntityMapToFeedMarketMapper,
@@ -70,16 +75,19 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetAppVersionUseCase,
   GetSelectedCountriesUseCase,
   GetStoredAppVersionUseCase,
+  GetSubscriptionDetailsUseCase,
   GetSupportedCountriesUseCase,
-  PurchasesErrorCodeToPaymentFlowErrorMapper,
   InAppReview,
   IncrementAppSessionUseCase,
   ListenAppThemeUseCase,
   MapToAppVersionMapper,
+  PaymentFlowErrorToErrorMessageMapper,
   PaymentService,
   PersonalAreaManager,
   PersonalAreaNavActions,
   PurchasableProductMapper,
+  PurchasesErrorCodeToPaymentFlowErrorMapper,
+  PurchaseSubscriptionUseCase,
   SaveAppThemeUseCase,
   SaveCurrentAppVersion,
   SaveSelectedCountriesUseCase,
