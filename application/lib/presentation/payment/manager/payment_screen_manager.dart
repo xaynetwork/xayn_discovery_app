@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
@@ -45,7 +46,6 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     final product = _subscriptionProduct;
 
     if (product == null || !product.canBePurchased) return;
-
     _purchaseSubscriptionHandler(PurchasableIds.subscription);
   }
 
@@ -83,13 +83,6 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           }
         }
 
-        final subscriptionProduct = product?.copyWith(
-          status ??
-              (isAvailable == true
-                  ? PurchasableProductStatus.restored
-                  : product.status),
-        );
-
         final paymentFlowError =
             errors.firstWhereOrNull((element) => element is PaymentFlowError)
                 as PaymentFlowError?;
@@ -97,16 +90,43 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
             ? null
             : _errorMessageMapper.map(paymentFlowError);
 
-        if (subscriptionProduct == null && paymentFlowErrorMsg != null) {
+        _subscriptionProduct = getUpdatedProduct(
+          _subscriptionProduct ?? product,
+          status,
+          isAvailable,
+          paymentFlowError,
+        );
+
+        if (_subscriptionProduct == null && paymentFlowErrorMsg != null) {
           return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
-        } else if (subscriptionProduct != null) {
-          _subscriptionProduct = subscriptionProduct;
+        } else if (_subscriptionProduct != null) {
           return PaymentScreenState.ready(
-            product: subscriptionProduct,
+            product: _subscriptionProduct!,
             errorMsg: paymentFlowErrorMsg,
           );
         }
       });
 
   void _logError(String prefix, Object error) => logger.e('$prefix: $error');
+
+  @visibleForTesting
+  PurchasableProduct? getUpdatedProduct(
+    PurchasableProduct? product,
+    PurchasableProductStatus? status,
+    bool? isAvailable,
+    PaymentFlowError? paymentFlowError,
+  ) {
+    if (product == null) return null;
+    late final PurchasableProductStatus updatedStatus;
+    if (paymentFlowError != null) {
+      updatedStatus = paymentFlowError.itemAlreadyOwned
+          ? PurchasableProductStatus.purchased
+          : PurchasableProductStatus.purchasable;
+    } else if (isAvailable == true || status?.isPurchased == true) {
+      updatedStatus = PurchasableProductStatus.purchased;
+    } else {
+      updatedStatus = status ?? product.status;
+    }
+    return product.copyWith(updatedStatus);
+  }
 }
