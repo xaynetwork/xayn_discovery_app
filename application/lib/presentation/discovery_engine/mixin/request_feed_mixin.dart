@@ -30,9 +30,9 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
 
   UseCaseSink<None, EngineEvent> _getUseCaseSink() {
     final useCase = di.get<RequestNextFeedBatchUseCase>();
-    final sink = pipe(useCase);
 
-    return sink;
+    return pipe(useCase)
+      ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
   void _startConsuming() {
