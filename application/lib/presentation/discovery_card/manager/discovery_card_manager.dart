@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
@@ -111,7 +112,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         .cast<AnalyticsEvent>()
         .followedBy(_sendAnalyticsUseCase),
   )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
-  late final UseCaseSink<CrudExplicitDocumentFeedbackUseCaseIn,
+  late final UseCaseSink<DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>,
           ExplicitDocumentFeedback> _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
@@ -134,8 +135,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
     _crudExplicitDocumentFeedbackHandler(
-      CrudExplicitDocumentFeedbackUseCaseIn.watch(
-        ExplicitDocumentFeedback(id: document.documentId.uniqueId),
+      DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>.watch(
+        document.documentId.uniqueId,
       ),
     );
 

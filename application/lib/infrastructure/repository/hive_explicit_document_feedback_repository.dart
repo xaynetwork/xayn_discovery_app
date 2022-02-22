@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dar
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 /// Hive's [AppSettings] repository implementation.
-@Singleton(as: ExplicitDocumentFeedbackRepository)
+@singleton
 class HiveExplicitDocumentFeedbackRepository
     extends HiveRepository<ExplicitDocumentFeedback>
     implements ExplicitDocumentFeedbackRepository {
