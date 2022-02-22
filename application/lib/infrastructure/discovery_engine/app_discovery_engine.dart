@@ -82,15 +82,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         .map((e) =>
             FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
         .toSet();
+    final dir = await getApplicationDocumentsDirectory();
 
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
-      applicationDirectoryPath: '/engine/',
+      applicationDirectoryPath: dir.path,
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
-      assetsUrl: '',
-      manifest: Manifest(const []),
+      assetsUrl: 'https://ai-assets.xaynet.dev',
+      manifest: await FlutterManifestReader().read(),
     );
 
     _inputLog.add(
@@ -138,11 +139,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         documentId: documentId,
         userReaction: userReaction,
       ),
-    );
-
-    _eventMap[engineEvent] = DocumentFeedbackChange(
-      documentId: documentId,
-      userReaction: userReaction,
     );
 
     return engineEvent;
@@ -201,12 +197,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   /// temporary workaround for adding events that are not yet handled
   /// by the discovery engine.
   void tempAddEvent(EngineEvent event) => _tempSearchEvents.add(event);
-
-  /// temporary workaround for getting info on what [Document] was changed
-  /// when [changeDocumentFeedback] was called.
-  DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
-          EngineEvent engineEvent) =>
-      _eventMap[engineEvent];
 
   @override
   Future<void> dispose() {
