@@ -20,7 +20,7 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
         parameters: [
           context,
           widget.document,
-          state.processedDocument?.getProvider(widget.document.webResource),
+          state.processedDocument?.getProvider(widget.document.resource),
           (tooltipKey) => showTooltip(tooltipKey),
         ],
       );

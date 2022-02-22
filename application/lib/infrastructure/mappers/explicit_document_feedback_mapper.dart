@@ -14,26 +14,27 @@ class ExplicitDocumentFeedbackMapper
 
     final String id = map[ExplicitDocumentFeedbackMapperFields.id] ??
         throwMapperException() as String;
-    final int feedback = map[ExplicitDocumentFeedbackMapperFields.feedback] ??
-        throwMapperException() as int;
+    final int userReaction =
+        map[ExplicitDocumentFeedbackMapperFields.userReaction] ??
+            throwMapperException() as int;
 
     return ExplicitDocumentFeedback(
       id: UniqueId.fromTrustedString(id),
-      feedback: feedback == -1
-          ? DocumentFeedback.negative
-          : feedback == 0
-              ? DocumentFeedback.neutral
-              : DocumentFeedback.positive,
+      userReaction: userReaction == -1
+          ? UserReaction.negative
+          : userReaction == 0
+              ? UserReaction.neutral
+              : UserReaction.positive,
     );
   }
 
   @override
   DbEntityMap toMap(ExplicitDocumentFeedback entity) => {
         ExplicitDocumentFeedbackMapperFields.id: entity.id.value,
-        ExplicitDocumentFeedbackMapperFields.feedback:
-            entity.feedback.isIrrelevant
+        ExplicitDocumentFeedbackMapperFields.userReaction:
+            entity.userReaction.isIrrelevant
                 ? -1
-                : entity.feedback.isNeutral
+                : entity.userReaction.isNeutral
                     ? 0
                     : 1,
       };
@@ -48,5 +49,5 @@ class ExplicitDocumentFeedbackMapper
 
 abstract class ExplicitDocumentFeedbackMapperFields {
   static const int id = 0;
-  static const int feedback = 1;
+  static const int userReaction = 1;
 }

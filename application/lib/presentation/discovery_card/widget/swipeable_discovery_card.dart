@@ -17,7 +17,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     Key? key,
     required this.manager,
     required this.document,
-    required this.explicitDocumentFeedback,
+    required this.explicitDocumentUserReaction,
     required this.card,
     required this.isPrimary,
     this.isSwipingEnabled = true,
@@ -25,7 +25,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
 
   final DiscoveryCardManager manager;
   final Document document;
-  final DocumentFeedback explicitDocumentFeedback;
+  final UserReaction explicitDocumentUserReaction;
   final Widget card;
   final bool isPrimary;
   final bool isSwipingEnabled;
@@ -38,14 +38,14 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
         optionsLeft: isPrimary
             ? [
-                explicitDocumentFeedback.isRelevant
+                explicitDocumentUserReaction.isRelevant
                     ? SwipeOption.neutral
                     : SwipeOption.like
               ]
             : const [],
         optionsRight: isPrimary
             ? [
-                explicitDocumentFeedback.isIrrelevant
+                explicitDocumentUserReaction.isIrrelevant
                     ? SwipeOption.neutral
                     : SwipeOption.dislike
               ]
@@ -68,19 +68,19 @@ class SwipeableDiscoveryCard extends StatelessWidget {
       case SwipeOption.like:
         manager.onFeedback(
           document: document,
-          feedback: DocumentFeedback.positive,
+          userReaction: UserReaction.positive,
         );
         break;
       case SwipeOption.neutral:
         manager.onFeedback(
           document: document,
-          feedback: DocumentFeedback.neutral,
+          userReaction: UserReaction.neutral,
         );
         break;
       case SwipeOption.dislike:
         manager.onFeedback(
           document: document,
-          feedback: DocumentFeedback.negative,
+          userReaction: UserReaction.negative,
         );
         break;
     }

@@ -30,7 +30,7 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
         document.documentId,
         () => CardManagers(
-          imageManager: di.get()..getImage(document.webResource.displayUrl),
+          imageManager: di.get()..getImage(document.resource.thumbnail),
           discoveryCardManager: di.get()..updateDocument(document),
         ),
       );
@@ -60,7 +60,7 @@ class CardManagers {
     CardManagers createCardManagers(Document document, Uint8List? image) {
       final imageManager = di.get<ImageManager>();
       final discoveryCardManager = di.get<DiscoveryCardManager>();
-      final uri = document.webResource.displayUrl;
+      final uri = document.resource.thumbnail;
       if (image != null) {
         final cacheManager = di.get<AppImageCacheManager>();
         cacheManager.putFile(uri.toString(), image);
