@@ -43,7 +43,7 @@ void main() async {
   createFakeDocument() => Document(
         documentId: DocumentId(),
         resource: NewsResource(
-          thumbnail: Uri.parse('https://displayUrl.test.xayn.com'),
+          image: Uri.parse('https://displayUrl.test.xayn.com'),
           sourceUrl: Uri.parse('https://url.test.xayn.com'),
           topic: 'topic',
           score: .0,

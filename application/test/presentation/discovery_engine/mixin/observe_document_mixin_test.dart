@@ -29,7 +29,7 @@ void main() {
       snippet: '',
       url: Uri.base,
       sourceUrl: Uri.base,
-      thumbnail: Uri.base,
+      image: Uri.base,
       datePublished: DateTime(2022),
       country: 'US',
       language: 'en-US',
