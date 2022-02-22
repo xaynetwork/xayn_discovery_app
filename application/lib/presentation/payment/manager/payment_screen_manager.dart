@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
@@ -11,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_map
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
@@ -21,6 +23,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
   final CheckSubscriptionActiveUseCase _checkSubscriptionActiveUseCase;
+  final RequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late final UseCaseValueStream<PurchasableProduct>
       _getPurchasableProductHandler = consume(
     _getPurchasableProductUseCase,
@@ -39,6 +42,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
     this._checkSubscriptionActiveUseCase,
+    this.requestCodeRedemptionSheetUseCase,
     this._errorMessageMapper,
   ) : super(const PaymentScreenState.initial());
 
@@ -47,6 +51,11 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
     if (product == null || !product.canBePurchased) return;
     _purchaseSubscriptionHandler(PurchasableIds.subscription);
+  }
+
+  void enterRedeemCode() {
+    if (!Platform.isIOS) return;
+    requestCodeRedemptionSheetUseCase.call(none);
   }
 
   @override
