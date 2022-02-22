@@ -11,12 +11,12 @@
 #
 
 import("../ios/fastlane/Fastfile")
-import("lib/properties.rb")
-import("lib/git.rb")
-import("lib/download_utils.rb")
+require "./lib/properties.rb"
+require "./lib/git.rb"
+require "./lib/download_utils.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
-import("lib/config.rb")
+require "./lib/config.rb"
 
 Keys = Config::Keys
 Options = Config::Options
