@@ -28,6 +28,12 @@ abstract class UtilsModule {
 
   @preResolve
   @lazySingleton
+  @test
+  Future<Purchases> preparePurchasesTest() async => Purchases();
+
+  @preResolve
+  @lazySingleton
+  @Environment(defaultEnvironmentName)
   Future<Purchases> preparePurchases() async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
