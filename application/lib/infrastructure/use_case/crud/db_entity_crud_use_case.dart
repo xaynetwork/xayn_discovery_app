@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
@@ -60,6 +61,9 @@ class DbEntityCrudUseCase<T extends DbEntity>
 class DbEntityCrudUseCaseIn<T extends DbEntity> extends CrudUseCaseIn {
   final T? _entity;
   final UniqueId? _id;
+
+  @visibleForTesting
+  UniqueId get id => _id ?? _entity!.id;
 
   const DbEntityCrudUseCaseIn.watch(UniqueId id)
       : _entity = null,
