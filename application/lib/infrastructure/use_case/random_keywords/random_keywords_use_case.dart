@@ -52,7 +52,7 @@ class RandomKeyWordsUseCase extends UseCase<List<Document>, String> {
     }
 
     final words = nextResults
-        .map((it) => it.webResource.snippet)
+        .map((it) => it.resource.snippet)
         .join(' ')
         .split(RegExp(r'[\s]+'))
         .where((it) => it.length >= 5)

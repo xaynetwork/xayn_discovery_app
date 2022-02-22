@@ -72,7 +72,7 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 9de4fdba40c4e2c9acbdd107042c672e293da0ed
+      ref: c48a546c37eb56da6c258969557a396d95cebc52
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
@@ -81,7 +81,7 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
       ### This hash must be the same like the hash in the xayn_discovery_engine dependency override
-      ref: fe37c6669d969f86677bfdad940264d3d43ba9f1
+      ref: 0c025e8674d71ab7bf6b956688a78b2ab4a3997d
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -95,7 +95,7 @@ dependency_overrides:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
       ### This hash must be the same like the hash in the xayn_discovery_engine_flutter dependency
-      ref: fcf40b7b7a6cfbcbbf2caf3f37484d27acaae6fd
+      ref: 0c025e8674d71ab7bf6b956688a78b2ab4a3997d
       path: discovery_engine
   json_annotation: 4.4.0
   hive: 2.0.5

@@ -18,7 +18,7 @@ class ProcessedDocument {
     required this.timeToRead,
   });
 
-  DocumentProvider getProvider(WebResource resource) {
+  DocumentProvider getProvider(NewsResource resource) {
     var favicon = resource.url.resolve('/favicon.ico');
 
     final link = processHtmlResult.favicon;
