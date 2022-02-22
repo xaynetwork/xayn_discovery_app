@@ -28,7 +28,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_do
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart' hide logger;
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef UriHandler = void Function(Uri uri);
 

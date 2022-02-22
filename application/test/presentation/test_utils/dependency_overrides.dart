@@ -17,7 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/dire
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart' hide initLogger;
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'fakes.dart';
 
