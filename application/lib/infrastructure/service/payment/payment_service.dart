@@ -31,4 +31,10 @@ class PaymentService {
       );
 
   Future<PurchaserInfo> getPurchaserInfo() => Purchases.getPurchaserInfo();
+
+  /// iOS only. Presents a code redemption sheet, useful for redeeming offer codes
+  /// Refer to https://docs.revenuecat.com/docs/ios-subscription-offers#offer-codes for more information on how
+  /// to configure and use offer codes
+  Future<void> presentCodeRedemptionSheet() =>
+      Purchases.presentCodeRedemptionSheet();
 }
