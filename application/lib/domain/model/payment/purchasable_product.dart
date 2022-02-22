@@ -49,3 +49,7 @@ class PurchasableProduct extends Equatable {
       status == PurchasableProductStatus.purchasable ||
       status == PurchasableProductStatus.canceled;
 }
+
+extension PurchasableProductStatusExtension on PurchasableProductStatus {
+  bool get isPurchased => this == PurchasableProductStatus.purchased;
+}
