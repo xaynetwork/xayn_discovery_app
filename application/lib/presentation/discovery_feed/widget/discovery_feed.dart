@@ -102,7 +102,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             builder: (_) => MoveDocumentToCollectionBottomSheet(
               document: document,
               provider: managers.discoveryCardManager.state.processedDocument
-                  ?.getProvider(document.webResource),
+                  ?.getProvider(document.resource),
               onError: (tooltipKey) => showTooltip(tooltipKey),
             ),
           );
@@ -121,14 +121,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             _discoveryFeedManager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
-            isLiked: managers
-                .discoveryCardManager.state.explicitDocumentFeedback.isRelevant,
+            isLiked: managers.discoveryCardManager.state
+                .explicitDocumentUserReaction.isRelevant,
             onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
-              feedback: managers.discoveryCardManager.state
-                      .explicitDocumentFeedback.isRelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.positive,
+              userReaction: managers.discoveryCardManager.state
+                      .explicitDocumentUserReaction.isRelevant
+                  ? UserReaction.neutral
+                  : UserReaction.positive,
             ),
           ),
           buildNavBarItemBookmark(
@@ -145,13 +145,13 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             ),
           buildNavBarItemDisLike(
             isDisLiked: managers.discoveryCardManager.state
-                .explicitDocumentFeedback.isIrrelevant,
+                .explicitDocumentUserReaction.isIrrelevant,
             onPressed: () => managers.discoveryCardManager.onFeedback(
               document: document,
-              feedback: managers.discoveryCardManager.state
-                      .explicitDocumentFeedback.isIrrelevant
-                  ? DocumentFeedback.neutral
-                  : DocumentFeedback.negative,
+              userReaction: managers.discoveryCardManager.state
+                      .explicitDocumentUserReaction.isIrrelevant
+                  ? UserReaction.neutral
+                  : UserReaction.negative,
             ),
           ),
         ],
@@ -345,8 +345,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           manager: managers.discoveryCardManager,
           isPrimary: isPrimary,
           document: document,
-          explicitDocumentFeedback:
-              managers.discoveryCardManager.state.explicitDocumentFeedback,
+          explicitDocumentUserReaction:
+              managers.discoveryCardManager.state.explicitDocumentUserReaction,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
         );
@@ -362,15 +362,15 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final managers = managersOf(document);
         final state = managers.discoveryCardManager.state;
 
-        switch (state.explicitDocumentFeedback) {
-          case DocumentFeedback.neutral:
+        switch (state.explicitDocumentUserReaction) {
+          case UserReaction.neutral:
             return null;
-          case DocumentFeedback.positive:
+          case UserReaction.positive:
             return Border.all(
               color: R.colors.swipeBackgroundRelevant,
               width: R.dimen.sentimentBorderSize,
             );
-          case DocumentFeedback.negative:
+          case UserReaction.negative:
             return Border.all(
               color: R.colors.swipeBackgroundIrrelevant,
               width: R.dimen.sentimentBorderSize,

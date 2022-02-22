@@ -31,7 +31,7 @@ void main() {
         when(explicitDocumentFeedbackRepository.save(any)).thenAnswer(
           (_) => ExplicitDocumentFeedback(
             id: uid,
-            feedback: DocumentFeedback.positive,
+            userReaction: UserReaction.positive,
           ),
         );
       },
@@ -39,7 +39,7 @@ void main() {
         CrudExplicitDocumentFeedbackUseCaseIn.store(
           ExplicitDocumentFeedback(
             id: uid,
-            feedback: DocumentFeedback.positive,
+            userReaction: UserReaction.positive,
           ),
         )
       ],
@@ -50,7 +50,7 @@ void main() {
         useCaseSuccess(
           ExplicitDocumentFeedback(
             id: uid,
-            feedback: DocumentFeedback.positive,
+            userReaction: UserReaction.positive,
           ),
         ),
       ],
@@ -64,7 +64,7 @@ void main() {
         when(explicitDocumentFeedbackRepository.getById(any)).thenReturn(
           ExplicitDocumentFeedback(
             id: uid,
-            feedback: DocumentFeedback.positive,
+            userReaction: UserReaction.positive,
           ),
         );
         when(explicitDocumentFeedbackRepository.watch(id: anyNamed('id')))
@@ -74,7 +74,7 @@ void main() {
               id: uid,
               newObject: ExplicitDocumentFeedback(
                 id: uid,
-                feedback: DocumentFeedback.negative,
+                userReaction: UserReaction.negative,
               ),
             ),
           ),
@@ -92,7 +92,7 @@ void main() {
         useCaseSuccess(
           ExplicitDocumentFeedback(
             id: uid,
-            feedback: DocumentFeedback.positive,
+            userReaction: UserReaction.positive,
           ),
         ),
       ],

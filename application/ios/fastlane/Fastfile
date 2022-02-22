@@ -13,7 +13,7 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-import("../fastlane/lib/config.rb")
+require "../fastlane/lib/config.rb"
 
 Keys = Config::Keys
 Options = Config::Options

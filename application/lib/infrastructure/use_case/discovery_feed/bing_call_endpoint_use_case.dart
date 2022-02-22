@@ -54,18 +54,21 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
 
       final document = Document(
         documentId: DocumentId(),
-        webResource: WebResource(
-          displayUrl: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
+        resource: NewsResource(
+          thumbnail: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
           datePublished: DateTime.parse(it['datePublished'] as String),
-          provider: getProvider(it),
+          country: 'US',
+          language: 'en-US',
+          rank: -1,
+          score: .0,
+          sourceUrl: Uri.parse(it['url'] as String? ?? ''),
+          topic: 'topic',
         ),
-        isActive: true,
-        feedback: DocumentFeedback.neutral,
-        nonPersonalizedRank: 0,
-        personalizedRank: 0,
+        userReaction: UserReaction.neutral,
+        batchIndex: -1,
       );
 
       documents.add(document);
@@ -73,29 +76,6 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
 
     return documents;
   }
-}
-
-WebResourceProvider? getProvider(Map<dynamic, dynamic> map) {
-  if (!map.containsKey('provider')) return null;
-
-  String? providerName;
-  String? providerLogoUrl;
-
-  try {
-    providerName = map['provider'][0]['name'] as String?;
-    providerLogoUrl =
-        map['provider'][0]['image']['thumbnail']['contentUrl'] as String?;
-    // ignore: empty_catches
-  } catch (e) {} //TODO: add logger call
-
-  return providerName != null
-      ? WebResourceProvider(
-          name: providerName,
-          thumbnail: providerLogoUrl == null
-              ? null
-              : Uri.parse('$providerLogoUrl?w=64'),
-        )
-      : null;
 }
 
 /// A standalone Function which can be used in combination with [compute].
