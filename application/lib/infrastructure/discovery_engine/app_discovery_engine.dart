@@ -10,7 +10,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart'
+    hide logger;
 
 /// A temporary wrapper for the [DiscoveryEngine].
 /// Once the engine is ready, we can remove this class.
@@ -94,8 +96,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     _inputLog.add(
       '[init]\n<configuration> ${configuration.toString()}',
     );
-
-    _engine = await DiscoveryEngine.init(configuration: configuration);
+    _engine = await DiscoveryEngine.init(configuration: configuration)
+        .catchError((e) {
+      logger.e('OH MY GOD NO!!! $e');
+    });
   }
 
   Future<void> _saveInitialFeedMarket(
@@ -129,10 +133,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required DocumentId documentId,
     required UserReaction userReaction,
   }) async {
-    _inputLog.add(
-      '[changeUserReaction]\n<documentId> $documentId\n<userReaction> $userReaction',
-    );
-
     final engineEvent = await safeRun(
       () => _engine.changeUserReaction(
         documentId: documentId,
