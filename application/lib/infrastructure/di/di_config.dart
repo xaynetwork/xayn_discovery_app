@@ -14,10 +14,15 @@ final di = GetIt.instance;
 
 const String defaultEnvironmentName = 'defaultEnvironment';
 
+const String debugEnvironmentName = 'debugEnvironment';
+
 /// Acts as a "joint" environment for dev and prod
 /// When required, use [Environment.test] to create test specific DI,
 /// and use [defaultEnvironment] to create an equivalent for dev/prod.
 const Environment defaultEnvironment = Environment(defaultEnvironmentName);
+
+/// Environment for debug mode only
+const Environment debug = Environment(debugEnvironmentName);
 
 /// Boilerplate setup for DI.
 @InjectableInit(
