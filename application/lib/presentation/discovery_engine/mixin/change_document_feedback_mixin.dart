@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
+mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<DocumentFeedbackChange, EngineEvent>? _useCaseSink;
 
   @override
@@ -22,9 +22,9 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
     return super.close();
   }
 
-  void changeDocumentFeedback({
+  void changeUserReaction({
     required Document document,
-    required DocumentFeedback feedback,
+    required UserReaction userReaction,
     required FeedbackContext context,
   }) async {
     _useCaseSink ??= _getUseCaseSink();
@@ -35,16 +35,16 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
     // when implicit, only propagate when neutral.
     // should a user explicitly dislike a Document,
     // and then trigger an implicit like, then it will _not_ propagate.
-    if (isExplicit || document.feedback.isNeutral) {
+    if (isExplicit || document.userReaction.isNeutral) {
       await _maybeUpdateExplicitDocumentFeedback(
         document: document,
-        feedback: feedback,
+        userReaction: userReaction,
         context: context,
       );
 
       // updating the engine and sending analytics, should only
       // propagate _if_ the value actually changes.
-      final willUpdateEngine = document.feedback != feedback;
+      final willUpdateEngine = document.userReaction != userReaction;
 
       if (willUpdateEngine) {
         final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
@@ -52,13 +52,13 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
         _useCaseSink!(
           DocumentFeedbackChange(
             documentId: document.documentId,
-            feedback: feedback,
+            userReaction: userReaction,
           ),
         );
 
         sendAnalyticsUseCase(
           DocumentFeedbackChangedEvent(
-            document: document.copyWith(feedback: feedback),
+            document: document.copyWith(userReaction: userReaction),
             context: context,
           ),
         );
@@ -68,7 +68,7 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
 
   Future<void> _maybeUpdateExplicitDocumentFeedback({
     required Document document,
-    required DocumentFeedback feedback,
+    required UserReaction userReaction,
     required FeedbackContext context,
   }) async {
     if (context == FeedbackContext.explicit) {
@@ -79,7 +79,7 @@ mixin ChangeDocumentFeedbackMixin<T> on UseCaseBlocHelper<T> {
         CrudExplicitDocumentFeedbackUseCaseIn.store(
           ExplicitDocumentFeedback(
             id: document.documentId.uniqueId,
-            feedback: feedback,
+            userReaction: userReaction,
           ),
         ),
       );

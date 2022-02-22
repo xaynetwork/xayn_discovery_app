@@ -41,7 +41,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
     final elements = DiscoveryCardElements(
       manager: discoveryCardManager,
       document: widget.document,
-      explicitDocumentFeedback: state.explicitDocumentFeedback,
+      explicitDocumentUserReaction: state.explicitDocumentUserReaction,
       title: webResource.title,
       timeToRead: timeToRead,
       url: webResource.url,
@@ -49,15 +49,15 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       datePublished: webResource.datePublished,
       onLikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
-        feedback: state.explicitDocumentFeedback.isRelevant
-            ? DocumentFeedback.neutral
-            : DocumentFeedback.positive,
+        userReaction: state.explicitDocumentUserReaction.isRelevant
+            ? UserReaction.neutral
+            : UserReaction.positive,
       ),
       onDislikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
-        feedback: state.explicitDocumentFeedback.isIrrelevant
-            ? DocumentFeedback.neutral
-            : DocumentFeedback.negative,
+        userReaction: state.explicitDocumentUserReaction.isIrrelevant
+            ? UserReaction.neutral
+            : UserReaction.negative,
       ),
       onOpenUrl: () => discoveryCardManager.openWebResourceUrl(widget.document),
       onBookmarkPressed: onBookmarkPressed,
