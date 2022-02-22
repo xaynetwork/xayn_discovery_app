@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -84,6 +86,12 @@ class _PaymentScreenState extends State<PaymentScreen> with TooltipStateMixin {
         const SizedBox(height: 100),
         product.canBePurchased
             ? AppGhostButton.text('APPLY', onPressed: manager.subscribe)
+            : const Center(),
+        Platform.isIOS
+            ? AppGhostButton.text(
+                'enter redeem code',
+                onPressed: manager.enterRedeemCode,
+              )
             : const Center(),
       ],
     );
