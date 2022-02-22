@@ -73,10 +73,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
+      assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 20,
       feedMarkets: markets,
-      assetsUrl: 'https://ai-assets.xaynet.dev',
       manifest: await FlutterManifestReader().read(),
     );
 
