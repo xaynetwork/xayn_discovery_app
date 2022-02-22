@@ -40,7 +40,7 @@ void main() async {
         documentId: DocumentId(),
         resource: NewsResource(
           image: Uri.parse('https://displayUrl.test.xayn.com'),
-          sourceUrl: Uri.parse('https://url.test.xayn.com'),
+          sourceDomain: 'example',
           topic: 'topic',
           score: .0,
           rank: -1,
