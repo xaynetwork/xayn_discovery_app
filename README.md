@@ -47,6 +47,7 @@ Short description of the project: What, Why, When and How :rofl:
  * [Troubleshooting :thinking:](#troubleshooting-thinking)
  * [Contributing :construction_worker_woman:](#contributing-construction_worker_woman)
  * [License :scroll:](#license-scroll)
+ * [Release](#release)
 
 ----------
 
@@ -154,6 +155,24 @@ We're more than happy to accept pull requests :muscle:
 
 ## License :scroll:
 **project_name** is licensed under `Apache 2`. View [license](../main/LICENSE).
+
+[top :arrow_heading_up:](#project_name)
+
+----------
+
+## Release
+
+### Check secrets with gitleaks
+
+[Gitleaks](https://github.com/zricethezav/gitleaks) is a tool for detecting and preventing hardcoded secrets in git repos.
+The tool scans the repo using a set of regex rules. 
+We have our custom set of rules implemented in the `.gitleaks.toml` file, located at the root folder of the project.
+
+Steps to follow for scanning the repo:
+- [Get started](https://github.com/zricethezav/gitleaks#getting-started) with gitleaks
+- Navigate to the `root folder` of the project.
+- Run the command `gitleaks detect -l debug --verbose`. For more information about the usage, please check the [documentation](https://github.com/zricethezav/gitleaks#usage). Please note: in order to use our custom set of rules, the location where the command is run must be the same of where the `.gitleaks.toml` is located. 
+- Check the output and look for any hardcoded secrets, if any
 
 [top :arrow_heading_up:](#project_name)
 
