@@ -149,9 +149,12 @@ class DiscoveryCardElements extends StatelessWidget {
       ],
     );
 
-    return InkWell(
-      onTap: onOpenUrl,
-      child: cardHeader,
+    return Material(
+      color: R.colors.transparent,
+      child: InkWell(
+        onTap: onOpenUrl,
+        child: cardHeader,
+      ),
     );
   }
 }
