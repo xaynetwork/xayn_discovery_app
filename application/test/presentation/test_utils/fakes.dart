@@ -14,7 +14,7 @@ final fakeDocument = Document(
   documentId: DocumentId(),
   userReaction: UserReaction.neutral,
   resource: NewsResource(
-    thumbnail: Uri.parse(
+    image: Uri.parse(
         "https://www.reuters.com/resizer/K2oMuVX28AvBmJyt3DzgsFJPL9A=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcp"),
     sourceUrl: Uri.parse("https://www.msn.com"),
     country: 'US',

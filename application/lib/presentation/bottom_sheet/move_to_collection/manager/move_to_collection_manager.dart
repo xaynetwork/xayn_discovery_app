@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_co
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart' hide logger;
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
 class MoveToCollectionManager extends Cubit<MoveToCollectionState>

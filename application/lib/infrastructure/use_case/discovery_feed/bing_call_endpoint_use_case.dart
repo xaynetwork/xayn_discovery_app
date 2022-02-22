@@ -55,7 +55,7 @@ class InvokeBingUseCase extends InvokeApiEndpointUseCase {
       final document = Document(
         documentId: DocumentId(),
         resource: NewsResource(
-          thumbnail: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
+          image: imageUrl != null ? Uri.parse(imageUrl) : Uri.base,
           url: Uri.parse(it['url'] as String? ?? ''),
           snippet: it['description'] as String? ?? '',
           title: it['name'] as String? ?? '',
