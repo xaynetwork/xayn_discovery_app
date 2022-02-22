@@ -131,9 +131,9 @@ class DiscoveryCardElements extends StatelessWidget {
       datePublished: datePublished,
     );
 
-    final openUrlIcon = IconButton(
-      onPressed: () {},
-      icon: SvgPicture.asset(
+    final openUrlIcon = Padding(
+      padding: EdgeInsets.all(R.dimen.unit),
+      child: SvgPicture.asset(
         R.assets.icons.globe,
         color: R.colors.brightIcon,
       ),
