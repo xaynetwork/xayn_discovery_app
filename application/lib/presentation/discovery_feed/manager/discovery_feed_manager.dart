@@ -1,10 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
@@ -19,6 +19,11 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_f
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+typedef OnFeedRequestSucceeded = Set<Document> Function(
+    FeedRequestSucceeded event);
+typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
+typedef OnNonMatchedEngineEvent = Set<Document> Function();
 
 const int _kMaxCardCount = 10;
 
@@ -44,7 +49,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         ChangeUserReactionMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
-    this._engine,
     this._discoveryFeedNavActions,
     this._fetchCardIndexUseCase,
     this._updateCardIndexUseCase,
@@ -52,8 +56,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     this._crudExplicitDocumentFeedbackUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(DiscoveryFeedState.initial());
-
-  final DiscoveryEngine _engine;
 
   /// The max card count of the feed
   /// If the count overflows, then n-cards will be removed from the beginning
@@ -190,31 +192,25 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         engineEvent,
         errorReport,
       ) async {
-        final engine = _engine as AppDiscoveryEngine;
-
         _cardIndex ??= cardIndex;
 
         if (_cardIndex == null) return null;
 
-        var results = engineEvent is FeedRequestSucceeded
-            ? {...state.results, ...engineEvent.items}
-            : state.results;
-        final changeDocumentFeedbackParams = engineEvent != null
-            ? engine.resolveChangeDocumentFeedbackParameters(engineEvent)
-            : null;
+        final processEngineEvent = _processEngineEvent(engineEvent);
 
-        if (changeDocumentFeedbackParams != null) {
-          results = results
-              .map(
-                (it) => it.documentId == changeDocumentFeedbackParams.documentId
-                    ? it.copyWith(
-                        userReaction: changeDocumentFeedbackParams.userReaction)
-                    : it,
-              )
-              .toSet();
-        }
+        final results = processEngineEvent(
+          whenFeedRequestSucceeded: (event) =>
+              {...state.results, ...event.items},
+          whenDocumentsUpdated: (event) => state.results
+              .map((it) =>
+                  event.items.firstWhereOrNull(
+                      (item) => item.documentId == it.documentId) ??
+                  it)
+              .toSet(),
+          orElse: () => state.results,
+        );
 
-        final sets = await _maybeReduceCardCount(results);
+        final sets = await _maybeReduceCardCount(results.toSet());
 
         final nextState = DiscoveryFeedState(
           results: sets.results,
@@ -229,6 +225,24 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
       });
+
+  Set<Document> Function({
+    required OnFeedRequestSucceeded whenFeedRequestSucceeded,
+    required OnDocumentsUpdated whenDocumentsUpdated,
+    required OnNonMatchedEngineEvent orElse,
+  }) _processEngineEvent(EngineEvent? event) => ({
+        required OnFeedRequestSucceeded whenFeedRequestSucceeded,
+        required OnDocumentsUpdated whenDocumentsUpdated,
+        required OnNonMatchedEngineEvent orElse,
+      }) {
+        if (event is FeedRequestSucceeded) {
+          return whenFeedRequestSucceeded(event);
+        } else if (event is DocumentsUpdated) {
+          return whenDocumentsUpdated(event);
+        }
+
+        return orElse();
+      };
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _observedViewTypes[id] ?? DocumentViewMode.story;
