@@ -55,7 +55,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         child: Center(
           child: Text(
             R.strings.bookmarkScreenNoArticles,
-            style: R.styles.appScreenHeadline,
+            style: R.styles.xlBoldStyle,
           ),
         ),
         padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
