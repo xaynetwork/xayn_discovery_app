@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart' hide logger;
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 
 /// This is a temporary solution and will be removed as soon as the discovery engine

@@ -39,7 +39,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   NewsResource get webResource => widget.document.resource;
 
-  String get imageUrl => webResource.thumbnail.toString();
+  String get imageUrl => webResource.image.toString();
 
   String get snippet => webResource.snippet;
 
@@ -52,7 +52,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     discoveryCardManager = widget.discoveryCardManager ?? di.get()
       ..updateDocument(widget.document);
     imageManager = widget.imageManager ?? di.get()
-      ..getImage(widget.document.resource.thumbnail);
+      ..getImage(widget.document.resource.image);
   }
 
   @override
@@ -74,7 +74,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
       discoveryCardManager.updateDocument(widget.document);
-      imageManager.getImage(widget.document.resource.thumbnail);
+      imageManager.getImage(widget.document.resource.image);
     }
   }
 
