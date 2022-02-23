@@ -59,12 +59,12 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
 
   Widget _buildHeader() => Text(
         R.strings.settingsSubscribedToHeader,
-        style: R.styles.appHighlightText,
+        style: R.styles.lStyle,
       );
 
   Widget _buildTitle() => Text(
         R.strings.settingsXaynPremium,
-        style: R.styles.appScreenHeadline,
+        style: R.styles.xlBoldStyle,
       );
 
   Widget _buildInfo() {
@@ -78,11 +78,11 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       text: infoStringWithDate,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
-      style: R.styles.appBodyText,
+      style: R.styles.mStyle,
       othersMarkers: [
         MarkerText(
           marker: _kTextPlaceholder,
-          style: R.styles.appBodyText.copyWith(fontWeight: FontWeight.bold),
+          style: R.styles.mStyle.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );

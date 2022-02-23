@@ -66,11 +66,11 @@ extension ReaderModeFontSizeExtension on ReaderModeFontSize {
   TextStyle get textStyle {
     switch (this) {
       case ReaderModeFontSize.small:
-        return R.styles.readerModeSmallTextStyle;
+        return R.styles.sHighDensityStyle;
       case ReaderModeFontSize.medium:
-        return R.styles.readerModeTextStyle;
+        return R.styles.mHighDensityStyle;
       case ReaderModeFontSize.large:
-        return R.styles.readerModeLargeTextStyle;
+        return R.styles.lHighDensityStyle;
     }
   }
 }
