@@ -11,19 +11,19 @@ class ChangeDocumentFeedbackUseCase
 
   @override
   Stream<EngineEvent> transaction(DocumentFeedbackChange param) async* {
-    yield await _engine.changeDocumentFeedback(
+    yield await _engine.changeUserReaction(
       documentId: param.documentId,
-      feedback: param.feedback,
+      userReaction: param.userReaction,
     );
   }
 }
 
 class DocumentFeedbackChange {
   final DocumentId documentId;
-  final DocumentFeedback feedback;
+  final UserReaction userReaction;
 
   const DocumentFeedbackChange({
     required this.documentId,
-    required this.feedback,
+    required this.userReaction,
   });
 }

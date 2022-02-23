@@ -16,7 +16,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onBookmarkLongPressed,
     required this.isBookmarked,
     required this.document,
-    required this.explicitDocumentFeedback,
+    required this.explicitDocumentUserReaction,
   }) : super(key: key);
 
   final VoidCallback onSharePressed;
@@ -26,12 +26,12 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final Document document;
-  final DocumentFeedback explicitDocumentFeedback;
+  final UserReaction explicitDocumentUserReaction;
 
   @override
   Widget build(BuildContext context) {
     final likeButton = AppGhostButton.icon(
-      explicitDocumentFeedback.isRelevant
+      explicitDocumentUserReaction.isRelevant
           ? R.assets.icons.thumbsUpActive
           : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
@@ -52,7 +52,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final dislikeButton = AppGhostButton.icon(
-      explicitDocumentFeedback.isIrrelevant
+      explicitDocumentUserReaction.isIrrelevant
           ? R.assets.icons.thumbsDownActive
           : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,

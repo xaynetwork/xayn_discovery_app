@@ -206,24 +206,24 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           document: widget.document,
-          explicitDocumentFeedback: state.explicitDocumentFeedback,
+          explicitDocumentUserReaction: state.explicitDocumentUserReaction,
           title: webResource.title,
           timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
           provider: provider,
           datePublished: webResource.datePublished,
-          onLikePressed: () => discoveryCardManager.changeDocumentFeedback(
+          onLikePressed: () => discoveryCardManager.changeUserReaction(
             document: widget.document,
-            feedback: state.explicitDocumentFeedback.isRelevant
-                ? DocumentFeedback.neutral
-                : DocumentFeedback.positive,
+            userReaction: state.explicitDocumentUserReaction.isRelevant
+                ? UserReaction.neutral
+                : UserReaction.positive,
             context: FeedbackContext.explicit,
           ),
-          onDislikePressed: () => discoveryCardManager.changeDocumentFeedback(
+          onDislikePressed: () => discoveryCardManager.changeUserReaction(
             document: widget.document,
-            feedback: state.explicitDocumentFeedback.isIrrelevant
-                ? DocumentFeedback.neutral
-                : DocumentFeedback.negative,
+            userReaction: state.explicitDocumentUserReaction.isIrrelevant
+                ? UserReaction.neutral
+                : UserReaction.negative,
             context: FeedbackContext.explicit,
           ),
           onOpenUrl: () =>
@@ -354,14 +354,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           onPressed: () => _discoveryCardManager.onBackNavPressed(),
         ),
         buildNavBarItemLike(
-          isLiked:
-              _discoveryCardManager.state.explicitDocumentFeedback.isRelevant,
+          isLiked: _discoveryCardManager
+              .state.explicitDocumentUserReaction.isRelevant,
           onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback:
-                _discoveryCardManager.state.explicitDocumentFeedback.isRelevant
-                    ? DocumentFeedback.neutral
-                    : DocumentFeedback.positive,
+            userReaction: _discoveryCardManager
+                    .state.explicitDocumentUserReaction.isRelevant
+                ? UserReaction.neutral
+                : UserReaction.positive,
           ),
         ),
         buildNavBarItemBookmark(
@@ -373,14 +373,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           onPressed: () => _discoveryCardManager.shareUri(widget.document),
         ),
         buildNavBarItemDisLike(
-          isDisLiked:
-              _discoveryCardManager.state.explicitDocumentFeedback.isIrrelevant,
+          isDisLiked: _discoveryCardManager
+              .state.explicitDocumentUserReaction.isIrrelevant,
           onPressed: () => _discoveryCardManager.onFeedback(
             document: widget.document,
-            feedback: _discoveryCardManager
-                    .state.explicitDocumentFeedback.isIrrelevant
-                ? DocumentFeedback.neutral
-                : DocumentFeedback.negative,
+            userReaction: _discoveryCardManager
+                    .state.explicitDocumentUserReaction.isIrrelevant
+                ? UserReaction.neutral
+                : UserReaction.negative,
           ),
         ),
       ],

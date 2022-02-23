@@ -11,81 +11,95 @@
 #
 
 import("../ios/fastlane/Fastfile")
-import("lib/properties.rb")
-import("lib/git.rb")
-import("lib/download_utils.rb")
+require "./lib/properties.rb"
+require "./lib/git.rb"
+require "./lib/download_utils.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
-import("lib/config.rb")
+require "./lib/config.rb"
+
+Keys = Config::Keys
+Options = Config::Options
+_Options = Config::InternalOptions
+Platforms = Config::Platforms
+Flavors = Config::Flavors
+AndroidOutputs = Config::AndroidOutputs
+BuildTypes = Config::BuildTypes
 
 # Common checks before running a lane
 before_all do |lane, options|
+  allowedOptions = Options.constants.map {|c|  Options.const_get(c) }
+  options.each do |k, v|
+     UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
+  end
+
   setIfNotSet = lambda { |option, alt|
     options[option] = options.key?(option) ? options[option] : alt
   }
 
-  setIfNotSet.call(:clean, true)
-  setIfNotSet.call(:platform, Config::PLATFORM)
-  setIfNotSet.call(:android_output, Config::ANDROID_OUTPUT)
-  setIfNotSet.call(:flavor, Config::FLAVOR)
-  setIfNotSet.call(:build, Config::BUILD)
-  setIfNotSet.call(:upload_to_appcenter, true)
-  setIfNotSet.call(:coverage, false)
+  # set default values
+  setIfNotSet.call(Options::CLEAN, true)
+  setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
+  setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
+  setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
+  setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
+  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, true)
+  setIfNotSet.call(Options::COVERAGE, false)
   ## downloading the iOS adhoc profile
-  setIfNotSet.call(:downloadProfile, true)
-  setIfNotSet.call(:update_assets, false)
+  setIfNotSet.call(Options::DOWNLOAD_PROFILE, true)
+  setIfNotSet.call(Options::UPDATE_ASSETS, false)
 
   version_name = gitVersionName()
-  flavor = options[:flavor]
-  platform = options[:platform]
-  offset = Config::FLAVOR_MATRIX[flavor][platform][Config::Keys::BUILD_NUMBER_OFFSET]
+  flavor = options[Options::FLAVOR]
+  platform = options[Options::PLATFORM]
+  offset = Config::FLAVOR_MATRIX[flavor][platform][Keys::BUILD_NUMBER_OFFSET]
   build_number = gitVersionNumber().to_i + offset
-  setIfNotSet.call(:build_number, build_number)
-  setIfNotSet.call(:version_name, version_name)
-  options[:env] = Config::ENV_DEFAULTS.to_h
+  setIfNotSet.call(Options::BUILD_NUMBER, build_number)
+  setIfNotSet.call(Options::VERSION_NAME, version_name)
+  options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
-  options[:env].merge!(ENV.to_h)
+  options[_Options::ENV].merge!(ENV.to_h)
   if is_ci
-    UI.success "Env:\n#{JSON.pretty_generate(options[:env])}"
+    UI.success "Env:\n#{JSON.pretty_generate(options[_Options::ENV])}"
   end
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
 desc "Flutter build"
 private_lane :flutter_build do |options|
-  if options[:clean]
+  if options[Options::CLEAN]
     clean(options)
   end
   build_runner(options)
 
-  platform = options[:platform]
-  target = platform == "android" ? options[:android_output] : platform
-  type = options[:build] == "release" ? "--release" : "--debug"
-  codesign = platform == "ios" ? "--no-codesign" : ""
-  flavor = options[:flavor]
-  appName = Config::FLAVOR_MATRIX[flavor][platform]["name"]
-  appId = Config::FLAVOR_MATRIX[flavor][platform]["id"]
+  platform = options[Options::PLATFORM]
+  target = platform == Platforms::ANDROID ? options[Options::ANDROID_OUTPUT] : platform
+  type = options[Options::BUILD_TYPE] == BuildTypes::RELEASE ? "--release" : "--debug"
+  codesign = platform == Platforms::IOS ? "--no-codesign" : ""
+  flavor = options[Options::FLAVOR]
+  appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
+  appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
 
   defines = {
-    "GIT_TAG" => options[:version_name],
+    "GIT_TAG" => options[Options::VERSION_NAME],
     "USER_APP_ID" => appId,
     "USER_APP_NAME" => appName,
     "USER_FLAVOR" => flavor,
   }
 
-  if platform == "ios"
-    defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor]["provisioning_profile_name"]
+  if platform == Platforms::IOS
+    defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::PROVISIONING_PROFILE_NAME]
   end
   dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
 
-  flutter("build #{target} #{type} #{codesign} --build-number=#{options[:build_number]} --build-name=#{options[:version_name]} --dart-define=GIT_TAG=#{options[:version_name]} --dart-define=USER_APP_ID=#{appId} --dart-define=USER_APP_NAME=\"#{appName}\" #{dartDefines}")
+  flutter("build #{target} #{type} #{codesign} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]} #{dartDefines}")
 end
 
 desc "Prepare internal key.properties"
 private_lane :android_prepare_key_properties do |options|
   UI.user_error!("No PROVISIONING_PASSWORD provided!") unless ENV.key?("PROVISIONING_PASSWORD")
   provisionigPassword = ENV["PROVISIONING_PASSWORD"]
-  keyAlias = Config::ANDROID_BUILD_CONFIG[options[:flavor]]["key_alias"]
+  keyAlias = Config::ANDROID_BUILD_CONFIG[options[Options::FLAVOR]][Keys::KEY_ALIAS]
   setProperties("../android/key.properties", {
     "storePassword" => provisionigPassword,
     "keyPassword" => provisionigPassword,
@@ -114,10 +128,10 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
-  if options[:update_assets]
+  if options[Options::UPDATE_ASSETS]
     update_assets(options)
   end
-  mode = options[:watch] ? "watch" : "build"
+  mode = options[Options::WATCH] ? "watch" : "build"
   command = "pub run build_runner #{mode} --delete-conflicting-outputs"
   begin
     flutter(command)
@@ -153,7 +167,7 @@ lane :check_config_files do |options|
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
   }, Config::ENV_DEFAULTS)
 
-  if options[:flavor] != "internal" && options[:release] != "debug"
+  if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   else
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
@@ -167,7 +181,7 @@ end
 
 desc "Watch changes for rerunning the build_runner"
 lane :watch do |options|
-  options[:watch] = true
+  options[Options::WATCH] = true
   build_runner(options)
 end
 
@@ -176,7 +190,9 @@ lane :clean do |options|
   flutter("clean")
 end
 
-desc "Sanity checks (options: coverage:[true/FALSE])"
+desc "Sanity checks (options: coverage:[true/FALSE])\n" \
+     "Available options:\n" \
+     "   - #{Options::COVERAGE}"
 lane :check do |options|
   pub_get(options)
   if Dir.glob("../**/env.g.dart").empty?
@@ -188,7 +204,7 @@ lane :check do |options|
   else
     flutter("format ./")
   end
-  if options[:coverage]
+  if options[Options::COVERAGE]
     # Creates a fake test that imports all files so that lcov calculates the correct coverage
     shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
     shell("cat test/test_stub.dart >> test/all_imports_test.dart")
@@ -202,31 +218,33 @@ lane :check do |options|
   end
 end
 
-desc "Build and publish (i.e fastlane publish platform:ios build:release flavor:beta)"
+desc "Build and publish \n" \
+     "Available options:\n" \
+     "#{Options::help()}"
 lane :publish do |options|
-  platform = options[:platform]
-  flavor = options[:flavor]
+  platform = options[Options::PLATFORM]
+  flavor = options[Options::FLAVOR]
   config = Config::FLAVOR_MATRIX[flavor][platform]
-  appcenter_target = config["appcenter_target"]
-  appcenter_token = config["appcenter_token"]
-  appcenter_buildfile = config["appcenter_buildfile"]
+  appcenter_target = config[Keys::APPCENTER_TARGET]
+  appcenter_token = config[Keys::APPCENTER_TOKEN]
+  appcenter_buildfile = config[Keys::APPCENTER_FILEPATH]
 
-  if platform == "android"
+  if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
   end
   flutter_build(options)
-  if platform == "ios"
+  if platform == Platforms::IOS
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
     end
   end
-  if options[:upload_to_appcenter]
+  if options[Options::UPLOAD_TO_APPCENTER]
     UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
     uploadToAppCenter(
       ENV[appcenter_token],
       appcenter_target,
       appcenter_buildfile,
-      options[:version_name]
+      options[Options::VERSION_NAME]
     )
   end
 end
@@ -236,8 +254,8 @@ lane :update_assets do |options|
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
   manifestPath["file://"] = ""
   raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
-  UI.user_error!("No AI_ASSETS_URL provided!") unless options[:env].key?("AI_ASSETS_URL")
-  downloadAssetsFromManifest(manifestPath, options[:env]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
+  UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
+  downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
 end
 
 # Private helper methods
@@ -283,3 +301,4 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
     downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
   }
 end
+

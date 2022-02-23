@@ -44,7 +44,7 @@ const String _kReadingTimeLanguage = 'en-US';
 class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with
         UseCaseBlocHelper<DiscoveryCardState>,
-        ChangeDocumentFeedbackMixin<DiscoveryCardState>,
+        ChangeUserReactionMixin<DiscoveryCardState>,
         OpenExternalUrlMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final ConnectivityUriUseCase _connectivityUseCase;
@@ -140,27 +140,27 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     );
 
     /// Update the uri which contains the news article
-    _updateUri(document.webResource.url);
+    _updateUri(document.resource.url);
   }
 
   void onFeedback({
     required Document document,
-    required DocumentFeedback feedback,
+    required UserReaction userReaction,
   }) =>
-      changeDocumentFeedback(
+      changeUserReaction(
         document: document,
-        feedback: feedback,
+        userReaction: userReaction,
         context: FeedbackContext.explicit,
       );
 
   void shareUri(Document document) {
-    _shareUriUseCase.call(document.webResource.url);
+    _shareUriUseCase.call(document.resource.url);
 
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
 
-    changeDocumentFeedback(
+    changeUserReaction(
       document: document,
-      feedback: DocumentFeedback.positive,
+      userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
     );
   }
@@ -171,26 +171,26 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _toggleBookmarkHandler(
       CreateBookmarkFromDocumentUseCaseIn(
         document: document,
-        provider: state.processedDocument?.getProvider(document.webResource),
+        provider: state.processedDocument?.getProvider(document.resource),
       ),
     );
 
     if (!isBookmarked) {
-      changeDocumentFeedback(
+      changeUserReaction(
         document: document,
-        feedback: DocumentFeedback.positive,
+        userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
       );
     }
   }
 
   void openWebResourceUrl(Document document) {
-    changeDocumentFeedback(
+    changeUserReaction(
       document: document,
-      feedback: DocumentFeedback.positive,
+      userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
     );
-    openExternalUrl(document.webResource.url.toString());
+    openExternalUrl(document.resource.url.toString());
   }
 
   @override
@@ -230,7 +230,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         if (explicitDocumentFeedback != null) {
           nextState = nextState.copyWith(
-            explicitDocumentFeedback: explicitDocumentFeedback.feedback,
+            explicitDocumentUserReaction: explicitDocumentFeedback.userReaction,
           );
         }
 

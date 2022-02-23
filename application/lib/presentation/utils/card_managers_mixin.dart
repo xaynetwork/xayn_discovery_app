@@ -1,8 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -30,7 +27,7 @@ mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
   CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
         document.documentId,
         () => CardManagers(
-          imageManager: di.get()..getImage(document.webResource.displayUrl),
+          imageManager: di.get()..getImage(document.resource.image),
           discoveryCardManager: di.get()..updateDocument(document),
         ),
       );
@@ -57,14 +54,10 @@ class CardManagers {
   static VoidCallback registerCardManagerCacheInDi(String scopeName) {
     di.pushNewScope(scopeName: scopeName);
     final cache = <DocumentId, CardManagers>{};
-    CardManagers createCardManagers(Document document, Uint8List? image) {
+    CardManagers createCardManagers(Document document) {
       final imageManager = di.get<ImageManager>();
       final discoveryCardManager = di.get<DiscoveryCardManager>();
-      final uri = document.webResource.displayUrl;
-      if (image != null) {
-        final cacheManager = di.get<AppImageCacheManager>();
-        cacheManager.putFile(uri.toString(), image);
-      }
+      final uri = document.resource.image;
       imageManager.getImage(uri);
       discoveryCardManager.updateDocument(document);
       return CardManagers(
@@ -72,9 +65,9 @@ class CardManagers {
           discoveryCardManager: discoveryCardManager);
     }
 
-    di.registerFactoryParam<CardManagers, Document, Uint8List>(
-        (Document? document, Uint8List? image) => cache.putIfAbsent(
-            document!.documentId, () => createCardManagers(document, image)));
+    di.registerFactoryParam<CardManagers, Document, void>(
+        (Document? document, _) => cache.putIfAbsent(
+            document!.documentId, () => createCardManagers(document)));
 
     return () {
       cache.forEach((key, value) {

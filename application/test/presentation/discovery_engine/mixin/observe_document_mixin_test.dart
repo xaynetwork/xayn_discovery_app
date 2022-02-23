@@ -22,20 +22,20 @@ void main() {
   late MockAnalyticsService analyticsService;
   final document = Document(
     documentId: DocumentId(),
-    feedback: DocumentFeedback.neutral,
-    personalizedRank: 0,
-    nonPersonalizedRank: 0,
-    isActive: true,
-    webResource: WebResource(
+    userReaction: UserReaction.neutral,
+    batchIndex: -1,
+    resource: NewsResource(
       title: '',
       snippet: '',
       url: Uri.base,
-      displayUrl: Uri.base,
+      sourceUrl: Uri.base,
+      image: Uri.base,
       datePublished: DateTime(2022),
-      provider: WebResourceProvider(
-        name: '',
-        thumbnail: Uri.base,
-      ),
+      country: 'US',
+      language: 'en-US',
+      rank: -1,
+      score: .0,
+      topic: 'topic',
     ),
   );
 

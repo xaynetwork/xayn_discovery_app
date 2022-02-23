@@ -42,21 +42,21 @@ void main() async {
 
   createFakeDocument() => Document(
         documentId: DocumentId(),
-        feedback: DocumentFeedback.neutral,
-        webResource: WebResource(
-          displayUrl: Uri.parse('https://displayUrl.test.xayn.com'),
+        resource: NewsResource(
+          image: Uri.parse('https://displayUrl.test.xayn.com'),
+          sourceUrl: Uri.parse('https://url.test.xayn.com'),
+          topic: 'topic',
+          score: .0,
+          rank: -1,
+          language: 'en-US',
+          country: 'US',
           snippet: 'snippet',
           title: 'title',
           url: Uri.parse('https://url.test.xayn.com'),
           datePublished: DateTime.parse("2021-01-01 00:00:00.000Z"),
-          provider: const WebResourceProvider(
-            name: "provider",
-            thumbnail: null,
-          ),
         ),
-        nonPersonalizedRank: 0,
-        personalizedRank: 0,
-        isActive: true,
+        batchIndex: -1,
+        userReaction: UserReaction.neutral,
       );
 
   final fakeDocumentA = createFakeDocument();

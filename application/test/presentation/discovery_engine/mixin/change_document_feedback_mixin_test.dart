@@ -55,8 +55,9 @@ void main() {
 
     when(engine.engineEvents).thenAnswer((_) => controller.stream);
 
-    when(engine.changeDocumentFeedback(
-            documentId: anyNamed('documentId'), feedback: anyNamed('feedback')))
+    when(engine.changeUserReaction(
+            documentId: anyNamed('documentId'),
+            userReaction: anyNamed('userReaction')))
         .thenAnswer(
       (_) {
         const event = ClientEventSucceeded();
@@ -79,16 +80,16 @@ void main() {
   blocTest<_TestBloc, bool>(
     'WHEN changing feedback THEN this is passed to the engine and finally the engine emits an engine event ',
     build: () => _TestBloc(),
-    act: (bloc) => bloc.changeDocumentFeedback(
+    act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
-      feedback: DocumentFeedback.positive,
+      userReaction: UserReaction.positive,
       context: FeedbackContext.explicit,
     ),
     verify: (manager) {
       verify(engine.engineEvents);
-      verify(engine.changeDocumentFeedback(
+      verify(engine.changeUserReaction(
         documentId: fakeDocument.documentId,
-        feedback: DocumentFeedback.positive,
+        userReaction: UserReaction.positive,
       ));
       verifyNoMoreInteractions(engine);
     },
@@ -98,9 +99,9 @@ void main() {
   blocTest<_TestBloc, bool>(
     'WHEN changing explicit feedback THEN expect explicit document feedback ',
     build: () => _TestBloc(),
-    act: (bloc) => bloc.changeDocumentFeedback(
+    act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
-      feedback: DocumentFeedback.positive,
+      userReaction: UserReaction.positive,
       context: FeedbackContext.explicit,
     ),
     verify: (manager) {
@@ -109,7 +110,7 @@ void main() {
           CrudExplicitDocumentFeedbackUseCaseIn.store(
             ExplicitDocumentFeedback(
               id: fakeDocument.documentId.uniqueId,
-              feedback: DocumentFeedback.positive,
+              userReaction: UserReaction.positive,
             ),
           ),
         ),
@@ -122,9 +123,9 @@ void main() {
   blocTest<_TestBloc, bool>(
     'WHEN changing implicit feedback THEN expect implicit document feedback ',
     build: () => _TestBloc(),
-    act: (bloc) => bloc.changeDocumentFeedback(
+    act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
-      feedback: DocumentFeedback.positive,
+      userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
     ),
     verify: (manager) {
@@ -139,7 +140,7 @@ class _TestBloc extends Cubit<bool>
     with
         UseCaseBlocHelper<bool>,
         EngineEventsMixin<bool>,
-        ChangeDocumentFeedbackMixin<bool> {
+        ChangeUserReactionMixin<bool> {
   _TestBloc() : super(false);
 
   @override

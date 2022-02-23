@@ -72,8 +72,10 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> changeDocumentFeedback(
-      {required DocumentId documentId, required DocumentFeedback feedback}) {
+  Future<EngineEvent> changeUserReaction({
+    required DocumentId documentId,
+    required UserReaction userReaction,
+  }) {
     return Future.value(const EngineEvent.clientEventSucceeded());
   }
 
@@ -101,11 +103,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   Future<EngineEvent> requestNextFeedBatch() {
     return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
-  }
-
-  @override
-  Future<EngineEvent> resetEngine() {
-    return Future.value(const EngineEvent.clientEventSucceeded());
   }
 
   @override
