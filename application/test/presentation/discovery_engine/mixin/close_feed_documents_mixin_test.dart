@@ -43,8 +43,8 @@ void main() {
 
     when(crudExplicitDocumentFeedbackUseCase.call(any))
         .thenAnswer((realInvocation) async {
-      final param = realInvocation.positionalArguments.first
-          as DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>;
+      final param =
+          realInvocation.positionalArguments.first as DbEntityCrudUseCaseIn;
 
       return Future.value(
           [UseCaseResult.success(ExplicitDocumentFeedback(id: param.id))]);
@@ -70,7 +70,7 @@ void main() {
       verifyInOrder(
         documents
             .map((it) => it.uniqueId)
-            .map(DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>.remove)
+            .map(DbEntityCrudUseCaseIn.remove)
             .map(crudExplicitDocumentFeedbackUseCase)
             .toList(),
       );

@@ -7,13 +7,13 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dar
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/crud_use_case.dart';
 
 class DbEntityCrudUseCase<T extends DbEntity>
-    extends CrudUseCase<DbEntityCrudUseCaseIn<T>, T> {
+    extends CrudUseCase<DbEntityCrudUseCaseIn, T> {
   final HiveRepository<T> _repository;
 
   DbEntityCrudUseCase(this._repository);
 
   @override
-  Stream<T> remove(DbEntityCrudUseCaseIn<T> param) async* {
+  Stream<T> remove(DbEntityCrudUseCaseIn param) async* {
     final entry = _repository.getById(param._id!);
 
     if (entry != null) {
@@ -24,14 +24,14 @@ class DbEntityCrudUseCase<T extends DbEntity>
   }
 
   @override
-  Stream<T> store(DbEntityCrudUseCaseIn<T> param) async* {
-    _repository.save(param._entity!);
+  Stream<T> store(DbEntityCrudUseCaseIn param) async* {
+    _repository.save(param._entity as T);
 
-    yield param._entity!;
+    yield param._entity as T;
   }
 
   @override
-  Stream<T> watch(DbEntityCrudUseCaseIn<T> param) async* {
+  Stream<T> watch(DbEntityCrudUseCaseIn param) async* {
     final id = param._id!;
 
     final startValue = _repository.getById(id);
@@ -49,7 +49,7 @@ class DbEntityCrudUseCase<T extends DbEntity>
   }
 
   @override
-  Stream<T> watchAll(DbEntityCrudUseCaseIn<T> param) async* {
+  Stream<T> watchAll(DbEntityCrudUseCaseIn param) async* {
     yield* _repository
         .watch()
         .whereType<ChangedEvent<T>>()
@@ -58,8 +58,8 @@ class DbEntityCrudUseCase<T extends DbEntity>
   }
 }
 
-class DbEntityCrudUseCaseIn<T extends DbEntity> extends CrudUseCaseIn {
-  final T? _entity;
+class DbEntityCrudUseCaseIn extends CrudUseCaseIn {
+  final DbEntity? _entity;
   final UniqueId? _id;
 
   @visibleForTesting
@@ -75,7 +75,7 @@ class DbEntityCrudUseCaseIn<T extends DbEntity> extends CrudUseCaseIn {
         _id = null,
         super(Operation.watchAll);
 
-  DbEntityCrudUseCaseIn.store(T entity)
+  DbEntityCrudUseCaseIn.store(DbEntity entity)
       : _entity = entity,
         _id = entity.id,
         super(Operation.store);

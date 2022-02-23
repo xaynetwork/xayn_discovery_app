@@ -71,8 +71,8 @@ void main() {
 
     when(crudExplicitDocumentFeedbackUseCase.singleOutput(any))
         .thenAnswer((realInvocation) async {
-      final param = realInvocation.positionalArguments.first
-          as DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>;
+      final param =
+          realInvocation.positionalArguments.first as DbEntityCrudUseCaseIn;
 
       return ExplicitDocumentFeedback(id: param.id);
     });
