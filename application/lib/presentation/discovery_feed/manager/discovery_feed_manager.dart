@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedb
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -17,11 +18,14 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_d
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnFeedRequestSucceeded = Set<Document> Function(
     FeedRequestSucceeded event);
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
+typedef OnEngineExceptionRaised = Set<Document> Function(
+    EngineExceptionRaised event);
 typedef OnNonMatchedEngineEvent = Set<Document> Function();
 
 const int _kMaxCardCount = 10;
@@ -29,8 +33,6 @@ const int _kMaxCardCount = 10;
 /// a threshold, how long a user should observe a document, before it becomes
 /// implicitly liked.
 const int _kThresholdDurationSecondsImplicitLike = 5;
-
-typedef ObservedViewTypes = Map<DocumentId, DocumentViewMode>;
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -80,7 +82,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     initialData: CrudExplicitDocumentFeedbackUseCaseIn.watchAll(),
   );
 
-  final ObservedViewTypes _observedViewTypes = <DocumentId, DocumentViewMode>{};
+  /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
+  final _documentCurrentViewMode = Expando<DocumentViewMode>();
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
@@ -141,7 +144,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   void handleViewType(Document document, DocumentViewMode mode) {
     final activeMode = _currentViewMode(document.documentId);
 
-    _observedViewTypes[document.documentId] = mode;
+    _documentCurrentViewMode[document.documentId] = mode;
 
     if (document.documentId == _observedDocument?.documentId &&
         activeMode != mode) {
@@ -207,6 +210,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
                 ),
               )
               .toSet(),
+          engineExceptionRaised: (event) {
+            _sendAnalyticsUseCase(EngineExceptionRaisedEvent(
+              event: event,
+            ));
+
+            logger.e('$event');
+
+            return state.results;
+          },
           orElse: () => state.results,
         );
 
@@ -229,23 +241,27 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   Set<Document> Function({
     required OnFeedRequestSucceeded feedRequestSucceeded,
     required OnDocumentsUpdated documentsUpdated,
+    required OnEngineExceptionRaised engineExceptionRaised,
     required OnNonMatchedEngineEvent orElse,
   }) _foldEngineEvent(EngineEvent? event) => ({
         required OnFeedRequestSucceeded feedRequestSucceeded,
         required OnDocumentsUpdated documentsUpdated,
+        required OnEngineExceptionRaised engineExceptionRaised,
         required OnNonMatchedEngineEvent orElse,
       }) {
         if (event is FeedRequestSucceeded) {
           return feedRequestSucceeded(event);
         } else if (event is DocumentsUpdated) {
           return documentsUpdated(event);
+        } else if (event is EngineExceptionRaised) {
+          return engineExceptionRaised(event);
         }
 
         return orElse();
       };
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
-      _observedViewTypes[id] ?? DocumentViewMode.story;
+      _documentCurrentViewMode[id] ?? DocumentViewMode.story;
 
   Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
     final observedDocument = _observedDocument;
@@ -286,9 +302,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     // adjust the cardIndex to counter the removals
     _cardIndex = await _updateCardIndexUseCase
         .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
-
-    // Additional cleanup on the observer.
-    flaggedForDisposal.forEach(_observedViewTypes.remove);
 
     return ResultSets(
       results: nextResults,
