@@ -81,7 +81,7 @@ dependencies:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
       ### This hash must be the same like the hash in the xayn_discovery_engine dependency override
-      ref: 9206827f1798492c3a8e9c01d5da0c587e9bc594
+      ref: da2d3effca09abbb92dce2bbc1bf68440b34299b
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -95,7 +95,7 @@ dependency_overrides:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
       ### This hash must be the same like the hash in the xayn_discovery_engine_flutter dependency
-      ref: 9206827f1798492c3a8e9c01d5da0c587e9bc594
+      ref: da2d3effca09abbb92dce2bbc1bf68440b34299b
       path: discovery_engine
   json_annotation: 4.4.0
   hive: 2.0.5
