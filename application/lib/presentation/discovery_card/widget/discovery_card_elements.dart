@@ -90,29 +90,6 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
     );
 
-    final faviconRow = FaviconBar.fromProvider(
-      provider: provider,
-      datePublished: datePublished,
-    );
-
-    final openUrlIcon = IconButton(
-      onPressed: onOpenUrl,
-      icon: SvgPicture.asset(
-        R.assets.icons.globe,
-        color: R.colors.brightIcon,
-      ),
-    );
-
-    final cardHeader = Row(
-      children: [
-        if (provider?.favicon != null)
-          Expanded(child: faviconRow)
-        else
-          const Spacer(),
-        openUrlIcon,
-      ],
-    );
-
     final titleAndTimeToRead = Wrap(
       runAlignment: WrapAlignment.end,
       runSpacing: R.dimen.unit,
@@ -137,7 +114,7 @@ class DiscoveryCardElements extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            cardHeader,
+            _buildCardHeader(),
             Expanded(child: titleAndTimeToRead),
             SizedBox(
               width: double.infinity,
@@ -150,5 +127,38 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     return elements;
+  }
+
+  Widget _buildCardHeader() {
+    final faviconRow = FaviconBar.fromProvider(
+      provider: provider,
+      datePublished: datePublished,
+    );
+
+    final openUrlIcon = Padding(
+      padding: EdgeInsets.all(R.dimen.unit),
+      child: SvgPicture.asset(
+        R.assets.icons.globe,
+        color: R.colors.brightIcon,
+      ),
+    );
+
+    final cardHeader = Row(
+      children: [
+        if (provider?.favicon != null)
+          Expanded(child: faviconRow)
+        else
+          const Spacer(),
+        openUrlIcon,
+      ],
+    );
+
+    return Material(
+      color: R.colors.transparent,
+      child: InkWell(
+        onTap: onOpenUrl,
+        child: cardHeader,
+      ),
+    );
   }
 }
