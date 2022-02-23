@@ -58,12 +58,12 @@ class TrialExpired extends StatelessWidget {
 
   Widget _buildTitle() => Text(
         R.strings.subscriptionHeader,
-        style: R.styles.subscriptionModalTitle,
+        style: R.styles.lStyle,
       );
 
   Widget _buildPricing() => Text(
         _product.price,
-        style: R.styles.subscriptionModalPrice,
+        style: R.styles.xxxlBoldStyle,
       );
 
   Widget _buildPerks() => SettingsSection(
@@ -125,6 +125,8 @@ class TrialExpired extends StatelessWidget {
 
   Widget _buildFooter() => Text(
         R.strings.subscriptionDisclaimer,
-        style: R.styles.subscriptionModalFooter,
+        style: R.styles.sStyle.copyWith(
+          color: R.colors.secondaryText,
+        ),
       );
 }
