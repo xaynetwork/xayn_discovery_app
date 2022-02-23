@@ -82,7 +82,7 @@ void main() {
         );
       },
       input: [
-        const DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>.watch(
+        const DbEntityCrudUseCaseIn.watch(
           uid,
         )
       ],
@@ -120,7 +120,7 @@ void main() {
         );
       },
       input: [
-        const DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>.remove(
+        const DbEntityCrudUseCaseIn.remove(
           uid,
         )
       ],
