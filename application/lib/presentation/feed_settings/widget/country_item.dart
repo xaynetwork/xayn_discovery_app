@@ -50,7 +50,7 @@ class CountryItem extends StatelessWidget {
   Widget _buildName() {
     final countryName = Text(
       country.name,
-      style: R.styles.appSmallHeadlineText,
+      style: R.styles.mBoldStyle,
     );
     final children = <Widget>[
       countryName,
@@ -60,7 +60,9 @@ class CountryItem extends StatelessWidget {
     if (languageName != null) {
       final language = Text(
         languageName,
-        style: R.styles.appCaptionText,
+        style: R.styles.sStyle.copyWith(
+          color: R.colors.secondaryText,
+        ),
       );
       children.add(language);
     }

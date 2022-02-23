@@ -35,6 +35,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onOpenUrl,
     this.fractionSize = 1.0,
     this.provider,
+    this.useLargeTitle = true,
   }) : super(key: key);
   final DiscoveryCardManager manager;
   final Document document;
@@ -51,20 +52,23 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final double fractionSize;
+  final bool useLargeTitle;
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final timeToReadWidget = Text(
       '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.appBodyText.copyWith(color: Colors.white),
+      style: R.styles.mStyle.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
     );
+    final titleWidgetStyle =
+        useLargeTitle ? R.styles.xxxlBoldStyle : R.styles.xlBoldStyle;
     final titleWidget = Text(
       title,
-      style: R.styles.appScreenHeadline.copyWith(color: Colors.white),
+      style: titleWidgetStyle.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
@@ -84,29 +88,6 @@ class DiscoveryCardElements extends StatelessWidget {
         document: document,
         explicitDocumentUserReaction: explicitDocumentUserReaction,
       ),
-    );
-
-    final faviconRow = FaviconBar.fromProvider(
-      provider: provider,
-      datePublished: datePublished,
-    );
-
-    final openUrlIcon = IconButton(
-      onPressed: onOpenUrl,
-      icon: SvgPicture.asset(
-        R.assets.icons.globe,
-        color: R.colors.brightIcon,
-      ),
-    );
-
-    final cardHeader = Row(
-      children: [
-        if (provider?.favicon != null)
-          Expanded(child: faviconRow)
-        else
-          const Spacer(),
-        openUrlIcon,
-      ],
     );
 
     final titleAndTimeToRead = Wrap(
@@ -133,7 +114,7 @@ class DiscoveryCardElements extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            cardHeader,
+            _buildCardHeader(),
             Expanded(child: titleAndTimeToRead),
             SizedBox(
               width: double.infinity,
@@ -146,5 +127,38 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     return elements;
+  }
+
+  Widget _buildCardHeader() {
+    final faviconRow = FaviconBar.fromProvider(
+      provider: provider,
+      datePublished: datePublished,
+    );
+
+    final openUrlIcon = Padding(
+      padding: EdgeInsets.all(R.dimen.unit),
+      child: SvgPicture.asset(
+        R.assets.icons.globe,
+        color: R.colors.brightIcon,
+      ),
+    );
+
+    final cardHeader = Row(
+      children: [
+        if (provider?.favicon != null)
+          Expanded(child: faviconRow)
+        else
+          const Spacer(),
+        openUrlIcon,
+      ],
+    );
+
+    return Material(
+      color: R.colors.transparent,
+      child: InkWell(
+        onTap: onOpenUrl,
+        child: cardHeader,
+      ),
+    );
   }
 }

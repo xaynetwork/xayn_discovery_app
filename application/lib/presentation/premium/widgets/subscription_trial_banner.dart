@@ -63,14 +63,14 @@ class SubscriptionTrialBanner extends StatelessWidget {
 
     final title = Text(
       trialEndDate.trialEndDateString,
-      style: R.styles.newSettingsSectionTitle,
+      style: R.styles.mBoldStyle,
     );
 
     final subtitle = Row(
       children: [
         Text(
           R.strings.trialBannerSubscribeNow,
-          style: R.styles.appThumbnailText.copyWith(
+          style: R.styles.sBoldStyle.copyWith(
             color: R.colors.primaryAction,
           ),
         ),

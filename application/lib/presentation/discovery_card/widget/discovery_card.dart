@@ -232,6 +232,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
+          useLargeTitle: false,
         );
 
         // Limits the max scroll-away distance,
