@@ -23,6 +23,7 @@ def askAndSetProperties(propertiesPath, hash, defaults)
   end
 
   setProperties(propertiesPath, resultingProps)
+  return resultingProps
 end
 
 # Reads and sets properties in a file
