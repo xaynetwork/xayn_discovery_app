@@ -15,7 +15,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final title = appToolbarData.title;
-    final text = Text(title, style: R.styles.appHeadlineText);
+    final text = Text(title, style: R.styles.lBoldStyle);
     final content = appToolbarData.map(
       titleOnly: (_) => _buildWithTextOnly(text),
       withTrailingIcon: (data) => _buildWithTrailingIcon(

@@ -11,7 +11,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Text(title, style: R.styles.appHeadlineText);
+    final text = Text(title, style: R.styles.lBoldStyle);
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(

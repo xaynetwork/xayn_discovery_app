@@ -50,14 +50,14 @@ class CountryFeedSettingsPage extends StatelessWidget {
   Widget _buildHint() => Text(
         R.strings.feedSettingsScreenContryListHint
             .replaceFirst('%s', maxSelectedCountryAmount.toString()),
-        style: R.styles.appBodyText,
+        style: R.styles.mStyle,
       );
 
   Widget _buildTitle(String title) => Padding(
         padding: EdgeInsets.only(bottom: R.dimen.unit),
         child: Text(
           title,
-          style: R.styles.appHeadlineText,
+          style: R.styles.lBoldStyle,
         ),
       );
 

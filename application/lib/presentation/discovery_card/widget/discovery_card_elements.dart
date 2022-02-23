@@ -35,6 +35,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onOpenUrl,
     this.fractionSize = 1.0,
     this.provider,
+    this.useLargeTitle = true,
   }) : super(key: key);
   final DiscoveryCardManager manager;
   final Document document;
@@ -51,20 +52,23 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final double fractionSize;
+  final bool useLargeTitle;
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final timeToReadWidget = Text(
       '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.appBodyText.copyWith(color: Colors.white),
+      style: R.styles.mStyle.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
     );
+    final titleWidgetStyle =
+        useLargeTitle ? R.styles.xxxlBoldStyle : R.styles.xlBoldStyle;
     final titleWidget = Text(
       title,
-      style: R.styles.appScreenHeadline.copyWith(color: Colors.white),
+      style: titleWidgetStyle.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,

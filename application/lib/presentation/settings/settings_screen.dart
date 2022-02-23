@@ -124,7 +124,9 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: Text(
             '${R.strings.settingsVersion} ${appVersion.version}\n'
             '${R.strings.settingsBuild} ${appVersion.build}',
-            style: R.styles.appBodyTextSecondary,
+            style: R.styles.mStyle.copyWith(
+              color: R.colors.secondaryText,
+            ),
           ),
         ),
         onLongPress: () => _manager.extractLogs(),
