@@ -16,7 +16,7 @@ class DocumentBookmarkedEvent extends AnalyticsEvent {
   }) : super(
           _kEventType,
           properties: {
-            _kParamDocument: document,
+            _kParamDocument: document.toJson(),
             _kParamIsBookmarked: isBookmarked,
           },
         );
