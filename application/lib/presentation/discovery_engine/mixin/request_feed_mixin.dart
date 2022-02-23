@@ -8,6 +8,8 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
+  late final RequestNextFeedBatchUseCase requestNextFeedBatchUseCase =
+      di.get<RequestNextFeedBatchUseCase>();
   UseCaseSink<None, EngineEvent>? _useCaseSink;
   bool _didStartConsuming = false;
 
@@ -29,18 +31,35 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   }
 
   UseCaseSink<None, EngineEvent> _getUseCaseSink() {
-    final useCase = di.get<RequestNextFeedBatchUseCase>();
-
-    return pipe(useCase)
+    return pipe(requestNextFeedBatchUseCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
   void _startConsuming() {
     final consumeUseCase = di.get<RequestFeedUseCase>();
+    final maybeRequestNextBatchUseCase =
+        _MaybeRequestNextBatchWhenEmptyUseCase(requestNextFeedBatchUseCase);
 
     _didStartConsuming = true;
 
     consume(consumeUseCase, initialData: none)
+        .transform((out) => out.switchedBy(maybeRequestNextBatchUseCase))
         .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
+  }
+}
+
+class _MaybeRequestNextBatchWhenEmptyUseCase
+    extends UseCase<EngineEvent, EngineEvent> {
+  final RequestNextFeedBatchUseCase maybeRequestNextBatchUseCase;
+
+  _MaybeRequestNextBatchWhenEmptyUseCase(this.maybeRequestNextBatchUseCase);
+
+  @override
+  Stream<EngineEvent> transaction(EngineEvent param) async* {
+    if (param is FeedRequestSucceeded && param.items.isEmpty) {
+      yield await maybeRequestNextBatchUseCase.singleOutput(none);
+    }
+
+    yield param;
   }
 }

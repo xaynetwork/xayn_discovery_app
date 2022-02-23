@@ -245,14 +245,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
       removeObsoleteCardManagers(state.removedResults);
 
-      if (!state.isComplete && state.results.isEmpty) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-
       if (state.results.isEmpty || cardIndex == -1) {
-        return const Center();
+        return _buildLoadingIndicator();
       }
 
       _cardViewController.index = cardIndex;
@@ -291,6 +285,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       );
     });
   }
+
+  Widget _buildLoadingIndicator() => const Center(
+        child: CircularProgressIndicator(),
+      );
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
       (int index) {
