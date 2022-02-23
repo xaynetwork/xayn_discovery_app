@@ -12,7 +12,7 @@ class DocumentSharedEvent extends AnalyticsEvent {
   }) : super(
           _kEventType,
           properties: {
-            _kParamDocument: document,
+            _kParamDocument: document.toJson(),
           },
         );
 }

@@ -18,7 +18,7 @@ class DocumentFeedbackChangedEvent extends AnalyticsEvent {
   }) : super(
           _kEventType,
           properties: {
-            _kParamDocument: document,
+            _kParamDocument: document.toJson(),
             _kParamContext: context.name,
           },
         );
