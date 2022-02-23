@@ -87,8 +87,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   late final UseCaseValueStream<ExplicitDocumentFeedback>
       _crudExplicitDocumentFeedbackConsumer = consume(
     _crudExplicitDocumentFeedbackUseCase,
-    initialData:
-        const DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>.watchAll(),
+    initialData: const DbEntityCrudUseCaseIn.watchAll(),
   );
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.

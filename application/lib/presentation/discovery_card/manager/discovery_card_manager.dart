@@ -112,8 +112,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         .cast<AnalyticsEvent>()
         .followedBy(_sendAnalyticsUseCase),
   )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
-  late final UseCaseSink<DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>,
-          ExplicitDocumentFeedback> _crudExplicitDocumentFeedbackHandler =
+  late final UseCaseSink<DbEntityCrudUseCaseIn, ExplicitDocumentFeedback>
+      _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
@@ -135,7 +135,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
     _crudExplicitDocumentFeedbackHandler(
-      DbEntityCrudUseCaseIn<ExplicitDocumentFeedback>.watch(
+      DbEntityCrudUseCaseIn.watch(
         document.documentId.uniqueId,
       ),
     );
