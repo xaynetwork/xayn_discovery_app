@@ -81,7 +81,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       apiBaseUrl: Env.searchApiBaseUrl,
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
-      maxItemsPerFeedBatch: 20,
+      maxItemsPerFeedBatch: 2,
       feedMarkets: markets,
       manifest: await FlutterManifestReader().read(),
     );
