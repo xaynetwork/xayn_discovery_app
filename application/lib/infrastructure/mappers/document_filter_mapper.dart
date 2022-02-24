@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
 @singleton
@@ -9,37 +8,32 @@ class DocumentFilterMapper extends BaseDbEntityMapper<DocumentFilter> {
   DocumentFilter? fromMap(Map? map) {
     if (map == null) return null;
 
-    final id =
-        map[DocumentFilterMapperFields.id] ?? throwMapperException() as String;
-
-    final filter = map[DocumentFilterMapperFields.filter] ??
-        throwMapperException() as String;
+    final filter = (map[DocumentFilterMapperFields.filter] ??
+        throwMapperException()) as String;
 
     final type =
-        map[DocumentFilterMapperFields.type] ?? throwMapperException() as int;
+        (map[DocumentFilterMapperFields.type] ?? throwMapperException()) as int;
 
-    return DocumentFilter(
-      id: UniqueId.fromTrustedString(id),
-      filter: filter,
-      type: type == 0
-          ? DocumentFilterType.source
-          : type == 1
-              ? DocumentFilterType.topic
-              : throw "DocumentFilterType  $type unknown.",
-    );
+    final filterType = type.toDocumentFilterType();
+
+    switch (filterType) {
+      case DocumentFilterType.source:
+        return DocumentFilter.fromSource(filter);
+      case DocumentFilterType.topic:
+        return DocumentFilter.fromTopic(filter);
+    }
   }
 
   @override
-  DbEntityMap toMap(DocumentFilter entity) => {
-        DocumentFilterMapperFields.id: entity.id.value,
-        DocumentFilterMapperFields.filter: entity.filter,
-        DocumentFilterMapperFields.type:
-            entity.type == DocumentFilterType.source
-                ? 0
-                : entity.type == DocumentFilterType.topic
-                    ? DocumentFilterType.topic
-                    : throw "DocumentFilterType  ${entity.type} unknown.",
-      };
+  DbEntityMap toMap(DocumentFilter entity) => entity.fold(
+      (source) => {
+            DocumentFilterMapperFields.filter: source,
+            DocumentFilterMapperFields.type: DocumentFilterType.source.toInt(),
+          },
+      (topic) => {
+            DocumentFilterMapperFields.filter: topic,
+            DocumentFilterMapperFields.type: DocumentFilterType.topic.toInt(),
+          });
 
   @override
   void throwMapperException([
@@ -49,10 +43,33 @@ class DocumentFilterMapper extends BaseDbEntityMapper<DocumentFilter> {
       super.throwMapperException(exceptionText);
 }
 
+extension on int {
+  DocumentFilterType toDocumentFilterType() {
+    switch (this) {
+      case 0:
+        return DocumentFilterType.source;
+
+      case 1:
+        return DocumentFilterType.topic;
+    }
+    throw "Unsupported DocumentFilterType id $this";
+  }
+}
+
+extension on DocumentFilterType {
+  int toInt() {
+    switch (this) {
+      case DocumentFilterType.source:
+        return 0;
+      case DocumentFilterType.topic:
+        return 1;
+    }
+  }
+}
+
 abstract class DocumentFilterMapperFields {
   const DocumentFilterMapperFields._();
 
-  static const int id = 0;
-  static const int filter = 1;
-  static const int type = 2;
+  static const int filter = 0;
+  static const int type = 1;
 }
