@@ -12,13 +12,11 @@ import 'hive_repository.dart';
 @Singleton(as: DocumentFilterRepository)
 class HiveDocumentFilterRepository extends HiveRepository<DocumentFilter>
     implements DocumentFilterRepository {
-  final DocumentFilterMapper _mapper;
-
-  HiveDocumentFilterRepository(this._mapper);
+  HiveDocumentFilterRepository();
 
   @override
   Box<Record> get box => Hive.box<Record>(BoxNames.documentFilters);
 
   @override
-  BaseDbEntityMapper<DocumentFilter> get mapper => _mapper;
+  BaseDbEntityMapper<DocumentFilter> mapper = DocumentFilterMapper();
 }
