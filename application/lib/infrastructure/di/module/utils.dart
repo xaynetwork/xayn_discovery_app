@@ -6,7 +6,8 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 abstract class UtilsModule {
   @preResolve
   @lazySingleton
-  @Environment(defaultEnvironmentName)
+  @releaseEnvironment
+  @debugEnvironment
   Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
 
   @preResolve

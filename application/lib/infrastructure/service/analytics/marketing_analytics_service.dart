@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -27,6 +27,7 @@ abstract class MarketingAnalyticsService {
 }
 
 @LazySingleton(as: MarketingAnalyticsService)
+@releaseEnvironment
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   final AppsflyerSdk _appsflyer;
 
@@ -39,7 +40,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   }
 
   @factoryMethod
-  static MarketingAnalyticsService initialized(PackageInfo packageInfo) {
+  static MarketingAnalyticsService initialized() {
     final options = Platform.isIOS
         ? AppsFlyerOptions(
             showDebug: EnvironmentHelper.kIsDebug,
@@ -63,6 +64,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
       registerConversionDataCallback: false,
       registerOnAppOpenAttributionCallback: false,
     );
+    logger.i('custom logger: marketing service');
     return AppsFlyerMarketingAnalyticsService(appsFlyer);
   }
 
@@ -149,4 +151,25 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
           'onDeepLinking', res.deepLink?.clickEvent.toSerializableMap() ?? {});
     }
   }
+}
+
+/// Appsflyer is disabled in debug mode
+@LazySingleton(as: MarketingAnalyticsService)
+@debugEnvironment
+@testEnvironment
+class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
+  @override
+  void send(AnalyticsEvent event) {}
+
+  @override
+  void optOut(bool state) {}
+
+  @override
+  void setPushNotification(bool isEnabled) {}
+
+  @override
+  void setCurrentDeviceLanguage(String language) {}
+
+  @override
+  Future<String?> getUID() async => null;
 }

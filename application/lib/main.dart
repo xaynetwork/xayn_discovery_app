@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/app/widget/app.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 void main() async {
   await setup();
@@ -33,7 +34,10 @@ Future<void> setup() async {
     (_) => HiveDB.init(null),
   );
   await hiveDb;
-  await configureDependencies();
+  await configureDependencies(
+    environment:
+        EnvironmentHelper.kIsDebug ? debugEnvironment : releaseEnvironment,
+  );
   HomeIndicator.hide();
   initServices();
   if (kReleaseMode) {
