@@ -27,8 +27,7 @@ abstract class MarketingAnalyticsService {
 }
 
 @LazySingleton(as: MarketingAnalyticsService)
-@defaultEnvironment
-@test
+@releaseEnvironment
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   final AppsflyerSdk _appsflyer;
 
@@ -156,7 +155,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
 
 /// Appsflyer is disabled in debug mode
 @LazySingleton(as: MarketingAnalyticsService)
-@debug
+@debugEnvironment
+@testEnvironment
 class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
   @override
   void send(AnalyticsEvent event) {}
