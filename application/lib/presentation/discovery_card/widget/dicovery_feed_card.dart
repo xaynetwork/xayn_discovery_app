@@ -34,7 +34,8 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
-    final timeToRead = state.processedDocument?.timeToRead ?? '';
+    final timeToReadOrError =
+        state.processedDocument?.timeToRead ?? state.error?.toString() ?? '';
     final processedDocument = state.processedDocument;
     final provider = processedDocument?.getProvider(webResource);
 
@@ -43,7 +44,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       document: widget.document,
       explicitDocumentUserReaction: state.explicitDocumentUserReaction,
       title: webResource.title,
-      timeToRead: timeToRead,
+      timeToRead: timeToReadOrError,
       url: webResource.url,
       provider: provider,
       datePublished: webResource.datePublished,
