@@ -16,7 +16,7 @@ class BottomSheetHeader extends StatelessWidget {
     final row = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(headerText, style: R.styles.appHeadlineText),
+        Text(headerText, style: R.styles.lBoldStyle),
         actionWidget ?? const Spacer(),
       ],
     );

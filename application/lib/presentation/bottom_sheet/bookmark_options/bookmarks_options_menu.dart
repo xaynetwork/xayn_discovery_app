@@ -74,7 +74,7 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
 
   Widget _buildRow(MenuOption menuOption) {
     final leadingIcon = SvgPicture.asset(menuOption.svgIconPath);
-    final text = Text(menuOption.text, style: R.styles.bottomSheetText);
+    final text = Text(menuOption.text, style: R.styles.mBoldStyle);
     final row = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,

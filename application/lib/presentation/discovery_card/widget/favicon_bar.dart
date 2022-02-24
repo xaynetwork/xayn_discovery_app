@@ -36,12 +36,12 @@ class FaviconBar extends StatelessWidget {
       children: [
         Text(
           provider?.name ?? '',
-          style: R.styles.appThumbnailText.copyWith(color: Colors.white),
+          style: R.styles.sBoldStyle.copyWith(color: Colors.white),
           overflow: TextOverflow.ellipsis,
         ),
         Text(
           timeAgo(datePublished, DateFormat.yMMMMd()),
-          style: R.styles.appThumbnailTextLight.copyWith(color: Colors.white),
+          style: R.styles.sStyle.copyWith(color: Colors.white),
         ),
       ],
     );
