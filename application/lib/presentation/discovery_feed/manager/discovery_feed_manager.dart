@@ -23,6 +23,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnFeedRequestSucceeded = Set<Document> Function(
     FeedRequestSucceeded event);
+typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
+    NextFeedBatchRequestSucceeded event);
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
 typedef OnEngineExceptionRaised = Set<Document> Function(
     EngineExceptionRaised event);
@@ -202,6 +204,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
         final results = foldEngineEvent(
           feedRequestSucceeded: (event) => {...state.results, ...event.items},
+          nextFeedBatchRequestSucceeded: (event) =>
+              {...state.results, ...event.items},
           documentsUpdated: (event) => state.results
               .map(
                 (it) => event.items.firstWhere(
@@ -240,17 +244,21 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   Set<Document> Function({
     required OnFeedRequestSucceeded feedRequestSucceeded,
+    required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
     required OnDocumentsUpdated documentsUpdated,
     required OnEngineExceptionRaised engineExceptionRaised,
     required OnNonMatchedEngineEvent orElse,
   }) _foldEngineEvent(EngineEvent? event) => ({
         required OnFeedRequestSucceeded feedRequestSucceeded,
+        required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
         required OnDocumentsUpdated documentsUpdated,
         required OnEngineExceptionRaised engineExceptionRaised,
         required OnNonMatchedEngineEvent orElse,
       }) {
         if (event is FeedRequestSucceeded) {
           return feedRequestSucceeded(event);
+        } else if (event is NextFeedBatchRequestSucceeded) {
+          return nextFeedBatchRequestSucceeded(event);
         } else if (event is DocumentsUpdated) {
           return documentsUpdated(event);
         } else if (event is EngineExceptionRaised) {
