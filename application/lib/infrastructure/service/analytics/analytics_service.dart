@@ -15,8 +15,7 @@ abstract class AnalyticsService {
 }
 
 @LazySingleton(as: AnalyticsService)
-@defaultEnvironment
-@test
+@releaseEnvironment
 class AmplitudeAnalyticsService
     with AsyncInitMixin
     implements AnalyticsService {
@@ -64,7 +63,8 @@ class AmplitudeAnalyticsService
 
 /// Amplitude is disabled in debug mode
 @LazySingleton(as: AnalyticsService)
-@debug
+@debugEnvironment
+@testEnvironment
 class AnalyticsServiceDebugMode implements AnalyticsService {
   @override
   Future<void> send(AnalyticsEvent event) async {}

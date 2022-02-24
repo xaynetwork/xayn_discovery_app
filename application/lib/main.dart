@@ -35,7 +35,8 @@ Future<void> setup() async {
   );
   await hiveDb;
   await configureDependencies(
-    environment: EnvironmentHelper.kIsDebug ? debug : defaultEnvironment,
+    environment:
+        EnvironmentHelper.kIsDebug ? debugEnvironment : releaseEnvironment,
   );
   HomeIndicator.hide();
   initServices();
