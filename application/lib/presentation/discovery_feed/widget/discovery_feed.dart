@@ -280,8 +280,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     });
   }
 
+  /// swap out with a better loading indicator,
+  /// beware that an animated spinner can cause test issues, with pumpAndSettle
   Widget _buildLoadingIndicator() => const Center(
-        child: CircularProgressIndicator(),
+        child: Text('loading...'),
       );
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
