@@ -46,7 +46,7 @@ void main() {
           child: PersonalAreaScreen(),
         ),
       ),
-      initialLinden: Linden(newColors: true),
+      initialLinden: Linden(),
     );
     await tester.pumpAndSettle(R.animations.screenStateChangeDuration);
   }
