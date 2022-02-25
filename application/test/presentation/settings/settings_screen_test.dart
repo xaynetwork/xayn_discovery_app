@@ -51,7 +51,7 @@ void main() {
   Future<void> openScreen(WidgetTester tester) async {
     await tester.pumpLindenApp(
       const SettingsScreen(),
-      initialLinden: Linden(newColors: true),
+      initialLinden: Linden(),
     );
     await tester.pumpAndSettle(R.animations.screenStateChangeDuration);
   }

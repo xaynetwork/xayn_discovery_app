@@ -150,7 +150,7 @@ class CardWidget extends StatelessWidget {
     );
     final titleText = Text(
       title,
-      style: R.styles.lBoldStyle.copyWith(color: R.colors.primaryTextInverse),
+      style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
     );
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +171,7 @@ class CardWidget extends StatelessWidget {
   }) {
     final titleText = Text(
       title,
-      style: R.styles.lBoldStyle.copyWith(color: R.colors.primaryTextInverse),
+      style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
     );
 
     final articleText =
@@ -179,7 +179,7 @@ class CardWidget extends StatelessWidget {
 
     final numOfItemsText = Text(
       numOfItems.toString() + ' ' + articleText,
-      style: R.styles.mStyle.copyWith(color: R.colors.primaryTextInverse),
+      style: R.styles.mStyle.copyWith(color: R.colors.brightText),
     );
 
     final row = Row(
@@ -222,7 +222,7 @@ class CardWidget extends StatelessWidget {
         Flexible(
           child: Text(
             provider?.name ?? '',
-            style: R.styles.sBoldStyle.copyWith(color: Colors.white),
+            style: R.styles.sBoldStyle.copyWith(color: R.colors.brightText),
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -231,14 +231,14 @@ class CardWidget extends StatelessWidget {
         ),
         Text(
           '•',
-          style: R.styles.sBoldStyle.copyWith(color: Colors.white),
+          style: R.styles.sBoldStyle.copyWith(color: R.colors.brightText),
         ),
         SizedBox(
           width: R.dimen.unit,
         ),
         Text(
           timeAgo(created, DateFormat.yMMMMd()),
-          style: R.styles.sStyle.copyWith(color: Colors.white),
+          style: R.styles.sStyle.copyWith(color: R.colors.brightText),
           overflow: TextOverflow.ellipsis,
         ),
       ],
@@ -248,7 +248,7 @@ class CardWidget extends StatelessWidget {
       title,
       maxLines: 3,
       overflow: TextOverflow.ellipsis,
-      style: R.styles.lBoldStyle.copyWith(color: R.colors.primaryTextInverse),
+      style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

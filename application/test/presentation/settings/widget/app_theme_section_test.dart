@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 
 void main() {
   const theme = AppTheme.system;
-  final linden = Linden(newColors: true);
+  final linden = Linden();
   testWidgets(
     'GIVEN section widget THEN title and selectableSettings are present',
     (final WidgetTester tester) async {
