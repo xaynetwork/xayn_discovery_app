@@ -33,7 +33,6 @@ abstract class UtilsModule {
 
   @preResolve
   @lazySingleton
-  @Environment(defaultEnvironmentName)
   Future<Purchases> preparePurchases() async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
