@@ -43,7 +43,7 @@ dependencies:
   injectable: 1.5.3
   instabug_flutter: 10.11.0
   intl: 0.17.0
-  json_annotation: 4.4.0
+  json_annotation: 4.3.0
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
@@ -62,6 +62,7 @@ dependencies:
     git:
       url: git@github.com:Bestfastfire/super_rich_text.git
       ref: f9d3963421682e2e0dd99c1ab553b99e38766ea1
+  system_info2: 2.0.3
   url_launcher: 6.0.20
   uuid: 3.0.5
   version: 2.0.0
@@ -76,7 +77,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 2ebbecb4ffb85ad87e2102910bf164d527637977
+      ref: f480f93150601222c697aea5ffbe5fc141ece88a
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git

@@ -12,12 +12,19 @@ import 'di_config.config.dart';
 /// refer to this object when needing programmatic dependency injection.
 final di = GetIt.instance;
 
-const String defaultEnvironmentName = 'defaultEnvironment';
+const String releaseEnvironmentName = 'releaseEnvironment';
+
+const String debugEnvironmentName = 'debugEnvironment';
 
 /// Acts as a "joint" environment for dev and prod
 /// When required, use [Environment.test] to create test specific DI,
 /// and use [defaultEnvironment] to create an equivalent for dev/prod.
-const Environment defaultEnvironment = Environment(defaultEnvironmentName);
+const Environment releaseEnvironment = Environment(releaseEnvironmentName);
+
+/// Environment for debug mode only
+const Environment debugEnvironment = Environment(debugEnvironmentName);
+
+const Environment testEnvironment = Environment(Environment.test);
 
 /// Boilerplate setup for DI.
 @InjectableInit(
@@ -26,7 +33,7 @@ const Environment defaultEnvironment = Environment(defaultEnvironmentName);
   asExtension: false, // default
 )
 Future<void> configureDependencies({
-  Environment environment = defaultEnvironment,
+  Environment environment = releaseEnvironment,
 }) async {
   await $initGetIt(
     di,

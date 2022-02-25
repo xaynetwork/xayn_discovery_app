@@ -93,18 +93,18 @@ class _MainScreenState extends State<MainScreen> {
                             child: Text(
                               it,
                               style: isBadData(it)
-                                  ? R.styles.appBodyText?.copyWith(
+                                  ? R.styles.mStyle.copyWith(
                                       color: R.colors.swipeBackgroundIrrelevant,
                                       fontStyle: FontStyle.italic,
                                       decoration: TextDecoration.lineThrough,
                                     )
                                   : isGoodData(it)
-                                      ? R.styles.appBodyText?.copyWith(
+                                      ? R.styles.mStyle.copyWith(
                                           color:
                                               R.colors.swipeBackgroundRelevant,
                                           fontStyle: FontStyle.italic,
                                         )
-                                      : R.styles.appBodyText,
+                                      : R.styles.mStyle,
                             ),
                           ),
                         ),

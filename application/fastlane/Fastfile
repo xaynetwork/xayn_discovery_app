@@ -11,7 +11,7 @@
 #
 
 import("../ios/fastlane/Fastfile")
-require "./lib/properties.rb"
+import("./lib/properties.rb")
 require "./lib/git.rb"
 require "./lib/download_utils.rb"
 
@@ -116,10 +116,14 @@ end
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
 
-desc "Update strings"
+desc "Update strings\n" \
+     "The first time the command fastlane update_strings is run, the POEditor Key will be asked to input\n" \
+     "A .env file will be created containing the token\n" \
+     "Following executions of the command will automatically take the token from the .env file"
 lane :update_strings do |options|
+  env = askAndSetProperties(".env", { "POEDITOR_API_TOKEN" => "POEDITOR_API_TOKEN" }, Config::ENV_DEFAULTS)
   download_translations(
-    api_token: "***REMOVED***",
+    api_token: env["POEDITOR_API_TOKEN"],
     project_id: "502883",
     languages: "de,en",
     output_dir: "lib/presentation/constants/translations/",

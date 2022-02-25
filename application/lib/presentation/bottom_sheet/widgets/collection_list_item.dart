@@ -41,7 +41,7 @@ class CollectionListItem extends StatelessWidget {
 
     final collectionName = Text(
       collection.name,
-      style: R.styles.bottomSheetText,
+      style: R.styles.mBoldStyle,
       overflow: TextOverflow.ellipsis,
     );
 

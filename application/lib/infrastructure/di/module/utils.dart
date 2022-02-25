@@ -9,7 +9,8 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 abstract class UtilsModule {
   @preResolve
   @lazySingleton
-  @Environment(defaultEnvironmentName)
+  @releaseEnvironment
+  @debugEnvironment
   Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
 
   @preResolve
