@@ -225,6 +225,7 @@ void main() async {
         isComplete: true,
         isFullScreen: true,
         isInErrorState: false,
+        shouldUpdateNavBar: true,
       ),
     ],
     verify: (manager) {
