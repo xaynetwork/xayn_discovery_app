@@ -357,12 +357,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     required bool isFullScreen,
   }) =>
       (int index) {
+        if (isFullScreen) return null;
+
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
         final managers = managersOf(document);
         final state = managers.discoveryCardManager.state;
-
-        if (isFullScreen) return null;
 
         switch (state.explicitDocumentUserReaction) {
           case UserReaction.neutral:
