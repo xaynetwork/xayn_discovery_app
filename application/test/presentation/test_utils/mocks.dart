@@ -32,6 +32,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/dire
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
@@ -103,6 +104,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SaveReaderModeFontStyleUseCase,
   SaveReaderModeFontSizeUseCase,
   SaveReaderModeBackgroundColorUseCase,
+  RequestCodeRedemptionSheetUseCase,
 ])
 class Mocks {
   Mocks._();
