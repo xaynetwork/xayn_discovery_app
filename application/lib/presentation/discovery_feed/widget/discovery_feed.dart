@@ -362,6 +362,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         final managers = managersOf(document);
         final state = managers.discoveryCardManager.state;
 
+        if (isFullScreen) return null;
+
         switch (state.explicitDocumentUserReaction) {
           case UserReaction.neutral:
             return null;
