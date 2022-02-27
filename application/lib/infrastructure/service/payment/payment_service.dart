@@ -1,6 +1,8 @@
 import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 /// This class is just a proxy for [Purchases].
 /// I created it, in order to be able to mock the behaviour in the useCases.
@@ -12,6 +14,15 @@ import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart
 @lazySingleton
 class PaymentService {
   /// This class is the only one place where we use [Purchases].
+
+  PaymentService() {
+    _init();
+  }
+
+  void _init() async {
+    Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
+    await Purchases.setup(Env.revenueCatSdkKey);
+  }
 
   Future<List<Product>> getProducts(
     List<String> identifiers, {
