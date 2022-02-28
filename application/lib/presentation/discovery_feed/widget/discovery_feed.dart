@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -184,6 +185,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           // - the iOS notch
           // - etc...
           final topPadding = MediaQuery.of(context).viewPadding.top;
+
+          final feed = _buildFeedView(state);
+
           return Scaffold(
             /// resizing the scaffold is set to false since the keyboard could be
             /// triggered when creating a collection from the bottom sheet and the
@@ -192,7 +196,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             resizeToAvoidBottomInset: false,
             body: Padding(
               padding: EdgeInsets.only(top: topPadding),
-              child: _buildFeedView(state),
+              child: _featureManager.showDiscoveryEngineReportOverlay
+                  ? DiscoveryEngineReportOverlay(child: feed)
+                  : feed,
             ),
           );
         },

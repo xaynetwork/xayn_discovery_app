@@ -24,6 +24,7 @@ void main() {
     (final WidgetTester tester) async {
       await tester.initToFeatureSelectionPage();
       when(manager.showFeaturesScreen).thenReturn(false);
+      when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
 
       // we swap FeatureScreen with another one
       await tester.initToDiscoveryPage();
