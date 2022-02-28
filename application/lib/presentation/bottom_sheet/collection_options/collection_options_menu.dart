@@ -79,7 +79,10 @@ class __CollectionOptionsState extends State<_CollectionOptions>
   }
 
   Widget _buildRow(MenuOption menuOption) {
-    final leadingIcon = SvgPicture.asset(menuOption.svgIconPath);
+    final leadingIcon = SvgPicture.asset(
+      menuOption.svgIconPath,
+      color: R.colors.icon,
+    );
     final text = Text(menuOption.text, style: R.styles.mBoldStyle);
     final row = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
