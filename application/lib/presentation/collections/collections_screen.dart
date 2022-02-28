@@ -123,6 +123,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       card = _buildBaseCard(collection);
     } else {
       card = CardWidgetTransitionWrapper(
+        key: ValueKey(collection.id),
         onAnimationDone: () => _showCollectionCardOptions(collection),
         child: _buildSwipeableCard(collection),
       );
@@ -133,7 +134,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     );
   }
 
-  Widget _buildBaseCard(Collection collection, [VoidCallback? onLongPress]) =>
+  Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
         builder: (context, cardState) {
@@ -156,10 +157,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       );
 
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
-        collectionCard: _buildBaseCard(
-          collection,
-          () => _showCollectionCardOptions(collection),
-        ),
+        collectionCard: _buildBaseCard(collection),
         onSwipeOptionTap: _onSwipeOptionsTap(collection),
       );
 
