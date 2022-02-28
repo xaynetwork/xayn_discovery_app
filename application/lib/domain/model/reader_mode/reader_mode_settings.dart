@@ -30,7 +30,7 @@ class ReaderModeSettings extends DbEntity with _$ReaderModeSettings {
 
   factory ReaderModeSettings.initial() => ReaderModeSettings._(
         id: ReaderModeSettings.globalId,
-        backgroundColor: ReaderModeBackgroundColor.system,
+        backgroundColor: ReaderModeBackgroundColor.initial(),
         fontSize: ReaderModeFontSize.medium,
         fontStyle: ReaderModeFontStyle.sans,
       );

@@ -5,49 +5,36 @@ import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_sty
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 extension ReaderModeBackgroundColorExtension on ReaderModeBackgroundColor {
+  Enum get type => R.isDarkMode ? dark : light;
+
+  Color get color => R.isDarkMode ? dark.color : light.color;
+
+  Color get textColor => R.isDarkMode
+      ? R.colors.readerModeTextWhiteColor
+      : R.colors.readerModeTextDarkColor;
+}
+
+extension ReaderModeBackgroundLightColorExtension
+    on ReaderModeBackgroundLightColor {
   Color get color {
-    switch (mapIfDefault) {
-      case ReaderModeBackgroundColor.white:
+    switch (this) {
+      case ReaderModeBackgroundLightColor.white:
         return R.colors.readerModeWhiteBackgroundColor;
-      case ReaderModeBackgroundColor.beige:
+      case ReaderModeBackgroundLightColor.beige:
         return R.colors.readerModeBeigeBackgroundColor;
-      case ReaderModeBackgroundColor.black:
-      default:
+    }
+  }
+}
+
+extension ReaderModeBackgroundDarkColorExtension
+    on ReaderModeBackgroundDarkColor {
+  Color get color {
+    switch (this) {
+      case ReaderModeBackgroundDarkColor.trueBlack:
         return R.colors.readerModeBlackBackgroundColor;
+      case ReaderModeBackgroundDarkColor.dark:
+        return R.colors.readerModeDarkBackgroundColor;
     }
-  }
-
-  Color? get borderColor {
-    switch (mapIfDefault) {
-      case ReaderModeBackgroundColor.white:
-      case ReaderModeBackgroundColor.beige:
-        return R.colors.chipBorderColor;
-      case ReaderModeBackgroundColor.black:
-      default:
-        return null;
-    }
-  }
-
-  Color get textColor {
-    switch (mapIfDefault) {
-      case ReaderModeBackgroundColor.white:
-      case ReaderModeBackgroundColor.beige:
-        return R.colors.readerModeTextDarkColor;
-      case ReaderModeBackgroundColor.black:
-      default:
-        return R.colors.readerModeTextWhiteColor;
-    }
-  }
-
-  bool get isDefault => this == ReaderModeBackgroundColor.system;
-
-  ReaderModeBackgroundColor get mapIfDefault {
-    if (isDefault) {
-      return R.isDarkMode
-          ? ReaderModeBackgroundColor.black
-          : ReaderModeBackgroundColor.white;
-    }
-    return this;
   }
 }
 
