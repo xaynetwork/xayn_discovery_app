@@ -132,17 +132,26 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
+
   if options[Options::UPDATE_ASSETS]
-    update_assets(options)
+    begin
+      update_assets(options)
+    rescue => ex
+      pub_get(options)
+      update_assets(options)
+    end
   end
+
   mode = options[Options::WATCH] ? "watch" : "build"
   command = "pub run build_runner #{mode} --delete-conflicting-outputs"
+
   begin
     flutter(command)
   rescue => ex
     pub_get(options)
     flutter(command)
   end
+
 end
 
 desc "Checks alle the config (env, properties, etc) if they are correctly set"
@@ -191,9 +200,8 @@ end
 
 desc "Flutter clean"
 lane :clean do |options|
-#   flutter("clean")
-#   clean_folder('assets/ai/')
-clean_folder("coverage/test/")
+  flutter("clean")
+  clean_folder('assets/ai/')
 end
 
 desc "Sanity checks (options: coverage:[true/FALSE])\n" \
