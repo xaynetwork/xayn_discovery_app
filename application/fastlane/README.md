@@ -93,15 +93,15 @@ Available options:
  - clean : [true, false]
  - platform : [ios, android]
  - android_output : [apk, appbundle]
- - flavor : [internal, beta]
  - build_number 
  - build_type : [debug, release]
+ - upload_to_appcenter : [true, false]
+ - flavor : [internal, beta]
  - coverage : [true, false]
  - download_profile : [true, false]
  - update_assets : [true, false]
- - upload_to_appcenter : [true, false]
- - version_name 
  - watch : [true, false]
+ - version_name 
  - keyFile 
  - keyId 
  - issuerId 

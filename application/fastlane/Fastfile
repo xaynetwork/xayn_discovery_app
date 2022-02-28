@@ -38,16 +38,16 @@ before_all do |lane, options|
   }
 
   # set default values
-  setIfNotSet.call(Options::CLEAN, true)
+  setIfNotSet.call(Options::CLEAN, is_ci)
   setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
   setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
   setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
   setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
-  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, true)
+  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, is_ci)
   setIfNotSet.call(Options::COVERAGE, false)
   ## downloading the iOS adhoc profile
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, true)
-  setIfNotSet.call(Options::UPDATE_ASSETS, false)
+  setIfNotSet.call(Options::UPDATE_ASSETS, true)
 
   version_name = gitVersionName()
   flavor = options[Options::FLAVOR]
@@ -191,7 +191,9 @@ end
 
 desc "Flutter clean"
 lane :clean do |options|
-  flutter("clean")
+#   flutter("clean")
+#   clean_folder('assets/ai/')
+clean_folder("coverage/test/")
 end
 
 desc "Sanity checks (options: coverage:[true/FALSE])\n" \
@@ -267,6 +269,12 @@ end
 def flutter(args)
   Dir.chdir("..") do
     sh "flutter #{args}"
+  end
+end
+
+def clean_folder(folder)
+  if Dir.exist?("../#{folder}") && !Dir.empty?("../#{folder}")
+    shell("rm -r #{folder}*")
   end
 end
 
