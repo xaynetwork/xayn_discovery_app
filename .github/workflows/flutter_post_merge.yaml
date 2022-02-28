@@ -77,10 +77,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
-          REVENUE_CAT_SDK_KEY_ANDROID_DEBUG: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID_DEBUG }}
-          REVENUE_CAT_SDK_KEY_IOS_DEBUG: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS_DEBUG }}
-          REVENUE_CAT_SDK_KEY_ANDROID_PRODUCTION: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID_PRODUCTION }}
-          REVENUE_CAT_SDK_KEY_IOS_PRODUCTION: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS_PRODUCTION }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -176,10 +174,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
-          REVENUE_CAT_SDK_KEY_ANDROID_DEBUG: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID_DEBUG }}
-          REVENUE_CAT_SDK_KEY_IOS_DEBUG: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS_DEBUG }}
-          REVENUE_CAT_SDK_KEY_ANDROID_PRODUCTION: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID_PRODUCTION }}
-          REVENUE_CAT_SDK_KEY_IOS_PRODUCTION: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS_PRODUCTION }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
