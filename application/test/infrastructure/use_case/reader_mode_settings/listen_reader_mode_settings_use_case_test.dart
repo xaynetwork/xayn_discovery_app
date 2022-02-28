@@ -17,7 +17,9 @@ void main() {
 
   final settingsWithBlackBackgroundColor =
       ReaderModeSettings.initial().copyWith(
-    backgroundColor: ReaderModeBackgroundColor.black,
+    backgroundColor: ReaderModeBackgroundColor.initial().copyWith(
+      dark: ReaderModeBackgroundDarkColor.trueBlack,
+    ),
   );
   final settingsWithSerifFontStyle = settingsWithBlackBackgroundColor.copyWith(
     fontStyle: ReaderModeFontStyle.serif,

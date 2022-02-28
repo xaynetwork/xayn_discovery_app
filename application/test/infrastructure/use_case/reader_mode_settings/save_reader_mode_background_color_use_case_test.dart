@@ -10,7 +10,9 @@ void main() {
   late MockReaderModeSettingsRepository repository;
   late SaveReaderModeBackgroundColorUseCase useCase;
 
-  const backgroundColor = ReaderModeBackgroundColor.beige;
+  final backgroundColor = ReaderModeBackgroundColor.initial().copyWith(
+    light: ReaderModeBackgroundLightColor.beige,
+  );
 
   setUp(() {
     repository = MockReaderModeSettingsRepository();

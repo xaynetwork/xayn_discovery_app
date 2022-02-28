@@ -12,16 +12,17 @@ class SelectableChip extends StatelessWidget {
   })  : child = const SizedBox.shrink(),
         backgroundColor = color,
         padding = null,
-        width = R.dimen.unit3_5,
-        height = R.dimen.unit3_5,
+        width = isSelected ? R.dimen.unit3_5 : R.dimen.unit3_25,
+        height = isSelected ? R.dimen.unit3_5 : R.dimen.unit3_25,
         border = isSelected
             ? Border.all(
                 color: R.colors.selectedItemBackgroundColor,
                 width: R.dimen.unit0_5,
               )
-            : borderColor != null
-                ? Border.all(color: borderColor, width: R.dimen.unit0_25)
-                : null,
+            : Border.all(
+                color: borderColor ?? R.colors.chipBorderColor,
+                width: R.dimen.unit0_25,
+              ),
         super(key: key);
 
   SelectableChip.svg({

@@ -11,11 +11,25 @@ import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/m
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/selectable_chip.dart';
 
-class EditReaderModeSettingsMenu extends StatelessWidget {
-  EditReaderModeSettingsMenu({Key? key, this.onCloseMenu}) : super(key: key);
-
-  final EditReaderModeSettingsManager _editReaderModeSettingsManager = di.get();
+class EditReaderModeSettingsMenu extends StatefulWidget {
+  const EditReaderModeSettingsMenu({Key? key, this.onCloseMenu})
+      : super(key: key);
   final VoidCallback? onCloseMenu;
+
+  @override
+  _EditReaderModeSettingsMenuState createState() =>
+      _EditReaderModeSettingsMenuState();
+}
+
+class _EditReaderModeSettingsMenuState
+    extends State<EditReaderModeSettingsMenu> {
+  final EditReaderModeSettingsManager _editReaderModeSettingsManager = di.get();
+
+  @override
+  void dispose() {
+    _editReaderModeSettingsManager.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +47,7 @@ class EditReaderModeSettingsMenu extends StatelessWidget {
                         _editReaderModeSettingsManager.onFontStylePressed(it),
                   ),
                 )
-                .toList(),
+                .toList(growable: false),
           );
 
           final editFontSizeRow = _buildPaddedRow(
@@ -50,36 +64,51 @@ class EditReaderModeSettingsMenu extends StatelessWidget {
                         _editReaderModeSettingsManager.onFontSizePressed(it),
                   ),
                 )
-                .toList(),
+                .toList(growable: false),
           );
 
-          final editBackgroundColorRow = _buildPaddedRow(
-              children: ReaderModeBackgroundColor.values
-                  .skipWhile((it) => it.isDefault)
-                  .map(
-                    (it) => SelectableChip.container(
-                      color: it.color,
-                      borderColor: it.borderColor,
-                      isSelected:
-                          it == state.readerModeBackgroundColor.mapIfDefault,
-                      onTap: () => _editReaderModeSettingsManager
-                          .onBackgroundColorPressed(it),
-                    ),
-                  )
-                  .toList());
+          final editLightBackgroundColorRow = _buildPaddedRow(
+            children: ReaderModeBackgroundLightColor.values
+                .map(
+                  (it) => SelectableChip.container(
+                    color: it.color,
+                    isSelected: it == state.readerModeBackgroundColor.type,
+                    onTap: () => _editReaderModeSettingsManager
+                        .onLightBackgroundColorPressed(it),
+                  ),
+                )
+                .toList(growable: false),
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          );
+
+          final editDarkBackgroundColorRow = _buildPaddedRow(
+            children: ReaderModeBackgroundDarkColor.values
+                .map(
+                  (it) => SelectableChip.container(
+                    color: it.color,
+                    isSelected: it == state.readerModeBackgroundColor.type,
+                    onTap: () => _editReaderModeSettingsManager
+                        .onDarkBackgroundColorPressed(it),
+                  ),
+                )
+                .toList(growable: false),
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          );
 
           return AppMenu(
             children: [
               editFontStyleRow,
               editFontSizeRow,
-              editBackgroundColorRow
+              R.isDarkMode
+                  ? editDarkBackgroundColorRow
+                  : editLightBackgroundColorRow,
             ],
             bottom: MediaQuery.of(context).viewInsets.bottom +
                 R.dimen.bottomBarDockedHeight +
                 R.dimen.unit4_25,
             end: R.dimen.unit2,
             width: R.dimen.unit22,
-            onClose: onCloseMenu,
+            onClose: widget.onCloseMenu,
             errorMessage: state.error != null
                 ? R.strings.readerModeSettingsErrorChangesNotApplied
                 : null,
@@ -87,11 +116,15 @@ class EditReaderModeSettingsMenu extends StatelessWidget {
         });
   }
 
-  Widget _buildPaddedRow({required List<Widget> children}) => Padding(
+  Widget _buildPaddedRow({
+    required List<Widget> children,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.spaceBetween,
+  }) =>
+      Padding(
         padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: mainAxisAlignment,
           children: children,
         ),
       );

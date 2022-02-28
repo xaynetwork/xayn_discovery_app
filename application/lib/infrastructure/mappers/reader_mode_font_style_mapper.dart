@@ -1,40 +1,33 @@
-import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
 const int _sans = 0;
 const int _serif = 1;
 
-@singleton
-class IntToReaderModeFontStyleMapper
-    implements Mapper<int?, ReaderModeFontStyle> {
-  const IntToReaderModeFontStyleMapper();
-
-  @override
-  ReaderModeFontStyle map(int? input) {
-    switch (input) {
-      case _serif:
-        return ReaderModeFontStyle.serif;
-      case _sans:
+extension ReaderModeFontStyleExtension on ReaderModeFontStyle {
+  int get toInt {
+    switch (this) {
+      case ReaderModeFontStyle.serif:
+        return _serif;
+      case ReaderModeFontStyle.sans:
+        return _sans;
       default:
-        return ReaderModeFontStyle.sans;
+        throw DbEntityMapperException(
+            'ReaderModeFontStyle: error occurred while mapping the object to int ');
     }
   }
 }
 
-@singleton
-class ReaderModeFontStyleToIntMapper
-    implements Mapper<ReaderModeFontStyle, int> {
-  const ReaderModeFontStyleToIntMapper();
-
-  @override
-  int map(ReaderModeFontStyle input) {
-    switch (input) {
-      case ReaderModeFontStyle.serif:
-        return _serif;
-      case ReaderModeFontStyle.sans:
+extension IntToReaderModeFontStyleExtension on int {
+  ReaderModeFontStyle get toReaderModeFontStyle {
+    switch (this) {
+      case _serif:
+        return ReaderModeFontStyle.serif;
+      case _sans:
+        return ReaderModeFontStyle.sans;
       default:
-        return _sans;
+        throw DbEntityMapperException(
+            'ReaderModeFontStyle: error occurred while mapping int to the object');
     }
   }
 }
