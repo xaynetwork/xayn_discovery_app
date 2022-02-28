@@ -26,6 +26,13 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: gitleaks-action
+        uses: zricethezav/gitleaks-action@master
+        with:
+          config-path: .gitleaks.toml
 
       - name: Install Flutter
         uses: britannio/action-install-flutter@v1
