@@ -42,7 +42,7 @@ void main() {
     );
     await tester.pumpLindenApp(
       child,
-      initialLinden: Linden(newColors: true),
+      initialLinden: Linden(),
     );
   }
 

@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 
 void main() {
-  final linden = Linden(newColors: true);
+  final linden = Linden();
   testWidgets(
     'GIVEN section THEN verify all widgets present',
     (final WidgetTester tester) async {
