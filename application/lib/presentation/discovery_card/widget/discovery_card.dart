@@ -202,7 +202,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
-        final maskedImage = DiscoveryCardHeadlineImage(child: image);
+        final maskedImage = DiscoveryCardReaderModeHeadlineImage(child: image);
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           document: widget.document,

@@ -47,7 +47,7 @@ void main() {
       final settings = repository.settings;
 
       expect(settings, isNotNull);
-      expect(settings.backgroundColor, ReaderModeBackgroundColor.system);
+      expect(settings.backgroundColor, ReaderModeBackgroundColor.initial());
 
       verify(box.toMap());
       verify(box.get('reader_mode_settings_id'));

@@ -19,8 +19,8 @@ void main() {
   late EditReaderModeSettingsState populatedState;
 
   const ReaderModeFontStyle mockFontStyle = ReaderModeFontStyle.serif;
-  const ReaderModeBackgroundColor mockBackgroundColor =
-      ReaderModeBackgroundColor.beige;
+  final ReaderModeBackgroundColor mockBackgroundColor =
+      ReaderModeBackgroundColor.initial();
   const ReaderModeFontSize mockFontSize = ReaderModeFontSize.large;
   final ReaderModeSettings mockReaderModeSettings =
       ReaderModeSettings.initial();
@@ -117,9 +117,10 @@ void main() {
     );
 
     blocTest<EditReaderModeSettingsManager, EditReaderModeSettingsState>(
-      'WHEN onBackgroundColorPressed is called THEN verify readerModeSettings changed',
+      'WHEN onLightBackgroundColorPressed is called THEN verify readerModeSettings changed',
       build: create,
-      act: (manager) => manager.onBackgroundColorPressed(mockBackgroundColor),
+      act: (manager) => manager
+          .onLightBackgroundColorPressed(ReaderModeBackgroundLightColor.beige),
       verify: (manager) {
         verifyInOrder([
           saveReaderModeBackgroundColorUseCase.transform(any),
@@ -133,7 +134,27 @@ void main() {
       },
       expect: () => [
         populatedState,
-        populatedState.copyWith(readerModeBackgroundColor: mockBackgroundColor)
+      ],
+    );
+
+    blocTest<EditReaderModeSettingsManager, EditReaderModeSettingsState>(
+      'WHEN onDarkBackgroundColorPressed is called THEN verify readerModeSettings changed',
+      build: create,
+      act: (manager) => manager.onDarkBackgroundColorPressed(
+          ReaderModeBackgroundDarkColor.trueBlack),
+      verify: (manager) {
+        verifyInOrder([
+          saveReaderModeBackgroundColorUseCase.transform(any),
+          saveReaderModeFontSizeUseCase.transform(any),
+          saveReaderModeFontStyleUseCase.transform(any),
+          saveReaderModeBackgroundColorUseCase.transaction(any),
+        ]);
+        verifyNoMoreInteractions(saveReaderModeFontStyleUseCase);
+        verifyNoMoreInteractions(saveReaderModeFontSizeUseCase);
+        verifyNoMoreInteractions(saveReaderModeBackgroundColorUseCase);
+      },
+      expect: () => [
+        populatedState,
       ],
     );
   });
