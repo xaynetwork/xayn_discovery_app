@@ -40,11 +40,11 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   AppDiscoveryEngine.test(DiscoveryEngine engine) : _engine = engine;
 
   @visibleForTesting
-  AppDiscoveryEngine(
-      {required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
-      required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
-      bool initialized = true})
-      : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
+  AppDiscoveryEngine({
+    required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+    required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+    bool initialized = true,
+  })  : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
         _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase {
     if (!initialized) {
       startInitializing();
@@ -64,6 +64,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
   @override
   Future<void> init() async {
+    // TODO use this as dependency
+    final applicationDocumentsDirectory =
+        await getApplicationDocumentsDirectory();
+    final manifest = await FlutterManifestReader().read();
+    final copier = FlutterBundleAssetCopier(
+      appDir: applicationDocumentsDirectory.path,
+      bundleAssetsPath: 'assets/ai',
+    );
+    await copier.copyAssets(manifest);
+
     await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
 
     final localMarkets =
@@ -73,8 +83,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         .map((e) =>
             FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
         .toSet();
-    final applicationDocumentsDirectory =
-        await getApplicationDocumentsDirectory();
 
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
@@ -83,7 +91,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
       feedMarkets: markets,
-      manifest: await FlutterManifestReader().read(),
+      manifest: manifest,
     );
 
     _inputLog.add(
