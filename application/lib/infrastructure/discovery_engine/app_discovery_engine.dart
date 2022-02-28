@@ -37,6 +37,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   final Expando<DocumentFeedbackChange> _eventMap =
       Expando<DocumentFeedbackChange>();
 
+  final StreamController<String> _inputLog =
+      StreamController<String>.broadcast();
+
+  /// A log stream of input events to the engine
+  Stream<String> get engineInputEventsLog => _inputLog.stream;
+
   @visibleForTesting
   AppDiscoveryEngine.test(DiscoveryEngine engine) : _engine = engine;
 
@@ -85,6 +91,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       manifest: Manifest(const []),
     );
 
+    _inputLog.add(
+      '[init]\n<configuration> ${configuration.toString()}',
+    );
+
     _engine = await DiscoveryEngine.init(configuration: configuration);
   }
 
@@ -104,17 +114,25 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> changeConfiguration({
     FeedMarkets? feedMarkets,
     int? maxItemsPerFeedBatch,
-  }) =>
-      safeRun(() => _engine.changeConfiguration(
-            feedMarkets: feedMarkets,
-            maxItemsPerFeedBatch: maxItemsPerFeedBatch,
-          ));
+  }) {
+    _inputLog.add(
+      '[changeConfiguration]\n<feedMarkets> $feedMarkets\n<nmaxItemsPerFeedBatch> $maxItemsPerFeedBatch',
+    );
+    return safeRun(() => _engine.changeConfiguration(
+          feedMarkets: feedMarkets,
+          maxItemsPerFeedBatch: maxItemsPerFeedBatch,
+        ));
+  }
 
   @override
   Future<EngineEvent> changeUserReaction({
     required DocumentId documentId,
     required UserReaction userReaction,
   }) async {
+    _inputLog.add(
+      '[changeUserReaction]\n<documentId> $documentId\n<userReaction> $userReaction',
+    );
+
     final engineEvent = await safeRun(
       () => _engine.changeUserReaction(
         documentId: documentId,
@@ -131,8 +149,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) =>
-      safeRun(() => _engine.closeFeedDocuments(documentIds));
+  Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) {
+    _inputLog.add(
+      '[closeFeedDocuments]\n<documentIds> \n${documentIds.join('\n')}',
+    );
+    return safeRun(() => _engine.closeFeedDocuments(documentIds));
+  }
 
   /// As we also need search events, which are not yet supported, we override
   /// this getter so that it includes our temp search event Stream.
@@ -149,21 +171,30 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required DocumentId documentId,
     required DocumentViewMode mode,
     required int seconds,
-  }) =>
-      safeRun(() => _engine.logDocumentTime(
-            documentId: documentId,
-            mode: mode,
-            seconds: seconds,
-          ));
+  }) {
+    _inputLog.add(
+      '[logDocumentTime]\n<documentId> $documentId\n<mode> $mode\n<seconds> $seconds',
+    );
+    return safeRun(
+      () => _engine.logDocumentTime(
+          documentId: documentId, mode: mode, seconds: seconds),
+    );
+  }
 
   @override
-  Future<EngineEvent> requestFeed() => safeRun(() => _engine.requestFeed());
+  Future<EngineEvent> requestFeed() {
+    _inputLog.add('[requestFeed]');
+    return safeRun(() => _engine.requestFeed());
+  }
 
   @override
-  Future<EngineEvent> requestNextFeedBatch() =>
-      safeRun(() => _engine.requestNextFeedBatch());
+  Future<EngineEvent> requestNextFeedBatch() {
+    _inputLog.add('[requestNextFeedBatch]');
+    return safeRun(() => _engine.requestNextFeedBatch());
+  }
 
   Future<EngineEvent> search(String searchTerm) {
+    _inputLog.add('[search]\n<searchTerm> $searchTerm');
     throw UnimplementedError();
   }
 
@@ -178,9 +209,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       _eventMap[engineEvent];
 
   @override
-  Future<void> dispose() => safeRun(() => _engine.dispose());
+  Future<void> dispose() {
+    _inputLog
+      ..add('[dispose]')
+      ..close();
+    return safeRun(() => _engine.dispose());
+  }
 
   @override
-  Future<EngineEvent> send(ClientEvent event) =>
-      safeRun(() => _engine.send(event));
+  Future<EngineEvent> send(ClientEvent event) {
+    _inputLog.add('[send]\n<ClientEvent> $ClientEvent');
+    return safeRun(() => _engine.send(event));
+  }
 }
