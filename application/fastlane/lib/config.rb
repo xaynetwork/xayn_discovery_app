@@ -1,7 +1,6 @@
 module Config
   module Keys
     BUILD_NUMBER_OFFSET = "build_number_offset"
-    REVENUE_CAT_SDK_KEY = "revenue_cat_sdk_key"
     ID = "id"
     NAME = "name"
     APPCENTER_TARGET = "appcenter_target"
@@ -104,8 +103,6 @@ module Config
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
-                   "REVENUE_CAT_SDK_KEY_ANDROID" => "",
-                   "REVENUE_CAT_SDK_KEY_IOS" => "",
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
 
   # Carefull to change those offsets, they are defining the beta process:
@@ -126,7 +123,6 @@ module Config
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_INTERNAL_TOKEN",
         Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
-        Keys::REVENUE_CAT_SDK_KEY => "appl_nnUMzggHVFBqMvcAuIQqCqxSRgI",
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.discovery.internal",
@@ -135,7 +131,6 @@ module Config
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_INTERNAL_TOKEN",
         Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
-        Keys::REVENUE_CAT_SDK_KEY => "-no-key-at-all-",
       },
     },
     Flavors::BETA => {
@@ -147,7 +142,6 @@ module Config
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_BETA_TOKEN",
         Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
-        Keys::REVENUE_CAT_SDK_KEY => "-no-key-yet-",
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.search",
@@ -156,19 +150,16 @@ module Config
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
         Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
-        Keys::REVENUE_CAT_SDK_KEY => "goog_ZCWdmgNpBOWVbrUjGGBOkUlUgEX",
       },
     },
     Flavors::PRODUCTION => {
       Platforms::IOS => {
         Keys::ID => "com.xayn.search",
         Keys::NAME => "Discovery App",
-        Keys::REVENUE_CAT_SDK_KEY => "-no-key-yet-",
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.search",
         Keys::NAME => "Discovery App",
-        Keys::REVENUE_CAT_SDK_KEY => "goog_ZCWdmgNpBOWVbrUjGGBOkUlUgEX",
       },
     },
   }
