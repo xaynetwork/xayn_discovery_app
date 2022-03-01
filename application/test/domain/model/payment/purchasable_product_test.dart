@@ -69,4 +69,20 @@ void main() {
       }
     },
   );
+
+  test(
+    'GIVEN PurchasableProductStatus WHEN isPurchased called THEN return true, only when status purchased',
+    () async {
+      final results = PurchasableProductStatus.values.map((e) => e.isPurchased);
+      final expectedResults = [
+        false,
+        true,
+        false,
+        false,
+        false,
+      ];
+
+      expect(results, equals(expectedResults));
+    },
+  );
 }
