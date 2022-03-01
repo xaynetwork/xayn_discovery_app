@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/collections/manager/collections_
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
@@ -213,4 +214,20 @@ class DiscoveryCardScreenManagerNavActionsImpl
 
   @override
   void onBackPressed() => changeStack((stack) => stack.pop());
+}
+
+@Injectable(as: ErrorNavActions)
+class ErrorNavActionsImpl extends ErrorNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  ErrorNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void openErrorScreen() =>
+      changeStack((stack) => stack.replace(PageRegistry.error));
+
+  @override
+  void onClosePressed() => changeStack((stack) => stack.pop());
 }

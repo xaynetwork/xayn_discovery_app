@@ -124,3 +124,6 @@ paymentFlowError:
 bottomSheetDeleteCollectionWithNoItemsBody: Willst Du diese Sammlung wirklich löschen?
 bottomSheetMoveSingleBookmark: Move to another collection
 readerModeSettingsErrorChangesNotApplied: Changes couldn't be applied
+errorGenericHeaderSomethingWentWrong: Something went wrong
+errorGenericBodyPleaseTryAgainLater: Please try again later.
+errorClose: Close

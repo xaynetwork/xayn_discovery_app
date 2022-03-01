@@ -177,6 +177,10 @@ class Translations {
   String get bottomSheetMoveSingleBookmark => """Move to another collection""";
   String get readerModeSettingsErrorChangesNotApplied =>
       """Changes couldn't be applied""";
+  String get errorGenericHeaderSomethingWentWrong => """Something went wrong""";
+  String get errorGenericBodyPleaseTryAgainLater =>
+      """Please try again later.""";
+  String get errorClose => """Close""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -319,4 +323,7 @@ Map<String, String> get translationsMap => {
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
       """readerModeSettingsErrorChangesNotApplied""":
           """Changes couldn't be applied""",
+      """errorGenericHeaderSomethingWentWrong""": """Something went wrong""",
+      """errorGenericBodyPleaseTryAgainLater""": """Please try again later.""",
+      """errorClose""": """Close""",
     };
