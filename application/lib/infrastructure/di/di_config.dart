@@ -29,7 +29,9 @@ const Environment debugEnvironment = Environment(debugEnvironmentName);
 const Environment testEnvironment = Environment(Environment.test);
 
 /// Environment for debug mode only
-const Environment debug = Environment(debugEnvironmentName);
+const Environment debugEnvironment = Environment(debugEnvironmentName);
+
+const Environment testEnvironment = Environment(Environment.test);
 
 /// Boilerplate setup for DI.
 @InjectableInit(
