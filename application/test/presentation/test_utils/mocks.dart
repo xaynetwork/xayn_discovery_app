@@ -29,7 +29,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
@@ -58,7 +58,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
-  CheckSubscriptionActiveUseCase,
+  GetSubscriptionStatusUseCase,
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   DbEntityMapToFeedMarketMapper,
