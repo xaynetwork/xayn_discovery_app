@@ -20,7 +20,7 @@ class DocumentTimeSpentEvent extends AnalyticsEvent {
           properties: {
             _kParamDurationInSeconds: duration.inSeconds,
             _kParamViewMode: viewMode.name,
-            _kParamDocument: document,
+            _kParamDocument: document.toJson(),
           },
         );
 }

@@ -20,8 +20,8 @@ class DocumentIndexChangedEvent extends AnalyticsEvent {
   }) : super(
           _kEventType,
           properties: {
-            if (previous != null) _kParamPreviousDocument: previous,
-            _kParamNextDocument: next,
+            if (previous != null) _kParamPreviousDocument: previous.toJson(),
+            _kParamNextDocument: next.toJson(),
             _kParamDirection: direction.name,
           },
         );

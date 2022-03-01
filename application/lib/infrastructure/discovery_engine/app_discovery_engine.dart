@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// A temporary wrapper for the [DiscoveryEngine].
 /// Once the engine is ready, we can remove this class.
@@ -29,14 +30,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final StreamController<EngineEvent> _tempSearchEvents =
       StreamController<EngineEvent>.broadcast();
 
-  /// temp solution:
-  /// - [changeDocumentFeedback] is a fire-and-forget right now
-  /// - instead, we need an [EngineEvent] which also contains info about the changed [Document].
-  ///
-  /// for now, the expando allows us to store the missing params as a weak-key map.
-  final Expando<DocumentFeedbackChange> _eventMap =
-      Expando<DocumentFeedbackChange>();
-
   final StreamController<String> _inputLog =
       StreamController<String>.broadcast();
 
@@ -47,11 +40,11 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   AppDiscoveryEngine.test(DiscoveryEngine engine) : _engine = engine;
 
   @visibleForTesting
-  AppDiscoveryEngine(
-      {required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
-      required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
-      bool initialized = true})
-      : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
+  AppDiscoveryEngine({
+    required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
+    required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
+    bool initialized = true,
+  })  : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
         _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase {
     if (!initialized) {
       startInitializing();
@@ -71,6 +64,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
   @override
   Future<void> init() async {
+    // TODO use this as dependency
+    final applicationDocumentsDirectory =
+        await getApplicationDocumentsDirectory();
+    final manifest = await FlutterManifestReader().read();
+    final copier = FlutterBundleAssetCopier(
+      appDir: applicationDocumentsDirectory.path,
+      bundleAssetsPath: 'assets/ai',
+    );
+    await copier.copyAssets(manifest);
+
     await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
 
     final localMarkets =
@@ -84,18 +87,20 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
-      applicationDirectoryPath: '/engine/',
-      maxItemsPerFeedBatch: 20,
+      assetsUrl: Env.aiAssetsUrl,
+      applicationDirectoryPath: applicationDocumentsDirectory.path,
+      maxItemsPerFeedBatch: 2,
       feedMarkets: markets,
-      assetsUrl: '',
-      manifest: Manifest(const []),
+      manifest: manifest,
     );
 
     _inputLog.add(
       '[init]\n<configuration> ${configuration.toString()}',
     );
-
-    _engine = await DiscoveryEngine.init(configuration: configuration);
+    _engine = await DiscoveryEngine.init(configuration: configuration)
+        .catchError((e) {
+      logger.e('OH MY GOD NO!!! $e');
+    });
   }
 
   Future<void> _saveInitialFeedMarket(
@@ -129,20 +134,11 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required DocumentId documentId,
     required UserReaction userReaction,
   }) async {
-    _inputLog.add(
-      '[changeUserReaction]\n<documentId> $documentId\n<userReaction> $userReaction',
-    );
-
     final engineEvent = await safeRun(
       () => _engine.changeUserReaction(
         documentId: documentId,
         userReaction: userReaction,
       ),
-    );
-
-    _eventMap[engineEvent] = DocumentFeedbackChange(
-      documentId: documentId,
-      userReaction: userReaction,
     );
 
     return engineEvent;
@@ -201,12 +197,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   /// temporary workaround for adding events that are not yet handled
   /// by the discovery engine.
   void tempAddEvent(EngineEvent event) => _tempSearchEvents.add(event);
-
-  /// temporary workaround for getting info on what [Document] was changed
-  /// when [changeDocumentFeedback] was called.
-  DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
-          EngineEvent engineEvent) =>
-      _eventMap[engineEvent];
 
   @override
   Future<void> dispose() {

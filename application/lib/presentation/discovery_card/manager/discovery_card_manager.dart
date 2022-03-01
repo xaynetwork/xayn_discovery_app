@@ -208,8 +208,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           final report = errorReport.of(_updateUri) ??
               errorReport.of(_isBookmarkedHandler) ??
               errorReport.of(_toggleBookmarkHandler);
-          logger.e(report!.error);
-          return DiscoveryCardState.error(report.error);
+          if (report != null) {
+            logger.e(report.error);
+
+            return DiscoveryCardState.error(report.error);
+          }
         }
 
         var nextState = DiscoveryCardState(

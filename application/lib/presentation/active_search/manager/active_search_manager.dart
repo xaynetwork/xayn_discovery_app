@@ -5,7 +5,6 @@ import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/temp/search_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class ActiveSearchNavActions {
@@ -25,8 +24,7 @@ abstract class ActiveSearchNavActions {
 class ActiveSearchManager extends Cubit<ActiveSearchState>
     with
         UseCaseBlocHelper<ActiveSearchState>,
-        EngineEventsMixin<ActiveSearchState>,
-        SearchMixin<ActiveSearchState>
+        EngineEventsMixin<ActiveSearchState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
@@ -48,8 +46,8 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
 
           return state.copyWith(
             results: {...currentResults, ...engineEvent.items},
-            isLoading: isLoading,
-            isComplete: !isLoading,
+            isLoading: false,
+            isComplete: true,
             isInErrorState: false,
           );
         }
