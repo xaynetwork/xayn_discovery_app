@@ -1,6 +1,7 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:mockito/mockito.dart';
+import 'package:purchases_flutter/object_wrappers.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
@@ -11,206 +12,117 @@ import 'payment_test_data.dart';
 
 void main() {
   late MockPaymentService paymentService;
-  late MockIAPErrorToPaymentFlowErrorMapper mapper;
+  late MockPurchasesErrorCodeToPaymentFlowErrorMapper mapper;
   late PurchaseSubscriptionUseCase useCase;
   setUp(() {
     paymentService = MockPaymentService();
-    mapper = MockIAPErrorToPaymentFlowErrorMapper();
+    mapper = MockPurchasesErrorCodeToPaymentFlowErrorMapper();
     useCase = PurchaseSubscriptionUseCase(paymentService, mapper);
-
-    when(paymentService.isAvailable()).thenAnswer((_) => Future.value(true));
-    when(paymentService.queryProductDetails({subscriptionId})).thenAnswer(
-      (_) async => ProductDetailsResponse(
-        productDetails: [productDetails],
-        notFoundIDs: [],
-      ),
-    );
-    when(paymentService.buyNonConsumable(
-      purchaseParam: anyNamed('purchaseParam'),
-    )).thenAnswer((_) => Future.value(true));
   });
 
-  useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-          PurchasableProductStatus>(
-      'WHEN paymentService not available THEN throw storeNotAvailable error',
-      setUp: () {
-        when(paymentService.isAvailable()).thenAnswer((_) async => false);
-      },
-      build: () => useCase,
-      input: {subscriptionId},
-      expect: [
-        useCaseFailure(throwsA(PaymentFlowError.storeNotAvailable)),
-      ],
-      verify: (_) {
-        verify(paymentService.isAvailable());
-        verifyNoMoreInteractions(paymentService);
-      });
-
-  useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-      PurchasableProductStatus>(
-    'WHEN paymentService can not find product THEN throw productNotFound error',
-    setUp: () {
-      when(paymentService.queryProductDetails({subscriptionId})).thenAnswer(
-        (_) async => ProductDetailsResponse(
-          notFoundIDs: [subscriptionId],
-          productDetails: [],
-        ),
+  test(
+    'GIVEN PurchaserInfo that contains product id THEN yield PurchasableProductStatus.purchased',
+    () async {
+      // ARRANGE
+      when(paymentService.purchaseProduct(subscriptionId)).thenAnswer(
+        (_) async => createPurchaserInfo(withActiveSubscription: true),
       );
-    },
-    build: () => useCase,
-    input: {subscriptionId},
-    expect: [
-      useCaseFailure(throwsA(PaymentFlowError.productNotFound)),
-    ],
-    verify: (_) {
-      verifyInOrder([
-        paymentService.isAvailable(),
-        paymentService.queryProductDetails({subscriptionId}),
-      ]);
+
+      // ACT
+      final output = await useCase.call(subscriptionId);
+
+      // ASSERT
+      expect(
+        output,
+        equals([
+          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.purchased),
+        ]),
+      );
+      verify(paymentService.purchaseProduct(subscriptionId));
       verifyNoMoreInteractions(paymentService);
+      verifyZeroInteractions(mapper);
     },
   );
 
-  group('Check stream response', () {
-    useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-        PurchasableProductStatus>(
-      'GIVEN purchaseStream with empty list THEN yields nothing',
-      build: () => useCase,
-      setUp: () {
-        when(paymentService.purchaseStream).thenAnswer((_) => Stream.value([]));
-      },
-      input: {subscriptionId},
-      take: 1,
-      verify: (_) {
-        verifyInOrder([
-          paymentService.isAvailable(),
-          paymentService.queryProductDetails({subscriptionId}),
-          paymentService.buyNonConsumable(
-              purchaseParam: anyNamed('purchaseParam')),
-          paymentService.purchaseStream,
-        ]);
-        verifyNoMoreInteractions(paymentService);
-      },
-    );
-    useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-        PurchasableProductStatus>(
-      'GIVEN purchaseStream with wrong id THEN yields nothing',
-      build: () => useCase,
-      setUp: () {
-        when(paymentService.purchaseStream).thenAnswer((_) => Stream.value([
-              createPurchase(PurchaseStatus.pending, id: 'wrong id'),
-            ]));
-      },
-      input: {subscriptionId},
-      take: 1,
-      verify: (_) {
-        verifyInOrder([
-          paymentService.isAvailable(),
-          paymentService.queryProductDetails({subscriptionId}),
-          paymentService.buyNonConsumable(
-              purchaseParam: anyNamed('purchaseParam')),
-          paymentService.purchaseStream,
-        ]);
-        verifyNoMoreInteractions(paymentService);
-      },
-    );
+  test(
+    'GIVEN PurchaserInfo that DOES NOT contains product id THEN throw PaymentFlowError.paymentFailed',
+    () async {
+      // ARRANGE
+      when(paymentService.purchaseProduct(subscriptionId)).thenAnswer(
+        (_) async => createPurchaserInfo(withActiveSubscription: false),
+      );
 
-    useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-        PurchasableProductStatus>(
-      'GIVEN PurchaseStatus pending THEN yields list of corresponding PurchasableProductStatus.pending',
-      build: () => useCase,
-      setUp: () {
-        when(paymentService.purchaseStream).thenAnswer((_) => Stream.value(
-              [createPurchase(PurchaseStatus.pending)],
-            ));
-      },
-      input: {subscriptionId},
-      expect: [
-        useCaseSuccess(PurchasableProductStatus.pending),
-      ],
-      verify: (_) {
+      // ACT
+      final output = await useCase.call(subscriptionId);
+
+      // ASSERT
+      expect(
+        output,
+        equals([
+          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseFailure(throwsA(PaymentFlowError.paymentFailed)),
+        ]),
+      );
+      verify(paymentService.purchaseProduct(subscriptionId));
+      verifyNoMoreInteractions(paymentService);
+      verifyZeroInteractions(mapper);
+    },
+  );
+
+  test(
+    'GIVEN PlatformException with canceled code WHEN purchaseProduct called THEN yield yield PurchasableProductStatus.canceled',
+    () async {
+      // ARRANGE
+      when(paymentService.purchaseProduct(subscriptionId))
+          .thenThrow(PlatformException(code: '1'));
+
+      // ACT
+      final output = await useCase.call(subscriptionId);
+
+      // ASSERT
+      expect(
+        output,
+        equals([
+          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.canceled),
+        ]),
+      );
+      verify(paymentService.purchaseProduct(subscriptionId));
+      verifyNoMoreInteractions(paymentService);
+      verifyZeroInteractions(mapper);
+    },
+  );
+
+  PurchasesErrorCode.values
+      .where((e) => e != PurchasesErrorCode.purchaseCancelledError)
+      .forEach((error) {
+    final errorCode = PurchasesErrorCode.values.indexOf(error);
+    test(
+      'GIVEN PlatformException with $error (code$errorCode) WHEN purchaseProduct called THEN use mapper and throw',
+      () async {
+        // ARRANGE
+        when(paymentService.purchaseProduct(subscriptionId))
+            .thenThrow(PlatformException(code: '$errorCode'));
+        when(mapper.map(error)).thenReturn(PaymentFlowError.unknown);
+
+        // ACT
+        final output = await useCase.call(subscriptionId);
+
+        // ASSERT
+        expect(
+          output,
+          equals([
+            useCaseSuccess(PurchasableProductStatus.pending),
+            useCaseFailure(throwsA(PaymentFlowError.unknown)),
+          ]),
+        );
         verifyInOrder([
-          paymentService.isAvailable(),
-          paymentService.queryProductDetails({subscriptionId}),
-          paymentService.buyNonConsumable(
-              purchaseParam: anyNamed('purchaseParam')),
-          paymentService.purchaseStream,
+          paymentService.purchaseProduct(subscriptionId),
+          mapper.map(error),
         ]);
         verifyNoMoreInteractions(paymentService);
-      },
-    );
-    useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-        PurchasableProductStatus>(
-      'GIVEN PurchaseStatus canceled THEN yields list of corresponding PurchasableProductStatus.canceled',
-      build: () => useCase,
-      setUp: () {
-        when(paymentService.purchaseStream).thenAnswer((_) => Stream.value(
-              [createPurchase(PurchaseStatus.canceled)],
-            ));
-      },
-      input: {subscriptionId},
-      expect: [
-        useCaseSuccess(PurchasableProductStatus.canceled),
-      ],
-      verify: (_) {
-        verifyInOrder([
-          paymentService.isAvailable(),
-          paymentService.queryProductDetails({subscriptionId}),
-          paymentService.buyNonConsumable(
-              purchaseParam: anyNamed('purchaseParam')),
-          paymentService.purchaseStream,
-        ]);
-        verifyNoMoreInteractions(paymentService);
-      },
-    );
-    useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-        PurchasableProductStatus>(
-      'GIVEN PurchaseStatus purchased THEN yields list of corresponding PurchasableProductStatus.purchased',
-      build: () => useCase,
-      setUp: () {
-        when(paymentService.purchaseStream).thenAnswer((_) => Stream.value(
-              [purchasedPurchaseDetails],
-            ));
-      },
-      input: {subscriptionId},
-      expect: [
-        useCaseSuccess(PurchasableProductStatus.purchased),
-      ],
-      verify: (_) {
-        verifyInOrder([
-          paymentService.isAvailable(),
-          paymentService.queryProductDetails({subscriptionId}),
-          paymentService.buyNonConsumable(
-              purchaseParam: anyNamed('purchaseParam')),
-          paymentService.purchaseStream,
-          paymentService.completePurchase(purchasedPurchaseDetails),
-        ]);
-        verifyNoMoreInteractions(paymentService);
-      },
-    );
-    useCaseTest<PurchaseSubscriptionUseCase, PurchasableProductId,
-        PurchasableProductStatus>(
-      'GIVEN PurchaseStatus restored THEN yields list of corresponding PurchasableProductStatus.restored',
-      build: () => useCase,
-      setUp: () {
-        when(paymentService.purchaseStream).thenAnswer((_) => Stream.value(
-              [restoredPurchaseDetails],
-            ));
-      },
-      input: {subscriptionId},
-      expect: [
-        useCaseSuccess(PurchasableProductStatus.restored),
-      ],
-      verify: (_) {
-        verifyInOrder([
-          paymentService.isAvailable(),
-          paymentService.queryProductDetails({subscriptionId}),
-          paymentService.buyNonConsumable(
-              purchaseParam: anyNamed('purchaseParam')),
-          paymentService.purchaseStream,
-          paymentService.completePurchase(restoredPurchaseDetails),
-        ]);
-        verifyNoMoreInteractions(paymentService);
+        verifyNoMoreInteractions(mapper);
       },
     );
   });
