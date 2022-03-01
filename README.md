@@ -1,164 +1,52 @@
-## :bangbang: TO-DO list after creating repo from template:
+## Development
 
- - [ ] Create new flutter project
- - [ ] [Organizing a library package](https://dart.dev/guides/libraries/create-library-packages#organizing-a-library-package)
- - [ ] Replace all `project_name` with the corrent one in this file
- - [ ] Replace `repo name` with the corrent one in:
-   - [ ] this filein the 
-   - [ ] [contributing](#contributing-construction_worker_woman) `create an issue` link
- - [ ] Remove useless parts of this README
- - [ ] Check license
- - [ ] Specifying a plugin’s supported platforms. More [here](https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms)
- - [ ] Uncomment CI scripts in `.github/workflows` 
-   - [ ] Set the latest `Flutter version` inside all of them
-- [ ] Setup `repository settings` - branch rules, PR reviews, etc. Sadly, but it's not copied from the template repo... 
- - [ ] to enable `codeCov` - please ask Felix to enable it for this repository
- - [ ] Try to keep README page SIMPLE but USEFUL
- - [ ] Chgeck for [PUB POINTS](https://pub.dev/help/scoring#pub-points)
-   - [ ] Follow Dart file conventions(https://pub.dev/help/scoring#follow-dart-file-conventions)  (this one done, but doubel-check it)
-   - [ ] [Provide documentation](https://pub.dev/help/scoring#provide-documentation)
-   - [ ] [Support multiple platforms](https://pub.dev/help/scoring#support-multiple-platforms)
-   - [ ] [Pass static analysis](https://pub.dev/help/scoring#pass-static-analysis)
-   - [ ] [Support up-to-date dependencies](https://pub.dev/help/scoring#support-up-to-date-dependencies)
-   - [ ] [View pub points report](https://pub.dev/help/scoring#calculating-pub-points-prior-to-publishing) before publishing. Make sure we have all possible score :muscle:
- - [ ] Remove this `TODO list` from the ReadMe, when all above are done :wink:
+For all targets the `.env.debug` Environment file needs to be added. 
+An example can be found in `env.example`.
 
-----------
+The build system supports to automatically fill those files, just run:
 
-# project_name
-
-[![Pub](https://img.shields.io/pub/v/project_name.svg)](https://pub.dartlang.org/packages/project_name)
-[![codecov](https://codecov.io/gh/xaynetwork/flutter-open-source-repo-template/branch/main/graph/badge.svg)](https://codecov.io/gh/xaynetwork/flutter-open-source-repo-template)
-[![Build Status](https://github.com/xaynetwork/flutter-open-source-repo-template/actions/workflows/flutter_post_merge.yaml/badge.svg)](https://github.com/xaynetwork/flutter-open-source-repo-template/actions)
-
-Short description of the project: What, Why, When and How :rofl:
-
-
-----------
-
-
-
-## Table of content:
-
- * [Installing :hammer_and_wrench:](#installing-hammer_and_wrench)
- * [How to use :building_construction:](#how-to-use-building_construction)
- * [Visuals :heart_eyes_cat:](#visuals-heart_eyes_cat)
- * [Attributes :gear:](#attributes-gear)
- * [Troubleshooting :thinking:](#troubleshooting-thinking)
- * [Contributing :construction_worker_woman:](#contributing-construction_worker_woman)
- * [License :scroll:](#license-scroll)
- * [Release](#release)
-
-----------
-
-
-
-## Installing :hammer_and_wrench:
-
-Add this to your package's `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  project_name: `latest version`
+```shell
+$ fastlane build_runner
 ```
 
-after that, shoot it on the command line:
+after checking out the project. Then answer the wizard questions in the command line.
 
-```css
-$ flutter pub get
+`fastlane build_runner` can be called whenever you want during development to ensure all dependencies
+are created, and property files are correctly set-up.
+
+To run the app during development on simulators/emulators and the android devices simply run
+
+```shell
+$ flutter run
 ```
 
-----------
+### iOS device development
 
+In order to run and debug the app on a real iOS device a provisioning profile and a developer certificate is necessary.
+A default development  profile for development is part of this repository, to install it run:
 
-
-## How to use :building_construction:
-
-Use case #1 (short description)
-```dart
-	// add some code with ninja-comments here
+```shell 
+$ open ios/profiles/Xayn_Discovery_Internal_Develop_Profile.mobileprovision
 ```
 
-Use case #2 (short description)
-```dart
-	// add some code with ninja-comments here
+Or open the profile in the finder.
+Then install the development certificate found under `ios/profiles/Certificates-internal.p12`
+the encryption key can be found in 1password.
+
+If you want to use another profile follow this steps:
+
+- Create a development certificate in XCode (Settings -> Accounts -> Xayn AG Team -> Manage Certificates -> "+" Button  -> Apple Development)
+- Create a "iOS App Development" provisioning profile under [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/profiles/list)
+- Be sure that it matches the default team id and app id found in `ios/fastlane/Appfile` and that it contains your created certificate in step 1
+- Edit the `ios/Flutter/UserDefaults.xcconfig` to contain
+```properties
+USER_PROVISIONING_PROFILE=YOUR PROFILE NAME
+USER_CERTIFICATE=YOUR CERTIFICATE NAME 
 ```
+- Now plugin your iOS device (be sure it is accepted as a development device XCode -> Window -> Devices )
+- Run `flutter run`
 
-Use case #3 (short description)
-```dart
-	// add some code with ninja-comments here
-```
-
- - please also give a try to the [example app](../main/example/) :stuck_out_tongue_winking_eye:
- - check full [documentation here](../documentation/)
-
-[top :arrow_heading_up:](#project_name)
-
-----------
-
-## Visuals :heart_eyes_cat:
-
-Curious how it will be looking? :smirk:
-
- |                          |                          |
- | ------------------------ | ------------------------ |
- | case description #1      | case description #2      |
- | <img width="280" src="../main/visuals/coding.gif"> | <img width="280" src="../main/visuals/building.gif"> |
- |                          |                          |
- | case description #3      | case description #4      |
- | <img width="280" src="../main/visuals/tea.gif"> | <img width="280" src="../main/visuals/cosmos.gif"> |
-
-[top :arrow_heading_up:](#project_name)
-
-----------
-
-
-
-## Attributes :gear:
-
-| attribute name   | Datatype		| Default Value | Description                                  |
-| ---------------- | -------------- | ------------- | -------------------------------------------- |
-| `child`          | `Widget`   	| `required`    | The widget below this widget in the tree.    |
-| `isEnabled`      | `bool`   	 	| `true`    	| Responsible for showing component as enabled.|
-| `key` 		   | `Key`          | `null`        | Controls how one widget replaces another widget in the tree. |
-
-[top :arrow_heading_up:](#project_name)
-
-----------
-
-
-
-## Troubleshooting :thinking:
-
-Describe here well known problems and how they can be solved.
-
-[top :arrow_heading_up:](#project_name)
-
-----------
-
-
-
-## Contributing :construction_worker_woman:
-
-We're more than happy to accept pull requests :muscle:
-
- - check our [contributing](../main/.github/contributing.md) page
- - found a bug or have a question? Please [create an issue](https://github.com/xaynetwork/flutter-open-source-repo-template/issues/new/choose).
-
-
-
-[top :arrow_heading_up:](#project_name)
-
-----------
-
-
-
-## License :scroll:
-**project_name** is licensed under `Apache 2`. View [license](../main/LICENSE).
-
-[top :arrow_heading_up:](#project_name)
-
-----------
+NOTE: The `ios/Flutter/Dartdefines.xcconfig` can contain overrides for `USER_PROVISIONING_PROFILE/ CERTIFICATE` (when running fastlane publish) so be sure that this is not the case!!!
 
 ## Release
 
