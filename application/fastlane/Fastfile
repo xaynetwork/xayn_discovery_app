@@ -28,9 +28,9 @@ BuildTypes = Config::BuildTypes
 
 # Common checks before running a lane
 before_all do |lane, options|
-  allowedOptions = Options.constants.map {|c|  Options.const_get(c) }
+  allowedOptions = Options.constants.map { |c| Options.const_get(c) }
   options.each do |k, v|
-     UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
+    UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
   end
 
   setIfNotSet = lambda { |option, alt|
@@ -132,26 +132,12 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
+  maybe_pub_get(options)
 
-  if options[Options::UPDATE_ASSETS]
-    begin
-      update_assets(options)
-    rescue => ex
-      pub_get(options)
-      update_assets(options)
-    end
-  end
+  update_assets(options)
 
   mode = options[Options::WATCH] ? "watch" : "build"
-  command = "pub run build_runner #{mode} --delete-conflicting-outputs"
-
-  begin
-    flutter(command)
-  rescue => ex
-    pub_get(options)
-    flutter(command)
-  end
-
+  flutter("pub run build_runner #{mode} --delete-conflicting-outputs")
 end
 
 desc "Checks alle the config (env, properties, etc) if they are correctly set"
@@ -201,14 +187,14 @@ end
 desc "Flutter clean"
 lane :clean do |options|
   flutter("clean")
-  clean_folder('assets/ai/')
+  clean_folder("assets/ai/")
 end
 
 desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "Available options:\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
-  pub_get(options)
+  maybe_pub_get(options)
   if Dir.glob("../**/env.g.dart").empty?
     build_runner(options)
   end
@@ -323,3 +309,16 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
   }
 end
 
+def maybe_pub_get(options)
+  lastLock = getLastModifiedForFile("../pubspec.lock")
+  lastPubGet = getLastModifiedForFile("../pubspec.yaml")
+  lastPackages = getLastModifiedForFile("../.packages")
+
+  if lastPubGet == nil
+    UI.user_error! "No pubspec.yaml file found!"
+  end
+
+  if lastLock == nil || lastPackages == nil || lastLock < lastPubGet
+    pub_get(options)
+  end
+end
