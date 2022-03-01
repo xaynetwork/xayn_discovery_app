@@ -1,7 +1,10 @@
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:injectable/injectable.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
-/// This class is just a proxy for [InAppPurchase].
+/// This class is just a proxy for [Purchases].
 /// I created it, in order to be able to mock the behaviour in the useCases.
 /// Unfortunately right now there is an issue with Mockito package we are using:
 /// it is not supporting code generation for the methods that return generics.
@@ -10,34 +13,39 @@ import 'package:injectable/injectable.dart';
 /// The issue described here: https://github.com/dart-lang/mockito/issues/338
 @lazySingleton
 class PaymentService {
-  /// This class is the only one place where we use [InAppPurchase]
-  late final _appPurchase = InAppPurchase.instance;
+  /// This class is the only one place where we use [Purchases].
 
-  Future<bool> buyConsumable({
-    required PurchaseParam purchaseParam,
-    bool autoConsume = true,
+  PaymentService() {
+    _init();
+  }
+
+  void _init() async {
+    Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
+    await Purchases.setup(Env.revenueCatSdkKey);
+  }
+
+  Future<List<Product>> getProducts(
+    List<String> identifiers, {
+    PurchaseType type = PurchaseType.subs,
   }) =>
-      _appPurchase.buyConsumable(
-        purchaseParam: purchaseParam,
-        autoConsume: autoConsume,
+      Purchases.getProducts(identifiers, type: type);
+
+  Future<PurchaserInfo> purchaseProduct(
+    PurchasableProductId id, {
+    UpgradeInfo? upgradeInfo,
+    PurchaseType type = PurchaseType.subs,
+  }) =>
+      Purchases.purchaseProduct(
+        id,
+        upgradeInfo: upgradeInfo,
+        type: type,
       );
 
-  Future<bool> buyNonConsumable({
-    required PurchaseParam purchaseParam,
-  }) =>
-      _appPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+  Future<PurchaserInfo> getPurchaserInfo() => Purchases.getPurchaserInfo();
 
-  Future<void> completePurchase(PurchaseDetails purchase) =>
-      _appPurchase.completePurchase(purchase);
-
-  Future<bool> isAvailable() => _appPurchase.isAvailable();
-
-  Stream<List<PurchaseDetails>> get purchaseStream =>
-      _appPurchase.purchaseStream;
-
-  Future<ProductDetailsResponse> queryProductDetails(Set<String> identifiers) =>
-      _appPurchase.queryProductDetails(identifiers);
-
-  Future<void> restorePurchases({String? applicationUserName}) =>
-      _appPurchase.restorePurchases(applicationUserName: applicationUserName);
+  /// iOS only. Presents a code redemption sheet, useful for redeeming offer codes
+  /// Refer to https://docs.revenuecat.com/docs/ios-subscription-offers#offer-codes for more information on how
+  /// to configure and use offer codes
+  Future<void> presentCodeRedemptionSheet() =>
+      Purchases.presentCodeRedemptionSheet();
 }
