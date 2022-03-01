@@ -63,11 +63,18 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   Widget _buildScreen(BookmarksScreenState state) {
     final list = ListView.builder(
-      itemBuilder: (context, i) => CardWidgetTransitionWrapper(
-        onAnimationDone: () => _showBookmarkCardOptions(state.bookmarks[i].id),
-        child: _createBookmarkCard(context, state.bookmarks[i]),
-      ),
       itemCount: state.bookmarks.length,
+      itemBuilder: (context, i) {
+        final card = CardWidgetTransitionWrapper(
+          onAnimationDone: () =>
+              _showBookmarkCardOptions(state.bookmarks[i].id),
+          child: _createBookmarkCard(context, state.bookmarks[i]),
+        );
+        return Padding(
+          padding: EdgeInsets.only(bottom: R.dimen.unit2),
+          child: card,
+        );
+      },
     );
     return Padding(
       child: list,
@@ -81,28 +88,25 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       ));
 
   Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) =>
-      Padding(
-        padding: EdgeInsets.only(bottom: R.dimen.unit2),
-        child: SwipeableBookmarkCard(
-          onMove: (UniqueId bookmarkId) {
-            _showMoveBookmarkBottomSheet(context, bookmarkId);
-          },
-          onDelete: (UniqueId bookmarkId) {
-            _bookmarkManager.removeBookmark(bookmarkId);
-          },
-          bookmarkId: bookmark.id,
-          child: CardWidget(
-            cardData: CardData.bookmark(
-              key: Key(bookmark.title),
-              title: bookmark.title,
-              onPressed: () => _bookmarkManager.onBookmarkPressed(
-                  bookmarkId: bookmark.id, isPrimary: false),
-              backgroundImage: bookmark.image,
-              created: DateTime.parse(bookmark.createdAt),
-              provider: bookmark.provider,
-              // Screenwidth - 2 * side paddings
-              cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
-            ),
+      SwipeableBookmarkCard(
+        onMove: (UniqueId bookmarkId) {
+          _showMoveBookmarkBottomSheet(context, bookmarkId);
+        },
+        onDelete: (UniqueId bookmarkId) {
+          _bookmarkManager.removeBookmark(bookmarkId);
+        },
+        bookmarkId: bookmark.id,
+        child: CardWidget(
+          cardData: CardData.bookmark(
+            key: Key(bookmark.title),
+            title: bookmark.title,
+            onPressed: () => _bookmarkManager.onBookmarkPressed(
+                bookmarkId: bookmark.id, isPrimary: false),
+            backgroundImage: bookmark.image,
+            created: DateTime.parse(bookmark.createdAt),
+            provider: bookmark.provider,
+            // Screenwidth - 2 * side paddings
+            cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
           ),
         ),
       );
