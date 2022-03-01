@@ -24,6 +24,7 @@ import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dia
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
+import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -286,10 +287,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     });
   }
 
-  /// swap out with a better loading indicator,
-  /// beware that an animated spinner can cause test issues, with pumpAndSettle
   Widget _buildLoadingIndicator() => const Center(
-        child: Text('loading...'),
+        ///TODO replace with shimmer
+        child: WidgetTestableProgressIndicator(),
       );
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
