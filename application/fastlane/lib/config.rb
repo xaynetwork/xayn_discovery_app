@@ -9,6 +9,7 @@ module Config
     KEY_ALIAS = "key_alias"
     PROVISIONING_PROFILE_PATH = "provisioning_profile_path"
     PROVISIONING_PROFILE_NAME = "provisioning_profile_name"
+    CERTIFICATE_NAME = "certificate_name"
     PROVISIONING_PROFILES = "provisioning_profiles"
     ADHOC = "adhoc"
   end
@@ -177,6 +178,7 @@ module Config
     Flavors::INTERNAL => {
       Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
       Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery Internal Adhoc Profile",
+      Keys::CERTIFICATE_NAME => "Apple Distribution: Xayn AG (586TQ875ST)",
       Keys::PROVISIONING_PROFILES => {
         "com.xayn.discovery.internal" => "Xayn Discovery Internal Adhoc Profile",
       },
@@ -185,6 +187,7 @@ module Config
     Flavors::BETA => {
       Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
       Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Profile",
+      Keys::CERTIFICATE_NAME => "Apple Distribution: Xayn AG (586TQ875ST)",
       Keys::PROVISIONING_PROFILES => {
         "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
       },
