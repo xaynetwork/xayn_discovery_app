@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
@@ -26,14 +27,15 @@ import 'settings_manager_test.mocks.dart';
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
+  const subscriptionStatus = SubscriptionStatus(
+    willRenew: false,
+    expirationDate: null,
+  );
   const stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
-    subscriptionStatus: SubscriptionStatus(
-      willRenew: false,
-      expirationDate: null,
-    ),
+    subscriptionStatus: subscriptionStatus,
   );
 
   late MockFeatureManager featureManager;
@@ -74,6 +76,9 @@ void main() {
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
 
+    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+        .thenAnswer((_) => Future.value(subscriptionStatus));
+
     when(featureManager.isPaymentEnabled).thenReturn(false);
   });
 
@@ -97,11 +102,13 @@ void main() {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
         getAppThemeUseCase.singleOutput(none),
+        getSubscriptionStatusUseCase.singleOutput(any),
         listenAppThemeUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
+      verifyNoMoreInteractions(getSubscriptionStatusUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
     },
   );

@@ -66,8 +66,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void _init() async {
     scheduleComputeState(() async {
       // read values
-      _theme = await _getAppThemeUseCase.singleOutput(none);
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
+      _theme = await _getAppThemeUseCase.singleOutput(none);
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
 
