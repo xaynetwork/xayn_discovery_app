@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
@@ -71,7 +73,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: child,
         );
     final children = [
-      _buildSubscriptionSection(state.subscriptionStatus.trialEndDate),
+      _buildSubscriptionSection(state.subscriptionStatus),
       _buildAppThemeSection(state.theme),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
@@ -87,10 +89,10 @@ class _SettingsScreenState extends State<SettingsScreen>
     return SingleChildScrollView(child: column);
   }
 
-  Widget _buildSubscriptionSection(DateTime? trialEndDate) =>
+  Widget _buildSubscriptionSection(SubscriptionStatus subscriptionStatus) =>
       SubscriptionSection(
-        trialEndDate: trialEndDate,
-        onSubscribePressed: _manager.onSubscribePressed,
+        subscriptionStatus: subscriptionStatus,
+        onSubscribePressed: _onSubscribePressed,
         onShowDetailsPressed: _showSubscriptionDetailsBottomSheet,
       );
 
@@ -140,5 +142,10 @@ class _SettingsScreenState extends State<SettingsScreen>
           subscriptionType: SubscriptionType.paid,
           endDate: subscriptionEndDate,
         ),
+      );
+
+  void _onSubscribePressed() => showAppBottomSheet(
+        context,
+        builder: (buildContext) => PaymentBottomSheet(),
       );
 }
