@@ -13,20 +13,26 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final header = Text(R.strings.errorGenericHeaderSomethingWentWrong);
+    final header = Text(R.strings.errorGenericHeaderSomethingWentWrong,
+        style: R.styles.lBoldStyle);
 
     final subHeader = Text(R.strings.errorGenericBodyPleaseTryAgainLater);
 
     final body = Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [header, subHeader],
+        children: [
+          header,
+          SizedBox(height: R.dimen.unit),
+          subHeader,
+        ],
       ),
     );
 
     final closeButton = AppGhostButton.text(
       R.strings.errorClose,
       onPressed: di.get<ErrorNavActions>().onClosePressed,
+      backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
     );
 
     final column = Column(

@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -49,7 +50,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
         CardManagersMixin,
         TooltipStateMixin,
         SubscriptionTrialBannerStateMixin,
-        OverlayStateMixin {
+        OverlayStateMixin,
+        ErrorHandlingMixin {
   late final DiscoveryFeedManager _discoveryFeedManager;
   late final StreamSubscription<BuildContext> _navBarUpdateListener;
   final CardViewController _cardViewController = CardViewController();
@@ -177,8 +179,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
+      BlocConsumer<DiscoveryFeedManager, DiscoveryFeedState>(
         bloc: _discoveryFeedManager,
+        listener: (context, state) {
+          if (state.isInErrorState) showErrorBottomSheet(context);
+        },
         builder: (context, state) {
           // this is for:
           // - any menu bar

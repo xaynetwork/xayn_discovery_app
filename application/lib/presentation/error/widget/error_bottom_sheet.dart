@@ -26,15 +26,20 @@ class _ErrorBottomSheet extends StatelessWidget with BottomSheetBodyMixin {
     final closeButton = AppGhostButton.text(
       R.strings.errorClose,
       onPressed: () => closeBottomSheet(context),
+      backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
     );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        SizedBox(height: R.dimen.unit),
         header,
+        SizedBox(height: R.dimen.unit1_25),
         body,
+        SizedBox(height: R.dimen.unit2_5),
         closeButton,
+        SizedBox(height: R.dimen.unit3_5),
       ],
     );
   }

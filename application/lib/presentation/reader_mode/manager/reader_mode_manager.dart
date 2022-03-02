@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
@@ -50,19 +51,25 @@ class ReaderModeManager extends Cubit<ReaderModeState>
         _postProcessHandler,
         _readerModeSettingsHandler,
       ).foldAll((uri, readerModeSettings, errorReport) {
+        ReaderModeState newState = state;
+
         if (errorReport.isNotEmpty) {
-          //todo: handle error
+          final report = errorReport.of(_postProcessHandler) ??
+              errorReport.of(_readerModeSettingsHandler);
+          newState = state.copyWith(
+            error: ErrorObject(report!.error),
+          );
         }
 
         if (readerModeSettings != null) {
-          return state.copyWith(
+          return newState.copyWith(
             readerModeSettings: readerModeSettings,
             uri: uri,
           );
         }
 
         if (uri != null) {
-          return state.copyWith(uri: uri);
+          return newState.copyWith(uri: uri);
         }
       });
 }
