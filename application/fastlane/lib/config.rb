@@ -63,18 +63,18 @@ module Config
 
     def self.doc_PLATFORM() 'ios, android' end
     PLATFORM = :platform
-    
+
     def self.doc_BUILD_TYPE() 'debug, release' end
     BUILD_TYPE = :build_type
-    
+
     def self.doc_UPDATE_ASSETS() 'true, false' end
     UPDATE_ASSETS = :update_assets
-    
+
     def self.doc_UPLOAD_TO_APPCENTER() 'true, false' end
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
-    
+
     VERSION_NAME = :version_name
-    
+
     def self.doc_WATCH() 'true, false' end
     WATCH = :watch
 
@@ -97,8 +97,8 @@ module Config
   end
 
   # env defaults that will be used when no ENV variables are provided
-  ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "api-gw.xaynet.dev",
-                   "SEARCH_API_URL_PRODUCTION" => "api-gw.xayn.com",
+  ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "https://api-gw.xaynet.dev",
+                   "SEARCH_API_URL_PRODUCTION" => "https://api-gw.xayn.com",
                    "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",

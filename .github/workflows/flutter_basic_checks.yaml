@@ -12,7 +12,7 @@ on:
       - '*'
 
 concurrency:
-  group:  ${{ github.workflow }}-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
@@ -26,6 +26,13 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: gitleaks-action
+        uses: zricethezav/gitleaks-action@master
+        with:
+          config-path: .gitleaks.toml
 
       - name: Install Flutter
         uses: britannio/action-install-flutter@v1
@@ -46,6 +53,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           FASTLANE_SKIP_UPDATE_CHECK: '1'
         working-directory: ./application
         run: |
@@ -105,18 +114,18 @@ jobs:
           name: coverage_report
           path: application/coverage/html
 
-# Disabled for now because we are not testing the UI thus coverage thresholds can not be enforced reliable
-#      - name: Show coverage status
-#        uses: actions/github-script@v3
-#        env:
-#          COVERAGE : ${{ env.coverage }}
-#          COVERAGE_DESCRIPTION : ${{ env.coverage_description }}
-#        with:
-#          script: |
-#            const { COVERAGE, COVERAGE_DESCRIPTION } = process.env
-#            if ( COVERAGE == "failure") {
-#              core.setFailed(COVERAGE_DESCRIPTION)
-#            }
+      # Disabled for now because we are not testing the UI thus coverage thresholds can not be enforced reliable
+      #      - name: Show coverage status
+      #        uses: actions/github-script@v3
+      #        env:
+      #          COVERAGE : ${{ env.coverage }}
+      #          COVERAGE_DESCRIPTION : ${{ env.coverage_description }}
+      #        with:
+      #          script: |
+      #            const { COVERAGE, COVERAGE_DESCRIPTION } = process.env
+      #            if ( COVERAGE == "failure") {
+      #              core.setFailed(COVERAGE_DESCRIPTION)
+      #            }
 
       - uses: actions/upload-artifact@v2
         if: (github.event_name == 'push')

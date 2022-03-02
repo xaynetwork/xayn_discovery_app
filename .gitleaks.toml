@@ -26,5 +26,5 @@ regex = '''(?i)['\"]?amplitude(.*)api(.*)key(.*)[debug|production]?['\"]?(\s*)(=
 
 [[rules]]
 id = "appsflyer-key"
-description = "APPSFLYER-KEY"
+description = "APPSFLYER_KEY"
 regex = '''(?i)['\"]?appsflyer(.*)[dev]?(.*)key(.*)[debug|production]?['\"]?(\s*)(=|>|:=|\|\|:|<=|=>|:)(\s*)['\"]?([a-z0-9]{32})['\"]?'''

@@ -7,12 +7,10 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
-import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/bing_call_endpoint_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -26,8 +24,6 @@ import 'discovery_feed_test.mocks.dart';
 /// requestFeed and requestNextFeedBatch will be covered when we move away from
 /// the temporary test mixins.
 @GenerateMocks([
-  AppDiscoveryEngine,
-  InvokeBingUseCase,
   ConnectivityUseCase,
   FeedRepository,
   AnalyticsService,
@@ -36,15 +32,15 @@ void main() async {
   late AppDiscoveryEngine engine;
   late MockDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
-  late MockInvokeBingUseCase invokeApiEndpointUseCase;
   late MockConnectivityUseCase connectivityUseCase;
   late DiscoveryFeedManager manager;
+  late StreamController<EngineEvent> eventsController;
 
   createFakeDocument() => Document(
         documentId: DocumentId(),
         resource: NewsResource(
           image: Uri.parse('https://displayUrl.test.xayn.com'),
-          sourceUrl: Uri.parse('https://url.test.xayn.com'),
+          sourceDomain: 'example',
           topic: 'topic',
           score: .0,
           rank: -1,
@@ -63,10 +59,10 @@ void main() async {
   final fakeDocumentB = createFakeDocument();
 
   setUp(() async {
+    eventsController = StreamController<EngineEvent>();
     connectivityUseCase = MockConnectivityUseCase();
     mockDiscoveryEngine = MockDiscoveryEngine();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
-    invokeApiEndpointUseCase = MockInvokeBingUseCase();
     feedRepository = MockFeedRepository();
 
     setupWidgetTest();
@@ -79,17 +75,21 @@ void main() async {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(connectivityUseCase.transaction(any)).thenAnswer(
         (invocation) => Stream.value(invocation.positionalArguments.first));
-    when(invokeApiEndpointUseCase.transform(any))
-        .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(invokeApiEndpointUseCase.transaction(any)).thenAnswer((_) =>
-        Stream.value(
-            ApiEndpointResponse.complete([fakeDocumentA, fakeDocumentB])));
+    when(mockDiscoveryEngine.engineEvents)
+        .thenAnswer((_) => eventsController.stream);
+    when(mockDiscoveryEngine.requestFeed()).thenAnswer((_) {
+      final event = FeedRequestSucceeded([fakeDocumentA, fakeDocumentB]);
+
+      eventsController.add(event);
+
+      return Future.value(event);
+    });
 
     await configureTestDependencies();
 
+    di.registerSingleton<DiscoveryEngine>(mockDiscoveryEngine);
     di.registerSingletonAsync<ConnectivityUseCase>(
         () => Future.value(connectivityUseCase));
-    di.registerSingleton<InvokeApiEndpointUseCase>(invokeApiEndpointUseCase);
     di.registerSingleton<FeedRepository>(feedRepository);
     di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
 
@@ -97,6 +97,7 @@ void main() async {
   });
 
   tearDown(() async {
+    await eventsController.close();
     await engine.dispose();
     await manager.close();
   });
@@ -105,8 +106,6 @@ void main() async {
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
-      di.registerSingleton<DiscoveryEngine>(engine);
-
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -138,16 +137,14 @@ void main() async {
     'WHEN closing documents THEN the discovery engine is notified ',
     build: () => manager,
     setUp: () async {
-      when(mockDiscoveryEngine.engineEvents)
-          .thenAnswer((_) => const Stream.empty());
-      when(mockDiscoveryEngine.closeFeedDocuments(any)).thenAnswer(
-          (documentIds) => Future.value(const ClientEventSucceeded()));
+      when(mockDiscoveryEngine.closeFeedDocuments(any))
+          .thenAnswer((documentIds) async {
+        const event = ClientEventSucceeded();
 
-      di.registerSingleton<DiscoveryEngine>(
-          AppDiscoveryEngine.test(mockDiscoveryEngine));
+        eventsController.add(event);
 
-      // wait for requestFeed to complete
-      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+        return event;
+      });
     },
     act: (manager) async {
       manager.closeFeedDocuments({fakeDocumentA.documentId});
@@ -155,6 +152,7 @@ void main() async {
     verify: (manager) {
       verifyInOrder([
         mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.requestFeed(),
         mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
       ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
@@ -165,19 +163,17 @@ void main() async {
       'WHEN observing documents THEN the discovery engine is notified ',
       build: () => manager,
       setUp: () async {
-        when(mockDiscoveryEngine.engineEvents)
-            .thenAnswer((_) => const Stream.empty());
         when(mockDiscoveryEngine.logDocumentTime(
           documentId: anyNamed('documentId'),
           mode: anyNamed('mode'),
           seconds: anyNamed('seconds'),
-        )).thenAnswer((_) => Future.value(const ClientEventSucceeded()));
+        )).thenAnswer((_) async {
+          const event = ClientEventSucceeded();
 
-        di.registerSingleton<DiscoveryEngine>(
-            AppDiscoveryEngine.test(mockDiscoveryEngine));
+          eventsController.add(event);
 
-        // wait for requestFeed to complete
-        await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+          return event;
+        });
       },
       act: (manager) async {
         manager.observeDocument(
@@ -193,6 +189,7 @@ void main() async {
       verify: (manager) {
         verifyInOrder([
           mockDiscoveryEngine.engineEvents,
+          mockDiscoveryEngine.requestFeed(),
           mockDiscoveryEngine.logDocumentTime(
             documentId: fakeDocumentA.documentId,
             mode: DocumentViewMode.story,
@@ -205,16 +202,6 @@ void main() async {
   blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
     'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
     build: () => manager,
-    setUp: () async {
-      when(mockDiscoveryEngine.engineEvents)
-          .thenAnswer((_) => const Stream.empty());
-
-      di.registerSingleton<DiscoveryEngine>(
-          AppDiscoveryEngine.test(mockDiscoveryEngine));
-
-      // wait for requestFeed to complete
-      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
-    },
     act: (manager) async {
       manager.handleNavigateIntoCard();
     },
@@ -230,6 +217,7 @@ void main() async {
     ],
     verify: (manager) {
       verify(mockDiscoveryEngine.engineEvents);
+      verify(mockDiscoveryEngine.requestFeed());
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );

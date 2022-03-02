@@ -7,6 +7,8 @@ void main() {
   final mapper = PaymentFlowErrorToErrorMessageMapper();
 
   final expectedResults = <String>[
+    // The first one for PaymentFlowError.canceled
+    R.strings.paymentFlowError.unknown,
     R.strings.paymentFlowError.unknown,
     R.strings.paymentFlowError.storeNotAvailable,
     R.strings.paymentFlowError.productNotFound,

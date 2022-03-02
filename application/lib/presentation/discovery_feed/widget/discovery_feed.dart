@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -23,6 +24,7 @@ import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dia
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
+import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -184,6 +186,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
           // - the iOS notch
           // - etc...
           final topPadding = MediaQuery.of(context).viewPadding.top;
+
+          final feed = _buildFeedView(state);
+
           return Scaffold(
             /// resizing the scaffold is set to false since the keyboard could be
             /// triggered when creating a collection from the bottom sheet and the
@@ -192,7 +197,9 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             resizeToAvoidBottomInset: false,
             body: Padding(
               padding: EdgeInsets.only(top: topPadding),
-              child: _buildFeedView(state),
+              child: _featureManager.showDiscoveryEngineReportOverlay
+                  ? DiscoveryEngineReportOverlay(child: feed)
+                  : feed,
             ),
           );
         },
@@ -238,14 +245,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
       removeObsoleteCardManagers(state.removedResults);
 
-      if (!state.isComplete && state.results.isEmpty) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-
       if (state.results.isEmpty || cardIndex == -1) {
-        return const Center();
+        return _buildLoadingIndicator();
       }
 
       _cardViewController.index = cardIndex;
@@ -284,6 +285,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       );
     });
   }
+
+  Widget _buildLoadingIndicator() => const Center(
+        ///TODO replace with shimmer
+        child: WidgetTestableProgressIndicator(),
+      );
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
       (int index) {
@@ -356,6 +362,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     required bool isFullScreen,
   }) =>
       (int index) {
+        if (isFullScreen) return null;
+
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
         final managers = managersOf(document);

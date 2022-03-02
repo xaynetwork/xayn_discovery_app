@@ -12,6 +12,7 @@ const FeatureMap kInitialFeatureMap = {
   Feature.featuresScreen:
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.trialBannerNotification: true,
+  Feature.discoveryEngineReportOverlay: false,
 };
 
 @lazySingleton
@@ -39,6 +40,9 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get canShowTrialBannerNotification =>
       isEnabled(Feature.trialBannerNotification);
+
+  bool get showDiscoveryEngineReportOverlay =>
+      isEnabled(Feature.discoveryEngineReportOverlay);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(

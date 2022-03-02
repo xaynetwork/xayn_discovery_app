@@ -38,8 +38,20 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
               readerModeSettingsRepository.settings.backgroundColor,
         ));
 
-  void onBackgroundColorPressed(ReaderModeBackgroundColor backgroundColor) =>
-      _saveBackgroundColorHandler(backgroundColor);
+  void onDarkBackgroundColorPressed(ReaderModeBackgroundDarkColor darkColor) =>
+      _saveBackgroundColorHandler(
+        state.readerModeBackgroundColor.copyWith(
+          dark: darkColor,
+        ),
+      );
+
+  void onLightBackgroundColorPressed(
+          ReaderModeBackgroundLightColor lightColor) =>
+      _saveBackgroundColorHandler(
+        state.readerModeBackgroundColor.copyWith(
+          light: lightColor,
+        ),
+      );
 
   void onFontSizePressed(ReaderModeFontSize fontSize) =>
       _saveFontSizeHandler(fontSize);

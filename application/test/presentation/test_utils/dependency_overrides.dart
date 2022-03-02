@@ -5,9 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
-import 'package:xayn_discovery_app/domain/use_case/discovery_feed/discovery_feed.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
@@ -20,14 +18,6 @@ import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'fakes.dart';
-
-@Injectable(as: InvokeApiEndpointUseCase)
-class TestBingClient extends InvokeApiEndpointUseCase {
-  @override
-  Stream<ApiEndpointResponse> transaction(Uri param) {
-    return Stream.value(ApiEndpointResponse.complete([fakeDocument]));
-  }
-}
 
 @Injectable(as: ConnectivityUriUseCase)
 class AlwaysConnectedConnectivityUseCase extends ConnectivityUriUseCase {
@@ -114,13 +104,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   void tempAddEvent(EngineEvent event) => _onEngineEvent.add(event);
 
   @override
-  DocumentFeedbackChange? resolveChangeDocumentFeedbackParameters(
-      EngineEvent engineEvent) {
-    // TODO: implement resolveChangeDocumentFeedbackParameters
-    return null;
-  }
-
-  @override
   Future<void> dispose() async {}
 
   @override
@@ -134,6 +117,10 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     // TODO: implement init
     throw UnimplementedError();
   }
+
+  @override
+  // TODO: implement engineInputEventsLog
+  Stream<String> get engineInputEventsLog => throw UnimplementedError();
 }
 
 @LazySingleton(as: AnalyticsService)

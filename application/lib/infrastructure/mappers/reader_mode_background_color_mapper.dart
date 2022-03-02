@@ -1,50 +1,63 @@
-import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
-const int _system = 0;
+const int _dark = 0;
 const int _white = 1;
-const int _black = 2;
+const int _trueBlack = 2;
 const int _beige = 3;
 
-@singleton
-class IntToReaderModeBackgroundColorMapper
-    implements Mapper<int?, ReaderModeBackgroundColor> {
-  const IntToReaderModeBackgroundColorMapper();
-
-  @override
-  ReaderModeBackgroundColor map(int? input) {
-    switch (input) {
-      case _white:
-        return ReaderModeBackgroundColor.white;
-      case _beige:
-        return ReaderModeBackgroundColor.beige;
-      case _black:
-        return ReaderModeBackgroundColor.black;
-      case _system:
+extension ReaderModeBackgroundLightColorExtension
+    on ReaderModeBackgroundLightColor {
+  int get toInt {
+    switch (this) {
+      case ReaderModeBackgroundLightColor.beige:
+        return _beige;
+      case ReaderModeBackgroundLightColor.white:
+        return _white;
       default:
-        return ReaderModeBackgroundColor.system;
+        throw DbEntityMapperException(
+            'ReaderModeBackgroundLightColor: error occurred while mapping the object to int');
     }
   }
 }
 
-@singleton
-class ReaderModeBackgroundColorToIntMapper
-    implements Mapper<ReaderModeBackgroundColor, int> {
-  const ReaderModeBackgroundColorToIntMapper();
-
-  @override
-  int map(ReaderModeBackgroundColor input) {
-    switch (input) {
-      case ReaderModeBackgroundColor.white:
-        return _white;
-      case ReaderModeBackgroundColor.beige:
-        return _beige;
-      case ReaderModeBackgroundColor.black:
-        return _black;
-      case ReaderModeBackgroundColor.system:
+extension ReaderModeBackgroundDarkColorExtension
+    on ReaderModeBackgroundDarkColor {
+  int get toInt {
+    switch (this) {
+      case ReaderModeBackgroundDarkColor.trueBlack:
+        return _trueBlack;
+      case ReaderModeBackgroundDarkColor.dark:
+        return _dark;
       default:
-        return _system;
+        throw DbEntityMapperException(
+            'ReaderModeBackgroundDarkColor: error occurred while mapping the object to int');
+    }
+  }
+}
+
+extension IntToReaderModeBackgroundColorExtension on int {
+  ReaderModeBackgroundDarkColor get toReaderModeBackgroundDarkColor {
+    switch (this) {
+      case _trueBlack:
+        return ReaderModeBackgroundDarkColor.trueBlack;
+      case _dark:
+        return ReaderModeBackgroundDarkColor.dark;
+      default:
+        throw DbEntityMapperException(
+            'ReaderModeBackgroundDarkColor: error occurred while mapping int to the object');
+    }
+  }
+
+  ReaderModeBackgroundLightColor get toReaderModeBackgroundLightColor {
+    switch (this) {
+      case _beige:
+        return ReaderModeBackgroundLightColor.beige;
+      case _white:
+        return ReaderModeBackgroundLightColor.white;
+      default:
+        throw DbEntityMapperException(
+            'ReaderModeBackgroundLightColor: error occurred while mapping int to the object');
     }
   }
 }

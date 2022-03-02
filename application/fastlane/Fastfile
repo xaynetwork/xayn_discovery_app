@@ -12,8 +12,8 @@
 
 import("../ios/fastlane/Fastfile")
 import("./lib/properties.rb")
+import("./lib/download_utils.rb")
 require "./lib/git.rb"
-require "./lib/download_utils.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
 require "./lib/config.rb"
@@ -28,9 +28,9 @@ BuildTypes = Config::BuildTypes
 
 # Common checks before running a lane
 before_all do |lane, options|
-  allowedOptions = Options.constants.map {|c|  Options.const_get(c) }
+  allowedOptions = Options.constants.map { |c| Options.const_get(c) }
   options.each do |k, v|
-     UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
+    UI.user_error!("Unknown Option ''#{k}'\nAllowed options:\n#{Options::help()}") unless allowedOptions.include?(k)
   end
 
   setIfNotSet = lambda { |option, alt|
@@ -38,16 +38,16 @@ before_all do |lane, options|
   }
 
   # set default values
-  setIfNotSet.call(Options::CLEAN, true)
+  setIfNotSet.call(Options::CLEAN, is_ci)
   setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
   setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
   setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
   setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
-  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, true)
+  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, is_ci)
   setIfNotSet.call(Options::COVERAGE, false)
   ## downloading the iOS adhoc profile
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, true)
-  setIfNotSet.call(Options::UPDATE_ASSETS, false)
+  setIfNotSet.call(Options::UPDATE_ASSETS, true)
 
   version_name = gitVersionName()
   flavor = options[Options::FLAVOR]
@@ -132,17 +132,12 @@ end
 desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
-  if options[Options::UPDATE_ASSETS]
-    update_assets(options)
-  end
+  maybe_pub_get(options)
+
+  update_assets(options)
+
   mode = options[Options::WATCH] ? "watch" : "build"
-  command = "pub run build_runner #{mode} --delete-conflicting-outputs"
-  begin
-    flutter(command)
-  rescue => ex
-    pub_get(options)
-    flutter(command)
-  end
+  flutter("pub run build_runner #{mode} --delete-conflicting-outputs")
 end
 
 desc "Checks alle the config (env, properties, etc) if they are correctly set"
@@ -157,6 +152,8 @@ lane :check_config_files do |options|
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_DEBUG" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
+    "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -169,6 +166,8 @@ lane :check_config_files do |options|
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_PRODUCTION" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
+    "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
   }, Config::ENV_DEFAULTS)
 
   if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
@@ -192,13 +191,14 @@ end
 desc "Flutter clean"
 lane :clean do |options|
   flutter("clean")
+  clean_folder("assets/ai/")
 end
 
 desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "Available options:\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
-  pub_get(options)
+  maybe_pub_get(options)
   if Dir.glob("../**/env.g.dart").empty?
     build_runner(options)
   end
@@ -259,6 +259,7 @@ lane :update_assets do |options|
   manifestPath["file://"] = ""
   raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
+  UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
   downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
 end
 
@@ -266,6 +267,12 @@ end
 def flutter(args)
   Dir.chdir("..") do
     sh "flutter #{args}"
+  end
+end
+
+def clean_folder(folder)
+  if Dir.exist?("../#{folder}") && !Dir.empty?("../#{folder}")
+    shell("rm -r #{folder}*")
   end
 end
 
@@ -306,3 +313,16 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
   }
 end
 
+def maybe_pub_get(options)
+  lastLock = getLastModifiedForFile("../pubspec.lock")
+  lastPubGet = getLastModifiedForFile("../pubspec.yaml")
+  lastPackages = getLastModifiedForFile("../.packages")
+
+  if lastPubGet == nil
+    UI.user_error! "No pubspec.yaml file found!"
+  end
+
+  if lastLock == nil || lastPackages == nil || lastLock < lastPubGet
+    pub_get(options)
+  end
+end
