@@ -17,6 +17,7 @@ mixin ErrorHandlingMixin {
   void showErrorBottomSheet(BuildContext context) => showAppBottomSheet(
         context,
         builder: (_) => const ErrorBottomSheet(),
+        allowStacking: false,
       );
 
   void handleError(
