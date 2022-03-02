@@ -11,8 +11,7 @@ class ErrorObject {
   ]);
 
   @override
-  String toString() =>
-      errorString ?? errorObject?.toString() ?? super.toString();
+  String toString() => errorString ?? errorObject?.toString() ?? '';
 
   bool get hasError => errorObject != null;
 }
