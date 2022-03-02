@@ -56,7 +56,7 @@ class _MaybeRequestNextBatchWhenEmptyUseCase
 
   @override
   Stream<EngineEvent> transaction(EngineEvent param) async* {
-    if (param is FeedRequestSucceeded && param.items.isEmpty) {
+    if (param is RestoreFeedSucceeded && param.items.isEmpty) {
       yield await maybeRequestNextBatchUseCase.singleOutput(none);
     }
 

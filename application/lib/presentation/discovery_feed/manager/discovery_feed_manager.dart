@@ -22,8 +22,8 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-typedef OnFeedRequestSucceeded = Set<Document> Function(
-    FeedRequestSucceeded event);
+typedef OnRestoreFeedSucceeded = Set<Document> Function(
+    RestoreFeedSucceeded event);
 typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
     NextFeedBatchRequestSucceeded event);
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -206,7 +206,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         final foldEngineEvent = _foldEngineEvent(engineEvent);
 
         final results = foldEngineEvent(
-          feedRequestSucceeded: (event) => {...state.results, ...event.items},
+          restoreFeedSucceeded: (event) => {...state.results, ...event.items},
           nextFeedBatchRequestSucceeded: (event) =>
               {...state.results, ...event.items},
           documentsUpdated: (event) => state.results
@@ -255,22 +255,22 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Set<Document> Function({
-    required OnFeedRequestSucceeded feedRequestSucceeded,
+    required OnRestoreFeedSucceeded restoreFeedSucceeded,
     required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
     required OnDocumentsUpdated documentsUpdated,
     required OnEngineExceptionRaised engineExceptionRaised,
     required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
     required OnNonMatchedEngineEvent orElse,
   }) _foldEngineEvent(EngineEvent? event) => ({
-        required OnFeedRequestSucceeded feedRequestSucceeded,
+        required OnRestoreFeedSucceeded restoreFeedSucceeded,
         required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
         required OnDocumentsUpdated documentsUpdated,
         required OnEngineExceptionRaised engineExceptionRaised,
         required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
         required OnNonMatchedEngineEvent orElse,
       }) {
-        if (event is FeedRequestSucceeded) {
-          return feedRequestSucceeded(event);
+        if (event is RestoreFeedSucceeded) {
+          return restoreFeedSucceeded(event);
         } else if (event is NextFeedBatchRequestSucceeded) {
           return nextFeedBatchRequestSucceeded(event);
         } else if (event is DocumentsUpdated) {

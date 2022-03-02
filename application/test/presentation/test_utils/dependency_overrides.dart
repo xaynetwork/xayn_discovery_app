@@ -86,18 +86,18 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestFeed() {
-    return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
+  Future<EngineEvent> restoreFeed() {
+    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
   }
 
   @override
   Future<EngineEvent> requestNextFeedBatch() {
-    return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
+    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
   }
 
   @override
   Future<EngineEvent> search(String searchTerm) {
-    return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
+    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
   }
 
   @override

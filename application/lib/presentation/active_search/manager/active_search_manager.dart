@@ -41,7 +41,7 @@ class ActiveSearchManager extends Cubit<ActiveSearchState>
           );
         }
 
-        if (engineEvent is FeedRequestSucceeded) {
+        if (engineEvent is RestoreFeedSucceeded) {
           final currentResults = state.results ?? const <Document>[];
 
           return state.copyWith(
