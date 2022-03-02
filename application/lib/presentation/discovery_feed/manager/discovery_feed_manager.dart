@@ -240,6 +240,10 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
         final sets = await _maybeReduceCardCount(results);
 
+        final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
+        final hasExplicitDocumentFeedbackChanged =
+            state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
+
         final nextState = DiscoveryFeedState(
           results: sets.results,
           removedResults: sets.removedResults,
@@ -248,6 +252,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isFullScreen: _isFullScreen,
           cardIndex: _cardIndex!,
           latestExplicitDocumentFeedback: explicitDocumentFeedback,
+          shouldUpdateNavBar:
+              hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
         );
 
         // guard against same-state emission
