@@ -16,7 +16,7 @@ class DocumentViewModeChangedEvent extends AnalyticsEvent {
           _kEventType,
           properties: {
             _kParamViewMode: viewMode.name,
-            _kParamDocument: document,
+            _kParamDocument: document.toJson(),
           },
         );
 }

@@ -10,6 +10,7 @@ class PaymentFlowErrorToErrorMessageMapper
   String map(PaymentFlowError input) {
     switch (input) {
       case PaymentFlowError.unknown:
+      case PaymentFlowError.canceled:
         return R.strings.paymentFlowError.unknown;
       case PaymentFlowError.storeNotAvailable:
         return R.strings.paymentFlowError.storeNotAvailable;

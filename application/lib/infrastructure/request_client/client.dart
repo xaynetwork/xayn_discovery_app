@@ -55,7 +55,9 @@ class Client implements http.Client {
         const <String>[];
     final locations = response.headers['location'] ?? redirects;
 
-    return locations.isNotEmpty ? Uri.parse(locations.last) : originalUri;
+    return locations.isNotEmpty
+        ? originalUri.resolve(locations.last)
+        : originalUri;
   }
 
   Map<String, String> _getCookiesToSet(List<String> rawCookies) =>

@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_f
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const double kSearchCardHeightRatio = 0.64;
@@ -33,7 +34,7 @@ class _ActiveSearchState extends State<ActiveSearch>
             onPressed: _activeSearchManager.onHomeNavPressed,
           ),
           buildNavBarItemSearchActive(
-            onSearchPressed: _activeSearchManager.search,
+            onSearchPressed: (_) => logger.i('not yet supported!'),
             hint: R.strings.activeSearchSearchHint,
             isActive: true,
           ),

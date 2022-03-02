@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dia
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
+import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 abstract class DiscoveryFeedNavActions {
@@ -250,14 +251,8 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
       removeObsoleteCardManagers(state.removedResults);
 
-      if (!state.isComplete && state.results.isEmpty) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-
       if (state.results.isEmpty || cardIndex == -1) {
-        return const Center();
+        return _buildLoadingIndicator();
       }
 
       _cardViewController.index = cardIndex;
@@ -296,6 +291,11 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       );
     });
   }
+
+  Widget _buildLoadingIndicator() => const Center(
+        ///TODO replace with shimmer
+        child: WidgetTestableProgressIndicator(),
+      );
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
       (int index) {

@@ -13,7 +13,7 @@ on:
         required: true
         default: 'ios_internal android_internal'
 concurrency:
-  group:  ${{ github.workflow }}-${{  github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{  github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 env:
@@ -77,6 +77,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -131,6 +133,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta
@@ -158,8 +162,7 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
 
       - name: Fix fastlane permissions
-        run:
-          sudo chmod -R a+w /var/lib/gems/
+        run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
         timeout-minutes: 20
@@ -173,6 +176,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -200,8 +205,7 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
 
       - name: Fix fastlane permissions
-        run:
-          sudo chmod -R a+w /var/lib/gems/
+        run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
         timeout-minutes: 20
@@ -215,6 +219,8 @@ jobs:
           AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
           AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta

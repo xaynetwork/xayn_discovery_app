@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:envify/envify.dart';
 import 'package:flutter/foundation.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -23,6 +25,16 @@ abstract class Env {
   static const String appStoreNumericalId = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.appStoreNumericalId
       : _EnvProd.appStoreNumericalId;
+  static const String aiAssetsUrl = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.aiAssetsUrl
+      : _EnvProd.aiAssetsUrl;
+  static final String revenueCatSdkKey = EnvironmentHelper.kIsInternalFlavor
+      ? (Platform.isIOS
+          ? _EnvDev.revenueCatSdkKeyIos
+          : _EnvDev.revenueCatSdkKeyAndroid)
+      : (Platform.isIOS
+          ? _EnvProd.revenueCatSdkKeyIos
+          : _EnvProd.revenueCatSdkKeyAndroid);
 }
 
 /// Standard Env config.
@@ -35,6 +47,10 @@ abstract class _EnvDev {
   static const String amplitudeApiKey = __EnvDev.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvDev.appsflyerDevKey;
   static const String appStoreNumericalId = __EnvDev.appStoreNumericalId;
+  static const String aiAssetsUrl = __EnvDev.aiAssetsUrl;
+  static const String revenueCatSdkKeyIos = __EnvDev.revenueCatSdkKeyIos;
+  static const String revenueCatSdkKeyAndroid =
+      __EnvDev.revenueCatSdkKeyAndroid;
 }
 
 /// Standard Env config.
@@ -47,4 +63,8 @@ abstract class _EnvProd {
   static const String amplitudeApiKey = __EnvProd.amplitudeApiKey;
   static const String appsflyerDevKey = __EnvProd.appsflyerDevKey;
   static const String appStoreNumericalId = __EnvProd.appStoreNumericalId;
+  static const String aiAssetsUrl = __EnvProd.aiAssetsUrl;
+  static const String revenueCatSdkKeyIos = __EnvProd.revenueCatSdkKeyIos;
+  static const String revenueCatSdkKeyAndroid =
+      __EnvProd.revenueCatSdkKeyAndroid;
 }
