@@ -88,7 +88,7 @@ Available options:
 [bundle exec] fastlane publish
 ```
 
-Build and publish 
+Build and publish to MS AppCenter 
 Available options:
  - clean : [true, false]
  - platform : [ios, android]
