@@ -20,10 +20,14 @@ void main() {
         (_) async => createPurchaserInfo(withActiveSubscription: true),
       );
       // ACT
-      final isActive = await useCase.singleOutput(subscriptionId);
+      final subscriptionStatus = await useCase.singleOutput(subscriptionId);
 
       // ASSERT
-      expect(isActive, isTrue);
+      expect(subscriptionStatus.isSubscriptionActive, isTrue);
+      expect(subscriptionStatus.isTrialActive, isTrue);
+      expect(subscriptionStatus.willRenew, isTrue);
+      expect(subscriptionStatus.expirationDate, isNotNull);
+      expect(subscriptionStatus.trialEndDate, isNotNull);
       verify(paymentService.getPurchaserInfo());
       verifyNoMoreInteractions(paymentService);
     },
@@ -38,10 +42,14 @@ void main() {
       );
 
       // ACT
-      final isActive = await useCase.singleOutput(subscriptionId);
+      final subscriptionStatus = await useCase.singleOutput(subscriptionId);
 
       // ASSERT
-      expect(isActive, isFalse);
+      expect(subscriptionStatus.isSubscriptionActive, isFalse);
+      expect(subscriptionStatus.isTrialActive, isFalse);
+      expect(subscriptionStatus.willRenew, isFalse);
+      expect(subscriptionStatus.expirationDate, isNull);
+      expect(subscriptionStatus.trialEndDate, isNull);
       verify(paymentService.getPurchaserInfo());
       verifyNoMoreInteractions(paymentService);
     },

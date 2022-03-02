@@ -13,18 +13,38 @@ const product = Product(
   'currencyCode',
 );
 
-PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) =>
-    PurchaserInfo(
-      const EntitlementInfos({}, {}),
-      {},
-      withActiveSubscription ? [subscriptionId] : [],
-      [],
-      [],
-      '',
-      '',
-      {},
-      '',
-    );
+PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) {
+  final tomorrow = DateTime.now().add(const Duration(days: 1));
+  final isActive = withActiveSubscription;
+  final willRenew = withActiveSubscription;
+  final entitlementInfo = EntitlementInfo(
+    subscriptionId,
+    isActive,
+    willRenew,
+    '',
+    '',
+    '',
+    true,
+    expirationDate: withActiveSubscription ? tomorrow.toIso8601String() : null,
+  );
+  final entitlements = EntitlementInfos(
+    {subscriptionId: entitlementInfo},
+    {subscriptionId: entitlementInfo},
+  );
+  return PurchaserInfo(
+    entitlements,
+    {},
+    withActiveSubscription ? [subscriptionId] : [],
+    [],
+    [],
+    '',
+    '',
+    {},
+    '',
+    latestExpirationDate:
+        withActiveSubscription ? tomorrow.toIso8601String() : null,
+  );
+}
 
 const purchasableProduct = PurchasableProduct(
   id: subscriptionId,
