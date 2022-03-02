@@ -79,7 +79,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   );
 
                   // TODO: For testing purposes only. Call it from the correct place.
-                  if (_featureManager.canShowTrialBannerNotification) {
+                  if (_featureManager.isPaymentEnabled) {
                     showTrialBanner();
                   }
                 }),

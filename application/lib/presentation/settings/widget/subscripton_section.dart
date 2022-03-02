@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_tri
 class SubscriptionSection extends StatelessWidget {
   final SubscriptionStatus subscriptionStatus;
   final VoidCallback onSubscribePressed;
-  final VoidCallback onShowDetailsPressed;
+  final Function(DateTime) onShowDetailsPressed;
 
   const SubscriptionSection({
     Key? key,
@@ -18,7 +18,7 @@ class SubscriptionSection extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => subscriptionStatus.trialEndDate != null
+  Widget build(BuildContext context) => subscriptionStatus.isTrialActive
       ? SettingsSection.custom(
           title: R.strings.settingsSectionSubscription,
           topPadding: 0,
@@ -37,14 +37,14 @@ class SubscriptionSection extends StatelessWidget {
         action: SettingsTileActionIcon(
           key: Keys.settingsSubscriptionPremium,
           svgIconPath: R.assets.icons.arrowRight,
-          onPressed: subscriptionStatus.isActive
-              ? onShowDetailsPressed
+          onPressed: subscriptionStatus.isSubscriptionActive
+              ? onShowDetailsPressed(subscriptionStatus.expirationDate!)
               : onSubscribePressed,
         ),
       ));
 
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
         trialEndDate: trialEndDate,
-        onPressed: onShowDetailsPressed,
+        onPressed: onSubscribePressed,
       );
 }

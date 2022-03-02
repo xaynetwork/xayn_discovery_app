@@ -53,7 +53,8 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   Widget build(BuildContext context) {
     final bloc = BlocBuilder<PersonalAreaManager, PersonalAreaState>(
       bloc: _manager,
-      builder: (_, state) => _buildScreen(state.trialEndDate),
+      builder: (_, state) =>
+          _buildScreen(state.subscriptionStatus?.trialEndDate),
     );
     return Scaffold(
       resizeToAvoidBottomInset: false,

@@ -37,9 +37,7 @@ extension WidgetTesterCommonActions on WidgetTester {
   }
 
   Future<void> navigateToSearch() async {
-    di
-        .get<FeatureManager>()
-        .overrideFeature(Feature.trialBannerNotification, false);
+    di.get<FeatureManager>().overrideFeature(Feature.payment, false);
     await tap(Keys.navBarItemSearch.finds());
     await pumpAndSettle(updateNavBarDebounceTimeout);
   }

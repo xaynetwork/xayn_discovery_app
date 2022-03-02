@@ -73,7 +73,8 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: child,
         );
     final children = [
-      _buildSubscriptionSection(state.subscriptionStatus),
+      if (state.isPaymentEnabled)
+        _buildSubscriptionSection(state.subscriptionStatus),
       _buildAppThemeSection(state.theme),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
@@ -93,7 +94,8 @@ class _SettingsScreenState extends State<SettingsScreen>
       SubscriptionSection(
         subscriptionStatus: subscriptionStatus,
         onSubscribePressed: _onSubscribePressed,
-        onShowDetailsPressed: _showSubscriptionDetailsBottomSheet,
+        onShowDetailsPressed: (expirationDate) =>
+            _showSubscriptionDetailsBottomSheet(expirationDate),
       );
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
@@ -136,11 +138,12 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
 
-  void _showSubscriptionDetailsBottomSheet() => showAppBottomSheet(
+  void _showSubscriptionDetailsBottomSheet(DateTime trialEndDate) =>
+      showAppBottomSheet(
         context,
         builder: (buildContext) => SubscriptionDetailsBottomSheet(
           subscriptionType: SubscriptionType.paid,
-          endDate: subscriptionEndDate,
+          endDate: trialEndDate,
         ),
       );
 
