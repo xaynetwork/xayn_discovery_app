@@ -104,7 +104,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
           productStatus,
-          subscriptionStatus?.isActive,
+          subscriptionStatus?.isSubscriptionActive,
           paymentFlowError,
         );
 

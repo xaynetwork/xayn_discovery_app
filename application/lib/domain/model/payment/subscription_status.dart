@@ -7,8 +7,11 @@ class SubscriptionStatus {
     required this.expirationDate,
   });
 
-  bool get isActive => expirationDate != null;
+  bool get isSubscriptionActive =>
+      expirationDate?.isAfter(DateTime.now()) ?? false;
 
   // TODO: implement trial functionality
   DateTime? get trialEndDate => expirationDate;
+
+  bool get isTrialActive => trialEndDate?.isAfter(DateTime.now()) ?? false;
 }
