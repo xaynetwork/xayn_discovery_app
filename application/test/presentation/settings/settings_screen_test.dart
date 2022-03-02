@@ -7,6 +7,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -30,7 +31,10 @@ void main() {
         build: '321',
       ),
       isPaymentEnabled: false,
-      trialEndDate: null) as SettingsScreenStateReady;
+      subscriptionStatus: SubscriptionStatus(
+        willRenew: false,
+        expirationDate: null,
+      )) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 
   setUp(() async {
