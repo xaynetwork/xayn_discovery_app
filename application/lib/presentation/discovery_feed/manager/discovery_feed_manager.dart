@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -28,6 +29,8 @@ typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
 typedef OnEngineExceptionRaised = Set<Document> Function(
     EngineExceptionRaised event);
+typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
+    NextFeedBatchRequestFailed event);
 typedef OnNonMatchedEngineEvent = Set<Document> Function();
 
 const int _kMaxCardCount = 10;
@@ -223,6 +226,15 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
             return state.results;
           },
+          nextFeedBatchRequestFailed: (event) {
+            _sendAnalyticsUseCase(NextFeedBatchRequestFailedEvent(
+              event: event,
+            ));
+
+            logger.e('$event');
+
+            return state.results;
+          },
           orElse: () => state.results,
         );
 
@@ -253,12 +265,14 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
     required OnDocumentsUpdated documentsUpdated,
     required OnEngineExceptionRaised engineExceptionRaised,
+    required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
     required OnNonMatchedEngineEvent orElse,
   }) _foldEngineEvent(EngineEvent? event) => ({
         required OnFeedRequestSucceeded feedRequestSucceeded,
         required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
         required OnDocumentsUpdated documentsUpdated,
         required OnEngineExceptionRaised engineExceptionRaised,
+        required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
         required OnNonMatchedEngineEvent orElse,
       }) {
         if (event is FeedRequestSucceeded) {
@@ -269,6 +283,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           return documentsUpdated(event);
         } else if (event is EngineExceptionRaised) {
           return engineExceptionRaised(event);
+        } else if (event is NextFeedBatchRequestFailed) {
+          return nextFeedBatchRequestFailed(event);
         }
 
         return orElse();
