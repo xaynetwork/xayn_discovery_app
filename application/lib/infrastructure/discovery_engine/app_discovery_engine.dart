@@ -137,6 +137,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required DocumentId documentId,
     required UserReaction userReaction,
   }) async {
+    _inputLog.add(
+      '[changeUserReaction]\n<documentId> \n$documentId \n<userReaction> \n$userReaction',
+    );
     final engineEvent = await safeRun(
       () => _engine.changeUserReaction(
         documentId: documentId,
