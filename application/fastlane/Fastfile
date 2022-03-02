@@ -89,6 +89,7 @@ private_lane :flutter_build do |options|
 
   if platform == Platforms::IOS
     defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::PROVISIONING_PROFILE_NAME]
+    defines["USER_CERTIFICATE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::CERTIFICATE_NAME]
   end
   dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
 
@@ -222,7 +223,7 @@ lane :check do |options|
   end
 end
 
-desc "Build and publish \n" \
+desc "Build and publish to MS AppCenter \n" \
      "Available options:\n" \
      "#{Options::help()}"
 lane :publish do |options|
