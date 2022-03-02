@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
@@ -10,6 +11,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_th
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -39,6 +42,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
   final ShareUriUseCase _shareUriUseCase;
+  final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -50,6 +54,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._settingsNavActions,
     this._shareUriUseCase,
     this._featureManager,
+    this._getSubscriptionStatusUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -57,13 +62,16 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   bool _initDone = false;
   late AppTheme _theme;
   late final AppVersion _appVersion;
+  late final SubscriptionStatus _subscriptionStatus;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   void _init() async {
     scheduleComputeState(() async {
       // read values
-      _appVersion = await _getAppVersionUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
+      _appVersion = await _getAppVersionUseCase.singleOutput(none);
+      _subscriptionStatus = await _getSubscriptionStatusUseCase
+          .singleOutput(PurchasableIds.subscription);
 
       // attach listeners
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
@@ -90,7 +98,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
-          trialEndDate: null,
+          subscriptionStatus: _subscriptionStatus,
         );
     return fold(_appThemeHandler).foldAll((appTheme, _) async {
       if (appTheme != null) {

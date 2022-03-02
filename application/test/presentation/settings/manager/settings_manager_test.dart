@@ -8,6 +8,7 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -29,7 +30,10 @@ void main() {
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
-    trialEndDate: null,
+    subscriptionStatus: SubscriptionStatus(
+      willRenew: false,
+      expirationDate: null,
+    ),
   );
 
   late MockFeatureManager featureManager;
@@ -41,6 +45,7 @@ void main() {
   late MockExtractLogUseCase extractLogUseCase;
   late MockUrlOpener urlOpener;
   late MockShareUriUseCase shareUriUseCase;
+  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -52,6 +57,7 @@ void main() {
     extractLogUseCase = MockExtractLogUseCase();
     urlOpener = MockUrlOpener();
     shareUriUseCase = MockShareUriUseCase();
+    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -81,6 +87,7 @@ void main() {
         MockSettingsNavActions(),
         shareUriUseCase,
         featureManager,
+        getSubscriptionStatusUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

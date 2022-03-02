@@ -8,8 +8,9 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
@@ -22,15 +23,16 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     with UseCaseBlocHelper<PaymentScreenState> {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
-  final CheckSubscriptionActiveUseCase _checkSubscriptionActiveUseCase;
+  final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final RequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late final UseCaseValueStream<PurchasableProduct>
       _getPurchasableProductHandler = consume(
     _getPurchasableProductUseCase,
     initialData: none,
   );
-  late final UseCaseValueStream<bool> _checkSubscriptionActiveHandler = consume(
-    _checkSubscriptionActiveUseCase,
+  late final UseCaseValueStream<SubscriptionStatus>
+      _checkSubscriptionActiveHandler = consume(
+    _getSubscriptionStatusUseCase,
     initialData: PurchasableIds.subscription,
   );
   final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
@@ -41,7 +43,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   PaymentScreenManager(
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
-    this._checkSubscriptionActiveUseCase,
+    this._getSubscriptionStatusUseCase,
     this.requestCodeRedemptionSheetUseCase,
     this._errorMessageMapper,
   ) : super(const PaymentScreenState.initial());
@@ -63,7 +65,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
         _getPurchasableProductHandler,
         _purchaseSubscriptionHandler,
         _checkSubscriptionActiveHandler,
-      ).foldAll((product, status, isAvailable, errorReport) {
+      ).foldAll((product, productStatus, subscriptionStatus, errorReport) {
         final errors = <Object>[];
 
         if (errorReport.isNotEmpty) {
@@ -101,8 +103,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
-          status,
-          isAvailable,
+          productStatus,
+          subscriptionStatus?.isActive,
           paymentFlowError,
         );
 

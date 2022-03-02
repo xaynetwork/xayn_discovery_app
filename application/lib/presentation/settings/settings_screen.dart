@@ -71,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: child,
         );
     final children = [
-      _buildSubscriptionSection(state.trialEndDate),
+      _buildSubscriptionSection(state.subscriptionStatus.trialEndDate),
       _buildAppThemeSection(state.theme),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
