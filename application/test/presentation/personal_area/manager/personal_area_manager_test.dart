@@ -12,12 +12,8 @@ void main() {
   late MockPersonalAreaNavActions actions;
   late MockFeatureManager featureManager;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
-  const subscriptionStatus = SubscriptionStatus(
-    willRenew: false,
-    expirationDate: null,
-    trialEndDate: null,
-  );
-  const readyState = PersonalAreaState(
+  final subscriptionStatus = SubscriptionStatus.initial();
+  final readyState = PersonalAreaState(
     subscriptionStatus: subscriptionStatus,
     isPaymentEnabled: false,
   );

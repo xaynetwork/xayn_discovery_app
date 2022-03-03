@@ -1,13 +1,14 @@
-class SubscriptionStatus {
-  final bool willRenew;
-  final DateTime? expirationDate;
-  final DateTime? trialEndDate;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const SubscriptionStatus({
-    required this.willRenew,
-    required this.expirationDate,
-    required this.trialEndDate,
-  });
+part 'subscription_status.freezed.dart';
+
+@freezed
+class SubscriptionStatus with _$SubscriptionStatus {
+  const factory SubscriptionStatus({
+    required bool willRenew,
+    required DateTime? expirationDate,
+    required DateTime? trialEndDate,
+  }) = _SubscriptionStatus;
 
   factory SubscriptionStatus.initial() => const SubscriptionStatus(
         willRenew: false,

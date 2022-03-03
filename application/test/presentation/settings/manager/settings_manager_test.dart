@@ -27,12 +27,8 @@ import 'settings_manager_test.mocks.dart';
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
-  const subscriptionStatus = SubscriptionStatus(
-    willRenew: false,
-    expirationDate: null,
-    trialEndDate: null,
-  );
-  const stateReady = SettingsScreenState.ready(
+  final subscriptionStatus = SubscriptionStatus.initial();
+  final stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
