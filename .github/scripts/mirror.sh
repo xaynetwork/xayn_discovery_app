@@ -67,15 +67,18 @@ cd "$DST_DIR"
 # --ignore-unmatch avoid to fail if the repository is empty
 git rm --ignore-unmatch -r .
 
-rsync -a --exclude example "$WS_ROOT/" "$DST_DIR/"
+rsync --exclude .git -a "$WS_ROOT/" "$DST_DIR/"
 
 cat <<EOT >> .gitignore
+
 .github/
 application/ios/profiles/
 application/android/*.jks
+
 EOT
 
 git add -A
+git clean -f -d -x
 
 git commit -a --message "$SRC_COMMIT_MSG
 https://github.com/xaynetwork/xayn_discovery_app/commit/$SRC_COMMIT
