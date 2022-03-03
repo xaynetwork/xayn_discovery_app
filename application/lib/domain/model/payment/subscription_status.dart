@@ -8,4 +8,10 @@ class SubscriptionStatus {
     required this.expirationDate,
     required this.trialEndDate,
   });
+
+  factory SubscriptionStatus.initial() => const SubscriptionStatus(
+        willRenew: false,
+        expirationDate: null,
+        trialEndDate: null,
+      );
 }

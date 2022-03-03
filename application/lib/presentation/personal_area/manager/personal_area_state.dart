@@ -10,12 +10,12 @@ class PersonalAreaState with _$PersonalAreaState {
   const PersonalAreaState._();
 
   const factory PersonalAreaState({
-    required SubscriptionStatus? subscriptionStatus,
+    required SubscriptionStatus subscriptionStatus,
     required bool isPaymentEnabled,
   }) = _PersonalAreaState;
 
-  factory PersonalAreaState.initial() => const PersonalAreaState(
-        subscriptionStatus: null,
+  factory PersonalAreaState.initial() => PersonalAreaState(
+        subscriptionStatus: SubscriptionStatus.initial(),
         isPaymentEnabled: false,
       );
 }

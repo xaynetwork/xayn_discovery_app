@@ -9,20 +9,21 @@ extension SubscriptionStatusExtension on SubscriptionStatus {
     }
 
     if (trialEndDate?.isAfter(now) ?? false) {
-      if (trialEndDate!.difference(now).inHours < 24) {
-        return SubscriptionType.lastDayOfFreeTrial;
-      }
       return SubscriptionType.freeTrial;
     }
 
     return SubscriptionType.notSubscribed;
   }
 
-  bool get isTrialActive =>
-      subscriptionType == SubscriptionType.freeTrial ||
-      subscriptionType == SubscriptionType.lastDayOfFreeTrial;
-
   bool get isSubscriptionActive =>
       subscriptionType == SubscriptionType.subscribed ||
       subscriptionType == SubscriptionType.subscribedWithPromoCode;
+
+  bool get isFreeTrialActive => subscriptionType == SubscriptionType.freeTrial;
+
+  bool get isLastDayOfFreeTrial {
+    if (subscriptionType != SubscriptionType.freeTrial) return false;
+    final now = DateTime.now();
+    return trialEndDate!.difference(now).inHours < 24;
+  }
 }

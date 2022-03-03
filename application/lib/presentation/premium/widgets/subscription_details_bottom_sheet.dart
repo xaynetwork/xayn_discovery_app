@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
@@ -13,25 +15,21 @@ const String _kTextPlaceholder = '__';
 class SubscriptionDetailsBottomSheet extends BottomSheetBase {
   SubscriptionDetailsBottomSheet({
     Key? key,
-    required SubscriptionType subscriptionType,
-    required DateTime endDate,
+    required SubscriptionStatus subscriptionStatus,
   }) : super(
           key: key,
           body: _SubscriptionDetails(
-            subscriptionType: subscriptionType,
-            endDate: endDate,
+            subscriptionStatus: subscriptionStatus,
           ),
         );
 }
 
 class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
-  final SubscriptionType subscriptionType;
-  final DateTime endDate;
+  final SubscriptionStatus subscriptionStatus;
 
   const _SubscriptionDetails({
     Key? key,
-    required this.subscriptionType,
-    required this.endDate,
+    required this.subscriptionStatus,
   }) : super(key: key);
 
   @override
@@ -68,10 +66,11 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       );
 
   Widget _buildInfo() {
-    final dateString = endDate.shortDateFormat;
-    final infoString = subscriptionType == SubscriptionType.paid
-        ? R.strings.subscriptionRenewsMonthlyText
-        : R.strings.promoCodeValidUntilText;
+    final dateString = subscriptionStatus.expirationDate?.shortDateFormat ?? '';
+    final infoString = subscriptionStatus.subscriptionType ==
+            SubscriptionType.subscribedWithPromoCode
+        ? R.strings.promoCodeValidUntilText
+        : R.strings.subscriptionRenewsMonthlyText;
     final infoStringWithDate = infoString.replaceFirst(
         '%s', '$_kTextPlaceholder$dateString$_kTextPlaceholder');
     return SuperRichText(

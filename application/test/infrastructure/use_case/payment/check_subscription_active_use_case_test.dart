@@ -30,7 +30,7 @@ void main() {
 
       // ASSERT
       expect(subscriptionStatus.isSubscriptionActive, isTrue);
-      expect(subscriptionStatus.isTrialActive, isTrue);
+      expect(subscriptionStatus.isFreeTrialActive, isTrue);
       expect(subscriptionStatus.willRenew, isTrue);
       expect(subscriptionStatus.expirationDate, isNotNull);
       expect(subscriptionStatus.trialEndDate, isNotNull);
@@ -52,7 +52,7 @@ void main() {
 
       // ASSERT
       expect(subscriptionStatus.isSubscriptionActive, isFalse);
-      expect(subscriptionStatus.isTrialActive, isFalse);
+      expect(subscriptionStatus.isFreeTrialActive, isFalse);
       expect(subscriptionStatus.willRenew, isFalse);
       expect(subscriptionStatus.expirationDate, isNull);
       expect(subscriptionStatus.trialEndDate, isNull);
