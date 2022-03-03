@@ -1,0 +1,37 @@
+name: Mirror Repo
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mirror-repo:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch')
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@3c9b0fc6f2d223b8450b02a0445f526350fc73e0 # v2.3.1
+        with:
+          key: ${{ secrets.SSH }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Checkout repository
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.4.0
+
+      - name: Configure Git
+        shell: bash
+        run: |
+          git config --global user.email "ci@xayn.com"
+          git config --global user.name "ci"
+
+      - name: Copy Repository
+        shell: bash
+        run: .github/scripts/mirror.sh --do-push
