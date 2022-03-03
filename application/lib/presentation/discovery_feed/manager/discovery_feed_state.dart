@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
-
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -21,6 +20,7 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     @Default(false) bool isFullScreen,
     required bool isInErrorState,
     ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
+    @Default(false) bool shouldUpdateNavBar,
   }) = _DiscoveryFeedState;
 
   factory DiscoveryFeedState.initial() => const DiscoveryFeedState(
