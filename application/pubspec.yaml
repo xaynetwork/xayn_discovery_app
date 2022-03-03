@@ -81,7 +81,7 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
-      ref: 3dde192060559059adc1f79b2bcb261d36bbe6ae
+      ref: 468876e5a1579c7d8944f7d25352efcbea0adce0
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -135,7 +135,7 @@ flutter:
     # In order to determine the real folder structure run:
     # fastlane clean && fastlane build_runner  (which will run the update_assets lane and download the assets)
     - assets/ai/kpe_v0001/
-    - assets/ai/smbert_v0000/
+    - assets/ai/smbert_v0001/
 
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
