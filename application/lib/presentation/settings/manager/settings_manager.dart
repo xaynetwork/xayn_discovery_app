@@ -20,8 +20,6 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
 abstract class SettingsNavActions {
-  void onPaymentNavPressed();
-
   void onBackNavPressed();
 }
 
@@ -109,7 +107,4 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   @override
   void onBackNavPressed() => _settingsNavActions.onBackNavPressed();
-
-  @override
-  void onPaymentNavPressed() => _settingsNavActions.onPaymentNavPressed();
 }

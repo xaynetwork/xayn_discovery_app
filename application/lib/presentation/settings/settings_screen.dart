@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
@@ -112,8 +111,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         onImprintPressed: () => _manager.openExternalUrl(Urls.imprint),
         onPrivacyPressed: () => _manager.openExternalUrl(Urls.privacyPolicy),
         onTermsPressed: () => _manager.openExternalUrl(Urls.termsAndConditions),
-        onPaymentPressed:
-            isPaymentEnabled ? _manager.onPaymentNavPressed : null,
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
