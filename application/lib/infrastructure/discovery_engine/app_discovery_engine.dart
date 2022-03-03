@@ -178,9 +178,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestFeed() {
-    _inputLog.add('[requestFeed]');
-    return safeRun(() => _engine.requestFeed());
+  Future<EngineEvent> restoreFeed() {
+    _inputLog.add('[restoreFeed]');
+    return safeRun(() => _engine.restoreFeed());
   }
 
   @override

@@ -77,8 +77,8 @@ void main() async {
         (invocation) => Stream.value(invocation.positionalArguments.first));
     when(mockDiscoveryEngine.engineEvents)
         .thenAnswer((_) => eventsController.stream);
-    when(mockDiscoveryEngine.requestFeed()).thenAnswer((_) {
-      final event = FeedRequestSucceeded([fakeDocumentA, fakeDocumentB]);
+    when(mockDiscoveryEngine.restoreFeed()).thenAnswer((_) {
+      final event = RestoreFeedSucceeded([fakeDocumentA, fakeDocumentB]);
 
       eventsController.add(event);
 
@@ -152,7 +152,7 @@ void main() async {
     verify: (manager) {
       verifyInOrder([
         mockDiscoveryEngine.engineEvents,
-        mockDiscoveryEngine.requestFeed(),
+        mockDiscoveryEngine.restoreFeed(),
         mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
       ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
@@ -189,7 +189,7 @@ void main() async {
       verify: (manager) {
         verifyInOrder([
           mockDiscoveryEngine.engineEvents,
-          mockDiscoveryEngine.requestFeed(),
+          mockDiscoveryEngine.restoreFeed(),
           mockDiscoveryEngine.logDocumentTime(
             documentId: fakeDocumentA.documentId,
             mode: DocumentViewMode.story,
@@ -212,11 +212,12 @@ void main() async {
         isComplete: true,
         isFullScreen: true,
         isInErrorState: false,
+        shouldUpdateNavBar: true,
       ),
     ],
     verify: (manager) {
       verify(mockDiscoveryEngine.engineEvents);
-      verify(mockDiscoveryEngine.requestFeed());
+      verify(mockDiscoveryEngine.restoreFeed());
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );

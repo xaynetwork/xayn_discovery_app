@@ -217,8 +217,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
     _discoveryFeedManager = di.get();
 
     _navBarUpdateListener = _discoveryFeedManager.stream
-        .map((state) => state.isFullScreen)
-        .distinct()
+        .where((state) => state.shouldUpdateNavBar)
         .map((_) => context)
         .listen(NavBarContainer.updateNavBar);
 
