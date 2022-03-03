@@ -34,6 +34,7 @@ void main() {
       subscriptionStatus: SubscriptionStatus(
         willRenew: false,
         expirationDate: null,
+        trialEndDate: null,
       )) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 

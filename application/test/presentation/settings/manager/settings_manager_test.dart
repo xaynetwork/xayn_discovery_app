@@ -30,6 +30,7 @@ void main() {
   const subscriptionStatus = SubscriptionStatus(
     willRenew: false,
     expirationDate: null,
+    trialEndDate: null,
   );
   const stateReady = SettingsScreenState.ready(
     theme: appTheme,

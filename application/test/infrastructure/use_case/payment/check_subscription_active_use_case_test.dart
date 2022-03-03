@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 
 import '../../../presentation/test_utils/utils.dart';
@@ -7,10 +8,15 @@ import 'payment_test_data.dart';
 
 void main() {
   late MockPaymentService paymentService;
+  late MockAppStatusRepository repository;
   late GetSubscriptionStatusUseCase useCase;
   setUp(() {
     paymentService = MockPaymentService();
-    useCase = GetSubscriptionStatusUseCase(paymentService);
+    repository = MockAppStatusRepository();
+    useCase = GetSubscriptionStatusUseCase(
+      paymentService,
+      repository,
+    );
   });
 
   test(

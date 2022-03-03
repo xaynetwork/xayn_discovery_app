@@ -15,6 +15,7 @@ void main() {
   const subscriptionStatus = SubscriptionStatus(
     willRenew: false,
     expirationDate: null,
+    trialEndDate: null,
   );
   const readyState = PersonalAreaState(
     subscriptionStatus: subscriptionStatus,

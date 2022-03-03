@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
@@ -105,6 +106,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SaveReaderModeFontSizeUseCase,
   SaveReaderModeBackgroundColorUseCase,
   RequestCodeRedemptionSheetUseCase,
+  AppStatusRepository,
 ])
 class Mocks {
   Mocks._();

@@ -1,4 +1,7 @@
 enum SubscriptionType {
-  paid,
-  promoCode,
+  freeTrial,
+  lastDayOfFreeTrial,
+  subscribed,
+  subscribedWithPromoCode, // TODO: implement promo codes
+  notSubscribed,
 }
