@@ -19,9 +19,7 @@ class GetSubscriptionStatusUseCase
     this._repository,
   );
 
-  /// yield [true] if subscription for [PurchasableProduct] with id[param]
-  /// is active
-  /// otherwise yield [false]
+  /// yield [SubscriptionStatus] for [PurchasableProduct] with id[param]
   @override
   Stream<SubscriptionStatus> transaction(PurchasableProductId param) async* {
     final purchaserInfo = await _paymentService.getPurchaserInfo();

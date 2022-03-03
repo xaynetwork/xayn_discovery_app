@@ -17,7 +17,7 @@ extension SubscriptionStatusExtension on SubscriptionStatus {
 
   bool get isSubscriptionActive =>
       subscriptionType == SubscriptionType.subscribed ||
-      subscriptionType == SubscriptionType.subscribedWithPromoCode;
+      subscriptionType == SubscriptionType.promoCode;
 
   bool get isFreeTrialActive => subscriptionType == SubscriptionType.freeTrial;
 

@@ -67,10 +67,10 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
 
   Widget _buildInfo() {
     final dateString = subscriptionStatus.expirationDate?.shortDateFormat ?? '';
-    final infoString = subscriptionStatus.subscriptionType ==
-            SubscriptionType.subscribedWithPromoCode
-        ? R.strings.promoCodeValidUntilText
-        : R.strings.subscriptionRenewsMonthlyText;
+    final infoString =
+        subscriptionStatus.subscriptionType == SubscriptionType.promoCode
+            ? R.strings.promoCodeValidUntilText
+            : R.strings.subscriptionRenewsMonthlyText;
     final infoStringWithDate = infoString.replaceFirst(
         '%s', '$_kTextPlaceholder$dateString$_kTextPlaceholder');
     return SuperRichText(
