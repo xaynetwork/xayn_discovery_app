@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
+      - TB-3418_mirror_repo
     tags:
       - '*'
   workflow_dispatch:
-    description: 'Manually mirror the repo to xayn_discovery_app_public'
 
 permissions:
   contents: read
