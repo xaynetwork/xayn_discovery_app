@@ -8,7 +8,7 @@ import 'feature_manager_state.dart';
 
 const FeatureMap kInitialFeatureMap = {
   Feature.onBoarding: false,
-  Feature.readerModeSettings: false,
+  Feature.readerModeSettings: true,
   Feature.featuresScreen:
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.discoveryEngineReportOverlay: false,

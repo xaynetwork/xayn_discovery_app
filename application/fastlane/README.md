@@ -88,7 +88,7 @@ Available options:
 [bundle exec] fastlane publish
 ```
 
-Build and publish to MS AppCenter 
+Build and publish 
 Available options:
  - clean : [true, false]
  - platform : [ios, android]
@@ -99,9 +99,9 @@ Available options:
  - coverage : [true, false]
  - download_profile : [true, false]
  - update_assets : [true, false]
+ - watch : [true, false]
  - upload_to_appcenter : [true, false]
  - version_name 
- - watch : [true, false]
  - keyFile 
  - keyId 
  - issuerId 
