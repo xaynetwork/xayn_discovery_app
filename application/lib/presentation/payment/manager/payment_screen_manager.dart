@@ -33,11 +33,6 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _getPurchasableProductUseCase,
     initialData: none,
   );
-  // late final UseCaseValueStream<SubscriptionStatus>
-  //     _getSubscriptionStatusHandler = consume(
-  //   _getSubscriptionStatusUseCase,
-  //   initialData: PurchasableIds.subscription,
-  // );
   late final UseCaseValueStream<SubscriptionStatus>
       _listenSubscriptionStatusHandler = consume(
     _listenSubscriptionStatusUseCase,
