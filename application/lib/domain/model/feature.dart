@@ -3,7 +3,6 @@ enum Feature {
   featuresScreen,
   payment,
   readerModeSettings,
-  trialBannerNotification,
   discoveryEngineReportOverlay,
 }
 

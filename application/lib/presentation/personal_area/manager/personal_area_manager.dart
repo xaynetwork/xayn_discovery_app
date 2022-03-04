@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 abstract class PersonalAreaNavActions {
   void onHomeNavPressed();
@@ -22,7 +21,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
 
   PersonalAreaManager(
     this._navActions,
-  ) : super(PersonalAreaState(trialEndDate: subscriptionEndDate));
+  ) : super(PersonalAreaState.initial());
 
   @override
   void onHomeNavPressed() => _navActions.onHomeNavPressed();
