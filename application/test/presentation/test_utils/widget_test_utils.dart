@@ -37,9 +37,6 @@ extension WidgetTesterCommonActions on WidgetTester {
   }
 
   Future<void> navigateToSearch() async {
-    di
-        .get<FeatureManager>()
-        .overrideFeature(Feature.trialBannerNotification, false);
     await tap(Keys.navBarItemSearch.finds());
     await pumpAndSettle(updateNavBarDebounceTimeout);
   }
@@ -60,7 +57,9 @@ extension WidgetTesterCommonActions on WidgetTester {
   }
 
   Future<void> navigateToSettingsScreen() async {
-    await tap(Keys.personalAreaCardSettings.finds());
+    final settingsCard = Keys.personalAreaCardSettings.finds();
+    await scrollUntilVisible(settingsCard, 10);
+    await tap(settingsCard);
     await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
