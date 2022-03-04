@@ -75,8 +75,10 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
       // attach listeners
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
-      _subscriptionStatusHandler =
-          consume(_listenSubscriptionStatusUseCase, initialData: none);
+      _subscriptionStatusHandler = consume(
+        _listenSubscriptionStatusUseCase,
+        initialData: PurchasableIds.subscription,
+      );
 
       _initDone = true;
     });

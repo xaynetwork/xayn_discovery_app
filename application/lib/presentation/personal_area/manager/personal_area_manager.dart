@@ -49,8 +49,10 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
           .singleOutput(PurchasableIds.subscription);
 
       // attach listeners
-      _subscriptionStatusHandler =
-          consume(_listenSubscriptionStatusUseCase, initialData: none);
+      _subscriptionStatusHandler = consume(
+        _listenSubscriptionStatusUseCase,
+        initialData: PurchasableIds.subscription,
+      );
 
       _initDone = true;
     });
