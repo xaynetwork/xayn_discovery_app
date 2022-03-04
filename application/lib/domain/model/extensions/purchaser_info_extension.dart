@@ -1,14 +1,14 @@
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/presentation/constants/entitlement_ids.dart';
 
 extension PurchaserInfoExtension on PurchaserInfo {
-  bool getWillRenew(PurchasableProductId param) {
-    final entitlement = entitlements.active[param];
+  bool get willRenew {
+    final entitlement = entitlements.active[EntitlementIds.unlimited];
     return entitlement?.willRenew ?? false;
   }
 
-  DateTime? getExpirationDate(PurchasableProductId param) {
-    final entitlement = entitlements.active[param];
+  DateTime? get expirationDate {
+    final entitlement = entitlements.active[EntitlementIds.unlimited];
     final expirationDateString = entitlement?.expirationDate;
     return expirationDateString != null
         ? DateTime.parse(expirationDateString)

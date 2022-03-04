@@ -40,7 +40,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
 
   bool _initDone = false;
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler;
-  late final SubscriptionStatus _subscriptionStatus;
+  late SubscriptionStatus _subscriptionStatus;
 
   void _init() async {
     scheduleComputeState(() async {

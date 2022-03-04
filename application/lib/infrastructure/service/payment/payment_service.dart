@@ -30,8 +30,10 @@ class PaymentService {
   void _init() async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
-    Purchases.addPurchaserInfoUpdateListener(
-        (purchaserInfo) => _controller.sink.add(purchaserInfo));
+    Purchases.logIn('testUser');
+    Purchases.addPurchaserInfoUpdateListener((purchaserInfo) {
+      _controller.sink.add(purchaserInfo);
+    });
   }
 
   Future<List<Product>> getProducts(

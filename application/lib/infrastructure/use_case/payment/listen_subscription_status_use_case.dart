@@ -20,8 +20,8 @@ class ListenSubscriptionStatusUseCase
   @override
   Stream<SubscriptionStatus> transaction(PurchasableProductId param) {
     return _paymentService.purchaserInfoStream.map((purchaserInfo) {
-      final willRenew = purchaserInfo.getWillRenew(param);
-      final expirationDate = purchaserInfo.getExpirationDate(param);
+      final willRenew = purchaserInfo.willRenew;
+      final expirationDate = purchaserInfo.expirationDate;
       return SubscriptionStatus(
         willRenew: willRenew,
         expirationDate: expirationDate,

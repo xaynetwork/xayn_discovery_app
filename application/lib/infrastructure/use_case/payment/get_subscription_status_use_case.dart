@@ -23,8 +23,8 @@ class GetSubscriptionStatusUseCase
   @override
   Stream<SubscriptionStatus> transaction(PurchasableProductId param) async* {
     final purchaserInfo = await _paymentService.getPurchaserInfo();
-    final willRenew = purchaserInfo.getWillRenew(param);
-    final expirationDate = purchaserInfo.getExpirationDate(param);
+    final willRenew = purchaserInfo.willRenew;
+    final expirationDate = purchaserInfo.expirationDate;
     yield SubscriptionStatus(
       willRenew: willRenew,
       expirationDate: expirationDate,

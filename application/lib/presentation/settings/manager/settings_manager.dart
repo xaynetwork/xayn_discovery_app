@@ -61,7 +61,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   bool _initDone = false;
   late AppTheme _theme;
   late final AppVersion _appVersion;
-  late final SubscriptionStatus _subscriptionStatus;
+  late SubscriptionStatus _subscriptionStatus;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler;
 
