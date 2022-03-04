@@ -12,6 +12,7 @@ void main() {
   late MockPersonalAreaNavActions actions;
   late MockFeatureManager featureManager;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   final subscriptionStatus = SubscriptionStatus.initial();
   final readyState = PersonalAreaState(
     subscriptionStatus: subscriptionStatus,
@@ -22,6 +23,7 @@ void main() {
     actions = MockPersonalAreaNavActions();
     featureManager = MockFeatureManager();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) => Future.value(subscriptionStatus));
@@ -32,6 +34,7 @@ void main() {
         actions,
         featureManager,
         getSubscriptionStatusUseCase,
+        listenSubscriptionStatusUseCase,
       );
 
   blocTest<PersonalAreaManager, PersonalAreaState>(

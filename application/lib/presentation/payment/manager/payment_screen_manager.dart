@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
@@ -25,15 +26,21 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
+  final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
   final RequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late final UseCaseValueStream<PurchasableProduct>
       _getPurchasableProductHandler = consume(
     _getPurchasableProductUseCase,
     initialData: none,
   );
+  // late final UseCaseValueStream<SubscriptionStatus>
+  //     _getSubscriptionStatusHandler = consume(
+  //   _getSubscriptionStatusUseCase,
+  //   initialData: PurchasableIds.subscription,
+  // );
   late final UseCaseValueStream<SubscriptionStatus>
-      _checkSubscriptionActiveHandler = consume(
-    _getSubscriptionStatusUseCase,
+      _listenSubscriptionStatusHandler = consume(
+    _listenSubscriptionStatusUseCase,
     initialData: PurchasableIds.subscription,
   );
   final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
@@ -45,9 +52,21 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
     this._getSubscriptionStatusUseCase,
+    this._listenSubscriptionStatusUseCase,
     this.requestCodeRedemptionSheetUseCase,
     this._errorMessageMapper,
-  ) : super(const PaymentScreenState.initial());
+  ) : super(const PaymentScreenState.initial()) {
+    _init();
+  }
+
+  SubscriptionStatus? _subscriptionStatus;
+
+  void _init() {
+    scheduleComputeState(() async {
+      _subscriptionStatus = await _getSubscriptionStatusUseCase
+          .singleOutput(PurchasableIds.subscription);
+    });
+  }
 
   void subscribe() {
     final product = _subscriptionProduct;
@@ -65,7 +84,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   FutureOr<PaymentScreenState?> computeState() async => fold3(
         _getPurchasableProductHandler,
         _purchaseSubscriptionHandler,
-        _checkSubscriptionActiveHandler,
+        _listenSubscriptionStatusHandler,
       ).foldAll((product, productStatus, subscriptionStatus, errorReport) {
         final errors = <Object>[];
 
@@ -86,13 +105,17 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
             );
           }
 
-          if (errorReport.exists(_checkSubscriptionActiveHandler)) {
-            errors.add(errorReport.of(_checkSubscriptionActiveHandler)!.error);
+          if (errorReport.exists(_listenSubscriptionStatusHandler)) {
+            errors.add(errorReport.of(_listenSubscriptionStatusHandler)!.error);
             _logError(
-              'checkSubscriptionActive error',
-              errorReport.of(_checkSubscriptionActiveHandler)!.error,
+              'listenSubscriptionStatus error',
+              errorReport.of(_listenSubscriptionStatusHandler)!.error,
             );
           }
+        }
+
+        if (subscriptionStatus != null) {
+          _subscriptionStatus = subscriptionStatus;
         }
 
         final paymentFlowError =
@@ -105,7 +128,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
           productStatus,
-          subscriptionStatus?.isSubscriptionActive,
+          _subscriptionStatus?.isSubscriptionActive,
           paymentFlowError,
         );
 

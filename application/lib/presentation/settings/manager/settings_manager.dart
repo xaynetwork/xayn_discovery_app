@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
@@ -39,6 +40,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final SettingsNavActions _settingsNavActions;
   final ShareUriUseCase _shareUriUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
+  final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -51,6 +53,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._shareUriUseCase,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
+    this._listenSubscriptionStatusUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -60,6 +63,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late final AppVersion _appVersion;
   late final SubscriptionStatus _subscriptionStatus;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
+  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler;
 
   void _init() async {
     scheduleComputeState(() async {
@@ -71,6 +75,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
       // attach listeners
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
+      _subscriptionStatusHandler =
+          consume(_listenSubscriptionStatusUseCase, initialData: none);
 
       _initDone = true;
     });
@@ -96,9 +102,14 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           isPaymentEnabled: _featureManager.isPaymentEnabled,
           subscriptionStatus: _subscriptionStatus,
         );
-    return fold(_appThemeHandler).foldAll((appTheme, _) async {
+    return fold2(_appThemeHandler, _subscriptionStatusHandler)
+        .foldAll((appTheme, subscriptionStatus, _) async {
       if (appTheme != null) {
         _theme = appTheme;
+      }
+
+      if (subscriptionStatus != null) {
+        _subscriptionStatus = subscriptionStatus;
       }
 
       return buildReady();

@@ -45,6 +45,7 @@ void main() {
   late MockUrlOpener urlOpener;
   late MockShareUriUseCase shareUriUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -57,6 +58,7 @@ void main() {
     urlOpener = MockUrlOpener();
     shareUriUseCase = MockShareUriUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -90,6 +92,7 @@ void main() {
         shareUriUseCase,
         featureManager,
         getSubscriptionStatusUseCase,
+        listenSubscriptionStatusUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
