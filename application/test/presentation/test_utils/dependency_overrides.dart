@@ -130,6 +130,12 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     // TODO: implement maybeUpdateMarkets
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool> willUpdateMarkets() {
+    // TODO: implement willUpdateMarkets
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)
