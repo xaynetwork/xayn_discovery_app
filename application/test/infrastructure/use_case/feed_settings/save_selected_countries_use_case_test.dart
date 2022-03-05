@@ -40,7 +40,7 @@ void main() {
   setUp(() {
     repository = MockFeedSettingsRepository();
     discoveryEngine = MockDiscoveryEngine();
-    useCase = SaveSelectedCountriesUseCase(repository, discoveryEngine);
+    useCase = SaveSelectedCountriesUseCase(repository);
 
     when(repository.settings).thenReturn(FeedSettings.initial());
     when(discoveryEngine.changeConfiguration(

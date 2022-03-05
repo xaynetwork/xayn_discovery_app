@@ -124,6 +124,12 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   // TODO: implement engineInputEventsLog
   Stream<String> get engineInputEventsLog => throw UnimplementedError();
+
+  @override
+  Future<EngineEvent?> maybeUpdateMarkets() {
+    // TODO: implement maybeUpdateMarkets
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)
