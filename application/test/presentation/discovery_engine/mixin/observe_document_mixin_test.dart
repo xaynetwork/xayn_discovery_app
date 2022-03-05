@@ -96,4 +96,7 @@ void main() {
 class _TestBloc extends Cubit<bool>
     with UseCaseBlocHelper<bool>, ObserveDocumentMixin<bool> {
   _TestBloc() : super(false);
+
+  @override
+  bool isDocumentCurrentlyDisplayed(Document document) => true;
 }

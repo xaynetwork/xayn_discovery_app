@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
@@ -33,10 +34,12 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
   }) {
     _useCaseSink ??= _getUseCaseSink(onObservation);
 
-    _useCaseSink!(DiscoveryCardObservation(
-      document: document,
-      viewType: mode,
-    ));
+    _useCaseSink!(
+      DiscoveryCardObservation(
+        document: document,
+        viewType: mode,
+      ),
+    );
   }
 
   UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink(
@@ -59,7 +62,10 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
           )
           .pairwise() // combine last card and current card
           .followedBy(discoveryCardMeasuredObservationUseCase)
-          .where((it) => it.document != null && it.viewType != null)
+          .where((it) =>
+              it.document != null &&
+              it.viewType != null &&
+              isDocumentCurrentlyDisplayed(it.document!))
           .doOnData(
             _onObservation(
               sendAnalyticsUseCase: sendAnalyticsUseCase,
@@ -75,6 +81,10 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
           .followedBy(useCase),
     )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
+
+  /// Sync-checks if the document is not yet closed by the feed
+  @mustCallSuper
+  bool isDocumentCurrentlyDisplayed(Document document);
 
   void Function(DiscoveryCardMeasuredObservation) _onObservation({
     required SendAnalyticsUseCase sendAnalyticsUseCase,
