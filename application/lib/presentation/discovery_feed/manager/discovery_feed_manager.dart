@@ -190,12 +190,28 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
   void handleCheckMarkets() => checkMarkets();
 
+  /// Configuration will change, after this method completes.
   @override
-  void didChangeMarkets() => scheduleComputeState(() {
+  void willChangeMarkets() => scheduleComputeState(() {
         _cardIndex = 0;
-        _observedDocument = null;
         _didChangeMarkets = true;
+
+        // clears the current pending observation, if any...
+        observeDocument();
+        // clear the inner-stored current observation...
+        _observedDocument = null;
+        // closes the current feed...
+        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
       });
+
+  /// Configuration was updated, we now ask for fresh documents, under the
+  /// new market settings.
+  @override
+  void didChangeMarkets() => requestNextFeedBatch();
+
+  @override
+  bool isDocumentCurrentlyDisplayed(Document document) =>
+      state.results.map((it) => it.documentId).contains(document.documentId);
 
   @override
   Future<DiscoveryFeedState?> computeState() async => fold3(
@@ -218,8 +234,6 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           _didChangeMarkets = false;
 
           results = <Document>{};
-
-          requestNextFeedBatch();
         } else {
           final foldEngineEvent = _foldEngineEvent(engineEvent);
 
@@ -236,18 +250,22 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
                 )
                 .toSet(),
             engineExceptionRaised: (event) {
-              _sendAnalyticsUseCase(EngineExceptionRaisedEvent(
-                event: event,
-              ));
+              _sendAnalyticsUseCase(
+                EngineExceptionRaisedEvent(
+                  event: event,
+                ),
+              );
 
               logger.e('$event');
 
               return state.results;
             },
             nextFeedBatchRequestFailed: (event) {
-              _sendAnalyticsUseCase(NextFeedBatchRequestFailedEvent(
-                event: event,
-              ));
+              _sendAnalyticsUseCase(
+                NextFeedBatchRequestFailedEvent(
+                  event: event,
+                ),
+              );
 
               logger.e('$event');
 

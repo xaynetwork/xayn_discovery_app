@@ -19,9 +19,30 @@ mixin CheckMarketsMixin<T> on UseCaseBlocHelper<T> {
     _useCase ??= di.get<CheckMarketsUseCase>();
     final result = await _useCase!(none);
 
-    if (result.isNotEmpty) didChangeMarkets();
+    for (final event in result) {
+      event.fold(
+          defaultOnError: (e, s) => onError(e, s ?? StackTrace.current),
+          onValue: (it) {
+            switch (it) {
+              case MarketChange.willChange:
+                willChangeMarkets();
+                break;
+              case MarketChange.didChange:
+                didChangeMarkets();
+                break;
+              default:
+                break;
+            }
+          });
+    }
   }
 
+  /// Runs right before the Configuration is updated,
+  /// Since this is expensive, we can run an action just before this triggers
+  @mustCallSuper
+  void willChangeMarkets();
+
+  /// Runs right after the Configuration was updated.
   @mustCallSuper
   void didChangeMarkets();
 }

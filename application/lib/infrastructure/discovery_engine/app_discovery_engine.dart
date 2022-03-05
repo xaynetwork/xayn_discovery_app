@@ -100,11 +100,17 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     });
   }
 
+  Future<bool> willUpdateMarkets() async {
+    const equality = SetEquality();
+    final markets = await _getLocalMarkets();
+
+    return !equality.equals(_localMarkets, markets);
+  }
+
   Future<EngineEvent?> maybeUpdateMarkets() async {
     final markets = await _getLocalMarkets();
-    const equality = SetEquality();
 
-    if (!equality.equals(_localMarkets, markets)) {
+    if (await willUpdateMarkets()) {
       _localMarkets = markets;
 
       return await changeConfiguration(feedMarkets: markets);
