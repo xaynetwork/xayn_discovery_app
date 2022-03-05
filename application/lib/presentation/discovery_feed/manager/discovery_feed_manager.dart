@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -52,7 +53,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         RequestFeedMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>,
-        ChangeUserReactionMixin<DiscoveryFeedState>
+        ChangeUserReactionMixin<DiscoveryFeedState>,
+        CheckMarketsMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._discoveryFeedNavActions,
@@ -92,6 +94,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
+  bool _didChangeMarkets = false;
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
@@ -182,11 +185,17 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     );
   }
 
-  /// Triggers the fake discovery engine to load more results, using a random
-  /// keyword which is derived from the current result set.
-  void handleLoadMore() async {
-    requestNextFeedBatch();
-  }
+  /// Triggers the discovery engine to load more results.
+  void handleLoadMore() => requestNextFeedBatch();
+
+  void handleCheckMarkets() => checkMarkets();
+
+  @override
+  void didChangeMarkets() => scheduleComputeState(() {
+        _cardIndex = 0;
+        _observedDocument = null;
+        _didChangeMarkets = true;
+      });
 
   @override
   Future<DiscoveryFeedState?> computeState() async => fold3(
@@ -203,43 +212,52 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
         if (_cardIndex == null) return null;
 
-        final foldEngineEvent = _foldEngineEvent(engineEvent);
+        late Set<Document> results;
 
-        final results = foldEngineEvent(
-          restoreFeedSucceeded: (event) => {...state.results, ...event.items},
-          nextFeedBatchRequestSucceeded: (event) =>
-              {...state.results, ...event.items},
-          documentsUpdated: (event) => state.results
-              .map(
-                (it) => event.items.firstWhere(
-                  (item) => item.documentId == it.documentId,
-                  orElse: () => it,
-                ),
-              )
-              .toSet(),
-          engineExceptionRaised: (event) {
-            _sendAnalyticsUseCase(EngineExceptionRaisedEvent(
-              event: event,
-            ));
+        if (_didChangeMarkets) {
+          _didChangeMarkets = false;
 
-            logger.e('$event');
+          results = <Document>{};
 
-            return state.results;
-          },
-          nextFeedBatchRequestFailed: (event) {
-            _sendAnalyticsUseCase(NextFeedBatchRequestFailedEvent(
-              event: event,
-            ));
+          requestNextFeedBatch();
+        } else {
+          final foldEngineEvent = _foldEngineEvent(engineEvent);
 
-            logger.e('$event');
+          results = foldEngineEvent(
+            restoreFeedSucceeded: (event) => {...state.results, ...event.items},
+            nextFeedBatchRequestSucceeded: (event) =>
+                {...state.results, ...event.items},
+            documentsUpdated: (event) => state.results
+                .map(
+                  (it) => event.items.firstWhere(
+                    (item) => item.documentId == it.documentId,
+                    orElse: () => it,
+                  ),
+                )
+                .toSet(),
+            engineExceptionRaised: (event) {
+              _sendAnalyticsUseCase(EngineExceptionRaisedEvent(
+                event: event,
+              ));
 
-            return state.results;
-          },
-          orElse: () => state.results,
-        );
+              logger.e('$event');
+
+              return state.results;
+            },
+            nextFeedBatchRequestFailed: (event) {
+              _sendAnalyticsUseCase(NextFeedBatchRequestFailedEvent(
+                event: event,
+              ));
+
+              logger.e('$event');
+
+              return state.results;
+            },
+            orElse: () => state.results,
+          );
+        }
 
         final sets = await _maybeReduceCardCount(results);
-
         final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
         final hasExplicitDocumentFeedbackChanged =
             state.latestExplicitDocumentFeedback != explicitDocumentFeedback;

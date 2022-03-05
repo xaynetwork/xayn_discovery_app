@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -24,6 +25,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late DiscoveryEngine _engine;
+  late Set<FeedMarket> _localMarkets;
 
   /// temp solution:
   /// Once search is supported, we drop this.
@@ -76,13 +78,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
     await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
 
-    final localMarkets =
-        await _getSelectedFeedMarketsUseCase.singleOutput(none);
-
-    final markets = localMarkets
-        .map((e) =>
-            FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
-        .toSet();
+    _localMarkets = await _getLocalMarkets();
 
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
@@ -91,7 +87,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
       maxItemsPerSearchBatch: 2,
-      feedMarkets: markets,
+      feedMarkets: _localMarkets,
       manifest: manifest,
     );
 
@@ -100,8 +96,21 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     );
     _engine = await DiscoveryEngine.init(configuration: configuration)
         .catchError((e) {
-      logger.e('OH MY GOD NO!!! $e');
+      logger.e('DiscoveryEngine.init: $e');
     });
+  }
+
+  Future<EngineEvent?> maybeUpdateMarkets() async {
+    final markets = await _getLocalMarkets();
+    const equality = SetEquality();
+
+    if (!equality.equals(_localMarkets, markets)) {
+      _localMarkets = markets;
+
+      return await changeConfiguration(feedMarkets: markets);
+    }
+
+    return null;
   }
 
   Future<void> _saveInitialFeedMarket(
@@ -216,5 +225,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> send(ClientEvent event) {
     _inputLog.add('[send]\n<ClientEvent> $ClientEvent');
     return safeRun(() => _engine.send(event));
+  }
+
+  Future<Set<FeedMarket>> _getLocalMarkets() async {
+    final localMarkets =
+        await _getSelectedFeedMarketsUseCase.singleOutput(none);
+
+    return localMarkets
+        .sortedBy((it) => '${it.countryCode}|${it.languageCode}')
+        .map((e) =>
+            FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
+        .toSet();
   }
 }
