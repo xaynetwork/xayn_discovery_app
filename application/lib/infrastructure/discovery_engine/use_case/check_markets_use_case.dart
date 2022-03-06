@@ -19,9 +19,9 @@ class CheckMarketsUseCase extends UseCase<None, MarketChange> {
   Stream<MarketChange> transaction(None param) async* {
     final engine = _engine as AppDiscoveryEngine;
 
-    if (await engine.willUpdateMarkets()) {
+    if (await engine.areMarketsOutdated()) {
       yield MarketChange.willChange;
-      await engine.maybeUpdateMarkets();
+      await engine.updateMarkets();
       yield MarketChange.didChange;
     } else {
       yield MarketChange.noChange;
