@@ -126,13 +126,13 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   Stream<String> get engineInputEventsLog => throw UnimplementedError();
 
   @override
-  Future<EngineEvent?> maybeUpdateMarkets() {
+  Future<EngineEvent> updateMarkets() {
     // TODO: implement maybeUpdateMarkets
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> willUpdateMarkets() {
+  Future<bool> areMarketsOutdated() {
     // TODO: implement willUpdateMarkets
     throw UnimplementedError();
   }
