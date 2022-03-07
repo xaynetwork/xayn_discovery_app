@@ -11,7 +11,7 @@ class DiscoveryCardHeadlineImage extends StatelessWidget {
     Key? key,
     required this.child,
     Color? shadowColor,
-  })  : shadowColor = shadowColor ?? R.colors.swipeCardBackground,
+  })  : shadowColor = shadowColor ?? R.colors.swipeCardBackgroundDefault,
         super(key: key);
 
   final Widget child;

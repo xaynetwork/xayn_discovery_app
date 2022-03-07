@@ -125,7 +125,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
-    final backgroundPane = ColoredBox(color: R.colors.swipeCardBackground);
+    final backgroundPane = ColoredBox(color: R.colors.swipeCardBackgroundHome);
 
     return CachedImage(
       imageManager: imageManager,
