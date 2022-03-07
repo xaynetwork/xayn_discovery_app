@@ -257,12 +257,20 @@ end
 desc "Update the assets folder based on the Assets Manifest from xayn_discovery_engine"
 lane :update_assets do |options|
   isUnderTest = options[Options::TEST]
+  isReleaseMode = options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
+
+  if isReleaseMode
+    aiAssetsUrl = options[_Options::ENV].key?("AI_ASSETS_URL_PRODUCTION")
+  else
+    aiAssetsUrl = options[_Options::ENV].key?("AI_ASSETS_URL_DEBUG")
+  end
+
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
   manifestPath["file://"] = ""
   raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
-  UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
+  UI.user_error!("No AI_ASSETS_URL provided!") unless aiAssetsUrl
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
-  downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
+  downloadAssetsFromManifest(manifestPath, aiAssetsUrl, File.join("..", "assets", "ai"), isUnderTest)
 end
 
 # Private helper methods
