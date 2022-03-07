@@ -152,7 +152,7 @@ module Config
         Keys::NAME => "Xayn 3.0",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
-        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
+        Keys::APPCENTER_FILEPATH => "build/app/outputs/bundle/release/app-release.aab",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
     },

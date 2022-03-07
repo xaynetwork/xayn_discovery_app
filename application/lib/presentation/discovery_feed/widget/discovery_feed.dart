@@ -215,7 +215,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
 
-    _discoveryFeedManager = di.get();
+    _discoveryFeedManager = di.get()..handleCheckMarkets();
 
     _navBarUpdateListener = _discoveryFeedManager.stream
         .where((state) => state.shouldUpdateNavBar)

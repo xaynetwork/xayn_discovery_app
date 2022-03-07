@@ -223,4 +223,4 @@ jobs:
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build_type:release flavor:beta
+          fastlane publish platform:android build_type:release flavor:beta android_output:appbundle
