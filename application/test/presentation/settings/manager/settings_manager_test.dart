@@ -78,6 +78,12 @@ void main() {
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) => Future.value(subscriptionStatus));
 
+    when(listenSubscriptionStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(subscriptionStatus));
+
+    when(listenSubscriptionStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+
     when(featureManager.isPaymentEnabled).thenReturn(false);
   });
 

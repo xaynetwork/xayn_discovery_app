@@ -26,7 +26,11 @@ void main() {
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
-        .thenAnswer((_) => Future.value(subscriptionStatus));
+        .thenAnswer((_) async => subscriptionStatus);
+    when(listenSubscriptionStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(subscriptionStatus));
+    when(listenSubscriptionStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(featureManager.isPaymentEnabled).thenReturn(false);
   });
 

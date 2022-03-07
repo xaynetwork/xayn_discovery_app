@@ -1,8 +1,10 @@
 import 'package:purchases_flutter/object_wrappers.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/presentation/constants/entitlement_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 
 const subscriptionId = PurchasableIds.subscription;
+const entitlementId = EntitlementIds.unlimited;
 
 const product = Product(
   subscriptionId,
@@ -18,7 +20,7 @@ PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) {
   final isActive = withActiveSubscription;
   final willRenew = withActiveSubscription;
   final entitlementInfo = EntitlementInfo(
-    subscriptionId,
+    entitlementId,
     isActive,
     willRenew,
     '',
@@ -28,13 +30,13 @@ PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) {
     expirationDate: withActiveSubscription ? tomorrow.toIso8601String() : null,
   );
   final entitlements = EntitlementInfos(
-    {subscriptionId: entitlementInfo},
-    {subscriptionId: entitlementInfo},
+    {entitlementId: entitlementInfo},
+    {entitlementId: entitlementInfo},
   );
   return PurchaserInfo(
     entitlements,
     {},
-    withActiveSubscription ? [subscriptionId] : [],
+    withActiveSubscription ? [entitlementId] : [],
     [],
     [],
     '',
