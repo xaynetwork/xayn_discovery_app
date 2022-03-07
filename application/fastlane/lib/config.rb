@@ -79,6 +79,9 @@ module Config
     def self.doc_WATCH() 'true, false' end
     WATCH = :watch
 
+    def self.doc_TEST() 'true, false' end
+    TEST = :test
+
     def self.help()
         Options.constants.map { |o|
           doc = ""

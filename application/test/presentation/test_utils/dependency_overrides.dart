@@ -56,8 +56,11 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   TestDiscoveryEngine();
 
   @override
-  Future<EngineEvent> changeConfiguration(
-      {FeedMarkets? feedMarkets, int? maxItemsPerFeedBatch}) {
+  Future<EngineEvent> changeConfiguration({
+    FeedMarkets? feedMarkets,
+    int? maxItemsPerFeedBatch,
+    int? maxItemsPerSearchBatch,
+  }) {
     return Future.value(const EngineEvent.clientEventSucceeded());
   }
 

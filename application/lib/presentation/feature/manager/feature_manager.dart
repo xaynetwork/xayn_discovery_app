@@ -12,6 +12,7 @@ const FeatureMap kInitialFeatureMap = {
   Feature.featuresScreen:
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.discoveryEngineReportOverlay: false,
+  Feature.payment: false,
 };
 
 @lazySingleton
@@ -34,8 +35,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isReaderModeSettingsEnabled => isEnabled(Feature.readerModeSettings);
 
-  bool get isPaymentEnabled =>
-      EnvironmentHelper.kIsDebug || isEnabled(Feature.payment);
+  bool get isPaymentEnabled => isEnabled(Feature.payment);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);

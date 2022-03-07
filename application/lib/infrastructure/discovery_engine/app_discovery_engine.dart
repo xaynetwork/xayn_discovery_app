@@ -90,6 +90,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
+      maxItemsPerSearchBatch: 2,
       feedMarkets: markets,
       manifest: manifest,
     );
@@ -119,9 +120,11 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> changeConfiguration({
     FeedMarkets? feedMarkets,
     int? maxItemsPerFeedBatch,
+    int? maxItemsPerSearchBatch,
   }) {
     _inputLog.add(
-      '[changeConfiguration]\n<feedMarkets> $feedMarkets\n<nmaxItemsPerFeedBatch> $maxItemsPerFeedBatch',
+      '[changeConfiguration]\n<feedMarkets> $feedMarkets\n<nmaxItemsPerFeedBatch> $maxItemsPerFeedBatch'
+      '\n<nmaxItemsPerSearchBatch> $maxItemsPerFeedBatch',
     );
     return safeRun(() => _engine.changeConfiguration(
           feedMarkets: feedMarkets,
@@ -134,6 +137,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required DocumentId documentId,
     required UserReaction userReaction,
   }) async {
+    _inputLog.add(
+      '[changeUserReaction]\n<documentId> \n$documentId \n<userReaction> \n$userReaction',
+    );
     final engineEvent = await safeRun(
       () => _engine.changeUserReaction(
         documentId: documentId,

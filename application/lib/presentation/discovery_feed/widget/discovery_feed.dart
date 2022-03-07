@@ -189,6 +189,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             /// feed should look the same in that process
             ///
             resizeToAvoidBottomInset: false,
+            backgroundColor: R.colors.homePageBackground,
             body: Padding(
               padding: EdgeInsets.only(top: topPadding),
               child: _featureManager.showDiscoveryEngineReportOverlay
