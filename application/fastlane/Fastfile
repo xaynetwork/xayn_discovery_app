@@ -123,7 +123,7 @@ lane :update_strings do |options|
   download_translations(
     api_token: env["POEDITOR_API_TOKEN"],
     project_id: "502883",
-    languages: "de,en",
+    languages: "nl,en,fr,de,pl,es",
     output_dir: "lib/presentation/constants/translations/",
   )
   # Need to move default language file to translations.i18n.yaml for the i18n build generator
