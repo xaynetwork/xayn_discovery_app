@@ -1,0 +1,126 @@
+# Deprecated translation.
+# Later should be removed
+your: 'Jouw'
+activeSearchSearchHint: 'Zoeken'
+settingsTitle: 'Jouw Instellingen'
+settingsSectionTitleAppTheme: 'Jouw App Thema'
+settingsSectionScrollDirection: 'Navigatie doorheen de feed'
+settingsSectionTitleGeneralInfo: 'Algemene informatie'
+settingsSectionTitleHelpImprove: 'Help Ons met Verbeteringen!'
+settingsSectionTitleSpreadTheWord: 'Deel deze App'
+settingsAppThemeSystem: 'Standaard'
+settingsAppThemeLight: 'Licht'
+settingsAppThemeDark: 'Donker'
+settingsScrollDirectionVertical: 'Vertikaal'
+settingsScrollDirectionHorizontal: 'Horizontaal'
+settingsAboutXayn: 'Over Xayn'
+settingsCarbonNeutral: "Wij zijn klimaat neutraal!"
+settingsImprint: 'Informatie'
+settingsPrivacyPolicy: 'Privacybeleid'
+settingsTermsAndConditions: 'Algemene Voorwaarden'
+settingsHaveFoundBug: 'Een bug gevonden?'
+settingsShareBtn: 'Met vrienden delen'
+settingsVersion: 'Versie:'
+settingsBuild: 'Nummer:'
+minAgo: 'min geleden'
+momentsAgo: 'zonet'
+hourAgo: 'uur geleden'
+hoursAgo: 'uren geleden'
+dayAgo: 'dag geleden'
+daysAgo: 'dagen geleden'
+readingTimeUnitSingular: 'minuut'
+readingTimeUnitPlural: 'minuten'
+readingTimeSuffix: 'lees'
+cannotLoadUrlError: 'Deze afbeelding kon niet geladen worden: '
+personalAreaTitle: Jouw Scherm
+personalAreaCollections: Uw verzamelingen
+personalAreaHomeFeed: Instellingen voor de Feed
+personalAreaSettings: Instellingen
+comingSoon: Binnenkort voorzien
+feedSettingsScreenTitle: Jouw Discovery Feed
+# %s - those symbols should be in all translations!
+feedSettingsScreenContryListHint: Kies de landen waaruit je nieuws wilt ontvangen (max. %s)
+feedSettingsScreenActiveCountryListSubtitle: Actieve Landen
+feedSettingsScreenInActiveCountryListSubtitle: Inactieve Landen
+feedSettingsScreenMinSelectedCountriesError: Kies ten minste één land
+# %s - those symbols should be in all translations!
+feedSettingsScreenMaxSelectedCountriesError: Je hebt reeds %s landen gekozen
+bottomSheetCancel: Annuleer
+langNameFrench: Frans
+langNameDutch: Nederlands
+langNameEnglish: Engels
+langNameGerman: Duits
+langNamePolish: Pools
+langNameSpanish: Spaans
+bottomSheetApply: Toepassen
+bottomSheetCreate: Aanmaken
+bottomSheetCreateCollectionHeader: Maak een nieuwe Verzameling aan
+bottomSheetCreateCollectionTextFieldHint: Naam van de Verzameling
+errorMsgTryingToCreateAgainDefaultCollection: Er bestaat reeds een standaard verzameling
+errorMsgTryingToRemoveDefaultCollection: Je kan de standaard verzameling niet verwijderen
+articles: artikelen
+article: artikel
+collectionsScreenTitle: Jouw Verzamelingen
+defaultCollectionNameReadLater: Later lezen
+bookmarkSnackBarSavedTo: Bewaard in %s
+bottomSheetSaveTo: Bewaar in
+# This is a simple prefix, before the author entry, for example "by " + author name
+readerModeBylinePrefix: door
+errorMsgCollectionDoesntExist: De verzameling bestaat niet
+errorMsgBookmarkDoesntExist: De bladwijzer bestaat niet
+errorMsgCollectionNameAlreadyUsed: Deze naam bestaat al
+errorMsgCollectionNameIsInvalid: De naam mag niet langer zijn dan %s tekens
+bottomSheetRename: Hernoemen
+bottomSheetDelete: Delete
+bottomSheetDeleteAll: Alles verwijderen
+bottomSheetMoveBookmarks: Verplaats
+bottomSheetDeleteCollectionHeader: Ben je zeker ?
+bottomSheetDeleteCollectionWithBookmarksBody: Als u deze collectie verwijdert zal elk artikel in deze map ook verwijderd worden. Wilt u doorgaan, of wilt u eerst alle artikelen verplaatsen?
+bottomSheetRenameCollectionHeader: Hernoem collectie
+settingsXaynPremium: Xayn Premium
+settingsSectionSubscription: Abonnement
+trialBannerSubscribeNow: Nu abonneren
+bookmarkScreenNoArticles: Geen Artikelen
+trialBannerEndsIn: Uw proefperiode eindigt over %s dagen
+trialBannerEndsTomorrow: Je proef eindigt morgen.
+trialBannerEndsToday: Uw proef eindigt vandaag
+trialBannerExpired: Uw proef is verlopen
+subscriptionHeader: Krijg onbeperkte inhoud voor slechts
+subscriptionPricingError: Kan prijsinformatie niet ophalen
+subscriptionPerk1: Gepersonaliseerde stroom
+subscriptionPerk2: Geen advertenties
+subscriptionPerk3: Geen tracering
+subscriptionPerk4: Koolstofneutraal
+subscriptionPerk5: Annuleren op elk moment
+subscriptionSubscribeNow: Nu abonneren
+subscriptionRestore: Herstel abonnement
+subscriptionPromoCode: Ik heb een promo code
+subscriptionDisclaimer: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
+settingsSubscribedToHeader: U bent geabonneerd op
+doneButtonTitle: Gedaan
+subscriptionRenewsMonthlyText: 'Het abonnement wordt maandelijks verlengd op: %s'
+promoCodeValidUntilText: 'Uw promocode is geldig tot: %s'
+subscriptionPlatformInfoApple: Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.
+subscriptionPlatformInfoGoogle: Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.
+paymentFlowError:
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the unknown error occurred during payment operation
+  unknown: Onbekende fout opgetreden
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the GooglePlay or AppStore is not available for some reason
+  storeNotAvailable: De winkel is op dit moment niet beschikbaar
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the subscription details can not be received
+  productNotFound: 'Product niet gevonden :('
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the item (subscription) was already paid before
+  itemAlreadyOwned: U bent reeds ingeschreven
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when some issue happened during the payment transaction
+  transactionFailed: Betalingstransactie mislukt
+bottomSheetDeleteCollectionWithNoItemsBody: Wil je deze collectie echt verwijderen?
+bottomSheetMoveSingleBookmark: Verplaats naar een andere collectie
+readerModeSettingsErrorChangesNotApplied: Wijzigingen konden niet worden toegepast
+errorGenericHeaderSomethingWentWrong: Er is iets misgegaan.
+errorGenericBodyPleaseTryAgainLater: Probeer het later nog eens.
+errorClose: Sluiten

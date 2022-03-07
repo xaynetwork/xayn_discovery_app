@@ -1,0 +1,126 @@
+# Deprecated translation.
+# Later should be removed
+your: 'Votre'
+activeSearchSearchHint: 'Recherche'
+settingsTitle: 'Vos paramètres'
+settingsSectionTitleAppTheme: 'Thème de l''app'
+settingsSectionScrollDirection: 'Direction de défilement'
+settingsSectionTitleGeneralInfo: 'informations générales'
+settingsSectionTitleHelpImprove: 'Aidez nous à améliorer!'
+settingsSectionTitleSpreadTheWord: 'Passez le mot'
+settingsAppThemeSystem: 'Défaillance du système'
+settingsAppThemeLight: 'Mode clair'
+settingsAppThemeDark: 'Mode sombre'
+settingsScrollDirectionVertical: 'Vertical'
+settingsScrollDirectionHorizontal: 'Horizontal'
+settingsAboutXayn: 'À propos de Xayn'
+settingsCarbonNeutral: "Nous sommes carboneutre!"
+settingsImprint: 'Empreinte'
+settingsPrivacyPolicy: 'Mentions légales'
+settingsTermsAndConditions: 'Termes et conditions'
+settingsHaveFoundBug: 'Avez-vous trouvé un bogue?'
+settingsShareBtn: 'Partager avec des amis'
+settingsVersion: 'Version:'
+settingsBuild: 'Build:'
+minAgo: 'il y a quelques minutes'
+momentsAgo: 'il y a quelques instants'
+hourAgo: 'il y a quelques instants'
+hoursAgo: 'il y a quelques instants'
+dayAgo: 'il y a quelques instants'
+daysAgo: 'il y a quelques instants'
+readingTimeUnitSingular: 'minute'
+readingTimeUnitPlural: 'minutes'
+readingTimeSuffix: 'lire'
+cannotLoadUrlError: 'Impossible de charger l''image avec l''URL: '
+personalAreaTitle: Votre espace
+personalAreaCollections: Vos Collections
+personalAreaHomeFeed: flux d'accueil
+personalAreaSettings: Réglages
+comingSoon: Bientôt disponible
+feedSettingsScreenTitle: Votre flux d'accueil
+# %s - those symbols should be in all translations!
+feedSettingsScreenContryListHint: Choisissez les pays dont vous souhaitez recevoir des nouvelles (max. %s)
+feedSettingsScreenActiveCountryListSubtitle: Pays Actifs
+feedSettingsScreenInActiveCountryListSubtitle: Pays Inactifs
+feedSettingsScreenMinSelectedCountriesError: Sélectionnez au moins un pays
+# %s - those symbols should be in all translations!
+feedSettingsScreenMaxSelectedCountriesError: Il y a déjà %s pays sélectionnés
+bottomSheetCancel: Annuler
+langNameFrench: Français
+langNameDutch: Néerlandais
+langNameEnglish: Anglais
+langNameGerman: Allemand
+langNamePolish: Polonais
+langNameSpanish: Espagnol
+bottomSheetApply: Appliquer
+bottomSheetCreate: Créer
+bottomSheetCreateCollectionHeader: Créer une nouvelle collection
+bottomSheetCreateCollectionTextFieldHint: Nom de la collection
+errorMsgTryingToCreateAgainDefaultCollection: Vous essayez à créer une collection par défaut
+errorMsgTryingToRemoveDefaultCollection: Vous ne pouvez pas supprimer la collection par défaut
+articles: des articles
+article: article
+collectionsScreenTitle: collections
+defaultCollectionNameReadLater: Lire plus tard
+bookmarkSnackBarSavedTo: Enregistré dans %s
+bottomSheetSaveTo: Enregister dans
+# This is a simple prefix, before the author entry, for example "by " + author name
+readerModeBylinePrefix: par
+errorMsgCollectionDoesntExist: Cette collection n'existe pas
+errorMsgBookmarkDoesntExist: Ce signet n'existe pas
+errorMsgCollectionNameAlreadyUsed: Ce nom est déjà utilisé
+errorMsgCollectionNameIsInvalid: Le nom ne peut excéder %s caractères
+bottomSheetRename: Renommer
+bottomSheetDelete: Effacer
+bottomSheetDeleteAll: effacer tous
+bottomSheetMoveBookmarks: Déplacer
+bottomSheetDeleteCollectionHeader: êtes-vous sûr ?
+bottomSheetDeleteCollectionWithBookmarksBody: Si vous supprimez cette collection, tous les articles de ce dossier seront également supprimés. Voulez-vous continuer ou souhaitez-vous déplacer tous les articles avant ?
+bottomSheetRenameCollectionHeader: Renommer la collection
+settingsXaynPremium: Xayn Premium
+settingsSectionSubscription: Abonnement
+trialBannerSubscribeNow: Abonnez-vous maintenant
+bookmarkScreenNoArticles: Pas d'articles
+trialBannerEndsIn: Votre période d'essai se termine dans %s jours
+trialBannerEndsTomorrow: Votre période d'essai se termine demain
+trialBannerEndsToday: Votre période d'essai se termine demain
+trialBannerExpired: Votre essai se termine aujourd'hui
+subscriptionHeader: Obtenez un contenu illimité à juste
+subscriptionPricingError: Impossible de récupérer les détails des prix
+subscriptionPerk1: Flux personnalisé
+subscriptionPerk2: Pas de pub
+subscriptionPerk3: Pas de suivi
+subscriptionPerk4: Neutre en carbone
+subscriptionPerk5: Neutre en carbone
+subscriptionSubscribeNow: Annuler à tout moment
+subscriptionRestore: Restaurer l'abonnement
+subscriptionPromoCode: J'ai un code promo
+subscriptionDisclaimer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.\n"
+settingsSubscribedToHeader: Vous êtes abonné à
+doneButtonTitle: Fini
+subscriptionRenewsMonthlyText: 'L''abonnement se renouvelle mensuellement le : %s'
+promoCodeValidUntilText: 'Votre code promotionnel est valable jusqu''au : %s'
+subscriptionPlatformInfoApple: En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement. Vous pouvez gérer vos abonnements dans __Apple App Store__.
+subscriptionPlatformInfoGoogle: En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement ! Vous pouvez gérer vos abonnements dans __Google Play Store__.
+paymentFlowError:
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the unknown error occurred during payment operation
+  unknown: Une erreur inconnue s'est produite
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the GooglePlay or AppStore is not available for some reason
+  storeNotAvailable: Le magasin n'est pas disponible pour le moment
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the subscription details can not be received
+  productNotFound: 'Produit non trouvé :('
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the item (subscription) was already paid before
+  itemAlreadyOwned: Vous êtes déjà abonné
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when some issue happened during the payment transaction
+  transactionFailed: Paiement échoué
+bottomSheetDeleteCollectionWithNoItemsBody: Voulez-vous vraiment supprimer cette collection ?
+bottomSheetMoveSingleBookmark: Déplacer vers une autre collection
+readerModeSettingsErrorChangesNotApplied: Impossible d'appliquer les modifications
+errorGenericHeaderSomethingWentWrong: Quelque chose s'est mal passé
+errorGenericBodyPleaseTryAgainLater: Veuillez réessayer plus tard.
+errorClose: Fermer
