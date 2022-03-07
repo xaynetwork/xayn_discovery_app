@@ -25,7 +25,7 @@ PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) {
     willRenew,
     '',
     '',
-    '',
+    subscriptionId,
     true,
     expirationDate: withActiveSubscription ? tomorrow.toIso8601String() : null,
   );
