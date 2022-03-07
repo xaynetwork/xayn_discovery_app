@@ -34,7 +34,7 @@ PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) {
     {entitlementId: entitlementInfo},
   );
   return PurchaserInfo(
-    entitlements,
+    withActiveSubscription ? entitlements : const EntitlementInfos({}, {}),
     {},
     withActiveSubscription ? [entitlementId] : [],
     [],
