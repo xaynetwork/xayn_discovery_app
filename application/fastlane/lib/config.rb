@@ -107,7 +107,8 @@ module Config
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
-                   "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
+                   "AI_ASSETS_URL_DEBUG" => "https://ai-assets.xaynet.dev",
+                   "AI_ASSETS_URL_PRODUCTION" => "https://ai-assets.xayn.com"}
 
   # Carefull to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...
