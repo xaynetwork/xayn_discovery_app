@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
@@ -71,8 +71,11 @@ class _SettingsScreenState extends State<SettingsScreen>
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
           child: child,
         );
+    final buildSubscriptionSection =
+        state.subscriptionStatus.isSubscriptionActive ||
+            state.subscriptionStatus.isFreeTrialActive;
     final children = [
-      if (state.isPaymentEnabled)
+      if (state.isPaymentEnabled && buildSubscriptionSection)
         _buildSubscriptionSection(state.subscriptionStatus),
       _buildAppThemeSection(state.theme),
       _buildGeneralSection(state.isPaymentEnabled),
@@ -92,9 +95,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   Widget _buildSubscriptionSection(SubscriptionStatus subscriptionStatus) =>
       SubscriptionSection(
         subscriptionStatus: subscriptionStatus,
-        onSubscribePressed: _onSubscribePressed,
-        onShowDetailsPressed: (expirationDate) =>
-            _showSubscriptionDetailsBottomSheet(expirationDate),
+        onPressed: () => _onSubscriptionSectionPressed(subscriptionStatus),
       );
 
   Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
@@ -110,8 +111,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         onImprintPressed: () => _manager.openExternalUrl(Urls.imprint),
         onPrivacyPressed: () => _manager.openExternalUrl(Urls.privacyPolicy),
         onTermsPressed: () => _manager.openExternalUrl(Urls.termsAndConditions),
-        onPaymentPressed:
-            isPaymentEnabled ? _manager.onPaymentNavPressed : null,
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
@@ -137,17 +136,19 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
 
-  void _showSubscriptionDetailsBottomSheet(DateTime trialEndDate) =>
+  void _onSubscriptionSectionPressed(SubscriptionStatus subscriptionStatus) {
+    if (subscriptionStatus.isSubscriptionActive) {
       showAppBottomSheet(
         context,
-        builder: (buildContext) => SubscriptionDetailsBottomSheet(
-          subscriptionType: SubscriptionType.paid,
-          endDate: trialEndDate,
+        builder: (_) => SubscriptionDetailsBottomSheet(
+          subscriptionStatus: subscriptionStatus,
         ),
       );
-
-  void _onSubscribePressed() => showAppBottomSheet(
+    } else if (subscriptionStatus.isFreeTrialActive) {
+      showAppBottomSheet(
         context,
-        builder: (buildContext) => PaymentBottomSheet(),
+        builder: (_) => PaymentBottomSheet(),
       );
+    }
+  }
 }

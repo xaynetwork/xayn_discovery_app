@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
@@ -53,8 +55,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   Widget build(BuildContext context) {
     final bloc = BlocBuilder<PersonalAreaManager, PersonalAreaState>(
       bloc: _manager,
-      builder: (_, state) =>
-          _buildScreen(state.subscriptionStatus?.trialEndDate),
+      builder: (_, state) => _buildScreen(state),
     );
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -67,10 +68,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     );
   }
 
-  Widget _buildScreen(DateTime? trialEndDate) {
+  Widget _buildScreen(PersonalAreaState state) {
     final column = Column(
       mainAxisSize: MainAxisSize.min,
-      children: _buildItems(trialEndDate),
+      children: _buildItems(state),
     );
     final bottomPadding = R.dimen.navBarHeight + R.dimen.unit2;
     final sidePadding = R.dimen.unit3;
@@ -86,21 +87,29 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     return SingleChildScrollView(child: withPadding);
   }
 
-  List<Widget> _buildItems(DateTime? trialEndDate) => [
-        if (trialEndDate != null) _buildTrialBanner(trialEndDate),
-        _buildCollection(),
-        _buildHomeFeed(),
-        _buildSettings(),
-      ]
-          .map((e) => Padding(
-                padding: EdgeInsets.only(bottom: R.dimen.unit2),
-                child: e,
-              ))
-          .toList();
+  List<Widget> _buildItems(PersonalAreaState state) {
+    final buildTrialBanner =
+        state.isPaymentEnabled && state.subscriptionStatus.isFreeTrialActive;
+    return [
+      if (buildTrialBanner)
+        _buildTrialBanner(state.subscriptionStatus.trialEndDate!),
+      _buildCollection(),
+      _buildHomeFeed(),
+      _buildSettings(),
+    ]
+        .map((e) => Padding(
+              padding: EdgeInsets.only(bottom: R.dimen.unit2),
+              child: e,
+            ))
+        .toList();
+  }
 
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
         trialEndDate: trialEndDate,
-        onPressed: () {}, // TODO: Show the payment screen
+        onPressed: () => showAppBottomSheet(
+          context,
+          builder: (_) => PaymentBottomSheet(),
+        ),
       );
 
   CardWidget _buildCollection() => CardWidget(

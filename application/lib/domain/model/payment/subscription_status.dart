@@ -1,17 +1,18 @@
-class SubscriptionStatus {
-  final bool willRenew;
-  final DateTime? expirationDate;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const SubscriptionStatus({
-    required this.willRenew,
-    required this.expirationDate,
-  });
+part 'subscription_status.freezed.dart';
 
-  bool get isSubscriptionActive =>
-      expirationDate?.isAfter(DateTime.now()) ?? false;
+@freezed
+class SubscriptionStatus with _$SubscriptionStatus {
+  const factory SubscriptionStatus({
+    required bool willRenew,
+    required DateTime? expirationDate,
+    required DateTime? trialEndDate,
+  }) = _SubscriptionStatus;
 
-  // TODO: implement trial functionality
-  DateTime? get trialEndDate => expirationDate;
-
-  bool get isTrialActive => trialEndDate?.isAfter(DateTime.now()) ?? false;
+  factory SubscriptionStatus.initial() => const SubscriptionStatus(
+        willRenew: false,
+        expirationDate: null,
+        trialEndDate: null,
+      );
 }

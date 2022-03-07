@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
@@ -15,6 +17,12 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 class PaymentService {
   /// This class is the only one place where we use [Purchases].
 
+  final StreamController<PurchaserInfo> _controller =
+      StreamController<PurchaserInfo>.broadcast();
+
+  /// A stream of [PurchaserInfo] objects. Emits when subscription state changes.
+  Stream<PurchaserInfo> get purchaserInfoStream => _controller.stream;
+
   PaymentService() {
     _init();
   }
@@ -22,6 +30,10 @@ class PaymentService {
   void _init() async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
+    Purchases.logIn('testUser');
+    Purchases.addPurchaserInfoUpdateListener((purchaserInfo) {
+      _controller.sink.add(purchaserInfo);
+    });
   }
 
   Future<List<Product>> getProducts(

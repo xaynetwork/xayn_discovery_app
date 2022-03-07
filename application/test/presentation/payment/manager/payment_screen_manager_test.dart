@@ -10,18 +10,21 @@ void main() {
   late MockGetSubscriptionDetailsUseCase getSubscriptionDetailsUseCase;
   late MockPurchaseSubscriptionUseCase purchaseSubscriptionUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   setUp(() {
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
     errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
     manager = PaymentScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
       getSubscriptionStatusUseCase,
+      listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
       errorMessageMapper,
     );
