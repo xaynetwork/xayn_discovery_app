@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
@@ -21,8 +22,12 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<PaymentScreenManager, PaymentScreenState>(
+      BlocConsumer<PaymentScreenManager, PaymentScreenState>(
         bloc: manager,
+        listener: (_, state) => _handlePurchasedOrRestored(
+          state: state,
+          context: context,
+        ),
         builder: (_, state) => state.map(
           initial: (_) => _buildLoading(),
           error: _buildErrorScreen,
@@ -32,6 +37,18 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
           ),
         ),
       );
+
+  void _handlePurchasedOrRestored({
+    required PaymentScreenState state,
+    required BuildContext context,
+  }) {
+    // When the user purchases or restores subscription - dismiss the bottom sheet
+    state.whenOrNull(ready: (product, _) {
+      if (product.status.isPurchased || product.status.isRestored) {
+        closeBottomSheet(context);
+      }
+    });
+  }
 
   Widget _buildLoading() => SizedBox(
         height: R.dimen.unit52,
