@@ -89,7 +89,7 @@ class _CachedImageState extends State<CachedImage> {
 
     final noImageBuilder = widget.noImageBuilder ??
         (BuildContext context) => Container(
-              color: R.colors.swipeCardBackground,
+              color: R.colors.swipeCardBackgroundHome,
             );
 
     return BlocBuilder<ImageManager, ImageManagerState>(
