@@ -23,6 +23,7 @@ dependencies:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
       ref: 1.0.0
+  flutter_tts: 3.3.3
   freezed_annotation: 1.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
@@ -84,9 +85,7 @@ dependencies:
       ref: f06bd9be3ff76205eb3c851cb5132373e661ea19
       path: discovery_engine_flutter
   xayn_readability:
-    git:
-      url: git@github.com:xaynetwork/xayn_readability.git
-      ref: 57cf834d5a0dc89964fdcaa6614648bdb7fdad18
+    path: ../../xayn_readability
   xayn_swipe_it: 1.0.3
 
 dependency_overrides:
