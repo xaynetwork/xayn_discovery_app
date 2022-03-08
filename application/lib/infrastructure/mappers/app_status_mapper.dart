@@ -20,12 +20,12 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
     final numberOfSessions = map[AppSettingsFields.numberOfSessions] as int?;
     final appVersion =
         _mapToAppVersionMapper.map(map[AppSettingsFields.appVersion]);
-    final trialStartDate = map[AppSettingsFields.trialEndDate] as DateTime?;
+    final trialEndDate = map[AppSettingsFields.trialEndDate] as DateTime?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
       lastKnownAppVersion: appVersion,
-      trialEndDate: trialStartDate ?? DateTime.now(),
+      trialEndDate: trialEndDate ?? DateTime.now(),
     );
   }
 
