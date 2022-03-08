@@ -126,6 +126,7 @@ class _DiscoveryCardStaticState
   }) {
     final readerMode = ReaderMode(
       title: title,
+      textToSpeechLanguageCode: 'en',
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
         left: R.dimen.unit3,
