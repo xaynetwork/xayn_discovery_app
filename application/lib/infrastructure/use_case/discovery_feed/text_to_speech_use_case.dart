@@ -1,45 +1,58 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:translator/translator.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 
+typedef ParagraphList = List<String>;
+
 @injectable
-class TextToSpeechUseCase extends UseCase<TextToSpeechUseCaseIn, Duration> {
+class TextToSpeechUseCase extends UseCase<ParagraphList, Duration> {
   final Tts _tts;
 
   TextToSpeechUseCase(this._tts);
 
   @override
-  Stream<Duration> transaction(TextToSpeechUseCaseIn param) async* {
-    if (param.paragraphs.isNotEmpty) {
-      final canSpeakInLanguage =
-          await _tts.isLanguageAvailable(param.languageCode);
+  Stream<Duration> transaction(ParagraphList param) async* {
+    if (param.isNotEmpty) {
+      final translator = GoogleTranslator();
 
-      if (canSpeakInLanguage) {
-        await _tts.setLanguage(param.languageCode);
-        await _tts.setVolume(1.0);
+      await _tts.setVolume(1.0);
 
-        yield* Stream.fromIterable(param.paragraphs)
-            .asyncMap(_tts.speak)
-            .mapTo(true)
-            .asyncMap(_tts.awaitSpeakCompletion)
-            .timeInterval()
-            .map((it) => it.interval);
+      detectLanguage(String text) async {
+        final translation = await translator.translate(text);
+        final languageCode = translation.sourceLanguage.code;
+
+        final canSpeakInLanguage = await _tts.isLanguageAvailable(languageCode);
+
+        return canSpeakInLanguage ? translation.sourceLanguage.code : null;
       }
+
+      yield* Stream.fromIterable(param)
+          .map((it) => it.trim())
+          .where((it) => it.isNotEmpty)
+          .asyncMap((it) async {
+            final languageCode = await detectLanguage(it);
+
+            if (languageCode != null) {
+              await _tts.setLanguage(languageCode);
+
+              return it;
+            }
+
+            return null;
+          })
+          .where((it) => it != null)
+          .cast<String>()
+          .asyncMap(_tts.speak)
+          .mapTo(true)
+          .asyncMap(_tts.awaitSpeakCompletion)
+          .timeInterval()
+          .map((it) => it.interval);
     }
   }
 
   Future<dynamic> stopCurrentSpeech() => _tts.stop();
-}
-
-class TextToSpeechUseCaseIn {
-  final String languageCode;
-  final List<String> paragraphs;
-
-  const TextToSpeechUseCaseIn({
-    required this.languageCode,
-    required this.paragraphs,
-  });
 }
 
 abstract class Tts {

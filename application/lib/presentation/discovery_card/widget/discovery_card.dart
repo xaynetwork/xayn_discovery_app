@@ -296,7 +296,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }) {
     final readerMode = ReaderMode(
       title: title,
-      textToSpeechLanguageCode: 'en',
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
         left: R.dimen.unit3,
