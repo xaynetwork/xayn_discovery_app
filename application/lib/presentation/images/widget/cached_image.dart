@@ -41,6 +41,8 @@ class CachedImage extends StatefulWidget {
 
 class _CachedImageState extends State<CachedImage> {
   late final ImageManager _imageManager;
+  late final _svgByteDecoder =
+      SvgPicture.svgByteDecoderBuilder(const SvgTheme());
 
   @override
   void initState() {
@@ -119,29 +121,22 @@ class _CachedImageState extends State<CachedImage> {
               height: widget.height?.toDouble(),
               fit: widget.fit,
               gaplessPlayback: true,
-              errorBuilder: (_, e, s) {
-                // try to decode the data as an svg
-                final svgFuture =
-                    SvgPicture.svgByteDecoderBuilder(const SvgTheme())(
-                        bytes, null, '');
+              errorBuilder: (_, e, s) => FutureBuilder<PictureInfo>(
+                  future: _svgByteDecoder(bytes, null, ''),
+                  builder: (_, snapshot) {
+                    // if decoding failed, or pending, return the fallback
+                    if (snapshot.hasError || !snapshot.hasData) {
+                      return noImageBuilder(context);
+                    }
 
-                return FutureBuilder<PictureInfo>(
-                    future: svgFuture,
-                    builder: (_, snapshot) {
-                      // if decoding failed, or pending, return the fallback
-                      if (snapshot.hasError || !snapshot.hasData) {
-                        return noImageBuilder(context);
-                      }
-
-                      return SvgPicture.memory(
-                        bytes,
-                        width: widget.width?.toDouble(),
-                        height: widget.height?.toDouble(),
-                        fit: widget.fit ?? BoxFit.cover,
-                        placeholderBuilder: noImageBuilder,
-                      );
-                    });
-              },
+                    return SvgPicture.memory(
+                      bytes,
+                      width: widget.width?.toDouble(),
+                      height: widget.height?.toDouble(),
+                      fit: widget.fit ?? BoxFit.cover,
+                      placeholderBuilder: noImageBuilder,
+                    );
+                  }),
             );
           } else {
             // there is no image
