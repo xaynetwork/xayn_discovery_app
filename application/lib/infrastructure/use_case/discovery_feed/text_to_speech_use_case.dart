@@ -13,8 +13,7 @@ class TextToSpeechUseCase extends UseCase<TextToSpeechUseCaseIn, Duration> {
   Stream<Duration> transaction(TextToSpeechUseCaseIn param) async* {
     if (param.paragraphs.isNotEmpty) {
       final canSpeakInLanguage =
-          await _tts.isLanguageAvailable(param.languageCode) &&
-              await _tts.isLanguageInstalled(param.languageCode);
+          await _tts.isLanguageAvailable(param.languageCode);
 
       if (canSpeakInLanguage) {
         await _tts.setLanguage(param.languageCode);
@@ -29,6 +28,8 @@ class TextToSpeechUseCase extends UseCase<TextToSpeechUseCaseIn, Duration> {
       }
     }
   }
+
+  Future<dynamic> stopCurrentSpeech() => _tts.stop();
 }
 
 class TextToSpeechUseCaseIn {
@@ -43,16 +44,16 @@ class TextToSpeechUseCaseIn {
 
 abstract class Tts {
   Future<dynamic> isLanguageAvailable(String language);
-  Future<dynamic> isLanguageInstalled(String language);
   Future<dynamic> setLanguage(String language);
   Future<dynamic> setVolume(double volume);
   Future<dynamic> speak(String text);
   Future<dynamic> awaitSpeakCompletion(bool awaitCompletion);
+  Future<dynamic> stop();
 }
 
 @Injectable(as: Tts)
 class AppTts implements Tts {
-  late final FlutterTts _impl;
+  late final FlutterTts _impl = FlutterTts();
 
   @override
   Future awaitSpeakCompletion(bool awaitCompletion) =>
@@ -63,10 +64,6 @@ class AppTts implements Tts {
       _impl.isLanguageAvailable(language);
 
   @override
-  Future isLanguageInstalled(String language) =>
-      _impl.isLanguageInstalled(language);
-
-  @override
   Future setLanguage(String language) => _impl.setLanguage(language);
 
   @override
@@ -74,4 +71,7 @@ class AppTts implements Tts {
 
   @override
   Future speak(String text) => _impl.speak(text);
+
+  @override
+  Future stop() => _impl.stop();
 }

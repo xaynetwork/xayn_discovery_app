@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
@@ -11,6 +12,8 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
+import 'package:xayn_discovery_app/presentation/text_to_speech/manager/text_to_speech_manager.dart';
+import 'package:xayn_discovery_app/presentation/text_to_speech/manager/text_to_speech_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
@@ -38,6 +41,7 @@ final RegExp _kMatchManifestRegExp = RegExp(
 
 class ReaderMode extends StatefulWidget {
   final String title;
+  final String textToSpeechLanguageCode;
   final readability.ProcessHtmlResult? processHtmlResult;
   final VoidCallback? onProcessedHtml;
   final ScrollHandler? onScroll;
@@ -46,6 +50,7 @@ class ReaderMode extends StatefulWidget {
   const ReaderMode({
     Key? key,
     required this.title,
+    required this.textToSpeechLanguageCode,
     this.processHtmlResult,
     this.padding = _kPadding,
     this.onProcessedHtml,
@@ -58,6 +63,7 @@ class ReaderMode extends StatefulWidget {
 
 class _ReaderModeState extends State<ReaderMode> {
   late final ReaderModeManager _readerModeManager = di.get();
+  late final TextToSpeechManager _textToSpeechManager = di.get();
   late final _readerModeController = readability.ReaderModeController();
 
   @override
@@ -71,6 +77,7 @@ class _ReaderModeState extends State<ReaderMode> {
   void dispose() {
     super.dispose();
 
+    _textToSpeechManager.close();
     _readerModeManager.close();
     _readerModeController.dispose();
   }
@@ -132,6 +139,17 @@ class _ReaderModeState extends State<ReaderMode> {
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
 
+            final contents = result.contents;
+
+            if (contents != null && contents.isNotEmpty) {
+              compute(_extractParagraphs, contents).then(
+                (it) => _textToSpeechManager.handleStart(
+                  languageCode: widget.textToSpeechLanguageCode,
+                  paragraphs: it,
+                ),
+              );
+            }
+
             return _onProcessedHtml(result);
           },
           onScroll: widget.onScroll,
@@ -139,12 +157,24 @@ class _ReaderModeState extends State<ReaderMode> {
           customWidgetBuilder: _customElements,
         );
 
-        return ColoredBox(
-          color: fontSettings.backgroundColor.color,
-          child: readerMode,
+        return BlocBuilder<TextToSpeechManager, TextToSpeechState>(
+          bloc: _textToSpeechManager,
+          builder: (context, state) => ColoredBox(
+            color: fontSettings.backgroundColor.color,
+            child: readerMode,
+          ),
         );
       },
     );
+  }
+
+  static List<String> _extractParagraphs(final String contents) {
+    final element = dom.DocumentFragment.html(contents);
+
+    return element
+        .querySelectorAll('p')
+        .map((it) => it.text)
+        .toList(growable: false);
   }
 
   Widget? _customElements(dom.Element element) {
