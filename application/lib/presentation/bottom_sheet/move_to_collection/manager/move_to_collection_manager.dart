@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -13,12 +14,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
 class MoveToCollectionManager extends Cubit<MoveToCollectionState>
-    with UseCaseBlocHelper<MoveToCollectionState> {
+    with
+        UseCaseBlocHelper<MoveToCollectionState>,
+        ChangeUserReactionMixin<MoveToCollectionState> {
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final MoveBookmarkUseCase _moveBookmarkUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
@@ -117,6 +121,11 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
         collectionId: state.selectedCollectionId!,
       );
       _createBookmarkHandler(param);
+      changeUserReaction(
+        document: document,
+        userReaction: UserReaction.positive,
+        context: FeedbackContext.implicit,
+      );
     }
     if (isBookmarked && !hasSelected) {
       _removeBookmarkHandler(document.documentUniqueId);

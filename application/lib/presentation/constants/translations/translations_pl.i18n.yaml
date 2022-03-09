@@ -1,0 +1,126 @@
+# Deprecated translation.
+# Later should be removed
+your: 'Twoje'
+activeSearchSearchHint: 'Wyszukiwanie'
+settingsTitle: 'Twoje Ustawienia'
+settingsSectionTitleAppTheme: 'Twój motyw aplikacji'
+settingsSectionScrollDirection: 'Kierunek discovery feed'
+settingsSectionTitleGeneralInfo: 'Informacje ogólne'
+settingsSectionTitleHelpImprove: 'Pomóż nam ulepszyć!'
+settingsSectionTitleSpreadTheWord: 'Podziel się'
+settingsAppThemeSystem: 'Domyślny'
+settingsAppThemeLight: 'Tryb jasny'
+settingsAppThemeDark: 'Tryb ciemny'
+settingsScrollDirectionVertical: 'Pionowy'
+settingsScrollDirectionHorizontal: 'Poziomy'
+settingsAboutXayn: 'O Xayn'
+settingsCarbonNeutral: "Jesteśmy neutralni pod względem emisji dwutlenku węgla!"
+settingsImprint: 'Dane firmy'
+settingsPrivacyPolicy: 'Polityka prywatności'
+settingsTermsAndConditions: 'Warunki użytkowania'
+settingsHaveFoundBug: 'Znalazłeś błąd?'
+settingsShareBtn: 'Podziel się z przyjaciółmi'
+settingsVersion: 'Wersja:'
+settingsBuild: 'Kompilacja:'
+minAgo: 'minuta temu'
+momentsAgo: 'chwilę temu'
+hourAgo: 'godzina temu'
+hoursAgo: 'godzin temu'
+dayAgo: 'dzień temu'
+daysAgo: 'dni temu'
+readingTimeUnitSingular: 'minuta'
+readingTimeUnitPlural: 'minuty'
+readingTimeSuffix: 'pozostało'
+cannotLoadUrlError: 'Nie można załadować obrazu z adresem url: '
+personalAreaTitle: Twoja przestrzeń
+personalAreaCollections: Wasze kolekcje
+personalAreaHomeFeed: Ustawienia kanałów
+personalAreaSettings: Ustawienia aplikacji
+comingSoon: Wkrótce
+feedSettingsScreenTitle: Twój kanał odkryć
+# %s - those symbols should be in all translations!
+feedSettingsScreenContryListHint: Wybierz kraje, z których chcesz otrzymywać wiadomości (maks. %s)
+feedSettingsScreenActiveCountryListSubtitle: Kraje aktywne
+feedSettingsScreenInActiveCountryListSubtitle: Kraje nieaktywne
+feedSettingsScreenMinSelectedCountriesError: Wybierz co najmniej jeden kraj
+# %s - those symbols should be in all translations!
+feedSettingsScreenMaxSelectedCountriesError: Już wybrałeś %s krajów
+bottomSheetCancel: Anuluj
+langNameFrench: Francuski
+langNameDutch: Holenderski
+langNameEnglish: Angielski
+langNameGerman: Niemiecki
+langNamePolish: Polski
+langNameSpanish: Hiszpański
+bottomSheetApply: Zastosuj
+bottomSheetCreate: Utwórz
+bottomSheetCreateCollectionHeader: Utwórz nową kolekcję
+bottomSheetCreateCollectionTextFieldHint: Nazwa kolekcji
+errorMsgTryingToCreateAgainDefaultCollection: Znowu próbujesz utworzyć domyślną kolekcję
+errorMsgTryingToRemoveDefaultCollection: Nie możesz usunąć domyślnej kolekcji
+articles: artykuły
+article: artykuł
+collectionsScreenTitle: Twoje kolekcje
+defaultCollectionNameReadLater: Przeczytaj później
+bookmarkSnackBarSavedTo: Zapisano do %s
+bottomSheetSaveTo: Zapisz do
+# This is a simple prefix, before the author entry, for example "by " + author name
+readerModeBylinePrefix: Autor
+errorMsgCollectionDoesntExist: Kolekcja nie istnieje
+errorMsgBookmarkDoesntExist: Zakładka nie istnieje
+errorMsgCollectionNameAlreadyUsed: Ta nazwa jest już używana
+errorMsgCollectionNameIsInvalid: Nazwa musi zawierać mniej niż %s znaków
+bottomSheetRename: Przemianować
+bottomSheetDelete: Usunąć
+bottomSheetDeleteAll: Usuń wszystko
+bottomSheetMoveBookmarks: Ruszaj się
+bottomSheetDeleteCollectionHeader: Jesteś pewny ?
+bottomSheetDeleteCollectionWithBookmarksBody: Jeśli usuniesz tę kolekcję, każdy artykuł w tym folderze również zostanie usunięty. Czy chcesz kontynuować, czy chcesz wcześniej przenieść wszystkie artykuły?
+bottomSheetRenameCollectionHeader: Zmień nazwę kolekcji
+settingsXaynPremium: Xayn Premium
+settingsSectionSubscription: Subskrypcja
+trialBannerSubscribeNow: Zapisz się teraz
+bookmarkScreenNoArticles: Brak artykułów
+trialBannerEndsIn: Twój okres próbny kończy się za %s dni
+trialBannerEndsTomorrow: Twój okres próbny kończy się jutro
+trialBannerEndsToday: Twój okres próbny kończy się dzisiaj
+trialBannerExpired: Twój okres próbny wygasł
+subscriptionHeader: Uzyskaj nieograniczoną zawartość za jedyne
+subscriptionPricingError: Nie można pobrać szczegółów cen
+subscriptionPerk1: Spersonalizowany strumień
+subscriptionPerk2: Bez reklam
+subscriptionPerk3: Bez śledzenia
+subscriptionPerk4: Neutralny pod względem emisji dwutlenku węgla
+subscriptionPerk5: Anuluj w dowolnym momencie
+subscriptionSubscribeNow: Zapisz się teraz
+subscriptionRestore: Przywróć subskrypcję
+subscriptionPromoCode: Mam kod promocyjny
+subscriptionDisclaimer: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
+settingsSubscribedToHeader: Subskrybujesz
+doneButtonTitle: Gotowy
+subscriptionRenewsMonthlyText: 'Subskrypcja odnawia się co miesiąc w dniu: %s'
+promoCodeValidUntilText: 'Twój kod promocyjny jest ważny do: %s'
+subscriptionPlatformInfoApple: Jako użytkownik wersji beta dajemy Ci premię za darmo! Możesz zarządzać swoimi subskrypcjami w __Apple App Store__.
+subscriptionPlatformInfoGoogle: Jako użytkownik wersji beta dajemy Ci premię za darmo! Możesz zarządzać swoimi subskrypcjami w __Sklepie Google Play__.
+paymentFlowError:
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the unknown error occurred during payment operation
+  unknown: Wystąpił nieznany błąd
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the GooglePlay or AppStore is not available for some reason
+  storeNotAvailable: Sklep jest w tej chwili niedostępny
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the subscription details can not be received
+  productNotFound: 'Produkt nie znaleziony :('
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when the item (subscription) was already paid before
+  itemAlreadyOwned: Zostałeś już zasubskrybowany
+  # DO NOT TRANSLATE THIS FOR NOW!
+  # Error msg, shown when some issue happened during the payment transaction
+  transactionFailed: Transakcja płatnicza nie powiodła się
+bottomSheetDeleteCollectionWithNoItemsBody: Czy na pewno chcesz usunąć tę kolekcję?
+bottomSheetMoveSingleBookmark: Przejdź do innej kolekcji
+readerModeSettingsErrorChangesNotApplied: Nie udało się zastosować zmian
+errorGenericHeaderSomethingWentWrong: Coś poszło nie tak
+errorGenericBodyPleaseTryAgainLater: Spróbuj ponownie później.
+errorClose: Blisko
