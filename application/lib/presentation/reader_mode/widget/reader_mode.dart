@@ -41,6 +41,7 @@ final RegExp _kMatchManifestRegExp = RegExp(
 
 class ReaderMode extends StatefulWidget {
   final String title;
+  final String languageCode;
   final Uri? uri;
   final readability.ProcessHtmlResult? processHtmlResult;
   final VoidCallback? onProcessedHtml;
@@ -50,6 +51,7 @@ class ReaderMode extends StatefulWidget {
   const ReaderMode({
     Key? key,
     required this.title,
+    required this.languageCode,
     this.uri,
     this.processHtmlResult,
     this.padding = _kPadding,
@@ -144,6 +146,7 @@ class _ReaderModeState extends State<ReaderMode> {
             if (contents != null && contents.isNotEmpty) {
               compute(_extractParagraphs, contents)
                   .then((it) => _textToSpeechManager.handleStart(
+                        languageCode: widget.languageCode,
                         uri: widget.uri,
                         paragraphs: it,
                       ));
