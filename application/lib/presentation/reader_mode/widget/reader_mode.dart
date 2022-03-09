@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
@@ -144,12 +143,11 @@ class _ReaderModeState extends State<ReaderMode> {
             final contents = result.contents;
 
             if (contents != null && contents.isNotEmpty) {
-              compute(TextToSpeechManager.extractParagraphs, contents)
-                  .then((it) => _textToSpeechManager.handleStart(
-                        languageCode: widget.languageCode,
-                        uri: widget.uri,
-                        paragraphs: it,
-                      ));
+              _textToSpeechManager.handleStart(
+                languageCode: widget.languageCode,
+                uri: widget.uri,
+                html: contents,
+              );
             }
 
             return _onProcessedHtml(result);
