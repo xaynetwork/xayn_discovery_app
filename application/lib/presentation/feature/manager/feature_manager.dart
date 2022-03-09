@@ -13,6 +13,7 @@ const FeatureMap kInitialFeatureMap = {
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.discoveryEngineReportOverlay: false,
   Feature.payment: false,
+  Feature.textToSpeech: false,
 };
 
 @lazySingleton
