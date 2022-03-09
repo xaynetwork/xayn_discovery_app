@@ -83,8 +83,8 @@ class TranslationsDe extends Translations {
   String get hoursAgo => """hours ago""";
   String get dayAgo => """day ago""";
   String get daysAgo => """days ago""";
-  String get readingTimeUnitSingular => """minute""";
-  String get readingTimeUnitPlural => """minutes""";
+  String get readingTimeUnitSingular => """Min Lesedauer""";
+  String get readingTimeUnitPlural => """Min Lesedauer""";
   String get readingTimeSuffix => """read""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Dein Bereich""";
@@ -170,20 +170,22 @@ class TranslationsDe extends Translations {
   String get promoCodeValidUntilText =>
       """Dein Promo-Code ist noch gültig bis: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Via Apple App Store abonniert. Du kannst Dein Abo im __Apple App Store__ verwalten.""";
+      """Als Beta User kriegst du Xayn Premium ganz automatisch gratis! Du kannst Dein Abo im __Apple App Store__ verwalten.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Via Google Play Store abonniert. Du kannst Dein Abo im __Google Play Store__ verwalten.""";
+      """Als Beta User kriegst du Xayn Premium ganz automatisch gratis!  Du kannst Dein Abo im __Google Play Store__ verwalten.""";
   PaymentFlowErrorTranslationsDe get paymentFlowError =>
       PaymentFlowErrorTranslationsDe(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
       """Willst Du diese Sammlung wirklich löschen?""";
-  String get bottomSheetMoveSingleBookmark => """Move to another collection""";
+  String get bottomSheetMoveSingleBookmark =>
+      """In eine andere Collection verschieben""";
   String get readerModeSettingsErrorChangesNotApplied =>
-      """Changes couldn't be applied""";
-  String get errorGenericHeaderSomethingWentWrong => """Something went wrong""";
+      """Die Änderungen konnten nicht gespeichert werden""";
+  String get errorGenericHeaderSomethingWentWrong =>
+      """Da ging wohl was schief""";
   String get errorGenericBodyPleaseTryAgainLater =>
-      """Please try again later.""";
-  String get errorClose => """Close""";
+      """Bitte versuche es später noch einmal.""";
+  String get errorClose => """Schließen""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -194,8 +196,6 @@ class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nicht gefunden :(""";
   String get itemAlreadyOwned => """Du bist bereits abonniert""";
   String get transactionFailed => """Zahlungsvorgang fehlgeschlagen""";
-  String get checkSubscriptionActiveFailed =>
-      """Check active subscription failed. Please try again later""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -227,8 +227,8 @@ Map<String, String> get translationsDeMap => {
       """hoursAgo""": """hours ago""",
       """dayAgo""": """day ago""",
       """daysAgo""": """days ago""",
-      """readingTimeUnitSingular""": """minute""",
-      """readingTimeUnitPlural""": """minutes""",
+      """readingTimeUnitSingular""": """Min Lesedauer""",
+      """readingTimeUnitPlural""": """Min Lesedauer""",
       """readingTimeSuffix""": """read""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Dein Bereich""",
@@ -313,9 +313,9 @@ Map<String, String> get translationsDeMap => {
       """promoCodeValidUntilText""":
           """Dein Promo-Code ist noch gültig bis: %s""",
       """subscriptionPlatformInfoApple""":
-          """Via Apple App Store abonniert. Du kannst Dein Abo im __Apple App Store__ verwalten.""",
+          """Als Beta User kriegst du Xayn Premium ganz automatisch gratis! Du kannst Dein Abo im __Apple App Store__ verwalten.""",
       """subscriptionPlatformInfoGoogle""":
-          """Via Google Play Store abonniert. Du kannst Dein Abo im __Google Play Store__ verwalten.""",
+          """Als Beta User kriegst du Xayn Premium ganz automatisch gratis!  Du kannst Dein Abo im __Google Play Store__ verwalten.""",
       """paymentFlowError.unknown""": """Unbekannter Fehler""",
       """paymentFlowError.storeNotAvailable""":
           """Der Store ist gerade nicht erreichbar""",
@@ -323,14 +323,14 @@ Map<String, String> get translationsDeMap => {
       """paymentFlowError.itemAlreadyOwned""": """Du bist bereits abonniert""",
       """paymentFlowError.transactionFailed""":
           """Zahlungsvorgang fehlgeschlagen""",
-      """paymentFlowError.checkSubscriptionActiveFailed""":
-          """Check active subscription failed. Please try again later""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Willst Du diese Sammlung wirklich löschen?""",
-      """bottomSheetMoveSingleBookmark""": """Move to another collection""",
+      """bottomSheetMoveSingleBookmark""":
+          """In eine andere Collection verschieben""",
       """readerModeSettingsErrorChangesNotApplied""":
-          """Changes couldn't be applied""",
-      """errorGenericHeaderSomethingWentWrong""": """Something went wrong""",
-      """errorGenericBodyPleaseTryAgainLater""": """Please try again later.""",
-      """errorClose""": """Close""",
+          """Die Änderungen konnten nicht gespeichert werden""",
+      """errorGenericHeaderSomethingWentWrong""": """Da ging wohl was schief""",
+      """errorGenericBodyPleaseTryAgainLater""":
+          """Bitte versuche es später noch einmal.""",
+      """errorClose""": """Schließen""",
     };

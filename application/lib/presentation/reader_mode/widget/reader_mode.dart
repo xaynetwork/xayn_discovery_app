@@ -218,6 +218,9 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
         width: (src.width ?? R.dimen.unit8).floor(),
         height: (src.height ?? R.dimen.unit8).floor(),
         fit: BoxFit.fitWidth,
+        errorBuilder: (_) => Container(),
+        noImageBuilder: (_) => Container(),
+        loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
       ),
     );
   }

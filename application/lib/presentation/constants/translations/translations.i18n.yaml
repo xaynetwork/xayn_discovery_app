@@ -100,8 +100,8 @@ settingsSubscribedToHeader: You are subscribed to
 doneButtonTitle: Done
 subscriptionRenewsMonthlyText: 'The subscription renews monthly on: %s'
 promoCodeValidUntilText: 'Your promo code is valid until: %s'
-subscriptionPlatformInfoApple: Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.
-subscriptionPlatformInfoGoogle: Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.
+subscriptionPlatformInfoApple: As beta user, we give you premium for free! You can manage your subscriptions in the __Apple App Store__.
+subscriptionPlatformInfoGoogle: As beta user, we give you premium for free! You can manage your subscriptions in the __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation
@@ -114,13 +114,10 @@ paymentFlowError:
   productNotFound: 'Product not found :('
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the item (subscription) was already paid before
-  itemAlreadyOwned: You have been already subscribed
+  itemAlreadyOwned: You have already been subscribed
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Payment transaction failed
-  # DO NOT TRANSLATE THIS FOR NOW!
-  # Error msg, shown when some issue happened during the payment transaction
-  checkSubscriptionActiveFailed: Check active subscription failed. Please try again later
 bottomSheetDeleteCollectionWithNoItemsBody: Do you really want to delete this collection?
 bottomSheetMoveSingleBookmark: Move to another collection
 readerModeSettingsErrorChangesNotApplied: Changes couldn't be applied

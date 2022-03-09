@@ -48,6 +48,7 @@ before_all do |lane, options|
   ## downloading the iOS adhoc profile
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, true)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
+  setIfNotSet.call(Options::TEST, lane == :check)
 
   version_name = gitVersionName()
   flavor = options[Options::FLAVOR]
@@ -122,7 +123,7 @@ lane :update_strings do |options|
   download_translations(
     api_token: env["POEDITOR_API_TOKEN"],
     project_id: "502883",
-    languages: "de,en",
+    languages: "nl,en,fr,de,pl,es",
     output_dir: "lib/presentation/constants/translations/",
   )
   # Need to move default language file to translations.i18n.yaml for the i18n build generator
@@ -200,9 +201,8 @@ desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
   maybe_pub_get(options)
-  if Dir.glob("../**/env.g.dart").empty?
-    build_runner(options)
-  end
+  build_runner(options)
+
   flutter("analyze lib test")
   if is_ci
     flutter("format ./ --set-exit-if-changed")
@@ -256,12 +256,13 @@ end
 
 desc "Update the assets folder based on the Assets Manifest from xayn_discovery_engine"
 lane :update_assets do |options|
+  isUnderTest = options[Options::TEST]
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
   manifestPath["file://"] = ""
   raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
-  downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"))
+  downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
 end
 
 # Private helper methods
@@ -304,13 +305,20 @@ def pathFromDependency(dependency)
   return path
 end
 
-def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath)
+def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath, justCreateEmptyFiles)
   file = File.read(manifestPath)
   data_hash = JSON.parse(file)
   data_hash["assets"].each { |a|
     suffix = a["url_suffix"]
     checksum = a["checksum"]
-    downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
+    if justCreateEmptyFiles
+      path = "#{assetPath}/#{suffix}"
+      FileUtils.mkdir_p File.dirname(path)
+      File.open(path, "w") {} unless File.exist?(path)
+      UI.success "Created #{path}"
+    else
+      downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
+    end
   }
 end
 

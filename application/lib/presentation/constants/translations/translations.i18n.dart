@@ -167,9 +167,9 @@ class Translations {
   String get promoCodeValidUntilText =>
       """Your promo code is valid until: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""";
+      """As beta user, we give you premium for free! You can manage your subscriptions in the __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""";
+      """As beta user, we give you premium for free! You can manage your subscriptions in the __Google Play Store__.""";
   PaymentFlowErrorTranslations get paymentFlowError =>
       PaymentFlowErrorTranslations(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -189,10 +189,8 @@ class PaymentFlowErrorTranslations {
   String get unknown => """Unknown error occurred""";
   String get storeNotAvailable => """The store is not available right now""";
   String get productNotFound => """Product not found :(""";
-  String get itemAlreadyOwned => """You have been already subscribed""";
+  String get itemAlreadyOwned => """You have already been subscribed""";
   String get transactionFailed => """Payment transaction failed""";
-  String get checkSubscriptionActiveFailed =>
-      """Check active subscription failed. Please try again later""";
 }
 
 Map<String, String> get translationsMap => {
@@ -305,19 +303,17 @@ Map<String, String> get translationsMap => {
           """The subscription renews monthly on: %s""",
       """promoCodeValidUntilText""": """Your promo code is valid until: %s""",
       """subscriptionPlatformInfoApple""":
-          """Subscribed via the Apple App Store. You can manage and cancel your subscriptions in the __Apple App Store__.""",
+          """As beta user, we give you premium for free! You can manage your subscriptions in the __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Subscribed via the Google Play Store. You can manage and cancel your subscriptions in the __Google Play Store__.""",
+          """As beta user, we give you premium for free! You can manage your subscriptions in the __Google Play Store__.""",
       """paymentFlowError.unknown""": """Unknown error occurred""",
       """paymentFlowError.storeNotAvailable""":
           """The store is not available right now""",
       """paymentFlowError.productNotFound""": """Product not found :(""",
       """paymentFlowError.itemAlreadyOwned""":
-          """You have been already subscribed""",
+          """You have already been subscribed""",
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
-      """paymentFlowError.checkSubscriptionActiveFailed""":
-          """Check active subscription failed. Please try again later""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",

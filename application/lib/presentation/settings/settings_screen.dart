@@ -71,8 +71,11 @@ class _SettingsScreenState extends State<SettingsScreen>
           child: child,
         );
     final children = [
-      _buildSubscriptionSection(state.trialEndDate),
-      _buildAppThemeSection(state.theme),
+      if (state.isPaymentEnabled) _buildSubscriptionSection(state.trialEndDate),
+      _buildAppThemeSection(
+        appTheme: state.theme,
+        isPaymentEnabled: state.isPaymentEnabled,
+      ),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -94,9 +97,14 @@ class _SettingsScreenState extends State<SettingsScreen>
         onShowDetailsPressed: _showSubscriptionDetailsBottomSheet,
       );
 
-  Widget _buildAppThemeSection(AppTheme appTheme) => SettingsAppThemeSection(
+  Widget _buildAppThemeSection({
+    required AppTheme appTheme,
+    required bool isPaymentEnabled,
+  }) =>
+      SettingsAppThemeSection(
         theme: appTheme,
         onSelected: _manager.saveTheme,
+        isFirstSection: !isPaymentEnabled,
       );
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>

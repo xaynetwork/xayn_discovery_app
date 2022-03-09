@@ -90,6 +90,9 @@ Available options:
 
 Build and publish to MS AppCenter 
 Available options:
+ - keyFile 
+ - keyId 
+ - issuerId 
  - clean : [true, false]
  - platform : [ios, android]
  - android_output : [apk, appbundle]
@@ -99,12 +102,10 @@ Available options:
  - coverage : [true, false]
  - download_profile : [true, false]
  - update_assets : [true, false]
+ - test : [true, false]
  - watch : [true, false]
  - upload_to_appcenter : [true, false]
  - version_name 
- - keyFile 
- - keyId 
- - issuerId 
 
 
 ### update_assets

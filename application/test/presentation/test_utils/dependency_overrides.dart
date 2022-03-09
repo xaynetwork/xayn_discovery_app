@@ -56,8 +56,11 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   TestDiscoveryEngine();
 
   @override
-  Future<EngineEvent> changeConfiguration(
-      {FeedMarkets? feedMarkets, int? maxItemsPerFeedBatch}) {
+  Future<EngineEvent> changeConfiguration({
+    FeedMarkets? feedMarkets,
+    int? maxItemsPerFeedBatch,
+    int? maxItemsPerSearchBatch,
+  }) {
     return Future.value(const EngineEvent.clientEventSucceeded());
   }
 
@@ -86,18 +89,18 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestFeed() {
-    return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
+  Future<EngineEvent> restoreFeed() {
+    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
   }
 
   @override
   Future<EngineEvent> requestNextFeedBatch() {
-    return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
+    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
   }
 
   @override
   Future<EngineEvent> search(String searchTerm) {
-    return Future.value(EngineEvent.feedRequestSucceeded([fakeDocument]));
+    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
   }
 
   @override
@@ -121,6 +124,18 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   // TODO: implement engineInputEventsLog
   Stream<String> get engineInputEventsLog => throw UnimplementedError();
+
+  @override
+  Future<EngineEvent> updateMarkets() {
+    // TODO: implement maybeUpdateMarkets
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> areMarketsOutdated() {
+    // TODO: implement willUpdateMarkets
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)

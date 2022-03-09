@@ -73,18 +73,12 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   _discoveryFeedManager.onHomeNavPressed();
                 }),
             buildNavBarItemSearch(
-                isDisabled: true,
-                onPressed: () {
-                  showTooltip(
-                    TooltipKeys.activeSearchDisabled,
-                    style: TooltipStyle.arrowDown,
-                  );
-
-                  // TODO: For testing purposes only. Call it from the correct place.
-                  if (_featureManager.canShowTrialBannerNotification) {
-                    showTrialBanner();
-                  }
-                }),
+              isDisabled: true,
+              onPressed: () => showTooltip(
+                TooltipKeys.activeSearchDisabled,
+                style: TooltipStyle.arrowDown,
+              ),
+            ),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
@@ -200,6 +194,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
             /// feed should look the same in that process
             ///
             resizeToAvoidBottomInset: false,
+            backgroundColor: R.colors.homePageBackground,
             body: Padding(
               padding: EdgeInsets.only(top: topPadding),
               child: _featureManager.showDiscoveryEngineReportOverlay
@@ -225,11 +220,10 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
 
-    _discoveryFeedManager = di.get();
+    _discoveryFeedManager = di.get()..handleCheckMarkets();
 
     _navBarUpdateListener = _discoveryFeedManager.stream
-        .map((state) => state.isFullScreen)
-        .distinct()
+        .where((state) => state.shouldUpdateNavBar)
         .map((_) => context)
         .listen(NavBarContainer.updateNavBar);
 

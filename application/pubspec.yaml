@@ -4,8 +4,8 @@ publish_to: 'none'
 version: 0.0.1
 
 environment:
-  sdk: '>=2.16.0 <3.0.0'
-  flutter: '>=2.10.0'
+  sdk: '>=2.16.1 <3.0.0'
+  flutter: '>=2.10.3'
 
 # Please list dependencies alphabetically!
 dependencies:
@@ -77,24 +77,25 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 5889adbdc31afe51f96209319919512e9b55302f
+      ref: f480f93150601222c697aea5ffbe5fc141ece88a
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
-      ref: 6b688ae62af32aa877d946f4c557a17965757cfe
+      ref: e8271e63244471325f348a55c9f8a32d9dda64e1
       path: discovery_engine_flutter
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
-      ref: c7ae15b1aaa1cc890b62be1020a343ed161260df
+      ref: 57cf834d5a0dc89964fdcaa6614648bdb7fdad18
   xayn_swipe_it: 1.0.3
 
 dependency_overrides:
   json_annotation: 4.4.0
   hive: 2.0.5
   freezed_annotation: 1.1.0
-  analyzer: 3.0.0
+  analyzer: 3.3.0
   provider: 6.0.2
+  dart_style: 2.2.2
 
 # Please list dependencies alphabetically!
 dev_dependencies:
@@ -135,7 +136,7 @@ flutter:
     # In order to determine the real folder structure run:
     # fastlane clean && fastlane build_runner  (which will run the update_assets lane and download the assets)
     - assets/ai/kpe_v0001/
-    - assets/ai/smbert_v0000/
+    - assets/ai/smbert_v0001/
 
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved

@@ -37,7 +37,7 @@ void main() {
     'GIVEN use case emits results THEN the state contains results',
     build: () {
       when(engine.engineEvents).thenAnswer(
-          (ctx) => Stream.value(FeedRequestSucceeded([fakeDocument])));
+          (ctx) => Stream.value(RestoreFeedSucceeded([fakeDocument])));
       return buildManager();
     },
     verify: (bloc) {

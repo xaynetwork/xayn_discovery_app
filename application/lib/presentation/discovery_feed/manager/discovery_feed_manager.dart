@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -22,8 +23,8 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-typedef OnFeedRequestSucceeded = Set<Document> Function(
-    FeedRequestSucceeded event);
+typedef OnRestoreFeedSucceeded = Set<Document> Function(
+    RestoreFeedSucceeded event);
 typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
     NextFeedBatchRequestSucceeded event);
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -52,7 +53,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
         RequestFeedMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>,
-        ChangeUserReactionMixin<DiscoveryFeedState>
+        ChangeUserReactionMixin<DiscoveryFeedState>,
+        CheckMarketsMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._discoveryFeedNavActions,
@@ -92,6 +94,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
+  bool _didChangeMarkets = false;
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
@@ -182,11 +185,33 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
     );
   }
 
-  /// Triggers the fake discovery engine to load more results, using a random
-  /// keyword which is derived from the current result set.
-  void handleLoadMore() async {
-    requestNextFeedBatch();
-  }
+  /// Triggers the discovery engine to load more results.
+  void handleLoadMore() => requestNextFeedBatch();
+
+  void handleCheckMarkets() => checkMarkets();
+
+  /// Configuration will change, after this method completes.
+  @override
+  void willChangeMarkets() => scheduleComputeState(() {
+        _cardIndex = 0;
+        _didChangeMarkets = true;
+
+        // clears the current pending observation, if any...
+        observeDocument();
+        // clear the inner-stored current observation...
+        _observedDocument = null;
+        // closes the current feed...
+        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
+      });
+
+  /// Configuration was updated, we now ask for fresh documents, under the
+  /// new market settings.
+  @override
+  void didChangeMarkets() => requestNextFeedBatch();
+
+  @override
+  bool isDocumentCurrentlyDisplayed(Document document) =>
+      state.results.map((it) => it.documentId).contains(document.documentId);
 
   @override
   Future<DiscoveryFeedState?> computeState() async => fold3(
@@ -203,42 +228,57 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
 
         if (_cardIndex == null) return null;
 
-        final foldEngineEvent = _foldEngineEvent(engineEvent);
+        late Set<Document> results;
 
-        final results = foldEngineEvent(
-          feedRequestSucceeded: (event) => {...state.results, ...event.items},
-          nextFeedBatchRequestSucceeded: (event) =>
-              {...state.results, ...event.items},
-          documentsUpdated: (event) => state.results
-              .map(
-                (it) => event.items.firstWhere(
-                  (item) => item.documentId == it.documentId,
-                  orElse: () => it,
+        if (_didChangeMarkets) {
+          _didChangeMarkets = false;
+
+          results = <Document>{};
+        } else {
+          final foldEngineEvent = _foldEngineEvent(engineEvent);
+
+          results = foldEngineEvent(
+            restoreFeedSucceeded: (event) => {...state.results, ...event.items},
+            nextFeedBatchRequestSucceeded: (event) =>
+                {...state.results, ...event.items},
+            documentsUpdated: (event) => state.results
+                .map(
+                  (it) => event.items.firstWhere(
+                    (item) => item.documentId == it.documentId,
+                    orElse: () => it,
+                  ),
+                )
+                .toSet(),
+            engineExceptionRaised: (event) {
+              _sendAnalyticsUseCase(
+                EngineExceptionRaisedEvent(
+                  event: event,
                 ),
-              )
-              .toSet(),
-          engineExceptionRaised: (event) {
-            _sendAnalyticsUseCase(EngineExceptionRaisedEvent(
-              event: event,
-            ));
+              );
 
-            logger.e('$event');
+              logger.e('$event');
 
-            return state.results;
-          },
-          nextFeedBatchRequestFailed: (event) {
-            _sendAnalyticsUseCase(NextFeedBatchRequestFailedEvent(
-              event: event,
-            ));
+              return state.results;
+            },
+            nextFeedBatchRequestFailed: (event) {
+              _sendAnalyticsUseCase(
+                NextFeedBatchRequestFailedEvent(
+                  event: event,
+                ),
+              );
 
-            logger.e('$event');
+              logger.e('$event');
 
-            return state.results;
-          },
-          orElse: () => state.results,
-        );
+              return state.results;
+            },
+            orElse: () => state.results,
+          );
+        }
 
         final sets = await _maybeReduceCardCount(results);
+        final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
+        final hasExplicitDocumentFeedbackChanged =
+            state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
 
         final nextState = DiscoveryFeedState(
           results: sets.results,
@@ -248,6 +288,8 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
           isFullScreen: _isFullScreen,
           cardIndex: _cardIndex!,
           latestExplicitDocumentFeedback: explicitDocumentFeedback,
+          shouldUpdateNavBar:
+              hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
         );
 
         // guard against same-state emission
@@ -255,22 +297,22 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
       });
 
   Set<Document> Function({
-    required OnFeedRequestSucceeded feedRequestSucceeded,
+    required OnRestoreFeedSucceeded restoreFeedSucceeded,
     required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
     required OnDocumentsUpdated documentsUpdated,
     required OnEngineExceptionRaised engineExceptionRaised,
     required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
     required OnNonMatchedEngineEvent orElse,
   }) _foldEngineEvent(EngineEvent? event) => ({
-        required OnFeedRequestSucceeded feedRequestSucceeded,
+        required OnRestoreFeedSucceeded restoreFeedSucceeded,
         required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
         required OnDocumentsUpdated documentsUpdated,
         required OnEngineExceptionRaised engineExceptionRaised,
         required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
         required OnNonMatchedEngineEvent orElse,
       }) {
-        if (event is FeedRequestSucceeded) {
-          return feedRequestSucceeded(event);
+        if (event is RestoreFeedSucceeded) {
+          return restoreFeedSucceeded(event);
         } else if (event is NextFeedBatchRequestSucceeded) {
           return nextFeedBatchRequestSucceeded(event);
         } else if (event is DocumentsUpdated) {
