@@ -1,13 +1,17 @@
 name: Mirror Repo
 
 on:
+  workflow_dispatch:
+    inputs:
+      param:
+        required: false
+        description: ''
   push:
     branches:
       - main
+      - TB-3418_mirror_repo
     tags:
       - '*'
-  workflow_dispatch:
-    description: 'Manually mirror the repo to xayn_discovery_app_public'
 
 permissions:
   contents: read
@@ -26,6 +30,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.4.0
+        with:
+          fetch-depth: '0'
 
       - name: Configure Git
         shell: bash
