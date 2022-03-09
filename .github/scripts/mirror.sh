@@ -34,14 +34,9 @@ if [ -z "$USERNAME" ]; then
     error "git user.name must be set"
 fi
 
-# Find out the current branch
-if [ -z "${GITHUB_REF:-}" ]; then
-    BRANCH="$(git branch --show-current)"
-else
-    BRANCH="${GITHUB_REF#refs/heads/}"
-fi
-echo "Targeting branch: $BRANCH"
+BRANCH="$(git branch --show-current)"
 
+echo "Targeting branch: $BRANCH"
 
 # Create a temporary folder to clone the other repo
 DST_DIR=$(mktemp -d)
@@ -86,6 +81,7 @@ https://github.com/xaynetwork/xayn_discovery_app/tree/$BRANCH"
 
 if [ "$DRY_RUN" = "false" ]; then
     git push -u origin HEAD:$BRANCH
+    git push -u origin HEAD:$BRANCH --tags
 else
     echo "Prepared release at: $DST_DIR"
 fi
