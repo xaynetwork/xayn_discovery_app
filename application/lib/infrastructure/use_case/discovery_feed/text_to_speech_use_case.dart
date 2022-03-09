@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/tts/tts.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_service.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 /// A map which can be used to try and further localize the language
@@ -32,7 +32,7 @@ const Map<String, List<_UrlLanguage>> _locality = {
 
 @injectable
 class TextToSpeechUseCase extends UseCase<Utterance, Duration> {
-  final Tts _tts;
+  final TtsService _tts;
 
   TextToSpeechUseCase(this._tts);
 
@@ -52,7 +52,10 @@ class TextToSpeechUseCase extends UseCase<Utterance, Duration> {
   }
 
   Future<String> _resolveLanguage(
-      String text, String languageCode, Uri? uri) async {
+    String text,
+    String languageCode,
+    Uri? uri,
+  ) async {
     var code = languageCode;
 
     if (_locality.containsKey(code)) {

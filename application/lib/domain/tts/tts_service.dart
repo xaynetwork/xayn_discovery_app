@@ -1,4 +1,4 @@
-abstract class Tts {
+abstract class TtsService {
   Future<dynamic> isLanguageAvailable(String language);
   Future<dynamic> setLanguage(String language);
   Future<dynamic> setVolume(double volume);

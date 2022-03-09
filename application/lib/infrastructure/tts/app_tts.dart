@@ -1,12 +1,12 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_discovery_app/domain/tts/tts.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_service.dart';
 
-@Injectable(as: Tts)
-class AppTts implements Tts {
-  late final FlutterTts _impl = FlutterTts();
+@Injectable(as: TtsService)
+class AppTtsService implements TtsService {
+  late final _impl = FlutterTts();
 
-  AppTts() {
+  AppTtsService() {
     _impl.setVolume(1.0);
   }
 
