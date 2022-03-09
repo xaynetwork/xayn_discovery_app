@@ -133,9 +133,9 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),
       fit: widget.imageBoxFit,
-      loadingBuilder: (context, progress) => backgroundPane,
-      errorBuilder: (context) =>
-          Text('${R.strings.cannotLoadUrlError}$imageUrl'),
+      loadingBuilder: (_, __) => backgroundPane,
+      errorBuilder: (_) => backgroundPane,
+      noImageBuilder: (_) => backgroundPane,
     );
   }
 }
