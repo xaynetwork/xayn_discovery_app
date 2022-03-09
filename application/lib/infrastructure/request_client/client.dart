@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
@@ -37,6 +39,7 @@ class Client implements http.Client {
 
         return await sendWithRedirectGuard(request.change(
           uri: location,
+          headers: request.headers.clone()..remove('cookie'),
           cookies: _getCookiesToSet(response.headers['set-cookie']!),
         ));
       }
@@ -60,15 +63,21 @@ class Client implements http.Client {
         : originalUri;
   }
 
-  Map<String, String> _getCookiesToSet(List<String> rawCookies) =>
-      Map.fromEntries(
-        rawCookies
-            .map((it) => it.split(';'))
-            .expand((it) => it)
-            .map((it) => it.split('='))
-            .where((it) => it.length == 2)
-            .map((it) => MapEntry(it.first, it.last)),
-      );
+  Map<String, String> _getCookiesToSet(List<String> rawCookies) {
+    final cookieMap = <String, String>{};
+
+    for (final it in rawCookies) {
+      try {
+        final cookie = Cookie.fromSetCookieValue(it);
+
+        cookieMap[cookie.name] = cookie.value;
+      } catch (e) {
+        // ignore invalid cookies
+      }
+    }
+
+    return cookieMap;
+  }
 }
 
 extension _IsRedirectExtension on http.Response {

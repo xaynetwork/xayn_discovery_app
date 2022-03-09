@@ -3,12 +3,20 @@ import 'dart:ui';
 import 'package:instabug_flutter/Instabug.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations_de.i18n.dart';
+import 'package:xayn_discovery_app/presentation/constants/translations/translations_es.i18n.dart';
+import 'package:xayn_discovery_app/presentation/constants/translations/translations_fr.i18n.dart';
+import 'package:xayn_discovery_app/presentation/constants/translations/translations_nl.i18n.dart';
+import 'package:xayn_discovery_app/presentation/constants/translations/translations_pl.i18n.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
 import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 
 enum AppLanguage {
   english,
   german,
+  dutch,
+  french,
+  polish,
+  spanish,
 }
 
 class AppLanguageHelper {
@@ -38,6 +46,14 @@ extension AppLanguageExtension on AppLanguage {
         return const Translations();
       case AppLanguage.german:
         return const TranslationsDe();
+      case AppLanguage.dutch:
+        return const TranslationsNl();
+      case AppLanguage.french:
+        return const TranslationsFr();
+      case AppLanguage.polish:
+        return const TranslationsPl();
+      case AppLanguage.spanish:
+        return const TranslationsEs();
     }
   }
 
@@ -47,6 +63,14 @@ extension AppLanguageExtension on AppLanguage {
         return 'en';
       case AppLanguage.german:
         return 'de';
+      case AppLanguage.dutch:
+        return 'nl';
+      case AppLanguage.french:
+        return 'fr';
+      case AppLanguage.polish:
+        return 'pl';
+      case AppLanguage.spanish:
+        return 'es';
     }
   }
 
@@ -56,6 +80,14 @@ extension AppLanguageExtension on AppLanguage {
         return 'US';
       case AppLanguage.german:
         return 'DE';
+      case AppLanguage.dutch:
+        return "NL";
+      case AppLanguage.french:
+        return "FR";
+      case AppLanguage.polish:
+        return "PL";
+      case AppLanguage.spanish:
+        return "ES";
     }
   }
 
@@ -65,6 +97,14 @@ extension AppLanguageExtension on AppLanguage {
         return IBGLocale.english;
       case AppLanguage.german:
         return IBGLocale.german;
+      case AppLanguage.dutch:
+        return IBGLocale.dutch;
+      case AppLanguage.french:
+        return IBGLocale.french;
+      case AppLanguage.polish:
+        return IBGLocale.polish;
+      case AppLanguage.spanish:
+        return IBGLocale.spanish;
     }
   }
 

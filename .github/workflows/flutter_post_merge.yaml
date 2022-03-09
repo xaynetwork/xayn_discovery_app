@@ -18,7 +18,7 @@ concurrency:
 
 env:
   flutter_channel: 'stable'
-  flutter_version: '2.10.0'
+  flutter_version: '2.10.3'
   java_version: '12.x'
   ios_device: 'iPhone 11 Pro (14.5)'
   # Common environment variables used inside ./build_scripts files
@@ -65,7 +65,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 20
+        timeout-minutes: 25
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -85,7 +85,7 @@ jobs:
 
   publish_ios_beta:
     name: Publish iOS Beta
-    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_beta'))
+    if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_beta'))
     runs-on: macos-latest
     steps:
       - name: Install SSH key
@@ -121,7 +121,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 20
+        timeout-minutes: 25
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -184,7 +184,7 @@ jobs:
 
   publish_android_beta:
     name: Publish Android Beta
-    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_beta'))
+    if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_beta'))
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH key
@@ -223,4 +223,4 @@ jobs:
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build_type:release flavor:beta
+          fastlane publish platform:android build_type:release flavor:beta android_output:appbundle
