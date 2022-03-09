@@ -296,6 +296,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }) {
     final readerMode = ReaderMode(
       title: title,
+      languageCode: widget.document.resource.language,
       uri: widget.document.resource.url,
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(

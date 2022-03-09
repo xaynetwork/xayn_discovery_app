@@ -17,11 +17,13 @@ class TextToSpeechManager extends Cubit<TextToSpeechState>
 
   void handleStart({
     required List<String> paragraphs,
+    required String languageCode,
     Uri? uri,
   }) =>
       _textToSpeechSink(Utterance(
-        uri: uri,
+        languageCode: languageCode,
         paragraphs: paragraphs,
+        uri: uri,
       ));
 
   @override
