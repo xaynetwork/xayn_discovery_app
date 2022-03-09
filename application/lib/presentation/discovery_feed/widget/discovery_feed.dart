@@ -177,7 +177,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
       BlocConsumer<DiscoveryFeedManager, DiscoveryFeedState>(
         bloc: _discoveryFeedManager,
         listener: (context, state) {
-          if (state.isInErrorState) showErrorBottomSheet(context);
+          if (state.isInErrorState) showErrorBottomSheet();
         },
         builder: (context, state) {
           // this is for:

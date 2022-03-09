@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 mixin ErrorHandlingMixin<T extends StatefulWidget> on State<T> {
   void openErrorScreen() => di.get<ErrorNavActions>().openErrorScreen();
 
-  void showErrorBottomSheet(BuildContext context) => showAppBottomSheet(
+  void showErrorBottomSheet() => showAppBottomSheet(
         context,
         builder: (_) => const ErrorBottomSheet(),
         allowStacking: false,
@@ -23,14 +23,14 @@ mixin ErrorHandlingMixin<T extends StatefulWidget> on State<T> {
     if (!error.hasError) return;
 
     if (showTooltip == null) {
-      showErrorBottomSheet(context);
+      showErrorBottomSheet();
       return;
     }
 
     TooltipKey? key = TooltipUtils.getErrorKey(error.errorObject);
 
     if (key == null) {
-      showErrorBottomSheet(context);
+      showErrorBottomSheet();
       return;
     }
 
