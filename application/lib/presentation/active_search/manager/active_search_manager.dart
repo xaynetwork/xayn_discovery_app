@@ -1,11 +1,12 @@
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case/handlers/fold.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
-import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -21,37 +22,25 @@ abstract class ActiveSearchNavActions {
 /// which contains a list of discovery news items which should be displayed
 /// in a list format by widgets.
 @injectable
-class ActiveSearchManager extends Cubit<ActiveSearchState>
-    with
-        UseCaseBlocHelper<ActiveSearchState>,
-        EngineEventsMixin<ActiveSearchState>
+class ActiveSearchManager extends BaseDiscoveryManager
+    with SearchMixin<DiscoveryFeedState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
-  ) : super(ActiveSearchState.empty());
+    FetchCardIndexUseCase fetchCardIndexUseCase,
+    UpdateCardIndexUseCase updateCardIndexUseCase,
+    SendAnalyticsUseCase sendAnalyticsUseCase,
+    CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
+  ) : super(
+          fetchCardIndexUseCase,
+          updateCardIndexUseCase,
+          sendAnalyticsUseCase,
+          crudExplicitDocumentFeedbackUseCase,
+        );
 
   final ActiveSearchNavActions _activeSearchNavActions;
 
-  @override
-  Future<ActiveSearchState?> computeState() async =>
-      fold(engineEvents).foldAll((engineEvent, errorReport) {
-        if (errorReport.isNotEmpty || engineEvent is EngineExceptionRaised) {
-          return state.copyWith(
-            isInErrorState: true,
-          );
-        }
-
-        if (engineEvent is RestoreFeedSucceeded) {
-          final currentResults = state.results ?? const <Document>[];
-
-          return state.copyWith(
-            results: {...currentResults, ...engineEvent.items},
-            isLoading: false,
-            isComplete: true,
-            isInErrorState: false,
-          );
-        }
-      });
+  void handleSearchTerm(String searchTerm) => search(searchTerm);
 
   @override
   void onPersonalAreaNavPressed() =>

@@ -15,8 +15,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_do
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -48,10 +47,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
         EngineEventsMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>,
-        ChangeUserReactionMixin<DiscoveryFeedState>
-    implements DiscoveryFeedNavActions {
+        ChangeUserReactionMixin<DiscoveryFeedState> {
   BaseDiscoveryManager(
-    this.discoveryFeedNavActions,
     this.fetchCardIndexUseCase,
     this.updateCardIndexUseCase,
     this.sendAnalyticsUseCase,
@@ -63,7 +60,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
   /// If the count overflows, then n-cards will be removed from the beginning
   /// onwards, until maxCardCount is satisfied.
   final int _maxCardCount;
-  final DiscoveryFeedNavActions discoveryFeedNavActions;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
   final UpdateCardIndexUseCase updateCardIndexUseCase;
   final SendAnalyticsUseCase sendAnalyticsUseCase;
@@ -348,22 +344,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
       results: nextResults,
       removedResults: flaggedForDisposal,
     );
-  }
-
-  @override
-  void onSearchNavPressed() {
-    // detect that we exit the feed screen
-    handleActivityStatus(false);
-
-    discoveryFeedNavActions.onSearchNavPressed();
-  }
-
-  @override
-  void onPersonalAreaNavPressed() {
-    // detect that we exit the feed screen
-    handleActivityStatus(false);
-
-    discoveryFeedNavActions.onPersonalAreaNavPressed();
   }
 
   void onHomeNavPressed() {

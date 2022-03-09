@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
-import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -64,20 +65,18 @@ class _ActiveSearchState extends State<ActiveSearch>
     return LayoutBuilder(builder: (context, constraints) {
       final cardHeight = constraints.maxHeight * kSearchCardHeightRatio;
 
-      return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
+      return BlocBuilder<BaseDiscoveryManager, DiscoveryFeedState>(
         bloc: _activeSearchManager,
         builder: (context, state) {
-          final results = state.results ?? {};
-
-          if (state.isLoading) {
+          if (!state.isComplete) {
             return const Center(child: CircularProgressIndicator());
-          } else if (results.isEmpty) {
+          } else if (state.results.isEmpty) {
             return Container();
           }
 
           return ListView.builder(
-            itemBuilder: _itemBuilder(results, true),
-            itemCount: results.length,
+            itemBuilder: _itemBuilder(state.results, true),
+            itemCount: state.results.length,
             itemExtent: cardHeight,
           );
         },

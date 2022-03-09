@@ -5,8 +5,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/base_discovery_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -19,20 +19,22 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 class DiscoveryFeedManager extends BaseDiscoveryManager
     with
         RequestFeedMixin<DiscoveryFeedState>,
-        CheckMarketsMixin<DiscoveryFeedState> {
+        CheckMarketsMixin<DiscoveryFeedState>
+    implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
-    DiscoveryFeedNavActions discoveryFeedNavActions,
+    this._discoveryFeedNavActions,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
   ) : super(
-          discoveryFeedNavActions,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
         );
+
+  final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   bool _didChangeMarkets = false;
 
@@ -59,6 +61,22 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   /// new market settings.
   @override
   void didChangeMarkets() => requestNextFeedBatch();
+
+  @override
+  void onSearchNavPressed() {
+    // detect that we exit the feed screen
+    handleActivityStatus(false);
+
+    _discoveryFeedNavActions.onSearchNavPressed();
+  }
+
+  @override
+  void onPersonalAreaNavPressed() {
+    // detect that we exit the feed screen
+    handleActivityStatus(false);
+
+    _discoveryFeedNavActions.onPersonalAreaNavPressed();
+  }
 
   @override
   Future<DiscoveryFeedState?> computeState() async {
