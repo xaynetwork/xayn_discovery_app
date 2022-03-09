@@ -12,6 +12,7 @@ void main() {
   late PaymentScreenManager manager;
   late MockGetSubscriptionDetailsUseCase getSubscriptionDetailsUseCase;
   late MockPurchaseSubscriptionUseCase purchaseSubscriptionUseCase;
+  late MockRestoreSubscriptionUseCase restoreSubscriptionUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
@@ -19,6 +20,7 @@ void main() {
   setUp(() {
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
+    restoreSubscriptionUseCase = MockRestoreSubscriptionUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
@@ -30,6 +32,7 @@ void main() {
     manager = PaymentScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
+      restoreSubscriptionUseCase,
       getSubscriptionStatusUseCase,
       listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,

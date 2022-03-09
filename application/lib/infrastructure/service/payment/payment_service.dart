@@ -53,6 +53,8 @@ class PaymentService {
         type: type,
       );
 
+  Future<PurchaserInfo> restore() => Purchases.restoreTransactions();
+
   Future<PurchaserInfo> getPurchaserInfo() => Purchases.getPurchaserInfo();
 
   /// iOS only. Presents a code redemption sheet, useful for redeeming offer codes

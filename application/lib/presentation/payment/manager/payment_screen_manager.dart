@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
@@ -25,6 +26,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     with UseCaseBlocHelper<PaymentScreenState> {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
+  final RestoreSubscriptionUseCase _restoreSubscriptionUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
   final RequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
@@ -41,11 +43,14 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
   late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
       _purchaseSubscriptionHandler = pipe(_purchaseSubscriptionUseCase);
+  late final UseCaseSink<None, PurchasableProductStatus>
+      _restoreSubscriptionHandler = pipe(_restoreSubscriptionUseCase);
   PurchasableProduct? _subscriptionProduct;
 
   PaymentScreenManager(
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
+    this._restoreSubscriptionUseCase,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
     this.requestCodeRedemptionSheetUseCase,
@@ -75,12 +80,18 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     requestCodeRedemptionSheetUseCase.call(none);
   }
 
+  void restore() {
+    _restoreSubscriptionHandler(none);
+  }
+
   @override
-  FutureOr<PaymentScreenState?> computeState() async => fold3(
+  FutureOr<PaymentScreenState?> computeState() async => fold4(
         _getPurchasableProductHandler,
         _purchaseSubscriptionHandler,
+        _restoreSubscriptionHandler,
         _listenSubscriptionStatusHandler,
-      ).foldAll((product, productStatus, subscriptionStatus, errorReport) {
+      ).foldAll((product, productStatus, restoreStatus, subscriptionStatus,
+          errorReport) {
         final errors = <Object>[];
 
         if (errorReport.isNotEmpty) {
@@ -97,6 +108,14 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
             _logError(
               'purchaseSubscription error',
               errorReport.of(_purchaseSubscriptionHandler)!.error,
+            );
+          }
+
+          if (errorReport.exists(_restoreSubscriptionHandler)) {
+            errors.add(errorReport.of(_restoreSubscriptionHandler)!.error);
+            _logError(
+              'restoreSubscription error',
+              errorReport.of(_restoreSubscriptionHandler)!.error,
             );
           }
 
@@ -122,7 +141,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
-          productStatus,
+          productStatus ?? restoreStatus,
           _subscriptionStatus?.isSubscriptionActive,
           paymentFlowError,
         );

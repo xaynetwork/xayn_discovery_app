@@ -21,6 +21,9 @@ class TrialExpired extends StatelessWidget {
   /// Handler for when the promo code button was tapped.
   final VoidCallback _onPromoCode;
 
+  /// Handler for when the restore button was tapped.
+  final VoidCallback _onRestore;
+
   /// Custom content paddding.
   final EdgeInsetsGeometry? _padding;
 
@@ -29,11 +32,13 @@ class TrialExpired extends StatelessWidget {
     required PurchasableProduct product,
     required VoidCallback onSubscribe,
     required VoidCallback onPromoCode,
+    required VoidCallback onRestore,
     VoidCallback? onCancel,
     EdgeInsetsGeometry? padding,
   })  : _product = product,
         _onSubscribe = onSubscribe,
         _onPromoCode = onPromoCode,
+        _onRestore = onRestore,
         _onCancel = onCancel,
         _padding = padding,
         super(key: key);
@@ -140,18 +145,42 @@ class TrialExpired extends StatelessWidget {
     );
   }
 
-  Widget _buildSubscriptionOptions() => Center(
-        child: TextButton(
-          child: Text(
-            R.strings.subscriptionPromoCode,
-            style: R.styles.sBoldStyle.copyWith(
-              decoration: TextDecoration.underline,
-              color: R.colors.secondaryText,
-            ),
-          ),
-          onPressed: _onPromoCode,
+  Widget _buildSubscriptionOptions() {
+    final promoCode = TextButton(
+      child: Text(
+        R.strings.subscriptionPromoCode,
+        style: R.styles.sBoldStyle.copyWith(
+          decoration: TextDecoration.underline,
+          color: R.colors.secondaryText,
         ),
-      );
+      ),
+      onPressed: _onPromoCode,
+    );
+
+    final spacer = SizedBox(
+      width: R.dimen.unit,
+    );
+
+    final restore = TextButton(
+      child: Text(
+        R.strings.subscriptionRestore,
+        style: R.styles.sBoldStyle.copyWith(
+          decoration: TextDecoration.underline,
+          color: R.colors.secondaryText,
+        ),
+      ),
+      onPressed: _onRestore,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        promoCode,
+        spacer,
+        restore,
+      ],
+    );
+  }
 
   Widget _buildFooter() => Text(
         R.strings.subscriptionDisclaimer,
