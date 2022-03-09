@@ -35,13 +35,10 @@ if [ -z "$USERNAME" ]; then
 fi
 
 # Find out the current branch
-if [ -z "${GITHUB_REF:-}" ]; then
-    BRANCH="$(git branch --show-current)"
-else
-    BRANCH="${GITHUB_REF#refs/heads/}"
-fi
-echo "Targeting branch: $BRANCH"
+BRANCH="$(git branch --remote --verbose --no-abbrev --contains | sed -rne 's/^[^\/]*\/([^\ ]+).*$/\1/p')"
+TAG=$(git describe --tags --exact-match $(git rev-parse HEAD) || echo "")
 
+echo "Targeting branch: $BRANCH"
 
 # Create a temporary folder to clone the other repo
 DST_DIR=$(mktemp -d)
@@ -82,10 +79,15 @@ git clean -f -d -x
 
 git commit -a --message "$SRC_COMMIT_MSG
 https://github.com/xaynetwork/xayn_discovery_app/commit/$SRC_COMMIT
-https://github.com/xaynetwork/xayn_discovery_app/tree/$BRANCH"
+https://github.com/xaynetwork/xayn_discovery_app/tree/$BRANCH" || true
+
+if [ -n "$TAG" ]; then
+  git tag $TAG
+fi
 
 if [ "$DRY_RUN" = "false" ]; then
     git push -u origin HEAD:$BRANCH
+    git push -u origin HEAD:$BRANCH --tags
 else
     echo "Prepared release at: $DST_DIR"
 fi
