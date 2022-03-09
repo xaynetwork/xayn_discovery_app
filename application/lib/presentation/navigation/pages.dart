@@ -131,6 +131,6 @@ class PageRegistry {
   static final error = xayn.PageData(
     name: "error",
     //ignore: prefer_const_constructors
-    builder: (_, args) => ErrorScreen(),
+    builder: (_, args) => SomethingWentWrongErrorScreen(),
   );
 }

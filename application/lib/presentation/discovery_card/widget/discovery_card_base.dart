@@ -89,7 +89,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         ),
         listener: (context, state) {
           if (state.error.hasError) {
-            handleError(context, state.error, showTooltip);
+            handleError(state.error, showTooltip);
           } else {
             discoveryCardStateListener(state);
           }

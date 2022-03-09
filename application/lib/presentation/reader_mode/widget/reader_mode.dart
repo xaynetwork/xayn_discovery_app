@@ -105,7 +105,7 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
 
     return BlocConsumer<ReaderModeManager, ReaderModeState>(
       bloc: _readerModeManager,
-      listener: (context, state) => handleError(context, state.error),
+      listener: (context, state) => handleError(state.error),
       builder: (context, state) {
         final uri = state.uri;
         final fontSettings = state.readerModeSettings;

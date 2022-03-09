@@ -15,15 +15,14 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
-
-typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
 
 class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
   MoveDocumentToCollectionBottomSheet({
     Key? key,
     required Document document,
-    required OnMoveDocumentToCollectionError onError,
+    required OnToolTipError onError,
     required DocumentProvider? provider,
     UniqueId? initialSelectedCollectionId,
   }) : super(
@@ -41,7 +40,7 @@ class _MoveDocumentToCollection extends StatefulWidget {
   final Document document;
   final DocumentProvider? provider;
   final UniqueId? initialSelectedCollectionId;
-  final OnMoveDocumentToCollectionError onError;
+  final OnToolTipError onError;
 
   const _MoveDocumentToCollection({
     Key? key,
