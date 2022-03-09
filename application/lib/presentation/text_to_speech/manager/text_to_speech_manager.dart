@@ -9,13 +9,20 @@ import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 class TextToSpeechManager extends Cubit<TextToSpeechState>
     with UseCaseBlocHelper<TextToSpeechState> {
   final TextToSpeechUseCase _textToSpeechUseCase;
-  late final UseCaseSink<ParagraphList, Duration> _textToSpeechSink =
+  late final UseCaseSink<Utterance, Duration> _textToSpeechSink =
       pipe(_textToSpeechUseCase);
 
   TextToSpeechManager(this._textToSpeechUseCase)
       : super(TextToSpeechState.silent());
 
-  void handleStart(List<String> paragraphs) => _textToSpeechSink(paragraphs);
+  void handleStart({
+    required List<String> paragraphs,
+    Uri? uri,
+  }) =>
+      _textToSpeechSink(Utterance(
+        uri: uri,
+        paragraphs: paragraphs,
+      ));
 
   @override
   Future<void> close() {

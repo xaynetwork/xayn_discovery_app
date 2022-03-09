@@ -41,6 +41,7 @@ final RegExp _kMatchManifestRegExp = RegExp(
 
 class ReaderMode extends StatefulWidget {
   final String title;
+  final Uri? uri;
   final readability.ProcessHtmlResult? processHtmlResult;
   final VoidCallback? onProcessedHtml;
   final ScrollHandler? onScroll;
@@ -49,6 +50,7 @@ class ReaderMode extends StatefulWidget {
   const ReaderMode({
     Key? key,
     required this.title,
+    this.uri,
     this.processHtmlResult,
     this.padding = _kPadding,
     this.onProcessedHtml,
@@ -141,7 +143,10 @@ class _ReaderModeState extends State<ReaderMode> {
 
             if (contents != null && contents.isNotEmpty) {
               compute(_extractParagraphs, contents)
-                  .then(_textToSpeechManager.handleStart);
+                  .then((it) => _textToSpeechManager.handleStart(
+                        uri: widget.uri,
+                        paragraphs: it,
+                      ));
             }
 
             return _onProcessedHtml(result);
