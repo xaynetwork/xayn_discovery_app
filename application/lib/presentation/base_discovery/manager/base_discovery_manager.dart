@@ -13,7 +13,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
@@ -31,8 +30,6 @@ typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
     NextFeedBatchRequestFailed event);
 typedef OnNonMatchedEngineEvent = Set<Document> Function();
 
-const int _kMaxCardCount = 10;
-
 /// a threshold, how long a user should observe a document, before it becomes
 /// implicitly liked.
 const int _kThresholdDurationSecondsImplicitLike = 5;
@@ -46,7 +43,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
     with
         UseCaseBlocHelper<DiscoveryFeedState>,
         EngineEventsMixin<DiscoveryFeedState>,
-        CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>,
         ChangeUserReactionMixin<DiscoveryFeedState>,
         CheckMarketsMixin<DiscoveryFeedState> {
@@ -55,13 +51,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
     this.updateCardIndexUseCase,
     this.sendAnalyticsUseCase,
     this.crudExplicitDocumentFeedbackUseCase,
-  )   : _maxCardCount = _kMaxCardCount,
-        super(DiscoveryFeedState.initial());
+  ) : super(DiscoveryFeedState.initial());
 
-  /// The max card count of the feed
-  /// If the count overflows, then n-cards will be removed from the beginning
-  /// onwards, until maxCardCount is satisfied.
-  final int _maxCardCount;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
   final UpdateCardIndexUseCase updateCardIndexUseCase;
   final SendAnalyticsUseCase sendAnalyticsUseCase;
@@ -88,6 +79,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
   bool _didChangeMarkets = false;
 
   bool get isLoading;
+
+  Document? get currentObservedDocument => _observedDocument;
+  int? get currentCardIndex => _cardIndex;
 
   void handleNavigateIntoCard() {
     scheduleComputeState(() => _isFullScreen = true);
@@ -192,8 +186,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
         observeDocument();
         // clear the inner-stored current observation...
         resetObservedDocument();
-        // closes the current feed...
-        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
       });
 
   void resetCardIndex() => _cardIndex = 0;
@@ -266,7 +258,11 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
           );
         }
 
-        final sets = await _maybeReduceCardCount(results);
+        final sets = await maybeReduceCardCount(results);
+        final nextCardIndex = sets.nextCardIndex;
+
+        if (nextCardIndex != null) _cardIndex = nextCardIndex;
+
         final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
         final hasExplicitDocumentFeedbackChanged =
             state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
@@ -320,51 +316,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
 
-  Future<ResultSets> _maybeReduceCardCount(Set<Document> results) async {
-    final observedDocument = _observedDocument;
-
-    if (observedDocument == null || results.length <= _maxCardCount) {
-      return ResultSets(results: results);
-    }
-
-    var nextResults = results.toSet();
-    var cardIndex = _cardIndex!;
-    final flaggedForDisposal =
-        results.take(results.length - _maxCardCount).toSet();
-
-    nextResults = nextResults..removeAll(flaggedForDisposal);
-    cardIndex = nextResults.toList().indexOf(observedDocument);
-
-    // The number 2 was chosen because we always animate transitions when
-    // moving between cards.
-    // If it is 2, then we have at least some cards above, and some cards below.
-    // This is actually important, because a transition going from card A to card B
-    // might currently be playing out:
-    // If cardIndex would be 0 or 1, then that running animation might not play correctly:
-    // the space above index 0 is zero, so there is no "from" range anymore
-    // which was the starting value when the animation began.
-    if (cardIndex <= 2) {
-      // This means we are about to remove the Document that is currently
-      // in front, which should be avoided.
-      // Only remove documents when scrolled far enough, so that the impact
-      // is seamless to the user.
-      return ResultSets(results: results);
-    }
-
-    // Invoke the use case which closes these Documents for the engine
-    // ok to be fire and forget, should we instead wait for the ack,
-    // then we need a specific CloseDocumentEngineEvent.
-    // Currently, we just get a generic [ClientEventSucceeded] event only.
-    closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
-    // adjust the cardIndex to counter the removals
-    _cardIndex = await updateCardIndexUseCase
-        .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
-
-    return ResultSets(
-      results: nextResults,
-      removedResults: flaggedForDisposal,
-    );
-  }
+  Future<ResultSets> maybeReduceCardCount(Set<Document> results);
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
@@ -388,11 +340,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
 }
 
 class ResultSets {
+  final int? nextCardIndex;
   final Set<Document> results;
   final Set<Document> removedResults;
 
   const ResultSets({
     required this.results,
+    this.nextCardIndex,
     this.removedResults = const <Document>{},
   });
 }

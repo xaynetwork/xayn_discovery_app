@@ -215,11 +215,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.requestNextFeedBatch());
   }
 
-  Future<EngineEvent> search(String searchTerm) {
-    _inputLog.add('[search]\n<searchTerm> $searchTerm');
-    throw UnimplementedError();
-  }
-
   /// temporary workaround for adding events that are not yet handled
   /// by the discovery engine.
   void tempAddEvent(EngineEvent event) => _tempSearchEvents.add(event);
@@ -247,5 +242,29 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         .map((e) =>
             FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
         .toSet();
+  }
+
+  @override
+  Future<EngineEvent> closeSearch() {
+    _inputLog.add('[closeSearch]');
+    return safeRun(() => _engine.closeSearch());
+  }
+
+  @override
+  Future<EngineEvent> requestNextSearchBatch() {
+    _inputLog.add('[requestNextSearchBatch]');
+    return safeRun(() => _engine.requestNextSearchBatch());
+  }
+
+  @override
+  Future<EngineEvent> requestSearch(String queryTerm) {
+    _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
+    return safeRun(() => _engine.requestSearch(queryTerm));
+  }
+
+  @override
+  Future<EngineEvent> restoreSearch() {
+    _inputLog.add('[restoreSearch]');
+    return safeRun(() => _engine.restoreSearch());
   }
 }

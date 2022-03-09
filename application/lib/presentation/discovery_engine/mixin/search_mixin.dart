@@ -2,23 +2,32 @@ import 'dart:async';
 
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/search_use_case.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_search_batch_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_search_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin SearchMixin<T> on UseCaseBlocHelper<T> {
-  Future<UseCaseSink<String, EngineEvent>>? _useCaseSink;
+  late final RequestNextSearchBatchUseCase requestNextSearchBatchUseCase =
+      di.get<RequestNextSearchBatchUseCase>();
+  late final RequestSearchUseCase searchUseCase =
+      di.get<RequestSearchUseCase>();
+  UseCaseSink<None, EngineEvent>? _nextBatchUseCaseSink;
+  UseCaseSink<String, EngineEvent>? _searchUseCaseSink;
   bool _didStartConsuming = false;
 
   bool get isLoading => false;
 
-  void search(String searchTerm) async {
-    _useCaseSink ??= _getUseCaseSink();
+  void search(String queryTerm) {
+    _searchUseCaseSink ??= _getSearchUseCaseSink();
 
-    final useCaseSink = await _useCaseSink;
+    _searchUseCaseSink!(queryTerm);
+  }
 
-    useCaseSink!(searchTerm);
+  void requestNextSearchBatch() {
+    _nextBatchUseCaseSink ??= _getNextBatchUseCaseSink();
+
+    _nextBatchUseCaseSink!(none);
   }
 
   @override
@@ -30,17 +39,22 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     return super.stream;
   }
 
-  Future<UseCaseSink<String, EngineEvent>> _getUseCaseSink() async {
-    final useCase = di.get<SearchUseCase>();
+  UseCaseSink<None, EngineEvent> _getNextBatchUseCaseSink() {
+    return pipe(requestNextSearchBatchUseCase)
+      ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
+  }
 
-    return pipe(useCase)
+  UseCaseSink<String, EngineEvent> _getSearchUseCaseSink() {
+    return pipe(searchUseCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
   void _startConsuming() {
-    final consumeUseCase = di.get<RequestFeedUseCase>();
+    final consumeUseCase = di.get<RequestSearchUseCase>();
 
     _didStartConsuming = true;
-    consume(consumeUseCase, initialData: none);
+
+    consume(consumeUseCase, initialData: none)
+        .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 }

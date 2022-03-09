@@ -99,11 +99,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> search(String searchTerm) {
-    return Future.value(EngineEvent.restoreFeedSucceeded([fakeDocument]));
-  }
-
-  @override
   void tempAddEvent(EngineEvent event) => _onEngineEvent.add(event);
 
   @override
@@ -134,6 +129,30 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   Future<bool> areMarketsOutdated() {
     // TODO: implement willUpdateMarkets
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> closeSearch() {
+    // TODO: implement closeSearch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestNextSearchBatch() {
+    // TODO: implement requestNextSearchBatch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestSearch(String queryTerm) {
+    // TODO: implement requestSearch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> restoreSearch() {
+    // TODO: implement restoreSearch
     throw UnimplementedError();
   }
 }

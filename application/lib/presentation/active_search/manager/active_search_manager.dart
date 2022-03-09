@@ -6,7 +6,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -23,7 +25,7 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends BaseDiscoveryManager
-    with SearchMixin<DiscoveryFeedState>
+    with SearchMixin<DiscoveryFeedState>, CloseSearchMixin<DiscoveryFeedState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
@@ -40,6 +42,13 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   final ActiveSearchNavActions _activeSearchNavActions;
 
+  @override
+  void willChangeMarkets() => scheduleComputeState(() {
+        super.willChangeMarkets();
+        // closes the current feed...
+        closeSearch(state.results.map((it) => it.documentId).toSet());
+      });
+
   void handleSearchTerm(String searchTerm) => search(searchTerm);
 
   @override
@@ -54,12 +63,13 @@ class ActiveSearchManager extends BaseDiscoveryManager
       _activeSearchNavActions.onCardDetailsPressed(args);
 
   @override
-  void handleLoadMore() {
-    // TODO: implement handleLoadMore
-  }
+  void handleLoadMore() => requestNextSearchBatch();
 
   @override
-  void didChangeMarkets() {
-    // TODO: implement didChangeMarkets
-  }
+  void didChangeMarkets() => requestNextSearchBatch();
+
+  /// in search, we never reduce the cards...
+  @override
+  Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
+      ResultSets(results: results);
 }
