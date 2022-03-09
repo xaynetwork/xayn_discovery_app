@@ -52,4 +52,14 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) =>
       _activeSearchNavActions.onCardDetailsPressed(args);
+
+  @override
+  void handleLoadMore() {
+    // TODO: implement handleLoadMore
+  }
+
+  @override
+  void didChangeMarkets() {
+    // TODO: implement didChangeMarkets
+  }
 }

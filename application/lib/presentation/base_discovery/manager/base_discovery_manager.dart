@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -47,7 +48,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
         EngineEventsMixin<DiscoveryFeedState>,
         CloseFeedDocumentsMixin,
         ObserveDocumentMixin<DiscoveryFeedState>,
-        ChangeUserReactionMixin<DiscoveryFeedState> {
+        ChangeUserReactionMixin<DiscoveryFeedState>,
+        CheckMarketsMixin<DiscoveryFeedState> {
   BaseDiscoveryManager(
     this.fetchCardIndexUseCase,
     this.updateCardIndexUseCase,
@@ -104,6 +106,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
       viewMode: DocumentViewMode.story,
     ));
   }
+
+  void handleLoadMore();
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
@@ -175,6 +179,22 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
       onObservation: _onObservation,
     );
   }
+
+  void handleCheckMarkets() => checkMarkets();
+
+  /// Configuration will change, after this method completes.
+  @override
+  void willChangeMarkets() => scheduleComputeState(() {
+        resetCardIndex();
+        _didChangeMarkets = true;
+
+        // clears the current pending observation, if any...
+        observeDocument();
+        // clear the inner-stored current observation...
+        resetObservedDocument();
+        // closes the current feed...
+        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
+      });
 
   void resetCardIndex() => _cardIndex = 0;
 

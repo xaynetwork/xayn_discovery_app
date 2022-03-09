@@ -3,12 +3,16 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+abstract class DiscoveryFeedNavActions {
+  void onSearchNavPressed();
+
+  void onPersonalAreaNavPressed();
+}
 
 /// Manages the state for the main, or home discovery feed screen.
 ///
@@ -17,9 +21,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// in a list format by widgets.
 @injectable
 class DiscoveryFeedManager extends BaseDiscoveryManager
-    with
-        RequestFeedMixin<DiscoveryFeedState>,
-        CheckMarketsMixin<DiscoveryFeedState>
+    with RequestFeedMixin<DiscoveryFeedState>
     implements DiscoveryFeedNavActions {
   DiscoveryFeedManager(
     this._discoveryFeedNavActions,
@@ -39,23 +41,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   bool _didChangeMarkets = false;
 
   /// Triggers the discovery engine to load more results.
-  void handleLoadMore() => requestNextFeedBatch();
-
-  void handleCheckMarkets() => checkMarkets();
-
-  /// Configuration will change, after this method completes.
   @override
-  void willChangeMarkets() => scheduleComputeState(() {
-        resetCardIndex();
-        _didChangeMarkets = true;
-
-        // clears the current pending observation, if any...
-        observeDocument();
-        // clear the inner-stored current observation...
-        resetObservedDocument();
-        // closes the current feed...
-        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
-      });
+  void handleLoadMore() => requestNextFeedBatch();
 
   /// Configuration was updated, we now ask for fresh documents, under the
   /// new market settings.
