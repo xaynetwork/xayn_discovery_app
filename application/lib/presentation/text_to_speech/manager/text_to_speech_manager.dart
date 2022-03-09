@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
@@ -20,6 +21,15 @@ class TextToSpeechManager extends Cubit<TextToSpeechState>
     this._featureManager,
   ) : super(TextToSpeechState.silent());
 
+  static List<String> extractParagraphs(final String contents) {
+    final element = dom.DocumentFragment.html(contents);
+
+    return element
+        .querySelectorAll('p')
+        .map((it) => it.text)
+        .toList(growable: false);
+  }
+
   void handleStart({
     required List<String> paragraphs,
     required String languageCode,
@@ -36,8 +46,8 @@ class TextToSpeechManager extends Cubit<TextToSpeechState>
           : null;
 
   @override
-  Future<void> close() {
-    _textToSpeechUseCase.stopCurrentSpeech();
+  Future<void> close() async {
+    await _textToSpeechUseCase.stopCurrentSpeech();
 
     return super.close();
   }

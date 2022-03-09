@@ -144,7 +144,7 @@ class _ReaderModeState extends State<ReaderMode> {
             final contents = result.contents;
 
             if (contents != null && contents.isNotEmpty) {
-              compute(_extractParagraphs, contents)
+              compute(TextToSpeechManager.extractParagraphs, contents)
                   .then((it) => _textToSpeechManager.handleStart(
                         languageCode: widget.languageCode,
                         uri: widget.uri,
@@ -168,15 +168,6 @@ class _ReaderModeState extends State<ReaderMode> {
         );
       },
     );
-  }
-
-  static List<String> _extractParagraphs(final String contents) {
-    final element = dom.DocumentFragment.html(contents);
-
-    return element
-        .querySelectorAll('p')
-        .map((it) => it.text)
-        .toList(growable: false);
   }
 
   Widget? _customElements(dom.Element element) {
