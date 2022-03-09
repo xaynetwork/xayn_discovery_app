@@ -118,6 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Betalingstransactie mislukt
+  noActiveSubscriptionFound: No active subscription found
 bottomSheetDeleteCollectionWithNoItemsBody: Wil je deze collectie echt verwijderen?
 bottomSheetMoveSingleBookmark: Verplaats naar een andere collectie
 readerModeSettingsErrorChangesNotApplied: Wijzigingen konden niet worden toegepast

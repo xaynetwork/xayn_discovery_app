@@ -195,6 +195,7 @@ class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
   String get productNotFound => """Producto no encontrado :(""";
   String get itemAlreadyOwned => """Tu ya te subscribiste""";
   String get transactionFailed => """Transacción de pago fallida""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsEsMap => {
@@ -322,6 +323,8 @@ Map<String, String> get translationsEsMap => {
       """paymentFlowError.itemAlreadyOwned""": """Tu ya te subscribiste""",
       """paymentFlowError.transactionFailed""":
           """Transacción de pago fallida""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Estás seguro de que quieres borrar esta colección?""",
       """bottomSheetMoveSingleBookmark""": """Moverse a otra colección""",

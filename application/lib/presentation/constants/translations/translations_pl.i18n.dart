@@ -193,6 +193,7 @@ class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nie znaleziony :(""";
   String get itemAlreadyOwned => """Zostałeś już zasubskrybowany""";
   String get transactionFailed => """Transakcja płatnicza nie powiodła się""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -320,6 +321,8 @@ Map<String, String> get translationsPlMap => {
           """Zostałeś już zasubskrybowany""",
       """paymentFlowError.transactionFailed""":
           """Transakcja płatnicza nie powiodła się""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Czy na pewno chcesz usunąć tę kolekcję?""",
       """bottomSheetMoveSingleBookmark""": """Przejdź do innej kolekcji""",

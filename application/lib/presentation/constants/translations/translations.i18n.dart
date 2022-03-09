@@ -191,6 +191,7 @@ class PaymentFlowErrorTranslations {
   String get productNotFound => """Product not found :(""";
   String get itemAlreadyOwned => """You have already been subscribed""";
   String get transactionFailed => """Payment transaction failed""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsMap => {
@@ -314,6 +315,8 @@ Map<String, String> get translationsMap => {
           """You have already been subscribed""",
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",

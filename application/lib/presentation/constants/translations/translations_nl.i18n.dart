@@ -194,6 +194,7 @@ class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
   String get productNotFound => """Product niet gevonden :(""";
   String get itemAlreadyOwned => """U bent reeds ingeschreven""";
   String get transactionFailed => """Betalingstransactie mislukt""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsNlMap => {
@@ -317,6 +318,8 @@ Map<String, String> get translationsNlMap => {
       """paymentFlowError.itemAlreadyOwned""": """U bent reeds ingeschreven""",
       """paymentFlowError.transactionFailed""":
           """Betalingstransactie mislukt""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Wil je deze collectie echt verwijderen?""",
       """bottomSheetMoveSingleBookmark""":
