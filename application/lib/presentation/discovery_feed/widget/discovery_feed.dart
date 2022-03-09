@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_f
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_state.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -172,7 +173,7 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<DiscoveryFeedManager, DiscoveryFeedState>(
+      BlocBuilder<BaseDiscoveryManager, DiscoveryFeedState>(
         bloc: _discoveryFeedManager,
         builder: (context, state) {
           // this is for:
