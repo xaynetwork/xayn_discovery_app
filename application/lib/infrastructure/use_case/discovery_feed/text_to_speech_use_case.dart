@@ -36,7 +36,7 @@ class TextToSpeechUseCase extends UseCase<Utterance, Duration> {
         uri: uri,
       ),
     );
-    final codeA = '${languageCode.major}-${languageCode.minor}';
+    final codeA = '${languageCode.major}-${languageCode.minor.toUpperCase()}';
     final codeB = languageCode.major;
 
     if (await _tts.isLanguageAvailable(codeA)) {
