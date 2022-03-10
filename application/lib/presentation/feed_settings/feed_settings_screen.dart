@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
@@ -20,7 +21,7 @@ class FeedSettingsScreen extends StatefulWidget {
 }
 
 class FeedSettingsScreenState extends State<FeedSettingsScreen>
-    with NavBarConfigMixin, TooltipStateMixin {
+    with NavBarConfigMixin, TooltipStateMixin, ErrorHandlingMixin {
   late final manager = di.get<FeedSettingsManager>();
 
   @override
@@ -61,9 +62,9 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
     }
 
     void _buildBlockListener(BuildContext context, FeedSettingsState state) {
-      if (state is FeedSettingsStateReady && state.errorKey != null) {
-        showTooltip(state.errorKey!);
-      }
+      state.whenOrNull(
+        ready: (_, __, ___, error) => handleError(error, showTooltip),
+      );
     }
 
     return BlocListener<FeedSettingsManager, FeedSettingsState>(

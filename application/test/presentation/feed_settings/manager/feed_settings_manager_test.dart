@@ -4,9 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_error.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_state.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 import '../../test_utils/utils.dart';
 
@@ -133,7 +134,7 @@ void main() {
     expect: () => [
       const FeedSettingsState.initial(),
       stateReady.copyWith(
-        errorKey: TooltipKeys.feedSettingsScreenMinSelectedCountries,
+        error: const ErrorObject(FeedSettingsError.minSelectedCountries),
       ),
       stateReady,
     ],
@@ -174,7 +175,7 @@ void main() {
         stateReady.copyWith(
           selectedCountries: [usa, germany, austria],
           unSelectedCountries: unselected2,
-          errorKey: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
+          error: const ErrorObject(FeedSettingsError.maxSelectedCountries),
         ),
         stateReady.copyWith(
           selectedCountries: [usa, germany, austria],
