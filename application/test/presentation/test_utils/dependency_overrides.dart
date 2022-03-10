@@ -145,7 +145,10 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestSearch(String queryTerm) {
+  Future<EngineEvent> requestSearch({
+    required String queryTerm,
+    required FeedMarket market,
+  }) {
     // TODO: implement requestSearch
     throw UnimplementedError();
   }
