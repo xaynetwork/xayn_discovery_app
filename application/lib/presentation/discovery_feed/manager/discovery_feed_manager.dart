@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/docum
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
@@ -86,7 +87,7 @@ class DiscoveryFeedManager extends Cubit<DiscoveryFeedState>
   late final UseCaseValueStream<ExplicitDocumentFeedback>
       _crudExplicitDocumentFeedbackConsumer = consume(
     _crudExplicitDocumentFeedbackUseCase,
-    initialData: CrudExplicitDocumentFeedbackUseCaseIn.watchAll(),
+    initialData: const DbEntityCrudUseCaseIn.watchAll(),
   );
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.

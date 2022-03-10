@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
@@ -40,6 +41,8 @@ class CachedImage extends StatefulWidget {
 
 class _CachedImageState extends State<CachedImage> {
   late final ImageManager _imageManager;
+  late final _svgByteDecoder =
+      SvgPicture.svgByteDecoderBuilder(const SvgTheme());
 
   @override
   void initState() {
@@ -118,6 +121,22 @@ class _CachedImageState extends State<CachedImage> {
               height: widget.height?.toDouble(),
               fit: widget.fit,
               gaplessPlayback: true,
+              errorBuilder: (_, e, s) => FutureBuilder<PictureInfo>(
+                  future: _svgByteDecoder(bytes, null, ''),
+                  builder: (_, snapshot) {
+                    // if decoding failed, or pending, return the fallback
+                    if (snapshot.hasError || !snapshot.hasData) {
+                      return noImageBuilder(context);
+                    }
+
+                    return SvgPicture.memory(
+                      bytes,
+                      width: widget.width?.toDouble(),
+                      height: widget.height?.toDouble(),
+                      fit: widget.fit ?? BoxFit.cover,
+                      placeholderBuilder: noImageBuilder,
+                    );
+                  }),
             );
           } else {
             // there is no image
