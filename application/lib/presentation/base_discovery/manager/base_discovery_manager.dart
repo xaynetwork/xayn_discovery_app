@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
@@ -46,6 +47,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.updateCardIndexUseCase,
     this.sendAnalyticsUseCase,
     this.crudExplicitDocumentFeedbackUseCase,
+    this.hapticFeedbackMediumUseCase,
   ) : super(DiscoveryState.initial());
 
   final FoldEngineEvent foldEngineEvent;
@@ -53,6 +55,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final UpdateCardIndexUseCase updateCardIndexUseCase;
   final SendAnalyticsUseCase sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase;
+  final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
 
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: none)
@@ -195,6 +198,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// the total results grow in size
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
       ResultSets(results: results);
+
+  void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
 
   @override
   Future<DiscoveryState?> computeState() async => fold3(

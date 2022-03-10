@@ -19,12 +19,14 @@ class SwipeableCollectionCard extends StatelessWidget {
     required this.collectionCard,
     required this.onSwipeOptionTap,
     this.cardHeight = CardWidgetData.cardHeight,
+    this.onFling,
     Key? key,
   }) : super(key: key);
 
   final Widget collectionCard;
   final double cardHeight;
   final OnSwipeOptionTap onSwipeOptionTap;
+  final VoidCallback? onFling;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,10 @@ class SwipeableCollectionCard extends StatelessWidget {
       opensToPosition: _kSwipeOpenToPosition,
       optionsLeft: const [SwipeOptionCollectionCard.edit],
       optionsRight: const [SwipeOptionCollectionCard.remove],
-      onFling: (options) => options.first,
+      onFling: (options) {
+        onFling?.call();
+        return options.first;
+      },
       onOptionTap: _onOptionsTap,
       optionBuilder: optionsBuilder,
       waitBeforeClosingDuration: Duration.zero,

@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 
 import 'bookmarks_screen_state.dart';
@@ -30,12 +31,14 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   final BookmarkErrorsEnumMapper _bookmarkErrorsEnumMapper;
   final DateTimeHandler _dateTimeHandler;
   final BookmarksScreenNavActions _bookmarksScreenNavActions;
+  final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   late final UniqueId? _collectionId;
 
   BookmarksScreenManager(
     this._listenBookmarksUseCase,
     this._removeBookmarkUseCase,
     this._moveBookmarkUseCase,
+    this._hapticFeedbackMediumUseCase,
     this._bookmarkErrorsEnumMapper,
     this._dateTimeHandler,
     this._bookmarksScreenNavActions, {
@@ -103,6 +106,8 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
       onValue: (_) {},
     );
   }
+
+  void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
   @override
   Future<BookmarksScreenState?> computeState() async =>

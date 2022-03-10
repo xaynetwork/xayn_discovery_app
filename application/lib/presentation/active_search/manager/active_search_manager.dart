@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -46,12 +47,14 @@ class ActiveSearchManager extends BaseDiscoveryManager
     UpdateCardIndexUseCase updateCardIndexUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
+    HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
   ) : super(
           _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
+          hapticFeedbackMediumUseCase,
         );
 
   final RestoreSearchUseCase _restoreSearchUseCase;
