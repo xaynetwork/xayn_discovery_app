@@ -18,6 +18,7 @@ class SwipeableBookmarkCard extends StatelessWidget {
     required this.bookmarkId,
     required this.onMove,
     required this.onDelete,
+    this.onFling,
   }) : super(key: key);
 
   final UniqueId bookmarkId;
@@ -25,6 +26,7 @@ class SwipeableBookmarkCard extends StatelessWidget {
   final Function(UniqueId) onMove;
   final Function(UniqueId) onDelete;
   final double cardHeight = 150;
+  final VoidCallback? onFling;
 
   @override
   Widget build(BuildContext context) => _buildSwipeWidget(child);
@@ -35,7 +37,10 @@ class SwipeableBookmarkCard extends StatelessWidget {
       optionsRight: const [SwipeOption.delete],
       minFlingVelocity: _kMinFlingVelocity,
       minFlingDragDistanceFraction: .333,
-      onFling: (options) => options.first,
+      onFling: (options) {
+        onFling?.call();
+        return options.first;
+      },
       opensToPosition: _kSwipeOpenToPosition,
       child: child,
       onOptionTap: (option) => onOptionsTap(option),

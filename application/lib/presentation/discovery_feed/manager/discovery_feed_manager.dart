@@ -5,10 +5,11 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -49,6 +50,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     UpdateCardIndexUseCase updateCardIndexUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
+    HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           _foldEngineEvent,
@@ -56,6 +58,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
+          hapticFeedbackMediumUseCase,
         );
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;

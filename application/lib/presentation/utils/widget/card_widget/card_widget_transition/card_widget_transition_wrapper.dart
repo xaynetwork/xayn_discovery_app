@@ -16,9 +16,11 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_wi
 class CardWidgetTransitionWrapper extends StatefulWidget {
   final Widget child;
   final VoidCallback? onAnimationDone;
+  final VoidCallback? onLongPress;
   const CardWidgetTransitionWrapper({
     required this.child,
     this.onAnimationDone,
+    this.onLongPress,
     Key? key,
   }) : super(
           key: key,
@@ -47,14 +49,16 @@ class _CardWidgetTransitionWrapperState
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        key: itemKey,
-        child: Hero(
-          tag: itemKey.toString(),
-          child: widget.child,
-          placeholderBuilder: (_, __, widget) => widget,
-        ),
-        onLongPress: () => _animate(),
-      );
+      key: itemKey,
+      child: Hero(
+        tag: itemKey.toString(),
+        child: widget.child,
+        placeholderBuilder: (_, __, widget) => widget,
+      ),
+      onLongPress: () {
+        widget.onLongPress?.call();
+        _animate();
+      });
 
   void _animate() {
     _calculateChildSize();
