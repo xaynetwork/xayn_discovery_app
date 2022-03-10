@@ -10,6 +10,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_th
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -39,6 +42,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
   final ShareUriUseCase _shareUriUseCase;
+  final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
+  final SaveTtsPreferenceUseCase _saveTtsPreferenceUseCase;
+  final ListenTtsPreferenceUseCase _listenTtsPreferenceUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -49,6 +55,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._extractLogUseCase,
     this._settingsNavActions,
     this._shareUriUseCase,
+    this._getTtsPreferenceUseCase,
+    this._saveTtsPreferenceUseCase,
+    this._listenTtsPreferenceUseCase,
     this._featureManager,
   ) : super(const SettingsScreenState.initial()) {
     _init();
@@ -57,24 +66,28 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   bool _initDone = false;
   late AppTheme _theme;
   late final AppVersion _appVersion;
-  late final UseCaseValueStream<AppTheme> _appThemeHandler;
+  late bool _ttsPreference;
+  late final UseCaseValueStream<AppTheme> _appThemeHandler =
+      consume(_listenAppThemeUseCase, initialData: none);
+  late final UseCaseValueStream<bool> _ttsPreferenceHandler =
+      consume(_listenTtsPreferenceUseCase, initialData: none);
 
   void _init() async {
     scheduleComputeState(() async {
       // read values
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
+      _ttsPreference = await _getTtsPreferenceUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
-
-      // attach listeners
-      _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
 
       _initDone = true;
     });
   }
 
-  void saveTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
+  void saveTheme(AppTheme theme) => _saveAppThemeUseCase(theme);
 
-  void toggleAndSaveTextToSpeechPreference() {}
+  void saveTextToSpeechPreference(bool ttsPreference) {
+    _saveTtsPreferenceUseCase(ttsPreference);
+  }
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
@@ -92,11 +105,17 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
+          isTtsEnabled: _ttsPreference,
           trialEndDate: null,
         );
-    return fold(_appThemeHandler).foldAll((appTheme, _) async {
+    return fold2(_appThemeHandler, _ttsPreferenceHandler)
+        .foldAll((appTheme, ttsPreference, _) async {
       if (appTheme != null) {
         _theme = appTheme;
+      }
+
+      if (ttsPreference != null) {
+        _ttsPreference = ttsPreference;
       }
 
       return buildReady();

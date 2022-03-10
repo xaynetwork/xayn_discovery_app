@@ -1,14 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/extract_paragraphs_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/text_to_speech_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
@@ -19,8 +18,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
   final TextToSpeechUseCase _textToSpeechUseCase;
   final ExtractParagraphsUseCase _extractParagraphsUseCase;
   final ListenReaderModeSettingsUseCase _listenReaderModeSettingsUseCase;
-  // todo: remove me, when the text-to-speech button is ready!
-  final FeatureManager _featureManager;
+  final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
 
   late final UseCaseSink<PostProcessInput, Uri> _postProcessHandler =
       pipe(_postProcessUseCase);
@@ -37,7 +35,7 @@ class ReaderModeManager extends Cubit<ReaderModeState>
     this._listenReaderModeSettingsUseCase,
     this._textToSpeechUseCase,
     this._extractParagraphsUseCase,
-    this._featureManager,
+    this._getTtsPreferenceUseCase,
     ReaderModeSettingsRepository readerModeSettingsRepository,
   ) : super(
           ReaderModeState.empty(
@@ -59,9 +57,9 @@ class ReaderModeManager extends Cubit<ReaderModeState>
     required String languageCode,
     Uri? uri,
   }) async {
-    final isFeatureEnabled = _featureManager.isEnabled(Feature.textToSpeech);
+    final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
 
-    if (!isFeatureEnabled) return;
+    if (!isTtsEnabled) return;
 
     final paragraphs = await _extractParagraphsUseCase.singleOutput(html);
 

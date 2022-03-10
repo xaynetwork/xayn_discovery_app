@@ -184,6 +184,11 @@ class TranslationsEs extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Por favor intente más tarde""";
   String get errorClose => """Cerrar""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -195,6 +200,7 @@ class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
   String get productNotFound => """Producto no encontrado :(""";
   String get itemAlreadyOwned => """Tu ya te subscribiste""";
   String get transactionFailed => """Transacción de pago fallida""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsEsMap => {
@@ -322,6 +328,8 @@ Map<String, String> get translationsEsMap => {
       """paymentFlowError.itemAlreadyOwned""": """Tu ya te subscribiste""",
       """paymentFlowError.transactionFailed""":
           """Transacción de pago fallida""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Estás seguro de que quieres borrar esta colección?""",
       """bottomSheetMoveSingleBookmark""": """Moverse a otra colección""",
@@ -331,4 +339,8 @@ Map<String, String> get translationsEsMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Por favor intente más tarde""",
       """errorClose""": """Cerrar""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };
