@@ -37,6 +37,8 @@ class Keys {
       Key('settings_terms_and_conditions');
   static const Key settingsHaveFoundBug = Key('settings_have_found_bug');
   static const Key settingsShareBtn = Key('settings_share');
+  static const Key settingsToggleTextToSpeechPreference =
+      Key('settingsToggleTextToSpeechPreference');
 
   static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
   static const Key navBarItemHome = Key('nav_bar_item_home');
