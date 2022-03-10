@@ -95,11 +95,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
     }
   }
 
-  /// in search, we never reduce the cards...
-  @override
-  Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
-      ResultSets(results: results);
-
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(
       BaseDiscoveryManager manager) {
     final state = manager.state;

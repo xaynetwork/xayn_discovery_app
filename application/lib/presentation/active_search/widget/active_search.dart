@@ -9,8 +9,6 @@ import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/w
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-const double kSearchCardHeightRatio = 0.64;
-
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.
 class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {

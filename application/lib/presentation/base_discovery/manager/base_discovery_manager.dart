@@ -192,6 +192,11 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   bool isDocumentCurrentlyDisplayed(Document document) =>
       state.results.map((it) => it.documentId).contains(document.documentId);
 
+  /// override this method, if your view needs to dispose older items, as
+  /// the total results grow in size
+  Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
+      ResultSets(results: results);
+
   @override
   Future<DiscoveryState?> computeState() async => fold3(
         cardIndexConsumer,
@@ -246,8 +251,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
-
-  Future<ResultSets> maybeReduceCardCount(Set<Document> results);
 
   /// secondary observation action, check if we should implicitly like the [Document]
   void _onObservation(DiscoveryCardMeasuredObservation observation) {
