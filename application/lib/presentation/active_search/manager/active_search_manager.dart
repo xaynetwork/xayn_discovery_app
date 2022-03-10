@@ -73,6 +73,10 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void onHomeNavPressed() => _activeSearchNavActions.onHomeNavPressed();
 
+  void onSearchNavPressed() {
+    // TODO probably go to the top of the feed
+  }
+
   @override
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) =>
       _activeSearchNavActions.onCardDetailsPressed(args);

@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
@@ -21,13 +20,6 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
 class _DiscoveryFeedState
     extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed> {
   @override
-  void initState() {
-    widget.manager.handleCheckMarkets();
-
-    super.initState();
-  }
-
-  @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
           [
@@ -37,13 +29,10 @@ class _DiscoveryFeedState
                   hideTooltip();
                   widget.manager.onHomeNavPressed();
                 }),
-            buildNavBarItemSearch(
-              isDisabled: true,
-              onPressed: () => showTooltip(
-                TooltipKeys.activeSearchDisabled,
-                style: TooltipStyle.arrowDown,
-              ),
-            ),
+            buildNavBarItemSearch(onPressed: () {
+              hideTooltip();
+              widget.manager.onSearchNavPressed();
+            }),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();

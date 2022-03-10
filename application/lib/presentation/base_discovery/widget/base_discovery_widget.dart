@@ -104,6 +104,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
 
+    widget.manager.handleCheckMarkets();
+
     _navBarUpdateListener = widget.manager.stream
         .where((state) => state.shouldUpdateNavBar)
         .map((_) => context)

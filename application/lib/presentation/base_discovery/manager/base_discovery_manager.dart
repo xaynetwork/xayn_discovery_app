@@ -246,10 +246,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
 
   Future<ResultSets> maybeReduceCardCount(Set<Document> results);
 
-  void onHomeNavPressed() {
-    // TODO probably go to the top of the feed
-  }
-
   /// secondary observation action, check if we should implicitly like the [Document]
   void _onObservation(DiscoveryCardMeasuredObservation observation) {
     final document = observation.document!;

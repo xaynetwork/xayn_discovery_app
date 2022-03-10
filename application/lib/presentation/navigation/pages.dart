@@ -58,7 +58,9 @@ class PageRegistry {
   static final search = xayn.PageData(
     name: "search",
     //ignore: prefer_const_constructors
-    builder: (_, args) => ActiveSearch(),
+    builder: (_, args) => ActiveSearch(
+      manager: di.get(),
+    ),
   );
 
   static cardDetailsStandalone(DiscoveryCardStandaloneArgs args) =>

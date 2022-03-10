@@ -126,6 +126,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   @override
   void didChangeMarkets() => requestNextFeedBatch();
 
+  void onHomeNavPressed() {
+    // TODO probably go to the top of the feed
+  }
+
   @override
   void onSearchNavPressed() {
     // detect that we exit the feed screen
