@@ -31,12 +31,10 @@ class _ActiveSearchState
               hideTooltip();
               widget.manager.onHomeNavPressed();
             }),
-            buildNavBarItemSearch(
-                isActive: true,
-                onPressed: () {
-                  hideTooltip();
-                  widget.manager.onSearchNavPressed();
-                }),
+            buildNavBarItemSearchActive(
+              isActive: true,
+              onSearchPressed: widget.manager.search,
+            ),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
