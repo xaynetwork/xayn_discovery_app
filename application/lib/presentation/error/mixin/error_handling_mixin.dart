@@ -10,10 +10,10 @@ import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 mixin ErrorHandlingMixin<T extends StatefulWidget> on State<T> {
   void openErrorScreen() => di.get<ErrorNavActions>().openErrorScreen();
 
-  void showErrorBottomSheet() => showAppBottomSheet(
+  void showErrorBottomSheet({bool allowStacking = false}) => showAppBottomSheet(
         context,
         builder: (_) => const ErrorBottomSheet(),
-        allowStacking: false,
+        allowStacking: allowStacking,
       );
 
   void handleError(
