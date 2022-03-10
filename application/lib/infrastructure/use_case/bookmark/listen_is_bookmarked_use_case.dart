@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
@@ -13,9 +14,12 @@ class ListenIsBookmarkedUseCase extends UseCase<UniqueId, bool> {
   ListenIsBookmarkedUseCase(this._bookmarksRepository);
 
   @override
-  Stream<bool> transaction(UniqueId param) => _bookmarksRepository
-      .watch()
-      .where((event) => event.id == param)
-      .map((_) => _bookmarksRepository.getById(param))
-      .map((event) => event != null);
+  Stream<bool> transaction(UniqueId param) async* {
+    yield* _bookmarksRepository
+        .watch()
+        .where((event) => event.id == param)
+        .map((_) => _bookmarksRepository.getById(param))
+        .startWith(_bookmarksRepository.getById(param))
+        .map((event) => event != null);
+  }
 }
