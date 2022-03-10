@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 /// signature for building an [AnimationController]
@@ -86,8 +85,6 @@ class DragBackRecognizer extends HorizontalDragGestureRecognizer {
     // test if we dragged far enough
     if (_distance > threshold) {
       _distance = 0;
-
-      HapticFeedback.mediumImpact();
 
       stopTrackingPointer(_lastPointer!);
 

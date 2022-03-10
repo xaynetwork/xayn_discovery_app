@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -12,7 +13,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_f
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -208,7 +208,10 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 document: document,
                 discoveryCardManager: managers.discoveryCardManager,
                 imageManager: managers.imageManager,
-                onDiscard: widget.manager.handleNavigateOutOfCard,
+                onDiscard: () {
+                  widget.manager.triggerHapticFeedbackMedium();
+                  return widget.manager.handleNavigateOutOfCard();
+                },
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
                     currentCardController = controller,
@@ -231,6 +234,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               managers.discoveryCardManager.state.explicitDocumentUserReaction,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
+          onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
         );
       };
 

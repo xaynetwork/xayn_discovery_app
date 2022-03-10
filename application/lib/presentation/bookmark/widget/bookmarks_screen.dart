@@ -109,6 +109,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
             cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
           ),
         ),
+        onFling: () => _bookmarkManager.triggerHapticFeedbackMedium(),
       );
 
   void _showMoveBookmarkBottomSheet(
