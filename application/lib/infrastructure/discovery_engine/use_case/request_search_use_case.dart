@@ -10,6 +10,9 @@ class RequestSearchUseCase extends UseCase<String, EngineEvent> {
 
   @override
   Stream<EngineEvent> transaction(String param) async* {
-    yield await _engine.requestSearch(param);
+    yield await _engine.requestSearch(
+      queryTerm: param,
+      market: const FeedMarket(countryCode: '', langCode: ''),
+    );
   }
 }

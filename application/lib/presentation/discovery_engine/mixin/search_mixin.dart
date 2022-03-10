@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_search_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_search_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/restore_search_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -50,7 +51,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   }
 
   void _startConsuming() {
-    final consumeUseCase = di.get<RequestSearchUseCase>();
+    final consumeUseCase = di.get<RestoreSearchUseCase>();
 
     _didStartConsuming = true;
 

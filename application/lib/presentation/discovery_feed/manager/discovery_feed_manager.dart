@@ -1,5 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -7,9 +9,17 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_fee
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const int _kMaxCardCount = 10;
+
+typedef OnRestoreFeedSucceeded = Set<Document> Function(
+    RestoreFeedSucceeded event);
+typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
+    NextFeedBatchRequestSucceeded event);
+typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
+    NextFeedBatchRequestFailed event);
 
 abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
@@ -41,6 +51,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
+          _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
@@ -140,5 +151,71 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     }
 
     return super.computeState();
+  }
+
+  static Set<Document> Function(EngineEvent?) _foldEngineEvent(
+      BaseDiscoveryManager manager) {
+    final state = manager.state;
+
+    foldEngineEvent({
+      required OnRestoreFeedSucceeded restoreFeedSucceeded,
+      required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
+      required OnDocumentsUpdated documentsUpdated,
+      required OnEngineExceptionRaised engineExceptionRaised,
+      required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
+      required OnNonMatchedEngineEvent orElse,
+    }) =>
+        (EngineEvent? event) {
+          if (event is RestoreFeedSucceeded) {
+            return restoreFeedSucceeded(event);
+          } else if (event is NextFeedBatchRequestSucceeded) {
+            return nextFeedBatchRequestSucceeded(event);
+          } else if (event is DocumentsUpdated) {
+            return documentsUpdated(event);
+          } else if (event is EngineExceptionRaised) {
+            return engineExceptionRaised(event);
+          } else if (event is NextFeedBatchRequestFailed) {
+            return nextFeedBatchRequestFailed(event);
+          }
+
+          return orElse();
+        };
+
+    return foldEngineEvent(
+      restoreFeedSucceeded: (event) => {...state.results, ...event.items},
+      nextFeedBatchRequestSucceeded: (event) =>
+          {...state.results, ...event.items},
+      documentsUpdated: (event) => state.results
+          .map(
+            (it) => event.items.firstWhere(
+              (item) => item.documentId == it.documentId,
+              orElse: () => it,
+            ),
+          )
+          .toSet(),
+      engineExceptionRaised: (event) {
+        manager.sendAnalyticsUseCase(
+          EngineExceptionRaisedEvent(
+            event: event,
+          ),
+        );
+
+        logger.e('$event');
+
+        return state.results;
+      },
+      nextFeedBatchRequestFailed: (event) {
+        manager.sendAnalyticsUseCase(
+          NextFeedBatchRequestFailedEvent(
+            event: event,
+          ),
+        );
+
+        logger.e('$event');
+
+        return state.results;
+      },
+      orElse: () => state.results,
+    );
   }
 }

@@ -257,9 +257,15 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestSearch(String queryTerm) {
+  Future<EngineEvent> requestSearch({
+    required String queryTerm,
+    required FeedMarket market,
+  }) {
     _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
-    return safeRun(() => _engine.requestSearch(queryTerm));
+    return safeRun(() => _engine.requestSearch(
+          queryTerm: queryTerm,
+          market: market,
+        ));
   }
 
   @override

@@ -6,8 +6,6 @@ import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedb
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -16,19 +14,14 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_mar
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-typedef OnRestoreFeedSucceeded = Set<Document> Function(
-    RestoreFeedSucceeded event);
-typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
-    NextFeedBatchRequestSucceeded event);
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
 typedef OnEngineExceptionRaised = Set<Document> Function(
     EngineExceptionRaised event);
-typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
-    NextFeedBatchRequestFailed event);
 typedef OnNonMatchedEngineEvent = Set<Document> Function();
+typedef FoldEngineEvent = Set<Document> Function(EngineEvent?) Function(
+    BaseDiscoveryManager);
 
 /// a threshold, how long a user should observe a document, before it becomes
 /// implicitly liked.
@@ -47,12 +40,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
         ChangeUserReactionMixin<DiscoveryFeedState>,
         CheckMarketsMixin<DiscoveryFeedState> {
   BaseDiscoveryManager(
+    this.foldEngineEvent,
     this.fetchCardIndexUseCase,
     this.updateCardIndexUseCase,
     this.sendAnalyticsUseCase,
     this.crudExplicitDocumentFeedbackUseCase,
   ) : super(DiscoveryFeedState.initial());
 
+  final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
   final UpdateCardIndexUseCase updateCardIndexUseCase;
   final SendAnalyticsUseCase sendAnalyticsUseCase;
@@ -218,44 +213,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
 
           results = <Document>{};
         } else {
-          final foldEngineEvent = _foldEngineEvent(engineEvent);
-
-          results = foldEngineEvent(
-            restoreFeedSucceeded: (event) => {...state.results, ...event.items},
-            nextFeedBatchRequestSucceeded: (event) =>
-                {...state.results, ...event.items},
-            documentsUpdated: (event) => state.results
-                .map(
-                  (it) => event.items.firstWhere(
-                    (item) => item.documentId == it.documentId,
-                    orElse: () => it,
-                  ),
-                )
-                .toSet(),
-            engineExceptionRaised: (event) {
-              sendAnalyticsUseCase(
-                EngineExceptionRaisedEvent(
-                  event: event,
-                ),
-              );
-
-              logger.e('$event');
-
-              return state.results;
-            },
-            nextFeedBatchRequestFailed: (event) {
-              sendAnalyticsUseCase(
-                NextFeedBatchRequestFailedEvent(
-                  event: event,
-                ),
-              );
-
-              logger.e('$event');
-
-              return state.results;
-            },
-            orElse: () => state.results,
-          );
+          results = foldEngineEvent(this)(engineEvent);
         }
 
         final sets = await maybeReduceCardCount(results);
@@ -282,36 +240,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
       });
-
-  Set<Document> Function({
-    required OnRestoreFeedSucceeded restoreFeedSucceeded,
-    required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
-    required OnDocumentsUpdated documentsUpdated,
-    required OnEngineExceptionRaised engineExceptionRaised,
-    required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
-    required OnNonMatchedEngineEvent orElse,
-  }) _foldEngineEvent(EngineEvent? event) => ({
-        required OnRestoreFeedSucceeded restoreFeedSucceeded,
-        required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
-        required OnDocumentsUpdated documentsUpdated,
-        required OnEngineExceptionRaised engineExceptionRaised,
-        required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
-        required OnNonMatchedEngineEvent orElse,
-      }) {
-        if (event is RestoreFeedSucceeded) {
-          return restoreFeedSucceeded(event);
-        } else if (event is NextFeedBatchRequestSucceeded) {
-          return nextFeedBatchRequestSucceeded(event);
-        } else if (event is DocumentsUpdated) {
-          return documentsUpdated(event);
-        } else if (event is EngineExceptionRaised) {
-          return engineExceptionRaised(event);
-        } else if (event is NextFeedBatchRequestFailed) {
-          return nextFeedBatchRequestFailed(event);
-        }
-
-        return orElse();
-      };
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
