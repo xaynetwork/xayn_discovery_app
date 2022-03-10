@@ -232,18 +232,20 @@ lane :publish do |options|
   config = Config::FLAVOR_MATRIX[flavor][platform]
   appcenter_target = config[Keys::APPCENTER_TARGET]
   appcenter_token = config[Keys::APPCENTER_TOKEN]
-  appcenter_buildfile = config[Keys::APPCENTER_FILEPATH]
 
   if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
   end
-  flutter_build(options)
+  output = flutter_build(options)
+  appcenter_buildfile = output[/.*Built (.*) /, 1]
   if platform == Platforms::IOS
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
+      appcenter_buildfile = options[:ios_create_ipa]
     end
   end
   if options[Options::UPLOAD_TO_APPCENTER]
+    UI.success "Will upload file #{appcenter_buildfile}"
     UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
     uploadToAppCenter(
       ENV[appcenter_token],
