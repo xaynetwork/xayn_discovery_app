@@ -1,16 +1,12 @@
 name: Mirror Repo
 
 on:
-  workflow_dispatch:
-    inputs:
-      param:
-        required: false
-        description: ''
   push:
     branches:
       - main
     tags:
       - '*'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,7 +15,7 @@ jobs:
   mirror-repo:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
-    if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch')
+    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push' && contains(github.ref, 'refs/tags/'))
     steps:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@3c9b0fc6f2d223b8450b02a0445f526350fc73e0 # v2.3.1
