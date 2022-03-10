@@ -11,8 +11,6 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
-import 'package:xayn_discovery_app/presentation/text_to_speech/manager/text_to_speech_manager.dart';
-import 'package:xayn_discovery_app/presentation/text_to_speech/manager/text_to_speech_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
@@ -64,7 +62,6 @@ class ReaderMode extends StatefulWidget {
 
 class _ReaderModeState extends State<ReaderMode> {
   late final ReaderModeManager _readerModeManager = di.get();
-  late final TextToSpeechManager _textToSpeechManager = di.get();
   late final _readerModeController = readability.ReaderModeController();
 
   @override
@@ -78,7 +75,6 @@ class _ReaderModeState extends State<ReaderMode> {
   void dispose() {
     super.dispose();
 
-    _textToSpeechManager.close();
     _readerModeManager.close();
     _readerModeController.dispose();
   }
@@ -143,7 +139,7 @@ class _ReaderModeState extends State<ReaderMode> {
             final contents = result.contents;
 
             if (contents != null && contents.isNotEmpty) {
-              _textToSpeechManager.handleStart(
+              _readerModeManager.handleSpeechStart(
                 languageCode: widget.languageCode,
                 uri: widget.uri,
                 html: contents,
@@ -157,12 +153,9 @@ class _ReaderModeState extends State<ReaderMode> {
           customWidgetBuilder: _customElements,
         );
 
-        return BlocBuilder<TextToSpeechManager, TextToSpeechState>(
-          bloc: _textToSpeechManager,
-          builder: (context, state) => ColoredBox(
-            color: fontSettings.backgroundColor.color,
-            child: readerMode,
-          ),
+        return ColoredBox(
+          color: fontSettings.backgroundColor.color,
+          child: readerMode,
         );
       },
     );

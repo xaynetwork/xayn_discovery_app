@@ -74,6 +74,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   void saveTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
 
+  void toggleAndSaveTextToSpeechPreference() {}
+
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
   void reportBug() => _bugReportingService.showDialog(
