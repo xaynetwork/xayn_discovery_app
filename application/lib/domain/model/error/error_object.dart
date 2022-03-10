@@ -1,7 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-@immutable
-class ErrorObject {
+class ErrorObject extends Equatable {
   final Object? errorObject;
   final String? errorString;
 
@@ -14,4 +13,7 @@ class ErrorObject {
   String toString() => errorString ?? errorObject?.toString() ?? '';
 
   bool get hasError => errorObject != null;
+
+  @override
+  List<Object?> get props => [errorObject, errorString];
 }
