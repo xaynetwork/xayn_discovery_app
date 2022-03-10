@@ -1,3 +1,5 @@
+import 'package:sprintf/sprintf.dart';
+
 extension StringExtension on String {
   /// Splits a `String` into two parts:
   /// The algorithm will start out in the middle of the `String`,
@@ -70,4 +72,14 @@ extension StringExtension on String {
       right: substring(index, length),
     );
   }
+
+  /// Formats the string with a single argument
+  /// Uses the common sprintf denotation: %s, %d ..
+  /// see [PrintFormat]
+  String format(dynamic arg) => sprintf(this, [arg]);
+
+  /// Formats the string with a list of arguments
+  /// Uses the common sprintf denotation: %s, %d ..
+  /// see [PrintFormat]
+  String formats(List args) => sprintf(this, args);
 }

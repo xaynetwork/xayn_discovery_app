@@ -3,6 +3,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
+import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -33,7 +34,7 @@ TooltipParams _getBookmarkedToDefault() {
       .truncate(maxDisplayableCollectionName);
 
   final savedToDefaultString =
-      R.strings.bookmarkSnackBarSavedTo.replaceAll('%s', defaultCollectionName);
+      R.strings.bookmarkSnackBarSavedTo.format(defaultCollectionName);
 
   void onPressed(List? args) {
     if (args == null || args.length < 4) return;
