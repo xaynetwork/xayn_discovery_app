@@ -37,12 +37,14 @@ void main() {
       final map = {
         0: true,
         1: 2,
+        2: true,
       };
       final settings = mapper.fromMap(map);
       expect(
         settings,
         AppSettings.global(
           isOnboardingDone: true,
+          autoPlayTextToSpeech: true,
           appTheme: AppTheme.dark,
         ),
       );
@@ -55,12 +57,14 @@ void main() {
 
       final settings = AppSettings.global(
         isOnboardingDone: true,
+        autoPlayTextToSpeech: true,
         appTheme: AppTheme.dark,
       );
       final map = mapper.toMap(settings);
       final expectedMap = {
         0: true,
         1: 2,
+        2: true,
       };
       expect(map, expectedMap);
     });

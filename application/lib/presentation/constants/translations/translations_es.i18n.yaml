@@ -118,9 +118,14 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Transacción de pago fallida
+  noActiveSubscriptionFound: No active subscription found
 bottomSheetDeleteCollectionWithNoItemsBody: Estás seguro de que quieres borrar esta colección?
 bottomSheetMoveSingleBookmark: Moverse a otra colección
 readerModeSettingsErrorChangesNotApplied: Los cambios no pudieron ser aplicado
 errorGenericHeaderSomethingWentWrong: Algo salió mal
 errorGenericBodyPleaseTryAgainLater: Por favor intente más tarde
 errorClose: Cerrar
+sourceHandlingTooltipLabel: What do you want to see less of?
+sourceHandlingTooltipHighlightedWord: What
+enableTextToSpeech: Enable text -to-speech
+settingsSectionTitleOptions: Options
