@@ -217,6 +217,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           results = foldEngineEvent(this)(engineEvent);
         }
 
+        final isInErrorState =
+            errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
         final sets = await maybeReduceCardCount(results);
         final nextCardIndex = sets.nextCardIndex;
 
@@ -230,7 +232,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           results: sets.results,
           removedResults: sets.removedResults,
           isComplete: !isLoading,
-          isInErrorState: errorReport.isNotEmpty,
+          isInErrorState: isInErrorState,
           isFullScreen: _isFullScreen,
           cardIndex: _cardIndex!,
           latestExplicitDocumentFeedback: explicitDocumentFeedback,

@@ -100,6 +100,10 @@ void main() {
   blocTest<ActiveSearchManager, DiscoveryState>(
     'GIVEN use case throws an error THEN the error state is true',
     build: () {
+      when(engine.restoreSearch()).thenAnswer(
+        (_) async =>
+            const EngineExceptionRaised(EngineExceptionReason.genericError),
+      );
       when(engine.engineEvents).thenAnswer(
         (_) => Stream.value(
           const EngineExceptionRaised(EngineExceptionReason.genericError),
