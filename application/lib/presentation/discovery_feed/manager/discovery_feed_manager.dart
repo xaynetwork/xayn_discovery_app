@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -35,8 +35,8 @@ abstract class DiscoveryFeedNavActions {
 @injectable
 class DiscoveryFeedManager extends BaseDiscoveryManager
     with
-        RequestFeedMixin<DiscoveryFeedState>,
-        CloseFeedDocumentsMixin<DiscoveryFeedState>
+        RequestFeedMixin<DiscoveryState>,
+        CloseFeedDocumentsMixin<DiscoveryState>
     implements DiscoveryFeedNavActions {
   /// The max card count of the feed
   /// If the count overflows, then n-cards will be removed from the beginning
@@ -147,7 +147,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   }
 
   @override
-  Future<DiscoveryFeedState?> computeState() async {
+  Future<DiscoveryState?> computeState() async {
     if (_didChangeMarkets) {
       _didChangeMarkets = false;
 

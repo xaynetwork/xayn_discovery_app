@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../test_utils/dependency_overrides.dart';
@@ -102,7 +102,7 @@ void main() async {
     await manager.close();
   });
 
-  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
@@ -113,7 +113,7 @@ void main() async {
       manager.handleIndexChanged(1);
     },
     expect: () => [
-      DiscoveryFeedState(
+      DiscoveryState(
         results: {fakeDocumentA, fakeDocumentB},
         cardIndex: 1,
         isComplete: true,
@@ -133,7 +133,7 @@ void main() async {
     },
   );
 
-  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN closing documents THEN the discovery engine is notified ',
     build: () => manager,
     setUp: () async {
@@ -159,7 +159,7 @@ void main() async {
     },
   );
 
-  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
       'WHEN observing documents THEN the discovery engine is notified ',
       build: () => manager,
       setUp: () async {
@@ -199,14 +199,14 @@ void main() async {
         verifyNoMoreInteractions(mockDiscoveryEngine);
       });
 
-  blocTest<DiscoveryFeedManager, DiscoveryFeedState>(
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
     build: () => manager,
     act: (manager) async {
       manager.handleNavigateIntoCard();
     },
     expect: () => [
-      DiscoveryFeedState(
+      DiscoveryState(
         results: {fakeDocumentA, fakeDocumentB},
         cardIndex: 0,
         isComplete: true,

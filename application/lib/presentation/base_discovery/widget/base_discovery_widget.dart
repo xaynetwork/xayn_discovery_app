@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
@@ -62,7 +62,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<BaseDiscoveryManager, DiscoveryFeedState>(
+      BlocBuilder<BaseDiscoveryManager, DiscoveryState>(
         bloc: widget.manager,
         builder: (context, state) {
           // this is for:
@@ -114,7 +114,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     super.initState();
   }
 
-  Widget _buildFeedView(DiscoveryFeedState state) {
+  Widget _buildFeedView(DiscoveryState state) {
     return LayoutBuilder(builder: (_, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;

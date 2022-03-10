@@ -13,7 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../presentation/test_utils/fakes.dart';
@@ -45,7 +45,7 @@ void main() {
         );
   });
 
-  blocTest<ActiveSearchManager, DiscoveryFeedState>(
+  blocTest<ActiveSearchManager, DiscoveryState>(
     'GIVEN fresh manager THEN the state is DiscoveryFeedState.initial()',
     build: () {
       when(engine.engineEvents).thenAnswer((_) => const Stream.empty());
@@ -65,10 +65,10 @@ void main() {
       );
       return buildManager();
     },
-    expect: () => [DiscoveryFeedState.initial().copyWith(isComplete: true)],
+    expect: () => [DiscoveryState.initial().copyWith(isComplete: true)],
   );
 
-  blocTest<ActiveSearchManager, DiscoveryFeedState>(
+  blocTest<ActiveSearchManager, DiscoveryState>(
     'GIVEN use case emits results THEN the state contains results',
     build: () {
       final restoreEvent = RestoreSearchSucceeded(
@@ -97,7 +97,7 @@ void main() {
     },
   );
 
-  blocTest<ActiveSearchManager, DiscoveryFeedState>(
+  blocTest<ActiveSearchManager, DiscoveryState>(
     'GIVEN use case throws an error THEN the error state is true',
     build: () {
       when(engine.engineEvents).thenAnswer(

@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_do
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -33,20 +33,20 @@ const int _kThresholdDurationSecondsImplicitLike = 5;
 /// It consumes events from the discovery engine and emits a state
 /// which contains a list of discovery news items which should be displayed
 /// in a list format by widgets.
-abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
+abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     with
-        UseCaseBlocHelper<DiscoveryFeedState>,
-        EngineEventsMixin<DiscoveryFeedState>,
-        ObserveDocumentMixin<DiscoveryFeedState>,
-        ChangeUserReactionMixin<DiscoveryFeedState>,
-        CheckMarketsMixin<DiscoveryFeedState> {
+        UseCaseBlocHelper<DiscoveryState>,
+        EngineEventsMixin<DiscoveryState>,
+        ObserveDocumentMixin<DiscoveryState>,
+        ChangeUserReactionMixin<DiscoveryState>,
+        CheckMarketsMixin<DiscoveryState> {
   BaseDiscoveryManager(
     this.foldEngineEvent,
     this.fetchCardIndexUseCase,
     this.updateCardIndexUseCase,
     this.sendAnalyticsUseCase,
     this.crudExplicitDocumentFeedbackUseCase,
-  ) : super(DiscoveryFeedState.initial());
+  ) : super(DiscoveryState.initial());
 
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
@@ -193,7 +193,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
       state.results.map((it) => it.documentId).contains(document.documentId);
 
   @override
-  Future<DiscoveryFeedState?> computeState() async => fold3(
+  Future<DiscoveryState?> computeState() async => fold3(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         engineEvents,
@@ -226,7 +226,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryFeedState>
         final hasExplicitDocumentFeedbackChanged =
             state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
 
-        final nextState = DiscoveryFeedState(
+        final nextState = DiscoveryState(
           results: sets.results,
           removedResults: sets.removedResults,
           isComplete: !isLoading,

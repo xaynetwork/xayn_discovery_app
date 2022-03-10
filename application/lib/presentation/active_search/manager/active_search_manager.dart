@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_feed_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
@@ -37,7 +37,7 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends BaseDiscoveryManager
-    with SearchMixin<DiscoveryFeedState>, CloseSearchMixin<DiscoveryFeedState>
+    with SearchMixin<DiscoveryState>, CloseSearchMixin<DiscoveryState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
