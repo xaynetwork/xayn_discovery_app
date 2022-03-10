@@ -44,7 +44,8 @@ void main() {
       PurchasesErrorCode.networkError,
       PurchasesErrorCode.logOutWithAnonymousUserError,
       PurchasesErrorCode.ineligibleError,
-    }
+    },
+    PaymentFlowError.noActiveSubscriptionFound: {},
   };
   setUp(() {
     bugReportingService = MockBugReportingService();
