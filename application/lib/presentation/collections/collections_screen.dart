@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_da
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/custom_animated_list.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -96,11 +97,12 @@ class _CollectionsScreenState extends State<CollectionsScreen>
     BuildContext context,
     CollectionsScreenState screenState,
   ) {
-    final list = ListView.builder(
-      itemCount: screenState.collections.length,
-      itemBuilder: (_, index) => _buildCard(
-        screenState.collections[index],
+    final list = CustomAnimatedList<Collection>(
+      items: screenState.collections,
+      itemBuilder: (_, index, __, collection) => _buildCard(
+        collection,
       ),
+      areItemsTheSame: (a, b) => a.id == b.id,
     );
 
     final bottomPadding = R.dimen.unit2;

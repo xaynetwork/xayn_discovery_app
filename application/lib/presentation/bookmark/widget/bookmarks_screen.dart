@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_da
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/custom_animated_list.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -62,21 +63,22 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       );
 
   Widget _buildScreen(BookmarksScreenState state) {
-    final list = ListView.builder(
-      itemCount: state.bookmarks.length,
-      itemBuilder: (context, i) {
+    final list = CustomAnimatedList<Bookmark>(
+      items: state.bookmarks,
+      itemBuilder: (_, index, __, bookmark) {
         final card = CardWidgetTransitionWrapper(
-          onAnimationDone: () =>
-              _showBookmarkCardOptions(state.bookmarks[i].id),
+          onAnimationDone: () => _showBookmarkCardOptions(bookmark.id),
           onLongPress: _bookmarkManager.triggerHapticFeedbackMedium,
-          child: _createBookmarkCard(context, state.bookmarks[i]),
+          child: _createBookmarkCard(context, bookmark),
         );
         return Padding(
           padding: EdgeInsets.only(bottom: R.dimen.unit2),
           child: card,
         );
       },
+      areItemsTheSame: (a, b) => a.id == b.id,
     );
+
     return Padding(
       child: list,
       padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
