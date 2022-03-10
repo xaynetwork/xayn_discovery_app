@@ -76,7 +76,7 @@ private_lane :ios_create_ipa do |options|
     path: provisioning_profile_path,
   )
 
-  build_app(scheme: "Runner",
+  filePath = build_app(scheme: "Runner",
             configuration: "Release",
             workspace: "Runner.xcworkspace",
             export_method: isAdhoc ? "ad-hoc" : "app-store",
@@ -92,6 +92,8 @@ private_lane :ios_create_ipa do |options|
     delete_keychain(name: "fastlane_tmp_keychain-db")
   rescue Exception
   end
+
+  options[:ios_create_ipa] = filePath
 end
 
 desc "Create an app store connect api key "
