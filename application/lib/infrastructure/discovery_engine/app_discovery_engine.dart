@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
@@ -29,11 +28,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late DiscoveryEngine _engine;
   late Set<FeedMarket> _localMarkets;
-
-  /// temp solution:
-  /// Once search is supported, we drop this.
-  late final StreamController<EngineEvent> _tempSearchEvents =
-      StreamController<EngineEvent>.broadcast();
 
   final StreamController<String> _inputLog =
       StreamController<String>.broadcast();
@@ -181,12 +175,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   /// As we also need search events, which are not yet supported, we override
   /// this getter so that it includes our temp search event Stream.
   @override
-  Stream<EngineEvent> get engineEvents {
-    final engineEvents = Stream.fromFuture(safeRun(() => _engine.engineEvents))
-        .asyncExpand((events) => events);
-
-    return Rx.merge([engineEvents, _tempSearchEvents.stream]);
-  }
+  Stream<EngineEvent> get engineEvents =>
+      Stream.fromFuture(safeRun(() => _engine.engineEvents))
+          .asyncExpand((events) => events);
 
   @override
   Future<EngineEvent> logDocumentTime({
@@ -214,10 +205,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     _inputLog.add('[requestNextFeedBatch]');
     return safeRun(() => _engine.requestNextFeedBatch());
   }
-
-  /// temporary workaround for adding events that are not yet handled
-  /// by the discovery engine.
-  void tempAddEvent(EngineEvent event) => _tempSearchEvents.add(event);
 
   @override
   Future<void> dispose() {

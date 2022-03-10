@@ -99,9 +99,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  void tempAddEvent(EngineEvent event) => _onEngineEvent.add(event);
-
-  @override
   Future<void> dispose() async {}
 
   @override
