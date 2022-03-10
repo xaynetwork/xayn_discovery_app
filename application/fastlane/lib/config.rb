@@ -5,7 +5,6 @@ module Config
     NAME = "name"
     APPCENTER_TARGET = "appcenter_target"
     APPCENTER_TOKEN = "appcenter_token"
-    APPCENTER_FILEPATH = "appcenter_buildfile"
     KEY_ALIAS = "key_alias"
     PROVISIONING_PROFILE_PATH = "provisioning_profile_path"
     PROVISIONING_PROFILE_NAME = "provisioning_profile_name"
@@ -106,7 +105,7 @@ module Config
                    "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
-                   "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1514123811",
+                   "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1605873072",
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
 
   # Carefull to change those offsets, they are defining the beta process:
@@ -125,7 +124,6 @@ module Config
         Keys::NAME => "Discovery",
         Keys::APPCENTER_TARGET => "Discovery-App-internal",
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_INTERNAL_TOKEN",
-        Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
       Platforms::ANDROID => {
@@ -133,26 +131,23 @@ module Config
         Keys::NAME => "Discovery",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-internal",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_INTERNAL_TOKEN",
-        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
     },
     Flavors::BETA => {
       Platforms::IOS => {
-        Keys::ID => "com.xayn.search",
+        Keys::ID => "com.xayn.discovery",
         Keys::NAME => "Xayn 3.0",
         # Discoveru is correct!! :P
         Keys::APPCENTER_TARGET => "Discoveru-App-iOS-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_BETA_TOKEN",
-        Keys::APPCENTER_FILEPATH => "build/discovery-app.ipa",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
       Platforms::ANDROID => {
-        Keys::ID => "com.xayn.search",
+        Keys::ID => "com.xayn.discovery",
         Keys::NAME => "Xayn 3.0",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
-        Keys::APPCENTER_FILEPATH => "build/app/outputs/bundle/release/app-release.aab",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
     },
@@ -188,11 +183,11 @@ module Config
       Keys::ADHOC => true,
     },
     Flavors::BETA => {
-      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Beta_Profile.mobileprovision",
-      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Beta Profile",
+      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
+      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Profile",
       Keys::CERTIFICATE_NAME => "Apple Distribution: Xayn AG (586TQ875ST)",
       Keys::PROVISIONING_PROFILES => {
-        "com.xayn.search" => "Xayn Discovery AppStore Beta Profile",
+        "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
       },
       Keys::ADHOC => false,
     },
