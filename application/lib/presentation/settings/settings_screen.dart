@@ -77,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         appTheme: state.theme,
         isPaymentEnabled: state.isPaymentEnabled,
       ),
-      _buildOptionsSection(),
+      _buildOptionsSection(state.isTtsEnabled),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -109,17 +109,18 @@ class _SettingsScreenState extends State<SettingsScreen>
         isFirstSection: !isPaymentEnabled,
       );
 
-  Widget _buildOptionsSection() => SettingsSection(
-        title: R.strings.settingsSectionTitleGeneralInfo,
+  Widget _buildOptionsSection(bool isTtsEnabled) => SettingsSection(
+        title: R.strings.settingsSectionTitleOptions,
         items: [
           SettingsCardData.fromTile(SettingsTileData(
-            title: R.strings.settingsAboutXayn,
+            title: R.strings.enableTextToSpeech,
             svgIconPath: R.assets.icons.speechBubbles,
             action:
                 // ignore: DEPRECATED_MEMBER_USE
                 SettingsTileActionSwitch(
-              value: true,
-              onPressed: _manager.toggleAndSaveTextToSpeechPreference,
+              value: isTtsEnabled,
+              onPressed: () =>
+                  _manager.saveTextToSpeechPreference(!isTtsEnabled),
               key: Keys.settingsToggleTextToSpeechPreference,
             ),
           )),
