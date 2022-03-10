@@ -8,17 +8,34 @@ on:
       - '*'
   workflow_dispatch:
     inputs:
-      param:
-        description: 'Manually run releases choose one or many of: ios_internal, android_internal, ios_beta, android_beta, none'
-        required: true
-        default: 'ios_internal android_internal'
+      android_internal:
+        description: 'Android Internal'
+        required: false
+        default: true
+        type: boolean
+      android_beta:
+        description: 'Android Beta'
+        required: false
+        default: false
+        type: boolean
+      ios_internal:
+        description: 'iOS Internal'
+        required: false
+        default: true
+        type: boolean
+      ios_beta:
+        description: 'iOS Beta'
+        required: false
+        default: false
+        type: boolean
+
 concurrency:
   group: ${{ github.workflow }}-${{  github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 env:
   flutter_channel: 'stable'
-  flutter_version: '2.10.0'
+  flutter_version: '2.10.3'
   java_version: '12.x'
   ios_device: 'iPhone 11 Pro (14.5)'
   # Common environment variables used inside ./build_scripts files
@@ -29,7 +46,7 @@ env:
 jobs:
   publish_ios_internal:
     name: Publish iOS Internal
-    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_internal'))
+    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.ios_internal == 'true')
     runs-on: macos-latest
     steps:
       - name: Install SSH key
@@ -65,7 +82,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 20
+        timeout-minutes: 25
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -85,7 +102,7 @@ jobs:
 
   publish_ios_beta:
     name: Publish iOS Beta
-    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'ios_beta'))
+    if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.ios_beta == 'true')
     runs-on: macos-latest
     steps:
       - name: Install SSH key
@@ -121,7 +138,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 20
+        timeout-minutes: 25
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -141,7 +158,7 @@ jobs:
 
   publish_android_internal:
     name: Publish Android Internal
-    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_internal'))
+    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.android_internal  == 'true')
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH key
@@ -184,7 +201,7 @@ jobs:
 
   publish_android_beta:
     name: Publish Android Beta
-    if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.param, 'android_beta'))
+    if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.android_beta  == 'true')
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH key
@@ -223,4 +240,4 @@ jobs:
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build_type:release flavor:beta
+          fastlane publish platform:android build_type:release flavor:beta android_output:appbundle

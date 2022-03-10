@@ -35,6 +35,7 @@ report.xml
 .pub-cache/
 .pub/
 /build/
+.fvm/
 
 # Generated files
 *.config.dart

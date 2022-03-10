@@ -28,8 +28,8 @@ hourAgo: 'hour ago'
 hoursAgo: 'hours ago'
 dayAgo: 'day ago'
 daysAgo: 'days ago'
-readingTimeUnitSingular: 'minute'
-readingTimeUnitPlural: 'minutes'
+readingTimeUnitSingular: 'Min Lesedauer'
+readingTimeUnitPlural: 'Min Lesedauer'
 readingTimeSuffix: 'read'
 cannotLoadUrlError: 'Unable to load image with url: '
 personalAreaTitle: Dein Bereich
@@ -100,8 +100,8 @@ settingsSubscribedToHeader: Du hast
 doneButtonTitle: Fertig
 subscriptionRenewsMonthlyText: 'Dein Abo erneuert sich am: %s'
 promoCodeValidUntilText: 'Dein Promo-Code ist noch gültig bis: %s'
-subscriptionPlatformInfoApple: Via Apple App Store abonniert. Du kannst Dein Abo im __Apple App Store__ verwalten.
-subscriptionPlatformInfoGoogle: Via Google Play Store abonniert. Du kannst Dein Abo im __Google Play Store__ verwalten.
+subscriptionPlatformInfoApple: Als Beta User kriegst du Xayn Premium ganz automatisch gratis! Du kannst Dein Abo im __Apple App Store__ verwalten.
+subscriptionPlatformInfoGoogle: Als Beta User kriegst du Xayn Premium ganz automatisch gratis!  Du kannst Dein Abo im __Google Play Store__ verwalten.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation
@@ -118,9 +118,9 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Zahlungsvorgang fehlgeschlagen
-  # DO NOT TRANSLATE THIS FOR NOW!
-  # Error msg, shown when some issue happened during the payment transaction
-  checkSubscriptionActiveFailed: Check active subscription failed. Please try again later
 bottomSheetDeleteCollectionWithNoItemsBody: Willst Du diese Sammlung wirklich löschen?
-bottomSheetMoveSingleBookmark: Move to another collection
-readerModeSettingsErrorChangesNotApplied: Changes couldn't be applied
+bottomSheetMoveSingleBookmark: In eine andere Collection verschieben
+readerModeSettingsErrorChangesNotApplied: Die Änderungen konnten nicht gespeichert werden
+errorGenericHeaderSomethingWentWrong: Da ging wohl was schief
+errorGenericBodyPleaseTryAgainLater: Bitte versuche es später noch einmal.
+errorClose: Schließen

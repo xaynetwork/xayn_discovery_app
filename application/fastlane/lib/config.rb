@@ -140,7 +140,7 @@ module Config
     },
     Flavors::BETA => {
       Platforms::IOS => {
-        Keys::ID => "com.xayn.discovery",
+        Keys::ID => "com.xayn.search",
         Keys::NAME => "Xayn 3.0",
         # Discoveru is correct!! :P
         Keys::APPCENTER_TARGET => "Discoveru-App-iOS-beta",
@@ -153,7 +153,7 @@ module Config
         Keys::NAME => "Xayn 3.0",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
-        Keys::APPCENTER_FILEPATH => "build/app/outputs/flutter-apk/app-release.apk",
+        Keys::APPCENTER_FILEPATH => "build/app/outputs/bundle/release/app-release.aab",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
       },
     },
@@ -189,11 +189,11 @@ module Config
       Keys::ADHOC => true,
     },
     Flavors::BETA => {
-      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Profile.mobileprovision",
-      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Profile",
+      Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_AppStore_Beta_Profile.mobileprovision",
+      Keys::PROVISIONING_PROFILE_NAME => "Xayn Discovery AppStore Beta Profile",
       Keys::CERTIFICATE_NAME => "Apple Distribution: Xayn AG (586TQ875ST)",
       Keys::PROVISIONING_PROFILES => {
-        "com.xayn.discovery" => "Xayn Discovery AppStore Profile",
+        "com.xayn.search" => "Xayn Discovery AppStore Beta Profile",
       },
       Keys::ADHOC => false,
     },
