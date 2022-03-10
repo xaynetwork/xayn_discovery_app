@@ -23,7 +23,7 @@ class RestoreSubscriptionUseCase
 
   @override
   Stream<PurchasableProductStatus> transaction(None param) async* {
-    yield PurchasableProductStatus.pending;
+    yield PurchasableProductStatus.restorePending;
     try {
       final info = await _paymentService.restore();
       final restored = info.expirationDate?.isAfter(DateTime.now()) ?? false;

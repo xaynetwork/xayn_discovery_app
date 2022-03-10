@@ -124,7 +124,8 @@ void main() {
     test(
       'GIVEN status is null THEN return product with the status from product',
       () {
-        final product = getProduct(status: PurchasableProductStatus.pending);
+        final product =
+            getProduct(status: PurchasableProductStatus.purchasePending);
         const PurchasableProductStatus? status = null;
         final result = manager.getUpdatedProduct(product, status, null, null);
 

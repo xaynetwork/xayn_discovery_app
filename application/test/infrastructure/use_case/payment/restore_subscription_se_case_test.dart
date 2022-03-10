@@ -36,7 +36,7 @@ void main() {
       expect(
         output,
         equals([
-          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.restorePending),
           useCaseSuccess(PurchasableProductStatus.restored),
         ]),
       );
@@ -61,7 +61,7 @@ void main() {
       expect(
         output,
         equals([
-          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.restorePending),
           useCaseFailure(throwsA(PaymentFlowError.noActiveSubscriptionFound)),
         ]),
       );
@@ -90,7 +90,7 @@ void main() {
         expect(
           output,
           equals([
-            useCaseSuccess(PurchasableProductStatus.pending),
+            useCaseSuccess(PurchasableProductStatus.restorePending),
             useCaseFailure(throwsA(PaymentFlowError.unknown)),
           ]),
         );

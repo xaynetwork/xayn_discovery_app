@@ -21,6 +21,11 @@ import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
+enum PaymentAction {
+  subscribe,
+  restore,
+}
+
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
     with UseCaseBlocHelper<PaymentScreenState> {
@@ -60,6 +65,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   }
 
   SubscriptionStatus? _subscriptionStatus;
+  PaymentAction? _paymentAction;
 
   void _init() {
     scheduleComputeState(() async {
@@ -72,6 +78,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     final product = _subscriptionProduct;
 
     if (product == null || !product.canBePurchased) return;
+    _paymentAction = PaymentAction.subscribe;
     _purchaseSubscriptionHandler(PurchasableIds.subscription);
   }
 
@@ -81,6 +88,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   }
 
   void restore() {
+    _paymentAction = PaymentAction.restore;
     _restoreSubscriptionHandler(none);
   }
 
@@ -141,7 +149,9 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
-          productStatus ?? restoreStatus,
+          _paymentAction == PaymentAction.subscribe
+              ? productStatus
+              : restoreStatus,
           _subscriptionStatus?.isSubscriptionActive,
           paymentFlowError,
         );
