@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
@@ -76,6 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         appTheme: state.theme,
         isPaymentEnabled: state.isPaymentEnabled,
       ),
+      _buildOptionsSection(),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -105,6 +107,23 @@ class _SettingsScreenState extends State<SettingsScreen>
         theme: appTheme,
         onSelected: _manager.saveTheme,
         isFirstSection: !isPaymentEnabled,
+      );
+
+  Widget _buildOptionsSection() => SettingsSection(
+        title: R.strings.settingsSectionTitleGeneralInfo,
+        items: [
+          SettingsCardData.fromTile(SettingsTileData(
+            title: R.strings.settingsAboutXayn,
+            svgIconPath: R.assets.icons.speechBubbles,
+            action:
+                // ignore: DEPRECATED_MEMBER_USE
+                SettingsTileActionSwitch(
+              value: true,
+              onPressed: _manager.toggleAndSaveTextToSpeechPreference,
+              key: Keys.settingsToggleTextToSpeechPreference,
+            ),
+          )),
+        ],
       );
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
