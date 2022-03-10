@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
+import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
 
@@ -49,7 +50,7 @@ class CountryFeedSettingsPage extends StatelessWidget {
 
   Widget _buildHint() => Text(
         R.strings.feedSettingsScreenContryListHint
-            .replaceFirst('%s', maxSelectedCountryAmount.toString()),
+            .format(maxSelectedCountryAmount.toString()),
         style: R.styles.mStyle,
       );
 
