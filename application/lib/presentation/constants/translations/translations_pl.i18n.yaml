@@ -95,7 +95,7 @@ subscriptionPerk5: Anuluj w dowolnym momencie
 subscriptionSubscribeNow: Zapisz się teraz
 subscriptionRestore: Przywróć subskrypcję
 subscriptionPromoCode: Mam kod promocyjny
-subscriptionDisclaimer: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
+subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
 settingsSubscribedToHeader: Subskrybujesz
 doneButtonTitle: Gotowy
 subscriptionRenewsMonthlyText: 'Subskrypcja odnawia się co miesiąc w dniu: %s'
@@ -118,9 +118,14 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Transakcja płatnicza nie powiodła się
+  noActiveSubscriptionFound: No active subscription found
 bottomSheetDeleteCollectionWithNoItemsBody: Czy na pewno chcesz usunąć tę kolekcję?
 bottomSheetMoveSingleBookmark: Przejdź do innej kolekcji
 readerModeSettingsErrorChangesNotApplied: Nie udało się zastosować zmian
 errorGenericHeaderSomethingWentWrong: Coś poszło nie tak
 errorGenericBodyPleaseTryAgainLater: Spróbuj ponownie później.
 errorClose: Blisko
+sourceHandlingTooltipLabel: What do you want to see less of?
+sourceHandlingTooltipHighlightedWord: What
+enableTextToSpeech: Enable text -to-speech
+settingsSectionTitleOptions: Options

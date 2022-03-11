@@ -95,7 +95,7 @@ subscriptionPerk5: Neutre en carbone
 subscriptionSubscribeNow: Annuler à tout moment
 subscriptionRestore: Restaurer l'abonnement
 subscriptionPromoCode: J'ai un code promo
-subscriptionDisclaimer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.\n"
+subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
 settingsSubscribedToHeader: Vous êtes abonné à
 doneButtonTitle: Fini
 subscriptionRenewsMonthlyText: 'L''abonnement se renouvelle mensuellement le : %s'
@@ -118,9 +118,14 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Paiement échoué
+  noActiveSubscriptionFound: No active subscription found
 bottomSheetDeleteCollectionWithNoItemsBody: Voulez-vous vraiment supprimer cette collection ?
 bottomSheetMoveSingleBookmark: Déplacer vers une autre collection
 readerModeSettingsErrorChangesNotApplied: Impossible d'appliquer les modifications
 errorGenericHeaderSomethingWentWrong: Quelque chose s'est mal passé
 errorGenericBodyPleaseTryAgainLater: Veuillez réessayer plus tard.
 errorClose: Fermer
+sourceHandlingTooltipLabel: What do you want to see less of?
+sourceHandlingTooltipHighlightedWord: What
+enableTextToSpeech: Enable text -to-speech
+settingsSectionTitleOptions: Options

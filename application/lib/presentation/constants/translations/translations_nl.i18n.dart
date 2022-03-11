@@ -160,7 +160,7 @@ class TranslationsNl extends Translations {
   String get subscriptionRestore => """Herstel abonnement""";
   String get subscriptionPromoCode => """Ik heb een promo code""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
+      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """U bent geabonneerd op""";
   String get doneButtonTitle => """Gedaan""";
   String get subscriptionRenewsMonthlyText =>
@@ -183,6 +183,11 @@ class TranslationsNl extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Probeer het later nog eens.""";
   String get errorClose => """Sluiten""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -194,6 +199,7 @@ class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
   String get productNotFound => """Product niet gevonden :(""";
   String get itemAlreadyOwned => """U bent reeds ingeschreven""";
   String get transactionFailed => """Betalingstransactie mislukt""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsNlMap => {
@@ -300,7 +306,7 @@ Map<String, String> get translationsNlMap => {
       """subscriptionRestore""": """Herstel abonnement""",
       """subscriptionPromoCode""": """Ik heb een promo code""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
+          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """U bent geabonneerd op""",
       """doneButtonTitle""": """Gedaan""",
       """subscriptionRenewsMonthlyText""":
@@ -317,6 +323,8 @@ Map<String, String> get translationsNlMap => {
       """paymentFlowError.itemAlreadyOwned""": """U bent reeds ingeschreven""",
       """paymentFlowError.transactionFailed""":
           """Betalingstransactie mislukt""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Wil je deze collectie echt verwijderen?""",
       """bottomSheetMoveSingleBookmark""":
@@ -327,4 +335,8 @@ Map<String, String> get translationsNlMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Probeer het later nog eens.""",
       """errorClose""": """Sluiten""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };

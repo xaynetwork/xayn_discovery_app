@@ -161,7 +161,7 @@ class TranslationsPl extends Translations {
   String get subscriptionRestore => """Przywróć subskrypcję""";
   String get subscriptionPromoCode => """Mam kod promocyjny""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
+      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """Subskrybujesz""";
   String get doneButtonTitle => """Gotowy""";
   String get subscriptionRenewsMonthlyText =>
@@ -183,6 +183,11 @@ class TranslationsPl extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Spróbuj ponownie później.""";
   String get errorClose => """Blisko""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -193,6 +198,7 @@ class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nie znaleziony :(""";
   String get itemAlreadyOwned => """Zostałeś już zasubskrybowany""";
   String get transactionFailed => """Transakcja płatnicza nie powiodła się""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -301,7 +307,7 @@ Map<String, String> get translationsPlMap => {
       """subscriptionRestore""": """Przywróć subskrypcję""",
       """subscriptionPromoCode""": """Mam kod promocyjny""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
+          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """Subskrybujesz""",
       """doneButtonTitle""": """Gotowy""",
       """subscriptionRenewsMonthlyText""":
@@ -320,6 +326,8 @@ Map<String, String> get translationsPlMap => {
           """Zostałeś już zasubskrybowany""",
       """paymentFlowError.transactionFailed""":
           """Transakcja płatnicza nie powiodła się""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Czy na pewno chcesz usunąć tę kolekcję?""",
       """bottomSheetMoveSingleBookmark""": """Przejdź do innej kolekcji""",
@@ -329,4 +337,8 @@ Map<String, String> get translationsPlMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Spróbuj ponownie później.""",
       """errorClose""": """Blisko""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };

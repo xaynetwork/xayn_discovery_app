@@ -163,8 +163,7 @@ class TranslationsFr extends Translations {
   String get subscriptionRestore => """Restaurer l'abonnement""";
   String get subscriptionPromoCode => """J'ai un code promo""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
-""";
+      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """Vous êtes abonné à""";
   String get doneButtonTitle => """Fini""";
   String get subscriptionRenewsMonthlyText =>
@@ -188,6 +187,11 @@ class TranslationsFr extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Veuillez réessayer plus tard.""";
   String get errorClose => """Fermer""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -199,6 +203,7 @@ class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produit non trouvé :(""";
   String get itemAlreadyOwned => """Vous êtes déjà abonné""";
   String get transactionFailed => """Paiement échoué""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsFrMap => {
@@ -308,8 +313,7 @@ Map<String, String> get translationsFrMap => {
       """subscriptionRestore""": """Restaurer l'abonnement""",
       """subscriptionPromoCode""": """J'ai un code promo""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
-""",
+          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """Vous êtes abonné à""",
       """doneButtonTitle""": """Fini""",
       """subscriptionRenewsMonthlyText""":
@@ -326,6 +330,8 @@ Map<String, String> get translationsFrMap => {
       """paymentFlowError.productNotFound""": """Produit non trouvé :(""",
       """paymentFlowError.itemAlreadyOwned""": """Vous êtes déjà abonné""",
       """paymentFlowError.transactionFailed""": """Paiement échoué""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Voulez-vous vraiment supprimer cette collection ?""",
       """bottomSheetMoveSingleBookmark""":
@@ -337,4 +343,8 @@ Map<String, String> get translationsFrMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Veuillez réessayer plus tard.""",
       """errorClose""": """Fermer""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };
