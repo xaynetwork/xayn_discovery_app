@@ -87,7 +87,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
             controller: _textEditingController,
             hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
             onChanged: _createOrRenameCollectionManager.updateCollectionName,
-            errorText: state.error.hasError ? state.error.toString() : null,
+            errorText: state.error.errorMsgIfHasOrNull,
           );
 
           final header = Padding(

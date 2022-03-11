@@ -14,6 +14,8 @@ class ErrorObject extends Equatable {
 
   bool get hasError => errorObject != null;
 
+  String? get errorMsgIfHasOrNull => hasError ? toString() : null;
+
   @override
   List<Object?> get props => [errorObject, errorString];
 }

@@ -36,10 +36,13 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
   @override
   NavBarConfig get navBarConfig => _discoveryCardScreenManager.state.map(
-      initial: (_) => NavBarConfig.backBtn(buildNavBarItemBack(
-          onPressed: _discoveryCardScreenManager.onBackPressed)),
-      populated: (p) => _createDocumentNavbar(p.document),
-      error: (_) => NavBarConfig(const []));
+        initial: (_) => NavBarConfig.backBtn(
+          buildNavBarItemBack(
+              onPressed: _discoveryCardScreenManager.onBackPressed),
+        ),
+        populated: (p) => _createDocumentNavbar(p.document),
+        error: (_) => NavBarConfig(const []),
+      );
 
   NavBarConfig _createDocumentNavbar(Document document) {
     final cardManagers = di.get<CardManagers>(param1: document);
