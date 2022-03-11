@@ -37,7 +37,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
   void initState() {
     super.initState();
 
-    if (widget.isPrimary) _readHeadlineAloud(true);
+    if (widget.isPrimary) _readHeadlineAloud();
   }
 
   @override
@@ -45,7 +45,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && widget.isPrimary != oldWidget.isPrimary) {
-      _readHeadlineAloud(false);
+      _readHeadlineAloud(forceStart: true);
     }
   }
 
@@ -101,11 +101,11 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
   void discoveryCardStateListener(DiscoveryCardState state) =>
       onBookmarkChanged(state);
 
-  void _readHeadlineAloud(bool triggersOnInit) =>
+  void _readHeadlineAloud({bool forceStart = false}) =>
       discoveryCardManager.handleSpeechStart(
         headline: widget.document.resource.title,
         languageCode: widget.document.resource.language,
         uri: widget.document.resource.url,
-        triggersOnInit: triggersOnInit,
+        forceStart: forceStart,
       );
 }
