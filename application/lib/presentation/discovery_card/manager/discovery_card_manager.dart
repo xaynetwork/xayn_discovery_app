@@ -23,6 +23,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/text_to_speech_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -61,6 +63,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final TextToSpeechUseCase _textToSpeechUseCase;
+  final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
 
   /// html reader mode elements:
   ///
@@ -116,9 +120,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   late final _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
+  late final UseCaseSink<Utterance, Duration> _textToSpeechSink =
+      pipe(_textToSpeechUseCase);
 
   bool _isLoading = false;
   bool _isBookmarked = false;
+  bool _didReadAloudFirstCard = false;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -132,7 +139,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
+    this._textToSpeechUseCase,
+    this._getTtsPreferenceUseCase,
   ) : super(DiscoveryCardState.initial());
+
+  @override
+  Future<void> close() async {
+    await _textToSpeechUseCase.stopCurrentSpeech();
+
+    return super.close();
+  }
 
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
@@ -201,15 +217,40 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
+  void handleSpeechStart({
+    required String headline,
+    required String languageCode,
+    required bool triggersOnInit,
+    Uri? uri,
+  }) async {
+    final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
+
+    if (!isTtsEnabled || triggersOnInit && _didReadAloudFirstCard) return;
+
+    await _textToSpeechUseCase.stopCurrentSpeech();
+
+    _textToSpeechSink(
+      Utterance(
+        languageCode: languageCode,
+        paragraphs: [headline],
+        uri: uri,
+      ),
+    );
+
+    if (triggersOnInit) _didReadAloudFirstCard = true;
+  }
+
   @override
-  Future<DiscoveryCardState?> computeState() async => fold3(
+  Future<DiscoveryCardState?> computeState() async => fold4(
         _updateUri,
         _isBookmarkedHandler,
         _crudExplicitDocumentFeedbackHandler,
+        _textToSpeechSink,
       ).foldAll((
         processedDocument,
         isBookmarked,
         explicitDocumentFeedback,
+        _,
         errorReport,
       ) {
         if (errorReport.isNotEmpty) {

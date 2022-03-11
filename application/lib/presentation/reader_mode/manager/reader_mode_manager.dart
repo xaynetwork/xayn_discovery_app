@@ -64,6 +64,8 @@ class ReaderModeManager extends Cubit<ReaderModeState>
 
     final paragraphs = await _extractParagraphsUseCase.singleOutput(html);
 
+    await _textToSpeechUseCase.stopCurrentSpeech();
+
     _textToSpeechSink(
       Utterance(
         languageCode: languageCode,
