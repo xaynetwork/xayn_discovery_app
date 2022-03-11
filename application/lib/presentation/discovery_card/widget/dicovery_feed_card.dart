@@ -34,6 +34,22 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
 class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
     with OnBookmarkChangedMixin<DiscoveryFeedCard> {
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.isPrimary) _readHeadlineAloud(true);
+  }
+
+  @override
+  void didUpdateWidget(DiscoveryFeedCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.isPrimary && widget.isPrimary != oldWidget.isPrimary) {
+      _readHeadlineAloud(false);
+    }
+  }
+
+  @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
     final timeToReadOrError = state.processedDocument?.timeToRead ?? '';
@@ -84,4 +100,12 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
       onBookmarkChanged(state);
+
+  void _readHeadlineAloud(bool triggersOnInit) =>
+      discoveryCardManager.handleSpeechStart(
+        headline: widget.document.resource.title,
+        languageCode: widget.document.resource.language,
+        uri: widget.document.resource.url,
+        triggersOnInit: triggersOnInit,
+      );
 }
