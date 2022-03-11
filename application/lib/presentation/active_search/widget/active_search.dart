@@ -1,134 +1,120 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
-import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_state.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
-
-const double kSearchCardHeightRatio = 0.64;
 
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.
-class ActiveSearch extends StatefulWidget {
-  const ActiveSearch({Key? key}) : super(key: key);
+class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
+  const ActiveSearch({Key? key, required ActiveSearchManager manager})
+      : super(key: key, manager: manager);
 
   @override
-  _ActiveSearchState createState() => _ActiveSearchState();
+  State<StatefulWidget> createState() => _ActiveSearchState();
 }
 
-class _ActiveSearchState extends State<ActiveSearch>
-    with NavBarConfigMixin, CardManagersMixin {
-  late final ActiveSearchManager _activeSearchManager = di.get();
-
+class _ActiveSearchState
+    extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   @override
-  NavBarConfig get navBarConfig => NavBarConfig(
+  NavBarConfig get navBarConfig {
+    NavBarConfig buildDefault() => NavBarConfig(
+          [
+            buildNavBarItemHome(onPressed: () {
+              hideTooltip();
+              widget.manager.onHomeNavPressed();
+            }),
+            buildNavBarItemSearchActive(
+              isActive: true,
+              onSearchPressed: widget.manager.search,
+            ),
+            buildNavBarItemPersonalArea(
+              onPressed: () {
+                hideTooltip();
+                widget.manager.onPersonalAreaNavPressed();
+              },
+            ),
+          ],
+          showAboveKeyboard: true,
+        );
+    NavBarConfig buildReaderMode() {
+      final document = widget.manager.state.results
+          .elementAt(widget.manager.state.cardIndex);
+      final managers = managersOf(document);
+
+      void onBookmarkPressed() =>
+          managers.discoveryCardManager.toggleBookmarkDocument(document);
+
+      void onBookmarkLongPressed() => showAppBottomSheet(
+            context,
+            builder: (_) => MoveDocumentToCollectionBottomSheet(
+              document: document,
+              provider: managers.discoveryCardManager.state.processedDocument
+                  ?.getProvider(document.resource),
+              onError: (tooltipKey) => showTooltip(tooltipKey),
+            ),
+          );
+
+      void onEditReaderModeSettingsPressed() => toggleOverlay(
+            (_) => EditReaderModeSettingsMenu(
+              onCloseMenu: removeOverlay,
+            ),
+          );
+
+      return NavBarConfig(
         [
-          buildNavBarItemHome(
-            onPressed: _activeSearchManager.onHomeNavPressed,
+          buildNavBarItemArrowLeft(onPressed: () async {
+            removeOverlay();
+            await currentCardController?.animateToClose();
+            widget.manager.handleNavigateOutOfCard();
+          }),
+          buildNavBarItemLike(
+            isLiked: managers.discoveryCardManager.state
+                .explicitDocumentUserReaction.isRelevant,
+            onPressed: () => managers.discoveryCardManager.onFeedback(
+              document: document,
+              userReaction: managers.discoveryCardManager.state
+                      .explicitDocumentUserReaction.isRelevant
+                  ? UserReaction.neutral
+                  : UserReaction.positive,
+            ),
           ),
-          buildNavBarItemSearchActive(
-            onSearchPressed: (_) => logger.i('not yet supported!'),
-            hint: R.strings.activeSearchSearchHint,
-            isActive: true,
+          buildNavBarItemBookmark(
+            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
+            onPressed: onBookmarkPressed,
+            onLongPressed: onBookmarkLongPressed,
           ),
-          buildNavBarItemPersonalArea(
-            onPressed: _activeSearchManager.onPersonalAreaNavPressed,
-          )
+          buildNavBarItemShare(
+              onPressed: () =>
+                  managers.discoveryCardManager.shareUri(document)),
+          if (featureManager.isReaderModeSettingsEnabled)
+            buildNavBarItemEditFont(
+              onPressed: onEditReaderModeSettingsPressed,
+            ),
+          buildNavBarItemDisLike(
+            isDisLiked: managers.discoveryCardManager.state
+                .explicitDocumentUserReaction.isIrrelevant,
+            onPressed: () => managers.discoveryCardManager.onFeedback(
+              document: document,
+              userReaction: managers.discoveryCardManager.state
+                      .explicitDocumentUserReaction.isIrrelevant
+                  ? UserReaction.neutral
+                  : UserReaction.negative,
+            ),
+          ),
         ],
+        isWidthExpanded: true,
         showAboveKeyboard: true,
       );
+    }
 
-  @override
-  void dispose() {
-    _activeSearchManager.close();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: _buildListView(),
-    );
-  }
-
-  Widget _buildListView() {
-    return LayoutBuilder(builder: (context, constraints) {
-      final cardHeight = constraints.maxHeight * kSearchCardHeightRatio;
-
-      return BlocBuilder<ActiveSearchManager, ActiveSearchState>(
-        bloc: _activeSearchManager,
-        builder: (context, state) {
-          final results = state.results ?? {};
-
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (results.isEmpty) {
-            return Container();
-          }
-
-          return ListView.builder(
-            itemBuilder: _itemBuilder(results, true),
-            itemCount: results.length,
-            itemExtent: cardHeight,
-          );
-        },
-      );
-    });
-  }
-
-  Widget Function(BuildContext, int) _itemBuilder(
-    Set<Document> results,
-    bool isPrimary,
-  ) =>
-      (BuildContext context, int index) {
-        final document = results.elementAt(index);
-        return _buildResultCard(
-          document,
-          isPrimary,
-        );
-      };
-
-  Widget _buildResultCard(
-    Document document,
-    bool isPrimary,
-  ) {
-    final managers = managersOf(document);
-    final card = GestureDetector(
-      onTap: () {
-        final args = DiscoveryCardStandaloneArgs(
-          isPrimary: true,
-          document: document,
-          discoveryCardManager: managers.discoveryCardManager,
-          imageManager: managers.imageManager,
-        );
-        _activeSearchManager.onCardDetailsPressed(args);
-      },
-      child: DiscoveryFeedCard(
-        isPrimary: isPrimary,
-        document: document,
-        imageManager: managers.imageManager,
-        discoveryCardManager: managers.discoveryCardManager,
-      ),
-    );
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: R.dimen.unit,
-        vertical: R.dimen.unit0_5,
-      ),
-      child: ClipRRect(
-        child: card,
-        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-      ),
-    );
+    return widget.manager.state.isFullScreen
+        ? buildReaderMode()
+        : buildDefault();
   }
 }

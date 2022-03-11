@@ -207,21 +207,16 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
 
   @override
   Widget? buildImageWidget(
-      readability.BuildMetadata meta, readability.ImageSource src) {
-    // if w/h is zero, fall back to R.dimen.unit8, showing the image as a thumbnail then
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(R.dimen.unit),
-      child: CachedImage(
-        uri: Uri.parse(src.url),
-        width: (src.width ?? R.dimen.unit8).floor(),
-        height: (src.height ?? R.dimen.unit8).floor(),
-        fit: BoxFit.fitWidth,
-        errorBuilder: (_) => Container(),
-        noImageBuilder: (_) => Container(),
-        loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
-      ),
-    );
-  }
+          readability.BuildMetadata meta, readability.ImageSource src) =>
+      ClipRRect(
+        borderRadius: BorderRadius.circular(R.dimen.unit),
+        child: CachedImage(
+          uri: Uri.parse(src.url),
+          errorBuilder: (_) => Container(),
+          noImageBuilder: (_) => Container(),
+          loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
+        ),
+      );
 
   @override
   Widget? buildVideoPlayer(
