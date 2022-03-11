@@ -15,12 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-/// A temporary wrapper for the [DiscoveryEngine].
-/// Once the engine is ready, we can remove this class.
-///
-/// What we are awaiting:
-/// - [changeDocumentFeedback] to return an EngineEvent with information about the [Document].
-/// - an implementation for [search].
+/// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
@@ -172,8 +167,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.closeFeedDocuments(documentIds));
   }
 
-  /// As we also need search events, which are not yet supported, we override
-  /// this getter so that it includes our temp search event Stream.
   @override
   Stream<EngineEvent> get engineEvents =>
       Stream.fromFuture(safeRun(() => _engine.engineEvents))
