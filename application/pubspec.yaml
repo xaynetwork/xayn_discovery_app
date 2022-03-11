@@ -23,6 +23,7 @@ dependencies:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
       ref: 1.0.0
+  flutter_tts: 3.3.3
   freezed_annotation: 1.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
