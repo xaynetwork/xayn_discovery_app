@@ -53,4 +53,6 @@ class BugReportingService {
     StackTrace? stack,
   ]) =>
       CrashReporting.reportHandledCrash(exception, stack);
+
+  void setUserId(String userId) => Instabug.setUserAttribute(userId, 'userId');
 }

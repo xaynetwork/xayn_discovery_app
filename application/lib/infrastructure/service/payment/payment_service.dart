@@ -27,13 +27,28 @@ class PaymentService {
     _init();
   }
 
+  bool _initDone = false;
+  String? _userId;
+
   void _init() async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
-    Purchases.logIn('testUser');
     Purchases.addPurchaserInfoUpdateListener((purchaserInfo) {
       _controller.sink.add(purchaserInfo);
     });
+    _initDone = true;
+    if (_userId != null) {
+      setUserId(_userId!);
+    }
+  }
+
+  void setUserId(String userId) {
+    _userId = userId;
+    if (!_initDone) return;
+    try {
+      Purchases.logIn(userId);
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   Future<List<Product>> getProducts(

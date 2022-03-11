@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 
 import '../../presentation/test_utils/utils.dart';
@@ -34,6 +35,7 @@ void main() {
         0: 10,
         1: {0: '1.0.0', 1: '123'},
         2: now,
+        3: 'userId',
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -42,6 +44,7 @@ void main() {
           numberOfSessions: 10,
           lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
           trialEndDate: now,
+          userId: const UniqueId.fromTrustedString('userId'),
         ),
       );
     });
@@ -60,6 +63,7 @@ void main() {
         numberOfSessions: 10,
         lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
         trialEndDate: now,
+        userId: const UniqueId.fromTrustedString('userId'),
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
@@ -69,6 +73,7 @@ void main() {
           1: '123',
         },
         2: now,
+        3: 'userId',
       };
       expect(map, expectedMap);
     });
