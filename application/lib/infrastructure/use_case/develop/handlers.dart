@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,7 +39,10 @@ class FileHandler {
 
 @injectable
 class ShareHandler {
-  Future<void> shareFiles(List<String> paths) => Share.shareFiles(paths);
+  Future<void> shareFiles(List<String> paths) => Share.shareFiles(
+        paths,
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      );
 }
 
 @injectable
