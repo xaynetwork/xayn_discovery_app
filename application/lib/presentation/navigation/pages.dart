@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
@@ -48,13 +49,18 @@ class PageRegistry {
   static final discoveryFeedKey = GlobalKey();
   static final discovery = xayn.PageData(
     name: "discovery",
-    builder: (_, args) => DiscoveryFeed(key: discoveryFeedKey),
+    builder: (_, args) => DiscoveryFeed(
+      key: discoveryFeedKey,
+      manager: di.get(),
+    ),
   );
 
   static final search = xayn.PageData(
     name: "search",
     //ignore: prefer_const_constructors
-    builder: (_, args) => ActiveSearch(),
+    builder: (_, args) => ActiveSearch(
+      manager: di.get(),
+    ),
   );
 
   static cardDetailsStandalone(DiscoveryCardStandaloneArgs args) =>
