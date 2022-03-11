@@ -125,7 +125,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   bool _isLoading = false;
   bool _isBookmarked = false;
-  bool _didReadAloudFirstCard = false;
+  bool _hasBeenReadAloud = false;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -220,12 +220,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void handleSpeechStart({
     required String headline,
     required String languageCode,
-    required bool triggersOnInit,
+    required bool forceStart,
     Uri? uri,
   }) async {
     final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
 
-    if (!isTtsEnabled || triggersOnInit && _didReadAloudFirstCard) return;
+    if (!isTtsEnabled || (_hasBeenReadAloud && !forceStart)) return;
 
     await _textToSpeechUseCase.stopCurrentSpeech();
 
@@ -237,7 +237,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       ),
     );
 
-    if (triggersOnInit) _didReadAloudFirstCard = true;
+    _hasBeenReadAloud = true;
   }
 
   @override
