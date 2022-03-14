@@ -32,6 +32,13 @@ class _DiscoveryFeedState
   }
 
   @override
+  void dispose() {
+    _manager.close();
+
+    super.dispose();
+  }
+
+  @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
           [

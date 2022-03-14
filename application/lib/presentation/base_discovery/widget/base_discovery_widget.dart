@@ -39,6 +39,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   final FeatureManager featureManager = di.get();
+
+  /// no need to dispose here, handled by the Card Widget itself
   DiscoveryCardController? currentCardController;
 
   double _dragDistance = .0;
@@ -88,6 +90,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   @override
   void dispose() {
     _cardViewController.dispose();
+    featureManager.close();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -119,16 +122,10 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
-      if (state.isComplete) {
-        if (state.results.isEmpty) {
-          return const Center(
-            child: Text('Sorry, no results!'),
-          );
-        }
-      } else {
-        if (state.results.isEmpty || cardIndex == -1) {
-          return _buildLoadingIndicator();
-        }
+      if (state.results.isEmpty || cardIndex == -1) {
+        return state.isComplete
+            ? _buildNoResultsIndicator()
+            : _buildLoadingIndicator();
       }
 
       _cardViewController.index = cardIndex;
@@ -180,6 +177,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         return document.documentId.toString();
       };
+
+  /// todo: we are awaiting a proper design here
+  Widget _buildNoResultsIndicator() => const Center(
+        child: Text('Sorry, no results!'),
+      );
 
   Widget Function(BuildContext, int) _itemBuilder({
     required Set<Document> results,
