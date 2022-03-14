@@ -5,11 +5,12 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
@@ -129,12 +130,16 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onAboutPressed: () => _manager.openExternalUrl(Urls.aboutXayn),
+        onAboutPressed: () =>
+            _manager.openExternalUrl(Urls.aboutXayn, CurrentView.settings),
         onCarbonNeutralPressed: () =>
-            _manager.openExternalUrl(Urls.carbonNeutral),
-        onImprintPressed: () => _manager.openExternalUrl(Urls.imprint),
-        onPrivacyPressed: () => _manager.openExternalUrl(Urls.privacyPolicy),
-        onTermsPressed: () => _manager.openExternalUrl(Urls.termsAndConditions),
+            _manager.openExternalUrl(Urls.carbonNeutral, CurrentView.settings),
+        onImprintPressed: () =>
+            _manager.openExternalUrl(Urls.imprint, CurrentView.settings),
+        onPrivacyPressed: () =>
+            _manager.openExternalUrl(Urls.privacyPolicy, CurrentView.settings),
+        onTermsPressed: () => _manager.openExternalUrl(
+            Urls.termsAndConditions, CurrentView.settings),
         onPaymentPressed:
             isPaymentEnabled ? _manager.onPaymentNavPressed : null,
       );
