@@ -31,7 +31,7 @@ class _ActiveSearchState
             }),
             buildNavBarItemSearchActive(
               isActive: true,
-              onSearchPressed: widget.manager.search,
+              onSearchPressed: widget.manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(
               onPressed: () {

@@ -157,8 +157,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
         };
 
     return foldEngineEvent(
-      searchRequestSucceeded: (event) => {...state.results, ...event.items},
-      restoreSearchSucceeded: (event) => {...state.results, ...event.items},
+      searchRequestSucceeded: (event) => event.items.toSet(),
+      restoreSearchSucceeded: (event) => event.items.toSet(),
       nextSearchBatchRequestSucceeded: (event) =>
           {...state.results, ...event.items},
       documentsUpdated: (event) => state.results
