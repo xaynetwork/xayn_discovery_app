@@ -39,6 +39,8 @@ final RegExp _kMatchManifestRegExp = RegExp(
 
 class ReaderMode extends StatefulWidget {
   final String title;
+  final String languageCode;
+  final Uri? uri;
   final readability.ProcessHtmlResult? processHtmlResult;
   final VoidCallback? onProcessedHtml;
   final ScrollHandler? onScroll;
@@ -47,6 +49,8 @@ class ReaderMode extends StatefulWidget {
   const ReaderMode({
     Key? key,
     required this.title,
+    required this.languageCode,
+    this.uri,
     this.processHtmlResult,
     this.padding = _kPadding,
     this.onProcessedHtml,
@@ -134,6 +138,16 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
 
+            final contents = result.contents;
+
+            if (contents != null && contents.isNotEmpty) {
+              _readerModeManager.handleSpeechStart(
+                languageCode: widget.languageCode,
+                uri: widget.uri,
+                html: contents,
+              );
+            }
+
             return _onProcessedHtml(result);
           },
           onScroll: widget.onScroll,
@@ -209,21 +223,16 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
 
   @override
   Widget? buildImageWidget(
-      readability.BuildMetadata meta, readability.ImageSource src) {
-    // if w/h is zero, fall back to R.dimen.unit8, showing the image as a thumbnail then
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(R.dimen.unit),
-      child: CachedImage(
-        uri: Uri.parse(src.url),
-        width: (src.width ?? R.dimen.unit8).floor(),
-        height: (src.height ?? R.dimen.unit8).floor(),
-        fit: BoxFit.fitWidth,
-        errorBuilder: (_) => Container(),
-        noImageBuilder: (_) => Container(),
-        loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
-      ),
-    );
-  }
+          readability.BuildMetadata meta, readability.ImageSource src) =>
+      ClipRRect(
+        borderRadius: BorderRadius.circular(R.dimen.unit),
+        child: CachedImage(
+          uri: Uri.parse(src.url),
+          errorBuilder: (_) => Container(),
+          noImageBuilder: (_) => Container(),
+          loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
+        ),
+      );
 
   @override
   Widget? buildVideoPlayer(
