@@ -23,6 +23,7 @@ void main() {
     'WHEN FeatureScreen dispose THEN manager.close not called',
     (final WidgetTester tester) async {
       await tester.initToFeatureSelectionPage();
+      when(manager.isActiveSearchEnabled).thenReturn(false);
       when(manager.showFeaturesScreen).thenReturn(false);
       when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
 
