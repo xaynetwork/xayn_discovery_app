@@ -39,7 +39,9 @@ void main() {
           GetSearchTermUseCase(engine),
           FetchCardIndexUseCase(feedRepository),
           UpdateCardIndexUseCase(feedRepository),
-          SendAnalyticsUseCase(AnalyticsServiceDebugMode()),
+          SendAnalyticsUseCase(
+            AnalyticsServiceDebugMode(),
+          ),
           CrudExplicitDocumentFeedbackUseCase(
             HiveExplicitDocumentFeedbackRepository(
               ExplicitDocumentFeedbackMapper(),
@@ -65,7 +67,7 @@ void main() {
       );
       return buildManager();
     },
-    expect: () => [DiscoveryState.initial().copyWith(isComplete: true)],
+    verify: (bloc) => expect(bloc.state, DiscoveryState.initial()),
   );
 
   blocTest<ActiveSearchManager, DiscoveryState>(
