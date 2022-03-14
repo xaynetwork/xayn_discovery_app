@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/restore_search_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_search_term_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
@@ -36,7 +36,7 @@ void main() {
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
-          RestoreSearchUseCase(engine),
+          GetSearchTermUseCase(engine),
           FetchCardIndexUseCase(feedRepository),
           UpdateCardIndexUseCase(feedRepository),
           SendAnalyticsUseCase(AnalyticsServiceDebugMode()),
@@ -57,10 +57,6 @@ void main() {
         (_) async => RestoreSearchSucceeded(
           const ActiveSearch(
             queryTerm: '',
-            market: FeedMarket(
-              countryCode: '',
-              langCode: '',
-            ),
             pageSize: 0,
             requestedPageNb: 0,
           ),
@@ -78,10 +74,6 @@ void main() {
       final restoreEvent = RestoreSearchSucceeded(
         const ActiveSearch(
           queryTerm: '',
-          market: FeedMarket(
-            countryCode: '',
-            langCode: '',
-          ),
           pageSize: 0,
           requestedPageNb: 0,
         ),

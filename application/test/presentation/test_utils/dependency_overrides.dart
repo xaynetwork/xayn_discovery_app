@@ -142,10 +142,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestSearch({
-    required String queryTerm,
-    required FeedMarket market,
-  }) {
+  Future<EngineEvent> requestSearch(String queryTerm) {
     // TODO: implement requestSearch
     throw UnimplementedError();
   }
@@ -153,6 +150,30 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   Future<EngineEvent> restoreSearch() {
     // TODO: implement restoreSearch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> addSourceToExcludedList(Uri source) {
+    // TODO: implement addSourceToExcludedList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> getExcludedSourcesList() {
+    // TODO: implement getExcludedSourcesList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> getSearchTerm() {
+    // TODO: implement getSearchTerm
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> removeSourceFromExcludedList(Uri source) {
+    // TODO: implement removeSourceFromExcludedList
     throw UnimplementedError();
   }
 }
