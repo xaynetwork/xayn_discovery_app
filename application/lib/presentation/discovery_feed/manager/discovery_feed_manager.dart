@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
@@ -72,6 +73,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   bool get isLoading => _isLoading;
 
   @override
+  FeedType get feedType => FeedType.feed;
+
+  @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
     final observedDocument = currentObservedDocument;
 
@@ -109,8 +113,11 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // Currently, we just get a generic [ClientEventSucceeded] event only.
     closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
     // adjust the cardIndex to counter the removals
-    cardIndex = await updateCardIndexUseCase
-        .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
+    cardIndex = await updateCardIndexUseCase.singleOutput(
+      FeedTypeAndIndex.feed(
+        cardIndex: cardIndex.clamp(0, nextResults.length - 1),
+      ),
+    );
 
     return ResultSets(
       nextCardIndex: cardIndex,
