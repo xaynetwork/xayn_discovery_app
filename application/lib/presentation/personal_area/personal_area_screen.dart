@@ -4,12 +4,13 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
@@ -24,6 +25,7 @@ class PersonalAreaScreen extends StatefulWidget {
 class PersonalAreaScreenState extends State<PersonalAreaScreen>
     with NavBarConfigMixin, TooltipStateMixin {
   late final PersonalAreaManager _manager = di.get();
+  late final FeatureManager _featureManager = di.get();
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
@@ -32,13 +34,14 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             hideTooltip();
             _manager.onHomeNavPressed();
           }),
-          buildNavBarItemSearch(
-            isDisabled: true,
-            onPressed: () => showTooltip(
-              TooltipKeys.activeSearchDisabled,
-              style: TooltipStyle.arrowDown,
+          if (_featureManager.isActiveSearchEnabled)
+            buildNavBarItemSearch(
+              isDisabled: true,
+              onPressed: () => showTooltip(
+                TooltipKeys.activeSearchDisabled,
+                style: TooltipStyle.arrowDown,
+              ),
             ),
-          ),
           buildNavBarItemPersonalArea(
             isActive: true,
             onPressed: () {

@@ -13,6 +13,8 @@ const FeatureMap kInitialFeatureMap = {
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.discoveryEngineReportOverlay: false,
   Feature.payment: false,
+  Feature.activeSearch:
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor
 };
 
 @lazySingleton
@@ -39,6 +41,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
+
+  bool get isActiveSearchEnabled => isEnabled(Feature.activeSearch);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
