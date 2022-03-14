@@ -8,10 +8,10 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -92,6 +92,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       _buildCollection(),
       _buildHomeFeed(),
       _buildSettings(),
+      _buildContact(),
     ]
         .map((e) => Padding(
               padding: EdgeInsets.only(bottom: R.dimen.unit2),
@@ -138,6 +139,17 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           svgBackgroundPath: R.assets.graphics.formsPurple,
           onPressed: _manager.onSettingsNavPressed,
           key: Keys.personalAreaCardSettings,
+        ),
+      );
+
+  CardWidget _buildContact() => CardWidget(
+        cardData: CardData.personalArea(
+          title: R.strings.personalAreaContact,
+          color: R.colors.collectionsScreenCard,
+          svgIconPath: R.assets.icons.info,
+          svgBackgroundPath: R.assets.graphics.formsPurple,
+          onPressed: _manager.onContactNavPressed,
+          key: Keys.personalAreaCardContact,
         ),
       );
 }

@@ -188,6 +188,8 @@ class TranslationsNl extends Translations {
   String get sourceHandlingTooltipHighlightedWord => """What""";
   String get enableTextToSpeech => """Enable text -to-speech""";
   String get settingsSectionTitleOptions => """Options""";
+  String get personalAreaContact => """Contact""";
+  String get settingsContactUs => """Contact""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -339,4 +341,6 @@ Map<String, String> get translationsNlMap => {
       """sourceHandlingTooltipHighlightedWord""": """What""",
       """enableTextToSpeech""": """Enable text -to-speech""",
       """settingsSectionTitleOptions""": """Options""",
+      """personalAreaContact""": """Contact""",
+      """settingsContactUs""": """Contact""",
     };

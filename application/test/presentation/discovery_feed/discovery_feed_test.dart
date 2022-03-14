@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -18,16 +17,10 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import '../test_utils/dependency_overrides.dart';
 import '../test_utils/utils.dart';
 import '../test_utils/widget_test_utils.dart';
-import 'discovery_feed_test.mocks.dart';
 
 /// todo: will need to be rewritten once we get rid of all the "fake" engine things,
 /// requestFeed and requestNextFeedBatch will be covered when we move away from
 /// the temporary test mixins.
-@GenerateMocks([
-  ConnectivityUseCase,
-  FeedRepository,
-  AnalyticsService,
-])
 void main() async {
   late AppDiscoveryEngine engine;
   late MockDiscoveryEngine mockDiscoveryEngine;
