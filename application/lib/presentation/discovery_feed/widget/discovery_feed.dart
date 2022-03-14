@@ -70,13 +70,14 @@ class _DiscoveryFeedState extends State<DiscoveryFeed>
                   hideTooltip();
                   _discoveryFeedManager.onHomeNavPressed();
                 }),
-            buildNavBarItemSearch(
-              isDisabled: true,
-              onPressed: () => showTooltip(
-                TooltipKeys.activeSearchDisabled,
-                style: TooltipStyle.arrowDown,
+            if (_featureManager.isActiveSearchEnabled)
+              buildNavBarItemSearch(
+                isDisabled: true,
+                onPressed: () => showTooltip(
+                  TooltipKeys.activeSearchDisabled,
+                  style: TooltipStyle.arrowDown,
+                ),
               ),
-            ),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
