@@ -64,7 +64,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   final GetSearchTermUseCase _getSearchTermUseCase;
   final ActiveSearchNavActions _activeSearchNavActions;
-  bool _isLoading = false;
+  bool _isLoading = true;
 
   @override
   bool get isLoading => _isLoading;

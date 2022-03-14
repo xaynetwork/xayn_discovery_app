@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -17,6 +18,7 @@ const int _kMaxCardCount = 10;
 
 typedef OnRestoreFeedSucceeded = Set<Document> Function(
     RestoreFeedSucceeded event);
+typedef OnRestoreFeedFailed = Set<Document> Function(RestoreFeedFailed event);
 typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
     NextFeedBatchRequestSucceeded event);
 typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
@@ -64,9 +66,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   bool _didChangeMarkets = false;
+  bool _isLoading = true;
 
   @override
-  bool get isLoading => false;
+  bool get isLoading => _isLoading;
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
@@ -165,6 +168,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(
       BaseDiscoveryManager manager) {
+    final self = manager as DiscoveryFeedManager;
     final state = manager.state;
 
     foldEngineEvent({
@@ -173,19 +177,26 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       required OnDocumentsUpdated documentsUpdated,
       required OnEngineExceptionRaised engineExceptionRaised,
       required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
+      required OnRestoreFeedFailed restoreFeedFailed,
       required OnNonMatchedEngineEvent orElse,
     }) =>
         (EngineEvent? event) {
           if (event is RestoreFeedSucceeded) {
+            self._isLoading = false;
             return restoreFeedSucceeded(event);
           } else if (event is NextFeedBatchRequestSucceeded) {
+            self._isLoading = false;
             return nextFeedBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
           } else if (event is EngineExceptionRaised) {
             return engineExceptionRaised(event);
           } else if (event is NextFeedBatchRequestFailed) {
+            self._isLoading = false;
             return nextFeedBatchRequestFailed(event);
+          } else if (event is RestoreFeedFailed) {
+            self._isLoading = false;
+            return restoreFeedFailed(event);
           }
 
           return orElse();
@@ -217,6 +228,17 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       nextFeedBatchRequestFailed: (event) {
         manager.sendAnalyticsUseCase(
           NextFeedBatchRequestFailedEvent(
+            event: event,
+          ),
+        );
+
+        logger.e('$event');
+
+        return state.results;
+      },
+      restoreFeedFailed: (event) {
+        manager.sendAnalyticsUseCase(
+          RestoreFeedFailedEvent(
             event: event,
           ),
         );
