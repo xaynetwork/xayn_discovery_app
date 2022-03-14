@@ -4,21 +4,21 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class SettingsGeneralInfoSection extends StatelessWidget {
+  final VoidCallback onContactPressed;
   final VoidCallback onAboutPressed;
   final VoidCallback onCarbonNeutralPressed;
   final VoidCallback onImprintPressed;
   final VoidCallback onPrivacyPressed;
   final VoidCallback onTermsPressed;
-  final VoidCallback? onPaymentPressed;
 
   const SettingsGeneralInfoSection({
     Key? key,
+    required this.onContactPressed,
     required this.onAboutPressed,
     required this.onCarbonNeutralPressed,
     required this.onImprintPressed,
     required this.onPrivacyPressed,
     required this.onTermsPressed,
-    required this.onPaymentPressed,
   }) : super(key: key);
 
   String get arrowRightIcon => R.assets.icons.arrowRight;
@@ -27,12 +27,12 @@ class SettingsGeneralInfoSection extends StatelessWidget {
   Widget build(BuildContext context) => SettingsSection(
         title: R.strings.settingsSectionTitleGeneralInfo,
         items: [
+          _getContact(),
           _getAboutXayn(),
           _getCarbonNeutral(),
           _getImprint(),
           _getPrivacyPolicy(),
           _getTC(),
-          if (onPaymentPressed != null) _getPayment(),
         ],
       );
 
@@ -89,13 +89,13 @@ class SettingsGeneralInfoSection extends StatelessWidget {
         ),
       ));
 
-  SettingsCardData _getPayment() => SettingsCardData.fromTile(SettingsTileData(
-        title: 'PAYMENT WIP',
-        svgIconPath: R.assets.icons.lightening,
+  SettingsCardData _getContact() => SettingsCardData.fromTile(SettingsTileData(
+        title: R.strings.settingsContactUs,
+        svgIconPath: R.assets.icons.info,
         action: SettingsTileActionIcon(
-          key: const Key('payment key'),
+          key: Keys.settingsContacts,
           svgIconPath: arrowRightIcon,
-          onPressed: onPaymentPressed!,
+          onPressed: onContactPressed,
         ),
       ));
 }

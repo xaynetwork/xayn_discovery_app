@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
+import 'package:xayn_discovery_app/presentation/contact/manager/contact_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
@@ -110,6 +111,18 @@ class SettingsNavActionsImpl extends SettingsNavActions {
   }
 }
 
+@Injectable(as: ContactNavActions)
+class ContactNavActionsImpl extends ContactNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  ContactNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
+}
+
 @Injectable(as: FeedSettingsNavActions)
 class FeedSettingsNavActionsImpl extends FeedSettingsNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -188,6 +201,11 @@ class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
   @override
   void onSettingsNavPressed() =>
       changeStack((stack) => stack.push(PageRegistry.settings));
+
+  @override
+  void onContactNavPressed() {
+    changeStack((stack) => stack.push(PageRegistry.contact));
+  }
 }
 
 @Injectable(as: OnBoardingNavActions)

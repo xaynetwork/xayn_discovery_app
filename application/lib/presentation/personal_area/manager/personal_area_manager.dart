@@ -12,6 +12,8 @@ abstract class PersonalAreaNavActions {
   void onHomeFeedSettingsNavPressed();
 
   void onSettingsNavPressed();
+
+  void onContactNavPressed();
 }
 
 @lazySingleton
@@ -38,4 +40,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
 
   @override
   void onSettingsNavPressed() => _navActions.onSettingsNavPressed();
+
+  @override
+  void onContactNavPressed() => _navActions.onContactNavPressed();
 }

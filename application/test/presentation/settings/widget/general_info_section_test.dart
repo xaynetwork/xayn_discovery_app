@@ -18,12 +18,12 @@ void main() {
           onCarbonNeutralPressed: () {},
           onTermsPressed: () {},
           onPrivacyPressed: () {},
-          onPaymentPressed: null,
+          onContactPressed: () {},
         ),
         initialLinden: linden,
       );
 
-      const kidsAmount = 5;
+      const kidsAmount = 6;
       expect(
         find.text(R.strings.settingsSectionTitleGeneralInfo),
         findsOneWidget,
@@ -50,6 +50,7 @@ void main() {
         Keys.settingsCarbonNeutral: false,
         Keys.settingsTermsAndConditions: false,
         Keys.settingsPrivacyPolicy: false,
+        Keys.settingsContacts: false,
       };
       final widget = SettingsGeneralInfoSection(
         onAboutPressed: () => callbacks[Keys.settingsAboutXayn] = true,
@@ -58,7 +59,7 @@ void main() {
             callbacks[Keys.settingsCarbonNeutral] = true,
         onTermsPressed: () => callbacks[Keys.settingsTermsAndConditions] = true,
         onPrivacyPressed: () => callbacks[Keys.settingsPrivacyPolicy] = true,
-        onPaymentPressed: null,
+        onContactPressed: () => callbacks[Keys.settingsContacts] = true,
       );
       await tester.pumpLindenApp(widget, initialLinden: linden);
 

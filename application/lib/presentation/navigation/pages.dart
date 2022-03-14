@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
+import 'package:xayn_discovery_app/presentation/contact/contact_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
@@ -92,6 +93,12 @@ class PageRegistry {
     name: "settings",
     //ignore: prefer_const_constructors
     builder: (_, args) => SettingsScreen(),
+  );
+
+  static final contact = xayn.PageData(
+    name: "contact",
+    //ignore: prefer_const_constructors
+    builder: (_, args) => ContactScreen(),
   );
   static final onboarding = xayn.PageData(
     name: "onboarding",

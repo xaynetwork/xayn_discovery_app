@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
@@ -76,10 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         appTheme: state.theme,
         isPaymentEnabled: state.isPaymentEnabled,
       ),
-      _buildGeneralSection(state.isPaymentEnabled),
-      _buildHelpImproveSection(),
-      _buildShareAppSection(),
-      _buildAppVersion(state.appVersion),
+      if (state.isPaymentEnabled) SettingsCard(data: _getPayment()),
       _buildBottomSpace(),
     ];
 
@@ -107,39 +99,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         isFirstSection: !isPaymentEnabled,
       );
 
-  Widget _buildGeneralSection(bool isPaymentEnabled) =>
-      SettingsGeneralInfoSection(
-        onAboutPressed: () => _manager.openExternalUrl(Urls.aboutXayn),
-        onCarbonNeutralPressed: () =>
-            _manager.openExternalUrl(Urls.carbonNeutral),
-        onImprintPressed: () => _manager.openExternalUrl(Urls.imprint),
-        onPrivacyPressed: () => _manager.openExternalUrl(Urls.privacyPolicy),
-        onTermsPressed: () => _manager.openExternalUrl(Urls.termsAndConditions),
-        onPaymentPressed:
-            isPaymentEnabled ? _manager.onPaymentNavPressed : null,
-      );
-
-  Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
-        onFindBugPressed: _manager.reportBug,
-      );
-
-  Widget _buildShareAppSection() =>
-      ShareAppSection(onShareAppPressed: _manager.shareApp);
-
-  Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(
-        child: Padding(
-          padding: EdgeInsets.only(top: R.dimen.unit4),
-          child: Text(
-            '${R.strings.settingsVersion} ${appVersion.version}\n'
-            '${R.strings.settingsBuild} ${appVersion.build}',
-            style: R.styles.mStyle.copyWith(
-              color: R.colors.secondaryText,
-            ),
-          ),
-        ),
-        onLongPress: () => _manager.extractLogs(),
-      );
-
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
 
   void _showSubscriptionDetailsBottomSheet() => showAppBottomSheet(
@@ -149,4 +108,14 @@ class _SettingsScreenState extends State<SettingsScreen>
           endDate: subscriptionEndDate,
         ),
       );
+
+  SettingsCardData _getPayment() => SettingsCardData.fromTile(SettingsTileData(
+        title: 'PAYMENT WIP',
+        svgIconPath: R.assets.icons.lightening,
+        action: SettingsTileActionIcon(
+          key: const Key('payment key'),
+          svgIconPath: R.assets.icons.arrowRight,
+          onPressed: _manager.onPaymentNavPressed,
+        ),
+      ));
 }

@@ -93,6 +93,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         _buildCollection(),
         _buildHomeFeed(),
         _buildSettings(),
+        _buildContact(),
       ]
           .map((e) => Padding(
                 padding: EdgeInsets.only(bottom: R.dimen.unit2),
@@ -135,6 +136,17 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           svgBackgroundPath: R.assets.graphics.formsPurple,
           onPressed: _manager.onSettingsNavPressed,
           key: Keys.personalAreaCardSettings,
+        ),
+      );
+
+  CardWidget _buildContact() => CardWidget(
+        cardData: CardData.personalArea(
+          title: R.strings.personalAreaContact,
+          color: R.colors.collectionsScreenCard,
+          svgIconPath: R.assets.icons.info,
+          svgBackgroundPath: R.assets.graphics.formsPurple,
+          onPressed: _manager.onContactNavPressed,
+          key: Keys.personalAreaCardContact,
         ),
       );
 }
