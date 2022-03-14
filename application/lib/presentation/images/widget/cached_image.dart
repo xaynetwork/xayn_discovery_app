@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
+import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 
 typedef ImageLoadingBuilder = Widget Function(
   BuildContext context,
@@ -84,7 +85,7 @@ class _CachedImageState extends State<CachedImage> {
           BuildContext context,
           double progress,
         ) =>
-            const CircularProgressIndicator();
+            const WidgetTestableProgressIndicator();
     final errorBuilder = widget.errorBuilder ??
         (BuildContext context) => kReleaseMode
             ? Container()
