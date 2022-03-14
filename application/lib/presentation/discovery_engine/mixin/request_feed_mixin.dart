@@ -13,8 +13,6 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<None, EngineEvent>? _useCaseSink;
   bool _didStartConsuming = false;
 
-  bool get isLoading => false;
-
   void requestNextFeedBatch() {
     _useCaseSink ??= _getUseCaseSink();
 

@@ -122,8 +122,16 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
-      if (state.results.isEmpty || cardIndex == -1) {
-        return _buildLoadingIndicator();
+      if (state.isComplete) {
+        if (state.results.isEmpty) {
+          return const Center(
+            child: Text('Sorry, no results!'),
+          );
+        }
+      } else {
+        if (state.results.isEmpty || cardIndex == -1) {
+          return _buildLoadingIndicator();
+        }
       }
 
       _cardViewController.index = cardIndex;

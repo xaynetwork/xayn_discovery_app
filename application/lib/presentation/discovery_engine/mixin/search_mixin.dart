@@ -17,8 +17,6 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<String, EngineEvent>? _searchUseCaseSink;
   bool _didStartConsuming = false;
 
-  bool get isLoading => false;
-
   void search(String queryTerm) {
     _searchUseCaseSink ??= _getSearchUseCaseSink();
 

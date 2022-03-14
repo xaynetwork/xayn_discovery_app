@@ -66,6 +66,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   bool _didChangeMarkets = false;
 
   @override
+  bool get isLoading => false;
+
+  @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
     final observedDocument = currentObservedDocument;
 
