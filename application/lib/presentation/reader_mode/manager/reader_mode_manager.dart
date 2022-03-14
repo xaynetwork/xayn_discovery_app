@@ -4,11 +4,11 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/extract_paragraphs_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/text_to_speech_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
