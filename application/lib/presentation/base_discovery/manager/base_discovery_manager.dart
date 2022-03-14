@@ -3,6 +3,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
@@ -58,7 +59,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
 
   late final UseCaseValueStream<int> cardIndexConsumer =
-      consume(fetchCardIndexUseCase, initialData: none)
+      consume(fetchCardIndexUseCase, initialData: feedType)
           .transform((out) => out.take(1));
 
   /// When explicit feedback changes, we need to emit a new state,
@@ -78,6 +79,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   bool _didChangeMarkets = false;
 
   bool get isLoading;
+  FeedType get feedType;
 
   Document? get currentObservedDocument => _observedDocument;
   int? get currentCardIndex => _cardIndex;
@@ -108,7 +110,19 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     if (index >= state.results.length) return;
 
     final nextDocument = state.results.elementAt(index);
-    final nextCardIndex = await updateCardIndexUseCase.singleOutput(index);
+    late final int nextCardIndex;
+
+    switch (feedType) {
+      case FeedType.feed:
+        nextCardIndex = await updateCardIndexUseCase
+            .singleOutput(FeedTypeAndIndex.feed(cardIndex: index));
+        break;
+      case FeedType.search:
+        nextCardIndex = await updateCardIndexUseCase
+            .singleOutput(FeedTypeAndIndex.search(cardIndex: index));
+        break;
+    }
+
     final didSwipeBefore = _cardIndex != null && _observedDocument != null;
     final direction = didSwipeBefore
         ? _cardIndex! < index

@@ -8,11 +8,17 @@ part 'feed.freezed.dart';
 class Feed extends DbEntity with _$Feed {
   static UniqueId globalId = const UniqueId.fromTrustedString('feed_id');
 
-  @Assert('cardIndex >= 0', 'cardIndex cannot be smaller than 0')
+  @Assert('cardIndexFeed >= 0', 'cardIndexFeed cannot be smaller than 0')
+  @Assert('cardIndexSearch >= 0', 'cardIndexSearch cannot be smaller than 0')
   factory Feed({
     required UniqueId id,
-    required int cardIndex,
+    required int cardIndexFeed,
+    required int cardIndexSearch,
   }) = _Feed;
 
-  factory Feed.initial() => Feed(id: globalId, cardIndex: 0);
+  factory Feed.initial() => Feed(
+        id: globalId,
+        cardIndexFeed: 0,
+        cardIndexSearch: 0,
+      );
 }

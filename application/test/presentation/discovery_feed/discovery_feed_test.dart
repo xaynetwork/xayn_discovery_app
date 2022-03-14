@@ -69,7 +69,8 @@ void main() async {
 
     when(feedRepository.get()).thenAnswer((_) => Feed(
           id: const UniqueId.fromTrustedString('test_feed'),
-          cardIndex: 0,
+          cardIndexFeed: 0,
+          cardIndexSearch: 0,
         ));
     when(connectivityUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);

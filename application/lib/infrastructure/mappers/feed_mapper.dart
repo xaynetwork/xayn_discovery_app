@@ -8,15 +8,20 @@ class FeedMapper extends BaseDbEntityMapper<Feed> {
   Feed? fromMap(Map? map) {
     if (map == null) return null;
 
-    final cardIndex =
-        map[FeedMapperFields.cardIndex] ?? throwMapperException() as int;
+    final cardIndexFeed = map[FeedMapperFields.cardIndexFeed] as int?;
+    final cardIndexSearch = map[FeedMapperFields.cardIndexSearch] as int?;
 
-    return Feed(id: Feed.globalId, cardIndex: cardIndex);
+    return Feed(
+      id: Feed.globalId,
+      cardIndexFeed: cardIndexFeed ?? 0,
+      cardIndexSearch: cardIndexSearch ?? 0,
+    );
   }
 
   @override
   DbEntityMap toMap(Feed entity) => {
-        FeedMapperFields.cardIndex: entity.cardIndex,
+        FeedMapperFields.cardIndexFeed: entity.cardIndexFeed,
+        FeedMapperFields.cardIndexSearch: entity.cardIndexSearch,
       };
 
   @override
@@ -28,5 +33,6 @@ class FeedMapper extends BaseDbEntityMapper<Feed> {
 }
 
 abstract class FeedMapperFields {
-  static const int cardIndex = 0;
+  static const int cardIndexFeed = 0;
+  static const int cardIndexSearch = 1;
 }

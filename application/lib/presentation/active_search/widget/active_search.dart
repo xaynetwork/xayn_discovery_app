@@ -75,7 +75,7 @@ class _ActiveSearchState
               document: document,
               provider: managers.discoveryCardManager.state.processedDocument
                   ?.getProvider(document.resource),
-              onError: (tooltipKey) => showTooltip(tooltipKey),
+              onError: showTooltip,
             ),
           );
 
