@@ -162,7 +162,7 @@ class TranslationsEs extends Translations {
   String get subscriptionRestore => """Reiniciar Subscripción""";
   String get subscriptionPromoCode => """Tengo un código promocional""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, un imperdiet metus. Nullam ac congue tellus. Sed en sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
+      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """Tu estás subscrito a""";
   String get doneButtonTitle => """Hecho""";
   String get subscriptionRenewsMonthlyText =>
@@ -184,6 +184,13 @@ class TranslationsEs extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Por favor intente más tarde""";
   String get errorClose => """Cerrar""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
+  String get personalAreaContact => """Contact""";
+  String get settingsContactUs => """Contact""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -195,6 +202,7 @@ class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
   String get productNotFound => """Producto no encontrado :(""";
   String get itemAlreadyOwned => """Tu ya te subscribiste""";
   String get transactionFailed => """Transacción de pago fallida""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsEsMap => {
@@ -304,7 +312,7 @@ Map<String, String> get translationsEsMap => {
       """subscriptionRestore""": """Reiniciar Subscripción""",
       """subscriptionPromoCode""": """Tengo un código promocional""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, un imperdiet metus. Nullam ac congue tellus. Sed en sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
+          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """Tu estás subscrito a""",
       """doneButtonTitle""": """Hecho""",
       """subscriptionRenewsMonthlyText""":
@@ -322,6 +330,8 @@ Map<String, String> get translationsEsMap => {
       """paymentFlowError.itemAlreadyOwned""": """Tu ya te subscribiste""",
       """paymentFlowError.transactionFailed""":
           """Transacción de pago fallida""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Estás seguro de que quieres borrar esta colección?""",
       """bottomSheetMoveSingleBookmark""": """Moverse a otra colección""",
@@ -331,4 +341,10 @@ Map<String, String> get translationsEsMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Por favor intente más tarde""",
       """errorClose""": """Cerrar""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
+      """personalAreaContact""": """Contact""",
+      """settingsContactUs""": """Contact""",
     };
