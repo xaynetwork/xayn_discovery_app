@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
@@ -10,8 +11,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
-  const DiscoveryFeed({Key? key, required DiscoveryFeedManager manager})
-      : super(key: key, manager: manager);
+  const DiscoveryFeed({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DiscoveryFeedState();
@@ -19,6 +19,18 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
 
 class _DiscoveryFeedState
     extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed> {
+  late final DiscoveryFeedManager _manager;
+
+  @override
+  DiscoveryFeedManager get manager => _manager;
+
+  @override
+  void initState() {
+    _manager = di.get();
+
+    super.initState();
+  }
+
   @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
@@ -27,23 +39,23 @@ class _DiscoveryFeedState
                 isActive: true,
                 onPressed: () {
                   hideTooltip();
-                  widget.manager.onHomeNavPressed();
+                  _manager.onHomeNavPressed();
                 }),
             buildNavBarItemSearch(onPressed: () {
               hideTooltip();
-              widget.manager.onSearchNavPressed();
+              _manager.onSearchNavPressed();
             }),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
-                widget.manager.onPersonalAreaNavPressed();
+                _manager.onPersonalAreaNavPressed();
               },
             ),
           ],
         );
     NavBarConfig buildReaderMode() {
-      final document = widget.manager.state.results
-          .elementAt(widget.manager.state.cardIndex);
+      final document =
+          _manager.state.results.elementAt(_manager.state.cardIndex);
       final managers = managersOf(document);
 
       void onBookmarkPressed() =>
@@ -73,7 +85,7 @@ class _DiscoveryFeedState
           buildNavBarItemArrowLeft(onPressed: () async {
             removeOverlay();
             await currentCardController?.animateToClose();
-            widget.manager.handleNavigateOutOfCard();
+            _manager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
             isLiked: managers.discoveryCardManager.state
@@ -114,8 +126,6 @@ class _DiscoveryFeedState
       );
     }
 
-    return widget.manager.state.isFullScreen
-        ? buildReaderMode()
-        : buildDefault();
+    return _manager.state.isFullScreen ? buildReaderMode() : buildDefault();
   }
 }

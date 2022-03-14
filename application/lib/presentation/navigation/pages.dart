@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
@@ -44,10 +41,6 @@ class PageRegistry {
     builder: (_, args) => SplashScreen(),
   );
 
-  /// maybe todo?
-  /// we do not want to recreate the manager every time xayn.PageData.builder triggers
-  static DiscoveryFeedManager? _discoveryFeedManager;
-
   /// Using a global key prevents rebuilding the [DiscoveryFeed]
   /// when device orientation changes. This also fixes an issue
   /// with playing videos in full screen mode.
@@ -56,19 +49,18 @@ class PageRegistry {
     name: "discovery",
     builder: (_, args) => DiscoveryFeed(
       key: discoveryFeedKey,
-      manager: _discoveryFeedManager ??= di.get(),
     ),
   );
 
-  /// maybe todo?
-  /// we do not want to recreate the manager every time xayn.PageData.builder triggers
-  static ActiveSearchManager? _activeSearchManager;
-
+  /// Using a global key prevents rebuilding the [ActiveSearch]
+  /// when device orientation changes. This also fixes an issue
+  /// with playing videos in full screen mode.
+  static final searchKey = GlobalKey();
   static final search = xayn.PageData(
     name: "search",
     //ignore: prefer_const_constructors
     builder: (_, args) => ActiveSearch(
-      manager: _activeSearchManager ??= di.get(),
+      key: searchKey,
     ),
   );
 
