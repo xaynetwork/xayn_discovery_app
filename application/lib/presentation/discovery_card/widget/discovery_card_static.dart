@@ -126,6 +126,8 @@ class _DiscoveryCardStaticState
   }) {
     final readerMode = ReaderMode(
       title: title,
+      languageCode: widget.document.resource.language,
+      uri: widget.document.resource.url,
       processHtmlResult: processHtmlResult,
       padding: EdgeInsets.only(
         left: R.dimen.unit3,

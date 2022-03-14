@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_feedback_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -76,7 +77,7 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
           di.get<CrudExplicitDocumentFeedbackUseCase>();
 
       await crudExplicitDocumentFeedbackUseCase.singleOutput(
-        CrudExplicitDocumentFeedbackUseCaseIn.store(
+        DbEntityCrudUseCaseIn.store(
           ExplicitDocumentFeedback(
             id: document.documentId.uniqueId,
             userReaction: userReaction,

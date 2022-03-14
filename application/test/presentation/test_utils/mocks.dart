@@ -37,6 +37,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_style_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
@@ -78,9 +81,11 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetStoredAppVersionUseCase,
   GetSubscriptionDetailsUseCase,
   GetSupportedCountriesUseCase,
+  GetTtsPreferenceUseCase,
   InAppReview,
   IncrementAppSessionUseCase,
   ListenAppThemeUseCase,
+  ListenTtsPreferenceUseCase,
   MapToAppVersionMapper,
   PaymentFlowErrorToErrorMessageMapper,
   PaymentService,
@@ -92,6 +97,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SaveAppThemeUseCase,
   SaveCurrentAppVersion,
   SaveSelectedCountriesUseCase,
+  SaveTtsPreferenceUseCase,
   SettingsNavActions,
   SettingsScreenManager,
   ShareUriUseCase,
