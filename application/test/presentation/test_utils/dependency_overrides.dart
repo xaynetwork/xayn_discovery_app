@@ -124,10 +124,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<bool> areMarketsOutdated() {
-    // TODO: implement willUpdateMarkets
-    throw UnimplementedError();
-  }
+  Future<bool> areMarketsOutdated() async => false;
 
   @override
   Future<EngineEvent> closeSearch() {
