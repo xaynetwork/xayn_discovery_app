@@ -34,6 +34,13 @@ class _ActiveSearchState
   }
 
   @override
+  void dispose() {
+    _manager.close();
+
+    super.dispose();
+  }
+
+  @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
           [
