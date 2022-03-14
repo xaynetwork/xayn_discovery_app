@@ -17,4 +17,14 @@ mixin OpenExternalUrlMixin<T> on UseCaseBlocHelper<T> {
       ),
     );
   }
+
+  void openEmail(String email, CurrentView currentView) {
+    _urlOpener.openEmail(email);
+    _sendAnalyticsUseCase(
+      OpenExternalUrlEvent(
+        url: email,
+        currentView: currentView,
+      ),
+    );
+  }
 }

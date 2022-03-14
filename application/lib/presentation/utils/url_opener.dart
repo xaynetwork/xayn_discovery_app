@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 @lazySingleton
 class UrlOpener {
-  late final LogUseCase<Uri> _openUrlLogUseCase = LogUseCase<Uri>(
+  late final LogUseCase<String> _openUrlLogUseCase = LogUseCase<String>(
     (it) => 'Could not launch $it',
     logger: logger,
   );
@@ -18,7 +18,14 @@ class UrlOpener {
     );
 
     if (!await launch(uri.toString())) {
-      _openUrlLogUseCase.call(uri!);
+      _openUrlLogUseCase.call(uri.toString());
+    }
+  }
+
+  void openEmail(String email) async {
+    final uri = 'mailto:$email';
+    if (!await launch(uri)) {
+      _openUrlLogUseCase.call(uri);
     }
   }
 }

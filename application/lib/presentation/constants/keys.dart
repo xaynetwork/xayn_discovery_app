@@ -16,6 +16,7 @@ class Keys {
       Key('personal_area_card_home_feed');
   static const Key personalAreaCardSettings =
       Key('personal_area_card_settings');
+  static const Key personalAreaCardContact = Key('personal_area_card_contact');
 
   static const Key settingsThemeSystem = Key('settings_theme_item_system');
   static const Key settingsThemeLight = Key('settings_theme_item_light');
@@ -33,6 +34,7 @@ class Keys {
   static const Key settingsCarbonNeutral = Key('settings_carbon_neutral');
   static const Key settingsImprint = Key('settings_imprint');
   static const Key settingsPrivacyPolicy = Key('settings_privacy_policy');
+  static const Key settingsContacts = Key('settings_contacts');
   static const Key settingsTermsAndConditions =
       Key('settings_terms_and_conditions');
   static const Key settingsHaveFoundBug = Key('settings_have_found_bug');

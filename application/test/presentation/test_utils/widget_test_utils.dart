@@ -63,6 +63,13 @@ extension WidgetTesterCommonActions on WidgetTester {
     await pumpAndSettle(updateNavBarDebounceTimeout);
   }
 
+  Future<void> navigateToContactScreen() async {
+    final settingsCard = Keys.personalAreaCardContact.finds();
+    await scrollUntilVisible(settingsCard, 10);
+    await tap(settingsCard);
+    await pumpAndSettle(updateNavBarDebounceTimeout);
+  }
+
   Future<void> navigateBack() async {
     await tap(Keys.navBarItemBackBtn.finds());
     await pumpAndSettle();

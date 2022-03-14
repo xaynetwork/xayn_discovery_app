@@ -10,4 +10,5 @@ class Urls {
   // TODO: Use the correct urls here
   static const subscriptionCancelApple = 'https://apple.com';
   static const subscriptionCancelGoogle = 'https://google.com';
+  static const contactMail = 'support@xayn.com';
 }

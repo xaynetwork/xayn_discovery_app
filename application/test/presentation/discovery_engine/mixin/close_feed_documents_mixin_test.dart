@@ -1,7 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
@@ -14,11 +13,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_fee
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../test_utils/utils.dart';
-import 'change_document_feedback_mixin_test.mocks.dart';
 
-@GenerateMocks([
-  CrudExplicitDocumentFeedbackUseCase,
-])
 void main() {
   late MockDiscoveryEngine engine;
   late MockCrudExplicitDocumentFeedbackUseCase

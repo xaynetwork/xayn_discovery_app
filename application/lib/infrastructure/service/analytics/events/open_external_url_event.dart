@@ -21,5 +21,5 @@ class OpenExternalUrlEvent extends AnalyticsEvent {
 enum CurrentView {
   story,
   reader,
-  settings,
+  contact,
 }
