@@ -10,11 +10,11 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -121,7 +121,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
     sendAnalyticsUseCase(DocumentIndexChangedEvent(
       next: nextDocument,
-      previous: _observedDocument,
       direction: direction,
     ));
 
