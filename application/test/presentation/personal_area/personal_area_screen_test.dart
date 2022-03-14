@@ -104,13 +104,13 @@ void main() {
       },
     );
     testWidgets(
-      'WHEN clicked on activeSearch THEN call is not redirected to manager (Active Search disabled)',
+      'WHEN clicked on activeSearch THEN call is redirected to manager',
       (final WidgetTester tester) async {
         await tester.initToDiscoveryPage();
         await tester.navigateToPersonalArea();
+
         await tester.tap(Keys.navBarItemSearch.finds());
-        await tester.pumpAndSettle();
-        verifyNever(manager.onActiveSearchNavPressed());
+        verify(manager.onActiveSearchNavPressed());
       },
     );
     testWidgets(

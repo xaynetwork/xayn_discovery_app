@@ -9,22 +9,26 @@ part 'app_settings.freezed.dart';
 class AppSettings extends DbEntity with _$AppSettings {
   factory AppSettings._({
     required bool isOnboardingDone,
+    required bool autoPlayTextToSpeech,
     required AppTheme appTheme,
     required UniqueId id,
   }) = _AppSettings;
 
   factory AppSettings.global({
     required bool isOnboardingDone,
+    required bool autoPlayTextToSpeech,
     required AppTheme appTheme,
   }) =>
       AppSettings._(
         isOnboardingDone: isOnboardingDone,
+        autoPlayTextToSpeech: autoPlayTextToSpeech,
         appTheme: appTheme,
         id: AppSettings.globalId,
       );
 
   factory AppSettings.initial() => AppSettings.global(
         isOnboardingDone: false,
+        autoPlayTextToSpeech: true,
         appTheme: AppTheme.system,
       );
 

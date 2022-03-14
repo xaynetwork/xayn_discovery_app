@@ -12,7 +12,6 @@ import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_a
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
   const PersonalAreaScreen({Key? key}) : super(key: key);
@@ -32,13 +31,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             hideTooltip();
             _manager.onHomeNavPressed();
           }),
-          buildNavBarItemSearch(
-            isDisabled: true,
-            onPressed: () => showTooltip(
-              TooltipKeys.activeSearchDisabled,
-              style: TooltipStyle.arrowDown,
-            ),
-          ),
+          buildNavBarItemSearch(onPressed: () {
+            hideTooltip();
+            _manager.onActiveSearchNavPressed();
+          }),
           buildNavBarItemPersonalArea(
             isActive: true,
             onPressed: () {

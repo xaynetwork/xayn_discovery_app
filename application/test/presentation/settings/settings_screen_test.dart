@@ -30,6 +30,7 @@ void main() {
         build: '321',
       ),
       isPaymentEnabled: false,
+      isTtsEnabled: true,
       trialEndDate: null) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 
