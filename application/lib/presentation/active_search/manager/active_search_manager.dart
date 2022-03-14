@@ -78,6 +78,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
         _isLoading = true;
+        resetCardIndex();
 
         search(searchTerm);
       });
@@ -109,6 +110,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
       scheduleComputeState(() {
         _isLoading = true;
+        resetCardIndex();
 
         handleSearchTerm(searchTerm);
       });
