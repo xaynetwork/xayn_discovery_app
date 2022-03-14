@@ -159,7 +159,7 @@ class Translations {
   String get subscriptionRestore => """Restore subscription""";
   String get subscriptionPromoCode => """I have a promo code""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
+      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """You are subscribed to""";
   String get doneButtonTitle => """Done""";
   String get subscriptionRenewsMonthlyText =>
@@ -181,6 +181,13 @@ class Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Please try again later.""";
   String get errorClose => """Close""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
+  String get personalAreaContact => """Contact""";
+  String get settingsContactUs => """Contact""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -191,6 +198,7 @@ class PaymentFlowErrorTranslations {
   String get productNotFound => """Product not found :(""";
   String get itemAlreadyOwned => """You have already been subscribed""";
   String get transactionFailed => """Payment transaction failed""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsMap => {
@@ -296,7 +304,7 @@ Map<String, String> get translationsMap => {
       """subscriptionRestore""": """Restore subscription""",
       """subscriptionPromoCode""": """I have a promo code""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, at iaculis purus. Aenean id semper nibh. Donec finibus elit ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, a imperdiet metus. Nullam ac congue tellus. Sed in sollicitudin orci. In ac fringilla augue, in hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
+          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """You are subscribed to""",
       """doneButtonTitle""": """Done""",
       """subscriptionRenewsMonthlyText""":
@@ -314,6 +322,8 @@ Map<String, String> get translationsMap => {
           """You have already been subscribed""",
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
@@ -322,4 +332,10 @@ Map<String, String> get translationsMap => {
       """errorGenericHeaderSomethingWentWrong""": """Something went wrong""",
       """errorGenericBodyPleaseTryAgainLater""": """Please try again later.""",
       """errorClose""": """Close""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
+      """personalAreaContact""": """Contact""",
+      """settingsContactUs""": """Contact""",
     };
