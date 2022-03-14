@@ -181,6 +181,11 @@ class Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Please try again later.""";
   String get errorClose => """Close""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -191,6 +196,7 @@ class PaymentFlowErrorTranslations {
   String get productNotFound => """Product not found :(""";
   String get itemAlreadyOwned => """You have already been subscribed""";
   String get transactionFailed => """Payment transaction failed""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsMap => {
@@ -314,6 +320,8 @@ Map<String, String> get translationsMap => {
           """You have already been subscribed""",
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
@@ -322,4 +330,8 @@ Map<String, String> get translationsMap => {
       """errorGenericHeaderSomethingWentWrong""": """Something went wrong""",
       """errorGenericBodyPleaseTryAgainLater""": """Please try again later.""",
       """errorClose""": """Close""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };
