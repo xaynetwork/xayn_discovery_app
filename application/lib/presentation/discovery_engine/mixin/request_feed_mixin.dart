@@ -63,7 +63,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
                 .followedBy(closeDocumentsUseCase)
                 .mapTo(none)
                 .followedBy(changeMarketsUseCase)
-                .doOnData((_) => _preambleCompleter.complete())
+                .doOnData(_preambleCompleter.complete)
                 .mapTo(none)
                 .followedBy(requestNextFeedBatchUseCase),
           )
