@@ -71,19 +71,21 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   bool get isLoading => _isLoading;
 
-  @override
-  void willChangeMarkets() => scheduleComputeState(() {
-        super.willChangeMarkets();
-        // closes the current search...
-        closeSearch(state.results.map((it) => it.documentId).toSet());
-      });
-
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
         _isLoading = true;
         resetCardIndex();
 
         search(searchTerm);
       });
+
+  @override
+  void resetParameters() {
+    resetCardIndex();
+    // clears the current pending observation, if any...
+    observeDocument();
+    // clear the inner-stored current observation...
+    resetObservedDocument();
+  }
 
   @override
   void onPersonalAreaNavPressed() =>
@@ -102,22 +104,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   void handleLoadMore() => requestNextSearchBatch();
-
-  @override
-  void didChangeMarkets() async {
-    super.didChangeMarkets();
-
-    final searchTerm = await getLastSearchTerm();
-
-    if (searchTerm != null) {
-      scheduleComputeState(() {
-        _isLoading = true;
-        resetCardIndex();
-
-        handleSearchTerm(searchTerm);
-      });
-    }
-  }
 
   Future<String?> getLastSearchTerm() async {
     final engineEvent = await _getSearchTermUseCase.singleOutput(none);
