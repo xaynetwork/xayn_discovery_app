@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
-import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -115,8 +114,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         .cast<AnalyticsEvent>()
         .followedBy(_sendAnalyticsUseCase),
   )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
-  late final UseCaseSink<DbEntityCrudUseCaseIn, ExplicitDocumentFeedback>
-      _crudExplicitDocumentFeedbackHandler =
+  late final _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
@@ -139,7 +137,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
     _crudExplicitDocumentFeedbackHandler(
-      DbEntityCrudUseCaseIn.watch(
+      DbCrudIn.watch(
         document.documentId.uniqueId,
       ),
     );
@@ -241,9 +239,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           );
         }
 
-        if (explicitDocumentFeedback != null) {
+        final reaction =
+            explicitDocumentFeedback?.mapOrNull(single: (v) => v.value);
+        if (reaction != null) {
           nextState = nextState.copyWith(
-            explicitDocumentUserReaction: explicitDocumentFeedback.userReaction,
+            explicitDocumentUserReaction: reaction.userReaction,
           );
         }
 

@@ -29,7 +29,7 @@ mixin CloseFeedDocumentsMixin<T> on UseCaseBlocHelper<T> {
 
     for (final id in documents) {
       crudExplicitDocumentFeedbackUseCase(
-        DbEntityCrudUseCaseIn.remove(
+        DbCrudIn.remove(
           id.uniqueId,
         ),
       );

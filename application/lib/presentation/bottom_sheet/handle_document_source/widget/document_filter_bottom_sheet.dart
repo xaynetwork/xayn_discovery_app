@@ -6,6 +6,8 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/handle_document_source/manager/document_filter_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/handle_document_source/manager/document_filter_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
@@ -19,36 +21,25 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
 
-class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
-  MoveDocumentToCollectionBottomSheet({
+class DocumentFilterBottomSheet extends BottomSheetBase {
+  DocumentFilterBottomSheet({
     Key? key,
     required Document document,
-    required OnMoveDocumentToCollectionError onError,
-    required DocumentProvider? provider,
     UniqueId? initialSelectedCollectionId,
   }) : super(
           key: key,
-          body: _MoveDocumentToCollection(
+          body: _DocumentFilterList(
             document: document,
-            provider: provider,
-            initialSelectedCollectionId: initialSelectedCollectionId,
-            onError: onError,
           ),
         );
 }
 
-class _MoveDocumentToCollection extends StatefulWidget {
+class _DocumentFilterList extends StatefulWidget {
   final Document document;
-  final DocumentProvider? provider;
-  final UniqueId? initialSelectedCollectionId;
-  final OnMoveDocumentToCollectionError onError;
 
   const _MoveDocumentToCollection({
     Key? key,
     required this.document,
-    required this.onError,
-    required this.provider,
-    this.initialSelectedCollectionId,
   }) : super(key: key);
 
   @override
@@ -56,50 +47,21 @@ class _MoveDocumentToCollection extends StatefulWidget {
       _MoveDocumentToCollectionState();
 }
 
-class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
+class _MoveDocumentToCollectionState extends State<_DocumentFilterList>
     with BottomSheetBodyMixin {
-  MoveToCollectionManager? _moveDocumentToCollectionManager;
-
-  @override
-  void initState() {
-    di.getAsync<MoveToCollectionManager>().then(
-      (it) async {
-        await it.updateInitialSelectedCollection(
-          bookmarkId: widget.document.documentUniqueId,
-          initialSelectedCollectionId: widget.initialSelectedCollectionId,
-        );
-        setState(
-          () => _moveDocumentToCollectionManager = it,
-        );
-      },
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _moveDocumentToCollectionManager?.close();
-    super.dispose();
-  }
+  late final DocumentFilterManager _manager = di.get(param1: widget.document);
 
   @override
   Widget build(BuildContext context) {
-    final body = _moveDocumentToCollectionManager == null
-        ? const SizedBox.shrink()
-        : BlocConsumer<MoveToCollectionManager, MoveToCollectionState>(
-            bloc: _moveDocumentToCollectionManager,
-            listener: (_, state) {
-              if (state.hasError) {
-                TooltipKey? key = TooltipUtils.getErrorKey(state.errorObj);
-                if (key != null) widget.onError(key);
-              }
-            },
+    final body =
+        BlocBuilder<DocumentFilterManager, DocumentFilterState>(
+            bloc: _manager,
             builder: (_, state) {
-              if (state.shouldClose) {
-                closeBottomSheet(context);
-              }
+              // if (state.shouldClose) {
+              //   closeBottomSheet(context);
+              // }
 
-              if (state.collections.isNotEmpty) {
+              if (state.filters.isNotEmpty) {
                 return CollectionsListBottomSheet(
                   collections: state.collections,
                   onSelectCollection: _moveDocumentToCollectionManager!
@@ -113,12 +75,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
           );
 
     final header = BottomSheetHeader(
-      headerText: R.strings.bottomSheetSaveTo,
-      actionWidget: AppGhostButton.icon(
-        R.assets.icons.plus,
-        onPressed: _showAddCollectionBottomSheet,
-        contentPadding: EdgeInsets.zero,
-      ),
+      headerText: R.strings.sourceHandlingTooltipLabel,
     );
 
     final footer = BottomSheetFooter(
@@ -127,10 +84,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
           onPressed: () =>
-              _moveDocumentToCollectionManager!.onApplyToDocumentPressed(
-            document: widget.document,
-            provider: widget.provider,
-          ),
+              _manager.onApplyPressed(),
         ),
       ),
     );
@@ -163,7 +117,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
           BuildContext context, UniqueId newCollectionId) =>
       showAppBottomSheet(
         context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
+        builder: (_) => DocumentFilterBottomSheet(
           document: widget.document,
           provider: widget.provider,
           initialSelectedCollectionId: newCollectionId,
