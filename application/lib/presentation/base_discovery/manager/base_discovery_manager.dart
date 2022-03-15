@@ -14,7 +14,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/check_markets_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -40,8 +39,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         UseCaseBlocHelper<DiscoveryState>,
         EngineEventsMixin<DiscoveryState>,
         ObserveDocumentMixin<DiscoveryState>,
-        ChangeUserReactionMixin<DiscoveryState>,
-        CheckMarketsMixin<DiscoveryState> {
+        ChangeUserReactionMixin<DiscoveryState> {
   BaseDiscoveryManager(
     this.feedType,
     this.foldEngineEvent,
@@ -78,9 +76,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
-  bool _isChangingMarkets = false;
-
-  bool get isChangingMarkets => _isChangingMarkets;
 
   bool get isLoading;
 
@@ -189,22 +184,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     );
   }
 
-  /// Configuration will change, after this method completes.
-  @override
-  void willChangeMarkets() {
-    resetCardIndex();
-    // clears the current pending observation, if any...
-    observeDocument();
-    // clear the inner-stored current observation...
-    resetObservedDocument();
-
-    _isChangingMarkets = true;
-  }
-
-  @override
-  void didChangeMarkets() =>
-      scheduleComputeState(() => _isChangingMarkets = false);
-
   void resetCardIndex() => _cardIndex = 0;
 
   void resetObservedDocument() => _observedDocument = null;
@@ -221,72 +200,47 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
 
   @override
-  Stream<DiscoveryState> get stream =>
-      Stream.fromFuture(checkMarkets()).asyncExpand((_) => super.stream);
+  Future<DiscoveryState?> computeState() async => fold3(
+        cardIndexConsumer,
+        crudExplicitDocumentFeedbackConsumer,
+        engineEvents,
+      ).foldAll((
+        cardIndex,
+        explicitDocumentFeedback,
+        engineEvent,
+        errorReport,
+      ) async {
+        _cardIndex ??= cardIndex;
 
-  @override
-  Future<DiscoveryState?> computeState() async {
-    foldHandler(
-      int? cardIndex,
-      ExplicitDocumentFeedback? explicitDocumentFeedback,
-      EngineEvent? engineEvent,
-      ErrorReport errorReport,
-    ) async {
-      _cardIndex ??= cardIndex;
+        if (_cardIndex == null) return null;
 
-      if (_cardIndex == null) return null;
+        final results = foldEngineEvent(this)(engineEvent);
+        final isInErrorState =
+            errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
+        final sets = await maybeReduceCardCount(results);
+        final nextCardIndex = sets.nextCardIndex;
 
-      final results = foldEngineEvent(this)(engineEvent);
-      final isInErrorState =
-          errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
-      final sets = await maybeReduceCardCount(results);
-      final nextCardIndex = sets.nextCardIndex;
+        if (nextCardIndex != null) _cardIndex = nextCardIndex;
 
-      if (nextCardIndex != null) _cardIndex = nextCardIndex;
+        final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
+        final hasExplicitDocumentFeedbackChanged =
+            state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
 
-      final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
-      final hasExplicitDocumentFeedbackChanged =
-          state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
+        final nextState = DiscoveryState(
+          results: sets.results,
+          removedResults: sets.removedResults,
+          isComplete: !isLoading,
+          isInErrorState: isInErrorState,
+          isFullScreen: _isFullScreen,
+          cardIndex: _cardIndex!,
+          latestExplicitDocumentFeedback: explicitDocumentFeedback,
+          shouldUpdateNavBar:
+              hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
+        );
 
-      final nextState = DiscoveryState(
-        results: sets.results,
-        removedResults: sets.removedResults,
-        isComplete: !isLoading,
-        isInErrorState: isInErrorState,
-        isFullScreen: _isFullScreen,
-        cardIndex: _cardIndex!,
-        latestExplicitDocumentFeedback: explicitDocumentFeedback,
-        shouldUpdateNavBar:
-            hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
-      );
-
-      // guard against same-state emission
-      if (!nextState.equals(state)) return nextState;
-    }
-
-    return engineEvents != null
-        ? fold3(
-            cardIndexConsumer,
-            crudExplicitDocumentFeedbackConsumer,
-            engineEvents!,
-          ).foldAll(foldHandler)
-        : fold2(
-            cardIndexConsumer,
-            crudExplicitDocumentFeedbackConsumer,
-          ).foldAll(
-            (
-              cardIndex,
-              explicitDocumentFeedback,
-              errorReport,
-            ) =>
-                foldHandler(
-              cardIndex,
-              explicitDocumentFeedback,
-              null,
-              errorReport,
-            ),
-          );
-  }
+        // guard against same-state emission
+        if (!nextState.equals(state)) return nextState;
+      });
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
