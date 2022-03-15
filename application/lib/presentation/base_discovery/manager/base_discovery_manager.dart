@@ -43,6 +43,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         ChangeUserReactionMixin<DiscoveryState>,
         CheckMarketsMixin<DiscoveryState> {
   BaseDiscoveryManager(
+    this.feedType,
     this.foldEngineEvent,
     this.fetchCardIndexUseCase,
     this.updateCardIndexUseCase,
@@ -57,6 +58,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final SendAnalyticsUseCase sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
+  final FeedType feedType;
 
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: feedType)
@@ -79,7 +81,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   bool _didChangeMarkets = false;
 
   bool get isLoading;
-  FeedType get feedType;
 
   Document? get currentObservedDocument => _observedDocument;
   int? get currentCardIndex => _cardIndex;

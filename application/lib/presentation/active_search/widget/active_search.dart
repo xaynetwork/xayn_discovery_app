@@ -22,6 +22,7 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   late final ActiveSearchManager _manager;
+  String? _lastSearchTerm;
 
   @override
   ActiveSearchManager get manager => _manager;
@@ -29,6 +30,12 @@ class _ActiveSearchState
   @override
   void initState() {
     _manager = di.get();
+
+    _manager.getLastSearchTerm().then((it) {
+      _lastSearchTerm = it;
+
+      if (mounted && it != null) NavBarContainer.updateNavBar(context);
+    });
 
     super.initState();
   }
@@ -50,6 +57,7 @@ class _ActiveSearchState
             }),
             buildNavBarItemSearchActive(
               isActive: true,
+              hint: _lastSearchTerm,
               onSearchPressed: _manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(
