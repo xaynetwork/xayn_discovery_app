@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_feed_documents_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
@@ -33,16 +35,36 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
-  void _startConsuming() {
-    final consumeUseCase = di.get<RequestFeedUseCase>();
-    final maybeRequestNextBatchUseCase =
-        _MaybeRequestNextBatchWhenEmptyUseCase(requestNextFeedBatchUseCase);
-
+  void _startConsuming() async {
     _didStartConsuming = true;
 
-    consume(consumeUseCase, initialData: none)
-        .transform((out) => out.switchedBy(maybeRequestNextBatchUseCase))
-        .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
+    final requestFeedUseCase = di.get<RequestFeedUseCase>();
+    final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
+    final areMarketsOutdated =
+        await areMarketsOutdatedUseCase.singleOutput(none);
+
+    if (areMarketsOutdated) {
+      final closeDocumentsUseCase = di.get<CloseFeedDocumentsUseCase>();
+
+      consume(requestFeedUseCase, initialData: none)
+          .transform(
+            (out) => out
+                .map((it) => it is RestoreFeedSucceeded
+                    ? it.items.map((it) => it.documentId).toSet()
+                    : const <DocumentId>{})
+                .followedBy(closeDocumentsUseCase),
+          )
+          .autoSubscribe(
+              onError: (e, s) => onError(e, s ?? StackTrace.current));
+    } else {
+      final maybeRequestNextBatchUseCase =
+          _MaybeRequestNextBatchWhenEmptyUseCase(requestNextFeedBatchUseCase);
+
+      consume(requestFeedUseCase, initialData: none)
+          .transform((out) => out.switchedBy(maybeRequestNextBatchUseCase))
+          .autoSubscribe(
+              onError: (e, s) => onError(e, s ?? StackTrace.current));
+    }
   }
 }
 

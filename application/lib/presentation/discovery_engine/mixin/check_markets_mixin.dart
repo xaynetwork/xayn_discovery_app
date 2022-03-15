@@ -15,7 +15,7 @@ mixin CheckMarketsMixin<T> on UseCaseBlocHelper<T> {
     return super.close();
   }
 
-  void checkMarkets() async {
+  Future<void> checkMarkets() async {
     _useCase ??= di.get<CheckMarketsUseCase>();
     final result = await _useCase!(none);
 

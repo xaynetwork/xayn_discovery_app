@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_search_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_search_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_search_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/restore_search_use_case.dart';
@@ -48,12 +50,22 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
-  void _startConsuming() {
-    final consumeUseCase = di.get<RestoreSearchUseCase>();
-
+  void _startConsuming() async {
     _didStartConsuming = true;
 
-    consume(consumeUseCase, initialData: none)
-        .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
+    final requestSearchUseCase = di.get<RestoreSearchUseCase>();
+    final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
+    final areMarketsOutdated =
+        await areMarketsOutdatedUseCase.singleOutput(none);
+
+    if (areMarketsOutdated) {
+      final closeSearchUseCase = di.get<CloseSearchUseCase>();
+
+      consume(closeSearchUseCase, initialData: none).autoSubscribe(
+          onError: (e, s) => onError(e, s ?? StackTrace.current));
+    } else {
+      consume(requestSearchUseCase, initialData: none).autoSubscribe(
+          onError: (e, s) => onError(e, s ?? StackTrace.current));
+    }
   }
 }
