@@ -7,6 +7,7 @@ import 'package:xayn_readability/xayn_readability.dart';
 
 const String _kUserAgent =
     'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
+const int _kMaxRedirectCount = 10;
 
 @injectable
 class Client implements http.Client {
@@ -20,7 +21,12 @@ class Client implements http.Client {
   @override
   Future<http.Response> send(http.Request request) => _client.send(request);
 
-  Future<http.Response> sendWithRedirectGuard(http.Request request) async {
+  Future<http.Response> sendWithRedirectGuard(
+    http.Request request, {
+    int count = 0,
+  }) async {
+    if (count >= _kMaxRedirectCount) throw MaxRedirectError(count);
+
     final response = await send(request);
 
     // test if in redirect status code range
@@ -37,14 +43,20 @@ class Client implements http.Client {
       if (response.headers.containsKey('set-cookie')) {
         logger.i('Server cookies detected');
 
-        return await sendWithRedirectGuard(request.change(
-          uri: location,
-          headers: request.headers.clone()..remove('cookie'),
-          cookies: _getCookiesToSet(response.headers['set-cookie']!),
-        ));
+        return await sendWithRedirectGuard(
+          request.change(
+            uri: location,
+            headers: request.headers.clone()..remove('cookie'),
+            cookies: _getCookiesToSet(response.headers['set-cookie']!),
+          ),
+          count: count + 1,
+        );
       }
 
-      return await sendWithRedirectGuard(request.change(uri: location));
+      return await sendWithRedirectGuard(
+        request.change(uri: location),
+        count: count + 1,
+      );
     }
 
     return response;
@@ -82,4 +94,14 @@ class Client implements http.Client {
 
 extension _IsRedirectExtension on http.Response {
   bool get isRedirect => statusCode >= 300 && statusCode < 400;
+}
+
+class MaxRedirectError extends Error {
+  final int numRedirects;
+  final String message = 'redirect loop detected';
+
+  MaxRedirectError(this.numRedirects);
+
+  @override
+  String toString() => message;
 }
