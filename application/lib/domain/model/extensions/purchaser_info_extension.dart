@@ -9,9 +9,6 @@ extension PurchaserInfoExtension on PurchaserInfo {
 
   DateTime? get expirationDate {
     final entitlement = entitlements.active[EntitlementIds.unlimited];
-    final expirationDateString = entitlement?.expirationDate;
-    return expirationDateString != null
-        ? DateTime.tryParse(expirationDateString)
-        : null;
+    return DateTime.tryParse(entitlement?.expirationDate ?? '');
   }
 }

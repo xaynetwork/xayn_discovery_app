@@ -44,7 +44,7 @@ void main() {
           numberOfSessions: 10,
           lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
           firstAppLaunchDate: now,
-userId: const UniqueId.fromTrustedString('userId'),
+          userId: const UniqueId.fromTrustedString('userId'),
         ),
       );
     });
@@ -63,7 +63,7 @@ userId: const UniqueId.fromTrustedString('userId'),
         numberOfSessions: 10,
         lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
         firstAppLaunchDate: now,
-userId: const UniqueId.fromTrustedString('userId'),
+        userId: const UniqueId.fromTrustedString('userId'),
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
