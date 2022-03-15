@@ -55,6 +55,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
   ) : super(
+          FeedType.search,
           _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
@@ -69,9 +70,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   bool get isLoading => _isLoading;
-
-  @override
-  FeedType get feedType => FeedType.search;
 
   @override
   void willChangeMarkets() => scheduleComputeState(() {
@@ -107,11 +105,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   void didChangeMarkets() async {
-    final engineEvent = await _getSearchTermUseCase.singleOutput(none);
+    final searchTerm = await getLastSearchTerm();
 
-    if (engineEvent is SearchTermRequestSucceeded) {
-      final searchTerm = engineEvent.searchTerm;
-
+    if (searchTerm != null) {
       scheduleComputeState(() {
         _isLoading = true;
         resetCardIndex();
@@ -119,6 +115,13 @@ class ActiveSearchManager extends BaseDiscoveryManager
         handleSearchTerm(searchTerm);
       });
     }
+  }
+
+  Future<String?> getLastSearchTerm() async {
+    final engineEvent = await _getSearchTermUseCase.singleOutput(none);
+    final didSucceed = engineEvent is SearchTermRequestSucceeded;
+
+    return didSucceed ? engineEvent.searchTerm : null;
   }
 
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(

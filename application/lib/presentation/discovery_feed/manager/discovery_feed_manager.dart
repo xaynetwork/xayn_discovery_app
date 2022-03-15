@@ -56,6 +56,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
+          FeedType.feed,
           _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
@@ -71,9 +72,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   bool get isLoading => _isLoading;
-
-  @override
-  FeedType get feedType => FeedType.feed;
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
