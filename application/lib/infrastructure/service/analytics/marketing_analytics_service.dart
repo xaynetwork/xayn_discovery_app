@@ -72,7 +72,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   @override
   void send(AnalyticsEvent event) {
     logger.i('Marketing Analytics event has been fired: ' + event.type);
-    _appsflyer.logEvent(event.type, event.properties.toSerializableMap());
+    _appsflyer.logEvent(event.type, event.properties);
   }
 
   @override

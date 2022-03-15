@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
@@ -16,12 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-/// A temporary wrapper for the [DiscoveryEngine].
-/// Once the engine is ready, we can remove this class.
-///
-/// What we are awaiting:
-/// - [changeDocumentFeedback] to return an EngineEvent with information about the [Document].
-/// - an implementation for [search].
+/// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
@@ -29,11 +23,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late DiscoveryEngine _engine;
   late Set<FeedMarket> _localMarkets;
-
-  /// temp solution:
-  /// Once search is supported, we drop this.
-  late final StreamController<EngineEvent> _tempSearchEvents =
-      StreamController<EngineEvent>.broadcast();
 
   final StreamController<String> _inputLog =
       StreamController<String>.broadcast();
@@ -178,15 +167,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.closeFeedDocuments(documentIds));
   }
 
-  /// As we also need search events, which are not yet supported, we override
-  /// this getter so that it includes our temp search event Stream.
   @override
-  Stream<EngineEvent> get engineEvents {
-    final engineEvents = Stream.fromFuture(safeRun(() => _engine.engineEvents))
-        .asyncExpand((events) => events);
-
-    return Rx.merge([engineEvents, _tempSearchEvents.stream]);
-  }
+  Stream<EngineEvent> get engineEvents =>
+      Stream.fromFuture(safeRun(() => _engine.engineEvents))
+          .asyncExpand((events) => events);
 
   @override
   Future<EngineEvent> logDocumentTime({
@@ -215,15 +199,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.requestNextFeedBatch());
   }
 
-  Future<EngineEvent> search(String searchTerm) {
-    _inputLog.add('[search]\n<searchTerm> $searchTerm');
-    throw UnimplementedError();
-  }
-
-  /// temporary workaround for adding events that are not yet handled
-  /// by the discovery engine.
-  void tempAddEvent(EngineEvent event) => _tempSearchEvents.add(event);
-
   @override
   Future<void> dispose() {
     _inputLog
@@ -247,5 +222,35 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         .map((e) =>
             FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
         .toSet();
+  }
+
+  @override
+  Future<EngineEvent> closeSearch() {
+    _inputLog.add('[closeSearch]');
+    return safeRun(() => _engine.closeSearch());
+  }
+
+  @override
+  Future<EngineEvent> requestNextSearchBatch() {
+    _inputLog.add('[requestNextSearchBatch]');
+    return safeRun(() => _engine.requestNextSearchBatch());
+  }
+
+  @override
+  Future<EngineEvent> requestSearch({
+    required String queryTerm,
+    required FeedMarket market,
+  }) {
+    _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
+    return safeRun(() => _engine.requestSearch(
+          queryTerm: queryTerm,
+          market: market,
+        ));
+  }
+
+  @override
+  Future<EngineEvent> restoreSearch() {
+    _inputLog.add('[restoreSearch]');
+    return safeRun(() => _engine.restoreSearch());
   }
 }

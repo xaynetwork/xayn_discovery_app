@@ -19,15 +19,12 @@ class ProcessedDocument {
   });
 
   DocumentProvider getProvider(NewsResource resource) {
-    var favicon = resource.url.resolve('/favicon.ico');
-
     final link = processHtmlResult.favicon;
-
-    if (link != null) favicon = Uri.parse(link);
+    final favIcon = link ?? '/favicon.ico';
 
     return DocumentProvider(
       name: processHtmlResult.metadata?.siteName ?? resource.sourceDomain,
-      favicon: favicon.toString(),
+      favicon: resource.url.resolve(favIcon).toString(),
     );
   }
 }

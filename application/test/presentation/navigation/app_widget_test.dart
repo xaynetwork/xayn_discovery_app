@@ -37,13 +37,13 @@ void main() {
   });
 
   testWidgets(
-      'In Discovery clicking on search, does not navigate to the Active Search screen (Active Search disabled)',
+      'In Discovery clicking on search, navigate to the Active Search screen',
       (driver) async {
     await driver.initToDiscoveryPage();
     await driver.navigateToSearch();
 
-    expect(find.byType(DiscoveryFeed), findsOneWidget);
-    expect(find.byType(ActiveSearch), findsNothing);
+    expect(find.byType(DiscoveryFeed), findsNothing);
+    expect(find.byType(ActiveSearch), findsOneWidget);
   });
 
   testWidgets('In Active Search clicking on home returns to discovery feed',

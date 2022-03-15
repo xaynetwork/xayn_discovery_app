@@ -6,6 +6,8 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -81,6 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         appTheme: state.theme,
         isPaymentEnabled: state.isPaymentEnabled,
       ),
+      _buildOptionsSection(state.isTtsEnabled),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -111,14 +114,36 @@ class _SettingsScreenState extends State<SettingsScreen>
         isFirstSection: !isPaymentEnabled,
       );
 
+  Widget _buildOptionsSection(bool isTtsEnabled) => SettingsSection(
+        title: R.strings.settingsSectionTitleOptions,
+        items: [
+          SettingsCardData.fromTile(SettingsTileData(
+            title: R.strings.enableTextToSpeech,
+            svgIconPath: R.assets.icons.speechBubbles,
+            action:
+                // ignore: DEPRECATED_MEMBER_USE
+                SettingsTileActionSwitch(
+              value: isTtsEnabled,
+              onPressed: () =>
+                  _manager.saveTextToSpeechPreference(!isTtsEnabled),
+              key: Keys.settingsToggleTextToSpeechPreference,
+            ),
+          )),
+        ],
+      );
+
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onAboutPressed: () => _manager.openExternalUrl(Urls.aboutXayn),
+        onAboutPressed: () =>
+            _manager.openExternalUrl(Urls.aboutXayn, CurrentView.settings),
         onCarbonNeutralPressed: () =>
-            _manager.openExternalUrl(Urls.carbonNeutral),
-        onImprintPressed: () => _manager.openExternalUrl(Urls.imprint),
-        onPrivacyPressed: () => _manager.openExternalUrl(Urls.privacyPolicy),
-        onTermsPressed: () => _manager.openExternalUrl(Urls.termsAndConditions),
+            _manager.openExternalUrl(Urls.carbonNeutral, CurrentView.settings),
+        onImprintPressed: () =>
+            _manager.openExternalUrl(Urls.imprint, CurrentView.settings),
+        onPrivacyPressed: () =>
+            _manager.openExternalUrl(Urls.privacyPolicy, CurrentView.settings),
+        onTermsPressed: () => _manager.openExternalUrl(
+            Urls.termsAndConditions, CurrentView.settings),
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
