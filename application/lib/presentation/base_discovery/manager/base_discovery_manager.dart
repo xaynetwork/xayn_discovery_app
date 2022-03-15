@@ -202,7 +202,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   }
 
   @override
-  void didChangeMarkets() {}
+  void didChangeMarkets() => _isChangingMarkets = false;
 
   void resetCardIndex() => _cardIndex = 0;
 
