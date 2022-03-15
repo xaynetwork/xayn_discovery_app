@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dar
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -59,6 +60,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// It is easier to support end expand
 @GenerateMocks([
   ActiveSearchNavActions,
+  AppDiscoveryEngine,
   AppImageCacheManager,
   AppManager,
   AppVersionToMapMapper,
@@ -69,7 +71,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   DbEntityMapToFeedMarketMapper,
-  DiscoveryEngine,
   Document,
   ExtractLogUseCase,
   FeatureManager,

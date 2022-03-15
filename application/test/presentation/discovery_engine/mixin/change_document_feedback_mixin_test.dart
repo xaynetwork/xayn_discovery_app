@@ -29,14 +29,14 @@ import 'change_document_feedback_mixin_test.mocks.dart';
   CrudExplicitDocumentFeedbackUseCase,
 ])
 void main() {
-  late MockDiscoveryEngine engine;
+  late MockAppDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
   late MockCrudExplicitDocumentFeedbackUseCase
       crudExplicitDocumentFeedbackUseCase;
   final controller = StreamController<EngineEvent>.broadcast();
 
   setUp(() async {
-    engine = MockDiscoveryEngine();
+    engine = MockAppDiscoveryEngine();
     analyticsService = MockAnalyticsService();
     crudExplicitDocumentFeedbackUseCase =
         MockCrudExplicitDocumentFeedbackUseCase();
