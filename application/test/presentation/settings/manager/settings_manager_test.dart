@@ -8,11 +8,13 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
@@ -27,12 +29,13 @@ void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
   const isTtsEnabled = true;
-  const stateReady = SettingsScreenState.ready(
+  final subscriptionStatus = SubscriptionStatus.initial();
+  final stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
     isTtsEnabled: true,
     isPaymentEnabled: false,
-    trialEndDate: null,
+    subscriptionStatus: subscriptionStatus,
   );
 
   late MockFeatureManager featureManager;
@@ -47,6 +50,8 @@ void main() {
   late MockGetTtsPreferenceUseCase getTtsPreferenceUseCase;
   late MockSaveTtsPreferenceUseCase saveTtsPreferenceUseCase;
   late MockListenTtsPreferenceUseCase listenTtsPreferenceUseCase;
+  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -61,6 +66,8 @@ void main() {
     getTtsPreferenceUseCase = MockGetTtsPreferenceUseCase();
     saveTtsPreferenceUseCase = MockSaveTtsPreferenceUseCase();
     listenTtsPreferenceUseCase = MockListenTtsPreferenceUseCase();
+    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -84,6 +91,15 @@ void main() {
     when(getTtsPreferenceUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(isTtsEnabled));
 
+    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+        .thenAnswer((_) => Future.value(subscriptionStatus));
+
+    when(listenSubscriptionStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(subscriptionStatus));
+
+    when(listenSubscriptionStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+
     when(featureManager.isPaymentEnabled).thenReturn(false);
   });
 
@@ -100,6 +116,8 @@ void main() {
         saveTtsPreferenceUseCase,
         listenTtsPreferenceUseCase,
         featureManager,
+        getSubscriptionStatusUseCase,
+        listenSubscriptionStatusUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -110,6 +128,7 @@ void main() {
         getAppVersionUseCase.singleOutput(none),
         getTtsPreferenceUseCase.singleOutput(none),
         getAppThemeUseCase.singleOutput(none),
+        getSubscriptionStatusUseCase.singleOutput(any),
         listenAppThemeUseCase.transform(any),
         listenTtsPreferenceUseCase.transform(any),
       ]);
@@ -118,6 +137,7 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(getTtsPreferenceUseCase);
+      verifyNoMoreInteractions(getSubscriptionStatusUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
       verifyNoMoreInteractions(listenTtsPreferenceUseCase);
     },

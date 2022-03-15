@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
-import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
@@ -124,11 +123,5 @@ class PageRegistry {
     name: "collections",
     //ignore: prefer_const_constructors
     builder: (_, args) => CollectionsScreen(),
-  );
-
-  static final payment = xayn.PageData(
-    name: "payment",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => PaymentScreen(),
   );
 }

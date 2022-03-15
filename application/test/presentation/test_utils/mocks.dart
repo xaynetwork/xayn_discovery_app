@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
@@ -29,8 +30,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/check_subscription_active_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
@@ -61,7 +63,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
-  CheckSubscriptionActiveUseCase,
+  GetSubscriptionStatusUseCase,
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   DbEntityMapToFeedMarketMapper,
@@ -111,6 +113,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SaveReaderModeFontSizeUseCase,
   SaveReaderModeBackgroundColorUseCase,
   RequestCodeRedemptionSheetUseCase,
+  AppStatusRepository,
+  ListenSubscriptionStatusUseCase,
 ])
 class Mocks {
   Mocks._();

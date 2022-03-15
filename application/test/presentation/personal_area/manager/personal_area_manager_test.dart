@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 
@@ -8,25 +10,48 @@ import '../../test_utils/utils.dart';
 
 void main() {
   late MockPersonalAreaNavActions actions;
-  late PersonalAreaManager manager;
-  final initialState = PersonalAreaState.initial();
+  late MockFeatureManager featureManager;
+  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
+  final subscriptionStatus = SubscriptionStatus.initial();
+  final readyState = PersonalAreaState(
+    subscriptionStatus: subscriptionStatus,
+    isPaymentEnabled: false,
+  );
 
   setUp(() {
     actions = MockPersonalAreaNavActions();
-    manager = PersonalAreaManager(actions);
+    featureManager = MockFeatureManager();
+    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
+
+    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+        .thenAnswer((_) async => subscriptionStatus);
+    when(listenSubscriptionStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(subscriptionStatus));
+    when(listenSubscriptionStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(featureManager.isPaymentEnabled).thenReturn(false);
   });
 
+  PersonalAreaManager create() => PersonalAreaManager(
+        actions,
+        featureManager,
+        getSubscriptionStatusUseCase,
+        listenSubscriptionStatusUseCase,
+      );
+
   blocTest<PersonalAreaManager, PersonalAreaState>(
-    'WHEN manager is created THEN state is initial',
-    build: () => manager,
+    'WHEN manager is created THEN state is ready',
+    build: () => create(),
     verify: (manager) {
-      expect(manager.state, equals(initialState));
+      expect(manager.state, equals(readyState));
     },
   );
 
   blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onHomeNavPressed is called THEN redirected to action',
-    build: () => manager,
+    build: () => create(),
     act: (manager) => manager.onHomeNavPressed(),
     verify: (manager) {
       verify(actions.onHomeNavPressed());
@@ -36,7 +61,7 @@ void main() {
 
   blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onActiveSearchNavPressed is called THEN redirected to action',
-    build: () => manager,
+    build: () => create(),
     act: (manager) => manager.onActiveSearchNavPressed(),
     verify: (manager) {
       verify(actions.onActiveSearchNavPressed());
@@ -46,7 +71,7 @@ void main() {
 
   blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onCollectionsNavPressed is called THEN redirected to action',
-    build: () => manager,
+    build: () => create(),
     act: (manager) => manager.onCollectionsNavPressed(),
     verify: (manager) {
       verify(actions.onCollectionsNavPressed());
@@ -56,7 +81,7 @@ void main() {
 
   blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onHomeFeedSettingsNavPressed is called THEN redirected to action',
-    build: () => manager,
+    build: () => create(),
     act: (manager) => manager.onHomeFeedSettingsNavPressed(),
     verify: (manager) {
       verify(actions.onHomeFeedSettingsNavPressed());
@@ -66,7 +91,7 @@ void main() {
 
   blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onSettingsNavPressed is called THEN redirected to action',
-    build: () => manager,
+    build: () => create(),
     act: (manager) => manager.onSettingsNavPressed(),
     verify: (manager) {
       verify(actions.onSettingsNavPressed());
