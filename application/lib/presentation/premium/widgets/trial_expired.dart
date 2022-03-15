@@ -59,6 +59,7 @@ class TrialExpired extends StatelessWidget {
             _buildSubscribeNow(),
             _buildSubscriptionOptions(),
             _buildFooter(),
+            spacer3,
           ],
         ),
       ),
