@@ -90,22 +90,22 @@ Available options:
 
 Build and publish to MS AppCenter 
 Available options:
+ - test : [true, false]
+ - watch : [true, false]
+ - version_name 
+ - build_number 
+ - keyFile 
  - keyId 
  - issuerId 
  - clean : [true, false]
  - platform : [ios, android]
  - android_output : [apk, appbundle]
- - build_number 
  - flavor : [internal, beta]
  - build_type : [debug, release]
+ - upload_to_appcenter : [true, false]
  - coverage : [true, false]
  - download_profile : [true, false]
  - update_assets : [true, false]
- - test : [true, false]
- - watch : [true, false]
- - upload_to_appcenter : [true, false]
- - version_name 
- - keyFile 
 
 
 ### update_assets

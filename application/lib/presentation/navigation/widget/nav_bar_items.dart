@@ -129,3 +129,9 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
     );
+
+const configIdSearch = NavBarConfigId('active_search');
+const configIdDiscoveryFeed = NavBarConfigId('discovery_feed');
+const configIdDiscoveryCardScreen = NavBarConfigId('discovery_card_screen');
+const configIdDiscoveryCard = NavBarConfigId('discovery_card');
+const configIdPersonalArea = NavBarConfigId('personal_area');
