@@ -28,6 +28,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
+        configIdPersonalArea,
         [
           buildNavBarItemHome(onPressed: () {
             hideTooltip();

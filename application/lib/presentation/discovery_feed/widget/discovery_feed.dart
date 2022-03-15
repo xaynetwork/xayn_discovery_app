@@ -41,6 +41,7 @@ class _DiscoveryFeedState
   @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
+          configIdDiscoveryFeed,
           [
             buildNavBarItemHome(
                 isActive: true,
@@ -88,6 +89,7 @@ class _DiscoveryFeedState
           );
 
       return NavBarConfig(
+        configIdDiscoveryFeed,
         [
           buildNavBarItemArrowLeft(onPressed: () async {
             removeOverlay();
