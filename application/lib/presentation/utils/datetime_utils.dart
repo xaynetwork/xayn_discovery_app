@@ -1,9 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-// TODO: This is for testing purposes only. Will eventually be replaced by Andrii's logic.
-DateTime subscriptionEndDate = DateTime.now().add(const Duration(days: 6));
-
 extension DateTimeExtension on DateTime {
   int calculateDifferenceInDays(DateTime date) => DateTime(year, month, day)
       .difference(DateTime(date.year, date.month, date.day))

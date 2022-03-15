@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
@@ -13,6 +14,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -20,11 +24,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
 abstract class SettingsNavActions {
-  void onPaymentNavPressed();
-
   void onBackNavPressed();
-
-  void onSubscribePressed();
 }
 
 @lazySingleton
@@ -45,6 +45,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
   final SaveTtsPreferenceUseCase _saveTtsPreferenceUseCase;
   final ListenTtsPreferenceUseCase _listenTtsPreferenceUseCase;
+  final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
+  final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -59,6 +61,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._saveTtsPreferenceUseCase,
     this._listenTtsPreferenceUseCase,
     this._featureManager,
+    this._getSubscriptionStatusUseCase,
+    this._listenSubscriptionStatusUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -67,10 +71,16 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late AppTheme _theme;
   late final AppVersion _appVersion;
   late bool _ttsPreference;
+  late SubscriptionStatus _subscriptionStatus;
   late final UseCaseValueStream<AppTheme> _appThemeHandler =
       consume(_listenAppThemeUseCase, initialData: none);
   late final UseCaseValueStream<bool> _ttsPreferenceHandler =
       consume(_listenTtsPreferenceUseCase, initialData: none);
+  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
+      consume(
+    _listenSubscriptionStatusUseCase,
+    initialData: PurchasableIds.subscription,
+  );
 
   void _init() async {
     scheduleComputeState(() async {
@@ -78,6 +88,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
       _ttsPreference = await _getTtsPreferenceUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
+      _subscriptionStatus = await _getSubscriptionStatusUseCase
+          .singleOutput(PurchasableIds.subscription);
 
       _initDone = true;
     });
@@ -106,10 +118,13 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
           isTtsEnabled: _ttsPreference,
-          trialEndDate: null,
+          subscriptionStatus: _subscriptionStatus,
         );
-    return fold2(_appThemeHandler, _ttsPreferenceHandler)
-        .foldAll((appTheme, ttsPreference, _) async {
+    return fold3(
+      _appThemeHandler,
+      _ttsPreferenceHandler,
+      _subscriptionStatusHandler,
+    ).foldAll((appTheme, ttsPreference, subscriptionStatus, _) async {
       if (appTheme != null) {
         _theme = appTheme;
       }
@@ -118,16 +133,14 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         _ttsPreference = ttsPreference;
       }
 
+      if (subscriptionStatus != null) {
+        _subscriptionStatus = subscriptionStatus;
+      }
+
       return buildReady();
     });
   }
 
   @override
   void onBackNavPressed() => _settingsNavActions.onBackNavPressed();
-
-  @override
-  void onPaymentNavPressed() => _settingsNavActions.onPaymentNavPressed();
-
-  @override
-  void onSubscribePressed() => _settingsNavActions.onSubscribePressed();
 }

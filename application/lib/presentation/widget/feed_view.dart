@@ -61,7 +61,7 @@ class FeedView extends StatelessWidget {
   Widget build(BuildContext context) => CardView(
         animationDuration: R.animations.feedTransitionDuration,
         animationCurve: isFullScreen ? _kAnimationCurveIn : _kAnimationCurveOut,
-        animateToSnapDuration: R.animations.unit3,
+        animateToSnapDuration: R.animations.unit2_25,
         animateToSnapCurve: _kAnimationSnapCurve,
         scrollDirection: scrollDirection,
         controller: cardViewController,
@@ -77,5 +77,6 @@ class FeedView extends StatelessWidget {
         onIndexChanged: onIndexChanged,
         disableGestures: isFullScreen,
         cardIdentifierBuilder: cardIdentifierBuilder,
+        deltaThreshold: 15,
       );
 }

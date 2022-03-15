@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
@@ -185,13 +186,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     }
   }
 
-  void openWebResourceUrl(Document document) {
+  void openWebResourceUrl(Document document, CurrentView currentView) {
     changeUserReaction(
       document: document,
       userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
     );
-    openExternalUrl(document.resource.url.toString());
+    openExternalUrl(document.resource.url.toString(), currentView);
   }
 
   @override
