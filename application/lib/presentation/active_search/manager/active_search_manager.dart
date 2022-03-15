@@ -13,7 +13,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -44,7 +43,7 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends BaseDiscoveryManager
-    with SearchMixin<DiscoveryState>, CloseSearchMixin<DiscoveryState>
+    with SearchMixin<DiscoveryState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
