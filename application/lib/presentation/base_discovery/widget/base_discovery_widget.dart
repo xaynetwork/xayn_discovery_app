@@ -101,8 +101,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
 
-    manager.handleCheckMarkets();
-
     super.initState();
   }
 

@@ -146,5 +146,5 @@ class _TestBloc extends Cubit<bool>
 
   @override
   Future<bool?> computeState() =>
-      fold(engineEvents).foldAll((events, errorReport) async => true);
+      fold(engineEvents!).foldAll((events, errorReport) async => true);
 }
