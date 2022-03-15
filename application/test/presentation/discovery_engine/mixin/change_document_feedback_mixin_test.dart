@@ -70,8 +70,7 @@ void main() {
 
     when(crudExplicitDocumentFeedbackUseCase.singleOutput(any))
         .thenAnswer((realInvocation) async {
-      final param =
-          realInvocation.positionalArguments.first as DbEntityCrudUseCaseIn;
+      final param = realInvocation.positionalArguments.first as DbCrudIn;
 
       return ExplicitDocumentFeedback(id: param.id);
     });
@@ -107,7 +106,7 @@ void main() {
     verify: (manager) {
       verify(
         crudExplicitDocumentFeedbackUseCase.singleOutput(
-          DbEntityCrudUseCaseIn.store(
+          DbCrudIn.store(
             ExplicitDocumentFeedback(
               id: fakeDocument.documentId.uniqueId,
               userReaction: UserReaction.positive,
