@@ -37,7 +37,8 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
-      buildNavBarItemBack(onPressed: _manager.onBackNavPressed));
+        buildNavBarItemBack(onPressed: _manager.onBackNavPressed),
+      );
 
   Linden get linden => UnterDenLinden.getLinden(context);
 
