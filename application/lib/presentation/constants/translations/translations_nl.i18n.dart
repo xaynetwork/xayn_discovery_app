@@ -183,6 +183,11 @@ class TranslationsNl extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Probeer het later nog eens.""";
   String get errorClose => """Sluiten""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -330,4 +335,8 @@ Map<String, String> get translationsNlMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Probeer het later nog eens.""",
       """errorClose""": """Sluiten""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };

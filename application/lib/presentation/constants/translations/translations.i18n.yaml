@@ -125,3 +125,8 @@ readerModeSettingsErrorChangesNotApplied: Changes couldn't be applied
 errorGenericHeaderSomethingWentWrong: Something went wrong
 errorGenericBodyPleaseTryAgainLater: Please try again later.
 errorClose: Close
+sourceHandlingTooltipLabel: What do you want to see less of?
+# Needs to be same like the "What" word in  sourceHandlingTooltipLabel
+sourceHandlingTooltipHighlightedWord: What
+enableTextToSpeech: Enable text -to-speech
+settingsSectionTitleOptions: Options

@@ -181,6 +181,11 @@ class Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Please try again later.""";
   String get errorClose => """Close""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -325,4 +330,8 @@ Map<String, String> get translationsMap => {
       """errorGenericHeaderSomethingWentWrong""": """Something went wrong""",
       """errorGenericBodyPleaseTryAgainLater""": """Please try again later.""",
       """errorClose""": """Close""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };

@@ -186,6 +186,11 @@ class TranslationsDe extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Bitte versuche es später noch einmal.""";
   String get errorClose => """Schließen""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -336,4 +341,8 @@ Map<String, String> get translationsDeMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Bitte versuche es später noch einmal.""",
       """errorClose""": """Schließen""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };

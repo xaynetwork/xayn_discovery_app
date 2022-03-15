@@ -125,3 +125,7 @@ readerModeSettingsErrorChangesNotApplied: Die Änderungen konnten nicht gespeich
 errorGenericHeaderSomethingWentWrong: Da ging wohl was schief
 errorGenericBodyPleaseTryAgainLater: Bitte versuche es später noch einmal.
 errorClose: Schließen
+sourceHandlingTooltipLabel: What do you want to see less of?
+sourceHandlingTooltipHighlightedWord: What
+enableTextToSpeech: Enable text -to-speech
+settingsSectionTitleOptions: Options

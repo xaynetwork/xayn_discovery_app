@@ -1,18 +1,18 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-part 'discovery_feed_state.freezed.dart';
+part 'discovery_state.freezed.dart';
 
-/// The state of the [DiscoveryFeedManager].
+/// The state of the [BaseDiscoveryManager].
 @freezed
-class DiscoveryFeedState with _$DiscoveryFeedState {
+class DiscoveryState with _$DiscoveryState {
   final SetEquality _setEquality = const SetEquality();
 
-  const DiscoveryFeedState._();
+  const DiscoveryState._();
 
-  const factory DiscoveryFeedState({
+  const factory DiscoveryState({
     @Default(<Document>{}) Set<Document> results,
     @Default(<Document>{}) Set<Document> removedResults,
     required int cardIndex,
@@ -21,15 +21,15 @@ class DiscoveryFeedState with _$DiscoveryFeedState {
     required bool isInErrorState,
     ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
     @Default(false) bool shouldUpdateNavBar,
-  }) = _DiscoveryFeedState;
+  }) = _DiscoveryState;
 
-  factory DiscoveryFeedState.initial() => const DiscoveryFeedState(
+  factory DiscoveryState.initial() => const DiscoveryState(
         cardIndex: 0,
         isComplete: false,
         isInErrorState: false,
       );
 
-  bool equals(DiscoveryFeedState other) =>
+  bool equals(DiscoveryState other) =>
       isFullScreen == other.isFullScreen &&
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&

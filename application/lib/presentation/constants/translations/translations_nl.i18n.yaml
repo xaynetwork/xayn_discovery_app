@@ -125,3 +125,7 @@ readerModeSettingsErrorChangesNotApplied: Wijzigingen konden niet worden toegepa
 errorGenericHeaderSomethingWentWrong: Er is iets misgegaan.
 errorGenericBodyPleaseTryAgainLater: Probeer het later nog eens.
 errorClose: Sluiten
+sourceHandlingTooltipLabel: What do you want to see less of?
+sourceHandlingTooltipHighlightedWord: What
+enableTextToSpeech: Enable text -to-speech
+settingsSectionTitleOptions: Options
