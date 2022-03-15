@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
 import '../../test_utils/utils.dart';
@@ -9,19 +12,26 @@ void main() {
   late PaymentScreenManager manager;
   late MockGetSubscriptionDetailsUseCase getSubscriptionDetailsUseCase;
   late MockPurchaseSubscriptionUseCase purchaseSubscriptionUseCase;
-  late MockCheckSubscriptionActiveUseCase checkSubscriptionActiveUseCase;
+  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   setUp(() {
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
-    checkSubscriptionActiveUseCase = MockCheckSubscriptionActiveUseCase();
+    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
     errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
+
+    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+        .thenAnswer((_) async => SubscriptionStatus.initial());
+
     manager = PaymentScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
-      checkSubscriptionActiveUseCase,
+      getSubscriptionStatusUseCase,
+      listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
       errorMessageMapper,
     );

@@ -6,6 +6,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -226,8 +227,10 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 : UserReaction.negative,
             context: FeedbackContext.explicit,
           ),
-          onOpenUrl: () =>
-              discoveryCardManager.openWebResourceUrl(widget.document),
+          onOpenUrl: () => discoveryCardManager.openWebResourceUrl(
+            widget.document,
+            CurrentView.reader,
+          ),
           onBookmarkPressed: onBookmarkPressed,
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,

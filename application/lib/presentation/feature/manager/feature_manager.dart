@@ -12,7 +12,7 @@ const FeatureMap kInitialFeatureMap = {
   Feature.featuresScreen:
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
   Feature.discoveryEngineReportOverlay: false,
-  Feature.payment: false,
+  Feature.payment: EnvironmentHelper.kIsDebug,
 };
 
 @lazySingleton

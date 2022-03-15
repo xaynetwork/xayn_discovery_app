@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -61,7 +62,10 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
             ? UserReaction.neutral
             : UserReaction.negative,
       ),
-      onOpenUrl: () => discoveryCardManager.openWebResourceUrl(widget.document),
+      onOpenUrl: () => discoveryCardManager.openWebResourceUrl(
+        widget.document,
+        CurrentView.story,
+      ),
       onBookmarkPressed: onBookmarkPressed,
       onBookmarkLongPressed: onBookmarkLongPressed(state),
       isBookmarked: state.isBookmarked,
