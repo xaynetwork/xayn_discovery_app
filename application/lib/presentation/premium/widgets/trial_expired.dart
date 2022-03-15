@@ -21,28 +21,35 @@ class TrialExpired extends StatelessWidget {
   /// Handler for when the promo code button was tapped.
   final VoidCallback _onPromoCode;
 
+  /// Custom content paddding.
+  final EdgeInsetsGeometry? _padding;
+
   const TrialExpired({
     Key? key,
     required PurchasableProduct product,
     required VoidCallback onSubscribe,
     required VoidCallback onPromoCode,
     VoidCallback? onCancel,
+    EdgeInsetsGeometry? padding,
   })  : _product = product,
         _onSubscribe = onSubscribe,
         _onPromoCode = onPromoCode,
         _onCancel = onCancel,
+        _padding = padding,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final spacer2_5 = SizedBox(height: R.dimen.unit2_5);
+    final spacer3 = SizedBox(height: R.dimen.unit3);
 
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+        padding: _padding ?? EdgeInsets.symmetric(horizontal: R.dimen.unit3),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            spacer3,
             _buildTitle(),
             _buildPricing(),
             _buildPerks(),
@@ -84,31 +91,54 @@ class TrialExpired extends StatelessWidget {
           .map((it) => SettingsCardData.fromTile(it))
           .toList(growable: false));
 
-  Widget _buildSubscribeNow() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          if (_onCancel != null)
-            Expanded(
-              child: TextButton(
-                  child: Text(
-                    R.strings.bottomSheetCancel,
-                    style: R.styles.mBoldStyle.copyWith(
-                      color: R.colors.secondaryActionText,
-                    ),
-                  ),
-                  onPressed: _onCancel),
-            ),
-          SizedBox(
-            width: R.dimen.unit,
-          ),
+  Widget _buildSubscribeNow() {
+    final cancelButton = TextButton(
+      child: Text(
+        R.strings.bottomSheetCancel,
+        style: R.styles.mBoldStyle.copyWith(
+          color: R.colors.secondaryActionText,
+        ),
+      ),
+      onPressed: _onCancel,
+    );
+
+    final spacer = SizedBox(
+      width: R.dimen.unit,
+    );
+
+    final subscribeNowButton = AppRaisedButton.text(
+      onPressed: _onSubscribe,
+      text: R.strings.subscriptionSubscribeNow,
+    );
+
+    final loadingButton = AppRaisedButton(
+      child: SizedBox(
+        width: R.dimen.unit2_5,
+        height: R.dimen.unit2_5,
+        child: CircularProgressIndicator(
+          color: R.colors.brightIcon,
+          strokeWidth: R.dimen.unit0_25,
+        ),
+      ),
+      onPressed: () {},
+    );
+
+    final isLoading = _product.status == PurchasableProductStatus.pending;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        if (_onCancel != null)
           Expanded(
-            child: AppRaisedButton.text(
-              onPressed: _onSubscribe,
-              text: R.strings.subscriptionSubscribeNow,
-            ),
+            child: cancelButton,
           ),
-        ],
-      );
+        spacer,
+        Expanded(
+          child: isLoading ? loadingButton : subscribeNowButton,
+        ),
+      ],
+    );
+  }
 
   Widget _buildSubscriptionOptions() => Center(
         child: TextButton(

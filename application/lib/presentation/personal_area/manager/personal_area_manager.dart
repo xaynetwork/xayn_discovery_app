@@ -1,5 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 
 abstract class PersonalAreaNavActions {
@@ -16,12 +22,58 @@ abstract class PersonalAreaNavActions {
 
 @lazySingleton
 class PersonalAreaManager extends Cubit<PersonalAreaState>
+    with UseCaseBlocHelper<PersonalAreaState>
     implements PersonalAreaNavActions {
   final PersonalAreaNavActions _navActions;
+  final FeatureManager _featureManager;
+  final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
+  final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
 
   PersonalAreaManager(
     this._navActions,
-  ) : super(PersonalAreaState.initial());
+    this._featureManager,
+    this._getSubscriptionStatusUseCase,
+    this._listenSubscriptionStatusUseCase,
+  ) : super(PersonalAreaState.initial()) {
+    _init();
+  }
+
+  bool _initDone = false;
+  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler;
+  late SubscriptionStatus _subscriptionStatus;
+
+  void _init() async {
+    scheduleComputeState(() async {
+      // read values
+      _subscriptionStatus = await _getSubscriptionStatusUseCase
+          .singleOutput(PurchasableIds.subscription);
+
+      // attach listeners
+      _subscriptionStatusHandler = consume(
+        _listenSubscriptionStatusUseCase,
+        initialData: PurchasableIds.subscription,
+      );
+
+      _initDone = true;
+    });
+  }
+
+  @override
+  Future<PersonalAreaState?> computeState() async {
+    if (!_initDone) return null;
+    PersonalAreaState buildReady() => PersonalAreaState(
+          isPaymentEnabled: _featureManager.isPaymentEnabled,
+          subscriptionStatus: _subscriptionStatus,
+        );
+    return fold(_subscriptionStatusHandler)
+        .foldAll((subscriptionStatus, _) async {
+      if (subscriptionStatus != null) {
+        _subscriptionStatus = subscriptionStatus;
+      }
+
+      return buildReady();
+    });
+  }
 
   @override
   void onHomeNavPressed() => _navActions.onHomeNavPressed();
