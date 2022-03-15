@@ -20,13 +20,13 @@ import 'change_document_feedback_mixin_test.mocks.dart';
   CrudExplicitDocumentFeedbackUseCase,
 ])
 void main() {
-  late MockDiscoveryEngine engine;
+  late MockAppDiscoveryEngine engine;
   late MockCrudExplicitDocumentFeedbackUseCase
       crudExplicitDocumentFeedbackUseCase;
   final documents = {DocumentId()};
 
   setUp(() async {
-    engine = MockDiscoveryEngine();
+    engine = MockAppDiscoveryEngine();
     crudExplicitDocumentFeedbackUseCase =
         MockCrudExplicitDocumentFeedbackUseCase();
 

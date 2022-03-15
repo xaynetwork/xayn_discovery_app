@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_search_term_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
@@ -23,11 +24,11 @@ import '../../presentation/test_utils/widget_test_utils.dart';
 
 void main() {
   late ActiveSearchManager Function() buildManager;
-  late DiscoveryEngine engine;
+  late AppDiscoveryEngine engine;
 
   setUp(() async {
     await setupWidgetTest();
-    engine = MockDiscoveryEngine();
+    engine = MockAppDiscoveryEngine();
     di
       ..unregister<DiscoveryEngine>()
       ..registerSingleton<DiscoveryEngine>(engine);
@@ -55,6 +56,7 @@ void main() {
     'GIVEN fresh manager THEN the state is DiscoveryFeedState.initial()',
     build: () {
       when(engine.engineEvents).thenAnswer((_) => const Stream.empty());
+      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
       when(engine.restoreSearch()).thenAnswer(
         (_) async => RestoreSearchSucceeded(
           const ActiveSearch(
@@ -83,6 +85,7 @@ void main() {
       );
 
       when(engine.engineEvents).thenAnswer((_) => Stream.value(restoreEvent));
+      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
       when(engine.restoreSearch()).thenAnswer(
         (_) async => restoreEvent,
       );
@@ -107,6 +110,7 @@ void main() {
           const EngineExceptionRaised(EngineExceptionReason.genericError),
         ),
       );
+      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
       return buildManager();
     },
     verify: (bloc) {
