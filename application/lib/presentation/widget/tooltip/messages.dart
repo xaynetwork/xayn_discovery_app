@@ -7,6 +7,7 @@ import 'package:xayn_design/xayn_design.dart'
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/collection_messages.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/document_filter_messages.dart';
 
 class TooltipKeys {
   static const feedSettingsScreenMaxSelectedCountries =
@@ -36,6 +37,8 @@ abstract class XaynMessageProvider {
           return bookmarkMessages.entries;
         case XaynMessageSet.collection:
           return collectionMessages.entries;
+        case XaynMessageSet.sourceHandling:
+          return sourceHandlingMessages.entries;
       }
     }).expand((it) => it));
   }
@@ -45,6 +48,7 @@ enum XaynMessageSet {
   activeSearch,
   bookmark,
   collection,
+  sourceHandling,
 }
 
 typedef OnToolTipError = void Function(TooltipKey);
