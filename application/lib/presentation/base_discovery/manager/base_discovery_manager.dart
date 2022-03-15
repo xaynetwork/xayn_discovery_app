@@ -273,13 +273,19 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         : fold2(
             cardIndexConsumer,
             crudExplicitDocumentFeedbackConsumer,
-          ).foldAll((
-            cardIndex,
-            explicitDocumentFeedback,
-            errorReport,
-          ) =>
-            foldHandler(
-                cardIndex, explicitDocumentFeedback, null, errorReport));
+          ).foldAll(
+            (
+              cardIndex,
+              explicitDocumentFeedback,
+              errorReport,
+            ) =>
+                foldHandler(
+              cardIndex,
+              explicitDocumentFeedback,
+              null,
+              errorReport,
+            ),
+          );
   }
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
