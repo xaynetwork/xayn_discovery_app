@@ -52,4 +52,5 @@ class PurchasableProduct extends Equatable {
 
 extension PurchasableProductStatusExtension on PurchasableProductStatus {
   bool get isPurchased => this == PurchasableProductStatus.purchased;
+  bool get isRestored => this == PurchasableProductStatus.restored;
 }

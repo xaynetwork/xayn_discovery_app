@@ -7,7 +7,9 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
@@ -23,15 +25,16 @@ import '../test_utils/widget_test_utils.dart';
 
 void main() {
   late StreamController<SettingsScreenState> streamController;
-  const stateReady = SettingsScreenState.ready(
-      theme: AppTheme.system,
-      appVersion: AppVersion(
-        version: '1.2.3',
-        build: '321',
-      ),
-      isPaymentEnabled: false,
-      isTtsEnabled: true,
-      trialEndDate: null) as SettingsScreenStateReady;
+  final stateReady = SettingsScreenState.ready(
+    theme: AppTheme.system,
+    appVersion: const AppVersion(
+      version: '1.2.3',
+      build: '321',
+    ),
+    isPaymentEnabled: false,
+    isTtsEnabled: true,
+    subscriptionStatus: SubscriptionStatus.initial(),
+  ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 
   setUp(() async {
@@ -170,7 +173,7 @@ void main() {
         manager.stream,
 
         // actual click happened here
-        manager.openExternalUrl(url),
+        manager.openExternalUrl(url, CurrentView.settings),
       ]);
       verifyNoMoreInteractions(manager);
     }
