@@ -128,15 +128,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   @override
   void handleLoadMore() => requestNextFeedBatch();
 
-  /// Configuration was updated, we now ask for fresh documents, under the
-  /// new market settings.
-  @override
-  void didChangeMarkets() {
-    requestNextFeedBatch();
-
-    super.didChangeMarkets();
-  }
-
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
   }
@@ -155,6 +146,15 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     handleActivityStatus(false);
 
     _discoveryFeedNavActions.onPersonalAreaNavPressed();
+  }
+
+  @override
+  void resetParameters() {
+    resetCardIndex();
+    // clears the current pending observation, if any...
+    observeDocument();
+    // clear the inner-stored current observation...
+    resetObservedDocument();
   }
 
   @override
@@ -205,8 +205,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         };
 
     return foldEngineEvent(
-      restoreFeedSucceeded: (event) =>
-          self.isChangingMarkets ? const <Document>{} : event.items.toSet(),
+      restoreFeedSucceeded: (event) => event.items.toSet(),
       nextFeedBatchRequestSucceeded: (event) =>
           {...state.results, ...event.items},
       documentsUpdated: (event) => state.results

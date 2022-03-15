@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engi
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin EngineEventsMixin<T> on UseCaseBlocHelper<T> {
-  UseCaseValueStream<EngineEvent>? engineEvents;
+  late final UseCaseValueStream<EngineEvent> engineEvents;
   bool _didStartConsuming = false;
 
   @override

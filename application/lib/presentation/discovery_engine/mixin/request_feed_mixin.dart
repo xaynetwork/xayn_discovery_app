@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/check_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_feed_documents_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
@@ -12,6 +14,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   late final RequestNextFeedBatchUseCase requestNextFeedBatchUseCase =
       di.get<RequestNextFeedBatchUseCase>();
+  final Completer _preambleCompleter = Completer();
   UseCaseSink<None, EngineEvent>? _useCaseSink;
   bool _didStartConsuming = false;
 
@@ -21,13 +24,16 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     _useCaseSink!(none);
   }
 
+  void resetParameters();
+
   @override
   Stream<T> get stream {
     if (!_didStartConsuming) {
       _startConsuming();
     }
 
-    return super.stream;
+    return Stream.fromFuture(_preambleCompleter.future)
+        .asyncExpand((_) => super.stream);
   }
 
   UseCaseSink<None, EngineEvent> _getUseCaseSink() {
@@ -45,20 +51,29 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
 
     if (areMarketsOutdated) {
       final closeDocumentsUseCase = di.get<CloseFeedDocumentsUseCase>();
+      final changeMarketsUseCase = di.get<CheckMarketsUseCase>();
 
       consume(requestFeedUseCase, initialData: none)
           .transform(
             (out) => out
+                .doOnData((_) => resetParameters())
                 .map((it) => it is RestoreFeedSucceeded
                     ? it.items.map((it) => it.documentId).toSet()
                     : const <DocumentId>{})
-                .followedBy(closeDocumentsUseCase),
+                .followedBy(closeDocumentsUseCase)
+                .mapTo(none)
+                .followedBy(changeMarketsUseCase)
+                .doOnData((_) => _preambleCompleter.complete())
+                .mapTo(none)
+                .followedBy(requestNextFeedBatchUseCase),
           )
           .autoSubscribe(
               onError: (e, s) => onError(e, s ?? StackTrace.current));
     } else {
       final maybeRequestNextBatchUseCase =
           _MaybeRequestNextBatchWhenEmptyUseCase(requestNextFeedBatchUseCase);
+
+      _preambleCompleter.complete();
 
       consume(requestFeedUseCase, initialData: none)
           .transform((out) => out.switchedBy(maybeRequestNextBatchUseCase))
