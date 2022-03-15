@@ -25,7 +25,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
       lastKnownAppVersion: appVersion,
-      trialEndDate: trialEndDate ?? DateTime.now(),
+      trialEndDate: trialEndDate ?? DateTime.now().add(freeTrialDuration),
     );
   }
 

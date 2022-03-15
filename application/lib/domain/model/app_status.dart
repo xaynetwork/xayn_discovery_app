@@ -5,10 +5,10 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'app_status.freezed.dart';
 
+const freeTrialDuration = Duration(days: 7);
+
 @freezed
 class AppStatus extends DbEntity with _$AppStatus {
-  static const freeTrialDuration = Duration(days: 7);
-
   factory AppStatus._({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
