@@ -37,7 +37,7 @@ void main() {
         );
       },
       input: [
-        DbEntityCrudUseCaseIn.store(
+        DbCrudIn.store(
           ExplicitDocumentFeedback(
             id: uid,
             userReaction: UserReaction.positive,
@@ -82,7 +82,7 @@ void main() {
         );
       },
       input: [
-        const DbEntityCrudUseCaseIn.watch(
+        const DbCrudIn.watch(
           uid,
         )
       ],
@@ -120,7 +120,7 @@ void main() {
         );
       },
       input: [
-        const DbEntityCrudUseCaseIn.remove(
+        const DbCrudIn.remove(
           uid,
         )
       ],

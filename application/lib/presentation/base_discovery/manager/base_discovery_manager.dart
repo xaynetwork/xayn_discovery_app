@@ -2,7 +2,6 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
-import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
@@ -77,10 +76,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// When explicit feedback changes, we need to emit a new state,
   /// so that the feed can redraw like/dislike borders.
   /// This consumer watches all the active feed Documents.
-  late final UseCaseValueStream<ExplicitDocumentFeedback>
-      crudExplicitDocumentFeedbackConsumer = consume(
+  late final crudExplicitDocumentFeedbackConsumer = consume(
     crudExplicitDocumentFeedbackUseCase,
-    initialData: const DbEntityCrudUseCaseIn.watchAll(),
+    initialData: const DbCrudIn.watchAll(),
   );
 
   /// requires to be implemented by concrete classes or mixins
@@ -90,6 +88,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   bool get didReachEnd;
 
   Document? get currentObservedDocument => _observedDocument;
+
   int? get currentCardIndex => _cardIndex;
 
   void handleNavigateIntoCard() {
@@ -240,8 +239,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         if (nextCardIndex != null) _cardIndex = nextCardIndex;
 
         final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
+        final feedback =
+            explicitDocumentFeedback?.mapOrNull(single: (v) => v.value);
         final hasExplicitDocumentFeedbackChanged =
-            state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
+            state.latestExplicitDocumentFeedback != feedback;
 
         final nextState = DiscoveryState(
           results: sets.results,
@@ -251,7 +252,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           isFullScreen: _isFullScreen,
           didReachEnd: didReachEnd,
           cardIndex: _cardIndex!,
-          latestExplicitDocumentFeedback: explicitDocumentFeedback,
+          latestExplicitDocumentFeedback: feedback,
           shouldUpdateNavBar:
               hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
         );
