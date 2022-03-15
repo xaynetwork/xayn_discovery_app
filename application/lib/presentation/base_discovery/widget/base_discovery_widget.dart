@@ -67,7 +67,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       BlocConsumer<BaseDiscoveryManager, DiscoveryState>(
         bloc: widget.manager,
         listener: (context, state) {
-          if (state.isInErrorState) showErrorBottomSheet();
+          ///TODO: Uncomment once TY-2592 is fixed
+          // if (state.isInErrorState) showErrorBottomSheet();
         },
         builder: (context, state) {
           // this is for:
