@@ -48,8 +48,8 @@ void main() {
       input: [bookmark1.id],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.watch(),
           bookmarksRepository.getById(bookmark1.id),
+          bookmarksRepository.watch(),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
@@ -73,8 +73,8 @@ void main() {
       input: [bookmark1.id],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.watch(),
           bookmarksRepository.getById(bookmark1.id),
+          bookmarksRepository.watch(),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },

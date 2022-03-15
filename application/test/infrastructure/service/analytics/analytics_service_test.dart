@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
-import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
-import 'analytics_service_test_utils.dart';
+
 import 'analytics_service_test.mocks.dart';
+import 'analytics_service_test_utils.dart';
 
 @GenerateMocks([Amplitude])
 void main() async {
@@ -26,7 +26,7 @@ void main() async {
       analyticsService.send(mockInAppEvent);
       verify(amplitude.logEvent(
         mockInAppEvent.type,
-        eventProperties: mockInAppEvent.properties.toSerializableMap(),
+        eventProperties: mockInAppEvent.properties,
       )).called(1);
     });
 

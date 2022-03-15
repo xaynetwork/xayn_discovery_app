@@ -13,6 +13,7 @@ class SettingsScreenState with _$SettingsScreenState {
     required AppTheme theme,
     required AppVersion appVersion,
     required bool isPaymentEnabled,
+    required bool isTtsEnabled,
     required SubscriptionStatus subscriptionStatus,
   }) = SettingsScreenStateReady;
 }

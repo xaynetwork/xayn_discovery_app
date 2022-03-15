@@ -186,6 +186,11 @@ class TranslationsDe extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Bitte versuche es später noch einmal.""";
   String get errorClose => """Schließen""";
+  String get sourceHandlingTooltipLabel =>
+      """What do you want to see less of?""";
+  String get sourceHandlingTooltipHighlightedWord => """What""";
+  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get settingsSectionTitleOptions => """Options""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -196,6 +201,7 @@ class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nicht gefunden :(""";
   String get itemAlreadyOwned => """Du bist bereits abonniert""";
   String get transactionFailed => """Zahlungsvorgang fehlgeschlagen""";
+  String get noActiveSubscriptionFound => """No active subscription found""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -323,6 +329,8 @@ Map<String, String> get translationsDeMap => {
       """paymentFlowError.itemAlreadyOwned""": """Du bist bereits abonniert""",
       """paymentFlowError.transactionFailed""":
           """Zahlungsvorgang fehlgeschlagen""",
+      """paymentFlowError.noActiveSubscriptionFound""":
+          """No active subscription found""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Willst Du diese Sammlung wirklich löschen?""",
       """bottomSheetMoveSingleBookmark""":
@@ -333,4 +341,8 @@ Map<String, String> get translationsDeMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Bitte versuche es später noch einmal.""",
       """errorClose""": """Schließen""",
+      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipHighlightedWord""": """What""",
+      """enableTextToSpeech""": """Enable text -to-speech""",
+      """settingsSectionTitleOptions""": """Options""",
     };

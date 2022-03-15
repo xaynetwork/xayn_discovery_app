@@ -2,7 +2,6 @@ import 'package:xayn_design/xayn_design.dart'
     show
         CustomizedTextualNotification,
         MessageFactory,
-        TextualNotification,
         TooltipKey,
         TooltipParams;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -10,7 +9,6 @@ import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages
 import 'package:xayn_discovery_app/presentation/widget/tooltip/collection_messages.dart';
 
 class TooltipKeys {
-  static const activeSearchDisabled = TooltipKey('activeSearchDisabled');
   static const feedSettingsScreenMaxSelectedCountries =
       TooltipKey('feedSettingsScreenMaxSelectedCountries');
   static const feedSettingsScreenMinSelectedCountries =
@@ -22,12 +20,7 @@ abstract class XaynMessageProvider {
   XaynMessageProvider._();
 
   static MessageFactory of(Iterable<XaynMessageSet> sets) {
-    const _defaultMessage = TextualNotification();
     final activeSearchMessages = {
-      TooltipKeys.activeSearchDisabled: TooltipParams(
-        label: R.strings.comingSoon,
-        builder: (_) => _defaultMessage,
-      ),
       TooltipKeys.feedSettingsScreenMinSelectedCountries: TooltipParams(
         label: R.strings.feedSettingsScreenMinSelectedCountriesError,
         builder: (_) => CustomizedTextualNotification(
