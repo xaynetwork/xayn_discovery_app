@@ -7,10 +7,10 @@ import 'package:xayn_discovery_engine/discovery_engine.dart' hide Configuration;
 import '../../../presentation/test_utils/utils.dart';
 
 void main() {
-  late MockDiscoveryEngine engine;
+  late MockAppDiscoveryEngine engine;
 
   setUp(() async {
-    engine = MockDiscoveryEngine();
+    engine = MockAppDiscoveryEngine();
   });
 
   void _setUpSuccess() => when(engine.changeConfiguration(
