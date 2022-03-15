@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
@@ -30,7 +31,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -217,15 +219,36 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
+  /// switch for testing between feature manager or settings TTS
+  final bool _ttsViaFeatureFlag = true;
+
   void handleSpeechStart({
     required String headline,
     required String languageCode,
     required bool forceStart,
     Uri? uri,
   }) async {
-    final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
+    checkUsingSettings() async {
+      final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
 
-    if (!isTtsEnabled || (_hasBeenReadAloud && !forceStart)) return;
+      if (!isTtsEnabled) return false;
+
+      return !_hasBeenReadAloud || forceStart;
+    }
+
+    checkUsingFeatureFlag() async {
+      final featureManager = di.get<FeatureManager>();
+
+      if (!featureManager.isTtsEnabled) return false;
+
+      return !_hasBeenReadAloud || forceStart;
+    }
+
+    final checker =
+        _ttsViaFeatureFlag ? checkUsingFeatureFlag : checkUsingSettings;
+    final useTts = await checker();
+
+    if (!useTts) return;
 
     await _textToSpeechUseCase.stopCurrentSpeech();
 
