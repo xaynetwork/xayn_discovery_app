@@ -161,7 +161,7 @@ class TranslationsPl extends Translations {
   String get subscriptionRestore => """Przywróć subskrypcję""";
   String get subscriptionPromoCode => """Mam kod promocyjny""";
   String get subscriptionDisclaimer =>
-      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
+      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """Subskrybujesz""";
   String get doneButtonTitle => """Gotowy""";
   String get subscriptionRenewsMonthlyText =>
@@ -307,7 +307,7 @@ Map<String, String> get translationsPlMap => {
       """subscriptionRestore""": """Przywróć subskrypcję""",
       """subscriptionPromoCode""": """Mam kod promocyjny""",
       """subscriptionDisclaimer""":
-          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
+          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """Subskrybujesz""",
       """doneButtonTitle""": """Gotowy""",
       """subscriptionRenewsMonthlyText""":

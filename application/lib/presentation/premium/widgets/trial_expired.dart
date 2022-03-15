@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 
 /// A widget which we use to highlight the 'perks' of subscribing,
 /// includes a number of handlers to cancel, subscribe or enter a promo code.
@@ -62,6 +64,7 @@ class TrialExpired extends StatelessWidget {
             _buildSubscribeNow(),
             _buildSubscriptionOptions(),
             _buildFooter(),
+            spacer3,
           ],
         ),
       ),
@@ -203,10 +206,22 @@ class TrialExpired extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter() => Text(
-        R.strings.subscriptionDisclaimer,
+  Widget _buildFooter() => SuperRichText(
+        text: R.strings.subscriptionDisclaimer,
         style: R.styles.sStyle.copyWith(
           color: R.colors.secondaryText,
         ),
+        othersMarkers: [
+          MarkerText.withUrl(
+            marker: '__',
+            urls: [
+              Urls.termsAndConditions,
+              Urls.privacyPolicy,
+            ],
+            style: R.styles.sStyle.copyWith(
+              color: R.colors.primaryAction,
+            ),
+          ),
+        ],
       );
 }

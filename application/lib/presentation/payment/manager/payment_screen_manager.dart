@@ -140,6 +140,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           _subscriptionStatus = subscriptionStatus;
         }
 
+        if (subscriptionStatus != null) {
+          _subscriptionStatus = subscriptionStatus;
+        }
+
         final paymentFlowError =
             errors.firstWhereOrNull((element) => element is PaymentFlowError)
                 as PaymentFlowError?;
