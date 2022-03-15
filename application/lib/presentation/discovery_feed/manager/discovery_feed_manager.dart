@@ -124,13 +124,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     );
   }
 
-  @override
-  void willChangeMarkets() => scheduleComputeState(() {
-        super.willChangeMarkets();
-        // closes the current feed...
-        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
-      });
-
   /// Triggers the discovery engine to load more results.
   @override
   void handleLoadMore() => requestNextFeedBatch();
@@ -138,7 +131,11 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   /// Configuration was updated, we now ask for fresh documents, under the
   /// new market settings.
   @override
-  void didChangeMarkets() => requestNextFeedBatch();
+  void didChangeMarkets() {
+    requestNextFeedBatch();
+
+    super.didChangeMarkets();
+  }
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
@@ -208,7 +205,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         };
 
     return foldEngineEvent(
-      restoreFeedSucceeded: (event) => {...state.results, ...event.items},
+      restoreFeedSucceeded: (event) =>
+          self.isChangingMarkets ? const <Document>{} : event.items.toSet(),
       nextFeedBatchRequestSucceeded: (event) =>
           {...state.results, ...event.items},
       documentsUpdated: (event) => state.results

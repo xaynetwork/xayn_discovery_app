@@ -78,7 +78,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
-  bool _didChangeMarkets = false;
+  bool _isChangingMarkets = false;
+
+  bool get isChangingMarkets => _isChangingMarkets;
 
   bool get isLoading;
 
@@ -187,19 +189,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     );
   }
 
-  void handleCheckMarkets() => checkMarkets();
-
   /// Configuration will change, after this method completes.
   @override
-  void willChangeMarkets() => scheduleComputeState(() {
-        resetCardIndex();
-        _didChangeMarkets = true;
+  void willChangeMarkets() {
+    resetCardIndex();
+    // clears the current pending observation, if any...
+    observeDocument();
+    // clear the inner-stored current observation...
+    resetObservedDocument();
 
-        // clears the current pending observation, if any...
-        observeDocument();
-        // clear the inner-stored current observation...
-        resetObservedDocument();
-      });
+    _isChangingMarkets = true;
+  }
+
+  @override
+  void didChangeMarkets() {}
 
   void resetCardIndex() => _cardIndex = 0;
 
@@ -217,56 +220,66 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
 
   @override
-  Future<DiscoveryState?> computeState() async => fold3(
-        cardIndexConsumer,
-        crudExplicitDocumentFeedbackConsumer,
-        engineEvents,
-      ).foldAll((
-        cardIndex,
-        explicitDocumentFeedback,
-        engineEvent,
-        errorReport,
-      ) async {
-        _cardIndex ??= cardIndex;
+  Stream<DiscoveryState> get stream =>
+      Stream.fromFuture(checkMarkets()).asyncExpand((_) => super.stream);
 
-        if (_cardIndex == null) return null;
+  @override
+  Future<DiscoveryState?> computeState() async {
+    foldHandler(
+      int? cardIndex,
+      ExplicitDocumentFeedback? explicitDocumentFeedback,
+      EngineEvent? engineEvent,
+      ErrorReport errorReport,
+    ) async {
+      _cardIndex ??= cardIndex;
 
-        late Set<Document> results;
+      if (_cardIndex == null) return null;
 
-        if (_didChangeMarkets) {
-          _didChangeMarkets = false;
+      final results = foldEngineEvent(this)(engineEvent);
+      final isInErrorState =
+          errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
+      final sets = await maybeReduceCardCount(results);
+      final nextCardIndex = sets.nextCardIndex;
 
-          results = <Document>{};
-        } else {
-          results = foldEngineEvent(this)(engineEvent);
-        }
+      if (nextCardIndex != null) _cardIndex = nextCardIndex;
 
-        final isInErrorState =
-            errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
-        final sets = await maybeReduceCardCount(results);
-        final nextCardIndex = sets.nextCardIndex;
+      final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
+      final hasExplicitDocumentFeedbackChanged =
+          state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
 
-        if (nextCardIndex != null) _cardIndex = nextCardIndex;
+      final nextState = DiscoveryState(
+        results: sets.results,
+        removedResults: sets.removedResults,
+        isComplete: !isLoading,
+        isInErrorState: isInErrorState,
+        isFullScreen: _isFullScreen,
+        cardIndex: _cardIndex!,
+        latestExplicitDocumentFeedback: explicitDocumentFeedback,
+        shouldUpdateNavBar:
+            hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
+      );
 
-        final hasIsFullScreenChanged = state.isFullScreen != _isFullScreen;
-        final hasExplicitDocumentFeedbackChanged =
-            state.latestExplicitDocumentFeedback != explicitDocumentFeedback;
+      // guard against same-state emission
+      if (!nextState.equals(state)) return nextState;
+    }
 
-        final nextState = DiscoveryState(
-          results: sets.results,
-          removedResults: sets.removedResults,
-          isComplete: !isLoading,
-          isInErrorState: isInErrorState,
-          isFullScreen: _isFullScreen,
-          cardIndex: _cardIndex!,
-          latestExplicitDocumentFeedback: explicitDocumentFeedback,
-          shouldUpdateNavBar:
-              hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
-        );
-
-        // guard against same-state emission
-        if (!nextState.equals(state)) return nextState;
-      });
+    return engineEvents != null
+        ? fold3(
+            cardIndexConsumer,
+            crudExplicitDocumentFeedbackConsumer,
+            engineEvents!,
+          ).foldAll(foldHandler)
+        : fold2(
+            cardIndexConsumer,
+            crudExplicitDocumentFeedbackConsumer,
+          ).foldAll((
+            cardIndex,
+            explicitDocumentFeedback,
+            errorReport,
+          ) =>
+            foldHandler(
+                cardIndex, explicitDocumentFeedback, null, errorReport));
+  }
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;

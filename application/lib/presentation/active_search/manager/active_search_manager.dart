@@ -105,6 +105,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   void didChangeMarkets() async {
+    super.didChangeMarkets();
+
     final searchTerm = await getLastSearchTerm();
 
     if (searchTerm != null) {
