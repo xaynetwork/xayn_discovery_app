@@ -5,33 +5,31 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'app_status.freezed.dart';
 
-const freeTrialDuration = Duration(days: 7);
-
 @freezed
 class AppStatus extends DbEntity with _$AppStatus {
   factory AppStatus._({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
-    required DateTime trialEndDate,
+    required DateTime firstAppLaunchDate,
     required UniqueId id,
   }) = _AppStatus;
 
   factory AppStatus({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
-    required DateTime trialEndDate,
+    required DateTime firstAppLaunchDate,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
         lastKnownAppVersion: lastKnownAppVersion,
-        trialEndDate: trialEndDate,
+        firstAppLaunchDate: firstAppLaunchDate,
         id: AppStatus.globalId,
       );
 
   factory AppStatus.initial() => AppStatus._(
         numberOfSessions: 0,
         lastKnownAppVersion: AppVersion.initial(),
-        trialEndDate: DateTime.now().add(freeTrialDuration),
+        firstAppLaunchDate: DateTime.now(),
         id: AppStatus.globalId,
       );
 
