@@ -90,7 +90,6 @@ Available options:
 
 Build and publish to MS AppCenter 
 Available options:
- - keyFile 
  - keyId 
  - issuerId 
  - clean : [true, false]
@@ -106,6 +105,7 @@ Available options:
  - watch : [true, false]
  - upload_to_appcenter : [true, false]
  - version_name 
+ - keyFile 
 
 
 ### update_assets

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
-import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
+
 import 'analytics_service_test_utils.dart';
 import 'marketing_analytics_service_test.mocks.dart';
 
@@ -39,7 +39,7 @@ void main() async {
       marketingAnalyticsService.send(mockInAppEvent);
       verify(appsFlyer.logEvent(
         mockInAppEvent.type,
-        mockInAppEvent.properties.toSerializableMap(),
+        mockInAppEvent.properties,
       )).called(1);
     });
 

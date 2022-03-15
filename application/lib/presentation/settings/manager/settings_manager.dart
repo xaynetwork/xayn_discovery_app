@@ -11,6 +11,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_th
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
@@ -39,6 +42,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
   final ShareUriUseCase _shareUriUseCase;
+  final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
+  final SaveTtsPreferenceUseCase _saveTtsPreferenceUseCase;
+  final ListenTtsPreferenceUseCase _listenTtsPreferenceUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
 
@@ -51,6 +57,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._extractLogUseCase,
     this._settingsNavActions,
     this._shareUriUseCase,
+    this._getTtsPreferenceUseCase,
+    this._saveTtsPreferenceUseCase,
+    this._listenTtsPreferenceUseCase,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
@@ -61,30 +70,36 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   bool _initDone = false;
   late AppTheme _theme;
   late final AppVersion _appVersion;
+  late bool _ttsPreference;
   late SubscriptionStatus _subscriptionStatus;
-  late final UseCaseValueStream<AppTheme> _appThemeHandler;
-  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler;
+  late final UseCaseValueStream<AppTheme> _appThemeHandler =
+      consume(_listenAppThemeUseCase, initialData: none);
+  late final UseCaseValueStream<bool> _ttsPreferenceHandler =
+      consume(_listenTtsPreferenceUseCase, initialData: none);
+  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
+      consume(
+    _listenSubscriptionStatusUseCase,
+    initialData: PurchasableIds.subscription,
+  );
 
   void _init() async {
     scheduleComputeState(() async {
       // read values
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
+      _ttsPreference = await _getTtsPreferenceUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
-
-      // attach listeners
-      _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
-      _subscriptionStatusHandler = consume(
-        _listenSubscriptionStatusUseCase,
-        initialData: PurchasableIds.subscription,
-      );
 
       _initDone = true;
     });
   }
 
-  void saveTheme(AppTheme theme) => _saveAppThemeUseCase.call(theme);
+  void saveTheme(AppTheme theme) => _saveAppThemeUseCase(theme);
+
+  void saveTextToSpeechPreference(bool ttsPreference) {
+    _saveTtsPreferenceUseCase(ttsPreference);
+  }
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
@@ -102,12 +117,20 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
+          isTtsEnabled: _ttsPreference,
           subscriptionStatus: _subscriptionStatus,
         );
-    return fold2(_appThemeHandler, _subscriptionStatusHandler)
-        .foldAll((appTheme, subscriptionStatus, _) async {
+    return fold3(
+      _appThemeHandler,
+      _ttsPreferenceHandler,
+      _subscriptionStatusHandler,
+    ).foldAll((appTheme, ttsPreference, subscriptionStatus, _) async {
       if (appTheme != null) {
         _theme = appTheme;
+      }
+
+      if (ttsPreference != null) {
+        _ttsPreference = ttsPreference;
       }
 
       if (subscriptionStatus != null) {

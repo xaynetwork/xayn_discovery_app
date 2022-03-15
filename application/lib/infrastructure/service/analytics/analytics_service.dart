@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
 
 const String _kCoresEntry = 'cores';
 const String _kCoresSocketEntry = 'socket';
@@ -58,7 +57,7 @@ class AmplitudeAnalyticsService
     safeRun(() async {
       await _amplitude.logEvent(
         event.type,
-        eventProperties: event.properties.toSerializableMap(),
+        eventProperties: event.properties,
       );
 
       logger.i('Analytics event has been fired:\n${{

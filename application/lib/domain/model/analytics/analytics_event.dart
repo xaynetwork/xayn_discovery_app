@@ -1,3 +1,5 @@
+import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
+
 const String _kTimestampEntry = 'timeStamp';
 
 abstract class AnalyticsEvent {
@@ -8,5 +10,5 @@ abstract class AnalyticsEvent {
       : properties = {
           _kTimestampEntry: DateTime.now().toUtc().toIso8601String(),
           if (properties != null) ...properties,
-        };
+        }.toSerializableMap();
 }

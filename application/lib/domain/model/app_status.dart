@@ -7,12 +7,10 @@ part 'app_status.freezed.dart';
 
 @freezed
 class AppStatus extends DbEntity with _$AppStatus {
-  static const freeTrialDuration = Duration(days: 7);
-
   factory AppStatus._({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
-    required DateTime trialEndDate,
+    required DateTime firstAppLaunchDate,
     required UniqueId id,
     required UniqueId userId,
   }) = _AppStatus;
@@ -20,13 +18,13 @@ class AppStatus extends DbEntity with _$AppStatus {
   factory AppStatus({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
-    required DateTime trialEndDate,
+    required DateTime firstAppLaunchDate,
     required UniqueId userId,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
         lastKnownAppVersion: lastKnownAppVersion,
-        trialEndDate: trialEndDate,
+        firstAppLaunchDate: firstAppLaunchDate,
         id: AppStatus.globalId,
         userId: userId,
       );
@@ -34,7 +32,7 @@ class AppStatus extends DbEntity with _$AppStatus {
   factory AppStatus.initial() => AppStatus._(
         numberOfSessions: 0,
         lastKnownAppVersion: AppVersion.initial(),
-        trialEndDate: DateTime.now().add(freeTrialDuration),
+        firstAppLaunchDate: DateTime.now(),
         id: AppStatus.globalId,
         userId: UniqueId(),
       );
