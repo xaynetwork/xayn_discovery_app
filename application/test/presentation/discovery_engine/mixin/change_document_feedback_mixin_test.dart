@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_se
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../test_utils/fakes.dart';
@@ -80,7 +79,7 @@ void main() {
 
   blocTest<_TestBloc, bool>(
     'WHEN changing feedback THEN this is passed to the engine and finally the engine emits an engine event ',
-    build: () => _TestBloc(),
+    build: () => _TestBloc(di.get<EngineEventsUseCase>()),
     act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
       userReaction: UserReaction.positive,
@@ -99,7 +98,7 @@ void main() {
 
   blocTest<_TestBloc, bool>(
     'WHEN changing explicit feedback THEN expect explicit document feedback ',
-    build: () => _TestBloc(),
+    build: () => _TestBloc(di.get<EngineEventsUseCase>()),
     act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
       userReaction: UserReaction.positive,
@@ -123,7 +122,7 @@ void main() {
 
   blocTest<_TestBloc, bool>(
     'WHEN changing implicit feedback THEN expect implicit document feedback ',
-    build: () => _TestBloc(),
+    build: () => _TestBloc(di.get<EngineEventsUseCase>()),
     act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
       userReaction: UserReaction.positive,
@@ -138,11 +137,15 @@ void main() {
 }
 
 class _TestBloc extends Cubit<bool>
-    with
-        UseCaseBlocHelper<bool>,
-        EngineEventsMixin<bool>,
-        ChangeUserReactionMixin<bool> {
-  _TestBloc() : super(false);
+    with UseCaseBlocHelper<bool>, ChangeUserReactionMixin<bool> {
+  _TestBloc(this.engineEventsUseCase) : super(false);
+
+  final EngineEventsUseCase engineEventsUseCase;
+
+  late final UseCaseValueStream<EngineEvent> engineEvents = consume(
+    engineEventsUseCase,
+    initialData: none,
+  );
 
   @override
   Future<bool?> computeState() =>
