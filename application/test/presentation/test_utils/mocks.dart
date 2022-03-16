@@ -24,14 +24,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_store
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
@@ -115,6 +116,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RequestCodeRedemptionSheetUseCase,
   AppStatusRepository,
   ListenSubscriptionStatusUseCase,
+  RenameDefaultCollectionUseCase,
 ])
 class Mocks {
   Mocks._();
