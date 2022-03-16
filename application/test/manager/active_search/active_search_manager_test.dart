@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_search_term_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
@@ -18,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../../presentation/test_utils/fakes.dart';
 import '../../presentation/test_utils/utils.dart';
@@ -38,7 +38,6 @@ void main() {
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
-          GetSearchTermUseCase(engine),
           EngineEventsUseCase(engine),
           FetchCardIndexUseCase(feedRepository),
           UpdateCardIndexUseCase(feedRepository),
@@ -69,6 +68,8 @@ void main() {
           [fakeDocument],
         ),
       );
+      when(engine.getSearchTerm()).thenAnswer(
+          (_) async => const EngineEvent.searchTermRequestSucceeded(''));
       return buildManager();
     },
     verify: (bloc) => expect(bloc.state, DiscoveryState.initial()),
@@ -91,6 +92,8 @@ void main() {
       when(engine.restoreSearch()).thenAnswer(
         (_) async => restoreEvent,
       );
+      when(engine.getSearchTerm()).thenAnswer(
+          (_) async => const EngineEvent.searchTermRequestSucceeded(''));
       return buildManager();
     },
     verify: (bloc) {
@@ -113,6 +116,8 @@ void main() {
         ),
       );
       when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(engine.getSearchTerm()).thenAnswer(
+          (_) async => const EngineEvent.searchTermRequestSucceeded(''));
       return buildManager();
     },
     verify: (bloc) {

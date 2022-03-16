@@ -1,9 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_search_term_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_search_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_search_failed_event.dart';
@@ -48,7 +46,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
-    this._getSearchTermUseCase,
     EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
@@ -66,7 +63,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
         );
 
-  final GetSearchTermUseCase _getSearchTermUseCase;
   final ActiveSearchNavActions _activeSearchNavActions;
   bool _isLoading = true;
 
@@ -106,13 +102,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   void handleLoadMore() => requestNextSearchBatch();
-
-  Future<String?> getLastSearchTerm() async {
-    final engineEvent = await _getSearchTermUseCase.singleOutput(none);
-    final didSucceed = engineEvent is SearchTermRequestSucceeded;
-
-    return didSucceed ? engineEvent.searchTerm : null;
-  }
 
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(
       BaseDiscoveryManager manager) {
