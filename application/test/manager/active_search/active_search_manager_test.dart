@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
@@ -57,7 +58,8 @@ void main() {
     'GIVEN fresh manager THEN the state is DiscoveryFeedState.initial()',
     build: () {
       when(engine.engineEvents).thenAnswer((_) => const Stream.empty());
-      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(engine.areMarketsOutdated(FeedType.search))
+          .thenAnswer((_) async => false);
       when(engine.restoreSearch()).thenAnswer(
         (_) async => RestoreSearchSucceeded(
           const ActiveSearch(
@@ -88,7 +90,8 @@ void main() {
       );
 
       when(engine.engineEvents).thenAnswer((_) => Stream.value(restoreEvent));
-      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(engine.areMarketsOutdated(FeedType.search))
+          .thenAnswer((_) async => false);
       when(engine.restoreSearch()).thenAnswer(
         (_) async => restoreEvent,
       );
@@ -115,7 +118,8 @@ void main() {
           const EngineExceptionRaised(EngineExceptionReason.genericError),
         ),
       );
-      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(engine.areMarketsOutdated(FeedType.search))
+          .thenAnswer((_) async => false);
       when(engine.getSearchTerm()).thenAnswer(
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
       return buildManager();
