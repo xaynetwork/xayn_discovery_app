@@ -21,9 +21,13 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       di.get<RequestNextSearchBatchUseCase>();
   late final RequestSearchUseCase searchUseCase =
       di.get<RequestSearchUseCase>();
+  final Completer _preambleCompleter = Completer();
   UseCaseSink<None, EngineEvent>? _nextBatchUseCaseSink;
   UseCaseSink<String, EngineEvent>? _searchUseCaseSink;
   bool _didStartConsuming = false;
+  String? _lastUsedSearchTerm;
+
+  String? get lastUsedSearchTerm => _lastUsedSearchTerm;
 
   void search(String queryTerm) {
     _searchUseCaseSink ??= _getSearchUseCaseSink();
@@ -45,7 +49,8 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       _startConsuming();
     }
 
-    return super.stream;
+    return Stream.fromFuture(_preambleCompleter.future)
+        .asyncExpand((_) => super.stream);
   }
 
   UseCaseSink<None, EngineEvent> _getNextBatchUseCaseSink() {
@@ -66,10 +71,11 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     final areMarketsOutdated =
         await areMarketsOutdatedUseCase.singleOutput(none);
 
+    _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
+
     if (areMarketsOutdated) {
       final closeSearchUseCase = di.get<CloseSearchUseCase>();
       final changeMarketsUseCase = di.get<CheckMarketsUseCase>();
-      final getSearchTermUseCase = di.get<GetSearchTermUseCase>();
 
       consume(requestSearchUseCase, initialData: none)
           .transform(
@@ -80,26 +86,38 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
                       ? it.items.map((it) => it.documentId).toSet()
                       : const <DocumentId>{},
                 )
-                .doOnData(_closeSearch)
+                .doOnData(_closeExplicitFeedback)
                 .mapTo(none)
                 .followedBy(closeSearchUseCase)
                 .mapTo(none)
                 .followedBy(changeMarketsUseCase)
-                .mapTo(none)
-                .followedBy(getSearchTermUseCase)
-                .whereType<SearchTermRequestSucceeded>()
-                .map((it) => it.searchTerm)
+                .doOnData(_preambleCompleter.complete)
+                .map((_) => _lastUsedSearchTerm)
+                .whereType<String>()
                 .doOnData(search),
           )
           .autoSubscribe(
               onError: (e, s) => onError(e, s ?? StackTrace.current));
     } else {
+      _preambleCompleter.complete();
+
       consume(requestSearchUseCase, initialData: none).autoSubscribe(
           onError: (e, s) => onError(e, s ?? StackTrace.current));
     }
   }
 
-  void _closeSearch(Set<DocumentId> documents) {
+  Future<String?> _restoreLastUsedSearchTerm() async {
+    final getSearchTermUseCase = di.get<GetSearchTermUseCase>();
+    final result = await getSearchTermUseCase.singleOutput(none);
+
+    if (result is SearchTermRequestSucceeded) {
+      return result.searchTerm;
+    }
+
+    return null;
+  }
+
+  void _closeExplicitFeedback(Set<DocumentId> documents) {
     final crudExplicitDocumentFeedbackUseCase =
         di.get<CrudExplicitDocumentFeedbackUseCase>();
 
