@@ -16,4 +16,22 @@ mixin OpenExternalUrlMixin<T> on UseCaseBlocHelper<T> {
       ),
     );
   }
+
+  void openExternalEmail(String email) {
+    _urlOpener.openEmail(email);
+    _sendAnalyticsUseCase(
+      OpenExternalUrlEvent(
+        url: email,
+      ),
+    );
+  }
+
+  void openExternalTel(String tel) {
+    _urlOpener.openTel(tel);
+    _sendAnalyticsUseCase(
+      OpenExternalUrlEvent(
+        url: tel,
+      ),
+    );
+  }
 }
