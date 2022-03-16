@@ -188,6 +188,8 @@ class TranslationsPl extends Translations {
   String get sourceHandlingTooltipHighlightedWord => """What""";
   String get enableTextToSpeech => """Enable text -to-speech""";
   String get settingsSectionTitleOptions => """Options""";
+  String get personalAreaContact => """Contact""";
+  String get settingsContactUs => """Contact""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -341,4 +343,6 @@ Map<String, String> get translationsPlMap => {
       """sourceHandlingTooltipHighlightedWord""": """What""",
       """enableTextToSpeech""": """Enable text -to-speech""",
       """settingsSectionTitleOptions""": """Options""",
+      """personalAreaContact""": """Contact""",
+      """settingsContactUs""": """Contact""",
     };
