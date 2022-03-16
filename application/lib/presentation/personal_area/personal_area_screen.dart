@@ -153,11 +153,8 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           "${Urls.xaynSupportEmail}\n".link(
               onTap: () => _manager.openExternalEmail(Urls.xaynSupportEmail)),
           "For Publishers: ".span(),
-          "${Urls.xaynPressEmail}\n".link(
+          Urls.xaynPressEmail.link(
               onTap: () => _manager.openExternalEmail(Urls.xaynPressEmail)),
-          "Phone: ".span(),
-          Urls.xaynPressPhone
-              .link(onTap: () => _manager.openExternalTel(Urls.xaynPressPhone)),
         ].span(),
         textAlign: TextAlign.start,
       );
