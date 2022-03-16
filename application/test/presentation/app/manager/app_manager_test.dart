@@ -17,6 +17,7 @@ void main() {
   late MockCreateOrGetDefaultCollectionUseCase
       createOrGetDefaultCollectionUseCase;
   late MockAppSettingsRepository appSettingsRepository;
+  late MockRenameDefaultCollectionUseCase renameDefaultCollectionUseCase;
   late Collection mockDefaultCollection;
 
   setUp(() {
@@ -26,6 +27,7 @@ void main() {
     incrementAppSessionUseCase = MockIncrementAppSessionUseCase();
     createOrGetDefaultCollectionUseCase =
         MockCreateOrGetDefaultCollectionUseCase();
+    renameDefaultCollectionUseCase = MockRenameDefaultCollectionUseCase();
     appSettingsRepository = MockAppSettingsRepository();
 
     when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
@@ -49,6 +51,7 @@ void main() {
         listenAppThemeUseCase,
         incrementAppSessionUseCase,
         createOrGetDefaultCollectionUseCase,
+        renameDefaultCollectionUseCase,
         appSettingsRepository,
       );
 
@@ -63,6 +66,21 @@ void main() {
               .call(R.strings.defaultCollectionNameReadLater))
           .called(1);
       verifyNoMoreInteractions(incrementAppSessionUseCase);
+    },
+  );
+
+  blocTest<AppManager, AppState>(
+    'WHEN maybeUpdateDefaultCollectionName is called THEN call the useCase',
+    build: create,
+    act: (manager) => manager.maybeUpdateDefaultCollectionName(),
+    verify: (manager) {
+      verify(
+        renameDefaultCollectionUseCase.call(
+          R.strings.defaultCollectionNameReadLater,
+        ),
+      ).called(1);
+
+      verifyNoMoreInteractions(renameDefaultCollectionUseCase);
     },
   );
 }
