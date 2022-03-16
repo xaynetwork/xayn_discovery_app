@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_search_term_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
@@ -38,6 +39,7 @@ void main() {
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
           GetSearchTermUseCase(engine),
+          EngineEventsUseCase(engine),
           FetchCardIndexUseCase(feedRepository),
           UpdateCardIndexUseCase(feedRepository),
           SendAnalyticsUseCase(

@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
@@ -49,6 +50,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   DiscoveryFeedManager(
     this._discoveryFeedNavActions,
+    EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
@@ -57,6 +59,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
+          engineEventsUseCase,
           _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,

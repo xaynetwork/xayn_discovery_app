@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -14,7 +15,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/engine_events_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -37,19 +37,9 @@ const int _kThresholdDurationSecondsImplicitLike = 5;
 abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     with
         UseCaseBlocHelper<DiscoveryState>,
-        EngineEventsMixin<DiscoveryState>,
         ObserveDocumentMixin<DiscoveryState>,
         ChangeUserReactionMixin<DiscoveryState> {
-  BaseDiscoveryManager(
-    this.feedType,
-    this.foldEngineEvent,
-    this.fetchCardIndexUseCase,
-    this.updateCardIndexUseCase,
-    this.sendAnalyticsUseCase,
-    this.crudExplicitDocumentFeedbackUseCase,
-    this.hapticFeedbackMediumUseCase,
-  ) : super(DiscoveryState.initial());
-
+  final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
   final UpdateCardIndexUseCase updateCardIndexUseCase;
@@ -58,6 +48,27 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   final FeedType feedType;
 
+  /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
+  final _documentCurrentViewMode = Expando<DocumentViewMode>();
+  Document? _observedDocument;
+  int? _cardIndex;
+  bool _isFullScreen = false;
+
+  BaseDiscoveryManager(
+    this.feedType,
+    this.engineEventsUseCase,
+    this.foldEngineEvent,
+    this.fetchCardIndexUseCase,
+    this.updateCardIndexUseCase,
+    this.sendAnalyticsUseCase,
+    this.crudExplicitDocumentFeedbackUseCase,
+    this.hapticFeedbackMediumUseCase,
+  ) : super(DiscoveryState.initial());
+
+  late final UseCaseValueStream<EngineEvent> engineEvents = consume(
+    engineEventsUseCase,
+    initialData: none,
+  );
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: feedType)
           .transform((out) => out.take(1));
@@ -71,12 +82,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     initialData: const DbEntityCrudUseCaseIn.watchAll(),
   );
 
-  /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
-  final _documentCurrentViewMode = Expando<DocumentViewMode>();
-  Document? _observedDocument;
-  int? _cardIndex;
-  bool _isFullScreen = false;
-
+  /// requires to be implemented by concrete classes or mixins
   bool get isLoading;
 
   Document? get currentObservedDocument => _observedDocument;
