@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/check_markets_use_case.dart';
@@ -69,7 +70,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     final requestSearchUseCase = di.get<RestoreSearchUseCase>();
     final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
     final areMarketsOutdated =
-        await areMarketsOutdatedUseCase.singleOutput(none);
+        await areMarketsOutdatedUseCase.singleOutput(FeedType.search);
 
     _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
 
@@ -89,7 +90,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
                 .doOnData(_closeExplicitFeedback)
                 .mapTo(none)
                 .followedBy(closeSearchUseCase)
-                .mapTo(none)
+                .mapTo(FeedType.search)
                 .followedBy(changeMarketsUseCase)
                 .doOnData(_preambleCompleter.complete)
                 .map((_) => _lastUsedSearchTerm)
