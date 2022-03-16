@@ -14,7 +14,9 @@ const FeatureMap kInitialFeatureMap = {
   Feature.discoveryEngineReportOverlay: false,
   Feature.payment: false,
   Feature.activeSearch:
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+  Feature.ratingDialog:
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
 };
 
 @lazySingleton
@@ -38,6 +40,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get isReaderModeSettingsEnabled => isEnabled(Feature.readerModeSettings);
 
   bool get isPaymentEnabled => isEnabled(Feature.payment);
+
+  bool get isRatingDialogEnabled => isEnabled(Feature.ratingDialog);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);

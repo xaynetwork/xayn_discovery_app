@@ -12,6 +12,7 @@ void main() {
   late MockSaveCurrentAppVersion mockSaveCurrentAppVersion;
   late MockGetAppSessionUseCase mockGetAppSessionUseCase;
   late MockInAppReview mockInAppReview;
+  late MockFeatureManager mockFeatureManager;
 
   late RatingDialogManager manager;
 
@@ -21,6 +22,7 @@ void main() {
     mockSaveCurrentAppVersion = MockSaveCurrentAppVersion();
     mockGetAppSessionUseCase = MockGetAppSessionUseCase();
     mockInAppReview = MockInAppReview();
+    mockFeatureManager = MockFeatureManager();
   });
 
   test(
@@ -33,6 +35,7 @@ void main() {
     when(mockGetAppSessionUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(3));
     when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+    when(mockFeatureManager.isRatingDialogEnabled).thenReturn(true);
 
     manager = RatingDialogManager.test(
       {1, 2, 3, 4, 5, 6, 7, 8},
@@ -41,6 +44,7 @@ void main() {
       mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
+      mockFeatureManager,
     );
 
     expect(await manager.showRatingDialogIfNeeded(), isTrue);
@@ -64,6 +68,7 @@ void main() {
       mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
+      mockFeatureManager,
     );
 
     expect(await manager.showRatingDialogIfNeeded(), isFalse);
@@ -87,6 +92,7 @@ void main() {
       mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
+      mockFeatureManager,
     );
 
     expect(await manager.showRatingDialogIfNeeded(), isTrue);
@@ -112,6 +118,7 @@ void main() {
       mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
+      mockFeatureManager,
     );
 
     expect(await manager.showRatingDialogIfNeeded(), isFalse);
@@ -138,6 +145,7 @@ void main() {
       mockSaveCurrentAppVersion,
       mockGetAppSessionUseCase,
       mockInAppReview,
+      mockFeatureManager,
     );
 
     expect(await manager.showRatingDialogIfNeeded(), isFalse);
