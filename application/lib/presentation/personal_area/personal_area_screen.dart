@@ -3,17 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/spans.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
   const PersonalAreaScreen({Key? key}) : super(key: key);
@@ -69,6 +72,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     final column = Column(
       mainAxisSize: MainAxisSize.min,
       children: _buildItems(state),
+      crossAxisAlignment: CrossAxisAlignment.start,
     );
     final bottomPadding = R.dimen.navBarHeight + R.dimen.unit2;
     final sidePadding = R.dimen.unit3;
@@ -93,9 +97,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       _buildCollection(),
       _buildHomeFeed(),
       _buildSettings(),
+      _buildContactSection(),
     ]
         .map((e) => Padding(
-              padding: EdgeInsets.only(bottom: R.dimen.unit2),
+              padding: EdgeInsets.only(bottom: R.dimen.unit5),
               child: e,
             ))
         .toList();
@@ -140,5 +145,29 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           onPressed: _manager.onSettingsNavPressed,
           key: Keys.personalAreaCardSettings,
         ),
+      );
+
+  Widget _buildContactSection() => Text.rich(
+        [
+          R.strings.personalAreaContact.bold(),
+          "\nXayn AG\nUnter den Linden 42\n10117 Berlin, Germany\n".span(),
+          "Web: ".span(),
+          "${Uri.parse(Urls.xayn).host}\n".link(
+              onTap: () =>
+                  _manager.openExternalUrl(Urls.xayn, CurrentView.settings)),
+          "Support eMail: ".span(),
+          "${Urls.xaynSupportEmail}\n".link(
+              onTap: () => _manager.openExternalEmail(
+                  Urls.xaynSupportEmail, CurrentView.settings)),
+          "For Publishers: ".span(),
+          "${Urls.xaynPressEmail}\n".link(
+              onTap: () => _manager.openExternalEmail(
+                  Urls.xaynPressEmail, CurrentView.settings)),
+          "Phone: ".span(),
+          Urls.xaynPressPhone.link(
+              onTap: () => _manager.openExternalTel(
+                  Urls.xaynPressPhone, CurrentView.settings)),
+        ].span(),
+        textAlign: TextAlign.start,
       );
 }
