@@ -6,11 +6,17 @@ import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
+import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart'
+    as domain;
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/get_feed_type_markets_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/save_feed_type_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
@@ -22,8 +28,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  late final GetFeedTypeMarketsUseCase _getFeedTypeMarketsUseCase;
+  late final SaveFeedTypeMarketsUseCase _saveFeedTypeMarketsUseCase;
   late DiscoveryEngine _engine;
-  late Set<FeedMarket> _localFeedMarkets, _localSearchMarkets;
 
   final StreamController<String> _inputLog =
       StreamController<String>.broadcast();
@@ -39,10 +46,14 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
+    required GetFeedTypeMarketsUseCase getFeedTypeMarketsUseCase,
+    required SaveFeedTypeMarketsUseCase saveFeedTypeMarketsUseCase,
     bool initialized = true,
   })  : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
         _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
-        _sendAnalyticsUseCase = sendAnalyticsUseCase {
+        _sendAnalyticsUseCase = sendAnalyticsUseCase,
+        _getFeedTypeMarketsUseCase = getFeedTypeMarketsUseCase,
+        _saveFeedTypeMarketsUseCase = saveFeedTypeMarketsUseCase {
     if (!initialized) {
       startInitializing();
     }
@@ -53,11 +64,15 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
+    required GetFeedTypeMarketsUseCase getFeedTypeMarketsUseCase,
+    required SaveFeedTypeMarketsUseCase saveFeedTypeMarketsUseCase,
   }) =>
       AppDiscoveryEngine(
         getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
         saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
         sendAnalyticsUseCase: sendAnalyticsUseCase,
+        getFeedTypeMarketsUseCase: getFeedTypeMarketsUseCase,
+        saveFeedTypeMarketsUseCase: saveFeedTypeMarketsUseCase,
         initialized: false,
       );
 
@@ -75,8 +90,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
     await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
 
-    _localFeedMarkets = _localSearchMarkets = await _getLocalMarkets();
-
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
@@ -84,7 +97,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
       maxItemsPerSearchBatch: 2,
-      feedMarkets: _localFeedMarkets,
+      feedMarkets: await _getLocalMarkets(),
       manifest: manifest,
     );
 
@@ -104,26 +117,39 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<bool> areMarketsOutdated(FeedType feedType) async {
     const equality = SetEquality();
     final markets = await _getLocalMarkets();
+    final feedTypeMarkets =
+        await _getFeedTypeMarketsUseCase.singleOutput(feedType);
 
-    switch (feedType) {
-      case FeedType.feed:
-        return !equality.equals(_localFeedMarkets, markets);
-      case FeedType.search:
-        return !equality.equals(_localSearchMarkets, markets);
-    }
+    return !equality.equals(feedTypeMarkets.feedMarkets, markets);
   }
 
   Future<EngineEvent> updateMarkets(FeedType feedType) async {
     final nextMarkets = await _getLocalMarkets();
+    late final UniqueId id;
 
     switch (feedType) {
       case FeedType.feed:
-        _localFeedMarkets = nextMarkets;
+        id = FeedTypeMarkets.feedId;
         break;
       case FeedType.search:
-        _localSearchMarkets = nextMarkets;
+        id = FeedTypeMarkets.searchId;
         break;
     }
+
+    await _saveFeedTypeMarketsUseCase.singleOutput(
+      FeedTypeMarkets(
+        id: id,
+        feedType: feedType,
+        feedMarkets: nextMarkets
+            .map(
+              (it) => domain.FeedMarket(
+                countryCode: it.countryCode,
+                languageCode: it.langCode,
+              ),
+            )
+            .toSet(),
+      ),
+    );
 
     return await changeConfiguration(feedMarkets: nextMarkets);
   }
