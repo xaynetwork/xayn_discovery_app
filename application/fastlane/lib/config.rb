@@ -121,14 +121,14 @@ module Config
     Flavors::INTERNAL => {
       Platforms::IOS => {
         Keys::ID => "com.xayn.discovery.internal",
-        Keys::NAME => "Discovery",
+        Keys::NAME => "Xayn News[i]",
         Keys::APPCENTER_TARGET => "Discovery-App-internal",
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_INTERNAL_TOKEN",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.discovery.internal",
-        Keys::NAME => "Discovery",
+        Keys::NAME => "Xayn News[i]",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-internal",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_INTERNAL_TOKEN",
         Keys::BUILD_NUMBER_OFFSET => internalBuildNumberOffset,
@@ -137,7 +137,7 @@ module Config
     Flavors::BETA => {
       Platforms::IOS => {
         Keys::ID => "com.xayn.discovery",
-        Keys::NAME => "Xayn 3.0",
+        Keys::NAME => "Xayn News",
         # Discoveru is correct!! :P
         Keys::APPCENTER_TARGET => "Discoveru-App-iOS-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_BETA_TOKEN",
@@ -145,7 +145,7 @@ module Config
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.discovery",
-        Keys::NAME => "Xayn 3.0",
+        Keys::NAME => "Xayn News",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
@@ -154,11 +154,11 @@ module Config
     Flavors::PRODUCTION => {
       Platforms::IOS => {
         Keys::ID => "com.xayn.search",
-        Keys::NAME => "Discovery App",
+        Keys::NAME => "Xayn News",
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.search",
-        Keys::NAME => "Discovery App",
+        Keys::NAME => "Xayn News",
       },
     },
   }
