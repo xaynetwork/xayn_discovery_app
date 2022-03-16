@@ -49,15 +49,18 @@ class _DiscoveryFeedState
       void onBookmarkPressed() =>
           managers.discoveryCardManager.toggleBookmarkDocument(document);
 
-      void onBookmarkLongPressed() => showAppBottomSheet(
-            context,
-            builder: (_) => MoveDocumentToCollectionBottomSheet(
-              document: document,
-              provider: managers.discoveryCardManager.state.processedDocument
-                  ?.getProvider(document.resource),
-              onError: (tooltipKey) => showTooltip(tooltipKey),
-            ),
-          );
+      void onBookmarkLongPressed() {
+        managers.discoveryCardManager.triggerHapticFeedbackMedium();
+        showAppBottomSheet(
+          context,
+          builder: (_) => MoveDocumentToCollectionBottomSheet(
+            document: document,
+            provider: managers.discoveryCardManager.state.processedDocument
+                ?.getProvider(document.resource),
+            onError: (tooltipKey) => showTooltip(tooltipKey),
+          ),
+        );
+      }
 
       void onEditReaderModeSettingsPressed() => toggleOverlay(
             (_) => EditReaderModeSettingsMenu(
