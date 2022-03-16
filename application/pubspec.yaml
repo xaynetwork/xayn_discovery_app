@@ -53,6 +53,7 @@ dependencies:
   provider: 6.0.2
   purchases_flutter: 3.9.3
   rxdart: 0.27.3
+  sprintf: 6.0.0
   share_plus: 3.0.5
   shimmer: 2.0.0
   story:

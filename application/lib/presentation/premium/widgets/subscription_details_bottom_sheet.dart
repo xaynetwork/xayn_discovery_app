@@ -6,6 +6,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
+import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
@@ -71,8 +72,8 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
         subscriptionStatus.subscriptionType == SubscriptionType.promoCode
             ? R.strings.promoCodeValidUntilText
             : R.strings.subscriptionRenewsMonthlyText;
-    final infoStringWithDate = infoString.replaceFirst(
-        '%s', '$_kTextPlaceholder$dateString$_kTextPlaceholder');
+    final infoStringWithDate =
+        infoString.format('$_kTextPlaceholder$dateString$_kTextPlaceholder');
     return SuperRichText(
       text: infoStringWithDate,
       maxLines: 2,

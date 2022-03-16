@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
@@ -82,7 +83,7 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
       key: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
       params: TooltipParams(
         label: R.strings.feedSettingsScreenMaxSelectedCountriesError
-            .replaceFirst('%s', state.maxSelectedCountryAmount.toString()),
+            .format(state.maxSelectedCountryAmount.toString()),
         builder: (_) => CustomizedTextualNotification(
           labelTextStyle: R.styles.tooltipHighlightTextStyle,
         ),

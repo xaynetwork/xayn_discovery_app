@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dar
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
@@ -19,6 +20,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._listenAppThemeUseCase,
     this._incrementAppSessionUseCase,
     this._createOrGetDefaultCollectionUseCase,
+    this._renameDefaultCollectionUseCase,
     AppSettingsRepository appSettingsRepository,
   ) : super(AppState(appTheme: appSettingsRepository.settings.appTheme)) {
     _init();
@@ -28,6 +30,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   final IncrementAppSessionUseCase _incrementAppSessionUseCase;
   final CreateOrGetDefaultCollectionUseCase
       _createOrGetDefaultCollectionUseCase;
+  final RenameDefaultCollectionUseCase _renameDefaultCollectionUseCase;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
 
   bool _initDone = false;
@@ -41,6 +44,10 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
       _initDone = true;
     });
   }
+
+  Future<void> maybeUpdateDefaultCollectionName() =>
+      _renameDefaultCollectionUseCase
+          .call(R.strings.defaultCollectionNameReadLater);
 
   @override
   Future<AppState?> computeState() async {

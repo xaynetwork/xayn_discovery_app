@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -44,7 +43,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         SubscriptionTrialBannerStateMixin,
         OverlayStateMixin,
         ErrorHandlingMixin {
-  late final StreamSubscription<BuildContext> _navBarUpdateListener;
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   final FeatureManager featureManager = di.get();
@@ -99,7 +97,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   @override
   void dispose() {
     _cardViewController.dispose();
-    _navBarUpdateListener.cancel();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -112,19 +109,13 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
     widget.manager.handleCheckMarkets();
 
-    _navBarUpdateListener = widget.manager.stream
-        .where((state) => state.shouldUpdateNavBar)
-        .map((_) => context)
-        .listen(NavBarContainer.updateNavBar);
-
     super.initState();
   }
 
   Widget _buildFeedView(DiscoveryState state) {
-    return LayoutBuilder(builder: (_, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-
       final results = state.results;
       final totalResults = results.length;
       // ensure that we don't overflow the index.
@@ -134,6 +125,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       final cardIndex = min(totalResults - 1, state.cardIndex);
 
       removeObsoleteCardManagers(state.removedResults);
+
+      if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
       if (state.results.isEmpty || cardIndex == -1) {
         return _buildLoadingIndicator();
