@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/check_markets_use_case.dart';
@@ -50,7 +51,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     final requestFeedUseCase = di.get<RequestFeedUseCase>();
     final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
     final areMarketsOutdated =
-        await areMarketsOutdatedUseCase.singleOutput(none);
+        await areMarketsOutdatedUseCase.singleOutput(FeedType.feed);
 
     if (areMarketsOutdated) {
       final changeMarketsUseCase = di.get<CheckMarketsUseCase>();
@@ -63,7 +64,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
                     ? it.items.map((it) => it.documentId).toSet()
                     : const <DocumentId>{})
                 .asyncMap(_closeExplicitFeedback)
-                .mapTo(none)
+                .mapTo(FeedType.feed)
                 .followedBy(changeMarketsUseCase)
                 .doOnData(_preambleCompleter.complete)
                 .mapTo(none)

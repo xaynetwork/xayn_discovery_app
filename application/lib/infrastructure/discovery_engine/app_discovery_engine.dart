@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -22,7 +23,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late DiscoveryEngine _engine;
-  late Set<FeedMarket> _localMarkets;
+  late Set<FeedMarket> _localFeedMarkets, _localSearchMarkets;
 
   final StreamController<String> _inputLog =
       StreamController<String>.broadcast();
@@ -74,7 +75,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
     await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
 
-    _localMarkets = await _getLocalMarkets();
+    _localFeedMarkets = _localSearchMarkets = await _getLocalMarkets();
 
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
@@ -83,7 +84,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
       maxItemsPerSearchBatch: 2,
-      feedMarkets: _localMarkets,
+      feedMarkets: _localFeedMarkets,
       manifest: manifest,
     );
 
@@ -100,17 +101,31 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     });
   }
 
-  Future<bool> areMarketsOutdated() async {
+  Future<bool> areMarketsOutdated(FeedType feedType) async {
     const equality = SetEquality();
     final markets = await _getLocalMarkets();
 
-    return !equality.equals(_localMarkets, markets);
+    switch (feedType) {
+      case FeedType.feed:
+        return !equality.equals(_localFeedMarkets, markets);
+      case FeedType.search:
+        return !equality.equals(_localSearchMarkets, markets);
+    }
   }
 
-  Future<EngineEvent> updateMarkets() async {
-    _localMarkets = await _getLocalMarkets();
+  Future<EngineEvent> updateMarkets(FeedType feedType) async {
+    final nextMarkets = await _getLocalMarkets();
 
-    return await changeConfiguration(feedMarkets: _localMarkets);
+    switch (feedType) {
+      case FeedType.feed:
+        _localFeedMarkets = nextMarkets;
+        break;
+      case FeedType.search:
+        _localSearchMarkets = nextMarkets;
+        break;
+    }
+
+    return await changeConfiguration(feedMarkets: nextMarkets);
   }
 
   Future<void> _saveInitialFeedMarket(
