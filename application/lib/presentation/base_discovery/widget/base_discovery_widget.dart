@@ -19,7 +19,7 @@ import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
-import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
+import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// A widget which displays a list of discovery results.
@@ -135,7 +135,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
-      if (!state.isComplete) return _buildLoadingIndicator();
+      if (!state.isComplete) return _buildLoadingIndicator(notchSize);
 
       _cardViewController.index = cardIndex;
 
@@ -178,10 +178,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     });
   }
 
-  Widget _buildLoadingIndicator() => const Center(
-        ///TODO replace with shimmer
-        child: WidgetTestableProgressIndicator(),
-      );
+  Widget _buildLoadingIndicator(double notchSize) =>
+      ShimmeringFeedView(notchSize: notchSize);
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
       (int index) {
