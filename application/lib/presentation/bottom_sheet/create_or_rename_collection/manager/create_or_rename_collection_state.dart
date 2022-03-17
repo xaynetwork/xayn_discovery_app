@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 
 part 'create_or_rename_collection_state.freezed.dart';
 
@@ -11,7 +12,7 @@ class CreateOrRenameCollectionState with _$CreateOrRenameCollectionState {
   const factory CreateOrRenameCollectionState({
     @Default('') String collectionName,
     Collection? newCollection,
-    String? errorMessage,
+    @Default(ErrorObject()) ErrorObject error,
   }) = _CreateOrRenameCollectionState;
 
   factory CreateOrRenameCollectionState.initial() =>
