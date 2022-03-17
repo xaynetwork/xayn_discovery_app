@@ -24,12 +24,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// A widget which displays a list of discovery results.
 abstract class BaseDiscoveryWidget<T extends BaseDiscoveryManager>
     extends StatefulWidget {
-  final T manager;
-
-  const BaseDiscoveryWidget({
-    Key? key,
-    required this.manager,
-  }) : super(key: key);
+  const BaseDiscoveryWidget({Key? key}) : super(key: key);
 }
 
 abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
@@ -44,24 +39,28 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   final FeatureManager featureManager = di.get();
+
+  /// no need to dispose here, handled by the Card Widget itself
   DiscoveryCardController? currentCardController;
 
   double _dragDistance = .0;
+
+  T get manager;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        return widget.manager.handleActivityStatus(true);
+        return manager.handleActivityStatus(true);
       default:
-        return widget.manager.handleActivityStatus(false);
+        return manager.handleActivityStatus(false);
     }
   }
 
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<BaseDiscoveryManager, DiscoveryState>(
-        bloc: widget.manager,
+        bloc: manager,
         builder: (context, state) {
           // this is for:
           // - any menu bar
@@ -91,6 +90,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   @override
   void dispose() {
     _cardViewController.dispose();
+    featureManager.close();
 
     WidgetsBinding.instance!.removeObserver(this);
 
@@ -100,8 +100,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
-
-    widget.manager.handleCheckMarkets();
 
     super.initState();
   }
@@ -123,13 +121,15 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
       if (state.results.isEmpty || cardIndex == -1) {
-        return _buildLoadingIndicator();
+        return state.isComplete
+            ? _buildNoResultsIndicator()
+            : _buildLoadingIndicator();
       }
 
       _cardViewController.index = cardIndex;
 
       onIndexChanged(int index) {
-        widget.manager.handleIndexChanged(index);
+        manager.handleIndexChanged(index);
         _ratingDialogManager.handleIndexChanged(index);
       }
 
@@ -153,7 +153,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           isFullScreen: state.isFullScreen,
         ),
         itemCount: totalResults,
-        onFinalIndex: widget.manager.handleLoadMore,
+        onFinalIndex: manager.handleLoadMore,
         onIndexChanged: totalResults > 0 ? onIndexChanged : null,
         isFullScreen: state.isFullScreen,
         fullScreenOffsetFraction: _dragDistance / DiscoveryCard.dragThreshold,
@@ -176,6 +176,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         return document.documentId.toString();
       };
 
+  /// todo: we are awaiting a proper design here
+  Widget _buildNoResultsIndicator() => const Center(
+        child: Text('Sorry, no results!'),
+      );
+
   Widget Function(BuildContext, int) _itemBuilder({
     required Set<Document> results,
     required bool isPrimary,
@@ -190,13 +195,13 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         onTapPrimary() {
           hideTooltip();
 
-          widget.manager.handleNavigateIntoCard();
+          manager.handleNavigateIntoCard();
         }
 
         onTapSecondary() => _cardViewController.jump(JumpDirection.down);
 
         if (isPrimary) {
-          widget.manager.handleViewType(
+          manager.handleViewType(
             document,
             isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
           );
@@ -208,7 +213,10 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 document: document,
                 discoveryCardManager: managers.discoveryCardManager,
                 imageManager: managers.imageManager,
-                onDiscard: widget.manager.handleNavigateOutOfCard,
+                onDiscard: () {
+                  manager.triggerHapticFeedbackMedium();
+                  return manager.handleNavigateOutOfCard();
+                },
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
                     currentCardController = controller,
@@ -231,6 +239,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               managers.discoveryCardManager.state.explicitDocumentUserReaction,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
+          onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
         );
       };
 

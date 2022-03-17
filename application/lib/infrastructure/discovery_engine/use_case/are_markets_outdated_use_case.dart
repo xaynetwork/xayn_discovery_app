@@ -4,15 +4,15 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
-class CheckMarketsUseCase extends UseCase<None, EngineEvent> {
+class AreMarketsOutdatedUseCase extends UseCase<None, bool> {
   final DiscoveryEngine _engine;
 
-  CheckMarketsUseCase(this._engine);
+  AreMarketsOutdatedUseCase(this._engine);
 
   @override
-  Stream<EngineEvent> transaction(None param) async* {
+  Stream<bool> transaction(None param) async* {
     final engine = _engine as AppDiscoveryEngine;
 
-    yield await engine.updateMarkets();
+    yield await engine.areMarketsOutdated();
   }
 }
