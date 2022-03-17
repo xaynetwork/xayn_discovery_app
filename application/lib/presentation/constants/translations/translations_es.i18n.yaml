@@ -131,3 +131,7 @@ enableTextToSpeech: Enable text -to-speech
 settingsSectionTitleOptions: Options
 personalAreaContact: Contact
 settingsContactUs: Contact
+contactSectionWeb: 'Web:'
+contactSectionSupportEmail: 'Support eMail:'
+contactSectionForPublishers: 'For Publishers:'
+contactSectionPhone: 'Phone:'

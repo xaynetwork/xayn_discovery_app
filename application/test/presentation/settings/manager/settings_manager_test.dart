@@ -14,9 +14,9 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_se
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
@@ -235,7 +235,7 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
-        shareUriUseCase.call(Uri.parse(Urls.download)),
+        shareUriUseCase.call(Uri.parse(Constants.download)),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);

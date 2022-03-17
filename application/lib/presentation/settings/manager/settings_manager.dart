@@ -17,9 +17,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
@@ -111,7 +111,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         primaryColor: R.colors.primaryAction,
       );
 
-  void shareApp() => _shareUriUseCase.call(Uri.parse(Urls.download));
+  void shareApp() => _shareUriUseCase.call(Uri.parse(Constants.download));
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 

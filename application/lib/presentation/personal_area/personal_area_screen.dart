@@ -4,9 +4,9 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -74,7 +74,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       children: _buildItems(state),
       crossAxisAlignment: CrossAxisAlignment.start,
     );
-    final bottomPadding = R.dimen.navBarHeight + R.dimen.unit2;
+    final bottomPadding = R.dimen.navBarHeight + R.dimen.unit5;
     final sidePadding = R.dimen.unit3;
     final withPadding = Padding(
       child: column,
@@ -100,7 +100,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       _buildContactSection(),
     ]
         .map((e) => Padding(
-              padding: EdgeInsets.only(bottom: R.dimen.unit5),
+              padding: EdgeInsets.only(bottom: R.dimen.unit2),
               child: e,
             ))
         .toList();
@@ -147,27 +147,37 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         ),
       );
 
-  Widget _buildContactSection() => Text.rich(
-        [
-          R.strings.personalAreaContact.bold(),
-          "\nXayn AG\nUnter den Linden 42\n10117 Berlin, Germany\n".span(),
-          "Web: ".span(),
-          "${Uri.parse(Urls.xayn).host}\n".link(
-              onTap: () =>
-                  _manager.openExternalUrl(Urls.xayn, CurrentView.settings)),
-          "Support eMail: ".span(),
-          "${Urls.xaynSupportEmail}\n".link(
-              onTap: () => _manager.openExternalEmail(
-                  Urls.xaynSupportEmail, CurrentView.settings)),
-          "For Publishers: ".span(),
-          "${Urls.xaynPressEmail}\n".link(
-              onTap: () => _manager.openExternalEmail(
-                  Urls.xaynPressEmail, CurrentView.settings)),
-          "Phone: ".span(),
-          Urls.xaynPressPhone.link(
-              onTap: () => _manager.openExternalTel(
-                  Urls.xaynPressPhone, CurrentView.settings)),
-        ].span(),
-        textAlign: TextAlign.start,
-      );
+  Widget _buildContactSection() {
+    void onXaynSupportEmailTap() => _manager.openExternalEmail(
+        Constants.xaynSupportEmail, CurrentView.settings);
+    void onXaynPressEmailTap() => _manager.openExternalEmail(
+        Constants.xaynPressEmail, CurrentView.settings);
+    void onXaynUrlTap() =>
+        _manager.openExternalUrl(Constants.xayn, CurrentView.settings);
+
+    final space = ' '.span();
+    final newLine = '\n'.span();
+    return Text.rich(
+      [
+        R.strings.personalAreaContact.bold(),
+        Constants.xaynAddress.span(),
+        R.strings.contactSectionWeb.span(),
+        space,
+        Uri.parse(Constants.xayn).host.link(onTap: onXaynUrlTap),
+        newLine,
+        R.strings.contactSectionSupportEmail.span(),
+        space,
+        Constants.xaynSupportEmail.link(onTap: () => onXaynSupportEmailTap),
+        newLine,
+        R.strings.contactSectionForPublishers.span(),
+        space,
+        Constants.xaynPressEmail.link(onTap: onXaynPressEmailTap),
+        newLine,
+        R.strings.contactSectionPhone.span(),
+        space,
+        Constants.xaynPressPhone.span(),
+      ].span(),
+      textAlign: TextAlign.start,
+    );
+  }
 }
