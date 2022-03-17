@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
-import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
@@ -117,12 +116,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   // TODO: implement engineInputEventsLog
   Stream<String> get engineInputEventsLog => throw UnimplementedError();
-
-  @override
-  Future<EngineEvent> updateMarkets(FeedType feedType) {
-    // TODO: implement maybeUpdateMarkets
-    throw UnimplementedError();
-  }
 
   @override
   Future<EngineEvent> closeSearch() {
