@@ -194,6 +194,10 @@ class TranslationsFr extends Translations {
   String get settingsSectionTitleOptions => """Options""";
   String get personalAreaContact => """Contact""";
   String get settingsContactUs => """Contact""";
+  String get contactSectionWeb => """Web:""";
+  String get contactSectionSupportEmail => """Support eMail:""";
+  String get contactSectionForPublishers => """For Publishers:""";
+  String get contactSectionPhone => """Phone:""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -351,4 +355,8 @@ Map<String, String> get translationsFrMap => {
       """settingsSectionTitleOptions""": """Options""",
       """personalAreaContact""": """Contact""",
       """settingsContactUs""": """Contact""",
+      """contactSectionWeb""": """Web:""",
+      """contactSectionSupportEmail""": """Support eMail:""",
+      """contactSectionForPublishers""": """For Publishers:""",
+      """contactSectionPhone""": """Phone:""",
     };
