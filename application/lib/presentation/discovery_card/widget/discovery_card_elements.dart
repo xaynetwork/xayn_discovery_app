@@ -59,7 +59,7 @@ class DiscoveryCardElements extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     final timeToReadWidget = Text(
       '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.mStyle.copyWith(color: Colors.white),
+      style: R.styles.sStyle.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
