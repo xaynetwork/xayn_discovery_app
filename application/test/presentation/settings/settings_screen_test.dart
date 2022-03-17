@@ -10,9 +10,9 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -182,7 +182,7 @@ void main() {
       'WHEN "about" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Urls.aboutXayn,
+        url: Constants.aboutXayn,
         btnKey: Keys.settingsAboutXayn,
       ),
     );
@@ -191,7 +191,7 @@ void main() {
       'WHEN "carbon neutral" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Urls.carbonNeutral,
+        url: Constants.carbonNeutral,
         btnKey: Keys.settingsCarbonNeutral,
       ),
     );
@@ -200,7 +200,7 @@ void main() {
       'WHEN "imprint" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Urls.imprint,
+        url: Constants.imprint,
         btnKey: Keys.settingsImprint,
       ),
     );
@@ -209,7 +209,7 @@ void main() {
       'WHEN "privacy" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Urls.privacyPolicy,
+        url: Constants.privacyPolicy,
         btnKey: Keys.settingsPrivacyPolicy,
       ),
     );
@@ -218,7 +218,7 @@ void main() {
       'WHEN "termsAndConditions" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Urls.termsAndConditions,
+        url: Constants.termsAndConditions,
         btnKey: Keys.settingsTermsAndConditions,
       ),
     );
