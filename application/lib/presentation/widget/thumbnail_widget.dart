@@ -35,7 +35,7 @@ class Thumbnail extends StatelessWidget {
           src,
           width: width ?? R.dimen.unit3,
           height: height ?? R.dimen.unit3,
-          errorBuilder: (_, __, ___) => Thumbnail.icon(Icons.web),
+          errorBuilder: (_, __, ___) => const SizedBox(),
         ),
         super(key: key);
 
