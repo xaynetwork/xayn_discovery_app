@@ -49,6 +49,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
     final discoveryCardManager = cardManagers.discoveryCardManager;
 
     return NavBarConfig(
+      configIdDiscoveryCardScreen,
       [
         buildNavBarItemArrowLeft(
             onPressed: _discoveryCardScreenManager.onBackPressed),
