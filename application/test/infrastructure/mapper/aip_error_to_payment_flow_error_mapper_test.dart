@@ -71,8 +71,11 @@ void main() {
       'GIVEN set of PurchasesErrorCode THEN verify that every one of those returns correct $paymentError',
       () async {
         final errors = mapOfErrors[paymentError]!;
-
         final result = errors.map(mapper.map).toSet();
+        if (paymentError == PaymentFlowError.noActiveSubscriptionFound) {
+          expect(result.length, equals(0));
+          return;
+        }
         expect(result.length, equals(1));
         expect(result.first, equals(paymentError));
       },

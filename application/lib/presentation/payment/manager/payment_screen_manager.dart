@@ -111,7 +111,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
             );
           }
 
-          if (errorReport.exists(_purchaseSubscriptionHandler)) {
+          if (errorReport.exists(_purchaseSubscriptionHandler) &&
+              _paymentAction == PaymentAction.subscribe) {
             errors.add(errorReport.of(_purchaseSubscriptionHandler)!.error);
             _logError(
               'purchaseSubscription error',
@@ -119,7 +120,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
             );
           }
 
-          if (errorReport.exists(_restoreSubscriptionHandler)) {
+          if (errorReport.exists(_restoreSubscriptionHandler) &&
+              _paymentAction == PaymentAction.restore) {
             errors.add(errorReport.of(_restoreSubscriptionHandler)!.error);
             _logError(
               'restoreSubscription error',
