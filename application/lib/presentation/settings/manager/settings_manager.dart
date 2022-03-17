@@ -111,7 +111,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         primaryColor: R.colors.primaryAction,
       );
 
-  void shareApp() => _shareUriUseCase.call(Uri.parse(Constants.download));
+  void shareApp() => _shareUriUseCase.call(Uri.parse(Constants.downloadUrl));
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 

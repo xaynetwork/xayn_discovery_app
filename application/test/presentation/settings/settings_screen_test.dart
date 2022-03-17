@@ -182,7 +182,7 @@ void main() {
       'WHEN "about" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Constants.aboutXayn,
+        url: Constants.aboutXaynUrl,
         btnKey: Keys.settingsAboutXayn,
       ),
     );
@@ -191,7 +191,7 @@ void main() {
       'WHEN "carbon neutral" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Constants.carbonNeutral,
+        url: Constants.carbonNeutralUrl,
         btnKey: Keys.settingsCarbonNeutral,
       ),
     );
@@ -200,7 +200,7 @@ void main() {
       'WHEN "imprint" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Constants.imprint,
+        url: Constants.imprintUrl,
         btnKey: Keys.settingsImprint,
       ),
     );
@@ -209,7 +209,7 @@ void main() {
       'WHEN "privacy" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Constants.privacyPolicy,
+        url: Constants.privacyPolicyUrl,
         btnKey: Keys.settingsPrivacyPolicy,
       ),
     );
@@ -218,7 +218,7 @@ void main() {
       'WHEN "termsAndConditions" clicked THEN call manager with proper URL',
       (final WidgetTester tester) => testUrlClicked(
         tester: tester,
-        url: Constants.termsAndConditions,
+        url: Constants.termsAndConditionsUrl,
         btnKey: Keys.settingsTermsAndConditions,
       ),
     );

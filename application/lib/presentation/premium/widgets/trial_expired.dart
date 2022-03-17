@@ -165,8 +165,8 @@ class TrialExpired extends StatelessWidget {
           MarkerText.withUrl(
             marker: '__',
             urls: [
-              Constants.termsAndConditions,
-              Constants.privacyPolicy,
+              Constants.termsAndConditionsUrl,
+              Constants.privacyPolicyUrl,
             ],
             style: R.styles.sStyle.copyWith(
               color: R.colors.primaryAction,

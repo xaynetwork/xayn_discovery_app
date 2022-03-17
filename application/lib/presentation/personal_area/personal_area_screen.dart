@@ -153,7 +153,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     void onXaynPressEmailTap() => _manager.openExternalEmail(
         Constants.xaynPressEmail, CurrentView.settings);
     void onXaynUrlTap() =>
-        _manager.openExternalUrl(Constants.xayn, CurrentView.settings);
+        _manager.openExternalUrl(Constants.xaynUrl, CurrentView.settings);
 
     final space = ' '.span();
     final newLine = '\n'.span();
@@ -163,7 +163,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         Constants.xaynAddress.span(),
         R.strings.contactSectionWeb.span(),
         space,
-        Uri.parse(Constants.xayn).host.link(onTap: onXaynUrlTap),
+        Uri.parse(Constants.xaynUrl).host.link(onTap: onXaynUrlTap),
         newLine,
         R.strings.contactSectionSupportEmail.span(),
         space,
