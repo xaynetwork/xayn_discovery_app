@@ -1,14 +1,18 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -16,6 +20,7 @@ const int _kMaxCardCount = 10;
 
 typedef OnRestoreFeedSucceeded = Set<Document> Function(
     RestoreFeedSucceeded event);
+typedef OnRestoreFeedFailed = Set<Document> Function(RestoreFeedFailed event);
 typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
     NextFeedBatchRequestSucceeded event);
 typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
@@ -45,22 +50,31 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   DiscoveryFeedManager(
     this._discoveryFeedNavActions,
+    EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
+    HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
+          FeedType.feed,
+          engineEventsUseCase,
           _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
+          hapticFeedbackMediumUseCase,
         );
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   bool _didChangeMarkets = false;
+  bool _isLoading = true;
+
+  @override
+  bool get isLoading => _isLoading;
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
@@ -100,8 +114,11 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // Currently, we just get a generic [ClientEventSucceeded] event only.
     closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
     // adjust the cardIndex to counter the removals
-    cardIndex = await updateCardIndexUseCase
-        .singleOutput(cardIndex.clamp(0, nextResults.length - 1));
+    cardIndex = await updateCardIndexUseCase.singleOutput(
+      FeedTypeAndIndex.feed(
+        cardIndex: cardIndex.clamp(0, nextResults.length - 1),
+      ),
+    );
 
     return ResultSets(
       nextCardIndex: cardIndex,
@@ -110,21 +127,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     );
   }
 
-  @override
-  void willChangeMarkets() => scheduleComputeState(() {
-        super.willChangeMarkets();
-        // closes the current feed...
-        closeFeedDocuments(state.results.map((it) => it.documentId).toSet());
-      });
-
   /// Triggers the discovery engine to load more results.
   @override
   void handleLoadMore() => requestNextFeedBatch();
-
-  /// Configuration was updated, we now ask for fresh documents, under the
-  /// new market settings.
-  @override
-  void didChangeMarkets() => requestNextFeedBatch();
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
@@ -147,6 +152,15 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   }
 
   @override
+  void resetParameters() {
+    resetCardIndex();
+    // clears the current pending observation, if any...
+    observeDocument();
+    // clear the inner-stored current observation...
+    resetObservedDocument();
+  }
+
+  @override
   Future<DiscoveryState?> computeState() async {
     if (_didChangeMarkets) {
       _didChangeMarkets = false;
@@ -159,6 +173,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(
       BaseDiscoveryManager manager) {
+    final self = manager as DiscoveryFeedManager;
     final state = manager.state;
 
     foldEngineEvent({
@@ -167,26 +182,33 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       required OnDocumentsUpdated documentsUpdated,
       required OnEngineExceptionRaised engineExceptionRaised,
       required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
+      required OnRestoreFeedFailed restoreFeedFailed,
       required OnNonMatchedEngineEvent orElse,
     }) =>
         (EngineEvent? event) {
           if (event is RestoreFeedSucceeded) {
+            self._isLoading = false;
             return restoreFeedSucceeded(event);
           } else if (event is NextFeedBatchRequestSucceeded) {
+            self._isLoading = false;
             return nextFeedBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
           } else if (event is EngineExceptionRaised) {
             return engineExceptionRaised(event);
           } else if (event is NextFeedBatchRequestFailed) {
+            self._isLoading = false;
             return nextFeedBatchRequestFailed(event);
+          } else if (event is RestoreFeedFailed) {
+            self._isLoading = false;
+            return restoreFeedFailed(event);
           }
 
           return orElse();
         };
 
     return foldEngineEvent(
-      restoreFeedSucceeded: (event) => {...state.results, ...event.items},
+      restoreFeedSucceeded: (event) => event.items.toSet(),
       nextFeedBatchRequestSucceeded: (event) =>
           {...state.results, ...event.items},
       documentsUpdated: (event) => state.results
@@ -211,6 +233,17 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       nextFeedBatchRequestFailed: (event) {
         manager.sendAnalyticsUseCase(
           NextFeedBatchRequestFailedEvent(
+            event: event,
+          ),
+        );
+
+        logger.e('$event');
+
+        return state.results;
+      },
+      restoreFeedFailed: (event) {
+        manager.sendAnalyticsUseCase(
+          RestoreFeedFailedEvent(
             event: event,
           ),
         );

@@ -1,0 +1,1 @@
+enum FeedType { feed, search }

@@ -112,16 +112,20 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
-      () => showAppBottomSheet(
-            context,
-            builder: (_) => MoveDocumentToCollectionBottomSheet(
-              document: widget.document,
-              provider: state.processedDocument
-                  ?.getProvider(widget.document.resource),
-              onError: (tooltipKey) => showTooltip(tooltipKey),
-            ),
-          );
+  void Function() onBookmarkLongPressed(DiscoveryCardState state) {
+    return () {
+      discoveryCardManager.triggerHapticFeedbackMedium();
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
+          provider:
+              state.processedDocument?.getProvider(widget.document.resource),
+          onError: (tooltipKey) => showTooltip(tooltipKey),
+        ),
+      );
+    };
+  }
 
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);

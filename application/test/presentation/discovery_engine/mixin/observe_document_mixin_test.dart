@@ -18,7 +18,7 @@ import 'observe_document_mixin_test.mocks.dart';
 
 @GenerateMocks([AnalyticsService])
 void main() {
-  late MockDiscoveryEngine engine;
+  late MockAppDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
   final document = Document(
     documentId: DocumentId(),
@@ -40,7 +40,7 @@ void main() {
   );
 
   setUp(() async {
-    engine = MockDiscoveryEngine();
+    engine = MockAppDiscoveryEngine();
     analyticsService = MockAnalyticsService();
 
     di.registerSingletonAsync<LogDocumentTimeUseCase>(

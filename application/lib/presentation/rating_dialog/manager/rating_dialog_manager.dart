@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_s
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_stored_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_version_use_case.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 /// Shows the rating dialog when any of the following conditions is met:
 ///
@@ -18,6 +19,7 @@ class RatingDialogManager {
     this._getStoredAppVersionUseCase,
     this._saveCurrentAppVersion,
     this._getAppSessionUseCase,
+    this._featureManager,
   )   : _viewedCardIndices = {},
         _inAppReview = InAppReview.instance {
     // Calling this from the constructor to handle the app update case.
@@ -32,6 +34,7 @@ class RatingDialogManager {
     this._saveCurrentAppVersion,
     this._getAppSessionUseCase,
     this._inAppReview,
+    this._featureManager,
   );
 
   final GetAppVersionUseCase _getAppVersionUseCase;
@@ -39,6 +42,7 @@ class RatingDialogManager {
   final SaveCurrentAppVersion _saveCurrentAppVersion;
   final GetAppSessionUseCase _getAppSessionUseCase;
   final InAppReview _inAppReview;
+  final FeatureManager _featureManager;
 
   final Set<int> _viewedCardIndices;
   static const _viewedCardsThreshold = 8;
@@ -60,6 +64,9 @@ class RatingDialogManager {
   }
 
   Future<bool> showRatingDialogIfNeeded() async {
+    if (!_featureManager.isRatingDialogEnabled) {
+      return false;
+    }
     if (_ratingDialogShown) {
       return false;
     }

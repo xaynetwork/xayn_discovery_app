@@ -52,6 +52,7 @@ void main() {
   late MockListenTtsPreferenceUseCase listenTtsPreferenceUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
+  late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -68,6 +69,7 @@ void main() {
     listenTtsPreferenceUseCase = MockListenTtsPreferenceUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
+    hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -115,6 +117,7 @@ void main() {
         getTtsPreferenceUseCase,
         saveTtsPreferenceUseCase,
         listenTtsPreferenceUseCase,
+        hapticFeedbackMediumUseCase,
         featureManager,
         getSubscriptionStatusUseCase,
         listenSubscriptionStatusUseCase,
