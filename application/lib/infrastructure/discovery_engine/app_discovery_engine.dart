@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -9,12 +8,12 @@ import 'package:xayn_discovery_app/domain/model/extensions/feed_market_extension
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_local_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/get_feed_type_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/save_feed_type_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
@@ -24,11 +23,10 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 /// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
-  late final GetSelectedFeedMarketsUseCase _getSelectedFeedMarketsUseCase;
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
-  late final GetFeedTypeMarketsUseCase _getFeedTypeMarketsUseCase;
   late final SaveFeedTypeMarketsUseCase _saveFeedTypeMarketsUseCase;
+  late final GetLocalMarketsUseCase _getLocalMarketsUseCase;
   late DiscoveryEngine _engine;
 
   final StreamController<String> _inputLog =
@@ -45,13 +43,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
-    required GetFeedTypeMarketsUseCase getFeedTypeMarketsUseCase,
+    required GetLocalMarketsUseCase getLocalMarketsUseCase,
     required SaveFeedTypeMarketsUseCase saveFeedTypeMarketsUseCase,
     bool initialized = true,
-  })  : _getSelectedFeedMarketsUseCase = getSelectedFeedMarketsUseCase,
-        _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
+  })  : _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
         _sendAnalyticsUseCase = sendAnalyticsUseCase,
-        _getFeedTypeMarketsUseCase = getFeedTypeMarketsUseCase,
+        _getLocalMarketsUseCase = getLocalMarketsUseCase,
         _saveFeedTypeMarketsUseCase = saveFeedTypeMarketsUseCase {
     if (!initialized) {
       startInitializing();
@@ -63,14 +60,14 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required GetSelectedFeedMarketsUseCase getSelectedFeedMarketsUseCase,
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
-    required GetFeedTypeMarketsUseCase getFeedTypeMarketsUseCase,
+    required GetLocalMarketsUseCase getLocalMarketsUseCase,
     required SaveFeedTypeMarketsUseCase saveFeedTypeMarketsUseCase,
   }) =>
       AppDiscoveryEngine(
         getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
         saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
         sendAnalyticsUseCase: sendAnalyticsUseCase,
-        getFeedTypeMarketsUseCase: getFeedTypeMarketsUseCase,
+        getLocalMarketsUseCase: getLocalMarketsUseCase,
         saveFeedTypeMarketsUseCase: saveFeedTypeMarketsUseCase,
         initialized: false,
       );
@@ -96,7 +93,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
       maxItemsPerSearchBatch: 2,
-      feedMarkets: await _getLocalMarkets(),
+      feedMarkets: await _getLocalMarketsUseCase.singleOutput(none),
       manifest: manifest,
     );
 
@@ -113,18 +110,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     });
   }
 
-  Future<bool> areMarketsOutdated(FeedType feedType) async {
-    final markets = await _getLocalMarkets();
-    final localMarkets = markets.map((it) => it.toLocal()).toSet();
-    final feedTypeMarkets =
-        await _getFeedTypeMarketsUseCase.singleOutput(feedType);
-
-    return feedTypeMarkets.feedMarkets.length != localMarkets.length ||
-        !feedTypeMarkets.feedMarkets.every(localMarkets.contains);
-  }
-
   Future<EngineEvent> updateMarkets(FeedType feedType) async {
-    final nextMarkets = await _getLocalMarkets();
+    final nextMarkets = await _getLocalMarketsUseCase.singleOutput(none);
     late final UniqueId id;
 
     switch (feedType) {
@@ -245,17 +232,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> send(ClientEvent event) {
     _inputLog.add('[send]\n<ClientEvent> $ClientEvent');
     return safeRun(() => _engine.send(event));
-  }
-
-  Future<Set<FeedMarket>> _getLocalMarkets() async {
-    final localMarkets =
-        await _getSelectedFeedMarketsUseCase.singleOutput(none);
-
-    return localMarkets
-        .sortedBy((it) => '${it.countryCode}|${it.languageCode}')
-        .map((e) =>
-            FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))
-        .toSet();
   }
 
   @override

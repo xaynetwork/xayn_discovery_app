@@ -34,6 +34,7 @@ void main() async {
   late MockAppDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
   late MockConnectivityUseCase connectivityUseCase;
+  late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
 
@@ -62,6 +63,7 @@ void main() async {
   setUp(() async {
     eventsController = StreamController<EngineEvent>();
     connectivityUseCase = MockConnectivityUseCase();
+    areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
     feedRepository = MockFeedRepository();
@@ -79,8 +81,8 @@ void main() async {
         (invocation) => Stream.value(invocation.positionalArguments.first));
     when(mockDiscoveryEngine.engineEvents)
         .thenAnswer((_) => eventsController.stream);
-    when(mockDiscoveryEngine.areMarketsOutdated(FeedType.feed))
-        .thenAnswer((_) async => false);
+    when(areMarketsOutdatedUseCase.transaction(FeedType.feed))
+        .thenAnswer((_) => Stream.value(false));
     when(mockDiscoveryEngine.restoreFeed()).thenAnswer((_) {
       final event = RestoreFeedSucceeded([fakeDocumentA, fakeDocumentB]);
 
@@ -155,7 +157,6 @@ void main() async {
     },
     verify: (manager) {
       verifyInOrder([
-        mockDiscoveryEngine.areMarketsOutdated(FeedType.feed),
         mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
         mockDiscoveryEngine.engineEvents,
         mockDiscoveryEngine.restoreFeed(),
@@ -193,7 +194,6 @@ void main() async {
       },
       verify: (manager) {
         verifyInOrder([
-          mockDiscoveryEngine.areMarketsOutdated(FeedType.feed),
           mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.restoreFeed(),
           mockDiscoveryEngine.logDocumentTime(
@@ -222,7 +222,6 @@ void main() async {
       ),
     ],
     verify: (manager) {
-      verify(mockDiscoveryEngine.areMarketsOutdated(FeedType.feed));
       verify(mockDiscoveryEngine.engineEvents);
       verify(mockDiscoveryEngine.restoreFeed());
       verifyNoMoreInteractions(mockDiscoveryEngine);
