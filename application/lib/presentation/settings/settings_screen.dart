@@ -135,16 +135,16 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onAboutPressed: () =>
-            _manager.openExternalUrl(Constants.aboutXayn, CurrentView.settings),
+        onAboutPressed: () => _manager.openExternalUrl(
+            Constants.aboutXaynUrl, CurrentView.settings),
         onCarbonNeutralPressed: () => _manager.openExternalUrl(
-            Constants.carbonNeutral, CurrentView.settings),
-        onImprintPressed: () =>
-            _manager.openExternalUrl(Constants.imprint, CurrentView.settings),
+            Constants.carbonNeutralUrl, CurrentView.settings),
+        onImprintPressed: () => _manager.openExternalUrl(
+            Constants.imprintUrl, CurrentView.settings),
         onPrivacyPressed: () => _manager.openExternalUrl(
-            Constants.privacyPolicy, CurrentView.settings),
+            Constants.privacyPolicyUrl, CurrentView.settings),
         onTermsPressed: () => _manager.openExternalUrl(
-            Constants.termsAndConditions, CurrentView.settings),
+            Constants.termsAndConditionsUrl, CurrentView.settings),
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(

@@ -88,8 +88,8 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
         ? R.strings.subscriptionPlatformInfoApple
         : R.strings.subscriptionPlatformInfoGoogle;
     final url = Platform.isIOS
-        ? Constants.subscriptionCancelApple
-        : Constants.subscriptionCancelGoogle;
+        ? Constants.subscriptionCancelAppleUrl
+        : Constants.subscriptionCancelGoogleUrl;
     return SuperRichText(
       text: footerString,
       maxLines: 2,
