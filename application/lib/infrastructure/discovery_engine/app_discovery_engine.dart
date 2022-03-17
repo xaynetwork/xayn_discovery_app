@@ -4,17 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/feed_market_extension.dart';
-import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
-import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_local_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/save_feed_type_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
@@ -25,7 +20,6 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
-  late final SaveFeedTypeMarketsUseCase _saveFeedTypeMarketsUseCase;
   late final GetLocalMarketsUseCase _getLocalMarketsUseCase;
   late DiscoveryEngine _engine;
 
@@ -44,12 +38,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
     required GetLocalMarketsUseCase getLocalMarketsUseCase,
-    required SaveFeedTypeMarketsUseCase saveFeedTypeMarketsUseCase,
     bool initialized = true,
   })  : _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
         _sendAnalyticsUseCase = sendAnalyticsUseCase,
-        _getLocalMarketsUseCase = getLocalMarketsUseCase,
-        _saveFeedTypeMarketsUseCase = saveFeedTypeMarketsUseCase {
+        _getLocalMarketsUseCase = getLocalMarketsUseCase {
     if (!initialized) {
       startInitializing();
     }
@@ -61,14 +53,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
     required GetLocalMarketsUseCase getLocalMarketsUseCase,
-    required SaveFeedTypeMarketsUseCase saveFeedTypeMarketsUseCase,
   }) =>
       AppDiscoveryEngine(
         getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
         saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
         sendAnalyticsUseCase: sendAnalyticsUseCase,
         getLocalMarketsUseCase: getLocalMarketsUseCase,
-        saveFeedTypeMarketsUseCase: saveFeedTypeMarketsUseCase,
         initialized: false,
       );
 
@@ -108,30 +98,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
       logger.e('DiscoveryEngine.init: $e');
     });
-  }
-
-  Future<EngineEvent> updateMarkets(FeedType feedType) async {
-    final nextMarkets = await _getLocalMarketsUseCase.singleOutput(none);
-    late final UniqueId id;
-
-    switch (feedType) {
-      case FeedType.feed:
-        id = FeedTypeMarkets.feedId;
-        break;
-      case FeedType.search:
-        id = FeedTypeMarkets.searchId;
-        break;
-    }
-
-    await _saveFeedTypeMarketsUseCase.singleOutput(
-      FeedTypeMarkets(
-        id: id,
-        feedType: feedType,
-        feedMarkets: nextMarkets.map((it) => it.toLocal()).toSet(),
-      ),
-    );
-
-    return await changeConfiguration(feedMarkets: nextMarkets);
   }
 
   Future<void> _saveInitialFeedMarket(
