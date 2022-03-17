@@ -94,13 +94,17 @@ NavBarItemIconButton buildNavBarItemSearch({
 NavBarItemEdit buildNavBarItemSearchActive({
   required OnSearchPressed onSearchPressed,
   bool isActive = false,
+  bool autofocus = true,
   String? hint,
+  String? initialText,
 }) =>
     NavBarItemEdit(
       svgIconPath: R.linden.assets.icons.search,
       isHighlighted: isActive,
       onSearchPressed: onSearchPressed,
       hint: hint,
+      autofocus: autofocus,
+      initialText: initialText,
       key: Keys.navBarItemSearch,
     );
 
