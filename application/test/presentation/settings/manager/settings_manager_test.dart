@@ -235,7 +235,7 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
-        shareUriUseCase.call(Uri.parse(Constants.download)),
+        shareUriUseCase.call(Uri.parse(Constants.downloadUrl)),
         getAppThemeUseCase.singleOutput(none),
         listenAppThemeUseCase.transform(any),
       ]);
