@@ -41,7 +41,10 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
               onPressed: _discoveryCardScreenManager.onBackPressed),
         ),
         populated: (p) => _createDocumentNavbar(p.document),
-        error: (_) => NavBarConfig(const []),
+        error: (_) => NavBarConfig.backBtn(
+          buildNavBarItemBack(
+              onPressed: _discoveryCardScreenManager.onBackPressed),
+        ),
       );
 
   NavBarConfig _createDocumentNavbar(Document document) {
