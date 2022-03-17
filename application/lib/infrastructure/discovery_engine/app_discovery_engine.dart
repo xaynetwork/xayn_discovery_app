@@ -114,13 +114,13 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   Future<bool> areMarketsOutdated(FeedType feedType) async {
-    const equality = SetEquality();
     final markets = await _getLocalMarkets();
     final localMarkets = markets.map((it) => it.toLocal()).toSet();
     final feedTypeMarkets =
         await _getFeedTypeMarketsUseCase.singleOutput(feedType);
 
-    return !equality.equals(feedTypeMarkets.feedMarkets, localMarkets);
+    return feedTypeMarkets.feedMarkets.length != localMarkets.length ||
+        !feedTypeMarkets.feedMarkets.every(localMarkets.contains);
   }
 
   Future<EngineEvent> updateMarkets(FeedType feedType) async {
