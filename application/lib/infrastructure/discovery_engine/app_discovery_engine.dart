@@ -5,10 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/feed_market_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
-import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart'
-    as domain;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
@@ -117,10 +116,11 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<bool> areMarketsOutdated(FeedType feedType) async {
     const equality = SetEquality();
     final markets = await _getLocalMarkets();
+    final localMarkets = markets.map((it) => it.toLocal()).toSet();
     final feedTypeMarkets =
         await _getFeedTypeMarketsUseCase.singleOutput(feedType);
 
-    return !equality.equals(feedTypeMarkets.feedMarkets, markets);
+    return !equality.equals(feedTypeMarkets.feedMarkets, localMarkets);
   }
 
   Future<EngineEvent> updateMarkets(FeedType feedType) async {
@@ -140,14 +140,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       FeedTypeMarkets(
         id: id,
         feedType: feedType,
-        feedMarkets: nextMarkets
-            .map(
-              (it) => domain.FeedMarket(
-                countryCode: it.countryCode,
-                languageCode: it.langCode,
-              ),
-            )
-            .toSet(),
+        feedMarkets: nextMarkets.map((it) => it.toLocal()).toSet(),
       ),
     );
 
