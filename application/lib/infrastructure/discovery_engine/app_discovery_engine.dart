@@ -237,20 +237,38 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestSearch({
-    required String queryTerm,
-    required FeedMarket market,
-  }) {
+  Future<EngineEvent> requestSearch(String queryTerm) {
     _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
-    return safeRun(() => _engine.requestSearch(
-          queryTerm: queryTerm,
-          market: market,
-        ));
+    return safeRun(() => _engine.requestSearch(queryTerm));
   }
 
   @override
   Future<EngineEvent> restoreSearch() {
     _inputLog.add('[restoreSearch]');
     return safeRun(() => _engine.restoreSearch());
+  }
+
+  @override
+  Future<EngineEvent> addSourceToExcludedList(Uri source) {
+    _inputLog.add('[addSourceToExcludedList]');
+    return safeRun(() => _engine.addSourceToExcludedList(source));
+  }
+
+  @override
+  Future<EngineEvent> getExcludedSourcesList() {
+    _inputLog.add('[getExcludedSourcesList]');
+    return safeRun(() => _engine.getExcludedSourcesList());
+  }
+
+  @override
+  Future<EngineEvent> getSearchTerm() {
+    _inputLog.add('[getSearchTerm]');
+    return safeRun(() => _engine.getSearchTerm());
+  }
+
+  @override
+  Future<EngineEvent> removeSourceFromExcludedList(Uri source) {
+    _inputLog.add('[removeSourceFromExcludedList]');
+    return safeRun(() => _engine.removeSourceFromExcludedList(source));
   }
 }

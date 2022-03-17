@@ -125,6 +125,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       card = CardWidgetTransitionWrapper(
         key: ValueKey(collection.id),
         onAnimationDone: () => _showCollectionCardOptions(collection),
+        onLongPress: _collectionsScreenManager?.triggerHapticFeedbackMedium,
         child: _buildSwipeableCard(collection),
       );
     }
@@ -159,6 +160,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
         collectionCard: _buildBaseCard(collection),
         onSwipeOptionTap: _onSwipeOptionsTap(collection),
+        onFling: _collectionsScreenManager?.triggerHapticFeedbackMedium,
       );
 
   _showAddCollectionBottomSheet() {

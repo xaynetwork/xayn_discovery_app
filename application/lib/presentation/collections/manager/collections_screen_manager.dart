@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_col
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
@@ -32,12 +33,14 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
   final CollectionErrorsEnumMapper _collectionErrorsEnumMapper;
   final CollectionsScreenNavActions _navActions;
   final DateTimeHandler _dateTimeHandler;
+  final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
 
   CollectionsScreenManager._(
     this._createCollectionUseCase,
     this._removeCollectionUseCase,
     this._renameCollectionUseCase,
     this._listenCollectionsUseCase,
+    this._hapticFeedbackMediumUseCase,
     this._collectionErrorsEnumMapper,
     this._navActions,
     this._dateTimeHandler,
@@ -53,6 +56,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
     RemoveCollectionUseCase removeCollectionUseCase,
     RenameCollectionUseCase renameCollectionUseCase,
     ListenCollectionsUseCase listenCollectionsUseCase,
+    HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     CollectionErrorsEnumMapper collectionErrorsEnumMapper,
     CollectionsScreenNavActions navActions,
     DateTimeHandler dateTimeHandler,
@@ -65,6 +69,7 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       removeCollectionUseCase,
       renameCollectionUseCase,
       listenCollectionsUseCase,
+      hapticFeedbackMediumUseCase,
       collectionErrorsEnumMapper,
       navActions,
       dateTimeHandler,
@@ -145,6 +150,8 @@ class CollectionsScreenManager extends Cubit<CollectionsScreenState>
       onValue: (_) {},
     );
   }
+
+  void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
   @override
   Future<CollectionsScreenState?> computeState() async {

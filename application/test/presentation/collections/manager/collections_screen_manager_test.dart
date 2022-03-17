@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_col
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
@@ -30,6 +31,7 @@ import 'collections_screen_manager_test.mocks.dart';
   CollectionErrorsEnumMapper,
   CollectionsScreenNavActions,
   DateTimeHandler,
+  HapticFeedbackMediumUseCase,
 ])
 void main() {
   late MockCreateCollectionUseCase createCollectionUseCase;
@@ -37,6 +39,7 @@ void main() {
   late MockRenameCollectionUseCase renameCollectionUseCase;
   late MockListenCollectionsUseCase listenCollectionsUseCase;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
+  late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
   late MockCollectionsScreenNavActions collectionsScreenNavActions;
   late MockDateTimeHandler dateTimeHandler;
@@ -77,6 +80,7 @@ void main() {
         removeCollectionUseCase,
         renameCollectionUseCase,
         listenCollectionsUseCase,
+        hapticFeedbackMediumUseCase,
         collectionErrorsEnumMapper,
         collectionsScreenNavActions,
         dateTimeHandler,
@@ -88,6 +92,7 @@ void main() {
     renameCollectionUseCase = MockRenameCollectionUseCase();
     listenCollectionsUseCase = MockListenCollectionsUseCase();
     getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
+    hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
     collectionsScreenNavActions = MockCollectionsScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();

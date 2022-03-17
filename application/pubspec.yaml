@@ -53,6 +53,7 @@ dependencies:
   provider: 6.0.2
   purchases_flutter: 3.9.3
   rxdart: 0.27.3
+  sprintf: 6.0.0
   share_plus: 3.0.5
   shimmer: 2.0.0
   story:
@@ -74,15 +75,15 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 4c44b279e7b73d93692cdf0508d34e563023276d
+      ref: 507b74f1bff985c047a1e7e99a1cfb0b7d0b89ea
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 52818f6a53cfa35b94efb4033bbda8e9f56b6640
+      ref: 4e726210bedd9f02e927b35bb4d1cedfa2db0a06
   xayn_discovery_engine_flutter:
     git:
       url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
-      ref: f06bd9be3ff76205eb3c851cb5132373e661ea19
+      ref: ae989d2b71f4d8eea8282c33403f647da3919dcb
       path: discovery_engine_flutter
   xayn_readability:
     git:

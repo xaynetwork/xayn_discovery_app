@@ -69,6 +69,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         );
 
         Strings.switchTranslations(currentLanguage);
+        _appManager.maybeUpdateDefaultCollectionName();
         Instabug.setLocale(currentLanguage.instabugLocale);
 
         return locales.first;
