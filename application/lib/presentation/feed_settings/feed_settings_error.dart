@@ -1,0 +1,4 @@
+enum FeedSettingsError {
+  maxSelectedCountries,
+  minSelectedCountries,
+}

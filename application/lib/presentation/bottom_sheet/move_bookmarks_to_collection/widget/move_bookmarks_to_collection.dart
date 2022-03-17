@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 
 class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarksToCollectionBottomSheet({
@@ -52,7 +53,7 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 }
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
-    with BottomSheetBodyMixin {
+    with BottomSheetBodyMixin, ErrorHandlingMixin {
   final MoveBookmarksToCollectionManager _moveBookmarksToCollectionManager =
       di.get();
 
@@ -73,9 +74,12 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   @override
   Widget build(BuildContext context) {
-    final body = BlocBuilder<MoveBookmarksToCollectionManager,
+    final body = BlocConsumer<MoveBookmarksToCollectionManager,
         MoveBookmarksToCollectionState>(
       bloc: _moveBookmarksToCollectionManager,
+      listener: (_, state) {
+        if (state.error.hasError) showErrorBottomSheet(allowStacking: true);
+      },
       builder: (_, state) => state.collections.isNotEmpty
           ? CollectionsListBottomSheet(
               collections: state.collections,
