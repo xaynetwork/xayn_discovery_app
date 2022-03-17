@@ -297,6 +297,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     required double width,
     required double headlineHeight,
   }) {
+    /// nav bar height + nav bar bottom padding + reader mode bottom padding preferred
+    final bottomPadding = R.dimen.navBarHeight + R.dimen.unit3 + R.dimen.unit5;
     final readerMode = ReaderMode(
       title: title,
       languageCode: widget.document.resource.language,
@@ -305,8 +307,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       padding: EdgeInsets.only(
         left: R.dimen.unit3,
         right: R.dimen.unit3,
-        // todo: bottom offset should compensate for the NavBar, so we need to calculate it
-        bottom: R.dimen.unit15,
+        bottom: bottomPadding,
         top: headlineHeight,
       ),
       onProcessedHtml: () => _openingAnimation.animateTo(
