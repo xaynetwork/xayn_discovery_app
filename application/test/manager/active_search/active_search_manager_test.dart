@@ -1,8 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
@@ -26,13 +28,20 @@ import '../../presentation/test_utils/widget_test_utils.dart';
 void main() {
   late ActiveSearchManager Function() buildManager;
   late AppDiscoveryEngine engine;
+  late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
 
   setUp(() async {
     await setupWidgetTest();
     engine = MockAppDiscoveryEngine();
+    areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
+
     di
       ..unregister<DiscoveryEngine>()
       ..registerSingleton<DiscoveryEngine>(engine);
+
+    di
+      ..unregister<AreMarketsOutdatedUseCase>()
+      ..registerSingleton<AreMarketsOutdatedUseCase>(areMarketsOutdatedUseCase);
 
     final feedRepository = HiveFeedRepository(FeedMapper());
 
@@ -57,7 +66,8 @@ void main() {
     'GIVEN fresh manager THEN the state is DiscoveryFeedState.initial()',
     build: () {
       when(engine.engineEvents).thenAnswer((_) => const Stream.empty());
-      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
+          .thenAnswer((_) async => false);
       when(engine.restoreSearch()).thenAnswer(
         (_) async => RestoreSearchSucceeded(
           const ActiveSearch(
@@ -88,7 +98,8 @@ void main() {
       );
 
       when(engine.engineEvents).thenAnswer((_) => Stream.value(restoreEvent));
-      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
+          .thenAnswer((_) async => false);
       when(engine.restoreSearch()).thenAnswer(
         (_) async => restoreEvent,
       );
@@ -115,7 +126,8 @@ void main() {
           const EngineExceptionRaised(EngineExceptionReason.genericError),
         ),
       );
-      when(engine.areMarketsOutdated()).thenAnswer((_) async => false);
+      when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
+          .thenAnswer((_) async => false);
       when(engine.getSearchTerm()).thenAnswer(
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
       return buildManager();

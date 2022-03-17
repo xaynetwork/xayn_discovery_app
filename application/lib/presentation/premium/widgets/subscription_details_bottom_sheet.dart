@@ -5,8 +5,8 @@ import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 const String _kTextPlaceholder = '__';
@@ -88,8 +88,8 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
         ? R.strings.subscriptionPlatformInfoApple
         : R.strings.subscriptionPlatformInfoGoogle;
     final url = Platform.isIOS
-        ? Urls.subscriptionCancelApple
-        : Urls.subscriptionCancelGoogle;
+        ? Constants.subscriptionCancelAppleUrl
+        : Constants.subscriptionCancelGoogleUrl;
     return SuperRichText(
       text: footerString,
       maxLines: 2,

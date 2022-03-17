@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -33,6 +34,7 @@ void main() async {
   late MockAppDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
   late MockConnectivityUseCase connectivityUseCase;
+  late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
 
@@ -61,6 +63,7 @@ void main() async {
   setUp(() async {
     eventsController = StreamController<EngineEvent>();
     connectivityUseCase = MockConnectivityUseCase();
+    areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
     feedRepository = MockFeedRepository();
@@ -78,8 +81,8 @@ void main() async {
         (invocation) => Stream.value(invocation.positionalArguments.first));
     when(mockDiscoveryEngine.engineEvents)
         .thenAnswer((_) => eventsController.stream);
-    when(mockDiscoveryEngine.areMarketsOutdated())
-        .thenAnswer((_) async => false);
+    when(areMarketsOutdatedUseCase.transaction(FeedType.feed))
+        .thenAnswer((_) => Stream.value(false));
     when(mockDiscoveryEngine.restoreFeed()).thenAnswer((_) {
       final event = RestoreFeedSucceeded([fakeDocumentA, fakeDocumentB]);
 
@@ -154,7 +157,6 @@ void main() async {
     },
     verify: (manager) {
       verifyInOrder([
-        mockDiscoveryEngine.areMarketsOutdated(),
         mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
         mockDiscoveryEngine.engineEvents,
         mockDiscoveryEngine.restoreFeed(),
@@ -192,7 +194,6 @@ void main() async {
       },
       verify: (manager) {
         verifyInOrder([
-          mockDiscoveryEngine.areMarketsOutdated(),
           mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.restoreFeed(),
           mockDiscoveryEngine.logDocumentTime(
@@ -221,7 +222,6 @@ void main() async {
       ),
     ],
     verify: (manager) {
-      verify(mockDiscoveryEngine.areMarketsOutdated());
       verify(mockDiscoveryEngine.engineEvents);
       verify(mockDiscoveryEngine.restoreFeed());
       verifyNoMoreInteractions(mockDiscoveryEngine);

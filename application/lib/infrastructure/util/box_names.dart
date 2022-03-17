@@ -9,6 +9,7 @@ abstract class BoxNames {
   static const appStatus = 'appStatus';
   static const feed = 'feed';
   static const feedSettings = 'feedSettings';
+  static const feedTypeMarkets = 'feedTypeMarkets';
   static const explicitDocumentFeedback = 'explicitDocumentFeedback';
   static const readerModeSettings = 'readerModeSettings';
 }
