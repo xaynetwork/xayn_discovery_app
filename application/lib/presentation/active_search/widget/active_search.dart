@@ -43,6 +43,7 @@ class _ActiveSearchState
   @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
+          configIdSearch,
           [
             buildNavBarItemHome(onPressed: () {
               hideTooltip();
@@ -87,6 +88,7 @@ class _ActiveSearchState
           );
 
       return NavBarConfig(
+        configIdSearch,
         [
           buildNavBarItemArrowLeft(onPressed: () async {
             removeOverlay();

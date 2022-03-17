@@ -355,6 +355,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
   @override
   NavBarConfig get navBarConfig {
     return NavBarConfig(
+      configIdDiscoveryCard,
       [
         buildNavBarItemArrowLeft(
           onPressed: () => _discoveryCardManager.onBackNavPressed(),
