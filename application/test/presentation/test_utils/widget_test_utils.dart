@@ -1,7 +1,6 @@
 import 'package:flutter/src/semantics/debug.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
@@ -26,44 +25,52 @@ Future<void> tearDownWidgetTest() async {
 
 extension WidgetTesterCommonActions on WidgetTester {
   Future<void> initToFeatureSelectionPage() async {
+    await pumpAndSettle();
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, true);
     await pumpWidget(getApp());
   }
 
   Future<void> initToDiscoveryPage() async {
+    await pumpAndSettle();
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
     await pumpWidget(getApp());
-    await pumpAndSettle(updateNavBarDebounceTimeout);
+    await pumpAndSettle();
   }
 
   Future<void> navigateToSearch() async {
+    await pumpAndSettle();
     await tap(Keys.navBarItemSearch.finds());
-    await pumpAndSettle(updateNavBarDebounceTimeout);
+    await pumpAndSettle();
   }
 
   Future<void> navigateToHome() async {
+    await pumpAndSettle();
     await tap(Keys.navBarItemHome.finds());
-    await pumpAndSettle(updateNavBarDebounceTimeout);
+    await pumpAndSettle();
   }
 
   Future<void> navigateToPersonalArea() async {
+    await pumpAndSettle();
     await tap(Keys.navBarItemPersonalArea.finds());
-    await pumpAndSettle(updateNavBarDebounceTimeout);
+    await pumpAndSettle();
   }
 
   Future<void> navigateToFeedSettings() async {
+    await pumpAndSettle();
     await tap(Keys.personalAreaCardHomeFeed.finds());
-    await pumpAndSettle(updateNavBarDebounceTimeout);
+    await pumpAndSettle();
   }
 
   Future<void> navigateToSettingsScreen() async {
+    await pumpAndSettle();
     final settingsCard = Keys.personalAreaCardSettings.finds();
     await scrollUntilVisible(settingsCard, 10);
     await tap(settingsCard);
-    await pumpAndSettle(updateNavBarDebounceTimeout);
+    await pumpAndSettle();
   }
 
   Future<void> navigateBack() async {
+    await pumpAndSettle();
     await tap(Keys.navBarItemBackBtn.finds());
     await pumpAndSettle();
   }

@@ -34,6 +34,7 @@ void main() {
   late MockListenBookmarksUseCase listenBookmarksUseCase;
   late MockRemoveBookmarkUseCase removeBookmarkUseCase;
   late MockMoveBookmarkUseCase moveBookmarkUseCase;
+  late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockBookmarkErrorsEnumMapper bookmarkErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
   late BookmarksScreenManager bookmarksScreenManager;
@@ -59,6 +60,7 @@ void main() {
     listenBookmarksUseCase = MockListenBookmarksUseCase();
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     moveBookmarkUseCase = MockMoveBookmarkUseCase();
+    hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
     bookmarksScreenNavActions = MockBookmarksScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
@@ -74,6 +76,7 @@ void main() {
       listenBookmarksUseCase,
       removeBookmarkUseCase,
       moveBookmarkUseCase,
+      hapticFeedbackMediumUseCase,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
       bookmarksScreenNavActions,

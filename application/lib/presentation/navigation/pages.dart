@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
@@ -50,15 +49,18 @@ class PageRegistry {
     name: "discovery",
     builder: (_, args) => DiscoveryFeed(
       key: discoveryFeedKey,
-      manager: di.get(),
     ),
   );
 
+  /// Using a global key prevents rebuilding the [ActiveSearch]
+  /// when device orientation changes. This also fixes an issue
+  /// with playing videos in full screen mode.
+  static final searchKey = GlobalKey();
   static final search = xayn.PageData(
     name: "search",
     //ignore: prefer_const_constructors
     builder: (_, args) => ActiveSearch(
-      manager: di.get(),
+      key: searchKey,
     ),
   );
 
