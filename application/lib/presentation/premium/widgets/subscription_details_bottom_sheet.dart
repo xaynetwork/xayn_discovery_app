@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/urls.dart';
@@ -68,10 +66,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
 
   Widget _buildInfo() {
     final dateString = subscriptionStatus.expirationDate?.shortDateFormat ?? '';
-    final infoString =
-        subscriptionStatus.subscriptionType == SubscriptionType.promoCode
-            ? R.strings.promoCodeValidUntilText
-            : R.strings.subscriptionRenewsMonthlyText;
+    final infoString = R.strings.subscriptionRenewsMonthlyText;
     final infoStringWithDate =
         infoString.format('$_kTextPlaceholder$dateString$_kTextPlaceholder');
     return SuperRichText(
