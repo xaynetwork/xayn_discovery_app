@@ -1,26 +1,31 @@
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case/none.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/restore_search_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_search_batch_request_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_search_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
+typedef OnSearchRequestSucceeded = Set<Document> Function(
+    SearchRequestSucceeded event);
 typedef OnRestoreSearchSucceeded = Set<Document> Function(
     RestoreSearchSucceeded event);
 typedef OnNextSearchBatchRequestSucceeded = Set<Document> Function(
     NextSearchBatchRequestSucceeded event);
 typedef OnNextSearchBatchRequestFailed = Set<Document> Function(
     NextSearchBatchRequestFailed event);
+typedef OnRestoreSearchFailed = Set<Document> Function(
+    RestoreSearchFailed event);
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -37,34 +42,48 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends BaseDiscoveryManager
-    with SearchMixin<DiscoveryState>, CloseSearchMixin<DiscoveryState>
+    with SearchMixin<DiscoveryState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
-    this._restoreSearchUseCase,
+    EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
+    HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
   ) : super(
+          FeedType.search,
+          engineEventsUseCase,
           _foldEngineEvent,
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
+          hapticFeedbackMediumUseCase,
         );
 
-  final RestoreSearchUseCase _restoreSearchUseCase;
   final ActiveSearchNavActions _activeSearchNavActions;
+  bool _isLoading = true;
 
   @override
-  void willChangeMarkets() => scheduleComputeState(() {
-        super.willChangeMarkets();
-        // closes the current search...
-        closeSearch(state.results.map((it) => it.documentId).toSet());
+  bool get isLoading => _isLoading;
+
+  void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
+        _isLoading = true;
+        resetCardIndex();
+
+        search(searchTerm);
       });
 
-  void handleSearchTerm(String searchTerm) => search(searchTerm);
+  @override
+  void resetParameters() {
+    resetCardIndex();
+    // clears the current pending observation, if any...
+    observeDocument();
+    // clear the inner-stored current observation...
+    resetObservedDocument();
+  }
 
   @override
   void onPersonalAreaNavPressed() =>
@@ -84,48 +103,50 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void handleLoadMore() => requestNextSearchBatch();
 
-  @override
-  void didChangeMarkets() async {
-    final engineEvent = await _restoreSearchUseCase.singleOutput(none);
-
-    if (engineEvent is RestoreSearchSucceeded) {
-      final queryTerm = engineEvent.search.queryTerm;
-
-      handleSearchTerm(queryTerm);
-    }
-  }
-
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(
       BaseDiscoveryManager manager) {
+    final self = manager as ActiveSearchManager;
     final state = manager.state;
 
     foldEngineEvent({
+      required OnSearchRequestSucceeded searchRequestSucceeded,
       required OnRestoreSearchSucceeded restoreSearchSucceeded,
       required OnNextSearchBatchRequestSucceeded
           nextSearchBatchRequestSucceeded,
       required OnDocumentsUpdated documentsUpdated,
       required OnEngineExceptionRaised engineExceptionRaised,
       required OnNextSearchBatchRequestFailed nextSearchBatchRequestFailed,
+      required OnRestoreSearchFailed restoreSearchFailed,
       required OnNonMatchedEngineEvent orElse,
     }) =>
         (EngineEvent? event) {
-          if (event is RestoreSearchSucceeded) {
+          if (event is SearchRequestSucceeded) {
+            self._isLoading = false;
+            return searchRequestSucceeded(event);
+          } else if (event is RestoreSearchSucceeded) {
+            self._isLoading = false;
             return restoreSearchSucceeded(event);
           } else if (event is NextSearchBatchRequestSucceeded) {
+            self._isLoading = false;
             return nextSearchBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
           } else if (event is EngineExceptionRaised) {
             return engineExceptionRaised(event);
           } else if (event is NextSearchBatchRequestFailed) {
+            self._isLoading = false;
             return nextSearchBatchRequestFailed(event);
+          } else if (event is RestoreSearchFailed) {
+            self._isLoading = false;
+            return restoreSearchFailed(event);
           }
 
           return orElse();
         };
 
     return foldEngineEvent(
-      restoreSearchSucceeded: (event) => {...state.results, ...event.items},
+      searchRequestSucceeded: (event) => event.items.toSet(),
+      restoreSearchSucceeded: (event) => event.items.toSet(),
       nextSearchBatchRequestSucceeded: (event) =>
           {...state.results, ...event.items},
       documentsUpdated: (event) => state.results
@@ -150,6 +171,17 @@ class ActiveSearchManager extends BaseDiscoveryManager
       nextSearchBatchRequestFailed: (event) {
         manager.sendAnalyticsUseCase(
           NextSearchBatchRequestFailedEvent(
+            event: event,
+          ),
+        );
+
+        logger.e('$event');
+
+        return state.results;
+      },
+      restoreSearchFailed: (event) {
+        manager.sendAnalyticsUseCase(
+          RestoreSearchFailedEvent(
             event: event,
           ),
         );

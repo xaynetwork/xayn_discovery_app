@@ -20,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
@@ -60,6 +61,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
+  final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
 
   /// html reader mode elements:
   ///
@@ -131,6 +133,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._toggleBookmarkUseCase,
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
+    this._hapticFeedbackMediumUseCase,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -194,6 +197,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     );
     openExternalUrl(document.resource.url.toString(), currentView);
   }
+
+  void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
   @override
   Future<DiscoveryCardState?> computeState() async => fold3(

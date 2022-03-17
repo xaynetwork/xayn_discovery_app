@@ -3,13 +3,13 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
-class RequestSearchUseCase extends UseCase<String, EngineEvent> {
+class GetSearchTermUseCase extends UseCase<None, EngineEvent> {
   final DiscoveryEngine _engine;
 
-  RequestSearchUseCase(this._engine);
+  GetSearchTermUseCase(this._engine);
 
   @override
-  Stream<EngineEvent> transaction(String param) async* {
-    yield await _engine.requestSearch(param);
+  Stream<EngineEvent> transaction(None param) async* {
+    yield await _engine.getSearchTerm();
   }
 }

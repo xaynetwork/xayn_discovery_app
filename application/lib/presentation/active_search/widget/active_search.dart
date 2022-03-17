@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
@@ -12,8 +13,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.
 class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
-  const ActiveSearch({Key? key, required ActiveSearchManager manager})
-      : super(key: key, manager: manager);
+  const ActiveSearch({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ActiveSearchState();
@@ -21,30 +21,50 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
+  late final ActiveSearchManager _manager;
+
+  @override
+  ActiveSearchManager get manager => _manager;
+
+  @override
+  void initState() {
+    _manager = di.get();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _manager.close();
+
+    super.dispose();
+  }
+
   @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
           [
             buildNavBarItemHome(onPressed: () {
               hideTooltip();
-              widget.manager.onHomeNavPressed();
+              _manager.onHomeNavPressed();
             }),
             buildNavBarItemSearchActive(
               isActive: true,
-              onSearchPressed: widget.manager.search,
+              hint: _manager.lastUsedSearchTerm,
+              onSearchPressed: _manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
-                widget.manager.onPersonalAreaNavPressed();
+                _manager.onPersonalAreaNavPressed();
               },
             ),
           ],
           showAboveKeyboard: true,
         );
     NavBarConfig buildReaderMode() {
-      final document = widget.manager.state.results
-          .elementAt(widget.manager.state.cardIndex);
+      final document =
+          _manager.state.results.elementAt(_manager.state.cardIndex);
       final managers = managersOf(document);
 
       void onBookmarkPressed() =>
@@ -56,7 +76,7 @@ class _ActiveSearchState
               document: document,
               provider: managers.discoveryCardManager.state.processedDocument
                   ?.getProvider(document.resource),
-              onError: (tooltipKey) => showTooltip(tooltipKey),
+              onError: showTooltip,
             ),
           );
 
@@ -71,7 +91,7 @@ class _ActiveSearchState
           buildNavBarItemArrowLeft(onPressed: () async {
             removeOverlay();
             await currentCardController?.animateToClose();
-            widget.manager.handleNavigateOutOfCard();
+            _manager.handleNavigateOutOfCard();
           }),
           buildNavBarItemLike(
             isLiked: managers.discoveryCardManager.state
@@ -113,8 +133,6 @@ class _ActiveSearchState
       );
     }
 
-    return widget.manager.state.isFullScreen
-        ? buildReaderMode()
-        : buildDefault();
+    return _manager.state.isFullScreen ? buildReaderMode() : buildDefault();
   }
 }

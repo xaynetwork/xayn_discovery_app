@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
+import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
 typedef ScrollHandler = void Function(double position);
@@ -230,7 +231,7 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
           uri: Uri.parse(src.url),
           errorBuilder: (_) => Container(),
           noImageBuilder: (_) => Container(),
-          loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
+          loadingBuilder: (_, __) => const WidgetTestableProgressIndicator(),
         ),
       );
 
