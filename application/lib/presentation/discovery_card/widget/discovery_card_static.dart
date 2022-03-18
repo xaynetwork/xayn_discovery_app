@@ -127,8 +127,6 @@ class _DiscoveryCardStaticState
     required Size size,
     required bool isBookmarked,
   }) {
-    /// nav bar height + nav bar bottom padding + reader mode bottom padding preferred
-    final bottomPadding = R.dimen.navBarHeight + R.dimen.unit3 + R.dimen.unit5;
     final readerMode = ReaderMode(
       title: title,
       languageCode: widget.document.resource.language,
@@ -137,7 +135,7 @@ class _DiscoveryCardStaticState
       padding: EdgeInsets.only(
         left: R.dimen.unit3,
         right: R.dimen.unit3,
-        bottom: bottomPadding,
+        bottom: R.dimen.readerModeBottomPadding,
         top: size.height * _kImageFractionSize,
       ),
       onScroll: (position) => setState(() => _scrollOffset = position),
