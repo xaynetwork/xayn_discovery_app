@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
@@ -36,7 +35,6 @@ class ShimmeringFeedView extends StatelessWidget {
     batchIndex: -1,
     userReaction: UserReaction.neutral,
   );
-  late final isInTest = Platform.environment.containsKey('FLUTTER_TEST');
 
   ShimmeringFeedView({
     Key? key,
@@ -52,7 +50,7 @@ class ShimmeringFeedView extends StatelessWidget {
   Widget build(BuildContext context) => Shimmer.fromColors(
         baseColor: R.colors.searchResultSkeletonBase,
         highlightColor: R.colors.searchResultSkeletonHighlight,
-        enabled: !isInTest,
+        enabled: !EnvironmentHelper.kIsInTest,
         child: CardView(
           scrollDirection: Axis.vertical,
           size: mainCardSize,
