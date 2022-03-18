@@ -1,5 +1,7 @@
 import 'package:injectable/injectable.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 
@@ -22,11 +24,13 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         _mapToAppVersionMapper.map(map[AppSettingsFields.appVersion]);
     final firstAppLaunchDate =
         map[AppSettingsFields.firstAppLaunchDate] as DateTime?;
+    final userId = map[AppSettingsFields.userId] as String?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
       lastKnownAppVersion: appVersion,
       firstAppLaunchDate: firstAppLaunchDate ?? DateTime.now(),
+      userId: UniqueId.fromTrustedString(userId ?? const Uuid().v4()),
     );
   }
 
@@ -35,7 +39,8 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         AppSettingsFields.numberOfSessions: entity.numberOfSessions,
         AppSettingsFields.appVersion:
             _appVersionToMapMapper.map(entity.lastKnownAppVersion),
-        AppSettingsFields.firstAppLaunchDate: entity.firstAppLaunchDate
+        AppSettingsFields.firstAppLaunchDate: entity.firstAppLaunchDate,
+        AppSettingsFields.userId: entity.userId.value,
       };
 }
 
@@ -45,4 +50,5 @@ abstract class AppSettingsFields {
   static const int numberOfSessions = 0;
   static const int appVersion = 1;
   static const int firstAppLaunchDate = 2;
+  static const int userId = 3;
 }
