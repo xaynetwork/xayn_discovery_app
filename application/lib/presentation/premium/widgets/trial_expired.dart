@@ -23,6 +23,9 @@ class TrialExpired extends StatelessWidget {
   /// Handler for when the promo code button was tapped.
   final VoidCallback _onPromoCode;
 
+  /// Handler for when the restore button was tapped.
+  final VoidCallback _onRestore;
+
   /// Custom content paddding.
   final EdgeInsetsGeometry? _padding;
 
@@ -31,11 +34,13 @@ class TrialExpired extends StatelessWidget {
     required PurchasableProduct product,
     required VoidCallback onSubscribe,
     required VoidCallback onPromoCode,
+    required VoidCallback onRestore,
     VoidCallback? onCancel,
     EdgeInsetsGeometry? padding,
   })  : _product = product,
         _onSubscribe = onSubscribe,
         _onPromoCode = onPromoCode,
+        _onRestore = onRestore,
         _onCancel = onCancel,
         _padding = padding,
         super(key: key);
@@ -94,6 +99,15 @@ class TrialExpired extends StatelessWidget {
           .map((it) => SettingsCardData.fromTile(it))
           .toList(growable: false));
 
+  Widget _buildProgressIndicator(Color color) => SizedBox(
+        width: R.dimen.unit2_5,
+        height: R.dimen.unit2_5,
+        child: CircularProgressIndicator(
+          color: color,
+          strokeWidth: R.dimen.unit0_25,
+        ),
+      );
+
   Widget _buildSubscribeNow() {
     final cancelButton = TextButton(
       child: Text(
@@ -109,24 +123,25 @@ class TrialExpired extends StatelessWidget {
       width: R.dimen.unit,
     );
 
-    final subscribeNowButton = AppRaisedButton.text(
-      onPressed: _onSubscribe,
-      text: R.strings.subscriptionSubscribeNow,
-    );
+    final isPurchasing =
+        _product.status == PurchasableProductStatus.purchasePending;
 
-    final loadingButton = AppRaisedButton(
+    final subscribeNowButton = AppRaisedButton(
       child: SizedBox(
-        width: R.dimen.unit2_5,
         height: R.dimen.unit2_5,
-        child: CircularProgressIndicator(
-          color: R.colors.brightIcon,
-          strokeWidth: R.dimen.unit0_25,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isPurchasing) ...[
+              _buildProgressIndicator(R.colors.brightIcon),
+              spacer
+            ],
+            Text(R.strings.subscriptionSubscribeNow),
+          ],
         ),
       ),
-      onPressed: () {},
+      onPressed: _onSubscribe,
     );
-
-    final isLoading = _product.status == PurchasableProductStatus.pending;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -137,24 +152,59 @@ class TrialExpired extends StatelessWidget {
           ),
         spacer,
         Expanded(
-          child: isLoading ? loadingButton : subscribeNowButton,
+          child: subscribeNowButton,
         ),
       ],
     );
   }
 
-  Widget _buildSubscriptionOptions() => Center(
-        child: TextButton(
-          child: Text(
-            R.strings.subscriptionPromoCode,
+  Widget _buildSubscriptionOptions() {
+    final promoCode = TextButton(
+      child: Text(
+        R.strings.subscriptionPromoCode,
+        style: R.styles.sBoldStyle.copyWith(
+          decoration: TextDecoration.underline,
+          color: R.colors.secondaryText,
+        ),
+      ),
+      onPressed: _onPromoCode,
+    );
+
+    final spacer = SizedBox(
+      width: R.dimen.unit,
+    );
+
+    final isRestoring =
+        _product.status == PurchasableProductStatus.restorePending;
+
+    final restore = TextButton(
+      child: Row(
+        children: [
+          if (isRestoring) ...[
+            _buildProgressIndicator(R.colors.secondaryText),
+            spacer,
+          ],
+          Text(
+            R.strings.subscriptionRestore,
             style: R.styles.sBoldStyle.copyWith(
               decoration: TextDecoration.underline,
               color: R.colors.secondaryText,
             ),
           ),
-          onPressed: _onPromoCode,
-        ),
-      );
+        ],
+      ),
+      onPressed: _onRestore,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        promoCode,
+        spacer,
+        restore,
+      ],
+    );
+  }
 
   Widget _buildFooter() => SuperRichText(
         text: R.strings.subscriptionDisclaimer,

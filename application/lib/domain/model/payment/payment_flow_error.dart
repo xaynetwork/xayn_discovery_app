@@ -5,6 +5,7 @@ enum PaymentFlowError {
   productNotFound,
   itemAlreadyOwned,
   paymentFailed,
+  noActiveSubscriptionFound,
 }
 
 extension PaymentFlowErrorExtension on PaymentFlowError {
