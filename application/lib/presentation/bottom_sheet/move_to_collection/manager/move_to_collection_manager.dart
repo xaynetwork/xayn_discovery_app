@@ -7,6 +7,9 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_moved_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
@@ -28,6 +31,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
   final CreateBookmarkFromDocumentUseCase _createBookmarkUseCase;
   final GetBookmarkUseCase _getBookmarkUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final List<Collection> _collections;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
@@ -48,6 +52,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     this._getBookmarkUseCase,
     this._createBookmarkUseCase,
     this._collections,
+    this._sendAnalyticsUseCase,
   ) : super(MoveToCollectionState.initial()) {
     _init();
   }
@@ -60,6 +65,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     RemoveBookmarkUseCase removeBookmarkUseCase,
     GetBookmarkUseCase getBookmarkUseCase,
     CreateBookmarkFromDocumentUseCase createBookmarkUseCase,
+    SendAnalyticsUseCase sendAnalyticsUseCase,
   ) async {
     final collections =
         (await getAllCollectionsUseCase.singleOutput(none)).collections;
@@ -71,6 +77,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
       getBookmarkUseCase,
       createBookmarkUseCase,
       collections,
+      sendAnalyticsUseCase,
     );
   }
 
@@ -126,9 +133,15 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
         userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
       );
+      _sendAnalyticsUseCase(
+        DocumentBookmarkedEvent(document: document, isBookmarked: true),
+      );
     }
     if (isBookmarked && !hasSelected) {
       _removeBookmarkHandler(document.documentUniqueId);
+      _sendAnalyticsUseCase(
+        DocumentBookmarkedEvent(document: document, isBookmarked: false),
+      );
     }
     if (isBookmarked && hasSelected) {
       _moveBookmark(bookmarkId: document.documentUniqueId);
@@ -149,6 +162,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
       collectionId: state.selectedCollectionId!,
     );
     _moveBookmarkHandler(param);
+    _sendAnalyticsUseCase(BookmarkMovedEvent());
   }
 
   @override

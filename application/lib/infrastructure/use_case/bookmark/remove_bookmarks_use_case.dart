@@ -6,16 +6,16 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 
 @injectable
-class RemoveBookmarskUseCase
-    extends UseCase<RemoveBookmarskUseCaseIn, RemoveBookmarskUseCaseOut> {
+class RemoveBookmarksUseCase
+    extends UseCase<RemoveBookmarksUseCaseIn, RemoveBookmarksUseCaseOut> {
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
-  RemoveBookmarskUseCase(
+  RemoveBookmarksUseCase(
     this._removeBookmarkUseCase,
   );
 
   @override
-  Stream<RemoveBookmarskUseCaseOut> transaction(
-      RemoveBookmarskUseCaseIn param) async* {
+  Stream<RemoveBookmarksUseCaseOut> transaction(
+      RemoveBookmarksUseCaseIn param) async* {
     List<Bookmark> removedBookmarks = [];
     for (var bookmarkId in param.bookmarksIds) {
       final removedBookmark = await _removeBookmarkUseCase.singleOutput(
@@ -23,23 +23,23 @@ class RemoveBookmarskUseCase
       );
       removedBookmarks.add(removedBookmark);
     }
-    yield RemoveBookmarskUseCaseOut(removedBookmarks: removedBookmarks);
+    yield RemoveBookmarksUseCaseOut(removedBookmarks: removedBookmarks);
   }
 }
 
-class RemoveBookmarskUseCaseIn extends Equatable {
+class RemoveBookmarksUseCaseIn extends Equatable {
   final List<UniqueId> bookmarksIds;
 
-  const RemoveBookmarskUseCaseIn({required this.bookmarksIds});
+  const RemoveBookmarksUseCaseIn({required this.bookmarksIds});
 
   @override
   List<Object> get props => [bookmarksIds];
 }
 
-class RemoveBookmarskUseCaseOut extends Equatable {
+class RemoveBookmarksUseCaseOut extends Equatable {
   final List<Bookmark> removedBookmarks;
 
-  const RemoveBookmarskUseCaseOut({
+  const RemoveBookmarksUseCaseOut({
     required this.removedBookmarks,
   });
 

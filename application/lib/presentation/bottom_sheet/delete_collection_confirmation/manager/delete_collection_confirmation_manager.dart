@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
@@ -14,8 +16,9 @@ class DeleteCollectionConfirmationManager
     extends Cubit<DeleteCollectionConfirmationState>
     with UseCaseBlocHelper<DeleteCollectionConfirmationState> {
   final RemoveCollectionUseCase _removeCollectionUseCase;
-  final RemoveBookmarskUseCase _removeBookmarskUseCase;
+  final RemoveBookmarksUseCase _removeBookmarksUseCase;
   final GetAllBookmarksUseCase _getAllBookmarksUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late UniqueId _collectionId;
   late final UseCaseSink<GetAllBookmarksUseCaseIn, GetAllBookmarksUseCaseOut>
@@ -26,7 +29,8 @@ class DeleteCollectionConfirmationManager
   DeleteCollectionConfirmationManager(
     this._removeCollectionUseCase,
     this._getAllBookmarksUseCase,
-    this._removeBookmarskUseCase,
+    this._removeBookmarksUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(DeleteCollectionConfirmationState.initial());
 
   void enteringScreen(UniqueId collectionId) {
@@ -39,10 +43,13 @@ class DeleteCollectionConfirmationManager
   }
 
   Future<void> deleteAll() async {
-    await _removeBookmarskUseCase.call(RemoveBookmarskUseCaseIn(
+    await _removeBookmarksUseCase.call(RemoveBookmarksUseCaseIn(
       bookmarksIds: state.bookmarksIds,
     ));
     await deleteCollection();
+    _sendAnalyticsUseCase(
+      CollectionDeletedEvent(context: DeleteCollectionContext.deleteBookmarks),
+    );
   }
 
   Future<void> deleteCollection() async {
@@ -50,6 +57,9 @@ class DeleteCollectionConfirmationManager
       RemoveCollectionUseCaseParam(
         collectionIdToRemove: _collectionId,
       ),
+    );
+    _sendAnalyticsUseCase(
+      CollectionDeletedEvent(context: DeleteCollectionContext.empty),
     );
   }
 
