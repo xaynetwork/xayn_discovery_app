@@ -64,6 +64,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;
+  EngineEvent? _completedEvent;
   bool _isLoading = true;
   bool _didReachEnd = false;
 
@@ -117,6 +118,13 @@ class ActiveSearchManager extends BaseDiscoveryManager
     final self = manager as ActiveSearchManager;
     final state = manager.state;
 
+    maybeCompleteLoading(EngineEvent event) {
+      if (event != self._completedEvent) {
+        self._isLoading = false;
+        self._completedEvent = event;
+      }
+    }
+
     foldEngineEvent({
       required OnSearchRequestSucceeded searchRequestSucceeded,
       required OnRestoreSearchSucceeded restoreSearchSucceeded,
@@ -130,24 +138,22 @@ class ActiveSearchManager extends BaseDiscoveryManager
     }) =>
         (EngineEvent? event) {
           if (event is SearchRequestSucceeded) {
-            self._isLoading = false;
+            maybeCompleteLoading(event);
             return searchRequestSucceeded(event);
           } else if (event is RestoreSearchSucceeded) {
-            self._isLoading = false;
+            maybeCompleteLoading(event);
             return restoreSearchSucceeded(event);
           } else if (event is NextSearchBatchRequestSucceeded) {
-            self._isLoading = false;
-            self._didReachEnd = event.items.isEmpty;
+            maybeCompleteLoading(event);
             return nextSearchBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
           } else if (event is EngineExceptionRaised) {
             return engineExceptionRaised(event);
           } else if (event is NextSearchBatchRequestFailed) {
-            self._isLoading = false;
             return nextSearchBatchRequestFailed(event);
           } else if (event is RestoreSearchFailed) {
-            self._isLoading = false;
+            maybeCompleteLoading(event);
             return restoreSearchFailed(event);
           }
 
