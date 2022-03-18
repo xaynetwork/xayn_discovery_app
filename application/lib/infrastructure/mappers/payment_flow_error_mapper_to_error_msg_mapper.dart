@@ -20,6 +20,8 @@ class PaymentFlowErrorToErrorMessageMapper
         return R.strings.paymentFlowError.itemAlreadyOwned;
       case PaymentFlowError.paymentFailed:
         return R.strings.paymentFlowError.transactionFailed;
+      case PaymentFlowError.noActiveSubscriptionFound:
+        return R.strings.paymentFlowError.noActiveSubscriptionFound;
     }
   }
 }
