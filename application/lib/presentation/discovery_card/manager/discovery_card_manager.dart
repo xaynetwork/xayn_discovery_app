@@ -115,6 +115,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           (it) => DocumentBookmarkedEvent(
             document: it.document,
             isBookmarked: it.isBookmarked,
+            toDefaultCollection: true,
           ),
         )
         .cast<AnalyticsEvent>()
