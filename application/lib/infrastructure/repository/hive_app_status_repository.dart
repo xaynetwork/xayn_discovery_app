@@ -28,5 +28,13 @@ class HiveAppStatusRepository extends HiveRepository<AppStatus>
   Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.appStatus);
 
   @override
-  AppStatus get appStatus => getById(AppStatus.globalId) ?? AppStatus.initial();
+  AppStatus get appStatus {
+    AppStatus? status = getById(AppStatus.globalId);
+    if (status == null) {
+      status = AppStatus.initial();
+      // We need to save the initial status as it generates a random user ID.
+      save(status);
+    }
+    return status;
+  }
 }
