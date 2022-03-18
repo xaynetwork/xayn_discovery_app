@@ -29,7 +29,7 @@ class CollectionListItem extends StatelessWidget {
       R.assets.icons.check,
       fit: BoxFit.fitHeight,
       color: R.colors.icon,
-      height: R.dimen.unit5,
+      height: R.dimen.bottomSheetItemTrailingIconHeight,
     );
 
     final thumbnail = collectionImage != null
