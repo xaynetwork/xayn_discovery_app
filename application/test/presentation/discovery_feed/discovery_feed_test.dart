@@ -125,6 +125,7 @@ void main() async {
         isComplete: true,
         isFullScreen: false,
         isInErrorState: false,
+        didReachEnd: false,
       ),
     ],
     verify: (manager) {
@@ -219,6 +220,7 @@ void main() async {
         isFullScreen: true,
         isInErrorState: false,
         shouldUpdateNavBar: true,
+        didReachEnd: false,
       ),
     ],
     verify: (manager) {
