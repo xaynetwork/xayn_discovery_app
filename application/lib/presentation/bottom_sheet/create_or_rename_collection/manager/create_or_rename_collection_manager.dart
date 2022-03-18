@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_created_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_renamed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -57,6 +58,15 @@ class CreateOrRenameCollectionManager
       param,
     );
     _sendAnalyticsUseCase(CollectionRenamedEvent());
+  }
+
+  void onCancelPressed({required bool isRenameMode}) {
+    final view = isRenameMode
+        ? BottomSheetView.renameCollection
+        : BottomSheetView.createCollection;
+    _sendAnalyticsUseCase(
+      BottomSheetDismissedEvent(bottomSheetView: view),
+    );
   }
 
   @override

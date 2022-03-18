@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_provider.dart'
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_moved_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
@@ -134,13 +135,22 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
         context: FeedbackContext.implicit,
       );
       _sendAnalyticsUseCase(
-        DocumentBookmarkedEvent(document: document, isBookmarked: true),
+        DocumentBookmarkedEvent(
+          document: document,
+          isBookmarked: true,
+          toDefaultCollection:
+              state.selectedCollectionId == Collection.readLaterId,
+        ),
       );
     }
     if (isBookmarked && !hasSelected) {
       _removeBookmarkHandler(document.documentUniqueId);
       _sendAnalyticsUseCase(
-        DocumentBookmarkedEvent(document: document, isBookmarked: false),
+        DocumentBookmarkedEvent(
+          document: document,
+          isBookmarked: false,
+          toDefaultCollection: false,
+        ),
       );
     }
     if (isBookmarked && hasSelected) {
@@ -156,13 +166,25 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     }
   }
 
+  void onCancelPressed() {
+    _sendAnalyticsUseCase(
+      BottomSheetDismissedEvent(
+          bottomSheetView: BottomSheetView.saveToCollection),
+    );
+  }
+
   void _moveBookmark({required UniqueId bookmarkId}) {
     final param = MoveBookmarkUseCaseIn(
       bookmarkId: bookmarkId,
       collectionId: state.selectedCollectionId!,
     );
     _moveBookmarkHandler(param);
-    _sendAnalyticsUseCase(BookmarkMovedEvent());
+    _sendAnalyticsUseCase(
+      BookmarkMovedEvent(
+        toDefaultCollection:
+            state.selectedCollectionId == Collection.readLaterId,
+      ),
+    );
   }
 
   @override

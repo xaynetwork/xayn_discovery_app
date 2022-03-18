@@ -57,20 +57,16 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
       di.get();
   late final TextEditingController _textEditingController;
 
+  bool get isRenameMode => widget.collection != null;
+
   @override
   void initState() {
     _textEditingController = TextEditingController();
-    _maybeSetInitialCollectionName();
+    if (isRenameMode) _setInitialCollectionName(widget.collection!.name);
     super.initState();
   }
 
-  /// If widget.collection is not null it means that an existing
-  /// collection is being renamed. In this case:
-  /// 1) Update the collection name in the state through the manager
-  /// 2) Show in the input field the name of the collection being renamed
-  void _maybeSetInitialCollectionName() {
-    final collectionName = widget.collection?.name;
-    if (collectionName == null) return;
+  void _setInitialCollectionName(String collectionName) {
     _createOrRenameCollectionManager.updateCollectionName(collectionName);
     _textEditingController.text = collectionName;
   }
@@ -93,22 +89,24 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
           final header = Padding(
             padding: EdgeInsets.symmetric(vertical: R.dimen.unit),
             child: BottomSheetHeader(
-              headerText: widget.collection == null
-                  ? R.strings.bottomSheetCreateCollectionHeader
-                  : R.strings.bottomSheetRenameCollectionHeader,
+              headerText: isRenameMode
+                  ? R.strings.bottomSheetRenameCollectionHeader
+                  : R.strings.bottomSheetCreateCollectionHeader,
             ),
           );
 
           final footer = BottomSheetFooter(
             onCancelPressed: () {
+              _createOrRenameCollectionManager.onCancelPressed(
+                  isRenameMode: isRenameMode);
               widget.onSystemPop?.call();
               closeBottomSheet(context);
             },
             setup: BottomSheetFooterSetup.row(
               buttonData: BottomSheetFooterButton(
-                text: widget.collection == null
-                    ? R.strings.bottomSheetCreate
-                    : R.strings.bottomSheetRename,
+                text: isRenameMode
+                    ? R.strings.bottomSheetRename
+                    : R.strings.bottomSheetCreate,
                 onPressed: _onApplyPressed,
                 isDisabled: state.collectionName.trim().isEmpty,
               ),
@@ -128,9 +126,8 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
       );
 
   void _onApplyPressed() {
-    final collectionId = widget.collection?.id;
-    if (collectionId != null) {
-      _createOrRenameCollectionManager.renameCollection(collectionId);
+    if (isRenameMode) {
+      _createOrRenameCollectionManager.renameCollection(widget.collection!.id);
     } else {
       _createOrRenameCollectionManager.createCollection();
     }
@@ -141,7 +138,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
     widget.onApplyPressed?.call(newCollection);
 
     /// If the renaming is going on then call the onSystemPop if not null
-    if (widget.collection != null) {
+    if (isRenameMode) {
       widget.onSystemPop?.call();
     }
   }
