@@ -1,14 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_error.dart';
 
 import 'feed_settings_state.dart';
 
@@ -36,7 +35,7 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
 
   final _allCountries = <Country>{};
   final _selectedCountries = <Country>{};
-  TooltipKey? _errorTooltipKey;
+  FeedSettingsError? _error;
 
   Future<void> init() async {
     final countries = await _getSupportedCountriesUseCase.singleOutput(none);
@@ -50,8 +49,7 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
   Future<void> onAddCountryPressed(Country country) async {
     if (_selectedCountries.length == maxSelectedCountryAmount) {
       scheduleComputeState(
-        () => _errorTooltipKey =
-            TooltipKeys.feedSettingsScreenMaxSelectedCountries,
+        () => _error = FeedSettingsError.maxSelectedCountries,
       );
       return;
     }
@@ -63,8 +61,7 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
   Future<void> onRemoveCountryPressed(Country country) async {
     if (_selectedCountries.length == 1) {
       scheduleComputeState(
-        () => _errorTooltipKey =
-            TooltipKeys.feedSettingsScreenMinSelectedCountries,
+        () => _error = FeedSettingsError.minSelectedCountries,
       );
       return;
     }
@@ -86,10 +83,10 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
         maxSelectedCountryAmount: maxSelectedCountryAmount,
         selectedCountries: _selectedCountries.toList(),
         unSelectedCountries: unSelectedCountries,
-        errorKey: _errorTooltipKey,
+        error: ErrorObject(_error),
       );
     } finally {
-      _errorTooltipKey = null;
+      _error = null;
     }
   }
 
