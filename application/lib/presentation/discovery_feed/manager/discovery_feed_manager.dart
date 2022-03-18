@@ -77,6 +77,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   bool get isLoading => _isLoading;
 
   @override
+  bool get didReachEnd => false;
+
+  @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
     final observedDocument = currentObservedDocument;
 

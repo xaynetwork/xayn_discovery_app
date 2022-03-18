@@ -27,6 +27,8 @@ class FeedView extends StatelessWidget {
   final BorderRadius borderRadius;
   final BoxBorderBuilder? boxBorderBuilder;
   final CardIdentifierBuilder? cardIdentifierBuilder;
+  final AuxiliaryCardBuilder? noItemsBuilder;
+  final AuxiliaryCardBuilder? finalItemBuilder;
 
   FeedView({
     Key? key,
@@ -42,6 +44,8 @@ class FeedView extends StatelessWidget {
     this.itemCount,
     this.boxBorderBuilder,
     this.cardIdentifierBuilder,
+    this.noItemsBuilder,
+    this.finalItemBuilder,
   })  : mainCardSize =
             isFullScreen ? 1.0 - .15 * fullScreenOffsetFraction : notchSize,
         padding = isFullScreen
@@ -78,5 +82,7 @@ class FeedView extends StatelessWidget {
         disableGestures: isFullScreen,
         cardIdentifierBuilder: cardIdentifierBuilder,
         deltaThreshold: 15,
+        noItemsBuilder: noItemsBuilder,
+        finalItemBuilder: finalItemBuilder,
       );
 }

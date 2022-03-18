@@ -8,12 +8,46 @@ import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_disco
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/widget/feed_info_card.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// A widget which displays a list of discovery results,
 /// and has an ability to perform search.
 class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
-  const ActiveSearch({Key? key}) : super(key: key);
+  ActiveSearch({Key? key})
+      : super(
+          key: key,
+          noItemsBuilder: (
+            BuildContext context,
+            double? width,
+            double? height,
+          ) =>
+              FeedNoResultsCard(
+            context: context,
+            width: width,
+            height: height,
+          ),
+          finalItemBuilder: (
+            BuildContext context,
+            double? width,
+            double? height,
+          ) =>
+              FeedEndOfResultsCard(
+            context: context,
+            width: width,
+            height: height,
+          ),
+          loadingItemBuilder: (
+            BuildContext context,
+            double? width,
+            double? height,
+          ) =>
+              FeedLoadingCard(
+            context: context,
+            width: width,
+            height: height,
+          ),
+        );
 
   @override
   State<StatefulWidget> createState() => _ActiveSearchState();
