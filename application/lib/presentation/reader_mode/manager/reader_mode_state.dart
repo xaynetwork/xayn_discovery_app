@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 
@@ -12,6 +13,7 @@ class ReaderModeState with _$ReaderModeState {
   const factory ReaderModeState({
     Uri? uri,
     required ReaderModeSettings readerModeSettings,
+    @Default(ErrorObject()) ErrorObject error,
   }) = _ReaderModeState;
 
   factory ReaderModeState.empty({

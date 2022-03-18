@@ -35,7 +35,7 @@ void main() {
       expect(
         output,
         equals([
-          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.purchasePending),
           useCaseSuccess(PurchasableProductStatus.purchased),
         ]),
       );
@@ -60,7 +60,7 @@ void main() {
       expect(
         output,
         equals([
-          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.purchasePending),
           useCaseFailure(throwsA(PaymentFlowError.paymentFailed)),
         ]),
       );
@@ -84,7 +84,7 @@ void main() {
       expect(
         output,
         equals([
-          useCaseSuccess(PurchasableProductStatus.pending),
+          useCaseSuccess(PurchasableProductStatus.purchasePending),
           useCaseSuccess(PurchasableProductStatus.canceled),
         ]),
       );
@@ -113,7 +113,7 @@ void main() {
         expect(
           output,
           equals([
-            useCaseSuccess(PurchasableProductStatus.pending),
+            useCaseSuccess(PurchasableProductStatus.purchasePending),
             useCaseFailure(throwsA(PaymentFlowError.unknown)),
           ]),
         );

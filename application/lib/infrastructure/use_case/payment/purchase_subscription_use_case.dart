@@ -25,7 +25,7 @@ class PurchaseSubscriptionUseCase
   Stream<PurchasableProductStatus> transaction(
     PurchasableProductId param,
   ) async* {
-    yield PurchasableProductStatus.pending;
+    yield PurchasableProductStatus.purchasePending;
     try {
       final info = await _paymentService.purchaseProduct(param);
       final productIdentifier =

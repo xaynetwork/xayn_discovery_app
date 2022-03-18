@@ -6,13 +6,14 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 import '../../bookmark/manager/bookmarks_screen_manager.dart';
 
 class BookmarkOptionsBottomSheet extends BottomSheetBase {
   BookmarkOptionsBottomSheet({
     required UniqueId bookmarkId,
-    required Function(TooltipKey) onError,
+    required OnToolTipError onError,
     required VoidCallback onSystemPop,
     Key? key,
   }) : super(
@@ -28,7 +29,7 @@ class BookmarkOptionsBottomSheet extends BottomSheetBase {
 
 class _BookmarkOptions extends StatefulWidget {
   final UniqueId bookmarkId;
-  final Function(TooltipKey) onError;
+  final OnToolTipError onError;
   final VoidCallback? onSystemPop;
   const _BookmarkOptions({
     required this.bookmarkId,

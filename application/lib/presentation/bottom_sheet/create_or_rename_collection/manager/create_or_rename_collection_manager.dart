@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_created_event.dart';
@@ -81,7 +82,7 @@ class CreateOrRenameCollectionManager
           logger.e(error);
           final errorMessage =
               _collectionErrorsEnumMapper.mapEnumToString(error);
-          return state.copyWith(errorMessage: errorMessage);
+          return state.copyWith(error: ErrorObject(error, errorMessage));
         }
 
         _checkForError = false;
