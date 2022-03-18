@@ -37,16 +37,6 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
             width: width,
             height: height,
           ),
-          loadingItemBuilder: (
-            BuildContext context,
-            double? width,
-            double? height,
-          ) =>
-              FeedLoadingCard(
-            context: context,
-            width: width,
-            height: height,
-          ),
         );
 
   @override
