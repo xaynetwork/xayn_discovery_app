@@ -139,18 +139,21 @@ class ActiveSearchManager extends BaseDiscoveryManager
         (EngineEvent? event) {
           if (event is SearchRequestSucceeded) {
             maybeCompleteLoading(event);
+            self._didReachEnd = event.items.length == 1;
             return searchRequestSucceeded(event);
           } else if (event is RestoreSearchSucceeded) {
             maybeCompleteLoading(event);
             return restoreSearchSucceeded(event);
           } else if (event is NextSearchBatchRequestSucceeded) {
             maybeCompleteLoading(event);
+            self._didReachEnd = event.items.isEmpty;
             return nextSearchBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
           } else if (event is EngineExceptionRaised) {
             return engineExceptionRaised(event);
           } else if (event is NextSearchBatchRequestFailed) {
+            self._didReachEnd = false;
             return nextSearchBatchRequestFailed(event);
           } else if (event is RestoreSearchFailed) {
             maybeCompleteLoading(event);
