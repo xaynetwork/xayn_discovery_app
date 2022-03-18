@@ -45,6 +45,12 @@ Future<void> configureDependencies({
   );
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
+
+  final appStatusRepository = di.get<AppStatusRepository>();
+  final userId = appStatusRepository.appStatus.userId;
+  di.registerLazySingleton<BugReportingService>(
+      () => BugReportingService(userId));
+  di.registerLazySingleton<PaymentService>(() => PaymentService(userId));
 }
 
 void initServices() {
@@ -52,11 +58,5 @@ void initServices() {
   di.get<MarketingAnalyticsService>();
   di.get<AnalyticsNavigatorObserver>();
   di.get<DiscoveryEngine>();
-
-  final paymentService = di.get<PaymentService>();
-  final bugReportingService = di.get<BugReportingService>();
-  final appStatusRepository = di.get<AppStatusRepository>();
-  final userId = appStatusRepository.appStatus.userId.value;
-  paymentService.setUserId(userId);
-  bugReportingService.setUserId(userId);
+  di.get<PaymentService>();
 }
