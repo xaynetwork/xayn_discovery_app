@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 /// A helper class to initialize something in [init] that must complete before any
 /// [safeRun] operation runs.
@@ -17,7 +17,7 @@ mixin AsyncInitMixin {
   void startInitializing() {
     _ongoingInit = CancelableOperation.fromFuture(init().then((value) => true),
         onCancel: () => false);
-    if (Platform.environment.containsKey('FLUTTER_TEST')) {
+    if (EnvironmentHelper.kIsInTest) {
       _operations.add(_ongoingInit!);
     }
   }
