@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
 abstract class PersonalAreaNavActions {
   void onHomeNavPressed();
@@ -22,7 +23,9 @@ abstract class PersonalAreaNavActions {
 
 @lazySingleton
 class PersonalAreaManager extends Cubit<PersonalAreaState>
-    with UseCaseBlocHelper<PersonalAreaState>
+    with
+        UseCaseBlocHelper<PersonalAreaState>,
+        OpenExternalUrlMixin<PersonalAreaState>
     implements PersonalAreaNavActions {
   final PersonalAreaNavActions _navActions;
   final FeatureManager _featureManager;

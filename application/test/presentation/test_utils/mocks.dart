@@ -5,6 +5,8 @@ import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dar
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -30,6 +32,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
@@ -58,9 +61,11 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// It is easier to support end expand
 @GenerateMocks([
   ActiveSearchNavActions,
+  AppDiscoveryEngine,
   AppImageCacheManager,
   AppManager,
   AppVersionToMapMapper,
+  AreMarketsOutdatedUseCase,
   BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
@@ -68,7 +73,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   DbEntityMapToFeedMarketMapper,
-  DiscoveryEngine,
   Document,
   ExtractLogUseCase,
   FeatureManager,
@@ -117,6 +121,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   AppStatusRepository,
   ListenSubscriptionStatusUseCase,
   RenameDefaultCollectionUseCase,
+  HapticFeedbackMediumUseCase,
 ])
 class Mocks {
   Mocks._();

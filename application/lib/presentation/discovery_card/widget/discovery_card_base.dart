@@ -6,9 +6,9 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
@@ -33,7 +33,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
-    extends State<T> with TooltipStateMixin {
+    extends State<T> with TooltipStateMixin, ErrorHandlingMixin {
   late final DiscoveryCardManager discoveryCardManager;
   late final ImageManager imageManager;
 
@@ -88,18 +88,13 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
           _buildImage(),
         ),
         listener: (context, state) {
-          if (state.hasError) {
-            _handleError(state);
+          if (state.error.hasError) {
+            handleError(state.error, showTooltip);
           } else {
             discoveryCardStateListener(state);
           }
         },
       );
-
-  void _handleError(DiscoveryCardState state) {
-    TooltipKey? key = TooltipUtils.getErrorKey(state.error);
-    if (key != null) showTooltip(key);
-  }
 
   void discoveryCardStateListener(DiscoveryCardState state);
 
@@ -112,20 +107,24 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);
 
-  void Function() onBookmarkLongPressed(DiscoveryCardState state) =>
-      () => showAppBottomSheet(
-            context,
-            builder: (_) => MoveDocumentToCollectionBottomSheet(
-              document: widget.document,
-              provider: state.processedDocument
-                  ?.getProvider(widget.document.resource),
-              onError: (tooltipKey) => showTooltip(tooltipKey),
-            ),
-          );
+  void Function() onBookmarkLongPressed(DiscoveryCardState state) {
+    return () {
+      discoveryCardManager.triggerHapticFeedbackMedium();
+      showAppBottomSheet(
+        context,
+        builder: (_) => MoveDocumentToCollectionBottomSheet(
+          document: widget.document,
+          provider:
+              state.processedDocument?.getProvider(widget.document.resource),
+          onError: (tooltipKey) => showTooltip(tooltipKey),
+        ),
+      );
+    };
+  }
 
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
-    final backgroundPane = ColoredBox(color: R.colors.swipeCardBackgroundHome);
+    final backgroundPane = Container(color: R.colors.swipeCardBackgroundHome);
 
     return CachedImage(
       imageManager: imageManager,

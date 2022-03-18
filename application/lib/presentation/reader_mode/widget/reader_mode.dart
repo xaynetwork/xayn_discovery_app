@@ -7,11 +7,13 @@ import 'package:html/dom.dart' as dom;
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
+import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
 typedef ScrollHandler = void Function(double position);
@@ -60,7 +62,7 @@ class ReaderMode extends StatefulWidget {
   State<StatefulWidget> createState() => _ReaderModeState();
 }
 
-class _ReaderModeState extends State<ReaderMode> {
+class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
   late final ReaderModeManager _readerModeManager = di.get();
   late final _readerModeController = readability.ReaderModeController();
 
@@ -106,8 +108,9 @@ class _ReaderModeState extends State<ReaderMode> {
       },
     );
 
-    return BlocBuilder<ReaderModeManager, ReaderModeState>(
+    return BlocConsumer<ReaderModeManager, ReaderModeState>(
       bloc: _readerModeManager,
+      listener: (context, state) => handleError(state.error),
       builder: (context, state) {
         final uri = state.uri;
         final fontSettings = state.readerModeSettings;
@@ -228,7 +231,7 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
           uri: Uri.parse(src.url),
           errorBuilder: (_) => Container(),
           noImageBuilder: (_) => Container(),
-          loadingBuilder: (_, __) => const CircularProgressIndicator.adaptive(),
+          loadingBuilder: (_, __) => const WidgetTestableProgressIndicator(),
         ),
       );
 

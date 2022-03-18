@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
-import 'package:flutter/widgets.dart';
-import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 const double _kSwipeOpenToPosition = 0.35;
 const double _kMinFlingVelocity = 250.0;
@@ -21,6 +21,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     required this.card,
     required this.isPrimary,
     this.isSwipingEnabled = true,
+    this.onFling,
   }) : super(key: key);
 
   final DiscoveryCardManager manager;
@@ -29,6 +30,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   final Widget card;
   final bool isPrimary;
   final bool isSwipingEnabled;
+  final VoidCallback? onFling;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,12 @@ class SwipeableDiscoveryCard extends StatelessWidget {
             : const [],
         minFlingVelocity: _kMinFlingVelocity,
         minFlingDragDistanceFraction: .333,
-        onFling: isPrimary ? (options) => options.first : null,
+        onFling: isPrimary
+            ? (options) {
+                onFling?.call();
+                return options.first;
+              }
+            : null,
         opensToPosition: _kSwipeOpenToPosition,
         child: ClipRRect(
           child: card,

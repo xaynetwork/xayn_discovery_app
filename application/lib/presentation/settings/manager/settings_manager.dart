@@ -11,14 +11,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_th
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
@@ -47,6 +48,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ListenTtsPreferenceUseCase _listenTtsPreferenceUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
+  final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -60,6 +62,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._getTtsPreferenceUseCase,
     this._saveTtsPreferenceUseCase,
     this._listenTtsPreferenceUseCase,
+    this._hapticFeedbackMediumUseCase,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
@@ -108,7 +111,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         primaryColor: R.colors.primaryAction,
       );
 
-  void shareApp() => _shareUriUseCase.call(Uri.parse(Urls.download));
+  void shareApp() => _shareUriUseCase.call(Uri.parse(Constants.downloadUrl));
+
+  void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
   @override
   Future<SettingsScreenState?> computeState() async {

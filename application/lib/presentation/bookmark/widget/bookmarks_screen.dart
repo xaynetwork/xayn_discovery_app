@@ -68,6 +68,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         final card = CardWidgetTransitionWrapper(
           onAnimationDone: () =>
               _showBookmarkCardOptions(state.bookmarks[i].id),
+          onLongPress: _bookmarkManager.triggerHapticFeedbackMedium,
           child: _createBookmarkCard(context, state.bookmarks[i]),
         );
         return Padding(
@@ -109,6 +110,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
             cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
           ),
         ),
+        onFling: () => _bookmarkManager.triggerHapticFeedbackMedium(),
       );
 
   void _showMoveBookmarkBottomSheet(
