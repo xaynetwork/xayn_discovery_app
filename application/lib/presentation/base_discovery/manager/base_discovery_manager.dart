@@ -85,6 +85,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// requires to be implemented by concrete classes or mixins
   bool get isLoading;
 
+  /// requires to be implemented by concrete classes or mixins
+  bool get didReachEnd;
+
   Document? get currentObservedDocument => _observedDocument;
   int? get currentCardIndex => _cardIndex;
 
@@ -238,6 +241,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           isComplete: !isLoading,
           isInErrorState: isInErrorState,
           isFullScreen: _isFullScreen,
+          didReachEnd: didReachEnd,
           cardIndex: _cardIndex!,
           latestExplicitDocumentFeedback: explicitDocumentFeedback,
           shouldUpdateNavBar:

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
-import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -25,7 +25,16 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// A widget which displays a list of discovery results.
 abstract class BaseDiscoveryWidget<T extends BaseDiscoveryManager>
     extends StatefulWidget {
-  const BaseDiscoveryWidget({Key? key}) : super(key: key);
+  final AuxiliaryCardBuilder? noItemsBuilder;
+  final AuxiliaryCardBuilder? finalItemBuilder;
+  final AuxiliaryCardBuilder? loadingItemBuilder;
+
+  const BaseDiscoveryWidget({
+    Key? key,
+    this.noItemsBuilder,
+    this.finalItemBuilder,
+    this.loadingItemBuilder,
+  }) : super(key: key);
 }
 
 abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
@@ -126,11 +135,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
-      if (state.results.isEmpty || cardIndex == -1) {
-        return state.isComplete
-            ? _buildNoResultsIndicator()
-            : _buildLoadingIndicator();
-      }
+      if (!state.isComplete) return _buildLoadingIndicator();
 
       _cardViewController.index = cardIndex;
 
@@ -165,6 +170,10 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         fullScreenOffsetFraction: _dragDistance / DiscoveryCard.dragThreshold,
         notchSize: notchSize,
         cardIdentifierBuilder: _createUniqueCardIdentity(results),
+        noItemsBuilder: widget.noItemsBuilder,
+        finalItemBuilder: state.didReachEnd
+            ? widget.finalItemBuilder
+            : widget.loadingItemBuilder,
       );
     });
   }
@@ -181,11 +190,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         return document.documentId.toString();
       };
-
-  /// todo: we are awaiting a proper design here
-  Widget _buildNoResultsIndicator() => const Center(
-        child: Text('Sorry, no results!'),
-      );
 
   Widget Function(BuildContext, int) _itemBuilder({
     required Set<Document> results,

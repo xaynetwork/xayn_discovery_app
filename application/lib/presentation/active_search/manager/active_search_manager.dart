@@ -65,12 +65,17 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   final ActiveSearchNavActions _activeSearchNavActions;
   bool _isLoading = true;
+  bool _didReachEnd = false;
 
   @override
   bool get isLoading => _isLoading;
 
+  @override
+  bool get didReachEnd => _didReachEnd;
+
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
         _isLoading = true;
+        _didReachEnd = false;
         resetCardIndex();
 
         search(searchTerm);
@@ -101,7 +106,11 @@ class ActiveSearchManager extends BaseDiscoveryManager
       _activeSearchNavActions.onCardDetailsPressed(args);
 
   @override
-  void handleLoadMore() => requestNextSearchBatch();
+  void handleLoadMore() {
+    if (_didReachEnd) return;
+
+    requestNextSearchBatch();
+  }
 
   static Set<Document> Function(EngineEvent?) _foldEngineEvent(
       BaseDiscoveryManager manager) {
@@ -128,6 +137,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
             return restoreSearchSucceeded(event);
           } else if (event is NextSearchBatchRequestSucceeded) {
             self._isLoading = false;
+            self._didReachEnd = event.items.isEmpty;
             return nextSearchBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
