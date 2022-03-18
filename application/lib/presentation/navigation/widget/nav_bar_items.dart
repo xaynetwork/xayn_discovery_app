@@ -94,13 +94,17 @@ NavBarItemIconButton buildNavBarItemSearch({
 NavBarItemEdit buildNavBarItemSearchActive({
   required OnSearchPressed onSearchPressed,
   bool isActive = false,
+  bool autofocus = true,
   String? hint,
+  String? initialText,
 }) =>
     NavBarItemEdit(
       svgIconPath: R.linden.assets.icons.search,
       isHighlighted: isActive,
       onSearchPressed: onSearchPressed,
       hint: hint,
+      autofocus: autofocus,
+      initialText: initialText,
       key: Keys.navBarItemSearch,
     );
 
@@ -129,3 +133,9 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
     );
+
+const configIdSearch = NavBarConfigId('active_search');
+const configIdDiscoveryFeed = NavBarConfigId('discovery_feed');
+const configIdDiscoveryCardScreen = NavBarConfigId('discovery_card_screen');
+const configIdDiscoveryCard = NavBarConfigId('discovery_card');
+const configIdPersonalArea = NavBarConfigId('personal_area');

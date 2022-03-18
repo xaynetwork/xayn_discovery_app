@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_f
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -35,7 +36,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         CardManagersMixin,
         TooltipStateMixin,
         SubscriptionTrialBannerStateMixin,
-        OverlayStateMixin {
+        OverlayStateMixin,
+        ErrorHandlingMixin {
   final CardViewController _cardViewController = CardViewController();
   final RatingDialogManager _ratingDialogManager = di.get();
   final FeatureManager featureManager = di.get();
@@ -59,8 +61,12 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<BaseDiscoveryManager, DiscoveryState>(
+      BlocConsumer<BaseDiscoveryManager, DiscoveryState>(
         bloc: manager,
+        listener: (context, state) {
+          ///TODO: Uncomment once TY-2592 is fixed
+          // if (state.isInErrorState) showErrorBottomSheet();
+        },
         builder: (context, state) {
           // this is for:
           // - any menu bar

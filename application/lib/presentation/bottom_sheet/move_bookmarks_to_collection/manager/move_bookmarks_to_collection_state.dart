@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'move_bookmarks_to_collection_state.freezed.dart';
@@ -16,8 +17,8 @@ class MoveBookmarksToCollectionState with _$MoveBookmarksToCollectionState {
     /// Selected collection id to save at
     UniqueId? selectedCollectionId,
 
-    /// Error Message
-    String? errorMsg,
+    /// Error Object that holds the error message
+    @Default(ErrorObject()) ErrorObject error,
   }) = _MoveBookmarksToCollectionState;
 
   factory MoveBookmarksToCollectionState.initial() =>

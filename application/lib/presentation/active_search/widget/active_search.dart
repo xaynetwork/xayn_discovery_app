@@ -43,6 +43,7 @@ class _ActiveSearchState
   @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
+          configIdSearch,
           [
             buildNavBarItemHome(onPressed: () {
               hideTooltip();
@@ -50,7 +51,11 @@ class _ActiveSearchState
             }),
             buildNavBarItemSearchActive(
               isActive: true,
+              autofocus: _manager.state.results.isEmpty,
               hint: _manager.lastUsedSearchTerm,
+              initialText: _manager.state.results.isNotEmpty
+                  ? _manager.lastUsedSearchTerm
+                  : null,
               onSearchPressed: _manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(
@@ -87,6 +92,7 @@ class _ActiveSearchState
           );
 
       return NavBarConfig(
+        configIdSearch,
         [
           buildNavBarItemArrowLeft(onPressed: () async {
             removeOverlay();

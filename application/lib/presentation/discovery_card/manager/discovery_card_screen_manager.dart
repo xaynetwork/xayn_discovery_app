@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
@@ -41,7 +42,7 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
           final error = errorReport.of(_getDocumentHandler);
           logger.e(
               'Could not retrieve document', error?.error, error?.stackTrace);
-          onBackPressed();
+          return DiscoveryCardScreenState.error(error: ErrorObject(error));
         }
       });
 

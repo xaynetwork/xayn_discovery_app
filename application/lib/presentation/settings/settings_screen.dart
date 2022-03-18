@@ -7,9 +7,9 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/constants/urls.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
@@ -37,7 +37,8 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
-      buildNavBarItemBack(onPressed: _manager.onBackNavPressed));
+        buildNavBarItemBack(onPressed: _manager.onBackNavPressed),
+      );
 
   Linden get linden => UnterDenLinden.getLinden(context);
 
@@ -134,16 +135,16 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onAboutPressed: () =>
-            _manager.openExternalUrl(Urls.aboutXayn, CurrentView.settings),
-        onCarbonNeutralPressed: () =>
-            _manager.openExternalUrl(Urls.carbonNeutral, CurrentView.settings),
-        onImprintPressed: () =>
-            _manager.openExternalUrl(Urls.imprint, CurrentView.settings),
-        onPrivacyPressed: () =>
-            _manager.openExternalUrl(Urls.privacyPolicy, CurrentView.settings),
+        onAboutPressed: () => _manager.openExternalUrl(
+            Constants.aboutXaynUrl, CurrentView.settings),
+        onCarbonNeutralPressed: () => _manager.openExternalUrl(
+            Constants.carbonNeutralUrl, CurrentView.settings),
+        onImprintPressed: () => _manager.openExternalUrl(
+            Constants.imprintUrl, CurrentView.settings),
+        onPrivacyPressed: () => _manager.openExternalUrl(
+            Constants.privacyPolicyUrl, CurrentView.settings),
         onTermsPressed: () => _manager.openExternalUrl(
-            Urls.termsAndConditions, CurrentView.settings),
+            Constants.termsAndConditionsUrl, CurrentView.settings),
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(

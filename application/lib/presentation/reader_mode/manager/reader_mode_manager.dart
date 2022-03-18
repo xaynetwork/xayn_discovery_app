@@ -1,13 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/extract_paragraphs_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/text_to_speech_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
@@ -90,19 +91,26 @@ class ReaderModeManager extends Cubit<ReaderModeState>
         lastSpokenDuration,
         errorReport,
       ) {
+        ReaderModeState newState = state;
+
         if (errorReport.isNotEmpty) {
-          //todo: handle error
+          final report = errorReport.of(_postProcessHandler) ??
+              errorReport.of(_readerModeSettingsHandler) ??
+              errorReport.of(_textToSpeechSink);
+          newState = state.copyWith(
+            error: ErrorObject(report!.error),
+          );
         }
 
         if (readerModeSettings != null) {
-          return state.copyWith(
+          return newState.copyWith(
             readerModeSettings: readerModeSettings,
             uri: uri,
           );
         }
 
         if (uri != null) {
-          return state.copyWith(uri: uri);
+          return newState.copyWith(uri: uri);
         }
       });
 }

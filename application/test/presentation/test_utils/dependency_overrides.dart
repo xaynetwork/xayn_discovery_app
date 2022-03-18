@@ -118,15 +118,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   Stream<String> get engineInputEventsLog => throw UnimplementedError();
 
   @override
-  Future<EngineEvent> updateMarkets() {
-    // TODO: implement maybeUpdateMarkets
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> areMarketsOutdated() async => false;
-
-  @override
   Future<EngineEvent> closeSearch() {
     // TODO: implement closeSearch
     throw UnimplementedError();
