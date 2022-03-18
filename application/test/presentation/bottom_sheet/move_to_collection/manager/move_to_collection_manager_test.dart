@@ -290,6 +290,7 @@ void main() {
                 DocumentBookmarkedEvent(
                   document: documentMarkedPositive,
                   isBookmarked: true,
+                  toDefaultCollection: true,
                 ),
               )
             ]);

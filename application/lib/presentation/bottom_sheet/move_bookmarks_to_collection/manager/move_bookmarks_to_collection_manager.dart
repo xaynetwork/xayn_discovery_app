@@ -4,6 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmarks_use_case.dart';
@@ -76,6 +77,13 @@ class MoveBookmarksToCollectionManager
     );
     _sendAnalyticsUseCase(
       CollectionDeletedEvent(context: DeleteCollectionContext.moveBookmarks),
+    );
+  }
+
+  void onCancelPressed() {
+    _sendAnalyticsUseCase(
+      BottomSheetDismissedEvent(
+          bottomSheetView: BottomSheetView.moveMultipleBookmarksToCollection),
     );
   }
 
