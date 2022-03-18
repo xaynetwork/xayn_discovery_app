@@ -136,6 +136,7 @@ void main() {
           removeBookmarkUseCase,
           getBookmarkUseCase,
           createBookmarkFromDocumentUseCase,
+          sendAnalyticsUseCase,
         );
 
     setUp(() async {
@@ -306,6 +307,7 @@ void main() {
           moveBookmarkUseCase.transform(any),
           removeBookmarkUseCase.transform(any),
           changeDocumentFeedbackUseCase.transform(any),
+          sendAnalyticsUseCase.call(any),
           createBookmarkFromDocumentUseCase.transaction(any),
           sendAnalyticsUseCase.call(any),
           changeDocumentFeedbackUseCase.transaction(any),

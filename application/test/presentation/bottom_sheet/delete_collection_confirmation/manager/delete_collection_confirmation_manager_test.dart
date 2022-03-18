@@ -9,6 +9,8 @@ import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
@@ -18,13 +20,15 @@ import 'delete_collection_confirmation_manager_test.mocks.dart';
 
 @GenerateMocks([
   RemoveCollectionUseCase,
-  RemoveBookmarskUseCase,
+  RemoveBookmarksUseCase,
   GetAllBookmarksUseCase,
+  SendAnalyticsUseCase,
 ])
 void main() {
   late MockRemoveCollectionUseCase removeCollectionUseCase;
-  late MockRemoveBookmarskUseCase removeBookmarskUseCase;
+  late MockRemoveBookmarksUseCase removeBookmarksUseCase;
   late MockGetAllBookmarksUseCase getAllBookmarksUseCase;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late DeleteCollectionConfirmationManager deleteCollectionConfirmationManager;
 
   final collection = Collection(
@@ -57,8 +61,9 @@ void main() {
   setUp(
     () {
       removeCollectionUseCase = MockRemoveCollectionUseCase();
-      removeBookmarskUseCase = MockRemoveBookmarskUseCase();
+      removeBookmarksUseCase = MockRemoveBookmarksUseCase();
       getAllBookmarksUseCase = MockGetAllBookmarksUseCase();
+      sendAnalyticsUseCase = MockSendAnalyticsUseCase();
       void _mockManagerInitMethodCalls() {
         when(
           getAllBookmarksUseCase.transform(any),
@@ -73,10 +78,10 @@ void main() {
         );
 
         when(
-          removeBookmarskUseCase.call(any),
+          removeBookmarksUseCase.call(any),
         ).thenAnswer((_) => Future.value([
               UseCaseResult.success(
-                RemoveBookmarskUseCaseOut(
+                RemoveBookmarksUseCaseOut(
                   removedBookmarks: bookmarks,
                 ),
               )
@@ -92,7 +97,8 @@ void main() {
       deleteCollectionConfirmationManager = DeleteCollectionConfirmationManager(
         removeCollectionUseCase,
         getAllBookmarksUseCase,
-        removeBookmarskUseCase,
+        removeBookmarksUseCase,
+        sendAnalyticsUseCase,
       );
     },
   );
@@ -133,6 +139,15 @@ void main() {
   blocTest(
     'WHEN deleteCollection is called THEN call removeCollectionUseCase with the proper collection id',
     build: () => deleteCollectionConfirmationManager,
+    setUp: () {
+      when(sendAnalyticsUseCase.call(any)).thenAnswer((_) async => [
+            UseCaseResult.success(
+              CollectionDeletedEvent(
+                context: DeleteCollectionContext.empty,
+              ),
+            )
+          ]);
+    },
     act: (manager) {
       deleteCollectionConfirmationManager.enteringScreen(collection.id);
       deleteCollectionConfirmationManager.deleteCollection();
@@ -150,15 +165,26 @@ void main() {
             collectionId: collection.id,
           ),
         ),
+        sendAnalyticsUseCase.call(any),
       ]);
       verifyNoMoreInteractions(getAllBookmarksUseCase);
       verifyNoMoreInteractions(removeCollectionUseCase);
+      verifyNoMoreInteractions(sendAnalyticsUseCase);
     },
   );
 
   blocTest(
-    'WHEN deleteAll is called THEN call removeBookmarskUseCase and removeCollectionUseCase with the proper collection id',
+    'WHEN deleteAll is called THEN call removeBookmarksUseCase and removeCollectionUseCase with the proper collection id',
     build: () => deleteCollectionConfirmationManager,
+    setUp: () {
+      when(sendAnalyticsUseCase.call(any)).thenAnswer((_) async => [
+            UseCaseResult.success(
+              CollectionDeletedEvent(
+                context: DeleteCollectionContext.deleteBookmarks,
+              ),
+            )
+          ]);
+    },
     act: (manager) {
       deleteCollectionConfirmationManager.enteringScreen(collection.id);
       deleteCollectionConfirmationManager.deleteAll();
@@ -166,7 +192,7 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         getAllBookmarksUseCase.transform(any),
-        removeBookmarskUseCase.call(any),
+        removeBookmarksUseCase.call(any),
         getAllBookmarksUseCase.transaction(
           GetAllBookmarksUseCaseIn(
             collectionId: collection.id,
@@ -177,9 +203,10 @@ void main() {
             collectionIdToRemove: collection.id,
           ),
         ),
+        sendAnalyticsUseCase.call(any),
       ]);
       verifyNoMoreInteractions(getAllBookmarksUseCase);
-      verifyNoMoreInteractions(removeBookmarskUseCase);
+      verifyNoMoreInteractions(removeBookmarksUseCase);
       verifyNoMoreInteractions(removeCollectionUseCase);
     },
   );
