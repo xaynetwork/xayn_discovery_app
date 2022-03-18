@@ -25,16 +25,6 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
             width: width,
             height: height,
           ),
-          loadingItemBuilder: (
-            BuildContext context,
-            double? width,
-            double? height,
-          ) =>
-              FeedLoadingCard(
-            context: context,
-            width: width,
-            height: height,
-          ),
         );
 
   @override
