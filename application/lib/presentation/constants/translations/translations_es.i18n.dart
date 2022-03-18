@@ -195,6 +195,12 @@ class TranslationsEs extends Translations {
   String get contactSectionSupportEmail => """Support eMail:""";
   String get contactSectionForPublishers => """For Publishers:""";
   String get contactSectionPhone => """Phone:""";
+  String get searchNoResultsFound => """No results""";
+  String get searchEndOfResults => """That's all!""";
+  String get searchNoResultsFoundDesc =>
+      """We couldn’t find any stories for your search. Try different or more general keywords.""";
+  String get searchEndOfResultsDesc =>
+      """These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -355,4 +361,10 @@ Map<String, String> get translationsEsMap => {
       """contactSectionSupportEmail""": """Support eMail:""",
       """contactSectionForPublishers""": """For Publishers:""",
       """contactSectionPhone""": """Phone:""",
+      """searchNoResultsFound""": """No results""",
+      """searchEndOfResults""": """That's all!""",
+      """searchNoResultsFoundDesc""":
+          """We couldn’t find any stories for your search. Try different or more general keywords.""",
+      """searchEndOfResultsDesc""":
+          """These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.""",
     };
