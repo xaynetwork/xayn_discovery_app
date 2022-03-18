@@ -4,8 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 enum PurchasableProductStatus {
   purchasable,
   purchased,
-  pending,
+  purchasePending,
   restored,
+  restorePending,
   canceled,
 }
 
