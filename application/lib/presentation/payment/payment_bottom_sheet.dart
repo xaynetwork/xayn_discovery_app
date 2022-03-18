@@ -67,6 +67,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
         product: state.product,
         onSubscribe: manager.subscribe,
         onPromoCode: manager.enterRedeemCode,
+        onRestore: manager.restore,
         onCancel: () => closeBottomSheet(context),
         padding: EdgeInsets.zero,
       );

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:injectable/injectable.dart';
 import 'package:instabug_flutter/CrashReporting.dart';
 import 'package:instabug_flutter/Instabug.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
 const kInstabugAndroidMethodChannel = 'instabug_android';
@@ -13,13 +13,15 @@ const kInstabugInvocationEventsParamName = 'invocationEvents';
 const kInstabugToken = Env.instabugToken;
 const kInstabugInvocationEvents = [InvocationEvent.none];
 
-@lazySingleton
 class BugReportingService {
-  BugReportingService() {
+  final UniqueId _userId;
+
+  BugReportingService(this._userId) {
     _init();
   }
 
-  _init() {
+  void _init() {
+    Instabug.setUserAttribute(_userId.value, 'userId');
     //init method for Andriod is called natively from CustomFlutterApplication class
     if (Platform.isIOS) {
       _initiOS(kInstabugToken, kInstabugInvocationEvents);

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -84,7 +85,7 @@ class MoveBookmarksToCollectionManager
         if (errorReport.isNotEmpty) {
           final error = errorReport.of(_collectionsHandler)!.error;
           logger.e(error);
-          return state.copyWith(errorMsg: error.toString());
+          return state.copyWith(error: ErrorObject(error));
         }
 
         if (usecaseOut != null) {

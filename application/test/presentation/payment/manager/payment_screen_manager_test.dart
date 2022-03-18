@@ -12,6 +12,7 @@ void main() {
   late PaymentScreenManager manager;
   late MockGetSubscriptionDetailsUseCase getSubscriptionDetailsUseCase;
   late MockPurchaseSubscriptionUseCase purchaseSubscriptionUseCase;
+  late MockRestoreSubscriptionUseCase restoreSubscriptionUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
@@ -19,6 +20,7 @@ void main() {
   setUp(() {
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
+    restoreSubscriptionUseCase = MockRestoreSubscriptionUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
@@ -30,6 +32,7 @@ void main() {
     manager = PaymentScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
+      restoreSubscriptionUseCase,
       getSubscriptionStatusUseCase,
       listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
@@ -121,7 +124,8 @@ void main() {
     test(
       'GIVEN status is null THEN return product with the status from product',
       () {
-        final product = getProduct(status: PurchasableProductStatus.pending);
+        final product =
+            getProduct(status: PurchasableProductStatus.purchasePending);
         const PurchasableProductStatus? status = null;
         final result = manager.getUpdatedProduct(product, status, null, null);
 

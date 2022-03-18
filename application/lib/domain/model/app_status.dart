@@ -12,18 +12,21 @@ class AppStatus extends DbEntity with _$AppStatus {
     required AppVersion lastKnownAppVersion,
     required DateTime firstAppLaunchDate,
     required UniqueId id,
+    required UniqueId userId,
   }) = _AppStatus;
 
   factory AppStatus({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
     required DateTime firstAppLaunchDate,
+    required UniqueId userId,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
         lastKnownAppVersion: lastKnownAppVersion,
         firstAppLaunchDate: firstAppLaunchDate,
         id: AppStatus.globalId,
+        userId: userId,
       );
 
   factory AppStatus.initial() => AppStatus._(
@@ -31,6 +34,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         lastKnownAppVersion: AppVersion.initial(),
         firstAppLaunchDate: DateTime.now(),
         id: AppStatus.globalId,
+        userId: UniqueId(),
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');
