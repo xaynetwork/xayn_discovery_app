@@ -70,6 +70,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
+  EngineEvent? _completedEvent;
   bool _didChangeMarkets = false;
   bool _isLoading = true;
 
@@ -179,6 +180,13 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     final self = manager as DiscoveryFeedManager;
     final state = manager.state;
 
+    maybeCompleteLoading(EngineEvent event) {
+      if (event != self._completedEvent) {
+        self._isLoading = false;
+        self._completedEvent = event;
+      }
+    }
+
     foldEngineEvent({
       required OnRestoreFeedSucceeded restoreFeedSucceeded,
       required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
@@ -190,20 +198,18 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     }) =>
         (EngineEvent? event) {
           if (event is RestoreFeedSucceeded) {
-            self._isLoading = false;
+            maybeCompleteLoading(event);
             return restoreFeedSucceeded(event);
           } else if (event is NextFeedBatchRequestSucceeded) {
-            self._isLoading = false;
             return nextFeedBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
           } else if (event is EngineExceptionRaised) {
             return engineExceptionRaised(event);
           } else if (event is NextFeedBatchRequestFailed) {
-            self._isLoading = false;
             return nextFeedBatchRequestFailed(event);
           } else if (event is RestoreFeedFailed) {
-            self._isLoading = false;
+            maybeCompleteLoading(event);
             return restoreFeedFailed(event);
           }
 
