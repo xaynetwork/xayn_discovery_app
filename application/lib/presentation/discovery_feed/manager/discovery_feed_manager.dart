@@ -201,6 +201,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
             maybeCompleteLoading(event);
             return restoreFeedSucceeded(event);
           } else if (event is NextFeedBatchRequestSucceeded) {
+            maybeCompleteLoading(event);
             return nextFeedBatchRequestSucceeded(event);
           } else if (event is DocumentsUpdated) {
             return documentsUpdated(event);
