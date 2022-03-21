@@ -305,8 +305,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       padding: EdgeInsets.only(
         left: R.dimen.unit3,
         right: R.dimen.unit3,
-        // todo: bottom offset should compensate for the NavBar, so we need to calculate it
-        bottom: R.dimen.unit15,
+        bottom: R.dimen.readerModeBottomPadding,
         top: headlineHeight,
       ),
       onProcessedHtml: () => _openingAnimation.animateTo(
