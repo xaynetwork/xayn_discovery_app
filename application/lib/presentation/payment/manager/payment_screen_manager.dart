@@ -26,9 +26,14 @@ enum PaymentAction {
   restore,
 }
 
+abstract class PaymentScreenNavActions {
+  void onDismiss();
+}
+
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
-    with UseCaseBlocHelper<PaymentScreenState> {
+    with UseCaseBlocHelper<PaymentScreenState>
+    implements PaymentScreenNavActions {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
   final RestoreSubscriptionUseCase _restoreSubscriptionUseCase;
@@ -52,7 +57,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
       _restoreSubscriptionHandler = pipe(_restoreSubscriptionUseCase);
   PurchasableProduct? _subscriptionProduct;
 
+  final PaymentScreenNavActions _paymentScreenNavActions;
+
   PaymentScreenManager(
+    this._paymentScreenNavActions,
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
     this._restoreSubscriptionUseCase,
@@ -190,4 +198,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     }
     return product.copyWith(updatedStatus);
   }
+
+  @override
+  void onDismiss() => _paymentScreenNavActions.onDismiss();
 }

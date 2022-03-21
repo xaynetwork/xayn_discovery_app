@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
@@ -30,6 +31,8 @@ abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
   void onPersonalAreaNavPressed();
+
+  void onTrialExpired();
 }
 
 /// Manages the state for the main, or home discovery feed screen.
@@ -56,6 +59,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
+    GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
@@ -66,6 +70,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
+          getSubscriptionStatusUseCase,
         );
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
@@ -150,6 +155,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
     _discoveryFeedNavActions.onPersonalAreaNavPressed();
   }
+
+  @override
+  void onTrialExpired() => _discoveryFeedNavActions.onTrialExpired();
 
   @override
   void resetParameters() {
@@ -255,4 +263,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       orElse: () => state.results,
     );
   }
+
+  @override
+  void handleShowPaywall() => _discoveryFeedNavActions.onTrialExpired();
 }

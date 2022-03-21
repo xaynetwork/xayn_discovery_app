@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -33,6 +34,8 @@ abstract class ActiveSearchNavActions {
   void onPersonalAreaNavPressed();
 
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args);
+
+  void onTrialExpired();
 }
 
 /// Manages the state for the active search screen.
@@ -52,6 +55,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
+    GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
   ) : super(
           FeedType.search,
           engineEventsUseCase,
@@ -61,6 +65,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
+          getSubscriptionStatusUseCase,
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;
@@ -99,6 +104,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) =>
       _activeSearchNavActions.onCardDetailsPressed(args);
+
+  @override
+  void onTrialExpired() => _activeSearchNavActions.onTrialExpired();
 
   @override
   void handleLoadMore() => requestNextSearchBatch();
@@ -193,4 +201,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
       orElse: () => state.results,
     );
   }
+
+  @override
+  void handleShowPaywall() => _activeSearchNavActions.onTrialExpired();
 }

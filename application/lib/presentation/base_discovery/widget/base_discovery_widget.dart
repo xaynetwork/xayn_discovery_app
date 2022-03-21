@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -15,12 +18,14 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 
 /// A widget which displays a list of discovery results.
 abstract class BaseDiscoveryWidget<T extends BaseDiscoveryManager>
@@ -47,6 +52,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   double _dragDistance = .0;
 
+  bool _trialBannerShown = false;
+
   T get manager;
 
   @override
@@ -66,6 +73,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         listener: (context, state) {
           ///TODO: Uncomment once TY-2592 is fixed
           // if (state.isInErrorState) showErrorBottomSheet();
+
+          _showPaymentScreenOrTrialBannerIfNeeded(state.subscriptionStatus);
         },
         builder: (context, state) {
           // this is for:
@@ -279,4 +288,25 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   void _onFullScreenDrag(double distance) =>
       setState(() => _dragDistance = distance.abs());
+
+  void _showPaymentScreenOrTrialBannerIfNeeded(
+      SubscriptionStatus? subscriptionStatus) {
+    if (subscriptionStatus?.isLastDayOfFreeTrial == true &&
+        manager.feedType == FeedType.feed &&
+        !_trialBannerShown) {
+      _trialBannerShown = true;
+      showTrialBanner(
+        trialEndDate: subscriptionStatus!.trialEndDate!,
+        onTap: _showPaymentBottomSheet,
+      );
+    } else if (subscriptionStatus?.subscriptionType ==
+        SubscriptionType.notSubscribed) {
+      manager.handleShowPaywall();
+    }
+  }
+
+  void _showPaymentBottomSheet() => showAppBottomSheet(
+        context,
+        builder: (_) => PaymentBottomSheet(),
+      );
 }

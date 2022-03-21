@@ -10,6 +10,7 @@ import '../../test_utils/utils.dart';
 
 void main() {
   late PaymentScreenManager manager;
+  late MockPaymentScreenNavActions paymentScreenNavActions;
   late MockGetSubscriptionDetailsUseCase getSubscriptionDetailsUseCase;
   late MockPurchaseSubscriptionUseCase purchaseSubscriptionUseCase;
   late MockRestoreSubscriptionUseCase restoreSubscriptionUseCase;
@@ -18,6 +19,7 @@ void main() {
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   setUp(() {
+    paymentScreenNavActions = MockPaymentScreenNavActions();
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
     restoreSubscriptionUseCase = MockRestoreSubscriptionUseCase();
@@ -30,6 +32,7 @@ void main() {
         .thenAnswer((_) async => SubscriptionStatus.initial());
 
     manager = PaymentScreenManager(
+      paymentScreenNavActions,
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
       restoreSubscriptionUseCase,

@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
@@ -29,11 +30,14 @@ void main() {
   late ActiveSearchManager Function() buildManager;
   late AppDiscoveryEngine engine;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
+  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
     await setupWidgetTest();
     engine = MockAppDiscoveryEngine();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
+    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -44,6 +48,11 @@ void main() {
       ..registerSingleton<AreMarketsOutdatedUseCase>(areMarketsOutdatedUseCase);
 
     final feedRepository = HiveFeedRepository(FeedMapper());
+
+    when(getSubscriptionStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(getSubscriptionStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -59,6 +68,7 @@ void main() {
             ),
           ),
           HapticFeedbackMediumUseCase(),
+          getSubscriptionStatusUseCase,
         );
   });
 
@@ -82,7 +92,12 @@ void main() {
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
       return buildManager();
     },
-    verify: (bloc) => expect(bloc.state, DiscoveryState.initial()),
+    verify: (bloc) => expect(
+      bloc.state,
+      DiscoveryState.initial().copyWith(
+        subscriptionStatus: subscriptionStatusInitial,
+      ),
+    ),
   );
 
   blocTest<ActiveSearchManager, DiscoveryState>(
