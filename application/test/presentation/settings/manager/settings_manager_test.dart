@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
@@ -10,7 +9,6 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
@@ -23,9 +21,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 import '../../test_utils/utils.dart';
-import 'settings_manager_test.mocks.dart';
 
-@GenerateMocks([AnalyticsService])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
