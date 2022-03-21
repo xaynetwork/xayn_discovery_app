@@ -7,7 +7,9 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_local_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_active_selected_countries_identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_identity_param_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
@@ -21,6 +23,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final GetLocalMarketsUseCase _getLocalMarketsUseCase;
+  late final SetIdentityParamUseCase _setIdentityParamUseCase;
   late DiscoveryEngine _engine;
 
   final StreamController<String> _inputLog =
@@ -38,10 +41,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
     required GetLocalMarketsUseCase getLocalMarketsUseCase,
+    required SetIdentityParamUseCase setIdentityParamUseCase,
     bool initialized = true,
   })  : _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
         _sendAnalyticsUseCase = sendAnalyticsUseCase,
-        _getLocalMarketsUseCase = getLocalMarketsUseCase {
+        _getLocalMarketsUseCase = getLocalMarketsUseCase,
+        _setIdentityParamUseCase = setIdentityParamUseCase {
     if (!initialized) {
       startInitializing();
     }
@@ -53,12 +58,14 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required SaveInitialFeedMarketUseCase saveInitialFeedMarketUseCase,
     required SendAnalyticsUseCase sendAnalyticsUseCase,
     required GetLocalMarketsUseCase getLocalMarketsUseCase,
+    required SetIdentityParamUseCase setIdentityParamUseCase,
   }) =>
       AppDiscoveryEngine(
         getSelectedFeedMarketsUseCase: getSelectedFeedMarketsUseCase,
         saveInitialFeedMarketUseCase: saveInitialFeedMarketUseCase,
         sendAnalyticsUseCase: sendAnalyticsUseCase,
         getLocalMarketsUseCase: getLocalMarketsUseCase,
+        setIdentityParamUseCase: setIdentityParamUseCase,
         initialized: false,
       );
 
@@ -76,6 +83,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
     await _saveInitialFeedMarket(_saveInitialFeedMarketUseCase);
 
+    final feedMarkets = await _getLocalMarketsUseCase.singleOutput(none);
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
@@ -83,9 +91,11 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
       maxItemsPerSearchBatch: 2,
-      feedMarkets: await _getLocalMarketsUseCase.singleOutput(none),
+      feedMarkets: feedMarkets,
       manifest: manifest,
     );
+
+    _updateFeedMarketIdentityParam(feedMarkets);
 
     _inputLog.add(
       '[init]\n<configuration> ${configuration.toString()}',
@@ -122,6 +132,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       '[changeConfiguration]\n<feedMarkets> $feedMarkets\n<nmaxItemsPerFeedBatch> $maxItemsPerFeedBatch'
       '\n<nmaxItemsPerSearchBatch> $maxItemsPerFeedBatch',
     );
+    if (feedMarkets != null) {
+      _updateFeedMarketIdentityParam(feedMarkets);
+    }
     return safeRun(() => _engine.changeConfiguration(
           feedMarkets: feedMarkets,
           maxItemsPerFeedBatch: maxItemsPerFeedBatch,
@@ -246,5 +259,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> removeSourceFromExcludedList(Uri source) {
     _inputLog.add('[removeSourceFromExcludedList]');
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
+  }
+
+  void _updateFeedMarketIdentityParam(FeedMarkets markets) {
+    final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
+    _setIdentityParamUseCase.call(param);
   }
 }
