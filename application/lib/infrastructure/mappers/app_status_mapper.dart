@@ -24,12 +24,14 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         _mapToAppVersionMapper.map(map[AppSettingsFields.appVersion]);
     final firstAppLaunchDate =
         map[AppSettingsFields.firstAppLaunchDate] as DateTime?;
+    final lastSeenDate = map[AppSettingsFields.lastSeenDate] as DateTime?;
     final userId = map[AppSettingsFields.userId] as String?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
       lastKnownAppVersion: appVersion,
       firstAppLaunchDate: firstAppLaunchDate ?? DateTime.now(),
+      lastSeenDate: lastSeenDate ?? DateTime.now(),
       userId: UniqueId.fromTrustedString(userId ?? const Uuid().v4()),
     );
   }
@@ -41,6 +43,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
             _appVersionToMapMapper.map(entity.lastKnownAppVersion),
         AppSettingsFields.firstAppLaunchDate: entity.firstAppLaunchDate,
         AppSettingsFields.userId: entity.userId.value,
+        AppSettingsFields.lastSeenDate: entity.lastSeenDate,
       };
 }
 
@@ -51,4 +54,5 @@ abstract class AppSettingsFields {
   static const int appVersion = 1;
   static const int firstAppLaunchDate = 2;
   static const int userId = 3;
+  static const int lastSeenDate = 4;
 }
