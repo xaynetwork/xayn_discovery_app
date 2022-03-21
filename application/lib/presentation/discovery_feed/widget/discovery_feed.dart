@@ -21,7 +21,6 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
             double? height,
           ) =>
               FeedNoResultsCard(
-            context: context,
             width: width,
             height: height,
           ),
