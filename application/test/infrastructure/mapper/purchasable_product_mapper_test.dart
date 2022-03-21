@@ -71,7 +71,7 @@ void main() {
       title: 'title_3',
       description: 'description_3',
       price: 'price_3',
-      currency: 'code_1',
+      currency: 'code_3',
       status: PurchasableProductStatus.purchasable,
     ),
   ];
