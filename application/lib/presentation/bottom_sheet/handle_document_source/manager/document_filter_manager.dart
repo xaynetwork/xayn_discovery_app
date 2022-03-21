@@ -18,7 +18,7 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
 
     /// must be passed with di.get(param1 : document)
     @factoryParam this._document,
-  ) : super(const DocumentFilterState(filters: {})) {
+  ) : super(const DocumentFilterState(filters: {}, hasPendingChanges: false)) {
     _handler(const DbCrudIn.getAll());
   }
 
@@ -28,9 +28,7 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
           (out) => _documentFilterUseCase.transaction(const DbCrudIn.getAll()));
 
   late final _handler = pipe(_documentFilterUseCase);
-  late final _pendingChanges = <DocumentFilter, bool>{
-    DocumentFilter.fromSource(_document.resource.sourceDomain): false,
-  };
+  late final _pendingChanges = <DocumentFilter, bool>{};
 
   @override
   Future<DocumentFilterState?> computeState() async => fold2(
@@ -41,19 +39,27 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
         handler,
         errorReport,
       ) {
+        var filter = DocumentFilter.fromSource(_document.resource.sourceDomain);
         final list = (getAll ?? handler)?.mapOrNull(list: (v) => v.value) ?? [];
+        list.removeWhere(
+          (element) =>
+              element!.fold((host) => element != filter, (topic) => false),
+        );
 
         final filters = {
-          ..._pendingChanges,
           for (var key in list) key!: true,
+          ..._pendingChanges,
         };
+        filters.putIfAbsent(filter, () => false);
 
-        return DocumentFilterState(filters: filters);
+        return DocumentFilterState(
+            filters: filters, hasPendingChanges: _pendingChanges.isNotEmpty);
       });
 
   void onFilterTogglePressed(DocumentFilter filter) {
     scheduleComputeState(() {
-      _pendingChanges[filter] = !(_pendingChanges[filter] ?? false);
+      final value = state.filters[filter]!;
+      _pendingChanges[filter] = !value;
     });
   }
 

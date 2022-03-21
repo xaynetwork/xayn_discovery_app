@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 import 'hive_repository.dart';
 
-@Singleton(as: DocumentFilterRepository)
+@singleton
 class HiveDocumentFilterRepository extends HiveRepository<DocumentFilter>
     implements DocumentFilterRepository {
   HiveDocumentFilterRepository();

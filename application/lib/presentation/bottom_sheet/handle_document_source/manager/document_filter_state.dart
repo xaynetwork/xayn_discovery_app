@@ -9,5 +9,6 @@ class DocumentFilterState with _$DocumentFilterState {
 
   const factory DocumentFilterState({
     required Map<DocumentFilter, bool> filters,
+    required bool hasPendingChanges,
   }) = _DocumentFilterState;
 }

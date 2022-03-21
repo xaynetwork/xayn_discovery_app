@@ -1,5 +1,8 @@
+import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/handle_document_source/widget/document_filter_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DocumentFilterKeys {
   static const documentFilter = TooltipKey('documentFilter');
@@ -11,14 +14,15 @@ final sourceHandlingMessages = <TooltipKey, TooltipParams>{
 
 TooltipParams _getDocumentFilter() {
   void onPressed(List? args) {
-    // showAppBottomSheet(
-    //   context,
-    //   builder: (_) => MoveDocumentToCollectionBottomSheet(
-    //     document: document,
-    //     onError: onError,
-    //     provider: provider,
-    //   ),
-    // );
+    if (args == null || args.length != 2) {
+      throw "No / or not required arguments provided for showing DocumentFilterBottomSheet";
+    }
+    showAppBottomSheet(
+      args[0] as BuildContext,
+      builder: (_) => DocumentFilterBottomSheet(
+        document: args[1] as Document,
+      ),
+    );
   }
 
   final content = CustomizedTextualNotification(
