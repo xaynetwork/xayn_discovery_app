@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_m
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
@@ -127,6 +128,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HapticFeedbackMediumUseCase,
   RestoreSubscriptionUseCase,
   SendAnalyticsUseCase,
+  SendMarketingAnalyticsUseCase,
   PurchaseEventMapper,
 ])
 class Mocks {

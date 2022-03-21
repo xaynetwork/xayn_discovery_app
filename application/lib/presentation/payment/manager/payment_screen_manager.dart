@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
@@ -37,7 +37,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
   final RequestCodeRedemptionSheetUseCase _requestCodeRedemptionSheetUseCase;
-  final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final SendMarketingAnalyticsUseCase _sendMarketingAnalyticsUseCase;
   final PurchaseEventMapper _purchaseEventMapper;
 
   late final UseCaseValueStream<PurchasableProduct>
@@ -64,7 +64,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
     this._requestCodeRedemptionSheetUseCase,
-    this._sendAnalyticsUseCase,
+    this._sendMarketingAnalyticsUseCase,
     this._errorMessageMapper,
     this._purchaseEventMapper,
   ) : super(const PaymentScreenState.initial()) {
@@ -182,7 +182,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   void _sendPurchaseEventIfNeeded(PurchasableProduct? product) {
     if (product?.status.isPurchased == true) {
       final event = _purchaseEventMapper.map(product!);
-      _sendAnalyticsUseCase.call(event);
+      _sendMarketingAnalyticsUseCase.call(event);
     }
   }
 

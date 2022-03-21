@@ -16,7 +16,7 @@ void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
-  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
+  late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   late MockPurchaseEventMapper purchaseEventMapper;
 
@@ -27,7 +27,7 @@ void main() {
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
-    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
+    sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
     errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
     purchaseEventMapper = MockPurchaseEventMapper();
 
@@ -41,7 +41,7 @@ void main() {
       getSubscriptionStatusUseCase,
       listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
-      sendAnalyticsUseCase,
+      sendMarketingAnalyticsUseCase,
       errorMessageMapper,
       purchaseEventMapper,
     );
