@@ -5,12 +5,10 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 class FeedEndOfResultsCard extends FeedInfoCard {
   FeedEndOfResultsCard({
     Key? key,
-    required BuildContext context,
     double? width,
     double? height,
   }) : super(
           key: key,
-          context: context,
           title: R.strings.searchEndOfResults,
           description: R.strings.searchEndOfResultsDesc,
           width: width,
@@ -19,7 +17,6 @@ class FeedEndOfResultsCard extends FeedInfoCard {
 }
 
 abstract class FeedInfoCard extends StatelessWidget {
-  final BuildContext context;
   final String title;
   final String description;
   final double? width;
@@ -27,7 +24,6 @@ abstract class FeedInfoCard extends StatelessWidget {
 
   const FeedInfoCard({
     Key? key,
-    required this.context,
     required this.title,
     required this.description,
     this.width,
@@ -61,13 +57,11 @@ abstract class FeedInfoCard extends StatelessWidget {
 }
 
 class FeedLoadingCard extends StatelessWidget {
-  final BuildContext context;
   final double? width;
   final double? height;
 
   const FeedLoadingCard({
     Key? key,
-    required this.context,
     this.width,
     this.height,
   }) : super(key: key);
@@ -92,12 +86,10 @@ class FeedLoadingCard extends StatelessWidget {
 class FeedNoResultsCard extends FeedInfoCard {
   FeedNoResultsCard({
     Key? key,
-    required BuildContext context,
     double? width,
     double? height,
   }) : super(
           key: key,
-          context: context,
           title: R.strings.searchNoResultsFound,
           description: R.strings.searchNoResultsFoundDesc,
           width: width,
