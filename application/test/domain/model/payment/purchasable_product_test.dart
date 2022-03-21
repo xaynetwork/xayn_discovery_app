@@ -7,12 +7,14 @@ void main() {
   const title = 'productTitle';
   const description = 'productDescription';
   const price = 'productPrice';
+  const currency = 'productCurrency';
   const statusDefault = PurchasableProductStatus.purchasable;
   const product = PurchasableProduct(
     id: id,
     title: title,
     description: description,
     price: price,
+    currency: currency,
     status: statusDefault,
   );
 
@@ -23,6 +25,7 @@ void main() {
       expect(product.title, equals(title));
       expect(product.description, equals(description));
       expect(product.price, equals(price));
+      expect(product.currency, equals(currency));
       expect(product.status, equals(statusDefault));
     },
   );
@@ -36,6 +39,7 @@ void main() {
         title,
         description,
         price,
+        currency,
         statusDefault,
       ]);
     },
@@ -50,6 +54,7 @@ void main() {
         expect(product.title, equals(title));
         expect(product.description, equals(description));
         expect(product.price, equals(price));
+        expect(product.currency, equals(currency));
         expect(copied.status, equals(newStatus));
       }
     },

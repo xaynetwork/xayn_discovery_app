@@ -11,6 +11,8 @@ import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
@@ -34,7 +36,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final RestoreSubscriptionUseCase _restoreSubscriptionUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
-  final RequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
+  final RequestCodeRedemptionSheetUseCase _requestCodeRedemptionSheetUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final PurchaseEventMapper _purchaseEventMapper;
+
   late final UseCaseValueStream<PurchasableProduct>
       _getPurchasableProductHandler = consume(
     _getPurchasableProductUseCase,
@@ -58,8 +63,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._restoreSubscriptionUseCase,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
-    this.requestCodeRedemptionSheetUseCase,
+    this._requestCodeRedemptionSheetUseCase,
+    this._sendAnalyticsUseCase,
     this._errorMessageMapper,
+    this._purchaseEventMapper,
   ) : super(const PaymentScreenState.initial()) {
     _init();
   }
@@ -84,7 +91,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
   void enterRedeemCode() {
     if (!Platform.isIOS) return;
-    requestCodeRedemptionSheetUseCase.call(none);
+    _requestCodeRedemptionSheetUseCase.call(none);
   }
 
   void restore() {
@@ -158,6 +165,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           paymentFlowError,
         );
 
+        _sendPurchaseEventIfNeeded(product);
+
         if (_subscriptionProduct == null && paymentFlowErrorMsg != null) {
           return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
         } else if (_subscriptionProduct != null) {
@@ -169,6 +178,13 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
       });
 
   void _logError(String prefix, Object error) => logger.e('$prefix: $error');
+
+  void _sendPurchaseEventIfNeeded(PurchasableProduct? product) {
+    if (product?.status.isPurchased == true) {
+      final event = _purchaseEventMapper.map(product!);
+      _sendAnalyticsUseCase.call(event);
+    }
+  }
 
   @visibleForTesting
   PurchasableProduct? getUpdatedProduct(

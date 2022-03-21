@@ -16,7 +16,10 @@ void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
+  late MockPurchaseEventMapper purchaseEventMapper;
+
   setUp(() {
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
@@ -24,7 +27,9 @@ void main() {
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
+    purchaseEventMapper = MockPurchaseEventMapper();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) async => SubscriptionStatus.initial());
@@ -36,7 +41,9 @@ void main() {
       getSubscriptionStatusUseCase,
       listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
+      sendAnalyticsUseCase,
       errorMessageMapper,
+      purchaseEventMapper,
     );
   });
 
@@ -49,6 +56,7 @@ void main() {
           title: 'title',
           description: 'description',
           price: 'price',
+          currency: 'usd',
           status: status ?? PurchasableProductStatus.purchasable,
         );
     final purchasedProduct =
