@@ -43,22 +43,11 @@ void main() {
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) async => SubscriptionStatus.initial());
 
-    // when(sendMarketingAnalyticsUseCase.call(any)).thenAnswer(
-    //   (_) async => const [UseCaseResult.success(isTtsEnabled)],
-    // );
-
     when(sendMarketingAnalyticsUseCase.call(any)).thenAnswer(
       (_) async => [
         UseCaseResult.success(testPurchaseEvent),
       ],
     );
-
-    // when(sendMarketingAnalyticsUseCase.transform(any)).thenAnswer(
-    //   (realInvocation) => realInvocation.positionalArguments.first,
-    // );
-
-    // when(sendMarketingAnalyticsUseCase.call(param))
-    //     .thenAnswer((_) async => SubscriptionStatus.initial());
 
     when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
