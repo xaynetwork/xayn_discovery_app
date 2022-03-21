@@ -1,8 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/purchase_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
@@ -20,6 +23,12 @@ void main() {
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   late MockPurchaseEventMapper purchaseEventMapper;
 
+  final testPurchaseEvent = PurchaseEvent(
+    productIdentifier: 'id',
+    price: 'price',
+    currency: 'currency',
+  );
+
   setUp(() {
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
     purchaseSubscriptionUseCase = MockPurchaseSubscriptionUseCase();
@@ -33,6 +42,25 @@ void main() {
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) async => SubscriptionStatus.initial());
+
+    // when(sendMarketingAnalyticsUseCase.call(any)).thenAnswer(
+    //   (_) async => const [UseCaseResult.success(isTtsEnabled)],
+    // );
+
+    when(sendMarketingAnalyticsUseCase.call(any)).thenAnswer(
+      (_) async => [
+        UseCaseResult.success(testPurchaseEvent),
+      ],
+    );
+
+    // when(sendMarketingAnalyticsUseCase.transform(any)).thenAnswer(
+    //   (realInvocation) => realInvocation.positionalArguments.first,
+    // );
+
+    // when(sendMarketingAnalyticsUseCase.call(param))
+    //     .thenAnswer((_) async => SubscriptionStatus.initial());
+
+    when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
     manager = PaymentScreenManager(
       getSubscriptionDetailsUseCase,
@@ -138,6 +166,18 @@ void main() {
         final result = manager.getUpdatedProduct(product, status, null, null);
 
         expect(result, equals(product));
+      },
+    );
+    test(
+      'GIVEN product is purchased THEN marketing event is sent',
+      () {
+        final product = getProduct(status: PurchasableProductStatus.purchased);
+        manager.sendPurchaseEventIfNeeded(product);
+
+        verifyInOrder([
+          sendMarketingAnalyticsUseCase.call(any),
+        ]);
+        verifyNoMoreInteractions(sendMarketingAnalyticsUseCase);
       },
     );
   });

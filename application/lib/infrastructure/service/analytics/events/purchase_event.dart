@@ -6,11 +6,11 @@ const String _kParamCurrency = 'af_currency';
 const String _kParamContentId = 'af_content_id';
 
 class PurchaseEvent extends AnalyticsEvent {
-  PurchaseEvent(
-    String productIdentifier,
-    String price,
-    String currency,
-  ) : super(_kEventType, properties: {
+  PurchaseEvent({
+    required String productIdentifier,
+    required String price,
+    required String currency,
+  }) : super(_kEventType, properties: {
           _kParamContentId: productIdentifier,
           _kParamPrice: price,
           _kParamCurrency: currency,

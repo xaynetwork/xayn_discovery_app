@@ -165,7 +165,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           paymentFlowError,
         );
 
-        _sendPurchaseEventIfNeeded(product);
+        sendPurchaseEventIfNeeded(product);
 
         if (_subscriptionProduct == null && paymentFlowErrorMsg != null) {
           return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
@@ -179,7 +179,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
   void _logError(String prefix, Object error) => logger.e('$prefix: $error');
 
-  void _sendPurchaseEventIfNeeded(PurchasableProduct? product) {
+  @visibleForTesting
+  void sendPurchaseEventIfNeeded(PurchasableProduct? product) {
     if (product?.status.isPurchased == true) {
       final event = _purchaseEventMapper.map(product!);
       _sendMarketingAnalyticsUseCase.call(event);

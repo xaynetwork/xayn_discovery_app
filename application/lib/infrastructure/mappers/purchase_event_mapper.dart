@@ -7,8 +7,8 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/purch
 class PurchaseEventMapper implements Mapper<PurchasableProduct, PurchaseEvent> {
   @override
   PurchaseEvent map(PurchasableProduct input) => PurchaseEvent(
-        input.id,
-        input.price,
-        input.currency,
+        productIdentifier: input.id,
+        price: input.price,
+        currency: input.currency,
       );
 }
