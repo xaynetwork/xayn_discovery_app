@@ -24,7 +24,6 @@ class SubscriptionTrialBanner extends StatelessWidget {
 
     return ClipRRect(
       child: Container(
-        height: R.dimen.unit9,
         child: stack,
         decoration: BoxDecoration(
           color: R.colors.settingsCardBackground,
@@ -63,7 +62,7 @@ class SubscriptionTrialBanner extends StatelessWidget {
 
     final title = Text(
       trialEndDate.trialEndDateString,
-      style: R.styles.mBoldStyle,
+      style: R.styles.lBoldStyle,
     );
 
     final subtitle = Row(
@@ -87,26 +86,30 @@ class SubscriptionTrialBanner extends StatelessWidget {
     final row = Row(
       children: [
         icon,
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            title,
-            spacing,
-            subtitle,
-          ],
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              title,
+              spacing,
+              subtitle,
+            ],
+          ),
         ),
       ],
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
     );
 
     final padding = Padding(
       padding: EdgeInsets.only(
-        left: R.dimen.unit2,
+        left: R.dimen.unit1_5,
         right: R.dimen.unit0_5,
       ),
       child: row,
     );
+
     final embedInButton = onPressed != null;
     return embedInButton
         ? AppGhostButton(
