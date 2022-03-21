@@ -19,6 +19,8 @@ void main() {
   late MockAppSettingsRepository appSettingsRepository;
   late MockRenameDefaultCollectionUseCase renameDefaultCollectionUseCase;
   late MockSetInitialIdentityParamsUseCase setInitialIdentityParamsUseCase;
+  late MockSetCollectionAndBookmarksChangesIdentityParam
+      setCollectionAndBookmarksChangesIdentityParam;
   late Collection mockDefaultCollection;
 
   setUp(() {
@@ -30,6 +32,8 @@ void main() {
         MockCreateOrGetDefaultCollectionUseCase();
     renameDefaultCollectionUseCase = MockRenameDefaultCollectionUseCase();
     setInitialIdentityParamsUseCase = MockSetInitialIdentityParamsUseCase();
+    setCollectionAndBookmarksChangesIdentityParam =
+        MockSetCollectionAndBookmarksChangesIdentityParam();
     appSettingsRepository = MockAppSettingsRepository();
 
     when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
@@ -50,6 +54,9 @@ void main() {
     when(setInitialIdentityParamsUseCase.call(none)).thenAnswer(
       (_) async => const [UseCaseResult.success(none)],
     );
+    when(setCollectionAndBookmarksChangesIdentityParam.call(none)).thenAnswer(
+      (_) async => const [UseCaseResult.success(none)],
+    );
   });
 
   AppManager create() => AppManager(
@@ -58,6 +65,7 @@ void main() {
         createOrGetDefaultCollectionUseCase,
         renameDefaultCollectionUseCase,
         setInitialIdentityParamsUseCase,
+        setCollectionAndBookmarksChangesIdentityParam,
         appSettingsRepository,
       );
 
