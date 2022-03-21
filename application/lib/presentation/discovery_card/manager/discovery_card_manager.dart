@@ -144,6 +144,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       ),
     );
 
+    // ideally, url is nullable, but we don't control this
+    if (document.resource.url == Uri.base) return;
+
     /// Update the uri which contains the news article
     _updateUri(document.resource.url);
   }

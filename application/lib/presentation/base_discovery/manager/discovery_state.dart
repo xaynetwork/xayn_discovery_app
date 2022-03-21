@@ -21,18 +21,21 @@ class DiscoveryState with _$DiscoveryState {
     required bool isInErrorState,
     ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
     @Default(false) bool shouldUpdateNavBar,
+    required bool didReachEnd,
   }) = _DiscoveryState;
 
   factory DiscoveryState.initial() => const DiscoveryState(
         cardIndex: 0,
         isComplete: false,
         isInErrorState: false,
+        didReachEnd: false,
       );
 
   bool equals(DiscoveryState other) =>
       isFullScreen == other.isFullScreen &&
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
+      didReachEnd == other.didReachEnd &&
       isInErrorState == other.isInErrorState &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(results, other.results) &&
