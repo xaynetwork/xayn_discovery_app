@@ -165,7 +165,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           paymentFlowError,
         );
 
-        sendPurchaseEventIfNeeded(product);
+        sendPurchaseEventIfNeeded(_subscriptionProduct);
 
         if (_subscriptionProduct == null && paymentFlowErrorMsg != null) {
           return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
