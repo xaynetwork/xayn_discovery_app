@@ -67,20 +67,18 @@ class FeedLoadingCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: R.colors.searchResultSkeletonBase,
-      highlightColor: R.colors.searchResultSkeletonHighlight,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          borderRadius: R.styles.roundBorder,
-          color: R.colors.cardBackground,
+  Widget build(BuildContext context) => Shimmer.fromColors(
+        baseColor: R.colors.searchResultSkeletonBase,
+        highlightColor: R.colors.searchResultSkeletonHighlight,
+        child: Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: R.styles.roundBorder,
+            color: R.colors.cardBackground,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class FeedNoResultsCard extends FeedInfoCard {
