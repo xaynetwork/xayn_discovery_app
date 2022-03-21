@@ -185,11 +185,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // this is important, because _isLoading would otherwise falsely be
     // switched to true.
     EngineEvent? lastEvent;
-    Set<Document>? lastResults;
+    var lastResults = const <Document>{};
 
     return (BaseDiscoveryManager manager) {
       final self = manager as DiscoveryFeedManager;
-      final state = manager.state;
 
       foldEngineEvent({
         required OnRestoreFeedSucceeded restoreFeedSucceeded,
@@ -201,7 +200,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         required OnNonMatchedEngineEvent orElse,
       }) =>
           (EngineEvent? event) {
-            if (event == lastEvent) return lastResults ?? const <Document>{};
+            if (event == lastEvent) return lastResults;
 
             lastEvent = event;
 
@@ -224,14 +223,14 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
               lastResults = orElse();
             }
 
-            return lastResults ?? const <Document>{};
+            return lastResults;
           };
 
       return foldEngineEvent(
         restoreFeedSucceeded: (event) => event.items.toSet(),
         nextFeedBatchRequestSucceeded: (event) =>
-            {...state.results, ...event.items},
-        documentsUpdated: (event) => state.results
+            {...lastResults, ...event.items},
+        documentsUpdated: (event) => lastResults
             .map(
               (it) => event.items.firstWhere(
                 (item) => item.documentId == it.documentId,
@@ -248,7 +247,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
           logger.e('$event');
 
-          return state.results;
+          return lastResults;
         },
         nextFeedBatchRequestFailed: (event) {
           manager.sendAnalyticsUseCase(
@@ -259,7 +258,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
           logger.e('$event');
 
-          return state.results;
+          return lastResults;
         },
         restoreFeedFailed: (event) {
           manager.sendAnalyticsUseCase(
@@ -270,9 +269,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
           logger.e('$event');
 
-          return state.results;
+          return lastResults;
         },
-        orElse: () => state.results,
+        orElse: () => lastResults,
       );
     };
   }
