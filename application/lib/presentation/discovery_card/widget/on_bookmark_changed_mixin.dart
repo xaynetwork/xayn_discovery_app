@@ -34,11 +34,8 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
       showTooltip(
         DocumentFilterKeys.documentFilter,
         parameters: [
-          // TODO pass arguments to personalize the bottom sheet
-          // context,
-          // widget.document,
-          // state.processedDocument?.getProvider(widget.document.resource),
-          // (tooltipKey) => showTooltip(tooltipKey),
+          context,
+          widget.document,
         ],
       );
     }
