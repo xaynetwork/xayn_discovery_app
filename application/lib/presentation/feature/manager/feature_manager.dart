@@ -6,16 +6,32 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 import 'feature_manager_state.dart';
 
-const FeatureMap kInitialFeatureMap = {
-  Feature.onBoarding: false,
-  Feature.readerModeSettings: true,
-  Feature.featuresScreen:
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-  Feature.discoveryEngineReportOverlay: false,
-  Feature.payment: EnvironmentHelper.kIsDebug,
-  Feature.ratingDialog:
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+FeatureMap kInitialFeatureMap = {
+  for (var v in Feature.values) v: v.defaultValue
 };
+
+extension on Feature {
+  bool get defaultValue {
+    switch (this) {
+      case Feature.onBoarding:
+        return false;
+      case Feature.readerModeSettings:
+        return true;
+      case Feature.featuresScreen:
+        return EnvironmentHelper.kIsDebug ||
+            EnvironmentHelper.kIsInternalFlavor;
+      case Feature.discoveryEngineReportOverlay:
+        return false;
+      case Feature.payment:
+        return EnvironmentHelper.kIsDebug;
+      case Feature.ratingDialog:
+        return EnvironmentHelper.kIsDebug ||
+            EnvironmentHelper.kIsInternalFlavor;
+      case Feature.documentFilter:
+        return EnvironmentHelper.kIsDebug;
+    }
+  }
+}
 
 @lazySingleton
 class FeatureManager extends Cubit<FeatureManagerState>
