@@ -8,10 +8,23 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/widget/feed_info_card.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
-  const DiscoveryFeed({Key? key}) : super(key: key);
+  DiscoveryFeed({Key? key})
+      : super(
+          key: key,
+          noItemsBuilder: (
+            BuildContext context,
+            double? width,
+            double? height,
+          ) =>
+              FeedNoResultsCard(
+            width: width,
+            height: height,
+          ),
+        );
 
   @override
   State<StatefulWidget> createState() => _DiscoveryFeedState();

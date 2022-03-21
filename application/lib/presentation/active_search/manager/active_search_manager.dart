@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
@@ -55,7 +56,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
   ) : super(
           FeedType.search,
           engineEventsUseCase,
-          _foldEngineEvent,
+          _foldEngineEvent(),
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
@@ -65,12 +66,17 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   final ActiveSearchNavActions _activeSearchNavActions;
   bool _isLoading = true;
+  bool _didReachEnd = false;
 
   @override
   bool get isLoading => _isLoading;
 
+  @override
+  bool get didReachEnd => _didReachEnd;
+
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
         _isLoading = true;
+        _didReachEnd = false;
         resetCardIndex();
 
         search(searchTerm);
@@ -101,96 +107,121 @@ class ActiveSearchManager extends BaseDiscoveryManager
       _activeSearchNavActions.onCardDetailsPressed(args);
 
   @override
-  void handleLoadMore() => requestNextSearchBatch();
+  void handleLoadMore() {
+    if (_didReachEnd) return;
 
-  static Set<Document> Function(EngineEvent?) _foldEngineEvent(
-      BaseDiscoveryManager manager) {
-    final self = manager as ActiveSearchManager;
-    final state = manager.state;
+    requestNextSearchBatch();
+  }
 
-    foldEngineEvent({
-      required OnSearchRequestSucceeded searchRequestSucceeded,
-      required OnRestoreSearchSucceeded restoreSearchSucceeded,
-      required OnNextSearchBatchRequestSucceeded
-          nextSearchBatchRequestSucceeded,
-      required OnDocumentsUpdated documentsUpdated,
-      required OnEngineExceptionRaised engineExceptionRaised,
-      required OnNextSearchBatchRequestFailed nextSearchBatchRequestFailed,
-      required OnRestoreSearchFailed restoreSearchFailed,
-      required OnNonMatchedEngineEvent orElse,
-    }) =>
-        (EngineEvent? event) {
-          if (event is SearchRequestSucceeded) {
-            self._isLoading = false;
-            return searchRequestSucceeded(event);
-          } else if (event is RestoreSearchSucceeded) {
-            self._isLoading = false;
-            return restoreSearchSucceeded(event);
-          } else if (event is NextSearchBatchRequestSucceeded) {
-            self._isLoading = false;
-            return nextSearchBatchRequestSucceeded(event);
-          } else if (event is DocumentsUpdated) {
-            return documentsUpdated(event);
-          } else if (event is EngineExceptionRaised) {
-            return engineExceptionRaised(event);
-          } else if (event is NextSearchBatchRequestFailed) {
-            self._isLoading = false;
-            return nextSearchBatchRequestFailed(event);
-          } else if (event is RestoreSearchFailed) {
-            self._isLoading = false;
-            return restoreSearchFailed(event);
-          }
+  /// A higher-order Function, which tracks the last event passed in,
+  /// and ultimately runs the inner fold Function when the incoming event
+  /// no longer matches lastEvent.
+  static Set<Document> Function(EngineEvent?) Function(BaseDiscoveryManager)
+      _foldEngineEvent() {
+    // because foldEngineEvent runs within a combineLatest setup,
+    // we can use lastEvent to compare with the incoming event,
+    // if they are the same, then the fold does not need to re-run.
+    // this is important, because _isLoading would otherwise falsely be
+    // switched to true.
+    EngineEvent? lastEvent;
+    var lastResults = const <Document>{};
 
-          return orElse();
-        };
+    return (BaseDiscoveryManager manager) {
+      final self = manager as ActiveSearchManager;
 
-    return foldEngineEvent(
-      searchRequestSucceeded: (event) => event.items.toSet(),
-      restoreSearchSucceeded: (event) => event.items.toSet(),
-      nextSearchBatchRequestSucceeded: (event) =>
-          {...state.results, ...event.items},
-      documentsUpdated: (event) => state.results
-          .map(
-            (it) => event.items.firstWhere(
-              (item) => item.documentId == it.documentId,
-              orElse: () => it,
+      foldEngineEvent({
+        required OnSearchRequestSucceeded searchRequestSucceeded,
+        required OnRestoreSearchSucceeded restoreSearchSucceeded,
+        required OnNextSearchBatchRequestSucceeded
+            nextSearchBatchRequestSucceeded,
+        required OnDocumentsUpdated documentsUpdated,
+        required OnEngineExceptionRaised engineExceptionRaised,
+        required OnNextSearchBatchRequestFailed nextSearchBatchRequestFailed,
+        required OnRestoreSearchFailed restoreSearchFailed,
+        required OnNonMatchedEngineEvent orElse,
+      }) =>
+          (EngineEvent? event) {
+            if (event == lastEvent) return lastResults;
+
+            lastEvent = event;
+
+            if (event is SearchRequestSucceeded) {
+              self._isLoading = false;
+              self._didReachEnd =
+                  event.items.length < AppDiscoveryEngine.searchPageSize;
+              lastResults = searchRequestSucceeded(event);
+            } else if (event is RestoreSearchSucceeded) {
+              self._isLoading = false;
+              lastResults = restoreSearchSucceeded(event);
+            } else if (event is NextSearchBatchRequestSucceeded) {
+              self._isLoading = false;
+              self._didReachEnd = event.items.isEmpty;
+              lastResults = nextSearchBatchRequestSucceeded(event);
+            } else if (event is DocumentsUpdated) {
+              lastResults = documentsUpdated(event);
+            } else if (event is EngineExceptionRaised) {
+              lastResults = engineExceptionRaised(event);
+            } else if (event is NextSearchBatchRequestFailed) {
+              self._didReachEnd = false;
+              lastResults = nextSearchBatchRequestFailed(event);
+            } else if (event is RestoreSearchFailed) {
+              self._isLoading = false;
+              lastResults = restoreSearchFailed(event);
+            } else {
+              lastResults = orElse();
+            }
+
+            return lastResults;
+          };
+
+      return foldEngineEvent(
+        searchRequestSucceeded: (event) => event.items.toSet(),
+        restoreSearchSucceeded: (event) => event.items.toSet(),
+        nextSearchBatchRequestSucceeded: (event) =>
+            {...lastResults, ...event.items},
+        documentsUpdated: (event) => lastResults
+            .map(
+              (it) => event.items.firstWhere(
+                (item) => item.documentId == it.documentId,
+                orElse: () => it,
+              ),
+            )
+            .toSet(),
+        engineExceptionRaised: (event) {
+          manager.sendAnalyticsUseCase(
+            EngineExceptionRaisedEvent(
+              event: event,
             ),
-          )
-          .toSet(),
-      engineExceptionRaised: (event) {
-        manager.sendAnalyticsUseCase(
-          EngineExceptionRaisedEvent(
-            event: event,
-          ),
-        );
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      nextSearchBatchRequestFailed: (event) {
-        manager.sendAnalyticsUseCase(
-          NextSearchBatchRequestFailedEvent(
-            event: event,
-          ),
-        );
+          return lastResults;
+        },
+        nextSearchBatchRequestFailed: (event) {
+          manager.sendAnalyticsUseCase(
+            NextSearchBatchRequestFailedEvent(
+              event: event,
+            ),
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      restoreSearchFailed: (event) {
-        manager.sendAnalyticsUseCase(
-          RestoreSearchFailedEvent(
-            event: event,
-          ),
-        );
+          return lastResults;
+        },
+        restoreSearchFailed: (event) {
+          manager.sendAnalyticsUseCase(
+            RestoreSearchFailedEvent(
+              event: event,
+            ),
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      orElse: () => state.results,
-    );
+          return lastResults;
+        },
+        orElse: () => lastResults,
+      );
+    };
   }
 }
