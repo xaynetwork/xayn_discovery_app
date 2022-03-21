@@ -65,7 +65,7 @@ class DiscoveryCardElements extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
     );
     final titleWidgetStyle =
-        useLargeTitle ? R.styles.xxxlBoldStyle : R.styles.xlBoldStyle;
+        useLargeTitle ? R.styles.xxlBoldStyle : R.styles.xlBoldStyle;
     final titleWidget = Text(
       title,
       style: titleWidgetStyle.copyWith(color: Colors.white),
