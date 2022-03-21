@@ -123,11 +123,10 @@ class ActiveSearchManager extends BaseDiscoveryManager
     // this is important, because _isLoading would otherwise falsely be
     // switched to true.
     EngineEvent? lastEvent;
-    Set<Document>? lastResults;
+    var lastResults = const <Document>{};
 
     return (BaseDiscoveryManager manager) {
       final self = manager as ActiveSearchManager;
-      final state = manager.state;
 
       foldEngineEvent({
         required OnSearchRequestSucceeded searchRequestSucceeded,
@@ -141,7 +140,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
         required OnNonMatchedEngineEvent orElse,
       }) =>
           (EngineEvent? event) {
-            if (event == lastEvent) return lastResults ?? const <Document>{};
+            if (event == lastEvent) return lastResults;
 
             lastEvent = event;
 
@@ -170,15 +169,15 @@ class ActiveSearchManager extends BaseDiscoveryManager
               lastResults = orElse();
             }
 
-            return lastResults ?? const <Document>{};
+            return lastResults;
           };
 
       return foldEngineEvent(
         searchRequestSucceeded: (event) => event.items.toSet(),
         restoreSearchSucceeded: (event) => event.items.toSet(),
         nextSearchBatchRequestSucceeded: (event) =>
-            {...state.results, ...event.items},
-        documentsUpdated: (event) => state.results
+            {...lastResults, ...event.items},
+        documentsUpdated: (event) => lastResults
             .map(
               (it) => event.items.firstWhere(
                 (item) => item.documentId == it.documentId,
@@ -195,7 +194,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
           logger.e('$event');
 
-          return state.results;
+          return lastResults;
         },
         nextSearchBatchRequestFailed: (event) {
           manager.sendAnalyticsUseCase(
@@ -206,7 +205,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
           logger.e('$event');
 
-          return state.results;
+          return lastResults;
         },
         restoreSearchFailed: (event) {
           manager.sendAnalyticsUseCase(
@@ -217,9 +216,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
           logger.e('$event');
 
-          return state.results;
+          return lastResults;
         },
-        orElse: () => state.results,
+        orElse: () => lastResults,
       );
     };
   }
