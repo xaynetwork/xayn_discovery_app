@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.d
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
@@ -62,6 +63,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// It is easier to support end expand
 @GenerateMocks([
   ActiveSearchNavActions,
+  AnalyticsService,
   AppDiscoveryEngine,
   AppImageCacheManager,
   AppManager,
