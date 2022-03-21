@@ -123,7 +123,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     // this is important, because _isLoading would otherwise falsely be
     // switched to true.
     EngineEvent? lastEvent;
-    late Set<Document> lastResults;
+    Set<Document>? lastResults;
 
     return (BaseDiscoveryManager manager) {
       final self = manager as ActiveSearchManager;
@@ -141,7 +141,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
         required OnNonMatchedEngineEvent orElse,
       }) =>
           (EngineEvent? event) {
-            if (event == lastEvent) return lastResults;
+            if (event == lastEvent) return lastResults ?? const <Document>{};
 
             lastEvent = event;
 
@@ -170,7 +170,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
               lastResults = orElse();
             }
 
-            return lastResults;
+            return lastResults ?? const <Document>{};
           };
 
       return foldEngineEvent(
