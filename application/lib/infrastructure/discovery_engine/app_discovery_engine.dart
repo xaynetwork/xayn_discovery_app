@@ -82,7 +82,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: 2,
-      maxItemsPerSearchBatch: 2,
+      maxItemsPerSearchBatch: 20,
       feedMarkets: await _getLocalMarketsUseCase.singleOutput(none),
       manifest: manifest,
     );
