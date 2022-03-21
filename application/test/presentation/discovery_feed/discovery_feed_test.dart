@@ -32,7 +32,6 @@ import 'discovery_feed_test.mocks.dart';
 @GenerateMocks([
   ConnectivityUseCase,
   FeedRepository,
-  AnalyticsService,
 ])
 void main() async {
   late AppDiscoveryEngine engine;
