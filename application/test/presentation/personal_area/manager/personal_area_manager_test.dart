@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_a
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
-import '../../settings/manager/settings_manager_test.mocks.dart';
 import '../../test_utils/utils.dart';
 
 void main() {
