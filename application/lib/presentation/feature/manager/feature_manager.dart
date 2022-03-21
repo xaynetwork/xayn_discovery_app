@@ -60,6 +60,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
 
+  bool get isDocumentFilterEnabled => isEnabled(Feature.documentFilter);
+
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
         featureMap: Map.from(_featureMap),
