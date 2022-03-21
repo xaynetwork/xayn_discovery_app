@@ -181,7 +181,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       _foldEngineEvent() {
     // because foldEngineEvent runs within a combineLatest setup,
     // we can use lastEvent to compare with the incoming event,
-    // if they are the same, then the fold does need to re-run.
+    // if they are the same, then the fold does not need to re-run.
     // this is important, because _isLoading would otherwise falsely be
     // switched to true.
     EngineEvent? lastEvent;

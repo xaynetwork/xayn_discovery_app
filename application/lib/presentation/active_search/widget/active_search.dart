@@ -23,7 +23,6 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
             double? height,
           ) =>
               FeedNoResultsCard(
-            context: context,
             width: width,
             height: height,
           ),
@@ -33,7 +32,6 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
             double? height,
           ) =>
               FeedEndOfResultsCard(
-            context: context,
             width: width,
             height: height,
           ),

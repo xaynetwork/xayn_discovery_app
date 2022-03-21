@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
@@ -119,7 +120,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
       _foldEngineEvent() {
     // because foldEngineEvent runs within a combineLatest setup,
     // we can use lastEvent to compare with the incoming event,
-    // if they are the same, then the fold does need to re-run.
+    // if they are the same, then the fold does not need to re-run.
     // this is important, because _isLoading would otherwise falsely be
     // switched to true.
     EngineEvent? lastEvent;
@@ -146,7 +147,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
             if (event is SearchRequestSucceeded) {
               self._isLoading = false;
-              self._didReachEnd = event.items.length == 1;
+              self._didReachEnd =
+                  event.items.length < AppDiscoveryEngine.searchPageSize;
               lastResults = searchRequestSucceeded(event);
             } else if (event is RestoreSearchSucceeded) {
               self._isLoading = false;
