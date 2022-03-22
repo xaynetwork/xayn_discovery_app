@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
@@ -207,6 +208,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       ResultSets(results: results);
 
   void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
+
+  void onReaderModeMenuDisplayed({required bool isVisible}) =>
+      sendAnalyticsUseCase(
+        ReaderModeSettingsMenuDisplayedEvent(
+          isVisible: isVisible,
+        ),
+      );
 
   @override
   Future<DiscoveryState?> computeState() async => fold3(
