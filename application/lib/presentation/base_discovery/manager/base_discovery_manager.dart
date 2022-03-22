@@ -51,9 +51,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
+  Set<DocumentId> _disposedDocuments = const <DocumentId>{};
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
+
+  Set<DocumentId> get disposedDocuments => _disposedDocuments;
 
   BaseDiscoveryManager(
     this.feedType,
@@ -236,6 +239,11 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
         final sets = await maybeReduceCardCount(results);
         final nextCardIndex = sets.nextCardIndex;
+
+        _disposedDocuments = {
+          ..._disposedDocuments,
+          ...sets.removedResults.map((it) => it.documentId)
+        };
 
         if (nextCardIndex != null) _cardIndex = nextCardIndex;
 
