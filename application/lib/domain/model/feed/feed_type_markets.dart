@@ -16,4 +16,16 @@ class FeedTypeMarkets extends DbEntity with _$FeedTypeMarkets {
     required FeedType feedType,
     required FeedMarkets feedMarkets,
   }) = _FeedTypeMarkets;
+
+  factory FeedTypeMarkets.forFeed(FeedMarkets feedMarkets) => FeedTypeMarkets(
+        id: feedId,
+        feedType: FeedType.feed,
+        feedMarkets: feedMarkets,
+      );
+
+  factory FeedTypeMarkets.forSearch(FeedMarkets feedMarkets) => FeedTypeMarkets(
+        id: searchId,
+        feedType: FeedType.search,
+        feedMarkets: feedMarkets,
+      );
 }
