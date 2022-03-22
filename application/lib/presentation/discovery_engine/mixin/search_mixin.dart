@@ -82,7 +82,8 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       onRestore(EngineEvent it) => it is RestoreSearchSucceeded
           ? {...it.items.map((it) => it.documentId)}
           : const <DocumentId>{};
-      onError(Object e, StackTrace? s) => onError(e, s ?? StackTrace.current);
+      onError(Object e, StackTrace? s) =>
+          this.onError(e, s ?? StackTrace.current);
 
       consume(requestSearchUseCase, initialData: none)
           .transform(
