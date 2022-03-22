@@ -1,4 +1,4 @@
-part of 'country_feed_settings_page_test.dart';
+part of 'select_countries_test.dart';
 
 const int maxSelectedCountryAmount = 3;
 
@@ -42,7 +42,7 @@ Widget buildPage({
   OnCountryPressed? onAddCountryPressed,
   OnCountryPressed? onRemoveCountryPressed,
 }) =>
-    CountryFeedSettingsPage(
+    SelectCountries(
       maxSelectedCountryAmount: maxSelectedCountryAmount,
       selectedCountries: selectedCountries,
       unSelectedCountries: unSelectedCountries,

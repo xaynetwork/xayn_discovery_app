@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_ite
 
 import '../../test_utils/extensions.dart';
 
-part 'country_feed_settings_page_test.utils.dart';
+part 'select_countries_test.utils.dart';
 
 void main() {
   group('Constructor asserts', () {
