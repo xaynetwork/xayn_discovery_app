@@ -142,7 +142,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> addSourceToExcludedList(Uri source) {
+  Future<EngineEvent> addSourceToExcludedList(String source) {
     // TODO: implement addSourceToExcludedList
     throw UnimplementedError();
   }
@@ -160,7 +160,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> removeSourceFromExcludedList(Uri source) {
+  Future<EngineEvent> removeSourceFromExcludedList(String source) {
     // TODO: implement removeSourceFromExcludedList
     throw UnimplementedError();
   }

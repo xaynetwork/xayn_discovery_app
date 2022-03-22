@@ -71,34 +71,34 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
     final areMarketsOutdated =
         await areMarketsOutdatedUseCase.singleOutput(FeedType.search);
+    final lastUsedSearchTerm =
+        _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
 
-    _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
-
-    if (areMarketsOutdated) {
+    if (areMarketsOutdated && lastUsedSearchTerm != null) {
       final closeSearchUseCase = di.get<CloseSearchUseCase>();
       final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
+
+      onResetParameters(_) => resetParameters();
+      onRestore(EngineEvent it) => it is RestoreSearchSucceeded
+          ? {...it.items.map((it) => it.documentId)}
+          : const <DocumentId>{};
+      onError(Object e, StackTrace? s) => onError(e, s ?? StackTrace.current);
 
       consume(requestSearchUseCase, initialData: none)
           .transform(
             (out) => out
-                .doOnData((_) => resetParameters())
-                .map(
-                  (it) => it is RestoreSearchSucceeded
-                      ? it.items.map((it) => it.documentId).toSet()
-                      : const <DocumentId>{},
-                )
+                .doOnData(onResetParameters)
+                .map(onRestore)
                 .doOnData(_closeExplicitFeedback)
                 .mapTo(none)
                 .followedBy(closeSearchUseCase)
                 .mapTo(FeedType.search)
                 .followedBy(changeMarketsUseCase)
                 .doOnData(_preambleCompleter.complete)
-                .map((_) => _lastUsedSearchTerm)
-                .whereType<String>()
+                .mapTo(lastUsedSearchTerm)
                 .doOnData(search),
           )
-          .autoSubscribe(
-              onError: (e, s) => onError(e, s ?? StackTrace.current));
+          .autoSubscribe(onError: onError);
     } else {
       _preambleCompleter.complete();
 
@@ -111,11 +111,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     final getSearchTermUseCase = di.get<GetSearchTermUseCase>();
     final result = await getSearchTermUseCase.singleOutput(none);
 
-    if (result is SearchTermRequestSucceeded) {
-      return result.searchTerm;
-    }
-
-    return null;
+    return result is SearchTermRequestSucceeded ? result.searchTerm : null;
   }
 
   void _closeExplicitFeedback(Set<DocumentId> documents) {
