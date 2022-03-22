@@ -1,4 +1,4 @@
-part of 'feed_settings_manager_test.dart';
+part of 'country_feed_settings_manager_test.dart';
 
 const keyUsa = Key('keyUsa');
 const keyGermany = Key('keyGermany');
@@ -74,9 +74,9 @@ const unSelectedList = [
   spain,
 ];
 
-const stateReady = FeedSettingsState.ready(
+const stateReady = CountryFeedSettingsState.ready(
   maxSelectedCountryAmount: maxSelectedCountryAmount,
   selectedCountries: selectedList,
   unSelectedCountries: unSelectedList,
   error: ErrorObject(),
-) as FeedSettingsStateReady;
+) as CountryFeedSettingsStateReady;
