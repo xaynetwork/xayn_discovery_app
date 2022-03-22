@@ -56,13 +56,18 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     if (areMarketsOutdated) {
       final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
 
+      onResetParameters(_) => resetParameters();
+      onRestore(EngineEvent it) => it is RestoreFeedSucceeded
+          ? it.items.map((it) => it.documentId).toSet()
+          : const <DocumentId>{};
+      onError(Object e, StackTrace? s) =>
+          this.onError(e, s ?? StackTrace.current);
+
       consume(requestFeedUseCase, initialData: none)
           .transform(
             (out) => out
-                .doOnData((_) => resetParameters())
-                .map((it) => it is RestoreFeedSucceeded
-                    ? it.items.map((it) => it.documentId).toSet()
-                    : const <DocumentId>{})
+                .doOnData(onResetParameters)
+                .map(onRestore)
                 .asyncMap(_closeExplicitFeedback)
                 .mapTo(FeedType.feed)
                 .followedBy(changeMarketsUseCase)
@@ -70,8 +75,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
                 .mapTo(none)
                 .followedBy(requestNextFeedBatchUseCase),
           )
-          .autoSubscribe(
-              onError: (e, s) => onError(e, s ?? StackTrace.current));
+          .autoSubscribe(onError: onError);
     } else {
       final maybeRequestNextBatchUseCase =
           _MaybeRequestNextBatchWhenEmptyUseCase(requestNextFeedBatchUseCase);
