@@ -231,7 +231,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> addSourceToExcludedList(Uri source) {
+  Future<EngineEvent> addSourceToExcludedList(String source) {
     _inputLog.add('[addSourceToExcludedList]');
     return safeRun(() => _engine.addSourceToExcludedList(source));
   }
@@ -249,7 +249,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> removeSourceFromExcludedList(Uri source) {
+  Future<EngineEvent> removeSourceFromExcludedList(String source) {
     _inputLog.add('[removeSourceFromExcludedList]');
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
   }
