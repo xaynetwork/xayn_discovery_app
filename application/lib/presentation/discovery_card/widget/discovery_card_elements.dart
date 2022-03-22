@@ -111,7 +111,12 @@ class DiscoveryCardElements extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildCardHeader(),
+            AnimatedOpacity(
+              opacity: provider?.favicon != null ? 1.0 : .0,
+              duration: R.animations.unit2,
+              curve: Curves.easeOut,
+              child: _buildCardHeader(),
+            ),
             Expanded(child: titleAndTimeToRead),
             SizedBox(
               width: double.infinity,
