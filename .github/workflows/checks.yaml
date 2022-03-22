@@ -24,11 +24,13 @@ jobs:
         with:
           key: ${{ secrets.SSH }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: replace
       - name: Install SSH key gitlab
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
           known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
+          if_key_exists: replace
 
       - uses: actions/checkout@v2
         with:
