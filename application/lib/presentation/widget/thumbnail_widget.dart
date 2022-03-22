@@ -36,6 +36,10 @@ class Thumbnail extends StatelessWidget {
           placeholder: _kTransparentPixel,
           width: width ?? R.dimen.unit3,
           height: height ?? R.dimen.unit3,
+          imageErrorBuilder: (context, _, s) => Icon(
+            Icons.web,
+            color: R.colors.icon,
+          ),
         ),
         super(key: key);
 
