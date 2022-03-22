@@ -22,8 +22,13 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          key: ${{ secrets.SSH }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - name: Install SSH key gitlab
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
 
       - uses: actions/checkout@v2
         with:
