@@ -15,6 +15,6 @@ class GetSubscriptionManagementUrlUseCase extends UseCase<None, String?> {
   /// yields a subscription management url for current platform
   @override
   Stream<String?> transaction(None param) async* {
-    yield _paymentService.subscriptionManagementURL;
+    yield await _paymentService.subscriptionManagementURL;
   }
 }
