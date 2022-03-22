@@ -30,16 +30,14 @@ class Thumbnail extends StatelessWidget {
     Key? key,
     double? width,
     double? height,
+    ImageErrorWidgetBuilder? errorWidgetBuilder,
     this.borderRadius,
   })  : child = FadeInImage.memoryNetwork(
           image: src,
           placeholder: _kTransparentPixel,
           width: width ?? R.dimen.unit3,
           height: height ?? R.dimen.unit3,
-          imageErrorBuilder: (context, _, s) => Icon(
-            Icons.web,
-            color: R.colors.icon,
-          ),
+          imageErrorBuilder: errorWidgetBuilder,
         ),
         super(key: key);
 
