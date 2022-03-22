@@ -52,8 +52,24 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          key: ${{ secrets.SSH }}
+          name: id_rsa_github
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host github.com
+              IdentityFile ~/.ssh/id_rsa_github
+          if_key_exists: replace
+
+      - name: Install SSH key gitlab
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          name: id_rsa_gitlab
+          known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
+          config: |
+            Host gitlab.com
+              IdentityFile ~/.ssh/id_rsa_gitlab
+          if_key_exists: replace
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -108,8 +124,24 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          key: ${{ secrets.SSH }}
+          name: id_rsa_github
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host github.com
+              IdentityFile ~/.ssh/id_rsa_github
+          if_key_exists: replace
+
+      - name: Install SSH key gitlab
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          name: id_rsa_gitlab
+          known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
+          config: |
+            Host gitlab.com
+              IdentityFile ~/.ssh/id_rsa_gitlab
+          if_key_exists: replace
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -164,8 +196,24 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          key: ${{ secrets.SSH }}
+          name: id_rsa_github
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host github.com
+              IdentityFile ~/.ssh/id_rsa_github
+          if_key_exists: replace
+
+      - name: Install SSH key gitlab
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          name: id_rsa_gitlab
+          known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
+          config: |
+            Host gitlab.com
+              IdentityFile ~/.ssh/id_rsa_gitlab
+          if_key_exists: replace
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -207,8 +255,24 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          key: ${{ secrets.SSH }}
+          name: id_rsa_github
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host github.com
+              IdentityFile ~/.ssh/id_rsa_github
+          if_key_exists: replace
+      
+      - name: Install SSH key gitlab
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
+          name: id_rsa_gitlab
+          known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
+          config: |
+            Host gitlab.com
+              IdentityFile ~/.ssh/id_rsa_gitlab
+          if_key_exists: replace
 
       - name: Checkout
         uses: actions/checkout@v2
