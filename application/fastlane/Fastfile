@@ -209,18 +209,20 @@ lane :check do |options|
   else
     flutter("format ./")
   end
+  flutter('pub global activate dart_dot_reporter')
   if options[Options::COVERAGE]
     # Creates a fake test that imports all files so that lcov calculates the correct coverage
     shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
     shell("cat test/test_stub.dart >> test/all_imports_test.dart")
-    flutter("test --coverage")
+    flutter("test --coverage --reporter=json > machine.log || echo 'Tests failed'")
     lcov_ignore_rules = shell("cat lcov_ignore | grep -v \\# | tr '\n' ' '")
     shell("mv coverage/lcov.info coverage/original_lcov.info")
     shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
     shell("genhtml coverage/lcov.info -o coverage/html")
   else
-    flutter("test")
+    flutter("test --reporter=json > machine.log || echo 'Tests failed'")
   end
+  flutter('pub global run dart_dot_reporter machine.log --show-message')
 end
 
 desc "Build and publish to MS AppCenter \n" \
