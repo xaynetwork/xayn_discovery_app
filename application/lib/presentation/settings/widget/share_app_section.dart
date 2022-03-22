@@ -20,10 +20,13 @@ class ShareAppSection extends StatelessWidget {
         ),
       );
 
-  AppRaisedButton _buildShareBtn() => AppRaisedButton.textWithIcon(
+  AppGhostButton _buildShareBtn() => AppGhostButton.textWithIcon(
         key: Keys.settingsShareBtn,
         onPressed: onShareAppPressed,
         text: R.strings.settingsShareBtn,
         svgIconPath: R.assets.icons.heart,
+        backgroundColor: R.colors.primaryAction,
+        iconColor: R.colors.iconInverse,
+        textColor: R.colors.quaternaryText,
       );
 }
