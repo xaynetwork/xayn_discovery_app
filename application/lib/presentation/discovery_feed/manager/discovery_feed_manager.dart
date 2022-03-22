@@ -190,6 +190,13 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     return (BaseDiscoveryManager manager) {
       final self = manager as DiscoveryFeedManager;
 
+      if (self.disposedDocuments.isNotEmpty) {
+        // because the feed's state will remove the oldest card, when the
+        // total card count is high enough, we replicate that action here.
+        lastResults = lastResults.toSet()
+          ..removeWhere((it) => self.disposedDocuments.contains(it.documentId));
+      }
+
       foldEngineEvent({
         required OnRestoreFeedSucceeded restoreFeedSucceeded,
         required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
