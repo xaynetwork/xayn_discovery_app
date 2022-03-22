@@ -35,6 +35,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_se
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
@@ -124,6 +125,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RenameDefaultCollectionUseCase,
   HapticFeedbackMediumUseCase,
   RestoreSubscriptionUseCase,
+  GetSubscriptionManagementUrlUseCase,
 ])
 class Mocks {
   Mocks._();

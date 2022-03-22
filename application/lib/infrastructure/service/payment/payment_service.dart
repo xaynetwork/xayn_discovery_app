@@ -24,6 +24,8 @@ class PaymentService {
 
   final UniqueId _userId;
 
+  PurchaserInfo? _purchaserInfo;
+
   PaymentService(this._userId) {
     _init();
   }
@@ -32,6 +34,7 @@ class PaymentService {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
     Purchases.addPurchaserInfoUpdateListener((purchaserInfo) {
+      _purchaserInfo = purchaserInfo;
       _controller.sink.add(purchaserInfo);
     });
     try {
@@ -59,11 +62,17 @@ class PaymentService {
 
   Future<PurchaserInfo> restore() => Purchases.restoreTransactions();
 
-  Future<PurchaserInfo> getPurchaserInfo() => Purchases.getPurchaserInfo();
+  Future<PurchaserInfo> getPurchaserInfo() async {
+    final purchaserInfo = await Purchases.getPurchaserInfo();
+    _purchaserInfo = purchaserInfo;
+    return purchaserInfo;
+  }
 
   /// iOS only. Presents a code redemption sheet, useful for redeeming offer codes
   /// Refer to https://docs.revenuecat.com/docs/ios-subscription-offers#offer-codes for more information on how
   /// to configure and use offer codes
   Future<void> presentCodeRedemptionSheet() =>
       Purchases.presentCodeRedemptionSheet();
+
+  String? get subscriptionManagementURL => _purchaserInfo?.managementURL;
 }

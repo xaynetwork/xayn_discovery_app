@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
@@ -49,6 +50,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final GetSubscriptionManagementUrlUseCase
+      _getSubscriptionManagementUrlUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -66,6 +69,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
+    this._getSubscriptionManagementUrlUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -75,6 +79,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late final AppVersion _appVersion;
   late bool _ttsPreference;
   late SubscriptionStatus _subscriptionStatus;
+  late String? _subscriptionManagementUrl;
   late final UseCaseValueStream<AppTheme> _appThemeHandler =
       consume(_listenAppThemeUseCase, initialData: none);
   late final UseCaseValueStream<bool> _ttsPreferenceHandler =
@@ -93,6 +98,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       _theme = await _getAppThemeUseCase.singleOutput(none);
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
+      _subscriptionManagementUrl =
+          await _getSubscriptionManagementUrlUseCase.singleOutput(none);
 
       _initDone = true;
     });
@@ -124,6 +131,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           isPaymentEnabled: _featureManager.isPaymentEnabled,
           isTtsEnabled: _ttsPreference,
           subscriptionStatus: _subscriptionStatus,
+          subscriptionManagementURL: _subscriptionManagementUrl,
         );
     return fold3(
       _appThemeHandler,
