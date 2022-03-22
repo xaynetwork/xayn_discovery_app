@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 
 /// This class is just a proxy for [Purchases].
 /// I created it, in order to be able to mock the behaviour in the useCases.
@@ -36,8 +35,6 @@ class PaymentService {
       _controller.sink.add(purchaserInfo);
     });
     try {
-      logger.i('>>>>> USER_ID: $userId');
-
       Purchases.logIn(userId);
       // ignore: empty_catches
     } catch (e) {}
