@@ -28,7 +28,7 @@ void main() {
       expect(find.byType(SettingsCard), findsNothing);
       expect(find.byType(SettingsGroup), findsNothing);
       expect(find.byType(SettingsTile), findsNothing);
-      expect(find.byType(AppRaisedButton), findsOneWidget);
+      expect(find.byType(AppGhostButton), findsOneWidget);
       expect(find.byType(SvgPicture), findsOneWidget);
       expect(find.byType(Text), findsNWidgets(2));
     },
