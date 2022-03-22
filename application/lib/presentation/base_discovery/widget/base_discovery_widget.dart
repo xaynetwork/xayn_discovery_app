@@ -130,7 +130,9 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (!state.isComplete) return _buildLoadingIndicator(notchSize);
 
-      _cardViewController.index = state.cardIndex;
+      if (state.cardIndex < totalResults) {
+        _cardViewController.index = state.cardIndex;
+      }
 
       onIndexChanged(int index) {
         manager.handleIndexChanged(index);
