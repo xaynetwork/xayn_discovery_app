@@ -17,6 +17,9 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
     super.initState();
 
     _didShowBookmarkTooltip = discoveryCardManager.state.isBookmarked;
+    _didShowDocumentFilterTooltip =
+        discoveryCardManager.state.explicitDocumentUserReaction ==
+            UserReaction.negative;
   }
 
   void onBookmarkChanged(DiscoveryCardState state) {

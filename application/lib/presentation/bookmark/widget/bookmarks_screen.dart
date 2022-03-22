@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/bookmark_options/bo
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/di_factories.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
@@ -35,7 +35,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
   final VoidCallback _dispose =
-      CardManagers.registerCardManagerCacheInDi('bookmarks');
+      DiFactories.registerCardManagerCacheInDi('bookmarks');
 
   @override
   Widget build(BuildContext context) {
