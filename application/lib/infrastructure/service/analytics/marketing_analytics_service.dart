@@ -4,6 +4,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -40,7 +41,9 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   }
 
   @factoryMethod
-  static MarketingAnalyticsService initialized() {
+  static MarketingAnalyticsService initialized(
+    AppStatusRepository appStatusRepository,
+  ) {
     final options = Platform.isIOS
         ? AppsFlyerOptions(
             showDebug: EnvironmentHelper.kIsDebug,
@@ -54,7 +57,6 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
             appId: EnvironmentHelper.kAppId,
             disableAdvertisingIdentifier: false,
           );
-
     final appsFlyer = AppsflyerSdk(options);
     appsFlyer.initSdk(
       /// NOTE: when sending registerOnDeepLinkingCallback flag, the sdk will
@@ -64,7 +66,10 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
       registerConversionDataCallback: false,
       registerOnAppOpenAttributionCallback: false,
     );
-    logger.i('custom logger: marketing service');
+    final userId = appStatusRepository.appStatus.userId.value;
+    appsFlyer.setCustomerUserId(userId);
+    logger.i('>>>>> USER_ID: $userId');
+
     return AppsFlyerMarketingAnalyticsService(appsFlyer);
   }
 
