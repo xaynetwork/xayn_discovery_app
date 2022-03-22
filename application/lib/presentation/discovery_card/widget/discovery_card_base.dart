@@ -124,7 +124,10 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   Widget _buildImage() {
     final mediaQuery = MediaQuery.of(context);
-    final backgroundPane = Container(color: R.colors.swipeCardBackgroundHome);
+
+    // allow opaque-when-loading, because the card will fade in on load completion.
+    buildBackgroundPane({required bool opaque}) =>
+        Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
 
     return CachedImage(
       imageManager: imageManager,
@@ -132,9 +135,9 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),
       fit: widget.imageBoxFit,
-      loadingBuilder: (_, __) => backgroundPane,
-      errorBuilder: (_) => backgroundPane,
-      noImageBuilder: (_) => backgroundPane,
+      loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
+      errorBuilder: (_) => buildBackgroundPane(opaque: false),
+      noImageBuilder: (_) => buildBackgroundPane(opaque: false),
     );
   }
 }
