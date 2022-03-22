@@ -1,7 +1,7 @@
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 
 const String _kEventType = 'af_purchase';
-const String _kParamPrice = 'af_purchase';
+const String _kParamPrice = 'af_price';
 const String _kParamCurrency = 'af_currency';
 const String _kParamContentId = 'af_content_id';
 
