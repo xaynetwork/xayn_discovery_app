@@ -97,8 +97,11 @@ class _CachedImageState extends State<CachedImage> {
             );
 
     return BlocBuilder<ImageManager, ImageManagerState>(
-        bloc: _imageManager,
-        builder: (context, state) {
+      bloc: _imageManager,
+      builder: (context, state) {
+        var opacity = .0;
+
+        buildChild() {
           if (state.uri != widget.uri) {
             final uriAsParam = state.uri?.queryParameters['url'];
 
@@ -116,6 +119,8 @@ class _CachedImageState extends State<CachedImage> {
           final bytes = state.bytes;
 
           if (bytes != null) {
+            opacity = 1.0;
+
             return Image.memory(
               bytes,
               width: widget.width?.toDouble(),
@@ -143,6 +148,17 @@ class _CachedImageState extends State<CachedImage> {
             // there is no image
             return noImageBuilder(context);
           }
-        });
+        }
+
+        final child = buildChild();
+
+        return AnimatedOpacity(
+          opacity: opacity,
+          duration: R.animations.unit2,
+          curve: Curves.easeOut,
+          child: child,
+        );
+      },
+    );
   }
 }
