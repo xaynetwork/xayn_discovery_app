@@ -161,7 +161,7 @@ class TranslationsDe extends Translations {
   String get subscriptionRestore => """Abo wiederherstellen""";
   String get subscriptionPromoCode => """Ich habe einen Promo-code""";
   String get subscriptionDisclaimer =>
-      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
+      """Indem Du auf „Jetzt abonnieren“ tippst, wirst zum App Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.""";
   String get settingsSubscribedToHeader => """Du hast""";
   String get doneButtonTitle => """Fertig""";
   String get subscriptionRenewsMonthlyText =>
@@ -186,22 +186,29 @@ class TranslationsDe extends Translations {
       """Bitte versuche es später noch einmal.""";
   String get errorClose => """Schließen""";
   String get sourceHandlingTooltipLabel =>
-      """What do you want to see less of?""";
-  String get sourceHandlingTooltipHighlightedWord => """What""";
-  String get enableTextToSpeech => """Enable text -to-speech""";
-  String get settingsSectionTitleOptions => """Options""";
-  String get personalAreaContact => """Contact""";
-  String get settingsContactUs => """Contact""";
+      """Wovon willst du weniger Vorschläge bekommen?""";
+  String get sourceHandlingTooltipHighlightedWord => """Was""";
+  String get enableTextToSpeech => """Text-zu-Sprache aktivieren""";
+  String get settingsSectionTitleOptions => """Optionen""";
+  String get personalAreaContact => """Kontakt""";
+  String get settingsContactUs => """Kontakt""";
   String get contactSectionWeb => """Web:""";
-  String get contactSectionSupportEmail => """Support eMail:""";
-  String get contactSectionForPublishers => """For Publishers:""";
-  String get contactSectionPhone => """Phone:""";
-  String get searchNoResultsFound => """No results""";
-  String get searchEndOfResults => """That's all!""";
+  String get contactSectionSupportEmail => """Support E-Mail:""";
+  String get contactSectionForPublishers => """Für Medienhäuser:""";
+  String get contactSectionPhone => """Telefon:""";
+  String get searchNoResultsFound => """Keine Ergebnisse""";
+  String get searchEndOfResults => """Das war's!""";
   String get searchNoResultsFoundDesc =>
-      """We couldn’t find any stories for your search. Try different or more general keywords.""";
+      """Wir konnten keine Stories für Deine Suche finden. Probiere ein anderes oder allgemeineres Stichwort.""";
   String get searchEndOfResultsDesc =>
-      """These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.""";
+      """Noch nicht gefunden, wonach Du suchst? Versuch's mit anderen oder allgemeineren Stichwörtern.""";
+  String get feedSettingsScreenSourceFilterExplanation =>
+      """Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Disvoery Feed angezeigt.""";
+  String get feedSettingsScreenTabCountries => """Länder""";
+  String get feedSettingsScreenTabSources => """Quellen""";
+  String get feedSettingsScreenSubtitleDislikedSources =>
+      """Aussortierte Quellen""";
+  String get settingsSectionHomeFeed => """Feedeinstellungen""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -212,7 +219,7 @@ class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nicht gefunden :(""";
   String get itemAlreadyOwned => """Du bist bereits abonniert""";
   String get transactionFailed => """Zahlungsvorgang fehlgeschlagen""";
-  String get noActiveSubscriptionFound => """No active subscription found""";
+  String get noActiveSubscriptionFound => """Kein aktives Abo gefunden""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -322,7 +329,7 @@ Map<String, String> get translationsDeMap => {
       """subscriptionRestore""": """Abo wiederherstellen""",
       """subscriptionPromoCode""": """Ich habe einen Promo-code""",
       """subscriptionDisclaimer""":
-          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
+          """Indem Du auf „Jetzt abonnieren“ tippst, wirst zum App Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.""",
       """settingsSubscribedToHeader""": """Du hast""",
       """doneButtonTitle""": """Fertig""",
       """subscriptionRenewsMonthlyText""": """Dein Abo erneuert sich am: %s""",
@@ -340,7 +347,7 @@ Map<String, String> get translationsDeMap => {
       """paymentFlowError.transactionFailed""":
           """Zahlungsvorgang fehlgeschlagen""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """No active subscription found""",
+          """Kein aktives Abo gefunden""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Willst Du diese Sammlung wirklich löschen?""",
       """bottomSheetMoveSingleBookmark""":
@@ -351,20 +358,28 @@ Map<String, String> get translationsDeMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Bitte versuche es später noch einmal.""",
       """errorClose""": """Schließen""",
-      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
-      """sourceHandlingTooltipHighlightedWord""": """What""",
-      """enableTextToSpeech""": """Enable text -to-speech""",
-      """settingsSectionTitleOptions""": """Options""",
-      """personalAreaContact""": """Contact""",
-      """settingsContactUs""": """Contact""",
+      """sourceHandlingTooltipLabel""":
+          """Wovon willst du weniger Vorschläge bekommen?""",
+      """sourceHandlingTooltipHighlightedWord""": """Was""",
+      """enableTextToSpeech""": """Text-zu-Sprache aktivieren""",
+      """settingsSectionTitleOptions""": """Optionen""",
+      """personalAreaContact""": """Kontakt""",
+      """settingsContactUs""": """Kontakt""",
       """contactSectionWeb""": """Web:""",
-      """contactSectionSupportEmail""": """Support eMail:""",
-      """contactSectionForPublishers""": """For Publishers:""",
-      """contactSectionPhone""": """Phone:""",
-      """searchNoResultsFound""": """No results""",
-      """searchEndOfResults""": """That's all!""",
+      """contactSectionSupportEmail""": """Support E-Mail:""",
+      """contactSectionForPublishers""": """Für Medienhäuser:""",
+      """contactSectionPhone""": """Telefon:""",
+      """searchNoResultsFound""": """Keine Ergebnisse""",
+      """searchEndOfResults""": """Das war's!""",
       """searchNoResultsFoundDesc""":
-          """We couldn’t find any stories for your search. Try different or more general keywords.""",
+          """Wir konnten keine Stories für Deine Suche finden. Probiere ein anderes oder allgemeineres Stichwort.""",
       """searchEndOfResultsDesc""":
-          """These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.""",
+          """Noch nicht gefunden, wonach Du suchst? Versuch's mit anderen oder allgemeineren Stichwörtern.""",
+      """feedSettingsScreenSourceFilterExplanation""":
+          """Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Disvoery Feed angezeigt.""",
+      """feedSettingsScreenTabCountries""": """Länder""",
+      """feedSettingsScreenTabSources""": """Quellen""",
+      """feedSettingsScreenSubtitleDislikedSources""":
+          """Aussortierte Quellen""",
+      """settingsSectionHomeFeed""": """Feedeinstellungen""",
     };
