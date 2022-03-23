@@ -10,7 +10,10 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin CloseFeedDocumentsMixin<T> on UseCaseBlocHelper<T> {
+  final Set<DocumentId> _closedDocuments = <DocumentId>{};
   UseCaseSink<Set<DocumentId>, EngineEvent>? _useCaseSink;
+
+  Set<DocumentId> get closedDocuments => _closedDocuments;
 
   @override
   Future<void> close() {
@@ -22,6 +25,8 @@ mixin CloseFeedDocumentsMixin<T> on UseCaseBlocHelper<T> {
   void closeFeedDocuments(Set<DocumentId> documents) {
     final crudExplicitDocumentFeedbackUseCase =
         di.get<CrudExplicitDocumentFeedbackUseCase>();
+
+    _closedDocuments.addAll(documents);
 
     _useCaseSink ??= _getUseCaseSink();
 
