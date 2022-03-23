@@ -1,21 +1,31 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_background_color_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_font_size_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_font_style_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_state.dart';
 
+import '../../../bottom_sheet/move_to_collection/manager/move_to_collection_manager_test.mocks.dart';
 import '../../../test_utils/utils.dart';
 
+@GenerateMocks([SendAnalyticsUseCase])
 void main() {
   late MockSaveReaderModeFontStyleUseCase saveReaderModeFontStyleUseCase;
   late MockSaveReaderModeFontSizeUseCase saveReaderModeFontSizeUseCase;
   late MockSaveReaderModeBackgroundColorUseCase
       saveReaderModeBackgroundColorUseCase;
   late MockReaderModeSettingsRepository readerModeSettingsRepository;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
+
   late EditReaderModeSettingsState populatedState;
 
   const ReaderModeFontStyle mockFontStyle = ReaderModeFontStyle.serif;
@@ -31,6 +41,7 @@ void main() {
     saveReaderModeBackgroundColorUseCase =
         MockSaveReaderModeBackgroundColorUseCase();
     readerModeSettingsRepository = MockReaderModeSettingsRepository();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
 
     populatedState = EditReaderModeSettingsState(
       readerModeBackgroundColor: mockReaderModeSettings.backgroundColor,
@@ -60,6 +71,7 @@ void main() {
         saveReaderModeFontSizeUseCase,
         saveReaderModeBackgroundColorUseCase,
         saveReaderModeFontStyleUseCase,
+        sendAnalyticsUseCase,
         readerModeSettingsRepository,
       );
 
@@ -77,6 +89,15 @@ void main() {
     blocTest<EditReaderModeSettingsManager, EditReaderModeSettingsState>(
       'WHEN onFontSizePressed is called THEN verify readerModeSettings changed',
       build: create,
+      setUp: () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              ReaderModeFontSizeChanged(fontSize: mockFontSize),
+            ),
+          ],
+        );
+      },
       act: (manager) => manager.onFontSizePressed(mockFontSize),
       verify: (manager) {
         verifyInOrder([
@@ -98,6 +119,15 @@ void main() {
     blocTest<EditReaderModeSettingsManager, EditReaderModeSettingsState>(
       'WHEN onFontStylePressed is called THEN verify readerModeSettings changed',
       build: create,
+      setUp: () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              ReaderModeFontStyleChanged(fontStyle: mockFontStyle),
+            ),
+          ],
+        );
+      },
       act: (manager) => manager.onFontStylePressed(mockFontStyle),
       verify: (manager) {
         verifyInOrder([
@@ -119,6 +149,20 @@ void main() {
     blocTest<EditReaderModeSettingsManager, EditReaderModeSettingsState>(
       'WHEN onLightBackgroundColorPressed is called THEN verify readerModeSettings changed',
       build: create,
+      setUp: () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              ReaderModeBackgroundColorChanged(
+                backgroundColor:
+                    populatedState.readerModeBackgroundColor.copyWith(
+                  light: ReaderModeBackgroundLightColor.beige,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
       act: (manager) => manager
           .onLightBackgroundColorPressed(ReaderModeBackgroundLightColor.beige),
       verify: (manager) {
@@ -140,6 +184,20 @@ void main() {
     blocTest<EditReaderModeSettingsManager, EditReaderModeSettingsState>(
       'WHEN onDarkBackgroundColorPressed is called THEN verify readerModeSettings changed',
       build: create,
+      setUp: () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              ReaderModeBackgroundColorChanged(
+                backgroundColor:
+                    populatedState.readerModeBackgroundColor.copyWith(
+                  dark: ReaderModeBackgroundDarkColor.trueBlack,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
       act: (manager) => manager.onDarkBackgroundColorPressed(
           ReaderModeBackgroundDarkColor.trueBlack),
       verify: (manager) {

@@ -15,6 +15,10 @@ import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
+/// needs to be public, used elsewhere
+const int _kSearchPageSize = 20;
+const int _kFeedBatchSize = 2;
+
 /// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
@@ -22,6 +26,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final GetLocalMarketsUseCase _getLocalMarketsUseCase;
   late DiscoveryEngine _engine;
+
+  static int get searchPageSize => _kSearchPageSize;
 
   final StreamController<String> _inputLog =
       StreamController<String>.broadcast();
@@ -81,8 +87,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       apiBaseUrl: Env.searchApiBaseUrl,
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
-      maxItemsPerFeedBatch: 2,
-      maxItemsPerSearchBatch: 2,
+      maxItemsPerFeedBatch: _kFeedBatchSize,
+      maxItemsPerSearchBatch: _kSearchPageSize,
       feedMarkets: await _getLocalMarketsUseCase.singleOutput(none),
       manifest: manifest,
     );

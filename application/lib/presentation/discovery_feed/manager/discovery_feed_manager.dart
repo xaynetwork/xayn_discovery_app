@@ -64,7 +64,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         super(
           FeedType.feed,
           engineEventsUseCase,
-          _foldEngineEvent,
+          _foldEngineEvent(),
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
@@ -80,6 +80,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   bool get isLoading => _isLoading;
+
+  @override
+  bool get didReachEnd => false;
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
@@ -179,89 +182,106 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     return super.computeState();
   }
 
-  static Set<Document> Function(EngineEvent?) _foldEngineEvent(
-      BaseDiscoveryManager manager) {
-    final self = manager as DiscoveryFeedManager;
-    final state = manager.state;
+  /// A higher-order Function, which tracks the last event passed in,
+  /// and ultimately runs the inner fold Function when the incoming event
+  /// no longer matches lastEvent.
+  static Set<Document> Function(EngineEvent?) Function(BaseDiscoveryManager)
+      _foldEngineEvent() {
+    // because foldEngineEvent runs within a combineLatest setup,
+    // we can use lastEvent to compare with the incoming event,
+    // if they are the same, then the fold does not need to re-run.
+    // this is important, because _isLoading would otherwise falsely be
+    // switched to true.
+    EngineEvent? lastEvent;
+    var lastResults = const <Document>{};
 
-    foldEngineEvent({
-      required OnRestoreFeedSucceeded restoreFeedSucceeded,
-      required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
-      required OnDocumentsUpdated documentsUpdated,
-      required OnEngineExceptionRaised engineExceptionRaised,
-      required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
-      required OnRestoreFeedFailed restoreFeedFailed,
-      required OnNonMatchedEngineEvent orElse,
-    }) =>
-        (EngineEvent? event) {
-          if (event is RestoreFeedSucceeded) {
-            self._isLoading = false;
-            return restoreFeedSucceeded(event);
-          } else if (event is NextFeedBatchRequestSucceeded) {
-            self._isLoading = false;
-            return nextFeedBatchRequestSucceeded(event);
-          } else if (event is DocumentsUpdated) {
-            return documentsUpdated(event);
-          } else if (event is EngineExceptionRaised) {
-            return engineExceptionRaised(event);
-          } else if (event is NextFeedBatchRequestFailed) {
-            self._isLoading = false;
-            return nextFeedBatchRequestFailed(event);
-          } else if (event is RestoreFeedFailed) {
-            self._isLoading = false;
-            return restoreFeedFailed(event);
-          }
+    return (BaseDiscoveryManager manager) {
+      final self = manager as DiscoveryFeedManager;
 
-          return orElse();
-        };
+      foldEngineEvent({
+        required OnRestoreFeedSucceeded restoreFeedSucceeded,
+        required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
+        required OnDocumentsUpdated documentsUpdated,
+        required OnEngineExceptionRaised engineExceptionRaised,
+        required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
+        required OnRestoreFeedFailed restoreFeedFailed,
+        required OnNonMatchedEngineEvent orElse,
+      }) =>
+          (EngineEvent? event) {
+            if (event == lastEvent) return lastResults;
 
-    return foldEngineEvent(
-      restoreFeedSucceeded: (event) => event.items.toSet(),
-      nextFeedBatchRequestSucceeded: (event) =>
-          {...state.results, ...event.items},
-      documentsUpdated: (event) => state.results
-          .map(
-            (it) => event.items.firstWhere(
-              (item) => item.documentId == it.documentId,
-              orElse: () => it,
+            lastEvent = event;
+
+            if (event is RestoreFeedSucceeded) {
+              self._isLoading = false;
+              lastResults = restoreFeedSucceeded(event);
+            } else if (event is NextFeedBatchRequestSucceeded) {
+              self._isLoading = false;
+              lastResults = nextFeedBatchRequestSucceeded(event);
+            } else if (event is DocumentsUpdated) {
+              lastResults = documentsUpdated(event);
+            } else if (event is EngineExceptionRaised) {
+              lastResults = engineExceptionRaised(event);
+            } else if (event is NextFeedBatchRequestFailed) {
+              lastResults = nextFeedBatchRequestFailed(event);
+            } else if (event is RestoreFeedFailed) {
+              self._isLoading = false;
+              lastResults = restoreFeedFailed(event);
+            } else {
+              lastResults = orElse();
+            }
+
+            return lastResults;
+          };
+
+      return foldEngineEvent(
+        restoreFeedSucceeded: (event) => event.items.toSet(),
+        nextFeedBatchRequestSucceeded: (event) =>
+            {...lastResults, ...event.items},
+        documentsUpdated: (event) => lastResults
+            .map(
+              (it) => event.items.firstWhere(
+                (item) => item.documentId == it.documentId,
+                orElse: () => it,
+              ),
+            )
+            .toSet(),
+        engineExceptionRaised: (event) {
+          manager.sendAnalyticsUseCase(
+            EngineExceptionRaisedEvent(
+              event: event,
             ),
-          )
-          .toSet(),
-      engineExceptionRaised: (event) {
-        manager.sendAnalyticsUseCase(
-          EngineExceptionRaisedEvent(
-            event: event,
-          ),
-        );
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      nextFeedBatchRequestFailed: (event) {
-        manager.sendAnalyticsUseCase(
-          NextFeedBatchRequestFailedEvent(
-            event: event,
-          ),
-        );
+          return lastResults;
+        },
+        nextFeedBatchRequestFailed: (event) {
+          manager.sendAnalyticsUseCase(
+            NextFeedBatchRequestFailedEvent(
+              event: event,
+            ),
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      restoreFeedFailed: (event) {
-        manager.sendAnalyticsUseCase(
-          RestoreFeedFailedEvent(
-            event: event,
-          ),
-        );
+          return lastResults;
+        },
+        restoreFeedFailed: (event) {
+          manager.sendAnalyticsUseCase(
+            RestoreFeedFailedEvent(
+              event: event,
+            ),
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      orElse: () => state.results,
-    );
+          return lastResults;
+        },
+        orElse: () => lastResults,
+      );
+    };
   }
 
   @override

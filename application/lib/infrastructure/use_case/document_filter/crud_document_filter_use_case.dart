@@ -5,6 +5,23 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 
 @injectable
 class CrudDocumentFilterUseCase extends DbEntityCrudUseCase<DocumentFilter> {
-  CrudDocumentFilterUseCase(HiveDocumentFilterRepository repository)
-      : super(repository);
+  final HiveDocumentFilterRepository _repository;
+
+  CrudDocumentFilterUseCase(this._repository) : super(_repository);
+
+  void applyChanges(Map<DocumentFilter, bool> pendingChanges) {
+    final currentStored = _repository.getAll();
+    for (var entry in pendingChanges.entries) {
+      final isStored = currentStored.contains(entry.key);
+      final shouldChange = isStored != entry.value;
+
+      if (shouldChange) {
+        if (isStored) {
+          _repository.remove(entry.key);
+        } else {
+          _repository.save(entry.key);
+        }
+      }
+    }
+  }
 }

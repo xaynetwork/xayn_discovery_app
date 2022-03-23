@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
-import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
@@ -23,14 +23,23 @@ import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
-import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
+import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 
 /// A widget which displays a list of discovery results.
 abstract class BaseDiscoveryWidget<T extends BaseDiscoveryManager>
     extends StatefulWidget {
-  const BaseDiscoveryWidget({Key? key}) : super(key: key);
+  final AuxiliaryCardBuilder? noItemsBuilder;
+  final AuxiliaryCardBuilder? finalItemBuilder;
+  final AuxiliaryCardBuilder? loadingItemBuilder;
+
+  const BaseDiscoveryWidget({
+    Key? key,
+    this.noItemsBuilder,
+    this.finalItemBuilder,
+    this.loadingItemBuilder,
+  }) : super(key: key);
 }
 
 abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
@@ -135,11 +144,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
-      if (state.results.isEmpty || cardIndex == -1) {
-        return state.isComplete
-            ? _buildNoResultsIndicator()
-            : _buildLoadingIndicator();
-      }
+      if (!state.isComplete) return _buildLoadingIndicator(notchSize);
 
       _cardViewController.index = cardIndex;
 
@@ -174,14 +179,16 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         fullScreenOffsetFraction: _dragDistance / DiscoveryCard.dragThreshold,
         notchSize: notchSize,
         cardIdentifierBuilder: _createUniqueCardIdentity(results),
+        noItemsBuilder: widget.noItemsBuilder,
+        finalItemBuilder: state.didReachEnd
+            ? widget.finalItemBuilder
+            : widget.loadingItemBuilder,
       );
     });
   }
 
-  Widget _buildLoadingIndicator() => const Center(
-        ///TODO replace with shimmer
-        child: WidgetTestableProgressIndicator(),
-      );
+  Widget _buildLoadingIndicator(double notchSize) =>
+      ShimmeringFeedView(notchSize: notchSize);
 
   String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
       (int index) {
@@ -190,11 +197,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         return document.documentId.toString();
       };
-
-  /// todo: we are awaiting a proper design here
-  Widget _buildNoResultsIndicator() => const Center(
-        child: Text('Sorry, no results!'),
-      );
 
   Widget Function(BuildContext, int) _itemBuilder({
     required Set<Document> results,
