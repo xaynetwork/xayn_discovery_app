@@ -50,12 +50,33 @@ class DbEntityCrudUseCase<T extends DbEntity> extends CrudUseCase<DbCrudIn, T> {
 
   @override
   Stream<CrudOut<T>> watchAll(DbCrudIn param) async* {
-    yield* _repository
-        .watch()
-        .whereType<ChangedEvent<T>>()
-        .map((it) => it.newObject)
-        .distinct()
-        .map((event) => CrudOut.single(value: event));
+    switch (param.operation) {
+      case Operation.watchAll:
+        yield* _repository
+            .watch()
+            .map((it) => it.id)
+            .distinct()
+            .map((event) => CrudOut.id(id: event));
+        break;
+      case Operation.watchAllDeleted:
+        yield* _repository
+            .watch()
+            .whereType<DeletedEvent<T>>()
+            .map((it) => it.id)
+            .distinct()
+            .map((event) => CrudOut.id(id: event));
+        break;
+      case Operation.watchAllChanged:
+        yield* _repository
+            .watch()
+            .whereType<ChangedEvent<T>>()
+            .map((it) => it.newObject)
+            .distinct()
+            .map((event) => CrudOut.single(value: event));
+        break;
+      default:
+        throw "Operation ${param.operation} in watchAll not supported";
+    }
   }
 
   @override
@@ -66,7 +87,21 @@ class DbEntityCrudUseCase<T extends DbEntity> extends CrudUseCase<DbCrudIn, T> {
 
   @override
   Stream<CrudOut<T>> getAll(DbCrudIn param) async* {
-    yield CrudOut.list(value: _repository.getAll());
+    switch (param.operation) {
+      case Operation.getAll:
+        yield CrudOut.list(value: _repository.getAll());
+        break;
+      case Operation.getAllContinuously:
+        yield* _repository
+            .watch()
+            .map((_) => _repository.getAll())
+            .startWith(_repository.getAll())
+            .map((event) => CrudOut.list(value: event))
+            .distinct();
+        break;
+      default:
+        throw "Operation ${param.operation} in getAll not supported";
+    }
   }
 }
 
@@ -87,10 +122,25 @@ class DbCrudIn extends CrudUseCaseIn {
         _id = null,
         super(Operation.getAll);
 
+  const DbCrudIn.getAllContinuously()
+      : _entity = null,
+        _id = null,
+        super(Operation.getAllContinuously);
+
   const DbCrudIn.watch(UniqueId id)
       : _entity = null,
         _id = id,
         super(Operation.watch);
+
+  const DbCrudIn.watchAllChanged()
+      : _entity = null,
+        _id = null,
+        super(Operation.watchAllChanged);
+
+  const DbCrudIn.watchAllDeleted()
+      : _entity = null,
+        _id = null,
+        super(Operation.watchAllDeleted);
 
   const DbCrudIn.watchAll()
       : _entity = null,

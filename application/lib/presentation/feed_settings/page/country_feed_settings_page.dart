@@ -47,8 +47,8 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
 
       return SelectCountries(
         maxSelectedCountryAmount: ready.maxSelectedCountryAmount,
-        selectedCountries: ready.selectedCountries,
-        unSelectedCountries: ready.unSelectedCountries,
+        selectedCountries: ready.activeFilters,
+        unSelectedCountries: ready.inactiveFilters,
         onAddCountryPressed: _manager.onAddCountryPressed,
         onRemoveCountryPressed: _manager.onRemoveCountryPressed,
       );
