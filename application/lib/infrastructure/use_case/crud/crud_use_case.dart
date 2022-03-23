@@ -12,6 +12,8 @@ abstract class CrudUseCase<In extends CrudUseCaseIn, Out>
         yield* watch(param);
         break;
       case Operation.watchAll:
+      case Operation.watchAllChanged:
+      case Operation.watchAllDeleted:
         yield* watchAll(param);
         break;
       case Operation.store:
@@ -24,6 +26,7 @@ abstract class CrudUseCase<In extends CrudUseCaseIn, Out>
         yield* get(param);
         break;
       case Operation.getAll:
+      case Operation.getAllContinuously:
         yield* getAll(param);
         break;
     }
@@ -39,7 +42,7 @@ abstract class CrudUseCase<In extends CrudUseCaseIn, Out>
   Stream<CrudOut<Out>> watch(In param);
 
   @protected
-  Stream<CrudOut<Out>> watchAll(In param);
+  Stream<CrudOut<Out?>> watchAll(In param);
 
   @protected
   Stream<CrudOut<Out>> store(In param);
@@ -48,7 +51,17 @@ abstract class CrudUseCase<In extends CrudUseCaseIn, Out>
   Stream<CrudOut<Out>> remove(In param);
 }
 
-enum Operation { watch, watchAll, store, remove, get, getAll }
+enum Operation {
+  watch,
+  watchAll,
+  watchAllDeleted,
+  watchAllChanged,
+  store,
+  remove,
+  get,
+  getAll,
+  getAllContinuously,
+}
 
 abstract class CrudUseCaseIn extends Equatable {
   const CrudUseCaseIn(this.operation);

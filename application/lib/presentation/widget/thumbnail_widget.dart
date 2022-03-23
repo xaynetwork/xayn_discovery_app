@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
+    as xayn;
 
 class Thumbnail extends StatelessWidget {
   const Thumbnail({
@@ -83,6 +85,20 @@ class Thumbnail extends StatelessWidget {
       child: child,
     );
   }
+}
+
+Widget buildThumbnailFromFaviconHost(String host) {
+  var defaultThumbnail = Thumbnail.assetImage(
+      R.assets.graphics.formsEmptyCollection,
+      backgroundColor: R.colors.collectionsScreenCard);
+  return xayn.CachedImage(
+    uri: Uri.parse('https://$host/favicon.ico'),
+    width: R.dimen.unit3.toInt(),
+    height: R.dimen.unit3.toInt(),
+    errorBuilder: (_) => defaultThumbnail,
+    loadingBuilder: (_, __) => defaultThumbnail,
+    noImageBuilder: (_) => defaultThumbnail,
+  );
 }
 
 final Uint8List _kTransparentPixel = Uint8List.fromList(

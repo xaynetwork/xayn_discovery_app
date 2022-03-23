@@ -15,6 +15,7 @@ class DocumentFilter extends Equatable implements DbEntity {
 
   bool get isSource => _type == DocumentFilterType.source;
   bool get isTopic => _type == DocumentFilterType.topic;
+  String get filterValue => _filter;
 
   const DocumentFilter._({
     required String filter,
