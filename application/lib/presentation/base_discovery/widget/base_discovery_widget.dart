@@ -6,7 +6,6 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -83,7 +82,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           ///TODO: Uncomment once TY-2592 is fixed
           // if (state.isInErrorState) showErrorBottomSheet();
 
-          _showPaymentScreenOrTrialBannerIfNeeded(state.subscriptionStatus);
+          _showTrialBannerIfNeeded(state.subscriptionStatus);
         },
         builder: (context, state) {
           // this is for:
@@ -291,19 +290,18 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   void _onFullScreenDrag(double distance) =>
       setState(() => _dragDistance = distance.abs());
 
-  void _showPaymentScreenOrTrialBannerIfNeeded(
-      SubscriptionStatus? subscriptionStatus) {
-    if (subscriptionStatus?.isLastDayOfFreeTrial == true &&
-        manager.feedType == FeedType.feed &&
-        !_trialBannerShown) {
+  void _showTrialBannerIfNeeded(SubscriptionStatus? subscriptionStatus) {
+    if (_trialBannerShown) return;
+
+    final needToShowBanner = subscriptionStatus?.isLastDayOfFreeTrial == true &&
+        manager.feedType == FeedType.feed;
+
+    if (needToShowBanner) {
       _trialBannerShown = true;
       showTrialBanner(
         trialEndDate: subscriptionStatus!.trialEndDate!,
         onTap: _showPaymentBottomSheet,
       );
-    } else if (subscriptionStatus?.subscriptionType ==
-        SubscriptionType.notSubscribed) {
-      manager.handleShowPaywall();
     }
   }
 

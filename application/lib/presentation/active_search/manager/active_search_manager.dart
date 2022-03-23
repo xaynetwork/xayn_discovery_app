@@ -1,5 +1,8 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
@@ -234,5 +237,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
   }
 
   @override
-  void handleShowPaywall() => _activeSearchNavActions.onTrialExpired();
+  void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
+    if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
+      _activeSearchNavActions.onTrialExpired();
+    }
+  }
 }

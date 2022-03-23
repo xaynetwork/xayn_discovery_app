@@ -25,14 +25,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           state: state,
           context: context,
         ),
-        builder: (_, state) => state.map(
-          initial: (_) => _buildLoading(),
-          error: _buildErrorScreen,
-          ready: (state) => _buildScreen(
-            context: context,
-            state: state,
-          ),
-        ),
+        builder: (_, state) => _buildScreen(state),
       );
 
   void _handlePurchasedOrRestored({
@@ -56,24 +49,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
       );
 
-  Widget _buildScreen({
-    required BuildContext context,
-    required PaymentScreenStateReady state,
-  }) {
-    final topPadding = MediaQuery.of(context).viewPadding.top;
-    final content = Padding(
-      padding: EdgeInsets.only(
-        top: topPadding,
-        left: R.dimen.unit3,
-        right: R.dimen.unit3,
-      ),
-      child: TrialExpired(
-        product: state.product,
-        onSubscribe: manager.subscribe,
-        onPromoCode: manager.enterRedeemCode,
-        onRestore: manager.restore,
-        padding: EdgeInsets.zero,
-      ),
+  Widget _buildTrialExpired(PurchasableProduct product) => Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).viewPadding.top,
+          left: R.dimen.unit3,
+          right: R.dimen.unit3,
+        ),
+        child: TrialExpired(
+          product: product,
+          onSubscribe: manager.subscribe,
+          onPromoCode: manager.enterRedeemCode,
+          onRestore: manager.restore,
+          padding: EdgeInsets.zero,
+        ),
+      );
+
+  Widget _buildScreen(PaymentScreenState state) {
+    final content = state.map(
+      initial: (_) => _buildLoading(),
+      error: _buildErrorScreen,
+      ready: (state) => _buildTrialExpired(state.product),
     );
     return Scaffold(
       body: SingleChildScrollView(child: content),
