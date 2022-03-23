@@ -207,6 +207,13 @@ class TranslationsPl extends Translations {
   String get feedSettingsScreenSubtitleDislikedSources =>
       """Disliked Sources""";
   String get settingsSectionHomeFeed => """Feed setup""";
+  String get paymentPromoCodeAndroidBottomSheetTitle =>
+      """Have a promo code?""";
+  String get paymentPromoCodeAndroidBottomSheetBody =>
+      """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""";
+  String get paymentFailedBottomSheetTitle => """Payment failed""";
+  String get paymentFailedBottomSheetBody =>
+      """The app store couldn’t process your payment. Please try again later. """;
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -378,4 +385,10 @@ Map<String, String> get translationsPlMap => {
       """feedSettingsScreenTabSources""": """Sources""",
       """feedSettingsScreenSubtitleDislikedSources""": """Disliked Sources""",
       """settingsSectionHomeFeed""": """Feed setup""",
+      """paymentPromoCodeAndroidBottomSheetTitle""": """Have a promo code?""",
+      """paymentPromoCodeAndroidBottomSheetBody""":
+          """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""",
+      """paymentFailedBottomSheetTitle""": """Payment failed""",
+      """paymentFailedBottomSheetBody""":
+          """The app store couldn’t process your payment. Please try again later. """,
     };
