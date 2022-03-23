@@ -28,17 +28,6 @@ jobs:
               IdentityFile ~/.ssh/id_rsa_github
           if_key_exists: replace
 
-      - name: Install SSH key gitlab
-        uses: shimataro/ssh-key-action@3c9b0fc6f2d223b8450b02a0445f526350fc73e0 # v2.3.1
-        with:
-          key: ${{ secrets.RELEASE_REPO_SSH_KEY }}
-          name: id_rsa_gitlab
-          known_hosts: ${{ secrets.RELEASE_REPO_KNOWN_HOSTS }}
-          config: |
-            Host gitlab.com
-              IdentityFile ~/.ssh/id_rsa_gitlab
-          if_key_exists: replace
-
       - name: Checkout repository
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.4.0
         with:
