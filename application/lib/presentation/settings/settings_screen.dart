@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
@@ -80,6 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     final children = [
       if (state.isPaymentEnabled && buildSubscriptionSection)
         _buildSubscriptionSection(state.subscriptionStatus),
+      _buildHomeFeedSection(),
       _buildAppThemeSection(
         appTheme: state.theme,
         isPaymentEnabled: state.isPaymentEnabled,
@@ -104,6 +106,11 @@ class _SettingsScreenState extends State<SettingsScreen>
         subscriptionStatus: subscriptionStatus,
         onPressed: () => _onSubscriptionSectionPressed(subscriptionStatus),
       );
+
+  Widget _buildHomeFeedSection() =>
+      SettingsHomeFeedSection(onCountriesPressed: () {
+        _manager.onCountriesOptionsPressed();
+      });
 
   Widget _buildAppThemeSection({
     required AppTheme appTheme,

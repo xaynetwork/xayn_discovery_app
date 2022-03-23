@@ -100,6 +100,10 @@ class SettingsNavActionsImpl extends SettingsNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onCountriesOptionsPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.feedSettings));
 }
 
 @Injectable(as: FeedSettingsNavActions)
