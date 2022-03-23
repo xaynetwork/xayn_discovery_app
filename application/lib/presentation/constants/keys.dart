@@ -40,6 +40,7 @@ class Keys {
   static const Key settingsToggleTextToSpeechPreference =
       Key('settingsToggleTextToSpeechPreference');
   static const Key settingsCountriesOption = Key('settings_countries_option');
+  static const Key settingsSourcesOption = Key('settings_sources_option');
 
   static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
   static const Key navBarItemHome = Key('nav_bar_item_home');
