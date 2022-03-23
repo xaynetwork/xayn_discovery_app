@@ -11,8 +11,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -58,8 +56,7 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
           onSelectItem: _manager.onFilterTogglePressed,
           getTitle: (e) => e.fold((host) => host, (topic) => topic),
           getImage: (e) => e.fold(
-              (host) =>
-                  _CachedThumbnail(uri: Uri.parse('https://$host/favicon.ico')),
+              (host) => buildThumbnailFromFaviconHost(host),
               (topic) => Thumbnail.assetImage(
                   R.assets.graphics.formsEmptyCollection,
                   backgroundColor: R.colors.collectionsScreenCard)),
@@ -98,28 +95,5 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
                 footer(state),
               ],
             ));
-  }
-}
-
-class _CachedThumbnail extends StatelessWidget {
-  _CachedThumbnail({Key? key, required this.uri}) : super(key: key);
-
-  final Uri uri;
-  late final _imageManager = di.get<ImageManager>()..getImage(uri);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ImageManager, ImageManagerState>(
-      builder: (_, state) {
-        final image = state.bytes;
-        final thumbnail = image != null
-            ? Thumbnail.memoryImage(image)
-            : Thumbnail.assetImage(R.assets.graphics.formsEmptyCollection,
-                backgroundColor: R.colors.collectionsScreenCard);
-
-        return thumbnail;
-      },
-      bloc: _imageManager,
-    );
   }
 }
