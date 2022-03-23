@@ -12,6 +12,7 @@ void main() {
     await setupWidgetTest();
     manager = MockFeatureManager();
     di.registerLazySingleton<FeatureManager>(() => manager);
+    when(manager.isDocumentFilterEnabled).thenReturn(false);
     when(manager.isRatingDialogEnabled).thenReturn(true);
     when(manager.showFeaturesScreen).thenReturn(true);
     when(manager.showOnboardingScreen).thenReturn(false);
@@ -24,6 +25,7 @@ void main() {
     'WHEN FeatureScreen dispose THEN manager.close not called',
     (final WidgetTester tester) async {
       await tester.initToFeatureSelectionPage();
+      when(manager.isDocumentFilterEnabled).thenReturn(false);
       when(manager.isRatingDialogEnabled).thenReturn(true);
       when(manager.showFeaturesScreen).thenReturn(false);
       when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
