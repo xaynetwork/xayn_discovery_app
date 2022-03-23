@@ -158,7 +158,12 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
 
         return ColoredBox(
           color: fontSettings.backgroundColor.color,
-          child: readerMode,
+          child: Scrollbar(
+            thickness: R.dimen.unit0_5,
+            radius: Radius.circular(R.dimen.unit0_5),
+            isAlwaysShown: true,
+            child: readerMode,
+          ),
         );
       },
     );
