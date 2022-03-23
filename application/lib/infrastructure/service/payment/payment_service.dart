@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 /// In current case it is [InAppPurchase.getPlatformAddition]
 /// which we are not using so far.
 /// The issue described here: https://github.com/dart-lang/mockito/issues/338
+@lazySingleton
 class PaymentService {
   /// This class is the only one place where we use [Purchases].
 
@@ -22,20 +24,18 @@ class PaymentService {
   /// A stream of [PurchaserInfo] objects. Emits when subscription state changes.
   Stream<PurchaserInfo> get purchaserInfoStream => _controller.stream;
 
-  final UniqueId _userId;
-
-  PaymentService(this._userId) {
-    _init();
+  PaymentService(AppStatusRepository appStatusRepository) {
+    _init(userId: appStatusRepository.appStatus.userId.value);
   }
 
-  void _init() async {
+  void _init({required String userId}) async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
     await Purchases.setup(Env.revenueCatSdkKey);
     Purchases.addPurchaserInfoUpdateListener((purchaserInfo) {
       _controller.sink.add(purchaserInfo);
     });
     try {
-      Purchases.logIn(_userId.value);
+      Purchases.logIn(userId);
       // ignore: empty_catches
     } catch (e) {}
   }

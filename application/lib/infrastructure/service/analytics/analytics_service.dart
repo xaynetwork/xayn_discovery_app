@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
@@ -26,12 +27,15 @@ class AmplitudeAnalyticsService
     with AsyncInitMixin
     implements AnalyticsService {
   final Amplitude _amplitude;
+  final String _userId;
 
   @visibleForTesting
   AmplitudeAnalyticsService({
     required Amplitude amplitude,
+    required String userId,
     bool initialized = true,
-  }) : _amplitude = amplitude {
+  })  : _amplitude = amplitude,
+        _userId = userId {
     if (!initialized) {
       startInitializing();
     }
@@ -42,12 +46,19 @@ class AmplitudeAnalyticsService
     await _amplitude.init(Env.amplitudeApiKey);
     await _amplitude.trackingSessionEvents(true);
     await _amplitude.setUseDynamicConfig(true);
+    await _amplitude.setUserId(_userId);
     await _preamble();
   }
 
   @factoryMethod
-  factory AmplitudeAnalyticsService.init() => AmplitudeAnalyticsService(
-      amplitude: Amplitude.getInstance(), initialized: false);
+  factory AmplitudeAnalyticsService.init(
+    AppStatusRepository appStatusRepository,
+  ) =>
+      AmplitudeAnalyticsService(
+        amplitude: Amplitude.getInstance(),
+        userId: appStatusRepository.appStatus.userId.value,
+        initialized: false,
+      );
 
   @override
   Future<void> flush() => safeRun(() => _amplitude.uploadEvents());

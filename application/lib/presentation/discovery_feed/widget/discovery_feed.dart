@@ -95,11 +95,14 @@ class _DiscoveryFeedState
         );
       }
 
-      void onEditReaderModeSettingsPressed() => toggleOverlay(
-            (_) => EditReaderModeSettingsMenu(
-              onCloseMenu: removeOverlay,
-            ),
-          );
+      void onEditReaderModeSettingsPressed() {
+        toggleOverlay(
+          (_) => EditReaderModeSettingsMenu(
+            onCloseMenu: removeOverlay,
+          ),
+        );
+        manager.onReaderModeMenuDisplayed(isVisible: isOverlayShown);
+      }
 
       return NavBarConfig(
         configIdDiscoveryFeed,
