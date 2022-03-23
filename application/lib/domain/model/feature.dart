@@ -5,6 +5,7 @@ enum Feature {
   readerModeSettings,
   discoveryEngineReportOverlay,
   ratingDialog,
+  documentFilter,
 }
 
 typedef FeatureMap = Map<Feature, bool>;

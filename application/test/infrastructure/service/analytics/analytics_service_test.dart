@@ -17,6 +17,7 @@ void main() async {
     amplitude = MockAmplitude();
     analyticsService = AmplitudeAnalyticsService(
       amplitude: amplitude,
+      userId: 'userId',
       initialized: true,
     );
   });

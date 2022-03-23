@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
-import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/document_filter_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_document_filter_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
-import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
@@ -45,12 +45,8 @@ Future<void> configureDependencies({
   );
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
-
-  final appStatusRepository = di.get<AppStatusRepository>();
-  final userId = appStatusRepository.appStatus.userId;
-  di.registerLazySingleton<BugReportingService>(
-      () => BugReportingService(userId));
-  di.registerLazySingleton<PaymentService>(() => PaymentService(userId));
+  di.registerLazySingleton<DocumentFilterRepository>(
+      () => di.get<HiveDocumentFilterRepository>());
 }
 
 void initServices() {

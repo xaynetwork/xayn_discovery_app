@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_feed_documents_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/crud_out.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -43,11 +44,12 @@ void main() {
 
     when(crudExplicitDocumentFeedbackUseCase.call(any))
         .thenAnswer((realInvocation) async {
-      final param =
-          realInvocation.positionalArguments.first as DbEntityCrudUseCaseIn;
+      final param = realInvocation.positionalArguments.first as DbCrudIn;
 
-      return Future.value(
-          [UseCaseResult.success(ExplicitDocumentFeedback(id: param.id))]);
+      return Future.value([
+        UseCaseResult.success(
+            CrudOut.single(value: ExplicitDocumentFeedback(id: param.id)))
+      ]);
     });
   });
 
@@ -70,7 +72,7 @@ void main() {
       verifyInOrder(
         documents
             .map((it) => it.uniqueId)
-            .map(DbEntityCrudUseCaseIn.remove)
+            .map(DbCrudIn.remove)
             .map(crudExplicitDocumentFeedbackUseCase)
             .toList(),
       );

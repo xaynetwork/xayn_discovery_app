@@ -92,7 +92,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
 
     for (final id in documents) {
       crudExplicitDocumentFeedbackUseCase(
-        DbEntityCrudUseCaseIn.remove(id.uniqueId),
+        DbCrudIn.remove(id.uniqueId),
       );
     }
 
