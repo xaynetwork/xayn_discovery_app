@@ -5,15 +5,18 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class SettingsHomeFeedSection extends StatelessWidget {
   final VoidCallback onCountriesPressed;
+  final bool isFirstSection;
 
   const SettingsHomeFeedSection({
     Key? key,
     required this.onCountriesPressed,
+    this.isFirstSection = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => SettingsSection(
         title: R.strings.settingsSectionHomeFeed,
+        topPadding: isFirstSection ? 0 : R.dimen.unit3,
         items: [_buildCountriesOption()],
       );
 
