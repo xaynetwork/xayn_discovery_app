@@ -123,7 +123,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   ReaderModeSettingsRepository,
   ListenReaderModeSettingsUseCase,
   SaveReaderModeFontStyleUseCase,
-  SaveReaderModeFontSizeUseCase,
+  SaveReaderModeFontSizeParamUseCase,
   SaveReaderModeBackgroundColorUseCase,
   RequestCodeRedemptionSheetUseCase,
   AppStatusRepository,
