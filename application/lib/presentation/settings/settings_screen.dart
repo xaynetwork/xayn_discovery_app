@@ -81,10 +81,11 @@ class _SettingsScreenState extends State<SettingsScreen>
     final children = [
       if (state.isPaymentEnabled && buildSubscriptionSection)
         _buildSubscriptionSection(state.subscriptionStatus),
-      _buildHomeFeedSection(),
+      _buildHomeFeedSection(
+        isPaymentEnabled: state.isPaymentEnabled,
+      ),
       _buildAppThemeSection(
         appTheme: state.theme,
-        isPaymentEnabled: state.isPaymentEnabled,
       ),
       // _buildOptionsSection(state.isTtsEnabled),
       _buildGeneralSection(state.isPaymentEnabled),
@@ -107,18 +108,20 @@ class _SettingsScreenState extends State<SettingsScreen>
         onPressed: () => _onSubscriptionSectionPressed(subscriptionStatus),
       );
 
-  Widget _buildHomeFeedSection() => SettingsHomeFeedSection(
+  Widget _buildHomeFeedSection({
+    required bool isPaymentEnabled,
+  }) =>
+      SettingsHomeFeedSection(
+        isFirstSection: !isPaymentEnabled,
         onCountriesPressed: _manager.onCountriesOptionsPressed,
       );
 
   Widget _buildAppThemeSection({
     required AppTheme appTheme,
-    required bool isPaymentEnabled,
   }) =>
       SettingsAppThemeSection(
         theme: appTheme,
         onSelected: _manager.saveTheme,
-        isFirstSection: !isPaymentEnabled,
       );
 
   /*Widget _buildOptionsSection(bool isTtsEnabled) => SettingsSection(
