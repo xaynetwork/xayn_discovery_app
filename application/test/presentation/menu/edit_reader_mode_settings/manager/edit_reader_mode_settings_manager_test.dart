@@ -4,7 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
-import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size_param.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_background_color_changed_event.dart';
@@ -20,7 +20,7 @@ import '../../../test_utils/utils.dart';
 @GenerateMocks([SendAnalyticsUseCase])
 void main() {
   late MockSaveReaderModeFontStyleUseCase saveReaderModeFontStyleUseCase;
-  late MockSaveReaderModeFontSizeUseCase saveReaderModeFontSizeUseCase;
+  late MockSaveReaderModeFontSizeParamUseCase saveReaderModeFontSizeUseCase;
   late MockSaveReaderModeBackgroundColorUseCase
       saveReaderModeBackgroundColorUseCase;
   late MockReaderModeSettingsRepository readerModeSettingsRepository;
@@ -31,13 +31,13 @@ void main() {
   const ReaderModeFontStyle mockFontStyle = ReaderModeFontStyle.serif;
   final ReaderModeBackgroundColor mockBackgroundColor =
       ReaderModeBackgroundColor.initial();
-  const ReaderModeFontSize mockFontSize = ReaderModeFontSize.large;
+  const mockFontSizeParam = ReaderModeFontSizeParams.size12;
   final ReaderModeSettings mockReaderModeSettings =
       ReaderModeSettings.initial();
 
   setUp(() {
     saveReaderModeFontStyleUseCase = MockSaveReaderModeFontStyleUseCase();
-    saveReaderModeFontSizeUseCase = MockSaveReaderModeFontSizeUseCase();
+    saveReaderModeFontSizeUseCase = MockSaveReaderModeFontSizeParamUseCase();
     saveReaderModeBackgroundColorUseCase =
         MockSaveReaderModeBackgroundColorUseCase();
     readerModeSettingsRepository = MockReaderModeSettingsRepository();
@@ -46,7 +46,7 @@ void main() {
     populatedState = EditReaderModeSettingsState(
       readerModeBackgroundColor: mockReaderModeSettings.backgroundColor,
       readerModeFontStyle: mockReaderModeSettings.fontStyle,
-      readerModeFontSize: mockReaderModeSettings.fontSize,
+      fontSizeParam: mockReaderModeSettings.fontSizeParam,
     );
 
     when(readerModeSettingsRepository.settings)
@@ -62,7 +62,7 @@ void main() {
     when(saveReaderModeFontStyleUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(mockFontStyle));
     when(saveReaderModeFontSizeUseCase.transaction(any))
-        .thenAnswer((_) => Stream.value(mockFontSize));
+        .thenAnswer((_) => Stream.value(mockFontSizeParam));
     when(saveReaderModeBackgroundColorUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(mockBackgroundColor));
   });
@@ -93,12 +93,12 @@ void main() {
         when(sendAnalyticsUseCase.call(any)).thenAnswer(
           (_) async => [
             UseCaseResult.success(
-              ReaderModeFontSizeChanged(fontSize: mockFontSize),
+              ReaderModeFontSizeParamChanged(fontSizeParam: mockFontSizeParam),
             ),
           ],
         );
       },
-      act: (manager) => manager.onFontSizePressed(mockFontSize),
+      act: (manager) => manager.onFontSizePressedIncreasePressed(),
       verify: (manager) {
         verifyInOrder([
           saveReaderModeBackgroundColorUseCase.transform(any),
@@ -112,7 +112,7 @@ void main() {
       },
       expect: () => [
         populatedState,
-        populatedState.copyWith(readerModeFontSize: mockFontSize)
+        populatedState.copyWith(fontSizeParam: mockFontSizeParam)
       ],
     );
 

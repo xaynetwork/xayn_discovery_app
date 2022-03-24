@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
-import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size_param.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -50,22 +50,7 @@ class _EditReaderModeSettingsMenuState
                 .toList(growable: false),
           );
 
-          final editFontSizeRow = _buildPaddedRow(
-            children: ReaderModeFontSize.values
-                .map(
-                  (it) => SelectableChip.svg(
-                    padding: EdgeInsets.symmetric(
-                      vertical: R.dimen.unit0_75,
-                      horizontal: R.dimen.unit0_5,
-                    ),
-                    svgPath: it.svgPath,
-                    isSelected: it == state.readerModeFontSize,
-                    onTap: () =>
-                        _editReaderModeSettingsManager.onFontSizePressed(it),
-                  ),
-                )
-                .toList(growable: false),
-          );
+          final editFontSizeRow = _buildFontSizeParamsRow(state.fontSizeParam);
 
           final editLightBackgroundColorRow = _buildPaddedRow(
             children: ReaderModeBackgroundLightColor.values
@@ -128,4 +113,47 @@ class _EditReaderModeSettingsMenuState
           children: children,
         ),
       );
+
+  Widget _buildFontSizeParamsRow(ReaderModeFontSizeParam currentParam) {
+    Widget btn(
+      String iconPath,
+      bool isActive,
+      VoidCallback? onPressed,
+    ) {
+      return AppGhostButton.icon(
+        iconPath,
+        onPressed: onPressed,
+        iconColor: isActive ? R.colors.icon : R.colors.iconDisabled,
+      );
+    }
+
+    final canMakeSmaller = !currentParam.isSmallest;
+    final btnMinus = btn(
+      R.assets.icons.minus,
+      canMakeSmaller,
+      canMakeSmaller
+          ? _editReaderModeSettingsManager.onFontSizeDecreasePressed
+          : null,
+    );
+    final canMakeBigger = !currentParam.isBiggest;
+    final btnPlus = btn(
+      R.assets.icons.plus,
+      canMakeBigger,
+      canMakeBigger
+          ? _editReaderModeSettingsManager.onFontSizePressedIncreasePressed
+          : null,
+    );
+
+    final icon = SvgPicture.asset(
+      R.assets.icons.fontSize,
+      width: R.dimen.iconSize,
+      color: R.colors.icon,
+    );
+
+    return _buildPaddedRow(children: [
+      btnMinus,
+      icon,
+      btnPlus,
+    ]);
+  }
 }

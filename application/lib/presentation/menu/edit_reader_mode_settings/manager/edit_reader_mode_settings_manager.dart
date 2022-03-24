@@ -2,7 +2,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
-import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_size_param.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_font_style.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_background_color_changed_event.dart';
@@ -20,13 +20,13 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
     with UseCaseBlocHelper<EditReaderModeSettingsState> {
   final SaveReaderModeBackgroundColorUseCase
       _saveReaderModeBackgroundColorUseCase;
-  final SaveReaderModeFontSizeUseCase _saveReaderModeFontSizeUseCase;
+  final SaveReaderModeFontSizeParamUseCase _saveReaderModeFontSizeUseCase;
   final SaveReaderModeFontStyleUseCase _saveReaderModeFontStyleUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final UseCaseSink<ReaderModeBackgroundColor, ReaderModeBackgroundColor>
       _saveBackgroundColorHandler = pipe(_saveReaderModeBackgroundColorUseCase);
-  late final UseCaseSink<ReaderModeFontSize, ReaderModeFontSize>
+  late final UseCaseSink<ReaderModeFontSizeParam, ReaderModeFontSizeParam>
       _saveFontSizeHandler = pipe(_saveReaderModeFontSizeUseCase);
   late final UseCaseSink<ReaderModeFontStyle, ReaderModeFontStyle>
       _saveFontStyleHandler = pipe(_saveReaderModeFontStyleUseCase);
@@ -39,7 +39,7 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
     ReaderModeSettingsRepository readerModeSettingsRepository,
   ) : super(EditReaderModeSettingsState(
           readerModeFontStyle: readerModeSettingsRepository.settings.fontStyle,
-          readerModeFontSize: readerModeSettingsRepository.settings.fontSize,
+          fontSizeParam: readerModeSettingsRepository.settings.fontSizeParam,
           readerModeBackgroundColor:
               readerModeSettingsRepository.settings.backgroundColor,
         ));
@@ -65,10 +65,19 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
     );
   }
 
-  void onFontSizePressed(ReaderModeFontSize fontSize) {
-    _saveFontSizeHandler(fontSize);
+  void onFontSizePressedIncreasePressed() {
+    final param = state.fontSizeParam.bigger;
+    _saveFontSizeHandler(param);
     _sendAnalyticsUseCase(
-      ReaderModeFontSizeChanged(fontSize: fontSize),
+      ReaderModeFontSizeParamChanged(fontSizeParam: param),
+    );
+  }
+
+  void onFontSizeDecreasePressed() {
+    final param = state.fontSizeParam.smaller;
+    _saveFontSizeHandler(param);
+    _sendAnalyticsUseCase(
+      ReaderModeFontSizeParamChanged(fontSizeParam: param),
     );
   }
 
@@ -84,8 +93,12 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
         _saveBackgroundColorHandler,
         _saveFontSizeHandler,
         _saveFontStyleHandler,
-      ).foldAll((backgroundColorHandlerOut, fontSizeHandlerOut,
-          fontStyleHandlerOut, errorReport) {
+      ).foldAll((
+        backgroundColorHandlerOut,
+        fontSizeHandlerOut,
+        fontStyleHandlerOut,
+        errorReport,
+      ) {
         if (errorReport.isNotEmpty) {
           final report = errorReport.of(_saveBackgroundColorHandler) ??
               errorReport.of(_saveFontSizeHandler) ??
@@ -97,7 +110,7 @@ class EditReaderModeSettingsManager extends Cubit<EditReaderModeSettingsState>
         return EditReaderModeSettingsState(
           readerModeBackgroundColor:
               backgroundColorHandlerOut ?? state.readerModeBackgroundColor,
-          readerModeFontSize: fontSizeHandlerOut ?? state.readerModeFontSize,
+          fontSizeParam: fontSizeHandlerOut ?? state.fontSizeParam,
           readerModeFontStyle: fontStyleHandlerOut ?? state.readerModeFontStyle,
         );
       });
