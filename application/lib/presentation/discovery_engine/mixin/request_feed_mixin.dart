@@ -12,8 +12,12 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/requ
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/update_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+
+/// indicates that the request is the first one after app startup when true
+bool _isFirstRunAfterAppStart = true;
 
 mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   late final RequestNextFeedBatchUseCase requestNextFeedBatchUseCase =
@@ -28,7 +32,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     _useCaseSink!(none);
   }
 
-  void resetParameters();
+  void resetParameters([int nextCardIndex = 0]);
 
   @override
   Stream<T> get stream {
@@ -48,45 +52,100 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   void _startConsuming() async {
     _didStartConsuming = true;
 
-    final requestFeedUseCase = di.get<RequestFeedUseCase>();
     final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
     final areMarketsOutdated =
         await areMarketsOutdatedUseCase.singleOutput(FeedType.feed);
 
     if (areMarketsOutdated) {
-      final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
-
-      onResetParameters(_) => resetParameters();
-      onRestore(EngineEvent it) => it is RestoreFeedSucceeded
-          ? it.items.map((it) => it.documentId).toSet()
-          : const <DocumentId>{};
-      onError(Object e, StackTrace? s) =>
-          this.onError(e, s ?? StackTrace.current);
-
-      consume(requestFeedUseCase, initialData: none)
-          .transform(
-            (out) => out
-                .doOnData(onResetParameters)
-                .map(onRestore)
-                .asyncMap(_closeExplicitFeedback)
-                .mapTo(FeedType.feed)
-                .followedBy(changeMarketsUseCase)
-                .doOnData(_preambleCompleter.complete)
-                .mapTo(none)
-                .followedBy(requestNextFeedBatchUseCase),
-          )
-          .autoSubscribe(onError: onError);
+      _consumeWithChangedMarkets();
+    } else if (_isFirstRunAfterAppStart) {
+      _consumeOnSessionStart();
     } else {
-      final maybeRequestNextBatchUseCase =
-          _MaybeRequestNextBatchWhenEmptyUseCase(requestNextFeedBatchUseCase);
-
-      _preambleCompleter.complete();
-
-      consume(requestFeedUseCase, initialData: none)
-          .transform((out) => out.switchedBy(maybeRequestNextBatchUseCase))
-          .autoSubscribe(
-              onError: (e, s) => onError(e, s ?? StackTrace.current));
+      _consumeNormally();
     }
+  }
+
+  void _consumeNormally() {
+    final requestFeedUseCase = di.get<RequestFeedUseCase>();
+
+    _preambleCompleter.complete();
+
+    consume(requestFeedUseCase, initialData: none)
+        .transform(
+            (out) => out.mapTo(none).switchedBy(requestNextFeedBatchUseCase))
+        .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
+  }
+
+  void _consumeOnSessionStart() {
+    late final fetchCardIndexUseCase = di.get<FetchCardIndexUseCase>();
+    final requestFeedUseCase = di.get<RequestFeedUseCase>();
+
+    _isFirstRunAfterAppStart = false;
+
+    onResetParameters(int nextIndex) => (_) => resetParameters(nextIndex);
+    onRestore(EngineEvent it) => it is RestoreFeedSucceeded
+        ? it.items.map((it) => it.documentId).toSet()
+        : const <DocumentId>{};
+    onPartition(Set<DocumentId> it) async {
+      final lastKnownFeedIndex =
+          await fetchCardIndexUseCase.singleOutput(FeedType.feed);
+
+      return it.partition((index) =>
+          index < lastKnownFeedIndex || index > lastKnownFeedIndex + 1);
+    }
+
+    onCloseHeadAndReturnTail(_PartitionedIterable<DocumentId> it) async {
+      if (it.head.isNotEmpty) {
+        await _closeExplicitFeedback(it.head.toSet());
+      }
+
+      return it.tail;
+    }
+
+    onError(Object e, StackTrace? s) =>
+        this.onError(e, s ?? StackTrace.current);
+
+    consume(requestFeedUseCase, initialData: none)
+        .transform(
+          (out) => out
+              .doOnData(onResetParameters(0))
+              .map(onRestore)
+              .asyncMap(onPartition)
+              .asyncMap(onCloseHeadAndReturnTail)
+              .doOnData(_preambleCompleter.complete)
+              .mapTo(none)
+              .followedBy(requestFeedUseCase)
+              .mapTo(none)
+              .followedBy(requestNextFeedBatchUseCase)
+              .doOnData(onResetParameters(2)),
+        )
+        .autoSubscribe(onError: onError);
+  }
+
+  void _consumeWithChangedMarkets() {
+    final requestFeedUseCase = di.get<RequestFeedUseCase>();
+    final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
+
+    onResetParameters(_) => resetParameters();
+    onRestore(EngineEvent it) => it is RestoreFeedSucceeded
+        ? it.items.map((it) => it.documentId).toSet()
+        : const <DocumentId>{};
+    onError(Object e, StackTrace? s) =>
+        this.onError(e, s ?? StackTrace.current);
+
+    consume(requestFeedUseCase, initialData: none)
+        .transform(
+          (out) => out
+              .doOnData(onResetParameters)
+              .map(onRestore)
+              .asyncMap(_closeExplicitFeedback)
+              .mapTo(FeedType.feed)
+              .followedBy(changeMarketsUseCase)
+              .doOnData(_preambleCompleter.complete)
+              .mapTo(none)
+              .followedBy(requestNextFeedBatchUseCase),
+        )
+        .autoSubscribe(onError: onError);
   }
 
   Future<void> _closeExplicitFeedback(Set<DocumentId> documents) async {
@@ -104,18 +163,29 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   }
 }
 
-class _MaybeRequestNextBatchWhenEmptyUseCase
-    extends UseCase<EngineEvent, EngineEvent> {
-  final RequestNextFeedBatchUseCase maybeRequestNextBatchUseCase;
+class _PartitionedIterable<T> {
+  final Iterable<T> head, tail;
 
-  _MaybeRequestNextBatchWhenEmptyUseCase(this.maybeRequestNextBatchUseCase);
+  const _PartitionedIterable({
+    required this.head,
+    required this.tail,
+  });
+}
 
-  @override
-  Stream<EngineEvent> transaction(EngineEvent param) async* {
-    if (param is RestoreFeedSucceeded && param.items.isEmpty) {
-      yield await maybeRequestNextBatchUseCase.singleOutput(none);
+extension _IterableExtension<T> on Iterable<T> {
+  _PartitionedIterable<T> partition(bool Function(int) shiftToHead) {
+    final head = <T>[], tail = <T>[];
+
+    for (var i = 0, len = length; i < len; i++) {
+      final item = elementAt(i);
+
+      if (shiftToHead(i)) {
+        head.add(item);
+      } else {
+        tail.add(item);
+      }
     }
 
-    yield param;
+    return _PartitionedIterable(head: head, tail: tail);
   }
 }

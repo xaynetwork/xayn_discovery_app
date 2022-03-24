@@ -174,8 +174,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   void onTrialExpired() => _discoveryFeedNavActions.onTrialExpired();
 
   @override
-  void resetParameters() {
-    resetCardIndex();
+  void resetParameters([int nextCardIndex = 0]) {
+    resetCardIndex(nextCardIndex);
     // clears the current pending observation, if any...
     observeDocument();
     // clear the inner-stored current observation...
