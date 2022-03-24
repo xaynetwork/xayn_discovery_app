@@ -107,10 +107,9 @@ class _SettingsScreenState extends State<SettingsScreen>
         onPressed: () => _onSubscriptionSectionPressed(subscriptionStatus),
       );
 
-  Widget _buildHomeFeedSection() =>
-      SettingsHomeFeedSection(onCountriesPressed: () {
-        _manager.onCountriesOptionsPressed();
-      });
+  Widget _buildHomeFeedSection() => SettingsHomeFeedSection(
+        onCountriesPressed: _manager.onCountriesOptionsPressed,
+      );
 
   Widget _buildAppThemeSection({
     required AppTheme appTheme,
