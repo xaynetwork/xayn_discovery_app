@@ -33,7 +33,7 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
 
   @override
   Widget build(BuildContext context) {
-    Widget buildReadyState(ready) {
+    Widget buildReadyState(CountryFeedSettingsStateReady ready) {
       registerTooltip(
         key: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
         params: TooltipParams(
@@ -47,8 +47,8 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
 
       return SelectCountries(
         maxSelectedCountryAmount: ready.maxSelectedCountryAmount,
-        selectedCountries: ready.activeFilters,
-        unSelectedCountries: ready.inactiveFilters,
+        selectedCountries: ready.selectedCountries,
+        unSelectedCountries: ready.unSelectedCountries,
         onAddCountryPressed: _manager.onAddCountryPressed,
         onRemoveCountryPressed: _manager.onRemoveCountryPressed,
       );
