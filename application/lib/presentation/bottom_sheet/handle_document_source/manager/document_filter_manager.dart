@@ -27,9 +27,7 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
   }
 
   late final _getAllAfterChanged = consume(_documentFilterUseCase,
-          initialData: const DbCrudIn.watchAll())
-      .transform(
-          (out) => _documentFilterUseCase.transaction(const DbCrudIn.getAll()));
+      initialData: const DbCrudIn.getAllContinuously());
 
   late final _handler = pipe(_documentFilterUseCase);
   late final _pendingChanges = <DocumentFilter, bool>{};
