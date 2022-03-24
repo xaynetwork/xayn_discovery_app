@@ -5,7 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_design/src/utils/design_testing_utils.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
@@ -21,6 +23,7 @@ void main() {
 
   setUp(() async {
     await setupWidgetTest();
+    di.get<FeatureManager>().overrideFeature(Feature.documentFilter, false);
     manager = MockCountryFeedSettingsManager();
     di.registerSingleton<CountryFeedSettingsManager>(manager);
     streamController = StreamController<CountryFeedSettingsState>.broadcast();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source_filter_settings_page.dart';
@@ -19,6 +20,7 @@ class FeedSettingsScreen extends StatefulWidget {
 class FeedSettingsScreenState extends State<FeedSettingsScreen>
     with NavBarConfigMixin {
   late final FeedSettingsManager _manager = di.get();
+  late final FeatureManager _featureManager = di.get();
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(buildNavBarItemBack(
@@ -37,15 +39,21 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
       );
 
   Widget _buildBody() {
+    final countries = Padding(
+      padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+      child: const CountryFeedSettingsPage(),
+    );
+
+    if (!_featureManager.isDocumentFilterEnabled) {
+      return countries;
+    }
+
     final pages = [
       Padding(
         padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
         child: const SourceFilterSettingsPage(),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
-        child: const CountryFeedSettingsPage(),
-      ),
+      countries,
     ];
 
     final tabBar = TabBar(

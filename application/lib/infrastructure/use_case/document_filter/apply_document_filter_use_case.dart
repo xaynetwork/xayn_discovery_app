@@ -55,16 +55,16 @@ class ApplyDocumentFilterUseCase extends UseCase<ApplyDocumentFilterIn, void> {
 
       for (var source in toBeRemoved) {
         final event = await _engine.removeSourceFromExcludedList(
-          source.fold((host) => host,
-              (topic) => throw '$topic is not a source!'),
+          source.fold(
+              (host) => host, (topic) => throw '$topic is not a source!'),
         );
         _handleError(event);
       }
 
       for (var source in toBeAdded) {
         final event = await _engine.addSourceToExcludedList(
-          source.fold((host) => host,
-              (topic) => throw '$topic is not a source!'),
+          source.fold(
+              (host) => host, (topic) => throw '$topic is not a source!'),
         );
         _handleError(event);
       }
