@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
@@ -16,15 +17,16 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-/// indicates that the request is the first one after app startup when true
-bool _isFirstRunAfterAppStart = true;
-
 mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   late final RequestNextFeedBatchUseCase requestNextFeedBatchUseCase =
       di.get<RequestNextFeedBatchUseCase>();
   final Completer _preambleCompleter = Completer();
   UseCaseSink<None, EngineEvent>? _useCaseSink;
   bool _didStartConsuming = false;
+
+  /// indicates that the request is the first one after app startup when true
+  @visibleForTesting
+  static bool isFirstRunAfterAppStart = true;
 
   void requestNextFeedBatch() {
     _useCaseSink ??= _getUseCaseSink();
@@ -58,7 +60,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
 
     if (areMarketsOutdated) {
       _consumeWithChangedMarkets();
-    } else if (_isFirstRunAfterAppStart) {
+    } else if (isFirstRunAfterAppStart) {
       _consumeOnSessionStart();
     } else {
       _consumeNormally();
@@ -80,7 +82,7 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     late final fetchCardIndexUseCase = di.get<FetchCardIndexUseCase>();
     final requestFeedUseCase = di.get<RequestFeedUseCase>();
 
-    _isFirstRunAfterAppStart = false;
+    isFirstRunAfterAppStart = false;
 
     onResetParameters(int nextIndex) => (_) => resetParameters(nextIndex);
     onRestore(EngineEvent it) => it is RestoreFeedSucceeded
