@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
@@ -10,7 +12,9 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_c
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_image.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 
@@ -53,7 +57,7 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 }
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
-    with BottomSheetBodyMixin, ErrorHandlingMixin {
+    with BottomSheetBodyMixin, ErrorHandlingMixin, CollectionCardManagersMixin {
   final MoveBookmarksToCollectionManager _moveBookmarksToCollectionManager =
       di.get();
 
@@ -81,12 +85,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
         if (state.error.hasError) showErrorBottomSheet(allowStacking: true);
       },
       builder: (_, state) => state.collections.isNotEmpty
-          ? CollectionsListBottomSheet(
-              collections: state.collections,
-              onSelectCollection:
-                  _moveBookmarksToCollectionManager.updateSelectedCollection,
-              initialSelectedCollectionId: state.selectedCollectionId,
-            )
+          ? _buildCollectionsList(state)
           : const SizedBox.shrink(),
     );
 
@@ -120,6 +119,19 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
         Flexible(child: body),
         footer,
       ],
+    );
+  }
+
+  _buildCollectionsList(MoveBookmarksToCollectionState state) {
+    final selectedCollection = state.collections
+        .firstWhereOrNull((c) => c.id == state.selectedCollectionId);
+    return SelectItemList<Collection>(
+      items: state.collections,
+      onSelectItem: (c) =>
+          _moveBookmarksToCollectionManager.updateSelectedCollection(c.id),
+      getTitle: (c) => c.name,
+      getImage: (c) => buildCollectionImage(managerOf(c.id)),
+      preSelectedItems: selectedCollection == null ? {} : {selectedCollection},
     );
   }
 
