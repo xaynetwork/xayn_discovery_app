@@ -41,7 +41,8 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
         handler,
         errorReport,
       ) {
-        var filter = DocumentFilter.fromSource(_document.resource.sourceDomain);
+        final filter =
+            DocumentFilter.fromSource(_document.resource.sourceDomain);
         final list = (getAll ?? handler)?.mapOrNull(list: (v) => v.value) ?? [];
         list.removeWhere(
           (element) =>
@@ -60,13 +61,14 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
 
   void onFilterTogglePressed(DocumentFilter filter) {
     scheduleComputeState(() {
-      final value = state.filters[filter]!;
+      final value = state.filters[filter] ?? false;
       _pendingChanges[filter] = !value;
     });
   }
 
-  void onApplyChangesPressed() {
-    _applyDocumentFilterUseCase.singleOutput(
+  // Future is only passed for tests
+  Future onApplyChangesPressed() {
+    return _applyDocumentFilterUseCase.singleOutput(
         ApplyDocumentFilterIn.applyChangesToDbAndEngine(
             changes: _pendingChanges));
   }
