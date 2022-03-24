@@ -25,7 +25,6 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   bool _didStartConsuming = false;
 
   /// indicates that the request is the first one after app startup when true
-  @visibleForTesting
   static bool isFirstRunAfterAppStart = true;
 
   void requestNextFeedBatch() {
