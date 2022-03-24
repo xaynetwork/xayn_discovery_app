@@ -115,7 +115,15 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // ok to be fire and forget, should we instead wait for the ack,
     // then we need a specific CloseDocumentEngineEvent.
     // Currently, we just get a generic [ClientEventSucceeded] event only.
-    closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
+    final documentIdsToClose = flaggedForDisposal
+        .map((it) => it.documentId)
+        .toList()
+      ..removeWhere(closedDocuments.contains);
+
+    if (documentIdsToClose.isNotEmpty) {
+      closeFeedDocuments(documentIdsToClose.toSet());
+    }
+
     // adjust the cardIndex to counter the removals
     cardIndex = await updateCardIndexUseCase.singleOutput(
       FeedTypeAndIndex.feed(
@@ -190,11 +198,11 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     return (BaseDiscoveryManager manager) {
       final self = manager as DiscoveryFeedManager;
 
-      if (self.disposedDocuments.isNotEmpty) {
+      if (self.closedDocuments.isNotEmpty) {
         // because the feed's state will remove the oldest card, when the
         // total card count is high enough, we replicate that action here.
         lastResults = lastResults.toSet()
-          ..removeWhere((it) => self.disposedDocuments.contains(it.documentId));
+          ..removeWhere((it) => self.closedDocuments.contains(it.documentId));
       }
 
       foldEngineEvent({
