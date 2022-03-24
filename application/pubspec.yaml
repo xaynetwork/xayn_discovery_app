@@ -75,21 +75,21 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: f1bb8ce3278fa4c0bbb6a225552f3b6333b272c4
+      ref: 2306d6ff6e745882d858df53df4a014012b16463
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 9d8523593c34de2259a0b74084924acdef49b689
+      ref: dbbc43d9a39940a5e705ed31c7204e6bcf72f6bc
   xayn_discovery_engine_flutter:
     git:
-      url: git@github.com:xaynetwork/xayn_discovery_engine_release.git
-      ref: ae989d2b71f4d8eea8282c33403f647da3919dcb
+      url: https://gitlab.com/xayn/xayn_discovery_engine_release
+      ref: 8e7135e305eacba9b5274559cf9e94b19aa8b993
       path: discovery_engine_flutter
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
       ref: 26256f4a3ed9d954cf72941f29e6d69ea6d925a5
-  xayn_swipe_it: 1.0.3
+  xayn_swipe_it: 1.0.4
 
 dependency_overrides:
   json_annotation: 4.4.0
@@ -98,6 +98,7 @@ dependency_overrides:
   analyzer: 3.3.0
   provider: 6.0.2
   dart_style: 2.2.2
+
 
 # Please list dependencies alphabetically!
 dev_dependencies:

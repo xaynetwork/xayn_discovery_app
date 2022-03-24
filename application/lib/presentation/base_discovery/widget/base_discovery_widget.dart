@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
@@ -125,11 +123,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
       final results = state.results;
       final totalResults = results.length;
-      // ensure that we don't overflow the index.
-      // this is because right now, we always refresh the feed when we
-      // return to it, should solve itself once this is state-managed by
-      // the real engine at some point.
-      final cardIndex = min(totalResults - 1, state.cardIndex);
 
       removeObsoleteCardManagers(state.removedResults);
 
@@ -137,7 +130,9 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (!state.isComplete) return _buildLoadingIndicator(notchSize);
 
-      _cardViewController.index = cardIndex;
+      if (state.cardIndex < totalResults) {
+        _cardViewController.index = state.cardIndex;
+      }
 
       onIndexChanged(int index) {
         manager.handleIndexChanged(index);

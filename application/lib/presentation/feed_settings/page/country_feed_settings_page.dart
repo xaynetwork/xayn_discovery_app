@@ -33,19 +33,25 @@ class CountryFeedSettingsPage extends StatelessWidget {
   }
 
   Widget get _verticalSpace => SizedBox(height: R.dimen.unit3);
+  Widget get _scrollViewBottomSpace =>
+      SizedBox(height: R.dimen.navBarHeight * 2);
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHint(),
-          _verticalSpace,
-          _buildTitle(R.strings.feedSettingsScreenActiveCountryListSubtitle),
-          ..._buildActiveCountries(),
-          _verticalSpace,
-          _buildTitle(R.strings.feedSettingsScreenInActiveCountryListSubtitle),
-          _buildInactiveCountries(context),
-        ],
+  Widget build(BuildContext context) => SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHint(),
+            _verticalSpace,
+            _buildTitle(R.strings.feedSettingsScreenActiveCountryListSubtitle),
+            ..._buildActiveCountries(),
+            _verticalSpace,
+            _buildTitle(
+                R.strings.feedSettingsScreenInActiveCountryListSubtitle),
+            ..._buildInactiveCountries(context),
+            _scrollViewBottomSpace,
+          ],
+        ),
       );
 
   Widget _buildHint() => Text(
@@ -70,19 +76,12 @@ class CountryFeedSettingsPage extends StatelessWidget {
           ))
       .toList();
 
-  Widget _buildInactiveCountries(BuildContext context) {
-    final listView = ListView.builder(
-      itemBuilder: (_, index) {
-        final country = unSelectedCountries[index];
-        return CountryItem(
-          country: country,
-          isSelected: false,
-          onActionPressed: () => onAddCountryPressed(country),
-        );
-      },
-      itemCount: unSelectedCountries.length,
-      padding: EdgeInsets.only(bottom: R.dimen.navBarHeight * 2),
-    );
-    return Expanded(child: listView);
-  }
+  List<Widget> _buildInactiveCountries(BuildContext context) =>
+      unSelectedCountries
+          .map((country) => CountryItem(
+                country: country,
+                isSelected: false,
+                onActionPressed: () => onAddCountryPressed(country),
+              ))
+          .toList();
 }
