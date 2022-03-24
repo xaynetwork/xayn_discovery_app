@@ -37,6 +37,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         CommonHttpRequestParams.httpRequestGet,
         url,
         followRedirects: false,
+        encoding: utf8,
         headers: headers,
         timeout: CommonHttpRequestParams.httpRequestTimeout,
       ),
@@ -56,19 +57,18 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     }
   }
 
-  String _extractResponseBody(Object body) {
-    if (body is String) {
-      return body;
-    } else if (body is List<int>) {
-      // do allow malformed here, as some sites may have encoding errors,
-      // but we still want to get their response in.
-      const decoder = Utf8Codec(allowMalformed: true);
+  String _extractResponseBody(List<int> bytes) {
+    try {
+      // we did a request for utf-8...
+      const decoder = Utf8Codec();
 
-      return decoder.decode(body);
+      return decoder.decode(bytes);
+    } catch (e) {
+      // ...unfortunately some sites still then return eg iso-8859-1
+      const decoder = Latin1Codec();
+
+      return decoder.decode(bytes);
     }
-
-    throw StateError(
-        'body is neither String or List<int>, unable to decode into String');
   }
 }
 

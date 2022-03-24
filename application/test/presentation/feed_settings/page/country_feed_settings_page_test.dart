@@ -56,7 +56,7 @@ void main() {
           findsOneWidget);
       expect(find.text(R.strings.feedSettingsScreenInActiveCountryListSubtitle),
           findsOneWidget);
-      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(SingleChildScrollView), findsOneWidget);
       expect(find.byType(CountryItem), findsNWidgets(3));
     },
   );
