@@ -4,6 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
@@ -82,6 +83,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   FeedSettingsMapper,
   FeedSettingsNavActions,
   FeedSettingsRepository,
+  FeedTypeMarketsRepository,
   GetAppSessionUseCase,
   GetAppThemeUseCase,
   GetAppVersionUseCase,
