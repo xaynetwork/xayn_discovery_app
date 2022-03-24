@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/crud_out.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -37,7 +38,7 @@ void main() {
         );
       },
       input: [
-        DbEntityCrudUseCaseIn.store(
+        DbCrudIn.store(
           ExplicitDocumentFeedback(
             id: uid,
             userReaction: UserReaction.positive,
@@ -49,10 +50,11 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ExplicitDocumentFeedback(
+          CrudOut.single(
+              value: ExplicitDocumentFeedback(
             id: uid,
             userReaction: UserReaction.positive,
-          ),
+          )),
         ),
       ],
     );
@@ -82,7 +84,7 @@ void main() {
         );
       },
       input: [
-        const DbEntityCrudUseCaseIn.watch(
+        const DbCrudIn.watch(
           uid,
         )
       ],
@@ -91,10 +93,11 @@ void main() {
       },
       expect: [
         useCaseSuccess(
-          ExplicitDocumentFeedback(
+          CrudOut.single(
+              value: ExplicitDocumentFeedback(
             id: uid,
             userReaction: UserReaction.positive,
-          ),
+          )),
         ),
       ],
     );
@@ -120,7 +123,7 @@ void main() {
         );
       },
       input: [
-        const DbEntityCrudUseCaseIn.remove(
+        const DbCrudIn.remove(
           uid,
         )
       ],
@@ -134,11 +137,11 @@ void main() {
         );
       },
       expect: [
-        useCaseSuccess(
-          ExplicitDocumentFeedback(
+        useCaseSuccess(CrudOut.single(
+          value: ExplicitDocumentFeedback(
             id: uid,
           ),
-        ),
+        )),
       ],
     );
   });

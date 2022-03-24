@@ -77,7 +77,7 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
           di.get<CrudExplicitDocumentFeedbackUseCase>();
 
       await crudExplicitDocumentFeedbackUseCase.singleOutput(
-        DbEntityCrudUseCaseIn.store(
+        DbCrudIn.store(
           ExplicitDocumentFeedback(
             id: document.documentId.uniqueId,
             userReaction: userReaction,
