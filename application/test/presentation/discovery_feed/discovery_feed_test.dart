@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -109,9 +110,47 @@ void main() async {
   });
 
   blocTest<DiscoveryFeedManager, DiscoveryState>(
+    'WHEN feed loads THEN verify call stack - first render after startup version ',
+    build: () => manager,
+    setUp: () async {
+      RequestFeedMixin.isFirstRunAfterAppStart = true;
+      // wait for requestFeed to complete
+      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+    },
+    verify: (manager) {
+      verifyInOrder([
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.requestNextFeedBatch(),
+      ]);
+      verifyNoMoreInteractions(mockDiscoveryEngine);
+    },
+  );
+
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
+    'WHEN feed loads THEN verify call stack - non-first render after startup version ',
+    build: () => manager,
+    setUp: () async {
+      RequestFeedMixin.isFirstRunAfterAppStart = false;
+      // wait for requestFeed to complete
+      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+    },
+    verify: (manager) {
+      verifyInOrder([
+        mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.requestNextFeedBatch(),
+      ]);
+      verifyNoMoreInteractions(mockDiscoveryEngine);
+    },
+  );
+
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
+      RequestFeedMixin.isFirstRunAfterAppStart = false;
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -144,6 +183,8 @@ void main() async {
     'WHEN closing documents THEN the discovery engine is notified ',
     build: () => manager,
     setUp: () async {
+      RequestFeedMixin.isFirstRunAfterAppStart = false;
+
       when(mockDiscoveryEngine.closeFeedDocuments(any))
           .thenAnswer((documentIds) async {
         const event = ClientEventSucceeded();
@@ -161,6 +202,7 @@ void main() async {
         mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
         mockDiscoveryEngine.engineEvents,
         mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.requestNextFeedBatch(),
       ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
@@ -170,6 +212,8 @@ void main() async {
       'WHEN observing documents THEN the discovery engine is notified ',
       build: () => manager,
       setUp: () async {
+        RequestFeedMixin.isFirstRunAfterAppStart = false;
+
         when(mockDiscoveryEngine.logDocumentTime(
           documentId: anyNamed('documentId'),
           mode: anyNamed('mode'),
@@ -197,6 +241,7 @@ void main() async {
         verifyInOrder([
           mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.restoreFeed(),
+          mockDiscoveryEngine.requestNextFeedBatch(),
           mockDiscoveryEngine.logDocumentTime(
             documentId: fakeDocumentA.documentId,
             mode: DocumentViewMode.story,
@@ -209,6 +254,7 @@ void main() async {
   blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
     build: () => manager,
+    setUp: () => RequestFeedMixin.isFirstRunAfterAppStart = false,
     act: (manager) async {
       manager.handleNavigateIntoCard();
     },
@@ -226,6 +272,7 @@ void main() async {
     verify: (manager) {
       verify(mockDiscoveryEngine.engineEvents);
       verify(mockDiscoveryEngine.restoreFeed());
+      verify(mockDiscoveryEngine.requestNextFeedBatch());
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );
