@@ -30,6 +30,8 @@ abstract class PaymentScreenNavActions {
   void onDismiss();
 }
 
+const _ignoredPaymentErrors = [PaymentFlowError.canceled];
+
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
     with UseCaseBlocHelper<PaymentScreenState>
@@ -150,9 +152,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           _subscriptionStatus = subscriptionStatus;
         }
 
-        final paymentFlowError =
-            errors.firstWhereOrNull((element) => element is PaymentFlowError)
-                as PaymentFlowError?;
+        final paymentFlowError = errors.firstWhereOrNull(
+          (it) => it is PaymentFlowError && !_ignoredPaymentErrors.contains(it),
+        ) as PaymentFlowError?;
+
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
           _paymentAction == PaymentAction.subscribe
