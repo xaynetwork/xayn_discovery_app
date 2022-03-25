@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repositor
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -85,6 +86,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   FeedSettingsMapper,
   FeedSettingsRepository,
   FeedTypeMarketsRepository,
+  FetchSessionUseCase,
   GetAppSessionUseCase,
   GetAppThemeUseCase,
   GetAppVersionUseCase,
@@ -109,6 +111,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SettingsNavActions,
   SettingsScreenManager,
   ShareUriUseCase,
+  UpdateSessionUseCase,
   UrlOpener,
   AppSettingsRepository,
   EditReaderModeSettingsManager,
