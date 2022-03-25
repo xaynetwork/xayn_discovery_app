@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
@@ -23,12 +24,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/tts/text_to_speech_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -61,6 +65,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final TextToSpeechUseCase _textToSpeechUseCase;
+  final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
 
   /// html reader mode elements:
   ///
@@ -116,9 +122,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   )..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   late final _crudExplicitDocumentFeedbackHandler =
       pipe(_crudExplicitDocumentFeedbackUseCase);
+  late final UseCaseSink<Utterance, Duration> _textToSpeechSink =
+      pipe(_textToSpeechUseCase);
 
   bool _isLoading = false;
   bool _isBookmarked = false;
+  bool _hasBeenReadAloud = false;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -132,7 +141,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
+    this._textToSpeechUseCase,
+    this._getTtsPreferenceUseCase,
   ) : super(DiscoveryCardState.initial());
+
+  @override
+  Future<void> close() async {
+    await _textToSpeechUseCase.stopCurrentSpeech();
+
+    return super.close();
+  }
 
   void updateDocument(Document document) {
     _isBookmarkedHandler(document.documentUniqueId);
@@ -201,15 +219,61 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
+  /// switch for testing between feature manager or settings TTS
+  final bool _ttsViaFeatureFlag = true;
+
+  void handleSpeechStart({
+    required String headline,
+    required String languageCode,
+    required bool forceStart,
+    Uri? uri,
+  }) async {
+    checkUsingSettings() async {
+      final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
+
+      if (!isTtsEnabled) return false;
+
+      return !_hasBeenReadAloud || forceStart;
+    }
+
+    checkUsingFeatureFlag() async {
+      final featureManager = di.get<FeatureManager>();
+
+      if (!featureManager.isTtsEnabled) return false;
+
+      return !_hasBeenReadAloud || forceStart;
+    }
+
+    final checker =
+        _ttsViaFeatureFlag ? checkUsingFeatureFlag : checkUsingSettings;
+    final useTts = await checker();
+
+    if (!useTts) return;
+
+    await _textToSpeechUseCase.stopCurrentSpeech();
+
+    _textToSpeechSink(
+      Utterance(
+        languageCode: languageCode,
+        paragraphs: [headline],
+        uri: uri,
+      ),
+    );
+
+    _hasBeenReadAloud = true;
+  }
+
   @override
-  Future<DiscoveryCardState?> computeState() async => fold3(
+  Future<DiscoveryCardState?> computeState() async => fold4(
         _updateUri,
         _isBookmarkedHandler,
         _crudExplicitDocumentFeedbackHandler,
+        _textToSpeechSink,
       ).foldAll((
         processedDocument,
         isBookmarked,
         explicitDocumentFeedback,
+        _,
         errorReport,
       ) {
         if (errorReport.isNotEmpty) {
