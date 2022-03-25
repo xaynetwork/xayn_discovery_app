@@ -23,7 +23,12 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH }}
+          name: id_rsa_github
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host github.com
+              IdentityFile ~/.ssh/id_rsa_github
+          if_key_exists: replace
 
       - uses: actions/checkout@v2
         with:

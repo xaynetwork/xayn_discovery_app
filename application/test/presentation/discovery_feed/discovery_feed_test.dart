@@ -6,12 +6,14 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -35,8 +37,10 @@ void main() async {
   late MockFeedRepository feedRepository;
   late MockConnectivityUseCase connectivityUseCase;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
+  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
+  final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   createFakeDocument() => Document(
         documentId: DocumentId(),
@@ -64,6 +68,7 @@ void main() async {
     eventsController = StreamController<EngineEvent>();
     connectivityUseCase = MockConnectivityUseCase();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
+    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
     feedRepository = MockFeedRepository();
@@ -90,6 +95,10 @@ void main() async {
 
       return Future.value(event);
     });
+    when(getSubscriptionStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(getSubscriptionStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
 
     await configureTestDependencies();
 
@@ -98,6 +107,8 @@ void main() async {
         () => Future.value(connectivityUseCase));
     di.registerSingleton<FeedRepository>(feedRepository);
     di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
+    di.registerLazySingleton<GetSubscriptionStatusUseCase>(
+        () => getSubscriptionStatusUseCase);
 
     manager = di.get<DiscoveryFeedManager>();
   });
@@ -125,6 +136,8 @@ void main() async {
         isComplete: true,
         isFullScreen: false,
         isInErrorState: false,
+        didReachEnd: false,
+        subscriptionStatus: subscriptionStatusInitial,
       ),
     ],
     verify: (manager) {
@@ -219,6 +232,8 @@ void main() async {
         isFullScreen: true,
         isInErrorState: false,
         shouldUpdateNavBar: true,
+        didReachEnd: false,
+        subscriptionStatus: subscriptionStatusInitial,
       ),
     ],
     verify: (manager) {

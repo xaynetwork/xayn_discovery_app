@@ -8,16 +8,16 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
-import 'package:xayn_discovery_app/presentation/constants/keys.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
@@ -69,6 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     return ScreenStateSwitcher(child: child);
   }
 
+  /// disabled TTS [_buildOptionsSection] to instead move it to the FeatureManager for now
   Widget _buildStateReady(SettingsScreenStateReady state) {
     Widget withPadding(Widget child) => Padding(
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
@@ -79,12 +80,17 @@ class _SettingsScreenState extends State<SettingsScreen>
             state.subscriptionStatus.isFreeTrialActive;
     final children = [
       if (state.isPaymentEnabled && buildSubscriptionSection)
-        _buildSubscriptionSection(state.subscriptionStatus),
-      _buildAppThemeSection(
-        appTheme: state.theme,
+        _buildSubscriptionSection(
+          subscriptionStatus: state.subscriptionStatus,
+          subscriptionManagementURL: state.subscriptionManagementURL,
+        ),
+      _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
       ),
-      _buildOptionsSection(state.isTtsEnabled),
+      _buildAppThemeSection(
+        appTheme: state.theme,
+      ),
+      // _buildOptionsSection(state.isTtsEnabled),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -99,23 +105,38 @@ class _SettingsScreenState extends State<SettingsScreen>
     return SingleChildScrollView(child: column);
   }
 
-  Widget _buildSubscriptionSection(SubscriptionStatus subscriptionStatus) =>
+  Widget _buildSubscriptionSection({
+    required SubscriptionStatus subscriptionStatus,
+    required String? subscriptionManagementURL,
+  }) =>
       SubscriptionSection(
         subscriptionStatus: subscriptionStatus,
-        onPressed: () => _onSubscriptionSectionPressed(subscriptionStatus),
+        onPressed: () => _onSubscriptionSectionPressed(
+          subscriptionStatus: subscriptionStatus,
+          subscriptionManagementURL: subscriptionManagementURL,
+        ),
+      );
+
+  Widget _buildHomeFeedSection({
+    required bool isPaymentEnabled,
+  }) =>
+      SettingsHomeFeedSection(
+        isFirstSection: !isPaymentEnabled,
+        onCountriesPressed: _manager.onCountriesOptionsPressed,
+        onSourcesPressed: () {
+          ///TODO Open sources management screen when the latter ready
+        },
       );
 
   Widget _buildAppThemeSection({
     required AppTheme appTheme,
-    required bool isPaymentEnabled,
   }) =>
       SettingsAppThemeSection(
         theme: appTheme,
         onSelected: _manager.saveTheme,
-        isFirstSection: !isPaymentEnabled,
       );
 
-  Widget _buildOptionsSection(bool isTtsEnabled) => SettingsSection(
+  /*Widget _buildOptionsSection(bool isTtsEnabled) => SettingsSection(
         title: R.strings.settingsSectionTitleOptions,
         items: [
           SettingsCardData.fromTile(SettingsTileData(
@@ -131,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             ),
           )),
         ],
-      );
+      );*/
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
@@ -173,12 +194,16 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
 
-  void _onSubscriptionSectionPressed(SubscriptionStatus subscriptionStatus) {
+  void _onSubscriptionSectionPressed({
+    required SubscriptionStatus subscriptionStatus,
+    required String? subscriptionManagementURL,
+  }) {
     if (subscriptionStatus.isSubscriptionActive) {
       showAppBottomSheet(
         context,
         builder: (_) => SubscriptionDetailsBottomSheet(
           subscriptionStatus: subscriptionStatus,
+          subscriptionManagementURL: subscriptionManagementURL,
         ),
       );
     } else if (subscriptionStatus.isFreeTrialActive) {

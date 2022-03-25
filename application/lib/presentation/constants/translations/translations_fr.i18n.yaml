@@ -95,7 +95,7 @@ subscriptionPerk5: Neutre en carbone
 subscriptionSubscribeNow: Annuler à tout moment
 subscriptionRestore: Restaurer l'abonnement
 subscriptionPromoCode: J'ai un code promo
-subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
+subscriptionDisclaimer: En appuyant sur "S'abonner maintenant", vous serez redirigé vers l'App Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.
 settingsSubscribedToHeader: Vous êtes abonné à
 doneButtonTitle: Fini
 subscriptionRenewsMonthlyText: 'L''abonnement se renouvelle mensuellement le : %s'
@@ -118,20 +118,29 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Paiement échoué
-  noActiveSubscriptionFound: No active subscription found
+  noActiveSubscriptionFound: Aucun abonnement actif trouvé
 bottomSheetDeleteCollectionWithNoItemsBody: Voulez-vous vraiment supprimer cette collection ?
 bottomSheetMoveSingleBookmark: Déplacer vers une autre collection
 readerModeSettingsErrorChangesNotApplied: Impossible d'appliquer les modifications
 errorGenericHeaderSomethingWentWrong: Quelque chose s'est mal passé
 errorGenericBodyPleaseTryAgainLater: Veuillez réessayer plus tard.
 errorClose: Fermer
-sourceHandlingTooltipLabel: What do you want to see less of?
-sourceHandlingTooltipHighlightedWord: What
-enableTextToSpeech: Enable text -to-speech
-settingsSectionTitleOptions: Options
+sourceHandlingTooltipLabel: Qu'est-ce que tu veux moins voir ?
+sourceHandlingTooltipHighlightedWord: Que
+enableTextToSpeech: Activer la synthèse vocale
+settingsSectionTitleOptions: Choix
 personalAreaContact: Contact
 settingsContactUs: Contact
 contactSectionWeb: 'Web:'
-contactSectionSupportEmail: 'Support eMail:'
-contactSectionForPublishers: 'For Publishers:'
-contactSectionPhone: 'Phone:'
+contactSectionSupportEmail: 'Courriel d''assistance :'
+contactSectionForPublishers: 'Pour les éditeurs :'
+contactSectionPhone: 'Téléphone :'
+searchNoResultsFound: Aucun résultat
+searchEndOfResults: C'est tout!
+searchNoResultsFoundDesc: Nous n'avons trouvé aucune histoire pour votre recherche. Essayez des mots-clés différents.
+searchEndOfResultsDesc: Vous n'avez pas vu ce que vous cherchez ? Essayez des mots-clés différents ou plus généraux.
+feedSettingsScreenSourceFilterExplanation: Les sources que vous n'aimez pas ne seront plus affichées dans votre flux de découverte.
+feedSettingsScreenTabCountries: Pays
+feedSettingsScreenTabSources: Sources
+feedSettingsScreenSubtitleDislikedSources: Sources que vous n’aimez pas
+settingsSectionHomeFeed: Configuration du flux

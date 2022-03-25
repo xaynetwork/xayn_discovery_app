@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -21,20 +22,25 @@ class DiscoveryState with _$DiscoveryState {
     required bool isInErrorState,
     ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
     @Default(false) bool shouldUpdateNavBar,
+    required bool didReachEnd,
+    SubscriptionStatus? subscriptionStatus,
   }) = _DiscoveryState;
 
   factory DiscoveryState.initial() => const DiscoveryState(
         cardIndex: 0,
         isComplete: false,
         isInErrorState: false,
+        didReachEnd: false,
       );
 
   bool equals(DiscoveryState other) =>
       isFullScreen == other.isFullScreen &&
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
+      didReachEnd == other.didReachEnd &&
       isInErrorState == other.isInErrorState &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(results, other.results) &&
-      _setEquality.equals(removedResults, other.removedResults);
+      _setEquality.equals(removedResults, other.removedResults) &&
+      subscriptionStatus == other.subscriptionStatus;
 }

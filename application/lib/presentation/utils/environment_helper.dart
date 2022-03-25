@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 class EnvironmentHelper {
@@ -30,6 +32,8 @@ class EnvironmentHelper {
   /// @see [kAppId]
   static const String kGitTag =
       String.fromEnvironment('GIT_TAG', defaultValue: 'HEAD');
+
+  static bool get kIsInTest => Platform.environment.containsKey('FLUTTER_TEST');
 
   static const bool kIsInternalFlavor = _flavor == "internal";
 

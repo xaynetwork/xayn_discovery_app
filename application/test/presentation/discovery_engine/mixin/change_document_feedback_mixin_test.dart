@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/crud_out.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -70,10 +71,9 @@ void main() {
 
     when(crudExplicitDocumentFeedbackUseCase.singleOutput(any))
         .thenAnswer((realInvocation) async {
-      final param =
-          realInvocation.positionalArguments.first as DbEntityCrudUseCaseIn;
+      final param = realInvocation.positionalArguments.first as DbCrudIn;
 
-      return ExplicitDocumentFeedback(id: param.id);
+      return CrudOut.single(value: ExplicitDocumentFeedback(id: param.id));
     });
   });
 
@@ -107,7 +107,7 @@ void main() {
     verify: (manager) {
       verify(
         crudExplicitDocumentFeedbackUseCase.singleOutput(
-          DbEntityCrudUseCaseIn.store(
+          DbCrudIn.store(
             ExplicitDocumentFeedback(
               id: fakeDocument.documentId.uniqueId,
               userReaction: UserReaction.positive,

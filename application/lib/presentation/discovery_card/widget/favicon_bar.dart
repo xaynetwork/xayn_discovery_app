@@ -26,10 +26,6 @@ class FaviconBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favicon = provider?.favicon == null
-        ? Thumbnail.icon(Icons.web)
-        : Thumbnail.networkImage(provider!.favicon.toString());
-
     final providerNameAndDatePublished = Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +44,14 @@ class FaviconBar extends StatelessWidget {
 
     return Row(
       children: [
-        favicon,
+        if (provider?.favicon != null)
+          Thumbnail.networkImage(
+            provider!.favicon.toString(),
+            errorWidgetBuilder: (context, _, s) => Icon(
+              Icons.web,
+              color: R.colors.icon,
+            ),
+          ),
         SizedBox(width: R.dimen.unit),
         Expanded(child: providerNameAndDatePublished),
       ],

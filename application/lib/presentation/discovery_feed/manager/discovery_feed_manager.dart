@@ -1,5 +1,8 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
@@ -9,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
@@ -30,6 +34,8 @@ abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
   void onPersonalAreaNavPressed();
+
+  void onTrialExpired();
 }
 
 /// Manages the state for the main, or home discovery feed screen.
@@ -56,16 +62,18 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
+    GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
           engineEventsUseCase,
-          _foldEngineEvent,
+          _foldEngineEvent(),
           fetchCardIndexUseCase,
           updateCardIndexUseCase,
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
+          getSubscriptionStatusUseCase,
         );
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
@@ -75,6 +83,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   bool get isLoading => _isLoading;
+
+  @override
+  bool get didReachEnd => false;
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
@@ -112,7 +123,15 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // ok to be fire and forget, should we instead wait for the ack,
     // then we need a specific CloseDocumentEngineEvent.
     // Currently, we just get a generic [ClientEventSucceeded] event only.
-    closeFeedDocuments(flaggedForDisposal.map((it) => it.documentId).toSet());
+    final documentIdsToClose = flaggedForDisposal
+        .map((it) => it.documentId)
+        .toList()
+      ..removeWhere(closedDocuments.contains);
+
+    if (documentIdsToClose.isNotEmpty) {
+      closeFeedDocuments(documentIdsToClose.toSet());
+    }
+
     // adjust the cardIndex to counter the removals
     cardIndex = await updateCardIndexUseCase.singleOutput(
       FeedTypeAndIndex.feed(
@@ -152,6 +171,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   }
 
   @override
+  void onTrialExpired() => _discoveryFeedNavActions.onTrialExpired();
+
+  @override
   void resetParameters() {
     resetCardIndex();
     // clears the current pending observation, if any...
@@ -171,88 +193,119 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     return super.computeState();
   }
 
-  static Set<Document> Function(EngineEvent?) _foldEngineEvent(
-      BaseDiscoveryManager manager) {
-    final self = manager as DiscoveryFeedManager;
-    final state = manager.state;
+  /// A higher-order Function, which tracks the last event passed in,
+  /// and ultimately runs the inner fold Function when the incoming event
+  /// no longer matches lastEvent.
+  static Set<Document> Function(EngineEvent?) Function(BaseDiscoveryManager)
+      _foldEngineEvent() {
+    // because foldEngineEvent runs within a combineLatest setup,
+    // we can use lastEvent to compare with the incoming event,
+    // if they are the same, then the fold does not need to re-run.
+    // this is important, because _isLoading would otherwise falsely be
+    // switched to true.
+    EngineEvent? lastEvent;
+    var lastResults = const <Document>{};
 
-    foldEngineEvent({
-      required OnRestoreFeedSucceeded restoreFeedSucceeded,
-      required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
-      required OnDocumentsUpdated documentsUpdated,
-      required OnEngineExceptionRaised engineExceptionRaised,
-      required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
-      required OnRestoreFeedFailed restoreFeedFailed,
-      required OnNonMatchedEngineEvent orElse,
-    }) =>
-        (EngineEvent? event) {
-          if (event is RestoreFeedSucceeded) {
-            self._isLoading = false;
-            return restoreFeedSucceeded(event);
-          } else if (event is NextFeedBatchRequestSucceeded) {
-            self._isLoading = false;
-            return nextFeedBatchRequestSucceeded(event);
-          } else if (event is DocumentsUpdated) {
-            return documentsUpdated(event);
-          } else if (event is EngineExceptionRaised) {
-            return engineExceptionRaised(event);
-          } else if (event is NextFeedBatchRequestFailed) {
-            self._isLoading = false;
-            return nextFeedBatchRequestFailed(event);
-          } else if (event is RestoreFeedFailed) {
-            self._isLoading = false;
-            return restoreFeedFailed(event);
-          }
+    return (BaseDiscoveryManager manager) {
+      final self = manager as DiscoveryFeedManager;
 
-          return orElse();
-        };
+      if (self.closedDocuments.isNotEmpty) {
+        // because the feed's state will remove the oldest card, when the
+        // total card count is high enough, we replicate that action here.
+        lastResults = lastResults.toSet()
+          ..removeWhere((it) => self.closedDocuments.contains(it.documentId));
+      }
 
-    return foldEngineEvent(
-      restoreFeedSucceeded: (event) => event.items.toSet(),
-      nextFeedBatchRequestSucceeded: (event) =>
-          {...state.results, ...event.items},
-      documentsUpdated: (event) => state.results
-          .map(
-            (it) => event.items.firstWhere(
-              (item) => item.documentId == it.documentId,
-              orElse: () => it,
+      foldEngineEvent({
+        required OnRestoreFeedSucceeded restoreFeedSucceeded,
+        required OnNextFeedBatchRequestSucceeded nextFeedBatchRequestSucceeded,
+        required OnDocumentsUpdated documentsUpdated,
+        required OnEngineExceptionRaised engineExceptionRaised,
+        required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
+        required OnRestoreFeedFailed restoreFeedFailed,
+        required OnNonMatchedEngineEvent orElse,
+      }) =>
+          (EngineEvent? event) {
+            if (event == lastEvent) return lastResults;
+
+            lastEvent = event;
+
+            if (event is RestoreFeedSucceeded) {
+              self._isLoading = false;
+              lastResults = restoreFeedSucceeded(event);
+            } else if (event is NextFeedBatchRequestSucceeded) {
+              self._isLoading = false;
+              lastResults = nextFeedBatchRequestSucceeded(event);
+            } else if (event is DocumentsUpdated) {
+              lastResults = documentsUpdated(event);
+            } else if (event is EngineExceptionRaised) {
+              lastResults = engineExceptionRaised(event);
+            } else if (event is NextFeedBatchRequestFailed) {
+              lastResults = nextFeedBatchRequestFailed(event);
+            } else if (event is RestoreFeedFailed) {
+              self._isLoading = false;
+              lastResults = restoreFeedFailed(event);
+            } else {
+              lastResults = orElse();
+            }
+
+            return lastResults;
+          };
+
+      return foldEngineEvent(
+        restoreFeedSucceeded: (event) => event.items.toSet(),
+        nextFeedBatchRequestSucceeded: (event) =>
+            {...lastResults, ...event.items},
+        documentsUpdated: (event) => lastResults
+            .map(
+              (it) => event.items.firstWhere(
+                (item) => item.documentId == it.documentId,
+                orElse: () => it,
+              ),
+            )
+            .toSet(),
+        engineExceptionRaised: (event) {
+          manager.sendAnalyticsUseCase(
+            EngineExceptionRaisedEvent(
+              event: event,
             ),
-          )
-          .toSet(),
-      engineExceptionRaised: (event) {
-        manager.sendAnalyticsUseCase(
-          EngineExceptionRaisedEvent(
-            event: event,
-          ),
-        );
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      nextFeedBatchRequestFailed: (event) {
-        manager.sendAnalyticsUseCase(
-          NextFeedBatchRequestFailedEvent(
-            event: event,
-          ),
-        );
+          return lastResults;
+        },
+        nextFeedBatchRequestFailed: (event) {
+          manager.sendAnalyticsUseCase(
+            NextFeedBatchRequestFailedEvent(
+              event: event,
+            ),
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      restoreFeedFailed: (event) {
-        manager.sendAnalyticsUseCase(
-          RestoreFeedFailedEvent(
-            event: event,
-          ),
-        );
+          return lastResults;
+        },
+        restoreFeedFailed: (event) {
+          manager.sendAnalyticsUseCase(
+            RestoreFeedFailedEvent(
+              event: event,
+            ),
+          );
 
-        logger.e('$event');
+          logger.e('$event');
 
-        return state.results;
-      },
-      orElse: () => state.results,
-    );
+          return lastResults;
+        },
+        orElse: () => lastResults,
+      );
+    };
+  }
+
+  @override
+  void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
+    if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
+      _discoveryFeedNavActions.onTrialExpired();
+    }
   }
 }

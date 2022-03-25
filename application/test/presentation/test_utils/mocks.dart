@@ -4,6 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
@@ -35,6 +36,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_se
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
@@ -53,6 +55,7 @@ import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_scree
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
@@ -82,6 +85,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   FeedSettingsMapper,
   FeedSettingsNavActions,
   FeedSettingsRepository,
+  FeedTypeMarketsRepository,
   GetAppSessionUseCase,
   GetAppThemeUseCase,
   GetAppVersionUseCase,
@@ -124,6 +128,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RenameDefaultCollectionUseCase,
   HapticFeedbackMediumUseCase,
   RestoreSubscriptionUseCase,
+  PaymentScreenNavActions,
+  GetSubscriptionManagementUrlUseCase,
 ])
 class Mocks {
   Mocks._();

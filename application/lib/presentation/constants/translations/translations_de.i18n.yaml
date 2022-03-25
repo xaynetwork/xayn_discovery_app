@@ -95,7 +95,7 @@ subscriptionPerk5: Jederzeit kündbar
 subscriptionSubscribeNow: Jetzt abonnieren
 subscriptionRestore: Abo wiederherstellen
 subscriptionPromoCode: Ich habe einen Promo-code
-subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
+subscriptionDisclaimer: Indem Du auf „Jetzt abonnieren“ tippst, wirst zum App Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.
 settingsSubscribedToHeader: Du hast
 doneButtonTitle: Fertig
 subscriptionRenewsMonthlyText: 'Dein Abo erneuert sich am: %s'
@@ -118,20 +118,29 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Zahlungsvorgang fehlgeschlagen
-  noActiveSubscriptionFound: No active subscription found
+  noActiveSubscriptionFound: Kein aktives Abo gefunden
 bottomSheetDeleteCollectionWithNoItemsBody: Willst Du diese Sammlung wirklich löschen?
 bottomSheetMoveSingleBookmark: In eine andere Collection verschieben
 readerModeSettingsErrorChangesNotApplied: Die Änderungen konnten nicht gespeichert werden
 errorGenericHeaderSomethingWentWrong: Da ging wohl was schief
 errorGenericBodyPleaseTryAgainLater: Bitte versuche es später noch einmal.
 errorClose: Schließen
-sourceHandlingTooltipLabel: What do you want to see less of?
-sourceHandlingTooltipHighlightedWord: What
-enableTextToSpeech: Enable text -to-speech
-settingsSectionTitleOptions: Options
-personalAreaContact: Contact
-settingsContactUs: Contact
+sourceHandlingTooltipLabel: Wovon willst du weniger Vorschläge bekommen?
+sourceHandlingTooltipHighlightedWord: Was
+enableTextToSpeech: Text-zu-Sprache aktivieren
+settingsSectionTitleOptions: Optionen
+personalAreaContact: Kontakt
+settingsContactUs: Kontakt
 contactSectionWeb: 'Web:'
-contactSectionSupportEmail: 'Support eMail:'
-contactSectionForPublishers: 'For Publishers:'
-contactSectionPhone: 'Phone:'
+contactSectionSupportEmail: 'Support E-Mail:'
+contactSectionForPublishers: 'Für Medienhäuser:'
+contactSectionPhone: 'Telefon:'
+searchNoResultsFound: Keine Ergebnisse
+searchEndOfResults: Das war's!
+searchNoResultsFoundDesc: Wir konnten keine Stories für Deine Suche finden. Probiere ein anderes oder allgemeineres Stichwort.
+searchEndOfResultsDesc: Noch nicht gefunden, wonach Du suchst? Versuch's mit anderen oder allgemeineren Stichwörtern.
+feedSettingsScreenSourceFilterExplanation: Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Disvoery Feed angezeigt.
+feedSettingsScreenTabCountries: Länder
+feedSettingsScreenTabSources: Quellen
+feedSettingsScreenSubtitleDislikedSources: Aussortierte Quellen
+settingsSectionHomeFeed: Feedeinstellungen

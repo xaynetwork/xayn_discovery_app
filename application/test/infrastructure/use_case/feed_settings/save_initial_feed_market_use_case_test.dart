@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_initial_feed_market_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/save_feed_type_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 
 import '../../../presentation/test_utils/utils.dart';
@@ -12,6 +14,8 @@ import '../../../presentation/test_utils/utils.dart';
 void main() {
   late SaveInitialFeedMarketUseCase useCase;
   late MockFeedSettingsRepository repository;
+  late SaveFeedTypeMarketsUseCase feedTypeMarketsUseCase;
+  late MockFeedTypeMarketsRepository feedTypeMarketsRepository;
 
   const nullableLocale = Locale.fromSubtags(
     languageCode: 'en',
@@ -25,8 +29,15 @@ void main() {
 
   setUp(() {
     repository = MockFeedSettingsRepository();
-    useCase = SaveInitialFeedMarketUseCase(repository);
+    feedTypeMarketsRepository = MockFeedTypeMarketsRepository();
+    feedTypeMarketsUseCase =
+        SaveFeedTypeMarketsUseCase(feedTypeMarketsRepository);
+    useCase = SaveInitialFeedMarketUseCase(
+      repository,
+      feedTypeMarketsUseCase,
+    );
     when(repository.settings).thenReturn(FeedSettings(feedMarkets: {}));
+    when(feedTypeMarketsRepository.save(any)).thenReturn(null);
   });
 
   FeedSettings getSettings([FeedMarket? market]) =>
@@ -49,7 +60,9 @@ void main() {
 
       expect(result, isA<None>());
       verify(repository.settings);
+      verifyNever(feedTypeMarketsRepository.save(any));
       verifyNoMoreInteractions(repository);
+      verifyNoMoreInteractions(feedTypeMarketsRepository);
     },
   );
 
@@ -63,8 +76,13 @@ void main() {
       verifyInOrder([
         repository.settings,
         repository.save(getSettings(defaultMarket)),
+        feedTypeMarketsRepository
+            .save(FeedTypeMarkets.forFeed({defaultMarket})),
+        feedTypeMarketsRepository
+            .save(FeedTypeMarkets.forSearch({defaultMarket})),
       ]);
       verifyNoMoreInteractions(repository);
+      verifyNoMoreInteractions(feedTypeMarketsRepository);
     },
   );
 
@@ -82,8 +100,13 @@ void main() {
       verifyInOrder([
         repository.settings,
         repository.save(getSettings(expectedMarket)),
+        feedTypeMarketsRepository
+            .save(FeedTypeMarkets.forFeed({expectedMarket})),
+        feedTypeMarketsRepository
+            .save(FeedTypeMarkets.forSearch({expectedMarket})),
       ]);
       verifyNoMoreInteractions(repository);
+      verifyNoMoreInteractions(feedTypeMarketsRepository);
     },
   );
 }

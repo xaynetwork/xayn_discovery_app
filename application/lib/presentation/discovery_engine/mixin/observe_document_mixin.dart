@@ -65,6 +65,7 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
           .where((it) =>
               it.document != null &&
               it.viewType != null &&
+              it.duration.inSeconds > 0 &&
               isDocumentCurrentlyDisplayed(it.document!))
           .doOnData(
             _onObservation(

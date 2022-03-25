@@ -78,7 +78,7 @@ class TrialExpired extends StatelessWidget {
 
   Widget _buildPricing() => Text(
         _product.price,
-        style: R.styles.xxxlBoldStyle,
+        style: R.styles.xxlBoldStyle,
       );
 
   Widget _buildPerks() => SettingsSection(

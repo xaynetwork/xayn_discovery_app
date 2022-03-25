@@ -163,7 +163,7 @@ class TranslationsFr extends Translations {
   String get subscriptionRestore => """Restaurer l'abonnement""";
   String get subscriptionPromoCode => """J'ai un code promo""";
   String get subscriptionDisclaimer =>
-      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
+      """En appuyant sur "S'abonner maintenant", vous serez redirigé vers l'App Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.""";
   String get settingsSubscribedToHeader => """Vous êtes abonné à""";
   String get doneButtonTitle => """Fini""";
   String get subscriptionRenewsMonthlyText =>
@@ -188,16 +188,29 @@ class TranslationsFr extends Translations {
       """Veuillez réessayer plus tard.""";
   String get errorClose => """Fermer""";
   String get sourceHandlingTooltipLabel =>
-      """What do you want to see less of?""";
-  String get sourceHandlingTooltipHighlightedWord => """What""";
-  String get enableTextToSpeech => """Enable text -to-speech""";
-  String get settingsSectionTitleOptions => """Options""";
+      """Qu'est-ce que tu veux moins voir ?""";
+  String get sourceHandlingTooltipHighlightedWord => """Que""";
+  String get enableTextToSpeech => """Activer la synthèse vocale""";
+  String get settingsSectionTitleOptions => """Choix""";
   String get personalAreaContact => """Contact""";
   String get settingsContactUs => """Contact""";
   String get contactSectionWeb => """Web:""";
-  String get contactSectionSupportEmail => """Support eMail:""";
-  String get contactSectionForPublishers => """For Publishers:""";
-  String get contactSectionPhone => """Phone:""";
+  String get contactSectionSupportEmail => """Courriel d'assistance :""";
+  String get contactSectionForPublishers => """Pour les éditeurs :""";
+  String get contactSectionPhone => """Téléphone :""";
+  String get searchNoResultsFound => """Aucun résultat""";
+  String get searchEndOfResults => """C'est tout!""";
+  String get searchNoResultsFoundDesc =>
+      """Nous n'avons trouvé aucune histoire pour votre recherche. Essayez des mots-clés différents.""";
+  String get searchEndOfResultsDesc =>
+      """Vous n'avez pas vu ce que vous cherchez ? Essayez des mots-clés différents ou plus généraux.""";
+  String get feedSettingsScreenSourceFilterExplanation =>
+      """Les sources que vous n'aimez pas ne seront plus affichées dans votre flux de découverte.""";
+  String get feedSettingsScreenTabCountries => """Pays""";
+  String get feedSettingsScreenTabSources => """Sources""";
+  String get feedSettingsScreenSubtitleDislikedSources =>
+      """Sources que vous n’aimez pas""";
+  String get settingsSectionHomeFeed => """Configuration du flux""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -209,7 +222,7 @@ class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produit non trouvé :(""";
   String get itemAlreadyOwned => """Vous êtes déjà abonné""";
   String get transactionFailed => """Paiement échoué""";
-  String get noActiveSubscriptionFound => """No active subscription found""";
+  String get noActiveSubscriptionFound => """Aucun abonnement actif trouvé""";
 }
 
 Map<String, String> get translationsFrMap => {
@@ -319,7 +332,7 @@ Map<String, String> get translationsFrMap => {
       """subscriptionRestore""": """Restaurer l'abonnement""",
       """subscriptionPromoCode""": """J'ai un code promo""",
       """subscriptionDisclaimer""":
-          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
+          """En appuyant sur "S'abonner maintenant", vous serez redirigé vers l'App Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.""",
       """settingsSubscribedToHeader""": """Vous êtes abonné à""",
       """doneButtonTitle""": """Fini""",
       """subscriptionRenewsMonthlyText""":
@@ -337,7 +350,7 @@ Map<String, String> get translationsFrMap => {
       """paymentFlowError.itemAlreadyOwned""": """Vous êtes déjà abonné""",
       """paymentFlowError.transactionFailed""": """Paiement échoué""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """No active subscription found""",
+          """Aucun abonnement actif trouvé""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Voulez-vous vraiment supprimer cette collection ?""",
       """bottomSheetMoveSingleBookmark""":
@@ -349,14 +362,28 @@ Map<String, String> get translationsFrMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Veuillez réessayer plus tard.""",
       """errorClose""": """Fermer""",
-      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
-      """sourceHandlingTooltipHighlightedWord""": """What""",
-      """enableTextToSpeech""": """Enable text -to-speech""",
-      """settingsSectionTitleOptions""": """Options""",
+      """sourceHandlingTooltipLabel""":
+          """Qu'est-ce que tu veux moins voir ?""",
+      """sourceHandlingTooltipHighlightedWord""": """Que""",
+      """enableTextToSpeech""": """Activer la synthèse vocale""",
+      """settingsSectionTitleOptions""": """Choix""",
       """personalAreaContact""": """Contact""",
       """settingsContactUs""": """Contact""",
       """contactSectionWeb""": """Web:""",
-      """contactSectionSupportEmail""": """Support eMail:""",
-      """contactSectionForPublishers""": """For Publishers:""",
-      """contactSectionPhone""": """Phone:""",
+      """contactSectionSupportEmail""": """Courriel d'assistance :""",
+      """contactSectionForPublishers""": """Pour les éditeurs :""",
+      """contactSectionPhone""": """Téléphone :""",
+      """searchNoResultsFound""": """Aucun résultat""",
+      """searchEndOfResults""": """C'est tout!""",
+      """searchNoResultsFoundDesc""":
+          """Nous n'avons trouvé aucune histoire pour votre recherche. Essayez des mots-clés différents.""",
+      """searchEndOfResultsDesc""":
+          """Vous n'avez pas vu ce que vous cherchez ? Essayez des mots-clés différents ou plus généraux.""",
+      """feedSettingsScreenSourceFilterExplanation""":
+          """Les sources que vous n'aimez pas ne seront plus affichées dans votre flux de découverte.""",
+      """feedSettingsScreenTabCountries""": """Pays""",
+      """feedSettingsScreenTabSources""": """Sources""",
+      """feedSettingsScreenSubtitleDislikedSources""":
+          """Sources que vous n’aimez pas""",
+      """settingsSectionHomeFeed""": """Configuration du flux""",
     };

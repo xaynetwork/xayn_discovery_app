@@ -84,6 +84,7 @@ class CountryItem extends StatelessWidget {
       onPressed: onActionPressed,
       contentPadding: EdgeInsets.all(R.dimen.unit2),
       key: country.key,
+      iconColor: R.colors.settingsIcon,
     );
     return SizedBox(width: R.dimen.iconButtonSize, child: btn);
   }

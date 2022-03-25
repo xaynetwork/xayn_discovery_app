@@ -4,11 +4,13 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/extract_paragraphs_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/tts/text_to_speech_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/post_process_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
@@ -53,16 +55,35 @@ class ReaderModeManager extends Cubit<ReaderModeState>
         title: title,
       ));
 
+  /// switch for testing between feature manager or settings TTS
+  final bool _ttsViaFeatureFlag = true;
+
   void handleSpeechStart({
     required String html,
     required String languageCode,
     Uri? uri,
   }) async {
-    final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
+    checkUsingSettings() async {
+      final isTtsEnabled = await _getTtsPreferenceUseCase.singleOutput(none);
 
-    if (!isTtsEnabled) return;
+      return isTtsEnabled;
+    }
+
+    checkUsingFeatureFlag() async {
+      final featureManager = di.get<FeatureManager>();
+
+      return featureManager.isTtsEnabled;
+    }
+
+    final checker =
+        _ttsViaFeatureFlag ? checkUsingFeatureFlag : checkUsingSettings;
+    final useTts = await checker();
+
+    if (!useTts) return;
 
     final paragraphs = await _extractParagraphsUseCase.singleOutput(html);
+
+    await _textToSpeechUseCase.stopCurrentSpeech();
 
     _textToSpeechSink(
       Utterance(
