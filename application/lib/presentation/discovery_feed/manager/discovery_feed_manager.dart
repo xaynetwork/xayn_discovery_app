@@ -1,5 +1,8 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
@@ -9,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
@@ -30,6 +34,8 @@ abstract class DiscoveryFeedNavActions {
   void onSearchNavPressed();
 
   void onPersonalAreaNavPressed();
+
+  void onTrialExpired();
 }
 
 /// Manages the state for the main, or home discovery feed screen.
@@ -56,6 +62,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
+    GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
@@ -66,6 +73,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
+          getSubscriptionStatusUseCase,
         );
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
@@ -161,6 +169,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
     _discoveryFeedNavActions.onPersonalAreaNavPressed();
   }
+
+  @override
+  void onTrialExpired() => _discoveryFeedNavActions.onTrialExpired();
 
   @override
   void resetParameters() {
@@ -289,5 +300,12 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         orElse: () => lastResults,
       );
     };
+  }
+
+  @override
+  void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
+    if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
+      _discoveryFeedNavActions.onTrialExpired();
+    }
   }
 }

@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
@@ -57,6 +58,10 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
   @override
   void onPersonalAreaNavPressed() =>
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
+
+  @override
+  void onTrialExpired() =>
+      changeStack((stack) => stack.replace(PageRegistry.payment));
 }
 
 @Injectable(as: DiscoveryCardNavActions)
@@ -100,6 +105,13 @@ class SettingsNavActionsImpl extends SettingsNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onCountriesOptionsPressed() => changeStack(
+        (stack) => stack.push(
+          PageRegistry.feedSettings,
+        ),
+      );
 }
 
 @Injectable(as: FeedSettingsNavActions)
@@ -149,6 +161,10 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   @override
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) => changeStack(
       (stack) => stack.push(PageRegistry.cardDetailsStandalone(args)));
+
+  @override
+  void onTrialExpired() =>
+      changeStack((stack) => stack.replace(PageRegistry.payment));
 }
 
 @Injectable(as: PersonalAreaNavActions)
@@ -221,4 +237,17 @@ class ErrorNavActionsImpl extends ErrorNavActions {
 
   @override
   void onClosePressed() => changeStack((stack) => stack.pop());
+}
+
+@Injectable(as: PaymentScreenNavActions)
+class PaymentScreenNavActionsImpl implements PaymentScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  PaymentScreenNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onDismiss() =>
+      changeStack((stack) => stack.replace(PageRegistry.discovery));
 }

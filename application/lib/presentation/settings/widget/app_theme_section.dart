@@ -9,19 +9,16 @@ typedef OnAppThemeSelected = Function(AppTheme theme);
 class SettingsAppThemeSection extends StatelessWidget {
   final AppTheme theme;
   final OnAppThemeSelected onSelected;
-  final bool isFirstSection;
 
   const SettingsAppThemeSection({
     Key? key,
     required this.theme,
     required this.onSelected,
-    this.isFirstSection = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => SettingsSection.custom(
         title: R.strings.settingsSectionTitleAppTheme,
-        topPadding: isFirstSection ? 0 : R.dimen.unit3,
         child: SettingsSelectable.icons(
           items: AppTheme.values.map(_getItem).toList(),
         ),

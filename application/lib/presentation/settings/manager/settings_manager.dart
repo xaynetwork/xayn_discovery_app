@@ -26,6 +26,8 @@ import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mi
 
 abstract class SettingsNavActions {
   void onBackNavPressed();
+
+  void onCountriesOptionsPressed();
 }
 
 @lazySingleton
@@ -148,4 +150,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   @override
   void onBackNavPressed() => _settingsNavActions.onBackNavPressed();
+
+  @override
+  void onCountriesOptionsPressed() =>
+      _settingsNavActions.onCountriesOptionsPressed();
 }
