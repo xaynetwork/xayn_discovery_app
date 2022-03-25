@@ -101,7 +101,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
       _subscriptionManagementUrl =
-          await _getSubscriptionManagementUrlUseCase.singleOutput(none);
+          (await _getSubscriptionManagementUrlUseCase.singleOutput(none)).url;
 
       _initDone = true;
     });
