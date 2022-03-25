@@ -12,10 +12,12 @@ class BottomSheetInformationalBody extends StatelessWidget
     Key? key,
     required this.title,
     required this.body,
+    this.errorCode,
   }) : super(key: key);
 
   final String title;
   final String body;
+  final String? errorCode;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,13 @@ class BottomSheetInformationalBody extends StatelessWidget
 
     final header = BottomSheetHeader(
       headerText: R.strings.errorGenericHeaderSomethingWentWrong,
+    );
+
+    final errorCodeWidget = Text(
+      'Error: ' + (errorCode ?? ''),
+      style: R.styles.sStyle.copyWith(
+        color: R.colors.secondaryText,
+      ),
     );
 
     final closeButton = AppGhostButton.text(
@@ -39,6 +48,7 @@ class BottomSheetInformationalBody extends StatelessWidget
         header,
         SizedBox(height: R.dimen.unit1_25),
         body,
+        if (errorCode != null) errorCodeWidget,
         SizedBox(height: R.dimen.unit2_5),
         closeButton,
         SizedBox(height: R.dimen.unit3_5),

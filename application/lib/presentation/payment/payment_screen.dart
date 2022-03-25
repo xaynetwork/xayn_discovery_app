@@ -48,7 +48,9 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
           final paymentFailed = error == PaymentFlowError.paymentFailed;
           final body = paymentFailed
               ? PaymentFailedErrorBottomSheet()
-              : GenericErrorBottomSheet();
+              : GenericErrorBottomSheet(
+                  errorCode: error.name,
+                );
           showAppBottomSheet(
             context,
             builder: (_) => body,

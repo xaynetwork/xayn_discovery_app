@@ -40,7 +40,9 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
             if (state.error == PaymentFlowError.paymentFailed) {
               return PaymentFailedErrorBottomSheet();
             }
-            return GenericErrorBottomSheet();
+            return GenericErrorBottomSheet(
+              errorCode: state.error.name,
+            );
           },
           ready: (state) => _buildScreen(
             context: context,
@@ -61,7 +63,9 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
           final paymentFailed = error == PaymentFlowError.paymentFailed;
           final body = paymentFailed
               ? PaymentFailedErrorBottomSheet()
-              : GenericErrorBottomSheet();
+              : GenericErrorBottomSheet(
+                  errorCode: error.name,
+                );
           showAppBottomSheet(
             context,
             builder: (_) => body,
