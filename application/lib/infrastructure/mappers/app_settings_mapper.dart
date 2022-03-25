@@ -19,13 +19,10 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
     if (map == null) return null;
 
     final isOnboardingDone = map[AppSettingsFields.isOnboardingDone] as bool?;
-    final autoPlayTextToSpeech =
-        map[AppSettingsFields.autoPlayTextToSpeech] as bool?;
     final appTheme = _intToAppThemeMapper.map(map[AppSettingsFields.appTheme]);
 
     return AppSettings.global(
       isOnboardingDone: isOnboardingDone ?? false,
-      autoPlayTextToSpeech: autoPlayTextToSpeech ?? true,
       appTheme: appTheme,
     );
   }
@@ -33,7 +30,6 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
   @override
   DbEntityMap toMap(AppSettings entity) => {
         AppSettingsFields.isOnboardingDone: entity.isOnboardingDone,
-        AppSettingsFields.autoPlayTextToSpeech: entity.autoPlayTextToSpeech,
         AppSettingsFields.appTheme: _appThemeToIntMapper.map(entity.appTheme),
       };
 }
@@ -43,5 +39,4 @@ abstract class AppSettingsFields {
 
   static const int isOnboardingDone = 0;
   static const int appTheme = 1;
-  static const int autoPlayTextToSpeech = 2;
 }
