@@ -14,7 +14,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_state.dart';
 
-import '../../../bottom_sheet/move_to_collection/manager/move_to_collection_manager_test.mocks.dart';
 import '../../../test_utils/utils.dart';
 
 @GenerateMocks([SendAnalyticsUseCase])

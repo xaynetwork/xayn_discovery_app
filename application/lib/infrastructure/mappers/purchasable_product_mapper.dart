@@ -11,6 +11,7 @@ class PurchasableProductMapper implements Mapper<Product, PurchasableProduct> {
         title: input.title,
         description: input.description,
         price: input.priceString,
+        currency: input.currencyCode,
         status: PurchasableProductStatus.purchasable,
       );
 }
