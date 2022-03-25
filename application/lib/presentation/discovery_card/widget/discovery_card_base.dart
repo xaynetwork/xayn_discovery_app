@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -13,6 +14,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 const BoxFit _kImageBoxFit = BoxFit.cover;
 
+typedef OnTtsData = void Function(TtsData);
+
 /// The base class for the different feed cards.
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
@@ -20,6 +23,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
   final BoxFit imageBoxFit;
+  final OnTtsData? onTtsData;
 
   const DiscoveryCardBase({
     Key? key,
@@ -28,6 +32,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     this.discoveryCardManager,
     this.imageManager,
     this.imageBoxFit = _kImageBoxFit,
+    this.onTtsData,
   }) : super(key: key);
 }
 

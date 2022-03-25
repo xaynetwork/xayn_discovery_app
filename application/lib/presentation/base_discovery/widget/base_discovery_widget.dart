@@ -4,6 +4,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -18,6 +19,7 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
+import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
@@ -62,6 +64,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   T get manager;
 
+  TtsData ttsData = TtsData.disabled();
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -98,11 +102,14 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
             ///
             resizeToAvoidBottomInset: false,
             backgroundColor: R.colors.homePageBackground,
-            body: Padding(
-              padding: EdgeInsets.only(top: topPadding),
-              child: featureManager.showDiscoveryEngineReportOverlay
-                  ? DiscoveryEngineReportOverlay(child: feed)
-                  : feed,
+            body: Tts(
+              data: ttsData,
+              child: Padding(
+                padding: EdgeInsets.only(top: topPadding),
+                child: featureManager.showDiscoveryEngineReportOverlay
+                    ? DiscoveryEngineReportOverlay(child: feed)
+                    : feed,
+              ),
             ),
           );
         },
@@ -145,6 +152,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       onIndexChanged(int index) {
         manager.handleIndexChanged(index);
         _ratingDialogManager.handleIndexChanged(index);
+        ttsData = TtsData.disabled();
       }
 
       return FeedView(
@@ -231,6 +239,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
                     currentCardController = controller,
+                onTtsData: (it) => setState(
+                    () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
@@ -239,6 +249,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   document: document,
                   discoveryCardManager: managers.discoveryCardManager,
                   imageManager: managers.imageManager,
+                  onTtsData: (it) => setState(() =>
+                      ttsData = ttsData.enabled ? TtsData.disabled() : it),
                 ),
               );
 
