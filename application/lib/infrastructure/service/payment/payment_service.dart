@@ -66,4 +66,9 @@ class PaymentService {
   /// to configure and use offer codes
   Future<void> presentCodeRedemptionSheet() =>
       Purchases.presentCodeRedemptionSheet();
+
+  Future<String?> get subscriptionManagementURL async {
+    final purchaserInfo = await Purchases.getPurchaserInfo();
+    return purchaserInfo.managementURL;
+  }
 }
