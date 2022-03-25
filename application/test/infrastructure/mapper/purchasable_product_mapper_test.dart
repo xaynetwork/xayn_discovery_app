@@ -47,6 +47,7 @@ void main() {
       title: 'title_0',
       description: 'description_0',
       price: 'price_0',
+      currency: 'code_0',
       status: PurchasableProductStatus.purchasable,
     ),
     PurchasableProduct(
@@ -54,6 +55,7 @@ void main() {
       title: 'title_1',
       description: 'description_1',
       price: 'price_1',
+      currency: 'code_1',
       status: PurchasableProductStatus.purchasable,
     ),
     PurchasableProduct(
@@ -61,6 +63,7 @@ void main() {
       title: 'title_2',
       description: 'description_2',
       price: 'price_2',
+      currency: 'code_2',
       status: PurchasableProductStatus.purchasable,
     ),
     PurchasableProduct(
@@ -68,6 +71,7 @@ void main() {
       title: 'title_3',
       description: 'description_3',
       price: 'price_3',
+      currency: 'code_3',
       status: PurchasableProductStatus.purchasable,
     ),
   ];
