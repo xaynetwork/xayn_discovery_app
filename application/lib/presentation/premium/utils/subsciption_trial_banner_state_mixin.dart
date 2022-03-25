@@ -6,11 +6,15 @@ import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_tri
 const _kTrialBannerDisplayDuration = Duration(seconds: 3);
 
 mixin SubscriptionTrialBannerStateMixin<T extends StatefulWidget> on State<T> {
-  void showTrialBanner([VoidCallback? onTap]) => InAppNotification.show(
+  void showTrialBanner({
+    required DateTime trialEndDate,
+    required VoidCallback onTap,
+  }) =>
+      InAppNotification.show(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit),
           child: SubscriptionTrialBanner(
-            trialEndDate: DateTime.now(), // TODO: Implement trial functionality
+            trialEndDate: trialEndDate,
           ),
         ),
         context: context,

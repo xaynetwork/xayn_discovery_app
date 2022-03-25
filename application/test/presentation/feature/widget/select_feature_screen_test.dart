@@ -29,6 +29,7 @@ void main() {
       when(manager.isRatingDialogEnabled).thenReturn(true);
       when(manager.showFeaturesScreen).thenReturn(false);
       when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
+      when(manager.isTtsEnabled).thenReturn(false);
 
       // we swap FeatureScreen with another one
       await tester.initToDiscoveryPage();

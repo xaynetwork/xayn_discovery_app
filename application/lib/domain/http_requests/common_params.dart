@@ -8,6 +8,7 @@ abstract class CommonHttpRequestParams {
     'accept-encoding': 'gzip',
     'accept-language': '*',
     'cache-control': 'no-cache',
+    'content-type': 'text/html; charset=utf-8',
     'pragma': 'no-cache',
     'sec-ch-ua':
         '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',

@@ -3,6 +3,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
@@ -13,9 +14,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -46,16 +50,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final SendAnalyticsUseCase sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
+  final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final FeedType feedType;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
-  Set<DocumentId> _disposedDocuments = const <DocumentId>{};
   Document? _observedDocument;
   int? _cardIndex;
   bool _isFullScreen = false;
-
-  Set<DocumentId> get disposedDocuments => _disposedDocuments;
 
   BaseDiscoveryManager(
     this.feedType,
@@ -66,6 +68,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.sendAnalyticsUseCase,
     this.crudExplicitDocumentFeedbackUseCase,
     this.hapticFeedbackMediumUseCase,
+    this.getSubscriptionStatusUseCase,
   ) : super(DiscoveryState.initial());
 
   late final UseCaseValueStream<EngineEvent> engineEvents = consume(
@@ -83,6 +86,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     crudExplicitDocumentFeedbackUseCase,
     initialData: const DbCrudIn.watchAll(),
   );
+
+  late final UseCaseValueStream<SubscriptionStatus> subscriptionStatusHandler =
+      consume(
+    getSubscriptionStatusUseCase,
+    initialData: PurchasableIds.subscription,
+  )..autoSubscribe(
+          onError: (e, s) => onError(e, s ?? StackTrace.current),
+          onValue: (value) => handleShowPaywallIfNeeded(value));
 
   /// requires to be implemented by concrete classes or mixins
   bool get isLoading;
@@ -113,6 +124,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   }
 
   void handleLoadMore();
+
+  void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus);
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
@@ -219,14 +232,16 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold3(
+  Future<DiscoveryState?> computeState() async => fold4(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         engineEvents,
+        subscriptionStatusHandler,
       ).foldAll((
         cardIndex,
         explicitDocumentFeedback,
         engineEvent,
+        subscriptionStatus,
         errorReport,
       ) async {
         _cardIndex ??= cardIndex;
@@ -238,11 +253,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
         final sets = await maybeReduceCardCount(results);
         final nextCardIndex = sets.nextCardIndex;
-
-        _disposedDocuments = {
-          ..._disposedDocuments,
-          ...sets.removedResults.map((it) => it.documentId)
-        };
 
         if (nextCardIndex != null) _cardIndex = nextCardIndex;
 
@@ -263,6 +273,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           latestExplicitDocumentFeedback: feedback,
           shouldUpdateNavBar:
               hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
+          subscriptionStatus: subscriptionStatus,
         );
 
         // guard against same-state emission
