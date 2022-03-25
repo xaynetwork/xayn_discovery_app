@@ -4,17 +4,19 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -39,6 +41,7 @@ void main() async {
   late MockConnectivityUseCase connectivityUseCase;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockFetchSessionUseCase fetchSessionUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
@@ -70,6 +73,7 @@ void main() async {
     connectivityUseCase = MockConnectivityUseCase();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    fetchSessionUseCase = MockFetchSessionUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
     feedRepository = MockFeedRepository();
@@ -100,6 +104,8 @@ void main() async {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(getSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
+    when(mockDiscoveryEngine.requestNextFeedBatch()).thenAnswer(
+        (realInvocation) async => const EngineEvent.clientEventSucceeded());
 
     await configureTestDependencies();
 
@@ -110,6 +116,7 @@ void main() async {
     di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
     di.registerLazySingleton<GetSubscriptionStatusUseCase>(
         () => getSubscriptionStatusUseCase);
+    di.registerSingleton<FetchSessionUseCase>(fetchSessionUseCase);
 
     manager = di.get<DiscoveryFeedManager>();
   });
@@ -124,7 +131,8 @@ void main() async {
     'WHEN feed loads THEN verify call stack - first render after startup version ',
     build: () => manager,
     setUp: () async {
-      RequestFeedMixin.isFirstRunAfterAppStart = true;
+      when(fetchSessionUseCase.singleOutput(none))
+          .thenAnswer((_) async => Session.start());
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -143,7 +151,8 @@ void main() async {
     'WHEN feed loads THEN verify call stack - non-first render after startup version ',
     build: () => manager,
     setUp: () async {
-      RequestFeedMixin.isFirstRunAfterAppStart = false;
+      when(fetchSessionUseCase.singleOutput(none))
+          .thenAnswer((_) async => Session.withFeedRequested());
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -161,7 +170,8 @@ void main() async {
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
-      RequestFeedMixin.isFirstRunAfterAppStart = false;
+      when(fetchSessionUseCase.singleOutput(none))
+          .thenAnswer((_) async => Session.withFeedRequested());
       // wait for requestFeed to complete
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
@@ -195,7 +205,8 @@ void main() async {
     'WHEN closing documents THEN the discovery engine is notified ',
     build: () => manager,
     setUp: () async {
-      RequestFeedMixin.isFirstRunAfterAppStart = false;
+      when(fetchSessionUseCase.singleOutput(none))
+          .thenAnswer((_) async => Session.withFeedRequested());
 
       when(mockDiscoveryEngine.closeFeedDocuments(any))
           .thenAnswer((documentIds) async {
@@ -224,7 +235,8 @@ void main() async {
       'WHEN observing documents THEN the discovery engine is notified ',
       build: () => manager,
       setUp: () async {
-        RequestFeedMixin.isFirstRunAfterAppStart = false;
+        when(fetchSessionUseCase.singleOutput(none))
+            .thenAnswer((_) async => Session.withFeedRequested());
 
         when(mockDiscoveryEngine.logDocumentTime(
           documentId: anyNamed('documentId'),
@@ -266,7 +278,8 @@ void main() async {
   blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
     build: () => manager,
-    setUp: () => RequestFeedMixin.isFirstRunAfterAppStart = false,
+    setUp: () => when(fetchSessionUseCase.singleOutput(none))
+        .thenAnswer((_) async => Session.withFeedRequested()),
     act: (manager) async {
       manager.handleNavigateIntoCard();
     },

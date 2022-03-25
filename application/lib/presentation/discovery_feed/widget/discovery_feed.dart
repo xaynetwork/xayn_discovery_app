@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -41,13 +40,15 @@ class _DiscoveryFeedState
 
   @override
   void initState() {
-    // we only want an animated index change on initial startup,
-    // when actualizing the feed with the latest batch elements
-    cardViewController.jumpBehavior = RequestFeedMixin.isFirstRunAfterAppStart
-        ? JumpBehavior.animated
-        : JumpBehavior.direct;
-
-    _manager = di.get();
+    _manager = di.get()
+      ..getSession().then(
+        (session) =>
+            // we only want an animated index change on initial startup,
+            // when actualizing the feed with the latest batch elements
+            cardViewController.jumpBehavior = session.didRequestFeed
+                ? JumpBehavior.direct
+                : JumpBehavior.animated,
+      );
 
     super.initState();
   }
