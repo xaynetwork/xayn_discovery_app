@@ -30,12 +30,14 @@ void main() {
   const appTheme = AppTheme.dark;
   const isTtsEnabled = true;
   final subscriptionStatus = SubscriptionStatus.initial();
+  const subscriptionManagementURL = 'https://example.com';
   final stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
     isTtsEnabled: true,
     isPaymentEnabled: false,
     subscriptionStatus: subscriptionStatus,
+    subscriptionManagementURL: subscriptionManagementURL,
   );
 
   late MockFeatureManager featureManager;
@@ -53,6 +55,8 @@ void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
+  late MockGetSubscriptionManagementUrlUseCase
+      getSubscriptionManagementUrlUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -70,6 +74,8 @@ void main() {
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
+    getSubscriptionManagementUrlUseCase =
+        MockGetSubscriptionManagementUrlUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -103,6 +109,9 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
+
+    when(getSubscriptionManagementUrlUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(subscriptionManagementURL));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -121,6 +130,7 @@ void main() {
         featureManager,
         getSubscriptionStatusUseCase,
         listenSubscriptionStatusUseCase,
+        getSubscriptionManagementUrlUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
