@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart'
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/no_active_subscription_found_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_failed_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/payment_promo_code/payment_promo_code_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -37,14 +38,9 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
         ),
         builder: (_, state) => state.map(
           initial: (_) => _buildLoading(),
-          error: (state) {
-            if (state.error == PaymentFlowError.paymentFailed) {
-              return PaymentFailedErrorBottomSheet();
-            }
-            return GenericErrorBottomSheet(
-              errorCode: state.error.name,
-            );
-          },
+          error: (state) => GenericErrorBottomSheet(
+            errorCode: state.error.errorCode,
+          ),
           ready: (state) => _buildScreen(
             context: context,
             state: state,
@@ -60,19 +56,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
         if (product.status.isPurchased || product.status.isRestored) {
           closeBottomSheet(context);
         }
-        if (error != null) {
-          final paymentFailed = error == PaymentFlowError.paymentFailed;
-          final body = paymentFailed
-              ? PaymentFailedErrorBottomSheet()
-              : GenericErrorBottomSheet(
-                  errorCode: error.errorCode,
-                );
-          showAppBottomSheet(
-            context,
-            builder: (_) => body,
-            allowStacking: true,
-          );
-        }
+        if (error != null) _handleError(context, error);
         return null;
       });
 
@@ -108,5 +92,24 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
         allowStacking: true,
       );
     }
+  }
+
+  void _handleError(BuildContext context, PaymentFlowError error) {
+    late BottomSheetBase body;
+    if (error == PaymentFlowError.paymentFailed) {
+      body = PaymentFailedErrorBottomSheet();
+    } else if (error == PaymentFlowError.noActiveSubscriptionFound) {
+      body = NoActiveSubscriptionFoundErrorBottomSheet();
+    } else {
+      body = GenericErrorBottomSheet(
+        errorCode: error.errorCode,
+      );
+    }
+
+    showAppBottomSheet(
+      context,
+      builder: (_) => body,
+      allowStacking: true,
+    );
   }
 }

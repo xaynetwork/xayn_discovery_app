@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart'
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/no_active_subscription_found_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_failed_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/payment_promo_code/payment_promo_code_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -45,19 +46,7 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
         if (product.status.isPurchased || product.status.isRestored) {
           manager.onDismiss();
         }
-        if (error != null) {
-          final paymentFailed = error == PaymentFlowError.paymentFailed;
-          final body = paymentFailed
-              ? PaymentFailedErrorBottomSheet()
-              : GenericErrorBottomSheet(
-                  errorCode: error.errorCode,
-                );
-          showAppBottomSheet(
-            context,
-            builder: (_) => body,
-            allowStacking: true,
-          );
-        }
+        if (error != null) _handleError(context, error);
         return null;
       });
 
@@ -108,5 +97,24 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
         allowStacking: true,
       );
     }
+  }
+
+  void _handleError(BuildContext context, PaymentFlowError error) {
+    late BottomSheetBase body;
+    if (error == PaymentFlowError.paymentFailed) {
+      body = PaymentFailedErrorBottomSheet();
+    } else if (error == PaymentFlowError.noActiveSubscriptionFound) {
+      body = NoActiveSubscriptionFoundErrorBottomSheet();
+    } else {
+      body = GenericErrorBottomSheet(
+        errorCode: error.errorCode,
+      );
+    }
+
+    showAppBottomSheet(
+      context,
+      builder: (_) => body,
+      allowStacking: true,
+    );
   }
 }

@@ -4,18 +4,19 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 abstract class ErrorNavActions {
-  void openErrorScreen();
+  void openErrorScreen({String? errorCode, bool replaceCurrentRoute = true});
 
   void onClosePressed();
 }
 
 /// Generic error screen
 class SomethingWentWrongErrorScreen extends _ErrorScreen {
-  SomethingWentWrongErrorScreen({Key? key})
+  SomethingWentWrongErrorScreen({Key? key, String? errorCode})
       : super(
           key: key,
           title: R.strings.errorGenericHeaderSomethingWentWrong,
           subtitle: R.strings.errorGenericBodyPleaseTryAgainLater,
+          errorCode: errorCode,
         );
 }
 
@@ -28,10 +29,12 @@ class _ErrorScreen extends StatelessWidget {
     Key? key,
     required this.title,
     required this.subtitle,
+    this.errorCode,
   }) : super(key: key);
 
   final String title;
   final String subtitle;
+  final String? errorCode;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,13 @@ class _ErrorScreen extends StatelessWidget {
 
     final subHeader = Text(subtitle);
 
+    final errorCodeWidget = Text(
+      '(Error: ${errorCode ?? ''})',
+      style: R.styles.sStyle.copyWith(
+        color: R.colors.secondaryText,
+      ),
+    );
+
     final body = Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -49,6 +59,10 @@ class _ErrorScreen extends StatelessWidget {
           header,
           SizedBox(height: R.dimen.unit),
           subHeader,
+          if (errorCode != null) ...[
+            SizedBox(height: R.dimen.unit),
+            errorCodeWidget,
+          ],
         ],
       ),
     );
