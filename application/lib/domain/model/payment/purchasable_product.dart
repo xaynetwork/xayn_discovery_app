@@ -18,6 +18,7 @@ class PurchasableProduct extends Equatable {
   final String title;
   final String description;
   final String price;
+  final String currency;
   final PurchasableProductStatus status;
 
   const PurchasableProduct({
@@ -25,6 +26,7 @@ class PurchasableProduct extends Equatable {
     required this.title,
     required this.description,
     required this.price,
+    required this.currency,
     required this.status,
   });
 
@@ -34,6 +36,7 @@ class PurchasableProduct extends Equatable {
         title,
         description,
         price,
+        currency,
         status,
       ];
 
@@ -43,6 +46,7 @@ class PurchasableProduct extends Equatable {
         title: title,
         description: description,
         price: price,
+        currency: currency,
         status: status,
       );
 
