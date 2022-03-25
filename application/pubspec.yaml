@@ -99,7 +99,6 @@ dependency_overrides:
   provider: 6.0.2
   dart_style: 2.2.2
 
-
 # Please list dependencies alphabetically!
 dev_dependencies:
   bloc_test: 8.5.0

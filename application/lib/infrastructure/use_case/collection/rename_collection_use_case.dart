@@ -23,14 +23,19 @@ class RenameCollectionUseCase
       throw CollectionUseCaseError.tryingToRenameCollectionWithInvalidName;
     }
 
-    if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
-      throw CollectionUseCaseError.tryingToRenameCollectionUsingExistingName;
-    }
-
     final collection = _collectionsRepository.getById(param.collectionId);
 
     if (collection == null) {
       throw CollectionUseCaseError.tryingToRenameNotExistingCollection;
+    }
+
+    if (collection.name == collectionNameTrimmed) {
+      yield collection;
+      return;
+    }
+
+    if (_collectionsRepository.isCollectionNameUsed(collectionNameTrimmed)) {
+      throw CollectionUseCaseError.tryingToRenameCollectionUsingExistingName;
     }
 
     final updatedCollection = collection.copyWith(name: collectionNameTrimmed);

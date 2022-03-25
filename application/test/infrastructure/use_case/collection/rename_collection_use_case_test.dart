@@ -11,6 +11,7 @@ import '../use_case_mocks/use_case_mocks.mocks.dart';
 void main() {
   late MockCollectionsRepository collectionsRepository;
   late RenameCollectionUseCase renameCollectionUseCase;
+  final defaultCollection = Collection.readLater(name: 'readLater');
   final collection =
       Collection(id: UniqueId(), name: 'Collection name', index: 1);
   const String newCollectionName = 'New collection name';
@@ -26,6 +27,15 @@ void main() {
 
     when(collectionsRepository.isCollectionNameUsed(newCollectionName))
         .thenReturn(false);
+
+    when(collectionsRepository.getById(Collection.readLaterId))
+        .thenReturn(defaultCollection);
+
+    when(collectionsRepository.isCollectionNameNotValid(defaultCollection.name))
+        .thenReturn(false);
+
+    when(collectionsRepository.isCollectionNameUsed(defaultCollection.name))
+        .thenReturn(true);
   });
 
   group('Rename collection use case', () {
@@ -40,11 +50,11 @@ void main() {
             collectionId: Collection.readLaterId, newName: newCollectionName)
       ],
       verify: (_) {
-        verify(collectionsRepository
-                .isCollectionNameNotValid(newCollectionName))
-            .called(1);
-        verify(collectionsRepository.isCollectionNameUsed(newCollectionName))
-            .called(1);
+        verifyInOrder([
+          collectionsRepository.isCollectionNameNotValid(newCollectionName),
+          collectionsRepository.getById(defaultCollection.id),
+          collectionsRepository.isCollectionNameUsed(newCollectionName),
+        ]);
         verifyNoMoreInteractions(collectionsRepository);
       },
       expect: [
@@ -67,7 +77,6 @@ void main() {
       verify: (_) {
         verifyInOrder([
           collectionsRepository.isCollectionNameNotValid(newCollectionName),
-          collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.getById(collection.id),
         ]);
         verifyNoMoreInteractions(collectionsRepository);
@@ -93,8 +102,8 @@ void main() {
       verify: (_) {
         verifyInOrder([
           collectionsRepository.isCollectionNameNotValid(newCollectionName),
-          collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.getById(collection.id),
+          collectionsRepository.isCollectionNameUsed(newCollectionName),
           collectionsRepository.save(updatedCollection),
         ]);
         verifyNoMoreInteractions(collectionsRepository);
@@ -103,6 +112,27 @@ void main() {
         useCaseSuccess(
           updatedCollection,
         )
+      ],
+    );
+    useCaseTest(
+      'WHEN the given id corresponds to a collection that exists THEN yield the collection',
+      build: () => renameCollectionUseCase,
+      input: [
+        RenameCollectionUseCaseParam(
+            collectionId: defaultCollection.id, newName: defaultCollection.name)
+      ],
+      verify: (_) {
+        verifyInOrder([
+          collectionsRepository
+              .isCollectionNameNotValid(defaultCollection.name),
+          collectionsRepository.getById(defaultCollection.id),
+        ]);
+        verifyNoMoreInteractions(collectionsRepository);
+      },
+      expect: [
+        useCaseSuccess(
+          defaultCollection,
+        ),
       ],
     );
   });
