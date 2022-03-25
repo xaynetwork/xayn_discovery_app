@@ -123,6 +123,9 @@ class _SettingsScreenState extends State<SettingsScreen>
       SettingsHomeFeedSection(
         isFirstSection: !isPaymentEnabled,
         onCountriesPressed: _manager.onCountriesOptionsPressed,
+        onSourcesPressed: () {
+          ///TODO Open sources management screen when the latter ready
+        },
       );
 
   Widget _buildAppThemeSection({
