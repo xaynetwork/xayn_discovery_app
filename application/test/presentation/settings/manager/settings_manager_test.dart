@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_se
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -110,8 +111,10 @@ void main() {
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
 
-    when(getSubscriptionManagementUrlUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(subscriptionManagementURL));
+    when(getSubscriptionManagementUrlUseCase.singleOutput(none)).thenAnswer(
+      (_) => Future.value(
+          GetSubscriptionManagementUrlOutput(subscriptionManagementURL)),
+    );
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
