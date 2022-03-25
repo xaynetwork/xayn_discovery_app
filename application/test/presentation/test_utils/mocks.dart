@@ -14,9 +14,12 @@ import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_mark
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
@@ -130,6 +133,9 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RestoreSubscriptionUseCase,
   PaymentScreenNavActions,
   GetSubscriptionManagementUrlUseCase,
+  SendAnalyticsUseCase,
+  SendMarketingAnalyticsUseCase,
+  PurchaseEventMapper,
 ])
 class Mocks {
   Mocks._();

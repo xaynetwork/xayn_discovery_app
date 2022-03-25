@@ -5,7 +5,8 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 
 @injectable
-class GetSubscriptionManagementUrlUseCase extends UseCase<None, String?> {
+class GetSubscriptionManagementUrlUseCase
+    extends UseCase<None, GetSubscriptionManagementUrlOutput> {
   final PaymentService _paymentService;
 
   GetSubscriptionManagementUrlUseCase(
@@ -14,7 +15,14 @@ class GetSubscriptionManagementUrlUseCase extends UseCase<None, String?> {
 
   /// yields a subscription management url for current platform
   @override
-  Stream<String?> transaction(None param) async* {
-    yield await _paymentService.subscriptionManagementURL;
+  Stream<GetSubscriptionManagementUrlOutput> transaction(None param) async* {
+    final url = await _paymentService.subscriptionManagementURL;
+    yield GetSubscriptionManagementUrlOutput(url);
   }
+}
+
+class GetSubscriptionManagementUrlOutput {
+  final String? url;
+
+  GetSubscriptionManagementUrlOutput(this.url);
 }
