@@ -26,7 +26,7 @@ class TrialExpired extends StatelessWidget {
   /// Handler for when the restore button was tapped.
   final VoidCallback _onRestore;
 
-  /// Custom content paddding.
+  /// Custom content padding.
   final EdgeInsetsGeometry? _padding;
 
   const TrialExpired({

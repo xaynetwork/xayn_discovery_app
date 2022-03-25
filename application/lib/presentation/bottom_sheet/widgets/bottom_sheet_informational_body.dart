@@ -3,17 +3,19 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-class ErrorBottomSheet extends BottomSheetBase {
-  const ErrorBottomSheet({
+/// Informative bottom sheet body has only title and body strings
+/// and only one action button to close the bottom sheet
+///
+class BottomSheetInformationalBody extends StatelessWidget
+    with BottomSheetBodyMixin {
+  const BottomSheetInformationalBody({
     Key? key,
-  }) : super(
-          key: key,
-          body: const _ErrorBottomSheet(),
-        );
-}
+    required this.title,
+    required this.body,
+  }) : super(key: key);
 
-class _ErrorBottomSheet extends StatelessWidget with BottomSheetBodyMixin {
-  const _ErrorBottomSheet({Key? key}) : super(key: key);
+  final String title;
+  final String body;
 
   @override
   Widget build(BuildContext context) {

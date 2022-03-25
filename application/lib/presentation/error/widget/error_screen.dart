@@ -9,6 +9,16 @@ abstract class ErrorNavActions {
   void onClosePressed();
 }
 
+/// Generic error screen
+class SomethingWentWrongErrorScreen extends _ErrorScreen {
+  SomethingWentWrongErrorScreen({Key? key})
+      : super(
+          key: key,
+          title: R.strings.errorGenericHeaderSomethingWentWrong,
+          subtitle: R.strings.errorGenericBodyPleaseTryAgainLater,
+        );
+}
+
 /// This screen is to be used in scenarios where the user navigated to a
 /// different page of the app, and while loading it we got an error, so there’s
 /// nothing to be shown behind the error modal.
@@ -66,14 +76,4 @@ class _ErrorScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Generic error screen
-class SomethingWentWrongErrorScreen extends _ErrorScreen {
-  SomethingWentWrongErrorScreen({Key? key})
-      : super(
-          key: key,
-          title: R.strings.errorGenericHeaderSomethingWentWrong,
-          subtitle: R.strings.errorGenericBodyPleaseTryAgainLater,
-        );
 }
