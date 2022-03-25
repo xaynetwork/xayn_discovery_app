@@ -1,5 +1,8 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
@@ -10,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -34,6 +38,8 @@ abstract class ActiveSearchNavActions {
   void onPersonalAreaNavPressed();
 
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args);
+
+  void onTrialExpired();
 }
 
 /// Manages the state for the active search screen.
@@ -53,6 +59,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     SendAnalyticsUseCase sendAnalyticsUseCase,
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
+    GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
   ) : super(
           FeedType.search,
           engineEventsUseCase,
@@ -62,6 +69,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           sendAnalyticsUseCase,
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
+          getSubscriptionStatusUseCase,
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;
@@ -105,6 +113,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) =>
       _activeSearchNavActions.onCardDetailsPressed(args);
+
+  @override
+  void onTrialExpired() => _activeSearchNavActions.onTrialExpired();
 
   @override
   void handleLoadMore() {
@@ -223,5 +234,12 @@ class ActiveSearchManager extends BaseDiscoveryManager
         orElse: () => lastResults,
       );
     };
+  }
+
+  @override
+  void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
+    if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
+      _activeSearchNavActions.onTrialExpired();
+    }
   }
 }

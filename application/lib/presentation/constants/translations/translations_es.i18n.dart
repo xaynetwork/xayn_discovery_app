@@ -200,7 +200,14 @@ class TranslationsEs extends Translations {
   String get searchNoResultsFoundDesc =>
       """We couldn’t find any stories for your search. Try different or more general keywords.""";
   String get searchEndOfResultsDesc =>
-      """These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.""";
+      """Didn’t see what you're looking for? Try different or more general keywords.""";
+  String get feedSettingsScreenSourceFilterExplanation =>
+      """Sources that you disliked will not be shown in your Discovery Feed anymore.""";
+  String get feedSettingsScreenTabCountries => """Countries""";
+  String get feedSettingsScreenTabSources => """Sources""";
+  String get feedSettingsScreenSubtitleDislikedSources =>
+      """Disliked Sources""";
+  String get settingsSectionHomeFeed => """Feed setup""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -366,5 +373,11 @@ Map<String, String> get translationsEsMap => {
       """searchNoResultsFoundDesc""":
           """We couldn’t find any stories for your search. Try different or more general keywords.""",
       """searchEndOfResultsDesc""":
-          """These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.""",
+          """Didn’t see what you're looking for? Try different or more general keywords.""",
+      """feedSettingsScreenSourceFilterExplanation""":
+          """Sources that you disliked will not be shown in your Discovery Feed anymore.""",
+      """feedSettingsScreenTabCountries""": """Countries""",
+      """feedSettingsScreenTabSources""": """Sources""",
+      """feedSettingsScreenSubtitleDislikedSources""": """Disliked Sources""",
+      """settingsSectionHomeFeed""": """Feed setup""",
     };

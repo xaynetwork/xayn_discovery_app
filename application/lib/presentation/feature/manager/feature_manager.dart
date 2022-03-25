@@ -29,6 +29,8 @@ extension on Feature {
             EnvironmentHelper.kIsInternalFlavor;
       case Feature.documentFilter:
         return EnvironmentHelper.kIsDebug;
+      case Feature.tts:
+        return false;
     }
   }
 }
@@ -56,6 +58,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get isPaymentEnabled => isEnabled(Feature.payment);
 
   bool get isRatingDialogEnabled => isEnabled(Feature.ratingDialog);
+
+  bool get isTtsEnabled => isEnabled(Feature.tts);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
