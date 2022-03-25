@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/clos
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/update_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
@@ -22,9 +23,6 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
   final Completer _preambleCompleter = Completer();
   UseCaseSink<None, EngineEvent>? _useCaseSink;
   bool _didStartConsuming = false;
-
-  /// indicates that the request is the first one after app startup when true
-  static bool isFirstRunAfterAppStart = true;
 
   void requestNextFeedBatch() {
     _useCaseSink ??= _getUseCaseSink();
@@ -55,13 +53,15 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
     final areMarketsOutdated =
         await areMarketsOutdatedUseCase.singleOutput(FeedType.feed);
+    final fetchSessionUseCase = di.get<FetchSessionUseCase>();
+    final session = await fetchSessionUseCase.singleOutput(none);
 
     if (areMarketsOutdated) {
       _consumeWithChangedMarkets();
-    } else if (isFirstRunAfterAppStart) {
-      _consumeOnSessionStart();
-    } else {
+    } else if (session.didRequestFeed) {
       _consumeNormally();
+    } else {
+      _consumeOnSessionStart();
     }
   }
 
@@ -76,11 +76,13 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
         .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
-  void _consumeOnSessionStart() {
+  void _consumeOnSessionStart() async {
     late final fetchCardIndexUseCase = di.get<FetchCardIndexUseCase>();
+    final updateSessionUseCase = di.get<UpdateSessionUseCase>();
     final requestFeedUseCase = di.get<RequestFeedUseCase>();
-
-    isFirstRunAfterAppStart = false;
+    final fetchSessionUseCase = di.get<FetchSessionUseCase>();
+    final session = await fetchSessionUseCase.singleOutput(none);
+    final sessionUpdate = session.copyWith(didRequestFeed: true);
 
     onResetParameters(int nextIndex) => (_) => resetParameters(nextIndex);
     onRestore(EngineEvent it) => it is RestoreFeedSucceeded
@@ -105,9 +107,12 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     onError(Object e, StackTrace? s) =>
         this.onError(e, s ?? StackTrace.current);
 
-    consume(requestFeedUseCase, initialData: none)
+    consume(updateSessionUseCase, initialData: sessionUpdate)
         .transform(
           (out) => out
+              .take(1)
+              .mapTo(none)
+              .followedBy(requestFeedUseCase)
               .doOnData(onResetParameters(0))
               .map(onRestore)
               .asyncMap(onPartition)
