@@ -53,5 +53,6 @@ const purchasableProduct = PurchasableProduct(
   title: 't',
   description: 'd',
   price: 'p',
+  currency: 'usd',
   status: PurchasableProductStatus.purchasable,
 );

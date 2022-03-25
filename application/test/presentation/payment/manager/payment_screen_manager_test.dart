@@ -1,8 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/purchase_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
@@ -17,7 +20,16 @@ void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
+  late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
   late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
+  late MockPurchaseEventMapper purchaseEventMapper;
+
+  final testPurchaseEvent = PurchaseEvent(
+    productIdentifier: 'id',
+    price: 'price',
+    currency: 'currency',
+  );
+
   setUp(() {
     paymentScreenNavActions = MockPaymentScreenNavActions();
     getSubscriptionDetailsUseCase = MockGetSubscriptionDetailsUseCase();
@@ -26,10 +38,20 @@ void main() {
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
+    sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
     errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
+    purchaseEventMapper = MockPurchaseEventMapper();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) async => SubscriptionStatus.initial());
+
+    when(sendMarketingAnalyticsUseCase.call(any)).thenAnswer(
+      (_) async => [
+        UseCaseResult.success(testPurchaseEvent),
+      ],
+    );
+
+    when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
     manager = PaymentScreenManager(
       paymentScreenNavActions,
@@ -39,7 +61,9 @@ void main() {
       getSubscriptionStatusUseCase,
       listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
+      sendMarketingAnalyticsUseCase,
       errorMessageMapper,
+      purchaseEventMapper,
     );
   });
 
@@ -52,6 +76,7 @@ void main() {
           title: 'title',
           description: 'description',
           price: 'price',
+          currency: 'usd',
           status: status ?? PurchasableProductStatus.purchasable,
         );
     final purchasedProduct =
@@ -133,6 +158,18 @@ void main() {
         final result = manager.getUpdatedProduct(product, status, null, null);
 
         expect(result, equals(product));
+      },
+    );
+    test(
+      'GIVEN product is purchased THEN marketing event is sent',
+      () {
+        final product = getProduct(status: PurchasableProductStatus.purchased);
+        manager.sendPurchaseEventIfNeeded(product);
+
+        verifyInOrder([
+          sendMarketingAnalyticsUseCase.call(any),
+        ]);
+        verifyNoMoreInteractions(sendMarketingAnalyticsUseCase);
       },
     );
   });
