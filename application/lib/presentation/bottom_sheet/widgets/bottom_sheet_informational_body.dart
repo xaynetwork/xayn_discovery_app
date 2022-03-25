@@ -28,7 +28,7 @@ class BottomSheetInformationalBody extends StatelessWidget
     );
 
     final errorCodeWidget = Text(
-      'Error: ' + (errorCode ?? ''),
+      '(Error: ${errorCode ?? ''})',
       style: R.styles.sStyle.copyWith(
         color: R.colors.secondaryText,
       ),

@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
+import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
           final body = paymentFailed
               ? PaymentFailedErrorBottomSheet()
               : GenericErrorBottomSheet(
-                  errorCode: error.name,
+                  errorCode: error.errorCode,
                 );
           showAppBottomSheet(
             context,

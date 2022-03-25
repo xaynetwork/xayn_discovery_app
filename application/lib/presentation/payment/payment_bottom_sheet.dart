@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
+import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 
 class PaymentBottomSheet extends BottomSheetBase {
   PaymentBottomSheet({
@@ -64,7 +65,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
           final body = paymentFailed
               ? PaymentFailedErrorBottomSheet()
               : GenericErrorBottomSheet(
-                  errorCode: error.name,
+                  errorCode: error.errorCode,
                 );
           showAppBottomSheet(
             context,
