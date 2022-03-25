@@ -9,10 +9,6 @@ class Constants {
   static const carbonNeutralUrl = 'https://xayn.com/product/sustainability';
   static const downloadUrl = 'https://about.xayn.com/download-xayn';
 
-  // TODO: Use the correct urls here
-  static const subscriptionCancelAppleUrl = 'https://apple.com';
-  static const subscriptionCancelGoogleUrl = 'https://google.com';
-
   static const xaynSupportEmail = 'support@xayn.com';
   static const xaynPressEmail = 'press@xayn.com';
 
