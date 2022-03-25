@@ -47,7 +47,7 @@ class FeedSettingsScreenState extends State<FeedSettingsScreen>
         resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
           appToolbarData: AppToolbarData.titleOnly(
-            title: R.strings.feedSettingsScreenTitle,
+            title: R.strings.feedSettingsScreenTabCountries,
           ),
         ),
         body: _buildBody(),

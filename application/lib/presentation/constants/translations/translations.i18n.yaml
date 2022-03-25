@@ -143,4 +143,12 @@ contactSectionPhone: 'Phone:'
 searchNoResultsFound: No results
 searchEndOfResults: That's all!
 searchNoResultsFoundDesc: We couldn’t find any stories for your search. Try different or more general keywords.
-searchEndOfResultsDesc: These are all the stories that we found for your search. Still didn’t see what you were looking for? Try different or more general keywords.
+searchEndOfResultsDesc: Didn’t see what you're looking for? Try different or more general keywords.
+# https://s3.eu-west-1.amazonaws.com/po-pub/i/2La7FchkU3SdUtu0Jye5EYNB.png
+feedSettingsScreenSourceFilterExplanation: Sources that you disliked will not be shown in your Discovery Feed anymore.
+# https://s3.eu-west-1.amazonaws.com/po-pub/i/4mf8wCc38GbCr9HFZd1m0T0z.png
+feedSettingsScreenTabCountries: Countries
+# https://s3.eu-west-1.amazonaws.com/po-pub/i/H3e7eBLx4qt6Tj25LtjBnV9M.png
+feedSettingsScreenTabSources: Sources
+feedSettingsScreenSubtitleDislikedSources: Disliked Sources
+settingsSectionHomeFeed: Feed setup

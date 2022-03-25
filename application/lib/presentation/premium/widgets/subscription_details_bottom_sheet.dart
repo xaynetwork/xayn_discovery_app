@@ -5,7 +5,6 @@ import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
-import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
@@ -15,20 +14,24 @@ class SubscriptionDetailsBottomSheet extends BottomSheetBase {
   SubscriptionDetailsBottomSheet({
     Key? key,
     required SubscriptionStatus subscriptionStatus,
+    required String? subscriptionManagementURL,
   }) : super(
           key: key,
           body: _SubscriptionDetails(
             subscriptionStatus: subscriptionStatus,
+            subscriptionManagementURL: subscriptionManagementURL,
           ),
         );
 }
 
 class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   final SubscriptionStatus subscriptionStatus;
+  final String? subscriptionManagementURL;
 
   const _SubscriptionDetails({
     Key? key,
     required this.subscriptionStatus,
+    required this.subscriptionManagementURL,
   }) : super(key: key);
 
   @override
@@ -87,9 +90,6 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
     final footerString = Platform.isIOS
         ? R.strings.subscriptionPlatformInfoApple
         : R.strings.subscriptionPlatformInfoGoogle;
-    final url = Platform.isIOS
-        ? Constants.subscriptionCancelAppleUrl
-        : Constants.subscriptionCancelGoogleUrl;
     return SuperRichText(
       text: footerString,
       maxLines: 2,
@@ -98,7 +98,9 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       othersMarkers: [
         MarkerText.withUrl(
           marker: _kTextPlaceholder,
-          urls: [url],
+          urls: subscriptionManagementURL != null
+              ? [subscriptionManagementURL!]
+              : [],
           style:
               R.styles.dialogBodySmall.copyWith(color: R.colors.primaryAction),
         ),
