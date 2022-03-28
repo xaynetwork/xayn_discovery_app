@@ -1,0 +1,50 @@
+name: Nightly Version Tagging
+
+on:
+  workflow_dispatch:
+  schedule:
+      # https://crontab.guru/#0_18_*_*_1-4
+      - cron: '0 18 0 * 1-4' # At 18:00 on every day-of-week from Monday through Thursday UTC
+
+permissions:
+  contents: read
+
+env:
+  FASTLANE_SKIP_UPDATE_CHECK: '1'
+
+jobs:
+  nightly-tagging:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@3c9b0fc6f2d223b8450b02a0445f526350fc73e0 # v2.3.1
+        with:
+          key: ${{ secrets.SSH }}
+          name: id_rsa_github
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host github.com
+              IdentityFile ~/.ssh/id_rsa_github
+          if_key_exists: replace
+
+      - name: Checkout repository
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2.4.0
+        with:
+          fetch-depth: '0'
+
+      - name: Configure Git
+        shell: bash
+        run: |
+          git config --global user.email "ci@xayn.com"
+          git config --global user.name "ci"
+
+      - name: Create a new tag
+        shell: bash
+        working-directory: ./application
+        run: fastlane increment_nightly_tag
+
+      - name: Push the new tag
+        shell: bash
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.GH_TOKEN }}" -d "{\"ref\": \"refs/tags/$(git describe --abbrev=0 --tags)\",\"sha\": \"$(git rev-parse HEAD)\"}" https://api.github.com/repos/xaynetwork/xayn_discovery_app/git/refs
