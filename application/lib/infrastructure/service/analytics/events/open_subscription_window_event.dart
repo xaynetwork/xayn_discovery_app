@@ -23,4 +23,5 @@ class OpenSubscriptionWindowEvent extends AnalyticsEvent {
 enum SubscriptionWindowCurrentView {
   personalArea,
   settings,
+  feed,
 }
