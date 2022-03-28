@@ -14,7 +14,6 @@ import '../../test_utils/utils.dart';
 part 'country_feed_settings_manager_test.utils.dart';
 
 void main() {
-  late MockFeedSettingsNavActions navActions;
   late MockGetSupportedCountriesUseCase getSupportedCountriesUseCase;
   late MockGetSelectedCountriesUseCase getSelectedCountriesUseCase;
   late MockSaveSelectedCountriesUseCase saveSelectedCountriesUseCase;
@@ -22,7 +21,6 @@ void main() {
   final allCountries = selectedList + unSelectedList;
 
   setUp(() {
-    navActions = MockFeedSettingsNavActions();
     getSupportedCountriesUseCase = MockGetSupportedCountriesUseCase();
     getSelectedCountriesUseCase = MockGetSelectedCountriesUseCase();
     saveSelectedCountriesUseCase = MockSaveSelectedCountriesUseCase();
@@ -61,7 +59,6 @@ void main() {
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
       verifyNoMoreInteractions(getSelectedCountriesUseCase);
       verifyZeroInteractions(saveSelectedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 
@@ -87,8 +84,6 @@ void main() {
       verify(getSupportedCountriesUseCase.singleOutput(none));
       verify(saveSelectedCountriesUseCase.singleOutput({usa, germany}));
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
-
-      verifyZeroInteractions(navActions);
     },
   );
 
@@ -119,7 +114,6 @@ void main() {
         saveSelectedCountriesUseCase.singleOutput({usa}),
       ]);
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 
@@ -142,7 +136,6 @@ void main() {
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
 
       verifyZeroInteractions(saveSelectedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 
@@ -190,7 +183,6 @@ void main() {
       ]);
 
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 }

@@ -222,7 +222,11 @@ lane :check do |options|
   else
     flutter("test --reporter=json > machine.log || echo 'Tests failed'")
   end
-  flutter('pub global run dart_dot_reporter machine.log --show-message')
+  begin
+    flutter('pub global run dart_dot_reporter machine.log --show-message')
+  rescue
+    UI.user_error!("Checks failed!");
+  end
 end
 
 desc "Build and publish to MS AppCenter \n" \
