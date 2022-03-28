@@ -247,6 +247,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
             } else if (event is EngineExceptionRaised) {
               lastResults = engineExceptionRaised(event);
             } else if (event is NextFeedBatchRequestFailed) {
+              self._isLoading = false;
               lastResults = nextFeedBatchRequestFailed(event);
             } else if (event is RestoreFeedFailed) {
               lastResults = restoreFeedFailed(event);
