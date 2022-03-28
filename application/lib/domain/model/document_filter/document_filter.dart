@@ -13,6 +13,10 @@ class DocumentFilter extends Equatable implements DbEntity {
   @override
   final UniqueId id;
 
+  bool get isSource => _type == DocumentFilterType.source;
+  bool get isTopic => _type == DocumentFilterType.topic;
+  String get filterValue => _filter;
+
   const DocumentFilter._({
     required String filter,
     required DocumentFilterType type,
@@ -20,16 +24,20 @@ class DocumentFilter extends Equatable implements DbEntity {
   })  : _type = type,
         _filter = filter;
 
-  factory DocumentFilter.fromSource(String url) {
-    final uri =
-        Uri.parse(url.startsWith(RegExp('http[s]?://')) ? url : "https://$url");
+  factory DocumentFilter.fromSourceUri(Uri uri) {
     if (uri.host.isEmpty) {
-      throw "Must provide a valid host name '$url' can not be parsed";
+      throw "Must provide a valid host name '$uri' can not be parsed";
     }
     return DocumentFilter._(
         filter: uri.host,
         type: DocumentFilterType.source,
         id: UniqueId.fromTrustedString("source:${uri.host}"));
+  }
+
+  factory DocumentFilter.fromSource(String url) {
+    final uri =
+        Uri.parse(url.startsWith(RegExp('http[s]?://')) ? url : "https://$url");
+    return DocumentFilter.fromSourceUri(uri);
   }
 
   factory DocumentFilter.fromTopic(String topic) => DocumentFilter._(

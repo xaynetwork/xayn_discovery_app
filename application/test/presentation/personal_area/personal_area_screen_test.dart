@@ -58,9 +58,8 @@ void main() {
 
       expect(find.byType(AppToolbar), findsOneWidget);
       expect(find.text(R.strings.personalAreaTitle), findsOneWidget);
-      expect(find.byType(CardWidget), findsNWidgets(3));
+      expect(find.byType(CardWidget), findsNWidgets(2));
       expect(find.byKey(Keys.personalAreaCardCollections), findsOneWidget);
-      expect(find.byKey(Keys.personalAreaCardHomeFeed), findsOneWidget);
       expect(find.byKey(Keys.personalAreaCardSettings), findsOneWidget);
     },
   );
@@ -136,16 +135,6 @@ void main() {
 
         await tester.tap(Keys.personalAreaCardCollections.finds());
         verify(manager.onCollectionsNavPressed());
-      },
-    );
-
-    testWidgets(
-      'WHEN clicked on homeFeed THEN call redirected to manager',
-      (final WidgetTester tester) async {
-        await openScreen(tester);
-
-        await tester.tap(Keys.personalAreaCardHomeFeed.finds());
-        verify(manager.onHomeFeedSettingsNavPressed());
       },
     );
 

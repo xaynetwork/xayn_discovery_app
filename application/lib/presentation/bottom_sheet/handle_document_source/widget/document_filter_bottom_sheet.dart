@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
@@ -54,7 +55,11 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
               filters.entries.where((e) => e.value).map((e) => e.key).toSet(),
           onSelectItem: _manager.onFilterTogglePressed,
           getTitle: (e) => e.fold((host) => host, (topic) => topic),
-          getImage: (e) => null,
+          getImage: (e) => e.fold(
+              (host) => buildThumbnailFromFaviconHost(host),
+              (topic) => Thumbnail.assetImage(
+                  R.assets.graphics.formsEmptyCollection,
+                  backgroundColor: R.colors.collectionsScreenCard)),
         );
       }
 

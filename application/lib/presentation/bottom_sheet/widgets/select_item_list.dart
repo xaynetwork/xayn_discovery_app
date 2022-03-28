@@ -1,9 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
 typedef OnSelectItem<T> = void Function(T);
 typedef ItemBuilder<T> = Widget Function(
@@ -55,7 +52,7 @@ class SelectItemList<T> extends StatelessWidget {
 }
 
 typedef GetTitle<T> = String Function(T);
-typedef GetImage<T> = Uint8List? Function(T);
+typedef GetImage<T> = Widget Function(T);
 
 class _ListItem<T> extends StatelessWidget {
   final T item;
@@ -83,12 +80,6 @@ class _ListItem<T> extends StatelessWidget {
     );
 
     final image = getImage(item);
-    final thumbnail = image != null
-        ? Thumbnail.memoryImage(image)
-        : Thumbnail.assetImage(
-            R.assets.graphics.formsEmptyCollection,
-            backgroundColor: R.colors.collectionsScreenCard,
-          );
 
     final collectionName = Text(
       getTitle(item),
@@ -100,7 +91,7 @@ class _ListItem<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        thumbnail,
+        image,
         SizedBox(width: R.dimen.unit2),
         Expanded(child: collectionName),
         Visibility(visible: isSelected, child: check),
