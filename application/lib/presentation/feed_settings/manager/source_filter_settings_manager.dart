@@ -73,8 +73,8 @@ class SourceFilterSettingsManager extends Cubit<SourceFilterSettingsState>
         return state;
       });
 
-  void applyChanges() {
-    _applyDocumentFilterUseCase
+  Future applyChanges() {
+    return _applyDocumentFilterUseCase
         .singleOutput(const ApplyDocumentFilterIn.syncEngineWithDb());
   }
 }

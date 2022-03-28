@@ -29,6 +29,8 @@ abstract class SettingsNavActions {
   void onBackNavPressed();
 
   void onCountriesOptionsPressed();
+
+  void onSourcesOptionsPressed();
 }
 
 @lazySingleton
@@ -162,4 +164,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   void onCountriesOptionsPressed() =>
       _settingsNavActions.onCountriesOptionsPressed();
+
+  @override
+  void onSourcesOptionsPressed() =>
+      _settingsNavActions.onSourcesOptionsPressed();
 }

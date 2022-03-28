@@ -9,6 +9,8 @@ import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 typedef OnCountryPressed = Function(Country country);
@@ -32,7 +34,20 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppToolbar(
+          appToolbarData: AppToolbarData.titleOnly(
+            title: R.strings.feedSettingsScreenTabCountries,
+          ),
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+          child: _buildBody(context),
+        ),
+      );
+
+  Widget _buildBody(BuildContext context) {
     Widget buildReadyState(CountryFeedSettingsStateReady ready) {
       registerTooltip(
         key: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
