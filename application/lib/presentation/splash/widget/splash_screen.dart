@@ -16,12 +16,14 @@ class _SplashScreenState extends State<SplashScreen>
   late final AnimationController _controller;
 
   late final _splashScreenManager = di.get<SplashScreenManager>();
+  late LottieBuilder _lottieBuilder;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
     _controller.addStatusListener(_animationStatusListener);
+    _prepareLottie();
   }
 
   @override
@@ -31,23 +33,25 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: _buildBody());
-
-  Widget _buildBody() => Center(
-        child: Lottie.asset(
-          R.assets.lottie.splashScreenJson(R.brightness),
-          controller: _controller,
-          onLoaded: (composition) {
-            _controller
-              ..duration = composition.duration
-              ..forward();
-          },
-        ),
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(child: _lottieBuilder),
       );
 
   void _animationStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
       _splashScreenManager.onSplashScreenAnimationFinished();
     }
+  }
+
+  void _prepareLottie() {
+    _lottieBuilder = Lottie.asset(
+      R.assets.lottie.splashScreenJson(R.brightness),
+      controller: _controller,
+      onLoaded: (composition) {
+        _controller
+          ..duration = composition.duration
+          ..forward();
+      },
+    );
   }
 }
