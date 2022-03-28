@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -26,6 +25,7 @@ import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
@@ -39,7 +39,8 @@ abstract class SettingsNavActions {
 class SettingsScreenManager extends Cubit<SettingsScreenState>
     with
         UseCaseBlocHelper<SettingsScreenState>,
-        OpenExternalUrlMixin<SettingsScreenState>
+        OpenExternalUrlMixin<SettingsScreenState>,
+        ObserveSubscriptionWindowMixin<SettingsScreenState>
     implements SettingsNavActions {
   final FeatureManager _featureManager;
   final GetAppVersionUseCase _getAppVersionUseCase;
@@ -126,19 +127,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void shareApp() => _shareUriUseCase.call(Uri.parse(Constants.downloadUrl));
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
-
-  void onSubscriptionWindowOpened() {
-    _sendAnalyticsUseCase(
-      OpenSubscriptionWindowEvent(
-        currentView: SubscriptionWindowCurrentView.settings,
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void onSubscriptionWindowClosed() {
-    // TODO: implement this
-  }
 
   Future<void> onSubscriptionCancelTapped() async {
     final subscriptionManagementUrl =

@@ -4,6 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -109,11 +110,15 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
       trialEndDate: trialEndDate,
       onPressed: () {
-        _manager.onSubscriptionWindowOpened();
+        _manager.onSubscriptionWindowOpened(
+          currentView: SubscriptionWindowCurrentView.personalArea,
+        );
         showAppBottomSheet(
           context,
           builder: (_) => PaymentBottomSheet(
-            onClosePressed: _manager.onSubscriptionWindowClosed,
+            onClosePressed: () => _manager.onSubscriptionWindowClosed(
+              currentView: SubscriptionWindowCurrentView.personalArea,
+            ),
           ),
         );
       });

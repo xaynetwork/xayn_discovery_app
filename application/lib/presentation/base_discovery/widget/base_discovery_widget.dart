@@ -5,6 +5,7 @@ import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
@@ -301,11 +302,15 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   }
 
   void _showPaymentBottomSheet() {
-    manager.onSubscriptionWindowOpened();
+    manager.onSubscriptionWindowOpened(
+      currentView: SubscriptionWindowCurrentView.feed,
+    );
     showAppBottomSheet(
       context,
       builder: (_) => PaymentBottomSheet(
-        onClosePressed: manager.onSubscriptionWindowClosed,
+        onClosePressed: () => manager.onSubscriptionWindowClosed(
+          currentView: SubscriptionWindowCurrentView.feed,
+        ),
       ),
     );
   }

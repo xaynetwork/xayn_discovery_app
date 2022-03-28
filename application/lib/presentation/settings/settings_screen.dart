@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -203,11 +204,15 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       );
     } else if (subscriptionStatus.isFreeTrialActive) {
-      _manager.onSubscriptionWindowOpened();
+      _manager.onSubscriptionWindowOpened(
+        currentView: SubscriptionWindowCurrentView.settings,
+      );
       showAppBottomSheet(
         context,
         builder: (_) => PaymentBottomSheet(
-          onClosePressed: _manager.onSubscriptionWindowClosed,
+          onClosePressed: () => _manager.onSubscriptionWindowClosed(
+            currentView: SubscriptionWindowCurrentView.settings,
+          ),
         ),
       );
     }

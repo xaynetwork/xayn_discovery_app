@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
@@ -21,6 +20,7 @@ import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -43,7 +43,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     with
         UseCaseBlocHelper<DiscoveryState>,
         ObserveDocumentMixin<DiscoveryState>,
-        ChangeUserReactionMixin<DiscoveryState> {
+        ChangeUserReactionMixin<DiscoveryState>,
+        ObserveSubscriptionWindowMixin<DiscoveryState> {
   final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
@@ -298,19 +299,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         context: FeedbackContext.implicit,
       );
     }
-  }
-
-  void onSubscriptionWindowOpened() {
-    sendAnalyticsUseCase(
-      OpenSubscriptionWindowEvent(
-        currentView: SubscriptionWindowCurrentView.feed,
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void onSubscriptionWindowClosed() {
-    // TODO: implement this
   }
 }
 
