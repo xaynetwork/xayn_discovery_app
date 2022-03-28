@@ -109,10 +109,12 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
       trialEndDate: trialEndDate,
       onPressed: () {
-        _manager.onTrialBannerTapped();
+        _manager.onSubscriptionWindowOpened();
         showAppBottomSheet(
           context,
-          builder: (_) => PaymentBottomSheet(),
+          builder: (_) => PaymentBottomSheet(
+            onClosePressed: _manager.onSubscriptionWindowClosed,
+          ),
         );
       });
 

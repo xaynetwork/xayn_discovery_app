@@ -11,14 +11,19 @@ import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.da
 class PaymentBottomSheet extends BottomSheetBase {
   PaymentBottomSheet({
     Key? key,
+    required VoidCallback onClosePressed,
   }) : super(
           key: key,
-          body: _Payment(),
+          body: _Payment(onClosePressed),
+          onSystemPop: onClosePressed,
         );
 }
 
 class _Payment extends StatelessWidget with BottomSheetBodyMixin {
   late final manager = di.get<PaymentScreenManager>();
+  final VoidCallback onClosePressed;
+
+  _Payment(this.onClosePressed);
 
   @override
   Widget build(BuildContext context) =>
@@ -46,6 +51,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
     state.whenOrNull(ready: (product, _) {
       if (product.status.isPurchased || product.status.isRestored) {
         closeBottomSheet(context);
+        onClosePressed();
       }
     });
   }
@@ -71,6 +77,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
         onCancel: () {
           manager.cancel();
           closeBottomSheet(context);
+          onClosePressed();
         },
         padding: EdgeInsets.zero,
       );

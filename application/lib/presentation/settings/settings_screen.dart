@@ -203,9 +203,12 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       );
     } else if (subscriptionStatus.isFreeTrialActive) {
+      _manager.onSubscriptionWindowOpened();
       showAppBottomSheet(
         context,
-        builder: (_) => PaymentBottomSheet(),
+        builder: (_) => PaymentBottomSheet(
+          onClosePressed: _manager.onSubscriptionWindowClosed,
+        ),
       );
     }
   }

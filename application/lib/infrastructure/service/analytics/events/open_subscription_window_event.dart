@@ -2,20 +2,20 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 
 const String _kEventType = 'openSubscriptionWindow';
 const String _kParamCurrentView = 'currentView';
-const String _kParamArguments = 'arguments';
+const String _kParamDurationInSeconds = 'duration';
 
 /// An [AnalyticsEvent] which tracks when subsciption window is open.
 /// - [currentView] is the name of the screen that was navigated from.
-/// - [arguments] are optional screen parameters.
+/// - [duration] indicates the amount of time spent
 class OpenSubscriptionWindowEvent extends AnalyticsEvent {
   OpenSubscriptionWindowEvent({
     required SubscriptionWindowCurrentView currentView,
-    Object? arguments,
+    required Duration duration,
   }) : super(
           _kEventType,
           properties: {
             _kParamCurrentView: currentView.name,
-            if (arguments != null) _kParamArguments: arguments,
+            _kParamDurationInSeconds: duration.inSeconds,
           },
         );
 }

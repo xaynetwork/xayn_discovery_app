@@ -65,12 +65,17 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
     });
   }
 
-  void onTrialBannerTapped() {
+  void onSubscriptionWindowOpened() {
     _sendAnalyticsUseCase(
       OpenSubscriptionWindowEvent(
         currentView: SubscriptionWindowCurrentView.personalArea,
+        duration: Duration(seconds: 1),
       ),
     );
+  }
+
+  void onSubscriptionWindowClosed() {
+    // TODO: implement this
   }
 
   @override

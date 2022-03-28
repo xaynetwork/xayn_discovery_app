@@ -301,10 +301,12 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   }
 
   void _showPaymentBottomSheet() {
-    manager.onTrialBannerTapped();
+    manager.onSubscriptionWindowOpened();
     showAppBottomSheet(
       context,
-      builder: (_) => PaymentBottomSheet(),
+      builder: (_) => PaymentBottomSheet(
+        onClosePressed: manager.onSubscriptionWindowClosed,
+      ),
     );
   }
 }

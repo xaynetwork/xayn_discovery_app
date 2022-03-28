@@ -127,12 +127,17 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
-  void onTrialBannerTapped() {
+  void onSubscriptionWindowOpened() {
     _sendAnalyticsUseCase(
       OpenSubscriptionWindowEvent(
         currentView: SubscriptionWindowCurrentView.settings,
+        duration: Duration(seconds: 1),
       ),
     );
+  }
+
+  void onSubscriptionWindowClosed() {
+    // TODO: implement this
   }
 
   Future<void> onSubscriptionCancelTapped() async {

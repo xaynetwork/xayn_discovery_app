@@ -300,12 +300,17 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     }
   }
 
-  void onTrialBannerTapped() {
+  void onSubscriptionWindowOpened() {
     sendAnalyticsUseCase(
       OpenSubscriptionWindowEvent(
         currentView: SubscriptionWindowCurrentView.feed,
+        duration: Duration(seconds: 1),
       ),
     );
+  }
+
+  void onSubscriptionWindowClosed() {
+    // TODO: implement this
   }
 }
 
