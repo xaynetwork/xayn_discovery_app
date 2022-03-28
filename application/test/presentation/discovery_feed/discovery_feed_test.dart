@@ -67,6 +67,8 @@ void main() async {
 
   final fakeDocumentA = createFakeDocument();
   final fakeDocumentB = createFakeDocument();
+  final fakeDocumentC = createFakeDocument();
+  final fakeDocumentD = createFakeDocument();
 
   setUp(() async {
     eventsController = StreamController<EngineEvent>();
@@ -100,12 +102,17 @@ void main() async {
 
       return Future.value(event);
     });
+    when(mockDiscoveryEngine.closeFeedDocuments(any))
+        .thenAnswer((_) async => const EngineEvent.clientEventSucceeded());
     when(getSubscriptionStatusUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(getSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
     when(mockDiscoveryEngine.requestNextFeedBatch()).thenAnswer(
-        (realInvocation) async => const EngineEvent.clientEventSucceeded());
+        (realInvocation) async => EngineEvent.nextFeedBatchRequestSucceeded([
+              fakeDocumentC,
+              fakeDocumentD,
+            ]));
 
     await configureTestDependencies();
 
@@ -139,6 +146,7 @@ void main() async {
     verify: (manager) {
       verifyInOrder([
         mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.closeFeedDocuments(any),
         mockDiscoveryEngine.restoreFeed(),
         mockDiscoveryEngine.engineEvents,
         mockDiscoveryEngine.requestNextFeedBatch(),
@@ -182,7 +190,7 @@ void main() async {
       DiscoveryState(
         results: {fakeDocumentA, fakeDocumentB},
         cardIndex: 1,
-        isComplete: true,
+        isComplete: false,
         isFullScreen: false,
         isInErrorState: false,
         didReachEnd: false,
@@ -287,7 +295,7 @@ void main() async {
       DiscoveryState(
         results: {fakeDocumentA, fakeDocumentB},
         cardIndex: 0,
-        isComplete: true,
+        isComplete: false,
         isFullScreen: true,
         isInErrorState: false,
         shouldUpdateNavBar: true,
