@@ -55,12 +55,6 @@ extension WidgetTesterCommonActions on WidgetTester {
     await pumpAndSettle();
   }
 
-  Future<void> navigateToFeedSettings() async {
-    await pumpAndSettle();
-    await tap(Keys.personalAreaCardHomeFeed.finds());
-    await pumpAndSettle();
-  }
-
   Future<void> navigateToSettingsScreen() async {
     await pumpAndSettle();
     final settingsCard = Keys.personalAreaCardSettings.finds();

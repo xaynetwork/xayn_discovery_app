@@ -57,7 +57,6 @@ import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -86,9 +85,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   ExtractLogUseCase,
   FeatureManager,
   FeedMarketToDbEntityMapMapper,
-  FeedSettingsManager,
   FeedSettingsMapper,
-  FeedSettingsNavActions,
   FeedSettingsRepository,
   FeedTypeMarketsRepository,
   GetAppSessionUseCase,
