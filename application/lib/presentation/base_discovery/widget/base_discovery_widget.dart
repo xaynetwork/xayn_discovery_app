@@ -149,10 +149,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       if (state.cardIndex < totalResults &&
           _cardViewController.index != state.cardIndex) {
         _cardViewController.index = state.cardIndex;
-        // from now on, we only want direct index updates
-        // the very first index change, is for when the feed runs right
-        // after startup, and is actualized with a new news batch.
-        _cardViewController.jumpBehavior = JumpBehavior.direct;
       }
 
       onIndexChanged(int index) {
