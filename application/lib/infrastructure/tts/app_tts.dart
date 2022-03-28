@@ -1,8 +1,11 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_service.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 
 @Injectable(as: TtsService)
+@releaseEnvironment
+@debugEnvironment
 class AppTtsService implements TtsService {
   late final _impl = FlutterTts();
 
@@ -29,4 +32,38 @@ class AppTtsService implements TtsService {
 
   @override
   Future stop() => _impl.stop();
+}
+
+@Injectable(as: TtsService)
+@test
+class TestAppTtsService implements TtsService {
+  @override
+  Future awaitSpeakCompletion(bool awaitCompletion) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future isLanguageAvailable(String language) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future setLanguage(String language) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future setVolume(double volume) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future speak(String text) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future stop() {
+    throw UnimplementedError();
+  }
 }
