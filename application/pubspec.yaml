@@ -79,7 +79,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: dbbc43d9a39940a5e705ed31c7204e6bcf72f6bc
+      ref: 3a767c88eefb8dee32e64a632d8c88d4cfd9fd04
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -169,28 +169,29 @@ flutter:
     # icons
     - packages/xayn_design/assets/icons/arrow_down.svg
     - packages/xayn_design/assets/icons/arrow_right.svg
+    - packages/xayn_design/assets/icons/bookmark.svg
+    - packages/xayn_design/assets/icons/bookmark_active.svg
+    - packages/xayn_design/assets/icons/check.svg
     - packages/xayn_design/assets/icons/diamond.svg
+    - packages/xayn_design/assets/icons/font_size.svg
+    - packages/xayn_design/assets/icons/globe.svg
+    - packages/xayn_design/assets/icons/moon.svg
+    - packages/xayn_design/assets/icons/moon_and_sun.svg
+    - packages/xayn_design/assets/icons/move.svg
+    - packages/xayn_design/assets/icons/plus.svg
+    - packages/xayn_design/assets/icons/premium_decoration.svg
     - packages/xayn_design/assets/icons/search.svg
     - packages/xayn_design/assets/icons/share_android.svg
     - packages/xayn_design/assets/icons/share_ios.svg
     - packages/xayn_design/assets/icons/shield.svg
+    - packages/xayn_design/assets/icons/sun.svg
+    - packages/xayn_design/assets/icons/text.svg
+    - packages/xayn_design/assets/icons/text_large_font.svg
+    - packages/xayn_design/assets/icons/text_medium_font.svg
+    - packages/xayn_design/assets/icons/text_sans.svg
+    - packages/xayn_design/assets/icons/text_serif.svg
+    - packages/xayn_design/assets/icons/text_small_font.svg
     - packages/xayn_design/assets/icons/thumbs_down.svg
     - packages/xayn_design/assets/icons/thumbs_down_active.svg
     - packages/xayn_design/assets/icons/thumbs_up.svg
     - packages/xayn_design/assets/icons/thumbs_up_active.svg
-    - packages/xayn_design/assets/icons/moon_and_sun.svg
-    - packages/xayn_design/assets/icons/move.svg
-    - packages/xayn_design/assets/icons/moon.svg
-    - packages/xayn_design/assets/icons/sun.svg
-    - packages/xayn_design/assets/icons/bookmark.svg
-    - packages/xayn_design/assets/icons/bookmark_active.svg
-    - packages/xayn_design/assets/icons/plus.svg
-    - packages/xayn_design/assets/icons/check.svg
-    - packages/xayn_design/assets/icons/globe.svg
-    - packages/xayn_design/assets/icons/premium_decoration.svg
-    - packages/xayn_design/assets/icons/text.svg
-    - packages/xayn_design/assets/icons/text_large_font.svg
-    - packages/xayn_design/assets/icons/text_medium_font.svg
-    - packages/xayn_design/assets/icons/text_small_font.svg
-    - packages/xayn_design/assets/icons/text_sans.svg
-    - packages/xayn_design/assets/icons/text_serif.svg
