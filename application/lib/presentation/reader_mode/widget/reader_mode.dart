@@ -181,11 +181,14 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
   }
 
   TextStyle _getReaderModeStyle(ReaderModeSettings settings) {
-    final fontSize = settings.fontSize.textStyle;
-    final fontStyle = settings.fontStyle.textStyle;
-    final readerModeTextStyle = fontSize.merge(fontStyle);
+    final fontSize = settings.fontSizeParam.size;
+    final fontHeight = settings.fontSizeParam.height / fontSize;
     final textColor = settings.backgroundColor.textColor;
-    return readerModeTextStyle.copyWith(color: textColor);
+    return settings.fontStyle.textStyle.copyWith(
+      color: textColor,
+      fontSize: fontSize,
+      height: fontHeight,
+    );
   }
 
   String _getHtmlColorString(ReaderModeSettings settings) {
