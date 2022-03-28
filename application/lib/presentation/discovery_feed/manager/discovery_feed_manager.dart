@@ -238,7 +238,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
             lastEvent = event;
 
             if (event is RestoreFeedSucceeded) {
-              self._isLoading = false;
               lastResults = restoreFeedSucceeded(event);
             } else if (event is NextFeedBatchRequestSucceeded) {
               self._isLoading = false;
@@ -250,7 +249,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
             } else if (event is NextFeedBatchRequestFailed) {
               lastResults = nextFeedBatchRequestFailed(event);
             } else if (event is RestoreFeedFailed) {
-              self._isLoading = false;
               lastResults = restoreFeedFailed(event);
             } else {
               lastResults = orElse();

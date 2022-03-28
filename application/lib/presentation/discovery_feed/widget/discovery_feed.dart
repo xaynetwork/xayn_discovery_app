@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -40,15 +39,7 @@ class _DiscoveryFeedState
 
   @override
   void initState() {
-    _manager = di.get()
-      ..getSession().then(
-        (session) =>
-            // we only want an animated index change on initial startup,
-            // when actualizing the feed with the latest batch elements
-            cardViewController.jumpBehavior = session.didRequestFeed
-                ? JumpBehavior.direct
-                : JumpBehavior.animated,
-      );
+    _manager = di.get();
 
     super.initState();
   }
