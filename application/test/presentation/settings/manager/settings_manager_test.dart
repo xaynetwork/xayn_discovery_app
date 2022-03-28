@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
@@ -38,7 +39,6 @@ void main() {
     isTtsEnabled: true,
     isPaymentEnabled: false,
     subscriptionStatus: subscriptionStatus,
-    subscriptionManagementURL: subscriptionManagementURL,
   );
 
   late MockFeatureManager featureManager;
@@ -58,6 +58,7 @@ void main() {
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockGetSubscriptionManagementUrlUseCase
       getSubscriptionManagementUrlUseCase;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -77,6 +78,7 @@ void main() {
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     getSubscriptionManagementUrlUseCase =
         MockGetSubscriptionManagementUrlUseCase();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -134,6 +136,7 @@ void main() {
         getSubscriptionStatusUseCase,
         listenSubscriptionStatusUseCase,
         getSubscriptionManagementUrlUseCase,
+        sendAnalyticsUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
@@ -321,6 +324,30 @@ void main() {
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
       verifyNoMoreInteractions(bugReportingService);
+    },
+  );
+
+  test(
+    'GIVEN subscription cancel is tapped THEN analytics event is sent',
+    () async {
+      when(sendAnalyticsUseCase.call(any)).thenAnswer(
+        (_) async => [
+          UseCaseResult.success(
+            SubscriptionActionEvent(
+              action: SubscriptionAction.unsubscribe,
+            ),
+          ),
+        ],
+      );
+      final manager = create();
+      await manager.onSubscriptionCancelTapped();
+
+      verifyInOrder([
+        sendAnalyticsUseCase.call(any),
+        urlOpener.openUrl(subscriptionManagementURL),
+      ]);
+      verifyNoMoreInteractions(sendAnalyticsUseCase);
+      verifyNoMoreInteractions(urlOpener);
     },
   );
 }

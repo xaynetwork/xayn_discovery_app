@@ -10,28 +10,30 @@ import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 const String _kTextPlaceholder = '__';
 
+typedef OnSubscriptionCancelTapped = Function();
+
 class SubscriptionDetailsBottomSheet extends BottomSheetBase {
   SubscriptionDetailsBottomSheet({
     Key? key,
     required SubscriptionStatus subscriptionStatus,
-    required String? subscriptionManagementURL,
+    required OnSubscriptionCancelTapped onSubscriptionCancelTapped,
   }) : super(
           key: key,
           body: _SubscriptionDetails(
             subscriptionStatus: subscriptionStatus,
-            subscriptionManagementURL: subscriptionManagementURL,
+            onSubscriptionCancelTapped: onSubscriptionCancelTapped,
           ),
         );
 }
 
 class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   final SubscriptionStatus subscriptionStatus;
-  final String? subscriptionManagementURL;
+  final OnSubscriptionCancelTapped onSubscriptionCancelTapped;
 
   const _SubscriptionDetails({
     Key? key,
     required this.subscriptionStatus,
-    required this.subscriptionManagementURL,
+    required this.onSubscriptionCancelTapped,
   }) : super(key: key);
 
   @override
@@ -96,11 +98,9 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       overflow: TextOverflow.ellipsis,
       style: R.styles.dialogBodySmall,
       othersMarkers: [
-        MarkerText.withUrl(
+        MarkerText.withFunction(
           marker: _kTextPlaceholder,
-          urls: subscriptionManagementURL != null
-              ? [subscriptionManagementURL!]
-              : [],
+          functions: [onSubscriptionCancelTapped],
           style:
               R.styles.dialogBodySmall.copyWith(color: R.colors.primaryAction),
         ),

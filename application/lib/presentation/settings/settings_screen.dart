@@ -82,7 +82,6 @@ class _SettingsScreenState extends State<SettingsScreen>
       if (state.isPaymentEnabled && buildSubscriptionSection)
         _buildSubscriptionSection(
           subscriptionStatus: state.subscriptionStatus,
-          subscriptionManagementURL: state.subscriptionManagementURL,
         ),
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
@@ -107,13 +106,11 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildSubscriptionSection({
     required SubscriptionStatus subscriptionStatus,
-    required String? subscriptionManagementURL,
   }) =>
       SubscriptionSection(
         subscriptionStatus: subscriptionStatus,
         onPressed: () => _onSubscriptionSectionPressed(
           subscriptionStatus: subscriptionStatus,
-          subscriptionManagementURL: subscriptionManagementURL,
         ),
       );
 
@@ -196,14 +193,13 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   void _onSubscriptionSectionPressed({
     required SubscriptionStatus subscriptionStatus,
-    required String? subscriptionManagementURL,
   }) {
     if (subscriptionStatus.isSubscriptionActive) {
       showAppBottomSheet(
         context,
         builder: (_) => SubscriptionDetailsBottomSheet(
           subscriptionStatus: subscriptionStatus,
-          subscriptionManagementURL: subscriptionManagementURL,
+          onSubscriptionCancelTapped: () => _manager.onSubscriptionCancelTapped,
         ),
       );
     } else if (subscriptionStatus.isFreeTrialActive) {

@@ -107,12 +107,14 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   }
 
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
-        trialEndDate: trialEndDate,
-        onPressed: () => showAppBottomSheet(
+      trialEndDate: trialEndDate,
+      onPressed: () {
+        _manager.onTrialBannerTapped();
+        showAppBottomSheet(
           context,
           builder: (_) => PaymentBottomSheet(),
-        ),
-      );
+        );
+      });
 
   CardWidget _buildCollection() => CardWidget(
         cardData: CardData.personalArea(
