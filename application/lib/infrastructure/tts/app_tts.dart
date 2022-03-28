@@ -34,36 +34,39 @@ class AppTtsService implements TtsService {
   Future stop() => _impl.stop();
 }
 
+/// For actual tests, use a MockTtsService, this stub is just there because
+/// of an issue with Windows, where Platform dependencies are not
+/// being overridden.
 @Injectable(as: TtsService)
 @test
 class TestAppTtsService implements TtsService {
   @override
-  Future awaitSpeakCompletion(bool awaitCompletion) {
-    throw UnimplementedError();
+  Future awaitSpeakCompletion(bool awaitCompletion) async {
+    // do nothing
   }
 
   @override
-  Future isLanguageAvailable(String language) {
-    throw UnimplementedError();
+  Future isLanguageAvailable(String language) async {
+    // do nothing
   }
 
   @override
-  Future setLanguage(String language) {
-    throw UnimplementedError();
+  Future setLanguage(String language) async {
+    // do nothing
   }
 
   @override
-  Future setVolume(double volume) {
-    throw UnimplementedError();
+  Future setVolume(double volume) async {
+    // do nothing
   }
 
   @override
-  Future speak(String text) {
-    throw UnimplementedError();
+  Future speak(String text) async {
+    // do nothing
   }
 
   @override
-  Future stop() {
-    throw UnimplementedError();
+  Future stop() async {
+    // do nothing
   }
 }
