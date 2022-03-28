@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/tts/manager/tts_state.dart';
 
 /// Singleton because TTS is a native bridge, we basically communicate with a
 /// single-instance TTS there.
-@singleton
+@lazySingleton
 class TtsManager extends Cubit<TtsState> with UseCaseBlocHelper<TtsState> {
   final TextToSpeechUseCase _textToSpeechUseCase;
   final ExtractParagraphsUseCase _extractParagraphsUseCase;
@@ -25,7 +25,7 @@ class TtsManager extends Cubit<TtsState> with UseCaseBlocHelper<TtsState> {
 
   @override
   Future<void> close() async {
-    await _textToSpeechUseCase.stopCurrentSpeech();
+    await stop();
 
     return super.close();
   }
