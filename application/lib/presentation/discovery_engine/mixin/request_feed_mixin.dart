@@ -88,20 +88,20 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     onRestore(EngineEvent it) => it is RestoreFeedSucceeded
         ? it.items.map((it) => it.documentId).toSet()
         : const <DocumentId>{};
-    onPartition(Set<DocumentId> it) async {
+    onCloseOldDocuments(Set<DocumentId> it) async {
       final lastKnownFeedIndex =
           await fetchCardIndexUseCase.singleOutput(FeedType.feed);
+      var index = 0;
 
-      return it.partition((index) =>
-          index < lastKnownFeedIndex || index > lastKnownFeedIndex + 1);
-    }
+      for (var i in it) {
+        if (index != lastKnownFeedIndex) {
+          await _closeExplicitFeedback({i});
+        }
 
-    onCloseHeadAndReturnTail(_PartitionedIterable<DocumentId> it) async {
-      if (it.head.isNotEmpty) {
-        await _closeExplicitFeedback(it.head.toSet());
+        index++;
       }
 
-      return it.tail;
+      return none;
     }
 
     onError(Object e, StackTrace? s) =>
@@ -113,16 +113,13 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
               .take(1)
               .mapTo(none)
               .followedBy(requestFeedUseCase)
-              .doOnData(onResetParameters(0))
               .map(onRestore)
-              .asyncMap(onPartition)
-              .asyncMap(onCloseHeadAndReturnTail)
+              .asyncMap(onCloseOldDocuments)
               .doOnData(_preambleCompleter.complete)
-              .mapTo(none)
               .followedBy(requestFeedUseCase)
               .mapTo(none)
               .followedBy(requestNextFeedBatchUseCase)
-              .doOnData(onResetParameters(2)),
+              .doOnData(onResetParameters(1)),
         )
         .autoSubscribe(onError: onError);
   }
@@ -165,32 +162,5 @@ mixin RequestFeedMixin<T> on UseCaseBlocHelper<T> {
     }
 
     await closeDocumentsUseCase(documents);
-  }
-}
-
-class _PartitionedIterable<T> {
-  final Iterable<T> head, tail;
-
-  const _PartitionedIterable({
-    required this.head,
-    required this.tail,
-  });
-}
-
-extension _IterableExtension<T> on Iterable<T> {
-  _PartitionedIterable<T> partition(bool Function(int) shiftToHead) {
-    final head = <T>[], tail = <T>[];
-
-    for (var i = 0, len = length; i < len; i++) {
-      final item = elementAt(i);
-
-      if (shiftToHead(i)) {
-        head.add(item);
-      } else {
-        tail.add(item);
-      }
-    }
-
-    return _PartitionedIterable(head: head, tail: tail);
   }
 }
