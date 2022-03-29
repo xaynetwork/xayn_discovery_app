@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -19,12 +20,14 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
     required Document document,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
+    OnTtsData? onTtsData,
   }) : super(
           key: key,
           isPrimary: isPrimary,
           document: document,
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
+          onTtsData: onTtsData,
         );
 
   @override
@@ -33,22 +36,6 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
 
 class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
     with OnBookmarkChangedMixin<DiscoveryFeedCard> {
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.isPrimary) _readHeadlineAloud();
-  }
-
-  @override
-  void didUpdateWidget(DiscoveryFeedCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.isPrimary && widget.isPrimary != oldWidget.isPrimary) {
-      _readHeadlineAloud(forceStart: true);
-    }
-  }
-
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
@@ -77,9 +64,22 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
             ? UserReaction.neutral
             : UserReaction.negative,
       ),
-      onOpenUrl: () => discoveryCardManager.openWebResourceUrl(
-        widget.document,
-        CurrentView.story,
+      onOpenUrl: () {
+        widget.onTtsData?.call(TtsData.disabled());
+
+        discoveryCardManager.openWebResourceUrl(
+          widget.document,
+          CurrentView.story,
+        );
+      },
+      onToggleTts: () => widget.onTtsData?.call(
+        TtsData(
+          enabled: true,
+          languageCode: widget.document.resource.language,
+          uri: widget.document.resource.url,
+          html: discoveryCardManager
+              .state.processedDocument?.processHtmlResult.contents,
+        ),
       ),
       onBookmarkPressed: onBookmarkPressed,
       onBookmarkLongPressed: onBookmarkLongPressed(state),
@@ -100,12 +100,4 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
       onBookmarkChanged(state);
-
-  void _readHeadlineAloud({bool forceStart = false}) =>
-      discoveryCardManager.handleSpeechStart(
-        headline: widget.document.resource.title,
-        languageCode: widget.document.resource.language,
-        uri: widget.document.resource.url,
-        forceStart: forceStart,
-      );
 }

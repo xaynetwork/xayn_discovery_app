@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/apply_document_filter_in.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/apply_document_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/handle_document_source/manager/document_filter_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/manager/document_filter_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @injectable
@@ -41,7 +41,8 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
         handler,
         errorReport,
       ) {
-        var filter = DocumentFilter.fromSource(_document.resource.sourceDomain);
+        final filter =
+            DocumentFilter.fromSource(_document.resource.sourceDomain);
         final list = (getAll ?? handler)?.mapOrNull(list: (v) => v.value) ?? [];
         list.removeWhere(
           (element) =>
@@ -60,13 +61,14 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
 
   void onFilterTogglePressed(DocumentFilter filter) {
     scheduleComputeState(() {
-      final value = state.filters[filter]!;
+      final value = state.filters[filter] ?? false;
       _pendingChanges[filter] = !value;
     });
   }
 
-  void onApplyChangesPressed() {
-    _applyDocumentFilterUseCase.singleOutput(
+  // Future is only passed for tests
+  Future onApplyChangesPressed() {
+    return _applyDocumentFilterUseCase.singleOutput(
         ApplyDocumentFilterIn.applyChangesToDbAndEngine(
             changes: _pendingChanges));
   }

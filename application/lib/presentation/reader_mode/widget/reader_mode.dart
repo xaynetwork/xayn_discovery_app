@@ -139,16 +139,6 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
 
-            final contents = result.contents;
-
-            if (contents != null && contents.isNotEmpty) {
-              _readerModeManager.handleSpeechStart(
-                languageCode: widget.languageCode,
-                uri: widget.uri,
-                html: contents,
-              );
-            }
-
             return _onProcessedHtml(result);
           },
           onScroll: widget.onScroll,
