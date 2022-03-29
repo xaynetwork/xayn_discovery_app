@@ -16,7 +16,7 @@ class ReaderModeSettingsMenuDisplayedEvent extends AnalyticsEvent {
           _kEventType,
           properties: {
             _kParamIsVisible: isVisible,
-            _kParamFeedType: feedType,
+            _kParamFeedType: feedType.name,
           },
         );
 }
