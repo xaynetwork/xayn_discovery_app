@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -28,6 +30,8 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
     with NavBarConfigMixin, ErrorHandlingMixin {
   late final DiscoveryCardScreenManager _discoveryCardScreenManager =
       di.get(param1: widget.documentId);
+
+  TtsData ttsData = TtsData.disabled();
 
   @override
   void initState() {
@@ -70,17 +74,20 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
     final topPadding = MediaQuery.of(context).viewPadding.top;
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: topPadding),
-        child:
-            BlocConsumer<DiscoveryCardScreenManager, DiscoveryCardScreenState>(
-          listener: checkForError,
-          builder: (context, state) => state.map(
-            populated: (v) => _createCard(v.document),
-            initial: (_) => Container(),
-            error: (_) => Container(),
+      body: Tts(
+        data: ttsData,
+        child: Padding(
+          padding: EdgeInsets.only(top: topPadding),
+          child: BlocConsumer<DiscoveryCardScreenManager,
+              DiscoveryCardScreenState>(
+            listener: checkForError,
+            builder: (context, state) => state.map(
+              populated: (v) => _createCard(v.document),
+              initial: (_) => Container(),
+              error: (_) => Container(),
+            ),
+            bloc: _discoveryCardScreenManager,
           ),
-          bloc: _discoveryCardScreenManager,
         ),
       ),
     );
@@ -101,6 +108,8 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       document: document,
       discoveryCardManager: cardManagers.discoveryCardManager,
       imageManager: cardManagers.imageManager,
+      onTtsData: (it) =>
+          setState(() => ttsData = ttsData.enabled ? TtsData.disabled() : it),
     );
   }
 }

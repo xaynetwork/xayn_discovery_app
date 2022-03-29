@@ -209,7 +209,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     );
   }
 
-  void resetCardIndex() => _cardIndex = 0;
+  void resetCardIndex([int nextCardIndex = 0]) => _cardIndex = nextCardIndex;
 
   void resetObservedDocument() => _observedDocument = null;
 
