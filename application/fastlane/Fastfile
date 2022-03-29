@@ -57,6 +57,7 @@ before_all do |lane, options|
   build_number = gitVersionNumber().to_i + offset
   setIfNotSet.call(Options::BUILD_NUMBER, build_number)
   setIfNotSet.call(Options::VERSION_NAME, version_name)
+  setIfNotSet.call(Options::STORE, flavor == Flavors::BETA)
   options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
   options[_Options::ENV].merge!(ENV.to_h)
@@ -253,12 +254,22 @@ lane :publish do |options|
   if options[Options::UPLOAD_TO_APPCENTER]
     UI.success "Will upload file #{appcenter_buildfile}"
     UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
-    uploadToAppCenter(
-      ENV[appcenter_token],
-      appcenter_target,
-      appcenter_buildfile,
-      options[Options::VERSION_NAME]
-    )
+
+    if options[Options::STORE]
+      uploadToStore(
+        ENV[appcenter_token],
+        appcenter_target,
+        appcenter_buildfile,
+        options[Options::VERSION_NAME]
+      )
+    else
+      uploadToAppCenter(
+        ENV[appcenter_token],
+        appcenter_target,
+        appcenter_buildfile,
+        options[Options::VERSION_NAME]
+      )
+    end
   end
 end
 
@@ -324,6 +335,21 @@ def uploadToAppCenter(token, appName, path, version)
     file: path,
     release_notes: changelog,
     destinations: Config::APPCENTER_DEFAULT_TARGET,
+    notify_testers: true,
+  )
+end
+
+def uploadToStore(token, appName, path, version)
+  changelog = gitChangeLog(version)
+  appcenter_upload(
+    api_token: token,
+    owner_name: Config::APPCENTER_OWNER_NAME,
+    owner_type: Config::APPCENTER_OWNER_TYPE,
+    app_name: appName,
+    file: path,
+    release_notes: changelog,
+    destinations: Config::APPCENTER_DEFAULT_STORE,
+    destination_type: 'store',
     notify_testers: true,
   )
 end
