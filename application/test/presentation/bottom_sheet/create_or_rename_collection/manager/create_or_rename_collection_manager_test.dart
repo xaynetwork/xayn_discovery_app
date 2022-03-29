@@ -2,8 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_renamed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_manager.dart';
@@ -16,11 +19,13 @@ import 'create_or_rename_collection_manager_test.mocks.dart';
   CreateCollectionUseCase,
   RenameCollectionUseCase,
   CollectionErrorsEnumMapper,
+  SendAnalyticsUseCase,
 ])
 void main() {
   late MockCreateCollectionUseCase createCollectionUseCase;
   late MockRenameCollectionUseCase renameCollectionUseCase;
   late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late CreateOrRenameCollectionState populatedState;
   late CreateOrRenameCollectionManager createOrRenameCollectionManager;
 
@@ -36,6 +41,7 @@ void main() {
     createCollectionUseCase = MockCreateCollectionUseCase();
     renameCollectionUseCase = MockRenameCollectionUseCase();
     collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     populatedState = CreateOrRenameCollectionState.populateCollectionName('');
 
     when(createCollectionUseCase.transform(any))
@@ -54,6 +60,7 @@ void main() {
       createCollectionUseCase,
       collectionErrorsEnumMapper,
       renameCollectionUseCase,
+      sendAnalyticsUseCase,
     );
   });
 
@@ -120,6 +127,13 @@ void main() {
   blocTest(
     'WHEN renameCollection is called THEN call renameCollectionUseCase and update correctly the state ',
     build: () => createOrRenameCollectionManager,
+    setUp: () {
+      when(sendAnalyticsUseCase.call(any)).thenAnswer((_) async => [
+            UseCaseResult.success(
+              CollectionRenamedEvent(),
+            )
+          ]);
+    },
     act: (manager) {
       createOrRenameCollectionManager
           .updateCollectionName(renamedCollection.name);
@@ -129,10 +143,12 @@ void main() {
       verifyInOrder([
         createCollectionUseCase.transform(any),
         renameCollectionUseCase.transform(any),
+        sendAnalyticsUseCase.call(any),
         renameCollectionUseCase.transaction(any),
       ]);
       verifyNoMoreInteractions(createCollectionUseCase);
       verifyNoMoreInteractions(renameCollectionUseCase);
+      verifyNoMoreInteractions(sendAnalyticsUseCase);
     },
     expect: () => [
       populatedState,
