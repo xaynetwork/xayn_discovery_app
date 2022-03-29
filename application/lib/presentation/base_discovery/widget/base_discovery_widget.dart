@@ -139,12 +139,16 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
       final results = state.results;
       final totalResults = results.length;
+      final isMissingNoItemsBuilders =
+          totalResults == 0 && widget.noItemsBuilder == null;
 
       removeObsoleteCardManagers(state.removedResults);
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
-      if (!state.isComplete) return _buildLoadingIndicator(notchSize);
+      if (!state.isComplete || isMissingNoItemsBuilders) {
+        return _buildLoadingIndicator(notchSize);
+      }
 
       if (state.cardIndex < totalResults &&
           _cardViewController.index != state.cardIndex) {
