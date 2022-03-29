@@ -11,12 +11,20 @@ class AppScrollbar extends StatelessWidget {
     required this.scrollController,
   }) : super(key: key);
 
+  /// ScrollbarPainter relies on MediaQuery.padding, instead of the current Layout context,
+  /// therefore, we reset this padding.
+  /// If not, the scroll bar does not render on the full height.
   @override
-  Widget build(BuildContext context) => Scrollbar(
-        controller: scrollController,
-        thickness: R.dimen.unit0_5,
-        radius: Radius.circular(R.dimen.unit0_5),
-        isAlwaysShown: scrollController.hasClients,
-        child: child,
+  Widget build(BuildContext context) => MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        removeBottom: true,
+        child: Scrollbar(
+          controller: scrollController,
+          thickness: R.dimen.unit0_5,
+          radius: Radius.circular(R.dimen.unit0_5),
+          isAlwaysShown: scrollController.hasClients,
+          child: child,
+        ),
       );
 }
