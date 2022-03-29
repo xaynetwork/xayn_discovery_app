@@ -111,6 +111,12 @@ private_lane :android_prepare_key_properties do |options|
   })
 end
 
+desc "Set a commit message template"
+private_lane :create_commit_template do |options|
+  sh "git config commit.template development/commit-msg-template"
+  UI.success "Commit-message template set 💪"
+end
+
 ####
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
@@ -136,6 +142,9 @@ desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
   maybe_pub_get(options)
+  if !is_ci
+    create_commit_template(options)
+  end
 
   update_assets(options)
 
