@@ -47,6 +47,8 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic>
     with OnBookmarkChangedMixin<DiscoveryCardStatic> {
+  late final ScrollController _scrollController =
+      ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
 
   @override
@@ -109,30 +111,37 @@ class _DiscoveryCardStaticState
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
         final maskedImage = DiscoveryCardHeadlineImage(child: image);
 
-        return Stack(
-          children: [
-            Positioned.fill(
+        return Scrollbar(
+          controller: _scrollController,
+          thickness: R.dimen.unit0_5,
+          radius: Radius.circular(R.dimen.unit0_5),
+          isAlwaysShown: true,
+          child: Stack(
+            children: [
+              Positioned.fill(
                 child: _buildReaderMode(
-              processHtmlResult: state.processedDocument?.processHtmlResult,
-              size: mediaQuery.size,
-              isBookmarked: state.isBookmarked,
-            )),
-            Positioned(
-              top: -outerScrollOffset,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: constraints.maxHeight * _kImageFractionSize,
-                alignment: Alignment.topCenter,
-                child: Stack(
-                  children: [
-                    maskedImage,
-                    elements,
-                  ],
+                  processHtmlResult: state.processedDocument?.processHtmlResult,
+                  size: mediaQuery.size,
+                  isBookmarked: state.isBookmarked,
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                top: -outerScrollOffset,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: constraints.maxHeight * _kImageFractionSize,
+                  alignment: Alignment.topCenter,
+                  child: Stack(
+                    children: [
+                      maskedImage,
+                      elements,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -144,6 +153,7 @@ class _DiscoveryCardStaticState
     required bool isBookmarked,
   }) {
     final readerMode = ReaderMode(
+      scrollController: _scrollController,
       title: title,
       languageCode: widget.document.resource.language,
       uri: widget.document.resource.url,
