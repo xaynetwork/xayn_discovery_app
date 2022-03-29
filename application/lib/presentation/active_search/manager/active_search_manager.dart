@@ -202,6 +202,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           manager.sendAnalyticsUseCase(
             EngineExceptionRaisedEvent(
               event: event,
+              feedType: FeedType.search,
             ),
           );
 
