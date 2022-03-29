@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:file/memory.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'mocks.mocks.dart';
@@ -16,7 +16,7 @@ final fakeDocument = Document(
   resource: NewsResource(
     image: Uri.parse(
         "https://www.reuters.com/resizer/K2oMuVX28AvBmJyt3DzgsFJPL9A=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcp"),
-    sourceDomain: 'example',
+    sourceDomain: 'example.com',
     country: 'US',
     language: 'en-US',
     rank: -1,

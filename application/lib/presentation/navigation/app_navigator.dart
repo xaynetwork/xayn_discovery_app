@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
@@ -109,21 +108,16 @@ class SettingsNavActionsImpl extends SettingsNavActions {
   @override
   void onCountriesOptionsPressed() => changeStack(
         (stack) => stack.push(
-          PageRegistry.feedSettings,
+          PageRegistry.countryFeedSettings,
         ),
       );
-}
-
-@Injectable(as: FeedSettingsNavActions)
-class FeedSettingsNavActionsImpl extends FeedSettingsNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  FeedSettingsNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
 
   @override
-  void onBackNavPressed() => changeStack((stack) => stack.pop());
+  void onSourcesOptionsPressed() => changeStack(
+        (stack) => stack.push(
+          PageRegistry.sourceFeedSettings,
+        ),
+      );
 }
 
 @Injectable(as: CollectionsScreenNavActions)
@@ -186,11 +180,6 @@ class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
   @override
   void onCollectionsNavPressed() {
     changeStack((stack) => stack.push(PageRegistry.collections));
-  }
-
-  @override
-  void onHomeFeedSettingsNavPressed() {
-    changeStack((stack) => stack.push(PageRegistry.feedSettings));
   }
 
   @override

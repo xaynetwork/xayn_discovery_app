@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -12,7 +14,9 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_image.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
@@ -56,7 +60,7 @@ class _MoveDocumentToCollection extends StatefulWidget {
 }
 
 class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
-    with BottomSheetBodyMixin {
+    with BottomSheetBodyMixin, CollectionCardManagersMixin {
   MoveToCollectionManager? _moveDocumentToCollectionManager;
 
   @override
@@ -99,11 +103,16 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
               }
 
               if (state.collections.isNotEmpty) {
-                return CollectionsListBottomSheet(
-                  collections: state.collections,
-                  onSelectCollection: _moveDocumentToCollectionManager!
-                      .updateSelectedCollection,
-                  initialSelectedCollectionId: state.selectedCollectionId,
+                final selectedCollection = state.collections.firstWhereOrNull(
+                    (c) => c.id == state.selectedCollectionId);
+                return SelectItemList<Collection>(
+                  items: state.collections,
+                  onSelectItem: (c) => _moveDocumentToCollectionManager!
+                      .updateSelectedCollection(c.id),
+                  getTitle: (c) => c.name,
+                  getImage: (c) => buildCollectionImage(managerOf(c.id)),
+                  preSelectedItems:
+                      selectedCollection == null ? {} : {selectedCollection},
                 );
               }
 
@@ -121,12 +130,15 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     );
 
     final footer = BottomSheetFooter(
-      onCancelPressed: () => closeBottomSheet(context),
+      onCancelPressed: () {
+        _moveDocumentToCollectionManager?.onCancelPressed();
+        closeBottomSheet(context);
+      },
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
           onPressed: () =>
-              _moveDocumentToCollectionManager!.onApplyToDocumentPressed(
+              _moveDocumentToCollectionManager?.onApplyToDocumentPressed(
             document: widget.document,
             provider: widget.provider,
           ),

@@ -33,7 +33,6 @@ void main() {
       build: '321',
     ),
     isPaymentEnabled: false,
-    isTtsEnabled: true,
     subscriptionStatus: SubscriptionStatus.initial(),
     subscriptionManagementURL: null,
   ) as SettingsScreenStateReady;

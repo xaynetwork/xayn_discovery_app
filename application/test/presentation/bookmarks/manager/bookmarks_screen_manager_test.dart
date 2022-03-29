@@ -8,10 +8,10 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_deleted_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
@@ -26,14 +26,13 @@ import 'bookmarks_screen_manager_test.mocks.dart';
   GetAllBookmarksUseCase,
   ListenBookmarksUseCase,
   RemoveBookmarkUseCase,
-  MoveBookmarkUseCase,
   BookmarkErrorsEnumMapper,
   DateTimeHandler,
 ])
 void main() {
   late MockListenBookmarksUseCase listenBookmarksUseCase;
   late MockRemoveBookmarkUseCase removeBookmarkUseCase;
-  late MockMoveBookmarkUseCase moveBookmarkUseCase;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockBookmarkErrorsEnumMapper bookmarkErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
@@ -59,7 +58,7 @@ void main() {
   setUp(() {
     listenBookmarksUseCase = MockListenBookmarksUseCase();
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
-    moveBookmarkUseCase = MockMoveBookmarkUseCase();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
     bookmarksScreenNavActions = MockBookmarksScreenNavActions();
@@ -75,17 +74,25 @@ void main() {
     bookmarksScreenManager = BookmarksScreenManager(
       listenBookmarksUseCase,
       removeBookmarkUseCase,
-      moveBookmarkUseCase,
       hapticFeedbackMediumUseCase,
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
       bookmarksScreenNavActions,
+      sendAnalyticsUseCase,
     );
 
     populatedState =
         BookmarksScreenState.populated(bookmarks, timestamp, 'Read Later');
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timestamp);
+
+    when(sendAnalyticsUseCase.call(any)).thenAnswer((_) async => [
+          UseCaseResult.success(
+            BookmarkDeletedEvent(
+              fromDefaultCollection: true,
+            ),
+          )
+        ]);
   });
 
   group(
@@ -115,136 +122,6 @@ void main() {
           verifyNoMoreInteractions(listenBookmarksUseCase);
         },
         expect: () => [populatedState],
-      );
-
-      blocTest<BookmarksScreenManager, BookmarksScreenState>(
-        'WHEN moveBookmark method has been called THEN call the usecase ',
-        setUp: () => when(
-          moveBookmarkUseCase.call(
-            MoveBookmarkUseCaseIn(
-              bookmarkId: bookmarks.first.id,
-              collectionId: collectionId,
-            ),
-          ),
-        ).thenAnswer(
-          (_) => Future.value(
-            [
-              UseCaseResult.success(
-                bookmarks.first,
-              )
-            ],
-          ),
-        ),
-        build: () => bookmarksScreenManager,
-        act: (manager) {
-          manager.moveBookmark(
-            bookmarkId: bookmarks.first.id,
-            collectionId: collectionId,
-          );
-        },
-        verify: (manager) {
-          verifyInOrder([
-            moveBookmarkUseCase.call(
-              MoveBookmarkUseCaseIn(
-                bookmarkId: bookmarks.first.id,
-                collectionId: collectionId,
-              ),
-            ),
-          ]);
-
-          verifyNoMoreInteractions(moveBookmarkUseCase);
-        },
-      );
-
-      blocTest<BookmarksScreenManager, BookmarksScreenState>(
-        'WHEN moveBookmarkUseCase returns failure output THEN return current state with error message ',
-        setUp: () {
-          when(bookmarkErrorsEnumMapper.mapEnumToString(
-            BookmarkUseCaseError.tryingToMoveBookmarkToNotExistingCollection,
-          )).thenReturn(R.strings.errorMsgCollectionDoesntExist);
-          when(
-            moveBookmarkUseCase.call(
-              MoveBookmarkUseCaseIn(
-                bookmarkId: bookmarks.first.id,
-                collectionId: collectionId,
-              ),
-            ),
-          ).thenAnswer(
-            (_) => Future.value(
-              [
-                const UseCaseResult.failure(
-                  BookmarkUseCaseError
-                      .tryingToMoveBookmarkToNotExistingCollection,
-                  null,
-                )
-              ],
-            ),
-          );
-        },
-        build: () => bookmarksScreenManager,
-        act: (manager) {
-          manager.moveBookmark(
-            bookmarkId: bookmarks.first.id,
-            collectionId: collectionId,
-          );
-        },
-        verify: (manager) {
-          verifyInOrder([
-            moveBookmarkUseCase.call(
-              MoveBookmarkUseCaseIn(
-                bookmarkId: bookmarks.first.id,
-                collectionId: collectionId,
-              ),
-            ),
-          ]);
-
-          verifyNoMoreInteractions(moveBookmarkUseCase);
-          expect(
-            manager.state.errorMsg,
-            equals(
-              R.strings.errorMsgCollectionDoesntExist,
-            ),
-          );
-        },
-      );
-
-      blocTest<BookmarksScreenManager, BookmarksScreenState>(
-        'WHEN moveBookmark method has been called THEN call the usecase ',
-        setUp: () => when(
-          moveBookmarkUseCase.call(
-            MoveBookmarkUseCaseIn(
-              bookmarkId: bookmarks.first.id,
-              collectionId: collectionId,
-            ),
-          ),
-        ).thenAnswer(
-          (_) => Future.value(
-            [
-              UseCaseResult.success(
-                bookmarks.first,
-              )
-            ],
-          ),
-        ),
-        build: () => bookmarksScreenManager,
-        act: (manager) {
-          manager.moveBookmark(
-            bookmarkId: bookmarks.first.id,
-            collectionId: collectionId,
-          );
-        },
-        verify: (manager) {
-          verifyInOrder([
-            moveBookmarkUseCase.call(
-              MoveBookmarkUseCaseIn(
-                bookmarkId: bookmarks.first.id,
-                collectionId: collectionId,
-              ),
-            ),
-          ]);
-
-          verifyNoMoreInteractions(moveBookmarkUseCase);
-        },
       );
 
       blocTest<BookmarksScreenManager, BookmarksScreenState>(

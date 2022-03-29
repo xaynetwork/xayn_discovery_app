@@ -8,10 +8,10 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
@@ -90,7 +90,6 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
-      // _buildOptionsSection(state.isTtsEnabled),
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
@@ -123,9 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       SettingsHomeFeedSection(
         isFirstSection: !isPaymentEnabled,
         onCountriesPressed: _manager.onCountriesOptionsPressed,
-        onSourcesPressed: () {
-          ///TODO Open sources management screen when the latter ready
-        },
+        onSourcesPressed: _manager.onSourcesOptionsPressed,
       );
 
   Widget _buildAppThemeSection({
@@ -135,24 +132,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         theme: appTheme,
         onSelected: _manager.saveTheme,
       );
-
-  /*Widget _buildOptionsSection(bool isTtsEnabled) => SettingsSection(
-        title: R.strings.settingsSectionTitleOptions,
-        items: [
-          SettingsCardData.fromTile(SettingsTileData(
-            title: R.strings.enableTextToSpeech,
-            svgIconPath: R.assets.icons.speechBubbles,
-            action:
-                // ignore: DEPRECATED_MEMBER_USE
-                SettingsTileActionSwitch(
-              value: isTtsEnabled,
-              onPressed: () =>
-                  _manager.saveTextToSpeechPreference(!isTtsEnabled),
-              key: Keys.settingsToggleTextToSpeechPreference,
-            ),
-          )),
-        ],
-      );*/
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(

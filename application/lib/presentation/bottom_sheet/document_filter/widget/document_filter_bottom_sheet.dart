@@ -3,14 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/handle_document_source/manager/document_filter_manager.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/handle_document_source/manager/document_filter_state.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/manager/document_filter_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/manager/document_filter_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
@@ -54,7 +55,11 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
               filters.entries.where((e) => e.value).map((e) => e.key).toSet(),
           onSelectItem: _manager.onFilterTogglePressed,
           getTitle: (e) => e.fold((host) => host, (topic) => topic),
-          getImage: (e) => null,
+          getImage: (e) => e.fold(
+              (host) => buildThumbnailFromFaviconHost(host),
+              (topic) => Thumbnail.assetImage(
+                  R.assets.graphics.formsEmptyCollection,
+                  backgroundColor: R.colors.collectionsScreenCard)),
         );
       }
 

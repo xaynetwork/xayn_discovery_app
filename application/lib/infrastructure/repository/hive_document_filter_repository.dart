@@ -15,7 +15,7 @@ class HiveDocumentFilterRepository extends HiveRepository<DocumentFilter>
   HiveDocumentFilterRepository();
 
   @override
-  Box<Record> get box => Hive.box<Record>(BoxNames.documentFilters);
+  late final Box<Record> box = Hive.box<Record>(BoxNames.documentFilters);
 
   @override
   BaseDbEntityMapper<DocumentFilter> mapper = DocumentFilterMapper();

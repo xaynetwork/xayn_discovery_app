@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
@@ -33,6 +35,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onBookmarkLongPressed,
     required this.isBookmarked,
     required this.onOpenUrl,
+    required this.onToggleTts,
     this.fractionSize = 1.0,
     this.provider,
     this.useLargeTitle = true,
@@ -49,6 +52,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
   final VoidCallback onOpenUrl;
+  final VoidCallback onToggleTts;
   final VoidCallback onBookmarkLongPressed;
   final bool isBookmarked;
   final double fractionSize;
@@ -132,9 +136,18 @@ class DiscoveryCardElements extends StatelessWidget {
   }
 
   Widget _buildCardHeader() {
+    final featureManager = di.get<FeatureManager>();
     final faviconRow = FaviconBar.fromProvider(
       provider: provider,
       datePublished: datePublished,
+    );
+
+    final ttsIcon = Padding(
+      padding: EdgeInsets.all(R.dimen.unit),
+      child: Icon(
+        Icons.volume_up,
+        color: R.colors.brightIcon,
+      ),
     );
 
     final openUrlIcon = Padding(
@@ -145,22 +158,23 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
     );
 
-    final cardHeader = Row(
+    withTap(Widget child, VoidCallback onTap) => Material(
+          color: R.colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            child: child,
+          ),
+        );
+
+    return Row(
       children: [
         if (provider?.favicon != null)
-          Expanded(child: faviconRow)
+          Expanded(child: withTap(faviconRow, onOpenUrl))
         else
           const Spacer(),
-        openUrlIcon,
+        if (featureManager.isTtsEnabled) withTap(ttsIcon, onToggleTts),
+        withTap(openUrlIcon, onOpenUrl),
       ],
-    );
-
-    return Material(
-      color: R.colors.transparent,
-      child: InkWell(
-        onTap: onOpenUrl,
-        child: cardHeader,
-      ),
     );
   }
 }
