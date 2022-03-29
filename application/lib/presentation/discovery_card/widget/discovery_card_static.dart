@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
@@ -47,8 +48,7 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic>
     with OnBookmarkChangedMixin<DiscoveryCardStatic> {
-  late final ScrollController _scrollController =
-      ScrollController(keepScrollOffset: false);
+  late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
 
   @override
@@ -111,11 +111,8 @@ class _DiscoveryCardStaticState
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
         final maskedImage = DiscoveryCardHeadlineImage(child: image);
 
-        return Scrollbar(
-          controller: _scrollController,
-          thickness: R.dimen.unit0_5,
-          radius: Radius.circular(R.dimen.unit0_5),
-          isAlwaysShown: true,
+        return AppScrollbar(
+          scrollController: _scrollController,
           child: Stack(
             children: [
               Positioned.fill(
