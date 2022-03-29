@@ -128,6 +128,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final DragCallback _onDrag;
   late final DiscoveryCardController _controller;
   late final StreamSubscription<BuildContext> _updateNavBarListener;
+  late final ScrollController _scrollController =
+      ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
 
   @override
@@ -260,32 +262,38 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
             _kMinImageFractionSize * constraints.maxHeight);
 
-        return Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            _buildReaderMode(
-              processHtmlResult: state.processedDocument?.processHtmlResult,
-              width: size.width,
-              headlineHeight:
-                  size.height * _kMinImageFractionSize + R.dimen.unit2,
-            ),
-            Positioned(
-              top: -outerScrollOffset,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: constraints.maxHeight * _openingAnimation.value,
-                alignment: Alignment.topCenter,
-                child: Stack(
+        return Scrollbar(
+          controller: _scrollController,
+          thickness: R.dimen.unit0_5,
+          radius: Radius.circular(R.dimen.unit0_5),
+          isAlwaysShown: _scrollController.hasClients,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              _buildReaderMode(
+                processHtmlResult: state.processedDocument?.processHtmlResult,
+                width: size.width,
+                headlineHeight:
+                    size.height * _kMinImageFractionSize + R.dimen.unit2,
+              ),
+              Positioned(
+                top: -outerScrollOffset,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: constraints.maxHeight * _openingAnimation.value,
                   alignment: Alignment.topCenter,
-                  children: [
-                    maskedImage,
-                    elements,
-                  ],
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      maskedImage,
+                      elements,
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -314,6 +322,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     required double headlineHeight,
   }) {
     final readerMode = ReaderMode(
+      scrollController: _scrollController,
       title: title,
       languageCode: widget.document.resource.language,
       uri: widget.document.resource.url,
