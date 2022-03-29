@@ -111,6 +111,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     sendAnalyticsUseCase(DocumentViewModeChangedEvent(
       document: _observedDocument!,
       viewMode: DocumentViewMode.reader,
+      feedType: feedType,
     ));
   }
 
@@ -120,6 +121,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     sendAnalyticsUseCase(DocumentViewModeChangedEvent(
       document: _observedDocument!,
       viewMode: DocumentViewMode.story,
+      feedType: feedType,
     ));
   }
 
@@ -162,6 +164,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     sendAnalyticsUseCase(DocumentIndexChangedEvent(
       next: nextDocument,
       direction: direction,
+      feedType: feedType,
     ));
 
     scheduleComputeState(() {
@@ -228,6 +231,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       sendAnalyticsUseCase(
         ReaderModeSettingsMenuDisplayedEvent(
           isVisible: isVisible,
+          feedType: feedType,
         ),
       );
 
