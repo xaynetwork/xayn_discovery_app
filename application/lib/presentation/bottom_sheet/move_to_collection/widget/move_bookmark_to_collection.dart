@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
@@ -10,7 +12,9 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_list.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_image.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
@@ -54,7 +58,7 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 }
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
-    with BottomSheetBodyMixin {
+    with BottomSheetBodyMixin, CollectionCardManagersMixin {
   MoveToCollectionManager? _moveBookmarkToCollectionManager;
 
   @override
@@ -98,11 +102,16 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
               }
 
               if (state.collections.isNotEmpty) {
-                return CollectionsListBottomSheet(
-                  collections: state.collections,
-                  onSelectCollection: _moveBookmarkToCollectionManager!
-                      .updateSelectedCollection,
-                  initialSelectedCollectionId: state.selectedCollectionId,
+                final selectedCollection = state.collections.firstWhereOrNull(
+                    (c) => c.id == state.selectedCollectionId);
+                return SelectItemList<Collection>(
+                  items: state.collections,
+                  onSelectItem: (c) => _moveBookmarkToCollectionManager
+                      ?.updateSelectedCollection(c.id),
+                  getTitle: (c) => c.name,
+                  getImage: (c) => buildCollectionImage(managerOf(c.id)),
+                  preSelectedItems:
+                      selectedCollection == null ? {} : {selectedCollection},
                 );
               }
 
@@ -121,6 +130,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () {
+        _moveBookmarkToCollectionManager?.onCancelPressed();
         closeBottomSheet(context);
         widget.onSystemPop?.call();
       },
@@ -128,7 +138,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
           onPressed: () {
-            _moveBookmarkToCollectionManager!.onApplyToBookmarkPressed(
+            _moveBookmarkToCollectionManager?.onApplyToBookmarkPressed(
               bookmarkId: widget.bookmarkId,
             );
           },
