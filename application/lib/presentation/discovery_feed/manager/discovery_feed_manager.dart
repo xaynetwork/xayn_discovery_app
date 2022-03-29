@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_disc
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -63,6 +64,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
+    FeatureManager featureManager,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
@@ -74,6 +76,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
+          featureManager,
         );
 
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
