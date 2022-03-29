@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_deleted_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -27,21 +29,21 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     implements BookmarksScreenNavActions {
   final ListenBookmarksUseCase _listenBookmarksUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
-  final MoveBookmarkUseCase _moveBookmarkUseCase;
   final BookmarkErrorsEnumMapper _bookmarkErrorsEnumMapper;
   final DateTimeHandler _dateTimeHandler;
   final BookmarksScreenNavActions _bookmarksScreenNavActions;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final UniqueId? _collectionId;
 
   BookmarksScreenManager(
     this._listenBookmarksUseCase,
     this._removeBookmarkUseCase,
-    this._moveBookmarkUseCase,
     this._hapticFeedbackMediumUseCase,
     this._bookmarkErrorsEnumMapper,
     this._dateTimeHandler,
-    this._bookmarksScreenNavActions, {
+    this._bookmarksScreenNavActions,
+    this._sendAnalyticsUseCase, {
 
     /// Required param to load a collection when entering a screen, alternatively call [enteringScreen]
     @factoryParam UniqueId? collectionId,
@@ -74,27 +76,6 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
         ListenBookmarksUseCaseIn(collectionId: collectionId));
   }
 
-  void moveBookmark({
-    required UniqueId bookmarkId,
-    required UniqueId collectionId,
-  }) async {
-    _useCaseError = null;
-    final param = MoveBookmarkUseCaseIn(
-        bookmarkId: bookmarkId, collectionId: collectionId);
-    final useCaseOut = await _moveBookmarkUseCase.call(param);
-
-    /// We just need to handle the failure case.
-    /// In case of success we will automatically get the updated list of Collections
-    /// since we are listening to the repo through the [ListenBookmarksUseCase]
-    useCaseOut.last.fold(
-      defaultOnError: _defaultOnError,
-      matchOnError: {
-        On<BookmarkUseCaseError>(_matchOnBookmarkUseCaseError),
-      },
-      onValue: (_) {},
-    );
-  }
-
   void removeBookmark(UniqueId bookmarkId) async {
     _useCaseError = null;
     final useCaseOut = await _removeBookmarkUseCase.call(bookmarkId);
@@ -103,7 +84,14 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
       matchOnError: {
         On<BookmarkUseCaseError>(_matchOnBookmarkUseCaseError),
       },
-      onValue: (_) {},
+      onValue: (bookmark) {
+        _sendAnalyticsUseCase(
+          BookmarkDeletedEvent(
+            fromDefaultCollection:
+                bookmark.collectionId == Collection.readLaterId,
+          ),
+        );
+      },
     );
   }
 
