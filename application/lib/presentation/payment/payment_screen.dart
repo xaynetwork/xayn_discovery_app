@@ -85,6 +85,11 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
   }
 
   void _handleError(BuildContext context, PaymentFlowError error) {
+    if (error == PaymentFlowError.itemAlreadyOwned) {
+      manager.onDismiss();
+      return;
+    }
+
     late BottomSheetBase body;
     if (error == PaymentFlowError.paymentFailed) {
       body = PaymentFailedErrorBottomSheet();

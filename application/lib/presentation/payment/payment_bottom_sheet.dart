@@ -80,6 +80,11 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
       );
 
   void _handleError(BuildContext context, PaymentFlowError error) {
+    if (error == PaymentFlowError.itemAlreadyOwned) {
+      closeBottomSheet(context);
+      return;
+    }
+
     late BottomSheetBase body;
     if (error == PaymentFlowError.paymentFailed) {
       body = PaymentFailedErrorBottomSheet();
