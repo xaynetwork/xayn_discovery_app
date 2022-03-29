@@ -105,20 +105,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   int? get currentCardIndex => _cardIndex;
 
-  void handleNavigateIntoCard() {
+  void handleNavigateIntoCard(Document document) {
     scheduleComputeState(() => _isFullScreen = true);
 
     sendAnalyticsUseCase(DocumentViewModeChangedEvent(
-      document: _observedDocument!,
+      document: document,
       viewMode: DocumentViewMode.reader,
     ));
   }
 
-  void handleNavigateOutOfCard() {
+  void handleNavigateOutOfCard(Document document) {
     scheduleComputeState(() => _isFullScreen = false);
 
     sendAnalyticsUseCase(DocumentViewModeChangedEvent(
-      document: _observedDocument!,
+      document: document,
       viewMode: DocumentViewMode.story,
     ));
   }
