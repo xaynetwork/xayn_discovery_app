@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
@@ -95,7 +96,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _purchaseSubscriptionHandler(PurchasableIds.subscription);
   }
 
-  void enterRedeemCode() => _requestCodeRedemptionSheetUseCase.call(none);
+  void enterRedeemCode() {
+    if (!Platform.isIOS) return;
+    _requestCodeRedemptionSheetUseCase.call(none);
+  }
 
   void restore() {
     _paymentAction = PaymentAction.restore;

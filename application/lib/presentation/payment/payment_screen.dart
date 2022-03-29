@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -9,7 +7,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/no_active_subscription_found_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_failed_error_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/payment_promo_code/payment_promo_code_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
@@ -68,7 +65,7 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
         child: TrialExpired(
           product: product,
           onSubscribe: manager.subscribe,
-          onPromoCode: () => _onPromoCode(context),
+          onPromoCode: () => manager.enterRedeemCode(),
           onRestore: manager.restore,
           padding: EdgeInsets.zero,
         ),
@@ -85,18 +82,6 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
     return Scaffold(
       body: SingleChildScrollView(child: content),
     );
-  }
-
-  void _onPromoCode(BuildContext context) {
-    if (Platform.isIOS) {
-      manager.enterRedeemCode();
-    } else {
-      showAppBottomSheet(
-        context,
-        builder: (_) => PaymentPromoCodeBottomSheet(),
-        allowStacking: true,
-      );
-    }
   }
 
   void _handleError(BuildContext context, PaymentFlowError error) {
