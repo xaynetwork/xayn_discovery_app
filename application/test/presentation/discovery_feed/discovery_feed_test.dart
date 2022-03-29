@@ -288,7 +288,7 @@ void main() async {
     setUp: () => when(fetchSessionUseCase.singleOutput(none))
         .thenAnswer((_) async => Session.withFeedRequested()),
     act: (manager) async {
-      manager.handleNavigateIntoCard();
+      manager.handleNavigateIntoCard(fakeDocumentA);
     },
     expect: () => [
       DiscoveryState(
