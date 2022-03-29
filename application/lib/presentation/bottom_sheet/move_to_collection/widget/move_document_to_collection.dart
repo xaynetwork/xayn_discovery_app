@@ -130,12 +130,15 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
     );
 
     final footer = BottomSheetFooter(
-      onCancelPressed: () => closeBottomSheet(context),
+      onCancelPressed: () {
+        _moveDocumentToCollectionManager?.onCancelPressed();
+        closeBottomSheet(context);
+      },
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
           onPressed: () =>
-              _moveDocumentToCollectionManager!.onApplyToDocumentPressed(
+              _moveDocumentToCollectionManager?.onApplyToDocumentPressed(
             document: widget.document,
             provider: widget.provider,
           ),
