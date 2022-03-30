@@ -26,6 +26,7 @@ import 'package:xayn_discovery_app/presentation/utils/widget/custom_animated_lis
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
 
 class NewPersonalAreaScreen extends StatefulWidget {
   const NewPersonalAreaScreen({Key? key}) : super(key: key);
@@ -89,10 +90,19 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
   Widget build(BuildContext context) => Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppToolbar(
-          appToolbarData: AppToolbarData.withTrailingIcon(
+          appToolbarData: AppToolbarData.withTwoTrailingIcons(
             title: R.strings.personalAreaTitle,
-            iconPath: R.assets.icons.plus,
-            onPressed: () => _showAddCollectionBottomSheet(),
+            iconModels: [
+              AppToolbarIconModel(
+                iconPath: R.assets.icons.plus,
+                onPressed: () => _showAddCollectionBottomSheet(),
+              ),
+              AppToolbarIconModel(
+                iconPath: R.assets.icons.gear,
+                onPressed: () => _manager?.onSettingsNavPressed(),
+                iconKey: Keys.personalAreaIconSettings,
+              ),
+            ],
           ),
         ),
         body: _buildBody(),
