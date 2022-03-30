@@ -93,16 +93,6 @@ void main() {
   );
 
   blocTest<PersonalAreaManager, PersonalAreaState>(
-    'WHEN onHomeFeedSettingsNavPressed is called THEN redirected to action',
-    build: () => create(),
-    act: (manager) => manager.onHomeFeedSettingsNavPressed(),
-    verify: (manager) {
-      verify(actions.onHomeFeedSettingsNavPressed());
-      verifyNoMoreInteractions(actions);
-    },
-  );
-
-  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onSettingsNavPressed is called THEN redirected to action',
     build: () => create(),
     act: (manager) => manager.onSettingsNavPressed(),

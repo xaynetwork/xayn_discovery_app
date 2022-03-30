@@ -222,7 +222,11 @@ lane :check do |options|
   else
     flutter("test --reporter=json > machine.log || echo 'Tests failed'")
   end
-  flutter('pub global run dart_dot_reporter machine.log --show-message')
+  begin
+    flutter('pub global run dart_dot_reporter machine.log --show-message')
+  rescue
+    UI.user_error!("Checks failed!");
+  end
 end
 
 desc "Build and publish to MS AppCenter \n" \
@@ -267,6 +271,28 @@ lane :update_assets do |options|
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
   downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
+end
+
+desc "Takes the current tag and increments the version on the minor position and creates a new Tag.\n" \
+     "So that 3.0.2 will become 3.1.0\n" \
+     "It will fail if the current commit is already tagged."
+lane :increment_nightly_tag do |options|
+  currentCommit = shell("git rev-parse HEAD")
+  currentCommit["\n"] = ""
+  currentCommitTag = ""
+  begin
+    currentCommitTag = shell("git describe --contains #{currentCommit} 2>/dev/null")
+    currentCommitTag["\n"] = ""
+  rescue
+  end
+
+  UI.user_error!("This commit (#{currentCommit}) already contains a tag (#{currentCommitTag})") unless currentCommitTag == ""
+
+  lastTag = shell('git describe --abbrev=0 --tags')
+  numbers = lastTag.split('.')
+  minor = numbers[1].to_i + 1
+  newTag = "#{numbers[0]}.#{minor}.0"
+  shell("git tag #{newTag}")
 end
 
 # Private helper methods

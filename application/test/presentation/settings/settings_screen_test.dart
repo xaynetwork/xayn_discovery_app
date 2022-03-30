@@ -33,7 +33,6 @@ void main() {
       build: '321',
     ),
     isPaymentEnabled: false,
-    isTtsEnabled: true,
     subscriptionStatus: SubscriptionStatus.initial(),
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;

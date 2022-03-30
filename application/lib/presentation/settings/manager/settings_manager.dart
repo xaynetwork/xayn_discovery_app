@@ -19,9 +19,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/tts/get_tts_preference_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/tts/listen_tts_preference_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/tts/save_tts_preference_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -33,6 +30,8 @@ abstract class SettingsNavActions {
   void onBackNavPressed();
 
   void onCountriesOptionsPressed();
+
+  void onSourcesOptionsPressed();
 }
 
 @lazySingleton
@@ -50,9 +49,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final ExtractLogUseCase _extractLogUseCase;
   final SettingsNavActions _settingsNavActions;
   final ShareUriUseCase _shareUriUseCase;
-  final GetTtsPreferenceUseCase _getTtsPreferenceUseCase;
-  final SaveTtsPreferenceUseCase _saveTtsPreferenceUseCase;
-  final ListenTtsPreferenceUseCase _listenTtsPreferenceUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
@@ -69,9 +65,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._extractLogUseCase,
     this._settingsNavActions,
     this._shareUriUseCase,
-    this._getTtsPreferenceUseCase,
-    this._saveTtsPreferenceUseCase,
-    this._listenTtsPreferenceUseCase,
     this._hapticFeedbackMediumUseCase,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
@@ -85,12 +78,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   bool _initDone = false;
   late AppTheme _theme;
   late final AppVersion _appVersion;
-  late bool _ttsPreference;
   late SubscriptionStatus _subscriptionStatus;
   late final UseCaseValueStream<AppTheme> _appThemeHandler =
       consume(_listenAppThemeUseCase, initialData: none);
-  late final UseCaseValueStream<bool> _ttsPreferenceHandler =
-      consume(_listenTtsPreferenceUseCase, initialData: none);
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
       consume(
     _listenSubscriptionStatusUseCase,
@@ -101,7 +91,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     scheduleComputeState(() async {
       // read values
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
-      _ttsPreference = await _getTtsPreferenceUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
@@ -111,10 +100,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   }
 
   void saveTheme(AppTheme theme) => _saveAppThemeUseCase(theme);
-
-  void saveTextToSpeechPreference(bool ttsPreference) {
-    _saveTtsPreferenceUseCase(ttsPreference);
-  }
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
@@ -159,20 +144,14 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
-          isTtsEnabled: _ttsPreference,
           subscriptionStatus: _subscriptionStatus,
         );
-    return fold3(
+    return fold2(
       _appThemeHandler,
-      _ttsPreferenceHandler,
       _subscriptionStatusHandler,
-    ).foldAll((appTheme, ttsPreference, subscriptionStatus, _) async {
+    ).foldAll((appTheme, subscriptionStatus, _) async {
       if (appTheme != null) {
         _theme = appTheme;
-      }
-
-      if (ttsPreference != null) {
-        _ttsPreference = ttsPreference;
       }
 
       if (subscriptionStatus != null) {
@@ -189,4 +168,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   void onCountriesOptionsPressed() =>
       _settingsNavActions.onCountriesOptionsPressed();
+
+  @override
+  void onSourcesOptionsPressed() =>
+      _settingsNavActions.onSourcesOptionsPressed();
 }

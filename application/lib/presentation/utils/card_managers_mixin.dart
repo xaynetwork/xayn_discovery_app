@@ -47,34 +47,4 @@ class CardManagers {
     imageManager.close();
     discoveryCardManager.close();
   }
-
-  /// Instead of using the mixin you can also register a factory of CardManagers
-  /// that also
-  /// Returns a function to dispose those managers
-  static VoidCallback registerCardManagerCacheInDi(String scopeName) {
-    di.pushNewScope(scopeName: scopeName);
-    final cache = <DocumentId, CardManagers>{};
-    CardManagers createCardManagers(Document document) {
-      final imageManager = di.get<ImageManager>();
-      final discoveryCardManager = di.get<DiscoveryCardManager>();
-      final uri = document.resource.image;
-      imageManager.getImage(uri);
-      discoveryCardManager.updateDocument(document);
-      return CardManagers(
-          imageManager: imageManager,
-          discoveryCardManager: discoveryCardManager);
-    }
-
-    di.registerFactoryParam<CardManagers, Document, void>(
-        (Document? document, _) => cache.putIfAbsent(
-            document!.documentId, () => createCardManagers(document)));
-
-    return () {
-      cache.forEach((key, value) {
-        value.closeAll();
-      });
-      cache.clear();
-      di.popScopesTill(scopeName);
-    };
-  }
 }

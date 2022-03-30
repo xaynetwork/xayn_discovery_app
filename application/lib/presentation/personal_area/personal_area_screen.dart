@@ -95,7 +95,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       if (buildTrialBanner)
         _buildTrialBanner(state.subscriptionStatus.trialEndDate!),
       _buildCollection(),
-      _buildHomeFeed(),
       _buildSettings(),
       _buildContactSection(),
     ]
@@ -124,17 +123,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           svgBackgroundPath: R.assets.graphics.formsOrange,
           onPressed: _manager.onCollectionsNavPressed,
           key: Keys.personalAreaCardCollections,
-        ),
-      );
-
-  CardWidget _buildHomeFeed() => CardWidget(
-        cardData: CardData.personalArea(
-          title: R.strings.personalAreaHomeFeed,
-          color: R.colors.personalAreaHomeFeed,
-          svgIconPath: R.assets.icons.confetti,
-          svgBackgroundPath: R.assets.graphics.formsGreen,
-          onPressed: _manager.onHomeFeedSettingsNavPressed,
-          key: Keys.personalAreaCardHomeFeed,
         ),
       );
 

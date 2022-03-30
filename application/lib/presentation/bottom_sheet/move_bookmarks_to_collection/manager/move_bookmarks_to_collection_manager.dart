@@ -4,6 +4,9 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
@@ -20,6 +23,7 @@ class MoveBookmarksToCollectionManager
   final MoveBookmarksUseCase _moveBookmarksUseCase;
   final RemoveCollectionUseCase _removeCollectionUseCase;
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   final List<Collection> _collections = [];
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
@@ -32,6 +36,7 @@ class MoveBookmarksToCollectionManager
     this._moveBookmarksUseCase,
     this._removeCollectionUseCase,
     this._getAllCollectionsUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(MoveBookmarksToCollectionState.initial());
 
   void enteringScreen({
@@ -69,6 +74,16 @@ class MoveBookmarksToCollectionManager
       RemoveCollectionUseCaseParam(
         collectionIdToRemove: collectionIdToRemove,
       ),
+    );
+    _sendAnalyticsUseCase(
+      CollectionDeletedEvent(context: DeleteCollectionContext.moveBookmarks),
+    );
+  }
+
+  void onCancelPressed() {
+    _sendAnalyticsUseCase(
+      BottomSheetDismissedEvent(
+          bottomSheetView: BottomSheetView.moveMultipleBookmarksToCollection),
     );
   }
 

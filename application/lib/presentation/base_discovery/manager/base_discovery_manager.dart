@@ -85,7 +85,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// This consumer watches all the active feed Documents.
   late final crudExplicitDocumentFeedbackConsumer = consume(
     crudExplicitDocumentFeedbackUseCase,
-    initialData: const DbCrudIn.watchAll(),
+    initialData: const DbCrudIn.watchAllChanged(),
   );
 
   late final UseCaseValueStream<SubscriptionStatus> subscriptionStatusHandler =
@@ -210,7 +210,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     );
   }
 
-  void resetCardIndex() => _cardIndex = 0;
+  void resetCardIndex([int nextCardIndex = 0]) => _cardIndex = nextCardIndex;
 
   void resetObservedDocument() => _observedDocument = null;
 
