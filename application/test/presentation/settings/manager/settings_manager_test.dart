@@ -53,6 +53,7 @@ void main() {
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockGetSubscriptionManagementUrlUseCase
       getSubscriptionManagementUrlUseCase;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -69,6 +70,7 @@ void main() {
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     getSubscriptionManagementUrlUseCase =
         MockGetSubscriptionManagementUrlUseCase();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(
@@ -116,6 +118,7 @@ void main() {
         getSubscriptionStatusUseCase,
         listenSubscriptionStatusUseCase,
         getSubscriptionManagementUrlUseCase,
+        sendAnalyticsUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

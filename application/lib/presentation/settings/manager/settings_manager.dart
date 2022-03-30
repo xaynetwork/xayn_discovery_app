@@ -4,7 +4,11 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_shared_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_theme_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
@@ -50,6 +54,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final GetSubscriptionManagementUrlUseCase
       _getSubscriptionManagementUrlUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -65,6 +70,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
     this._getSubscriptionManagementUrlUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -96,16 +102,25 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     });
   }
 
-  void saveTheme(AppTheme theme) => _saveAppThemeUseCase(theme);
+  void saveTheme(AppTheme theme) {
+    _saveAppThemeUseCase(theme);
+    _sendAnalyticsUseCase(AppThemeChangedEvent(theme: theme));
+  }
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
 
-  void reportBug() => _bugReportingService.showDialog(
-        brightness: R.brightness,
-        primaryColor: R.colors.primaryAction,
-      );
+  void reportBug() {
+    _bugReportingService.showDialog(
+      brightness: R.brightness,
+      primaryColor: R.colors.primaryAction,
+    );
+    _sendAnalyticsUseCase(BugReportedEvent());
+  }
 
-  void shareApp() => _shareUriUseCase.call(Uri.parse(Constants.downloadUrl));
+  void shareApp() {
+    _shareUriUseCase.call(Uri.parse(Constants.downloadUrl));
+    _sendAnalyticsUseCase(AppSharedEvent());
+  }
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
