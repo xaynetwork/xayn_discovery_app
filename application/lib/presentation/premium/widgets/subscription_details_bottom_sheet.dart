@@ -10,30 +10,30 @@ import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
 const String _kTextPlaceholder = '__';
 
-typedef OnSubscriptionCancelTapped = Function();
+typedef OnSubscriptionLinkCancelTapped = Function();
 
 class SubscriptionDetailsBottomSheet extends BottomSheetBase {
   SubscriptionDetailsBottomSheet({
     Key? key,
     required SubscriptionStatus subscriptionStatus,
-    required OnSubscriptionCancelTapped onSubscriptionCancelTapped,
+    required OnSubscriptionLinkCancelTapped onSubscriptionLinkCancelTapped,
   }) : super(
           key: key,
           body: _SubscriptionDetails(
             subscriptionStatus: subscriptionStatus,
-            onSubscriptionCancelTapped: onSubscriptionCancelTapped,
+            onSubscriptionLinkCancelTapped: onSubscriptionLinkCancelTapped,
           ),
         );
 }
 
 class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   final SubscriptionStatus subscriptionStatus;
-  final OnSubscriptionCancelTapped onSubscriptionCancelTapped;
+  final OnSubscriptionLinkCancelTapped onSubscriptionLinkCancelTapped;
 
   const _SubscriptionDetails({
     Key? key,
     required this.subscriptionStatus,
-    required this.onSubscriptionCancelTapped,
+    required this.onSubscriptionLinkCancelTapped,
   }) : super(key: key);
 
   @override
@@ -100,7 +100,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
       othersMarkers: [
         MarkerText.withFunction(
           marker: _kTextPlaceholder,
-          functions: [onSubscriptionCancelTapped],
+          functions: [onSubscriptionLinkCancelTapped],
           style:
               R.styles.dialogBodySmall.copyWith(color: R.colors.primaryAction),
         ),

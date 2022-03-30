@@ -135,7 +135,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     );
   }
 
-  Future<void> onSubscriptionCancelTapped() async {
+  Future<void> onSubscriptionLinkCancelTapped() async {
     final subscriptionManagementUrl =
         (await _getSubscriptionManagementUrlUseCase.singleOutput(none)).url;
     if (subscriptionManagementUrl != null) {

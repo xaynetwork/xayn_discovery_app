@@ -199,7 +199,8 @@ class _SettingsScreenState extends State<SettingsScreen>
         context,
         builder: (_) => SubscriptionDetailsBottomSheet(
           subscriptionStatus: subscriptionStatus,
-          onSubscriptionCancelTapped: () => _manager.onSubscriptionCancelTapped,
+          onSubscriptionLinkCancelTapped: () =>
+              _manager.onSubscriptionLinkCancelTapped,
         ),
       );
     } else if (subscriptionStatus.isFreeTrialActive) {
