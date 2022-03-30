@@ -23,7 +23,10 @@ class AppRouter extends xayn.NavigatorDelegate {
     final extraBottomPadding =
         bottomPadding > 0 ? bottomPadding : kExtraBottomOffset;
 
-    final defaultPadding = EdgeInsets.all(R.dimen.unit2);
+    final defaultPadding = EdgeInsets.symmetric(
+      vertical: R.dimen.unit2,
+      horizontal: R.dimen.unit4,
+    );
     final navbarPadding = isKeyboardVisible
         ? defaultPadding
         : defaultPadding.copyWith(bottom: R.dimen.unit2 + extraBottomPadding);
