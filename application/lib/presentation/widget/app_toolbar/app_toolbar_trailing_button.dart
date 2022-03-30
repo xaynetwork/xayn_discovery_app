@@ -5,10 +5,12 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 class AppToolbarTrailingIconButton extends StatelessWidget {
   final String iconPath;
   final VoidCallback? onPressed;
+  final Key? iconKey;
 
   const AppToolbarTrailingIconButton({
     required this.iconPath,
     this.onPressed,
+    this.iconKey,
     Key? key,
   }) : super(
           key: key,
@@ -23,7 +25,7 @@ class AppToolbarTrailingIconButton extends StatelessWidget {
       color: R.colors.icon,
     );
     final btn = InkWell(
-      key: key,
+      key: iconKey,
       onTap: onPressed,
       child: Center(child: icon),
       borderRadius: BorderRadius.circular(R.dimen.unit),
