@@ -199,6 +199,7 @@ module Config
   # Appcenter defaults
   APPCENTER_OWNER_NAME = "XAIN_AG"
   APPCENTER_OWNER_TYPE = "organization"
+  APPCENTER_DESTINATION_TYPE_STORE = "store"
   APPCENTER_DEFAULT_TARGET = "Collaborators"
   APPCENTER_DEFAULT_STORE = "Beta"
 end
