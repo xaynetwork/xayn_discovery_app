@@ -22,6 +22,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
         text: text,
         iconPath: data.iconPath,
         onPressed: data.onPressed,
+        iconKey: data.iconkey,
       ),
     );
 
@@ -48,12 +49,14 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
     required Text text,
     required String iconPath,
     VoidCallback? onPressed,
+    Key? iconKey,
   }) =>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           text,
           AppToolbarTrailingIconButton(
+            iconKey: iconKey,
             iconPath: iconPath,
             onPressed: onPressed,
           ),
