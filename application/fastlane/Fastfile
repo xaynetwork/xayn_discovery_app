@@ -351,7 +351,7 @@ def uploadToStore(token, appName, path, version, maxChangeLogSize = -1)
     file: path,
     release_notes: changelog,
     destinations: Config::APPCENTER_DEFAULT_STORE,
-    destination_type: 'store',
+    destination_type: Config::APPCENTER_DESTINATION_TYPE_STORE,
     notify_testers: true,
   )
 end
