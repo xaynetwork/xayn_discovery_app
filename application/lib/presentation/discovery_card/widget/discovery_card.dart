@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -45,12 +46,14 @@ class DiscoveryCard extends DiscoveryCardBase {
     this.onDiscard,
     this.onDrag,
     this.onController,
+    OnTtsData? onTtsData,
   }) : super(
           key: key,
           isPrimary: isPrimary,
           document: document,
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
+          onTtsData: onTtsData,
         );
 
   @override
@@ -227,9 +230,22 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 : UserReaction.negative,
             context: FeedbackContext.explicit,
           ),
-          onOpenUrl: () => discoveryCardManager.openWebResourceUrl(
-            widget.document,
-            CurrentView.reader,
+          onOpenUrl: () {
+            widget.onTtsData?.call(TtsData.disabled());
+
+            discoveryCardManager.openWebResourceUrl(
+              widget.document,
+              CurrentView.reader,
+            );
+          },
+          onToggleTts: () => widget.onTtsData?.call(
+            TtsData(
+              enabled: true,
+              languageCode: widget.document.resource.language,
+              uri: widget.document.resource.url,
+              html: discoveryCardManager
+                  .state.processedDocument?.processHtmlResult.contents,
+            ),
           ),
           onBookmarkPressed: onBookmarkPressed,
           onBookmarkLongPressed: onBookmarkLongPressed(state),

@@ -6,7 +6,6 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
@@ -17,7 +16,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'collections_screen_manager_test.mocks.dart';
 
@@ -34,24 +32,17 @@ import 'collections_screen_manager_test.mocks.dart';
   HapticFeedbackMediumUseCase,
 ])
 void main() {
-  late MockCreateCollectionUseCase createCollectionUseCase;
-  late MockRemoveCollectionUseCase removeCollectionUseCase;
-  late MockRenameCollectionUseCase renameCollectionUseCase;
   late MockListenCollectionsUseCase listenCollectionsUseCase;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
-  late MockCollectionErrorsEnumMapper collectionErrorsEnumMapper;
   late MockCollectionsScreenNavActions collectionsScreenNavActions;
   late MockDateTimeHandler dateTimeHandler;
   late CollectionsScreenState populatedState;
   final timeStamp = DateTime.now();
-  const newCollectionName = 'New Collection Name';
   final collection1 =
       Collection(id: UniqueId(), name: 'Collection1 name', index: 0);
   final collection2 =
       Collection(id: UniqueId(), name: 'Collection2 name', index: 1);
-  final newCollection =
-      Collection(id: UniqueId(), name: 'Collection3 name', index: 2);
   late CollectionsScreenManager collectionsScreenManager;
 
   void _mockManagerInitMethodCalls() {
@@ -75,25 +66,17 @@ void main() {
 
   Future<CollectionsScreenManager> createManager() async =>
       await CollectionsScreenManager.create(
-        createCollectionUseCase,
         getAllCollectionsUseCase,
-        removeCollectionUseCase,
-        renameCollectionUseCase,
         listenCollectionsUseCase,
         hapticFeedbackMediumUseCase,
-        collectionErrorsEnumMapper,
         collectionsScreenNavActions,
         dateTimeHandler,
       );
 
   setUp(() async {
-    createCollectionUseCase = MockCreateCollectionUseCase();
-    removeCollectionUseCase = MockRemoveCollectionUseCase();
-    renameCollectionUseCase = MockRenameCollectionUseCase();
     listenCollectionsUseCase = MockListenCollectionsUseCase();
     getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
-    collectionErrorsEnumMapper = MockCollectionErrorsEnumMapper();
     collectionsScreenNavActions = MockCollectionsScreenNavActions();
     dateTimeHandler = MockDateTimeHandler();
     populatedState = CollectionsScreenState.populated(
@@ -117,263 +100,6 @@ void main() {
         listenCollectionsUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(listenCollectionsUseCase);
-    },
-  );
-
-  blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN create collection method is called THEN call CreateCollectionUseCase ',
-    build: () => collectionsScreenManager,
-    setUp: () {
-      when(createCollectionUseCase.call(newCollection.name)).thenAnswer(
-        (_) => Future.value([UseCaseResult.success(collection1)]),
-      );
-    },
-    act: (manager) {
-      manager.createCollection(collectionName: newCollection.name);
-    },
-    //default one, emitted when manager created
-    expect: () => [populatedState],
-    verify: (manager) {
-      verifyInOrder([
-        getAllCollectionsUseCase.singleOutput(none),
-        listenCollectionsUseCase.transform(any),
-        createCollectionUseCase.call(newCollection.name),
-      ]);
-      verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(createCollectionUseCase);
-      verifyNoMoreInteractions(listenCollectionsUseCase);
-    },
-  );
-
-  blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN createCollectionUsecase returns throws an error THEN return current state with error message',
-    build: () => collectionsScreenManager,
-    setUp: () {
-      when(createCollectionUseCase.call(newCollection.name)).thenAnswer(
-        (_) => Future.value(
-          [
-            const UseCaseResult.failure(
-              CollectionUseCaseError.tryingToCreateCollectionUsingExistingName,
-              null,
-            )
-          ],
-        ),
-      );
-
-      when(collectionErrorsEnumMapper.mapEnumToString(
-        CollectionUseCaseError.tryingToCreateCollectionUsingExistingName,
-      )).thenReturn(R.strings.errorMsgCollectionNameAlreadyUsed);
-    },
-    act: (manager) {
-      manager.createCollection(collectionName: newCollection.name);
-    },
-    expect: () => [
-      //default one, emitted when manager created
-      populatedState,
-      populatedState.copyWith(
-          errorMsg: R.strings.errorMsgCollectionNameAlreadyUsed),
-    ],
-    verify: (manager) {
-      verifyInOrder([
-        getAllCollectionsUseCase.singleOutput(none),
-        listenCollectionsUseCase.transform(any),
-        createCollectionUseCase.call(newCollection.name),
-      ]);
-      verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(createCollectionUseCase);
-      verifyNoMoreInteractions(listenCollectionsUseCase);
-    },
-  );
-
-  blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN renameCollection method is called THEN call RenameCollectionUseCase ',
-    build: () => collectionsScreenManager,
-    setUp: () {
-      when(
-        renameCollectionUseCase.call(
-          RenameCollectionUseCaseParam(
-            collectionId: collection1.id,
-            newName: newCollectionName,
-          ),
-        ),
-      ).thenAnswer(
-        (_) => Future.value(
-          [
-            UseCaseResult.success(
-              collection1.copyWith(
-                name: newCollectionName,
-              ),
-            )
-          ],
-        ),
-      );
-    },
-    act: (manager) => manager.renameCollection(
-      collectionId: collection1.id,
-      newName: newCollectionName,
-    ),
-
-    //default one, emitted when manager created
-    expect: () => [populatedState],
-    verify: (manager) {
-      verifyInOrder([
-        getAllCollectionsUseCase.singleOutput(none),
-        listenCollectionsUseCase.transform(any),
-        renameCollectionUseCase.call(
-          RenameCollectionUseCaseParam(
-            collectionId: collection1.id,
-            newName: newCollectionName,
-          ),
-        ),
-      ]);
-      verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(renameCollectionUseCase);
-      verifyNoMoreInteractions(listenCollectionsUseCase);
-    },
-  );
-
-  blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN renameCollectionUsecase returns throws an error THEN return current state with error message',
-    build: () => collectionsScreenManager,
-    setUp: () {
-      when(
-        renameCollectionUseCase.call(
-          RenameCollectionUseCaseParam(
-            collectionId: collection1.id,
-            newName: newCollectionName,
-          ),
-        ),
-      ).thenAnswer(
-        (_) => Future.value(
-          [
-            const UseCaseResult.failure(
-              CollectionUseCaseError.tryingToRenameCollectionUsingExistingName,
-              null,
-            )
-          ],
-        ),
-      );
-
-      when(collectionErrorsEnumMapper.mapEnumToString(
-        CollectionUseCaseError.tryingToRenameCollectionUsingExistingName,
-      )).thenReturn(R.strings.errorMsgCollectionNameAlreadyUsed);
-    },
-    act: (manager) => manager.renameCollection(
-      collectionId: collection1.id,
-      newName: newCollectionName,
-    ),
-    expect: () => [
-      //default one, emitted when manager created
-      populatedState,
-      populatedState.copyWith(
-          errorMsg: R.strings.errorMsgCollectionNameAlreadyUsed),
-    ],
-    verify: (manager) {
-      verifyInOrder([
-        getAllCollectionsUseCase.singleOutput(none),
-        listenCollectionsUseCase.transform(any),
-        renameCollectionUseCase.call(
-          RenameCollectionUseCaseParam(
-            collectionId: collection1.id,
-            newName: newCollectionName,
-          ),
-        ),
-      ]);
-      verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(renameCollectionUseCase);
-      verifyNoMoreInteractions(listenCollectionsUseCase);
-    },
-  );
-
-  blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN removeCollection is called THEN call RemoveCollectionUseCase ',
-    build: () => collectionsScreenManager,
-    setUp: () {
-      when(
-        removeCollectionUseCase.call(
-          RemoveCollectionUseCaseParam(
-            collectionIdToRemove: collection1.id,
-          ),
-        ),
-      ).thenAnswer(
-        (_) => Future.value(
-          [
-            UseCaseResult.success(
-              collection1,
-            )
-          ],
-        ),
-      );
-    },
-    act: (manager) => manager.removeCollection(
-      collectionIdToRemove: collection1.id,
-    ),
-
-    //default one, emitted when manager created
-    expect: () => [populatedState],
-    verify: (manager) {
-      verifyInOrder([
-        getAllCollectionsUseCase.singleOutput(none),
-        listenCollectionsUseCase.transform(any),
-        removeCollectionUseCase.call(
-          RemoveCollectionUseCaseParam(
-            collectionIdToRemove: collection1.id,
-          ),
-        ),
-      ]);
-      verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(removeCollectionUseCase);
-      verifyNoMoreInteractions(listenCollectionsUseCase);
-    },
-  );
-
-  blocTest<CollectionsScreenManager, CollectionsScreenState>(
-    'WHEN removeCollectionUseCase returns throws an error THEN return current state with error message',
-    build: () => collectionsScreenManager,
-    setUp: () {
-      when(
-        removeCollectionUseCase.call(
-          RemoveCollectionUseCaseParam(
-            collectionIdToRemove: collection1.id,
-          ),
-        ),
-      ).thenAnswer(
-        (_) => Future.value(
-          [
-            const UseCaseResult.failure(
-              CollectionUseCaseError.tryingToRemoveDefaultCollection,
-              null,
-            )
-          ],
-        ),
-      );
-
-      when(collectionErrorsEnumMapper.mapEnumToString(
-        CollectionUseCaseError.tryingToRemoveDefaultCollection,
-      )).thenReturn(R.strings.errorMsgTryingToRemoveDefaultCollection);
-    },
-    act: (manager) => manager.removeCollection(
-      collectionIdToRemove: collection1.id,
-    ),
-    expect: () => [
-      //default one, emitted when manager created
-      populatedState,
-      populatedState.copyWith(
-          errorMsg: R.strings.errorMsgTryingToRemoveDefaultCollection),
-    ],
-    verify: (manager) {
-      verifyInOrder([
-        getAllCollectionsUseCase.singleOutput(none),
-        listenCollectionsUseCase.transform(any),
-        removeCollectionUseCase.call(
-          RemoveCollectionUseCaseParam(
-            collectionIdToRemove: collection1.id,
-          ),
-        ),
-      ]);
-      verifyNoMoreInteractions(getAllCollectionsUseCase);
-      verifyNoMoreInteractions(removeCollectionUseCase);
       verifyNoMoreInteractions(listenCollectionsUseCase);
     },
   );
