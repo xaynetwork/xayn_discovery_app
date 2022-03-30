@@ -57,9 +57,8 @@ extension WidgetTesterCommonActions on WidgetTester {
 
   Future<void> navigateToSettingsScreen() async {
     await pumpAndSettle();
-    final settingsCard = Keys.personalAreaCardSettings.finds();
-    await scrollUntilVisible(settingsCard, 10);
-    await tap(settingsCard);
+    final settingsIcon = Keys.personalAreaIconSettings.finds();
+    await tap(settingsIcon);
     await pumpAndSettle();
   }
 
