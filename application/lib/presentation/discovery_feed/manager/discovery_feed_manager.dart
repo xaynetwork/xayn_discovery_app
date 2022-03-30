@@ -3,8 +3,11 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
@@ -56,6 +59,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   final int _maxCardCount;
 
   DiscoveryFeedManager(
+    this._fetchSessionUseCase,
     this._discoveryFeedNavActions,
     EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
@@ -79,6 +83,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           featureManager,
         );
 
+  late final FetchSessionUseCase _fetchSessionUseCase;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
   bool _didChangeMarkets = false;
@@ -89,6 +94,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   bool get didReachEnd => false;
+
+  Future<Session> getSession() => _fetchSessionUseCase.singleOutput(none);
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
@@ -177,8 +184,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   void onTrialExpired() => _discoveryFeedNavActions.onTrialExpired();
 
   @override
-  void resetParameters() {
-    resetCardIndex();
+  void resetParameters([int nextCardIndex = 0]) {
+    resetCardIndex(nextCardIndex);
     // clears the current pending observation, if any...
     observeDocument();
     // clear the inner-stored current observation...
@@ -234,7 +241,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
             lastEvent = event;
 
             if (event is RestoreFeedSucceeded) {
-              self._isLoading = false;
               lastResults = restoreFeedSucceeded(event);
             } else if (event is NextFeedBatchRequestSucceeded) {
               self._isLoading = false;
@@ -244,9 +250,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
             } else if (event is EngineExceptionRaised) {
               lastResults = engineExceptionRaised(event);
             } else if (event is NextFeedBatchRequestFailed) {
+              self._isLoading = false;
               lastResults = nextFeedBatchRequestFailed(event);
             } else if (event is RestoreFeedFailed) {
-              self._isLoading = false;
               lastResults = restoreFeedFailed(event);
             } else {
               lastResults = orElse();
