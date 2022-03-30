@@ -260,7 +260,9 @@ lane :publish do |options|
         ENV[appcenter_token],
         appcenter_target,
         appcenter_buildfile,
-        options[Options::VERSION_NAME]
+        options[Options::VERSION_NAME],
+        # maxChangeLogSize
+        platform ==  Platforms::ANDROID ? 500 : -1
       )
     else
       uploadToAppCenter(
@@ -325,8 +327,8 @@ def shell(args)
   end
 end
 
-def uploadToAppCenter(token, appName, path, version)
-  changelog = gitChangeLog(version)
+def uploadToAppCenter(token, appName, path, version, maxChangeLogSize = -1)
+  changelog = gitShortChangeLog(version, maxChangeLogSize, false)
   appcenter_upload(
     api_token: token,
     owner_name: Config::APPCENTER_OWNER_NAME,
@@ -339,8 +341,8 @@ def uploadToAppCenter(token, appName, path, version)
   )
 end
 
-def uploadToStore(token, appName, path, version)
-  changelog = gitChangeLog(version)
+def uploadToStore(token, appName, path, version, maxChangeLogSize = -1)
+  changelog = gitShortChangeLog(version, maxChangeLogSize, false)
   appcenter_upload(
     api_token: token,
     owner_name: Config::APPCENTER_OWNER_NAME,
