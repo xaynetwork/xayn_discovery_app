@@ -64,6 +64,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           title: R.strings.personalAreaTitle,
           iconPath: R.assets.icons.gear,
           onPressed: _manager.onSettingsNavPressed,
+          iconkey: Keys.personalAreaIconSettings,
         ),
       ),
       body: bloc,
