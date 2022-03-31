@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
@@ -177,6 +178,12 @@ class TestAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> send(AnalyticsEvent event) async {}
+
+  @override
+  Future<void> updateIdentityParam(IdentityParam param) async {}
+
+  @override
+  Future<void> updateIdentityParams(Set<IdentityParam> params) async {}
 }
 
 @Injectable(as: Client)
@@ -187,6 +194,7 @@ class FakeHttpClient extends Client {
           404, 'FakeResponse: Resource not found.', http.Headers(), null));
 
   FakeHttpClient(this.handler);
+
   final Future<http.Response> Function(http.Request request) handler;
 
   @override
