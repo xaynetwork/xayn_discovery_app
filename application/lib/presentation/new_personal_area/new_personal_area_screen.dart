@@ -42,25 +42,11 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         CollectionCardManagersMixin,
         BottomSheetBodyMixin,
         CardWidgetTransitionMixin {
-  NewPersonalAreaManager? _manager;
-
-  @override
-  void initState() {
-    _initManager();
-    super.initState();
-  }
-
-  void _initManager() {
-    di.getAsync<NewPersonalAreaManager>().then((it) {
-      setState(() {
-        _manager = it;
-      });
-    });
-  }
+  late final NewPersonalAreaManager _manager = di.get();
 
   @override
   void dispose() {
-    _manager?.close();
+    _manager.close();
     super.dispose();
   }
 
@@ -70,11 +56,11 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         [
           buildNavBarItemHome(onPressed: () {
             hideTooltip();
-            _manager?.onHomeNavPressed();
+            _manager.onHomeNavPressed();
           }),
           buildNavBarItemSearch(onPressed: () {
             hideTooltip();
-            _manager?.onActiveSearchNavPressed();
+            _manager.onActiveSearchNavPressed();
           }),
           buildNavBarItemPersonalArea(
             isActive: true,
@@ -96,7 +82,9 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
               ),
               AppToolbarIconModel(
                 iconPath: R.assets.icons.gear,
-                onPressed: () => _manager?.onSettingsNavPressed(),
+                onPressed: () {
+                  _manager.onSettingsNavPressed();
+                },
                 iconKey: Keys.personalAreaIconSettings,
               ),
             ],
@@ -106,9 +94,6 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
       );
 
   Widget _buildBody() {
-    if (_manager == null) {
-      return Container();
-    }
     Widget screenBloc =
         BlocBuilder<NewPersonalAreaManager, NewPersonalAreaState>(
       bloc: _manager,
@@ -157,7 +142,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         : card = CardWidgetTransitionWrapper(
             key: ValueKey(collection.id),
             onAnimationDone: () => _showCollectionCardOptions(collection),
-            onLongPress: _manager?.triggerHapticFeedbackMedium,
+            onLongPress: _manager.triggerHapticFeedbackMedium,
             child: _buildSwipeableCard(collection),
           );
 
@@ -178,7 +163,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
                 collection.id.toString(),
               ),
               title: collection.name,
-              onPressed: () => _manager?.onCollectionPressed(collection.id),
+              onPressed: () => _manager.onCollectionPressed(collection.id),
               numOfItems: cardState.numOfItems,
               backgroundImage: cardState.image,
               color: R.colors.collectionsScreenCard,
@@ -192,7 +177,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
   Widget _buildSwipeableCard(Collection collection) => SwipeableCollectionCard(
         collectionCard: _buildBaseCard(collection),
         onSwipeOptionTap: _onSwipeOptionsTap(collection),
-        onFling: _manager?.triggerHapticFeedbackMedium,
+        onFling: _manager.triggerHapticFeedbackMedium,
       );
 
   Widget _buildTrialBanner(DateTime trialEndDate) => Padding(
