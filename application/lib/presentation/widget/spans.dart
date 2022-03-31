@@ -4,9 +4,9 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 extension TextSpanExtension on String {
   TextSpan link({VoidCallback? onTap}) => span(
-      style: R.styles.sStyle.copyWith(color: R.colors.accent), onTap: onTap);
+      style: R.styles.mStyle.copyWith(color: R.colors.accent), onTap: onTap);
   TextSpan bold({VoidCallback? onTap}) =>
-      span(style: R.styles.sBoldStyle, onTap: onTap);
+      span(style: R.styles.mBoldStyle, onTap: onTap);
 
   TextSpan span({TextStyle? style, VoidCallback? onTap}) {
     TapGestureRecognizer? gesture;
@@ -16,7 +16,7 @@ extension TextSpanExtension on String {
     }
     return TextSpan(
       text: this,
-      style: style ?? R.styles.sStyle,
+      style: style ?? R.styles.mStyle,
       recognizer: gesture,
     );
   }
