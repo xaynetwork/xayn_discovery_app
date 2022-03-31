@@ -73,6 +73,9 @@ module Config
     def self.doc_UPLOAD_TO_APPCENTER() 'true, false' end
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
 
+    def self.doc_STORE() 'true, false' end
+    STORE = :store
+
     VERSION_NAME = :version_name
 
     def self.doc_WATCH() 'true, false' end
@@ -196,5 +199,7 @@ module Config
   # Appcenter defaults
   APPCENTER_OWNER_NAME = "XAIN_AG"
   APPCENTER_OWNER_TYPE = "organization"
+  APPCENTER_DESTINATION_TYPE_STORE = "store"
   APPCENTER_DEFAULT_TARGET = "Collaborators"
+  APPCENTER_DEFAULT_STORE = "Beta"
 end
