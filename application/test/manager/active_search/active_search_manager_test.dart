@@ -31,6 +31,7 @@ void main() {
   late AppDiscoveryEngine engine;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockFeatureManager featureManager;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -38,6 +39,7 @@ void main() {
     engine = MockAppDiscoveryEngine();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    featureManager = MockFeatureManager();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -69,6 +71,7 @@ void main() {
           ),
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
+          featureManager,
         );
   });
 
@@ -90,6 +93,7 @@ void main() {
       );
       when(engine.getSearchTerm()).thenAnswer(
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(featureManager.isPaymentEnabled).thenReturn(true);
       return buildManager();
     },
     verify: (bloc) => expect(
@@ -120,6 +124,7 @@ void main() {
       );
       when(engine.getSearchTerm()).thenAnswer(
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(featureManager.isPaymentEnabled).thenReturn(false);
       return buildManager();
     },
     verify: (bloc) {
