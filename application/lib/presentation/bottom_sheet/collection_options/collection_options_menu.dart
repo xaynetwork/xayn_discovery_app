@@ -71,10 +71,7 @@ class __CollectionOptionsState extends State<_CollectionOptions>
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(height: R.dimen.unit2),
-        ...menuOptions.map(_buildRow).toList(),
-      ],
+      children: menuOptions.map(_buildRow).toList(),
     );
   }
 

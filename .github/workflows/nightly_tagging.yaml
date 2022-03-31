@@ -6,9 +6,6 @@ on:
     # https://crontab.guru/#0_18_*_*_1,2,3,4
     - cron: '0 18 * * 1,2,3,4' # At 18:00 on every day-of-week from Monday through Thursday UTC
 
-permissions:
-  contents: read
-
 env:
   FASTLANE_SKIP_UPDATE_CHECK: '1'
 

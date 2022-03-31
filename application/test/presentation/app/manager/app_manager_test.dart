@@ -18,6 +18,9 @@ void main() {
       createOrGetDefaultCollectionUseCase;
   late MockAppSettingsRepository appSettingsRepository;
   late MockRenameDefaultCollectionUseCase renameDefaultCollectionUseCase;
+  late MockSetInitialIdentityParamsUseCase setInitialIdentityParamsUseCase;
+  late MockSetCollectionAndBookmarksChangesIdentityParam
+      setCollectionAndBookmarksChangesIdentityParam;
   late Collection mockDefaultCollection;
 
   setUp(() {
@@ -28,6 +31,9 @@ void main() {
     createOrGetDefaultCollectionUseCase =
         MockCreateOrGetDefaultCollectionUseCase();
     renameDefaultCollectionUseCase = MockRenameDefaultCollectionUseCase();
+    setInitialIdentityParamsUseCase = MockSetInitialIdentityParamsUseCase();
+    setCollectionAndBookmarksChangesIdentityParam =
+        MockSetCollectionAndBookmarksChangesIdentityParam();
     appSettingsRepository = MockAppSettingsRepository();
 
     when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
@@ -45,6 +51,12 @@ void main() {
         UseCaseResult.success(mockDefaultCollection),
       ],
     );
+    when(setInitialIdentityParamsUseCase.call(none)).thenAnswer(
+      (_) async => const [UseCaseResult.success(none)],
+    );
+    when(setCollectionAndBookmarksChangesIdentityParam.call(none)).thenAnswer(
+      (_) async => const [UseCaseResult.success(none)],
+    );
   });
 
   AppManager create() => AppManager(
@@ -52,6 +64,8 @@ void main() {
         incrementAppSessionUseCase,
         createOrGetDefaultCollectionUseCase,
         renameDefaultCollectionUseCase,
+        setInitialIdentityParamsUseCase,
+        setCollectionAndBookmarksChangesIdentityParam,
         appSettingsRepository,
       );
 
@@ -60,11 +74,16 @@ void main() {
     build: create,
     expect: () => const [AppState(appTheme: AppTheme.system)],
     verify: (manager) {
-      verify(appSettingsRepository.settings).called(1);
-      verify(incrementAppSessionUseCase.call(none)).called(1);
-      verify(createOrGetDefaultCollectionUseCase
-              .call(R.strings.defaultCollectionNameReadLater))
-          .called(1);
+      verifyInOrder([
+        appSettingsRepository.settings,
+        incrementAppSessionUseCase.call(none),
+        createOrGetDefaultCollectionUseCase
+            .call(R.strings.defaultCollectionNameReadLater),
+        setInitialIdentityParamsUseCase.call(none),
+      ]);
+      verifyNoMoreInteractions(appSettingsRepository);
+      verifyNoMoreInteractions(createOrGetDefaultCollectionUseCase);
+      verifyNoMoreInteractions(setInitialIdentityParamsUseCase);
       verifyNoMoreInteractions(incrementAppSessionUseCase);
     },
   );
