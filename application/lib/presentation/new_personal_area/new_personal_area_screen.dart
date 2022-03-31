@@ -127,14 +127,14 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
   ) {
     final list = CustomAnimatedList<ListItemModel>(
       items: screenState.items,
-      itemBuilder: (_, index, __, item) {
-        if (item.isTrialBanner) {
-          return _buildTrialBanner(item.trialEndDate!);
-        }
-        return _buildCard(
-          item.collection!,
-        );
-      },
+      itemBuilder: (_, index, __, item) => item.map(
+        collection: (itemModel) => _buildCard(
+          itemModel.collection,
+        ),
+        payment: (itemModel) => _buildTrialBanner(
+          itemModel.trialEndDate,
+        ),
+      ),
       areItemsTheSame: (a, b) => a.id == b.id,
     );
 
