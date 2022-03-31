@@ -39,6 +39,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     with UseCaseBlocHelper<NewPersonalAreaState>
     implements NewPersonalAreaNavActions {
   final CreateCollectionUseCase _createCollectionUseCase;
+  final GetAllCollectionsUseCase _getAllCollectionsUseCase;
   final RemoveCollectionUseCase _removeCollectionUseCase;
   final RenameCollectionUseCase _renameCollectionUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
@@ -50,8 +51,9 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
 
-  NewPersonalAreaManager._(
+  NewPersonalAreaManager(
     this._createCollectionUseCase,
+    this._getAllCollectionsUseCase,
     this._removeCollectionUseCase,
     this._renameCollectionUseCase,
     this._listenCollectionsUseCase,
@@ -62,75 +64,39 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
-    this._items,
   ) : super(NewPersonalAreaState.initial()) {
     _init();
   }
 
-  @factoryMethod
-  static Future<NewPersonalAreaManager> create(
-    CreateCollectionUseCase createCollectionUseCase,
-    GetAllCollectionsUseCase getAllCollectionsUseCase,
-    RemoveCollectionUseCase removeCollectionUseCase,
-    RenameCollectionUseCase renameCollectionUseCase,
-    ListenCollectionsUseCase listenCollectionsUseCase,
-    HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
-    CollectionErrorsEnumMapper collectionErrorsEnumMapper,
-    NewPersonalAreaNavActions navActions,
-    DateTimeHandler dateTimeHandler,
-    FeatureManager featureManager,
-    GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
-    ListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase,
-  ) async {
-    final items = (await getAllCollectionsUseCase.singleOutput(none))
-        .collections
-        .map(
-          (e) => ListItemModel.collection(
-            id: e.id,
-            collection: e,
-          ),
-        )
-        .toList();
-
-    return NewPersonalAreaManager._(
-      createCollectionUseCase,
-      removeCollectionUseCase,
-      renameCollectionUseCase,
-      listenCollectionsUseCase,
-      hapticFeedbackMediumUseCase,
-      collectionErrorsEnumMapper,
-      navActions,
-      dateTimeHandler,
-      featureManager,
-      getSubscriptionStatusUseCase,
-      listenSubscriptionStatusUseCase,
-      items,
-    );
-  }
-
-  late List<ListItemModel> _items;
   late final UseCaseValueStream<ListenCollectionsUseCaseOut>
-      _collectionsHandler;
-  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler;
+      _collectionsHandler =
+      consume(_listenCollectionsUseCase, initialData: none);
+  late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
+      consume(
+    _listenSubscriptionStatusUseCase,
+    initialData: PurchasableIds.subscription,
+  );
   late SubscriptionStatus _subscriptionStatus;
+  List<ListItemModel> _items = [];
   String? _useCaseError;
 
   void _init() {
     scheduleComputeState(() async {
-      _collectionsHandler =
-          consume(_listenCollectionsUseCase, initialData: none);
-
       // read values
+      _items = (await _getAllCollectionsUseCase.singleOutput(none))
+          .collections
+          .map(
+            (e) => ListItemModel.collection(
+              id: e.id,
+              collection: e,
+            ),
+          )
+          .toList();
+
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
 
       _maybeAddOrUpdateTrialBannerToItems();
-
-      // attach listeners
-      _subscriptionStatusHandler = consume(
-        _listenSubscriptionStatusUseCase,
-        initialData: PurchasableIds.subscription,
-      );
     });
   }
 
