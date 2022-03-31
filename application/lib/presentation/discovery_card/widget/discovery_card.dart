@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
@@ -128,6 +129,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final DragCallback _onDrag;
   late final DiscoveryCardController _controller;
   late final StreamSubscription<BuildContext> _updateNavBarListener;
+  late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
 
   @override
@@ -260,32 +262,35 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
             _kMinImageFractionSize * constraints.maxHeight);
 
-        return Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            _buildReaderMode(
-              processHtmlResult: state.processedDocument?.processHtmlResult,
-              width: size.width,
-              headlineHeight:
-                  size.height * _kMinImageFractionSize + R.dimen.unit2,
-            ),
-            Positioned(
-              top: -outerScrollOffset,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: constraints.maxHeight * _openingAnimation.value,
-                alignment: Alignment.topCenter,
-                child: Stack(
+        return AppScrollbar(
+          scrollController: _scrollController,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              _buildReaderMode(
+                processHtmlResult: state.processedDocument?.processHtmlResult,
+                width: size.width,
+                headlineHeight:
+                    size.height * _kMinImageFractionSize + R.dimen.unit2,
+              ),
+              Positioned(
+                top: -outerScrollOffset,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: constraints.maxHeight * _openingAnimation.value,
                   alignment: Alignment.topCenter,
-                  children: [
-                    maskedImage,
-                    elements,
-                  ],
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      maskedImage,
+                      elements,
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -314,6 +319,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     required double headlineHeight,
   }) {
     final readerMode = ReaderMode(
+      scrollController: _scrollController,
       title: title,
       languageCode: widget.document.resource.language,
       uri: widget.document.resource.url,
