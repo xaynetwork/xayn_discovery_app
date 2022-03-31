@@ -61,8 +61,11 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppToolbar(
-        appToolbarData: AppToolbarData.titleOnly(
+        appToolbarData: AppToolbarData.withTrailingIcon(
           title: R.strings.personalAreaTitle,
+          iconPath: R.assets.icons.gear,
+          onPressed: _manager.onSettingsNavPressed,
+          iconkey: Keys.personalAreaIconSettings,
         ),
       ),
       body: bloc,
@@ -96,8 +99,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       if (buildTrialBanner)
         _buildTrialBanner(state.subscriptionStatus.trialEndDate!),
       _buildCollection(),
-      _buildHomeFeed(),
-      _buildSettings(),
       _buildContactSection(),
     ]
         .map((e) => Padding(
@@ -131,28 +132,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           svgBackgroundPath: R.assets.graphics.formsOrange,
           onPressed: _manager.onCollectionsNavPressed,
           key: Keys.personalAreaCardCollections,
-        ),
-      );
-
-  CardWidget _buildHomeFeed() => CardWidget(
-        cardData: CardData.personalArea(
-          title: R.strings.personalAreaHomeFeed,
-          color: R.colors.personalAreaHomeFeed,
-          svgIconPath: R.assets.icons.confetti,
-          svgBackgroundPath: R.assets.graphics.formsGreen,
-          onPressed: _manager.onHomeFeedSettingsNavPressed,
-          key: Keys.personalAreaCardHomeFeed,
-        ),
-      );
-
-  CardWidget _buildSettings() => CardWidget(
-        cardData: CardData.personalArea(
-          title: R.strings.personalAreaSettings,
-          color: R.colors.personalAreaSettings,
-          svgIconPath: R.assets.icons.gear,
-          svgBackgroundPath: R.assets.graphics.formsPurple,
-          onPressed: _manager.onSettingsNavPressed,
-          key: Keys.personalAreaCardSettings,
         ),
       );
 

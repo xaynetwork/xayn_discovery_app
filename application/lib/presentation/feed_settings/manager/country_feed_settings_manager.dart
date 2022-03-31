@@ -9,29 +9,22 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sup
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_error.dart';
 
-import 'feed_settings_state.dart';
-
-abstract class FeedSettingsNavActions {
-  void onBackNavPressed();
-}
+import 'country_feed_settings_state.dart';
 
 const maxSelectedCountryAmount = 3;
 
 @injectable
-class FeedSettingsManager extends Cubit<FeedSettingsState>
-    with UseCaseBlocHelper
-    implements FeedSettingsNavActions {
+class CountryFeedSettingsManager extends Cubit<CountryFeedSettingsState>
+    with UseCaseBlocHelper {
   final GetSupportedCountriesUseCase _getSupportedCountriesUseCase;
   final GetSelectedCountriesUseCase _getSelectedCountriesUseCase;
   final SaveSelectedCountriesUseCase _saveSelectedFeedMarketsUseCase;
-  final FeedSettingsNavActions _navActions;
 
-  FeedSettingsManager(
-    this._navActions,
+  CountryFeedSettingsManager(
     this._getSupportedCountriesUseCase,
     this._getSelectedCountriesUseCase,
     this._saveSelectedFeedMarketsUseCase,
-  ) : super(const FeedSettingsState.initial());
+  ) : super(const CountryFeedSettingsState.initial());
 
   final _allCountries = <Country>{};
   final _selectedCountries = <Country>{};
@@ -71,15 +64,15 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
   }
 
   @override
-  Future<FeedSettingsState> computeState() async {
+  Future<CountryFeedSettingsState> computeState() async {
     if (_allCountries.isEmpty) {
-      return const FeedSettingsState.initial();
+      return const CountryFeedSettingsState.initial();
     }
     final unSelectedCountries = List<Country>.from(_allCountries);
     unSelectedCountries
         .removeWhere((country) => _selectedCountries.contains(country));
     try {
-      return FeedSettingsState.ready(
+      return CountryFeedSettingsState.ready(
         maxSelectedCountryAmount: maxSelectedCountryAmount,
         selectedCountries: _selectedCountries.toList(),
         unSelectedCountries: unSelectedCountries,
@@ -89,7 +82,4 @@ class FeedSettingsManager extends Cubit<FeedSettingsState>
       _error = null;
     }
   }
-
-  @override
-  void onBackNavPressed() => _navActions.onBackNavPressed();
 }

@@ -76,6 +76,7 @@ class _CreateCollectionState extends State<_DeleteCollection>
 
           final footer = BottomSheetFooter(
             onCancelPressed: () {
+              _deleteCollectionConfirmationManager.onCancelPressed();
               closeBottomSheet(context);
               widget.onSystemPop?.call();
             },

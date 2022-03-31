@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
@@ -10,7 +9,6 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -24,19 +22,15 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 import '../../test_utils/utils.dart';
-import 'settings_manager_test.mocks.dart';
 
-@GenerateMocks([AnalyticsService])
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
-  const isTtsEnabled = true;
   final subscriptionStatus = SubscriptionStatus.initial();
   const subscriptionManagementURL = 'https://example.com';
   final stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
-    isTtsEnabled: true,
     isPaymentEnabled: false,
     subscriptionStatus: subscriptionStatus,
   );
@@ -50,9 +44,6 @@ void main() {
   late MockExtractLogUseCase extractLogUseCase;
   late MockUrlOpener urlOpener;
   late MockShareUriUseCase shareUriUseCase;
-  late MockGetTtsPreferenceUseCase getTtsPreferenceUseCase;
-  late MockSaveTtsPreferenceUseCase saveTtsPreferenceUseCase;
-  late MockListenTtsPreferenceUseCase listenTtsPreferenceUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
@@ -70,9 +61,6 @@ void main() {
     extractLogUseCase = MockExtractLogUseCase();
     urlOpener = MockUrlOpener();
     shareUriUseCase = MockShareUriUseCase();
-    getTtsPreferenceUseCase = MockGetTtsPreferenceUseCase();
-    saveTtsPreferenceUseCase = MockSaveTtsPreferenceUseCase();
-    listenTtsPreferenceUseCase = MockListenTtsPreferenceUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
@@ -89,18 +77,11 @@ void main() {
       (_) => const Stream.empty(),
     );
 
-    when(listenTtsPreferenceUseCase.transform(any)).thenAnswer(
-      (_) => const Stream.empty(),
-    );
-
     when(getAppVersionUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appVersion));
 
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
-
-    when(getTtsPreferenceUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(isTtsEnabled));
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
         .thenAnswer((_) => Future.value(subscriptionStatus));
@@ -128,9 +109,6 @@ void main() {
         extractLogUseCase,
         MockSettingsNavActions(),
         shareUriUseCase,
-        getTtsPreferenceUseCase,
-        saveTtsPreferenceUseCase,
-        listenTtsPreferenceUseCase,
         hapticFeedbackMediumUseCase,
         featureManager,
         getSubscriptionStatusUseCase,
@@ -145,20 +123,15 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
-        getTtsPreferenceUseCase.singleOutput(none),
         getAppThemeUseCase.singleOutput(none),
         getSubscriptionStatusUseCase.singleOutput(any),
         listenAppThemeUseCase.transform(any),
-        listenTtsPreferenceUseCase.transform(any),
       ]);
       verifyNoMoreInteractions(saveAppThemeUseCase);
-      verifyNoMoreInteractions(saveTtsPreferenceUseCase);
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
-      verifyNoMoreInteractions(getTtsPreferenceUseCase);
       verifyNoMoreInteractions(getSubscriptionStatusUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
-      verifyNoMoreInteractions(listenTtsPreferenceUseCase);
     },
   );
 
@@ -185,32 +158,6 @@ void main() {
       verifyNoMoreInteractions(getAppVersionUseCase);
       verifyNoMoreInteractions(getAppThemeUseCase);
       verifyNoMoreInteractions(listenAppThemeUseCase);
-    },
-  );
-
-  blocTest<SettingsScreenManager, SettingsScreenState>(
-    'GIVEN text-to-speech WHEN saveTtsPreference method called THEN call saveTts useCase',
-    setUp: () {
-      when(saveTtsPreferenceUseCase.call(isTtsEnabled)).thenAnswer(
-        (_) async => const [UseCaseResult.success(isTtsEnabled)],
-      );
-    },
-    build: () => create(),
-    act: (manager) => manager.saveTextToSpeechPreference(isTtsEnabled),
-    //default one, emitted when manager created
-    expect: () => [stateReady],
-    verify: (manager) {
-      verifyInOrder([
-        getAppVersionUseCase.singleOutput(none),
-        // this placed here inside, cos it will be called exactly after
-        saveTtsPreferenceUseCase.call(isTtsEnabled),
-        getTtsPreferenceUseCase.singleOutput(none),
-        listenTtsPreferenceUseCase.transform(any),
-      ]);
-      verifyNoMoreInteractions(saveTtsPreferenceUseCase);
-      verifyNoMoreInteractions(getAppVersionUseCase);
-      verifyNoMoreInteractions(getTtsPreferenceUseCase);
-      verifyNoMoreInteractions(listenTtsPreferenceUseCase);
     },
   );
 

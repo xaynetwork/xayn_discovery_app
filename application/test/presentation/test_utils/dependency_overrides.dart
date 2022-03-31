@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
@@ -16,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import 'fakes.dart';
 
@@ -79,6 +81,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
 
   @override
   Stream<EngineEvent> get engineEvents => _onEngineEvent.stream;
+  final Set<String> _excludedSources = {};
 
   @override
   Future<EngineEvent> logDocumentTime(
@@ -142,15 +145,15 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> addSourceToExcludedList(String source) {
-    // TODO: implement addSourceToExcludedList
-    throw UnimplementedError();
+  Future<EngineEvent> addSourceToExcludedList(String source) async {
+    _excludedSources.add(source);
+    return const EngineEvent.clientEventSucceeded();
   }
 
   @override
-  Future<EngineEvent> getExcludedSourcesList() {
-    // TODO: implement getExcludedSourcesList
-    throw UnimplementedError();
+  Future<EngineEvent> getExcludedSourcesList() async {
+    return EngineEvent.excludedSourcesListRequestSucceeded(
+        _excludedSources.toSet());
   }
 
   @override
@@ -160,9 +163,9 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> removeSourceFromExcludedList(String source) {
-    // TODO: implement removeSourceFromExcludedList
-    throw UnimplementedError();
+  Future<EngineEvent> removeSourceFromExcludedList(String source) async {
+    _excludedSources.remove(source);
+    return const EngineEvent.clientEventSucceeded();
   }
 }
 
@@ -175,6 +178,12 @@ class TestAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> send(AnalyticsEvent event) async {}
+
+  @override
+  Future<void> updateIdentityParam(IdentityParam param) async {}
+
+  @override
+  Future<void> updateIdentityParams(Set<IdentityParam> params) async {}
 }
 
 @Injectable(as: Client)
@@ -185,6 +194,7 @@ class FakeHttpClient extends Client {
           404, 'FakeResponse: Resource not found.', http.Headers(), null));
 
   FakeHttpClient(this.handler);
+
   final Future<http.Response> Function(http.Request request) handler;
 
   @override

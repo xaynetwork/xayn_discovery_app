@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_a
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
-import '../../settings/manager/settings_manager_test.mocks.dart';
 import '../../test_utils/utils.dart';
 
 void main() {
@@ -85,16 +84,6 @@ void main() {
     act: (manager) => manager.onCollectionsNavPressed(),
     verify: (manager) {
       verify(actions.onCollectionsNavPressed());
-      verifyNoMoreInteractions(actions);
-    },
-  );
-
-  blocTest<PersonalAreaManager, PersonalAreaState>(
-    'WHEN onHomeFeedSettingsNavPressed is called THEN redirected to action',
-    build: () => create(),
-    act: (manager) => manager.onHomeFeedSettingsNavPressed(),
-    verify: (manager) {
-      verify(actions.onHomeFeedSettingsNavPressed());
       verifyNoMoreInteractions(actions);
     },
   );

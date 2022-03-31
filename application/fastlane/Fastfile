@@ -57,6 +57,7 @@ before_all do |lane, options|
   build_number = gitVersionNumber().to_i + offset
   setIfNotSet.call(Options::BUILD_NUMBER, build_number)
   setIfNotSet.call(Options::VERSION_NAME, version_name)
+  setIfNotSet.call(Options::STORE, flavor == Flavors::BETA)
   options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
   options[_Options::ENV].merge!(ENV.to_h)
@@ -222,7 +223,11 @@ lane :check do |options|
   else
     flutter("test --reporter=json > machine.log || echo 'Tests failed'")
   end
-  flutter('pub global run dart_dot_reporter machine.log --show-message')
+  begin
+    flutter('pub global run dart_dot_reporter machine.log --show-message')
+  rescue
+    UI.user_error!("Checks failed!");
+  end
 end
 
 desc "Build and publish to MS AppCenter \n" \
@@ -249,12 +254,24 @@ lane :publish do |options|
   if options[Options::UPLOAD_TO_APPCENTER]
     UI.success "Will upload file #{appcenter_buildfile}"
     UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
-    uploadToAppCenter(
-      ENV[appcenter_token],
-      appcenter_target,
-      appcenter_buildfile,
-      options[Options::VERSION_NAME]
-    )
+
+    if options[Options::STORE]
+      uploadToStore(
+        ENV[appcenter_token],
+        appcenter_target,
+        appcenter_buildfile,
+        options[Options::VERSION_NAME],
+        # maxChangeLogSize
+        platform ==  Platforms::ANDROID ? 500 : -1
+      )
+    else
+      uploadToAppCenter(
+        ENV[appcenter_token],
+        appcenter_target,
+        appcenter_buildfile,
+        options[Options::VERSION_NAME]
+      )
+    end
   end
 end
 
@@ -267,6 +284,28 @@ lane :update_assets do |options|
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
   downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
+end
+
+desc "Takes the current tag and increments the version on the minor position and creates a new Tag.\n" \
+     "So that 3.0.2 will become 3.1.0\n" \
+     "It will fail if the current commit is already tagged."
+lane :increment_nightly_tag do |options|
+  currentCommit = shell("git rev-parse HEAD")
+  currentCommit["\n"] = ""
+  currentCommitTag = ""
+  begin
+    currentCommitTag = shell("git describe --contains #{currentCommit} 2>/dev/null")
+    currentCommitTag["\n"] = ""
+  rescue
+  end
+
+  UI.user_error!("This commit (#{currentCommit}) already contains a tag (#{currentCommitTag})") unless currentCommitTag == ""
+
+  lastTag = shell('git describe --abbrev=0 --tags')
+  numbers = lastTag.split('.')
+  minor = numbers[1].to_i + 1
+  newTag = "#{numbers[0]}.#{minor}.0"
+  shell("git tag #{newTag}")
 end
 
 # Private helper methods
@@ -288,8 +327,8 @@ def shell(args)
   end
 end
 
-def uploadToAppCenter(token, appName, path, version)
-  changelog = gitChangeLog(version)
+def uploadToAppCenter(token, appName, path, version, maxChangeLogSize = -1)
+  changelog = gitShortChangeLog(version, maxChangeLogSize, false)
   appcenter_upload(
     api_token: token,
     owner_name: Config::APPCENTER_OWNER_NAME,
@@ -298,6 +337,21 @@ def uploadToAppCenter(token, appName, path, version)
     file: path,
     release_notes: changelog,
     destinations: Config::APPCENTER_DEFAULT_TARGET,
+    notify_testers: true,
+  )
+end
+
+def uploadToStore(token, appName, path, version, maxChangeLogSize = -1)
+  changelog = gitShortChangeLog(version, maxChangeLogSize, false)
+  appcenter_upload(
+    api_token: token,
+    owner_name: Config::APPCENTER_OWNER_NAME,
+    owner_type: Config::APPCENTER_OWNER_TYPE,
+    app_name: appName,
+    file: path,
+    release_notes: changelog,
+    destinations: Config::APPCENTER_DEFAULT_STORE,
+    destination_type: Config::APPCENTER_DESTINATION_TYPE_STORE,
     notify_testers: true,
   )
 end

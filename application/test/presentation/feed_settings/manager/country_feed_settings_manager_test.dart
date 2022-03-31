@@ -6,29 +6,26 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_error.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/feed_settings_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
 
 import '../../test_utils/utils.dart';
 
-part 'feed_settings_manager_test.utils.dart';
+part 'country_feed_settings_manager_test.utils.dart';
 
 void main() {
-  late MockFeedSettingsNavActions navActions;
   late MockGetSupportedCountriesUseCase getSupportedCountriesUseCase;
   late MockGetSelectedCountriesUseCase getSelectedCountriesUseCase;
   late MockSaveSelectedCountriesUseCase saveSelectedCountriesUseCase;
-  late FeedSettingsManager manager;
+  late CountryFeedSettingsManager manager;
   final allCountries = selectedList + unSelectedList;
 
   setUp(() {
-    navActions = MockFeedSettingsNavActions();
     getSupportedCountriesUseCase = MockGetSupportedCountriesUseCase();
     getSelectedCountriesUseCase = MockGetSelectedCountriesUseCase();
     saveSelectedCountriesUseCase = MockSaveSelectedCountriesUseCase();
 
-    manager = FeedSettingsManager(
-      navActions,
+    manager = CountryFeedSettingsManager(
       getSupportedCountriesUseCase,
       getSelectedCountriesUseCase,
       saveSelectedCountriesUseCase,
@@ -42,18 +39,18 @@ void main() {
         .thenAnswer((_) async => none);
   });
 
-  blocTest<FeedSettingsManager, FeedSettingsState>(
+  blocTest<CountryFeedSettingsManager, CountryFeedSettingsState>(
     'WHEN manager just created THEN emit initial state',
     build: () => manager,
-    expect: () => const [FeedSettingsState.initial()],
+    expect: () => const [CountryFeedSettingsState.initial()],
   );
 
-  blocTest<FeedSettingsManager, FeedSettingsState>(
+  blocTest<CountryFeedSettingsManager, CountryFeedSettingsState>(
     'WHEN manager init() called THEN emit state ready with countries',
     build: () => manager,
     act: (manager) => manager.init(),
     expect: () => const [
-      FeedSettingsState.initial(),
+      CountryFeedSettingsState.initial(),
       stateReady,
     ],
     verify: (_) {
@@ -62,11 +59,10 @@ void main() {
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
       verifyNoMoreInteractions(getSelectedCountriesUseCase);
       verifyZeroInteractions(saveSelectedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 
-  blocTest<FeedSettingsManager, FeedSettingsState>(
+  blocTest<CountryFeedSettingsManager, CountryFeedSettingsState>(
     'WHEN manager onAddCountryPressed() called THEN emit state ready with one more selected country',
     build: () => manager,
     act: (manager) async {
@@ -77,7 +73,7 @@ void main() {
       final unselected = List<Country>.from(unSelectedList);
       unselected.remove(germany);
       return [
-        const FeedSettingsState.initial(),
+        const CountryFeedSettingsState.initial(),
         stateReady.copyWith(
           selectedCountries: [usa, germany],
           unSelectedCountries: unselected,
@@ -88,12 +84,10 @@ void main() {
       verify(getSupportedCountriesUseCase.singleOutput(none));
       verify(saveSelectedCountriesUseCase.singleOutput({usa, germany}));
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
-
-      verifyZeroInteractions(navActions);
     },
   );
 
-  blocTest<FeedSettingsManager, FeedSettingsState>(
+  blocTest<CountryFeedSettingsManager, CountryFeedSettingsState>(
     'WHEN manager onRemoveCountryPressed() called THEN emit state ready with minus one selected country',
     build: () => manager,
     act: (manager) async {
@@ -105,7 +99,7 @@ void main() {
       final unselected = List<Country>.from(unSelectedList);
       unselected.remove(germany);
       return [
-        const FeedSettingsState.initial(),
+        const CountryFeedSettingsState.initial(),
         stateReady.copyWith(
           selectedCountries: [usa, germany],
           unSelectedCountries: unselected,
@@ -120,11 +114,10 @@ void main() {
         saveSelectedCountriesUseCase.singleOutput({usa}),
       ]);
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 
-  blocTest<FeedSettingsManager, FeedSettingsState>(
+  blocTest<CountryFeedSettingsManager, CountryFeedSettingsState>(
     'GIVEN manager onRemoveCountryPressed() called WHEN only one selected country THEN nothing happened',
     build: () => manager,
     act: (manager) async {
@@ -132,7 +125,7 @@ void main() {
       await manager.onRemoveCountryPressed(germany);
     },
     expect: () => [
-      const FeedSettingsState.initial(),
+      const CountryFeedSettingsState.initial(),
       stateReady.copyWith(
         error: const ErrorObject(FeedSettingsError.minSelectedCountries),
       ),
@@ -143,11 +136,10 @@ void main() {
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
 
       verifyZeroInteractions(saveSelectedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 
-  blocTest<FeedSettingsManager, FeedSettingsState>(
+  blocTest<CountryFeedSettingsManager, CountryFeedSettingsState>(
     'GIVEN 3 calls with onAddCountryPressed WHEN selected list country already contain one default THEN add only 2 first',
     build: () => manager,
     act: (manager) async {
@@ -163,7 +155,7 @@ void main() {
       unselected2.remove(germany);
       unselected2.remove(austria);
       return [
-        const FeedSettingsState.initial(),
+        const CountryFeedSettingsState.initial(),
         stateReady.copyWith(
           selectedCountries: [usa, germany],
           unSelectedCountries: unselected,
@@ -191,7 +183,6 @@ void main() {
       ]);
 
       verifyNoMoreInteractions(getSupportedCountriesUseCase);
-      verifyZeroInteractions(navActions);
     },
   );
 }

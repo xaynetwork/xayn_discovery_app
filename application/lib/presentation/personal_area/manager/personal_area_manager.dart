@@ -17,8 +17,6 @@ abstract class PersonalAreaNavActions {
 
   void onCollectionsNavPressed();
 
-  void onHomeFeedSettingsNavPressed();
-
   void onSettingsNavPressed();
 }
 
@@ -88,10 +86,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
 
   @override
   void onCollectionsNavPressed() => _navActions.onCollectionsNavPressed();
-
-  @override
-  void onHomeFeedSettingsNavPressed() =>
-      _navActions.onHomeFeedSettingsNavPressed();
 
   @override
   void onSettingsNavPressed() => _navActions.onSettingsNavPressed();

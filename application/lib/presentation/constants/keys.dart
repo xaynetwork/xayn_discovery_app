@@ -12,10 +12,8 @@ class Keys {
 
   static const Key personalAreaCardCollections =
       Key('personal_area_card_collections');
-  static const Key personalAreaCardHomeFeed =
-      Key('personal_area_card_home_feed');
-  static const Key personalAreaCardSettings =
-      Key('personal_area_card_settings');
+  static const Key personalAreaIconSettings =
+      Key('personal_area_icon_settings');
 
   static const Key settingsThemeSystem = Key('settings_theme_item_system');
   static const Key settingsThemeLight = Key('settings_theme_item_light');

@@ -8,7 +8,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_screen.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/page/source_filter_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
@@ -31,7 +32,8 @@ class PageRegistry {
     personalArea,
     settings,
     onboarding,
-    feedSettings,
+    countryFeedSettings,
+    sourceFeedSettings,
     collections,
     error,
     payment,
@@ -119,10 +121,16 @@ class PageRegistry {
     ),
   );
 
-  static final feedSettings = xayn.PageData(
-    name: "feedSettings",
+  static final sourceFeedSettings = xayn.PageData(
+    name: "sourceFeedSettings",
     //ignore: prefer_const_constructors
-    builder: (_, args) => FeedSettingsScreen(),
+    builder: (_, args) => SourceFilterSettingsPage(),
+  );
+
+  static final countryFeedSettings = xayn.PageData(
+    name: "countryFeedSettings",
+    //ignore: prefer_const_constructors
+    builder: (_, args) => CountryFeedSettingsPage(),
   );
 
   static final collections = xayn.PageData(

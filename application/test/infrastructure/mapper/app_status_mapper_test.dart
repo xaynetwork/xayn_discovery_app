@@ -14,6 +14,7 @@ void main() {
   late MockAppVersionToMapMapper mockAppVersionToMapMapper;
 
   final now = DateTime.now();
+  late final lastSeen = now.subtract(const Duration(minutes: 1));
 
   setUp(() async {
     mockMapToAppVersionMapper = MockMapToAppVersionMapper();
@@ -36,6 +37,7 @@ void main() {
         1: {0: '1.0.0', 1: '123'},
         2: now,
         3: 'userId',
+        4: lastSeen,
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -45,6 +47,7 @@ void main() {
           lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
           firstAppLaunchDate: now,
           userId: const UniqueId.fromTrustedString('userId'),
+          lastSeenDate: lastSeen,
         ),
       );
     });
@@ -64,6 +67,7 @@ void main() {
         lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
         firstAppLaunchDate: now,
         userId: const UniqueId.fromTrustedString('userId'),
+        lastSeenDate: lastSeen,
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
@@ -74,6 +78,7 @@ void main() {
         },
         2: now,
         3: 'userId',
+        4: lastSeen,
       };
       expect(map, expectedMap);
     });
