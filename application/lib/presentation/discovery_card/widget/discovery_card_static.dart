@@ -69,6 +69,7 @@ class _DiscoveryCardStaticState
           url: webResource.url,
           provider: provider,
           datePublished: webResource.datePublished,
+          isInteractionEnabled: true,
           onLikePressed: () => discoveryCardManager.onFeedback(
             document: widget.document,
             userReaction: state.explicitDocumentUserReaction.isRelevant
