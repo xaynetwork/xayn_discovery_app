@@ -8,6 +8,8 @@ import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repositor
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -16,8 +18,11 @@ import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_map
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_collection_and_bookmark_changes_identity_param_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
@@ -52,6 +57,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
@@ -65,70 +71,77 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// It is easier to support end expand
 @GenerateMocks([
   ActiveSearchNavActions,
+  AnalyticsService,
   AppDiscoveryEngine,
   AppImageCacheManager,
   AppManager,
+  AppSettingsRepository,
+  AppStatusRepository,
   AppVersionToMapMapper,
   AreMarketsOutdatedUseCase,
   BookmarksScreenNavActions,
   BugReportingService,
   BuildContext,
-  GetSubscriptionStatusUseCase,
+  CountryFeedSettingsManager,
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
-  CountryFeedSettingsManager,
+  CrudExplicitDocumentFeedbackUseCase,
   DbEntityMapToFeedMarketMapper,
+  DiscoveryCardManager,
   Document,
+  EditReaderModeSettingsManager,
   ExtractLogUseCase,
   FeatureManager,
   FeedMarketToDbEntityMapMapper,
   FeedSettingsMapper,
   FeedSettingsRepository,
   FeedTypeMarketsRepository,
+  FetchSessionUseCase,
   GetAppSessionUseCase,
   GetAppThemeUseCase,
   GetAppVersionUseCase,
   GetSelectedCountriesUseCase,
   GetStoredAppVersionUseCase,
   GetSubscriptionDetailsUseCase,
+  GetSubscriptionManagementUrlUseCase,
+  GetSubscriptionStatusUseCase,
   GetSupportedCountriesUseCase,
+  HapticFeedbackMediumUseCase,
   InAppReview,
   IncrementAppSessionUseCase,
   ListenAppThemeUseCase,
+  ListenReaderModeSettingsUseCase,
+  ListenSubscriptionStatusUseCase,
   MapToAppVersionMapper,
   PaymentFlowErrorToErrorMessageMapper,
+  PaymentScreenNavActions,
   PaymentService,
   PersonalAreaManager,
   PersonalAreaNavActions,
   PurchasableProductMapper,
-  PurchasesErrorCodeToPaymentFlowErrorMapper,
+  PurchaseEventMapper,
   PurchaseSubscriptionUseCase,
+  PurchasesErrorCodeToPaymentFlowErrorMapper,
+  ReaderModeSettingsMapper,
+  ReaderModeSettingsRepository,
+  RenameDefaultCollectionUseCase,
+  RequestCodeRedemptionSheetUseCase,
+  RestoreSubscriptionUseCase,
   SaveAppThemeUseCase,
   SaveCurrentAppVersion,
+  SaveReaderModeBackgroundColorUseCase,
+  SaveReaderModeFontSizeParamUseCase,
+  SaveReaderModeFontStyleUseCase,
   SaveSelectedCountriesUseCase,
+  SendAnalyticsUseCase,
+  SendMarketingAnalyticsUseCase,
+  SetInitialIdentityParamsUseCase,
+  SetCollectionAndBookmarksChangesIdentityParam,
   SettingsNavActions,
   SettingsScreenManager,
   ShareUriUseCase,
+  UpdateSessionUseCase,
   UrlOpener,
-  AppSettingsRepository,
-  EditReaderModeSettingsManager,
-  ReaderModeSettingsMapper,
-  ReaderModeSettingsRepository,
-  ListenReaderModeSettingsUseCase,
-  SaveReaderModeFontStyleUseCase,
-  SaveReaderModeFontSizeParamUseCase,
-  SaveReaderModeBackgroundColorUseCase,
-  RequestCodeRedemptionSheetUseCase,
-  AppStatusRepository,
-  ListenSubscriptionStatusUseCase,
-  RenameDefaultCollectionUseCase,
-  HapticFeedbackMediumUseCase,
-  RestoreSubscriptionUseCase,
-  PaymentScreenNavActions,
-  GetSubscriptionManagementUrlUseCase,
-  SendAnalyticsUseCase,
-  SendMarketingAnalyticsUseCase,
-  PurchaseEventMapper,
 ])
 class Mocks {
   Mocks._();

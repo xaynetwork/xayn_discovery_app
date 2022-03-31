@@ -13,5 +13,6 @@ class AppToolbarData with _$AppToolbarData {
     required String title,
     required String iconPath,
     VoidCallback? onPressed,
+    Key? iconkey,
   }) = _AppToolbarDataWithTrailingIcon;
 }

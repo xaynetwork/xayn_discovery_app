@@ -51,9 +51,9 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         SubscriptionTrialBannerStateMixin,
         OverlayStateMixin,
         ErrorHandlingMixin {
-  final CardViewController _cardViewController = CardViewController();
-  final RatingDialogManager _ratingDialogManager = di.get();
-  final FeatureManager featureManager = di.get();
+  late final CardViewController _cardViewController = CardViewController();
+  late final RatingDialogManager _ratingDialogManager = di.get();
+  late final FeatureManager featureManager = di.get();
 
   /// no need to dispose here, handled by the Card Widget itself
   DiscoveryCardController? currentCardController;
@@ -63,6 +63,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   bool _trialBannerShown = false;
 
   T get manager;
+  CardViewController get cardViewController => _cardViewController;
 
   TtsData ttsData = TtsData.disabled();
 
@@ -145,7 +146,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (!state.isComplete) return _buildLoadingIndicator(notchSize);
 
-      if (state.cardIndex < totalResults) {
+      if (state.cardIndex < totalResults &&
+          _cardViewController.index != state.cardIndex) {
         _cardViewController.index = state.cardIndex;
       }
 
