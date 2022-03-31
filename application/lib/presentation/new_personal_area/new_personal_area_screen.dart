@@ -78,10 +78,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
           }),
           buildNavBarItemPersonalArea(
             isActive: true,
-            onPressed: () {
-              // nothing to do, we already on this screen :)
-              hideTooltip();
-            },
+            onPressed: hideTooltip,
           ),
         ],
       );
@@ -154,16 +151,16 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
 
   Widget _buildCard(Collection collection) {
     late Widget card;
-    if (collection.isDefault) {
-      card = _buildBaseCard(collection);
-    } else {
-      card = CardWidgetTransitionWrapper(
-        key: ValueKey(collection.id),
-        onAnimationDone: () => _showCollectionCardOptions(collection),
-        onLongPress: _manager?.triggerHapticFeedbackMedium,
-        child: _buildSwipeableCard(collection),
-      );
-    }
+
+    card = collection.isDefault
+        ? _buildBaseCard(collection)
+        : card = CardWidgetTransitionWrapper(
+            key: ValueKey(collection.id),
+            onAnimationDone: () => _showCollectionCardOptions(collection),
+            onLongPress: _manager?.triggerHapticFeedbackMedium,
+            child: _buildSwipeableCard(collection),
+          );
+
     return Padding(
       padding: EdgeInsets.only(bottom: R.dimen.unit2),
       child: card,
@@ -174,6 +171,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
         bloc: managerOf(collection.id),
         builder: (context, cardState) {
+          final sidePaddings = 2 * R.dimen.unit3;
           return CardWidget(
             cardData: CardData.collectionsScreen(
               key: Keys.generateCollectionsScreenCardKey(
@@ -185,7 +183,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
               backgroundImage: cardState.image,
               color: R.colors.collectionsScreenCard,
               // Screenwidth - 2 * side paddings
-              cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
+              cardWidth: R.dimen.screenWidth - sidePaddings,
             ),
           );
         },
