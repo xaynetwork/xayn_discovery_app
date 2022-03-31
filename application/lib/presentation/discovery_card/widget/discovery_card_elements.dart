@@ -36,6 +36,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.isBookmarked,
     required this.onOpenUrl,
     required this.onToggleTts,
+    this.isInteractionEnabled = true,
     this.fractionSize = 1.0,
     this.provider,
     this.useLargeTitle = true,
@@ -57,6 +58,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final bool isBookmarked;
   final double fractionSize;
   final bool useLargeTitle;
+  final bool isInteractionEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -158,10 +160,10 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
     );
 
-    withTap(Widget child, VoidCallback onTap) => Material(
+    maybeWithTap(Widget child, VoidCallback onTap) => Material(
           color: R.colors.transparent,
           child: InkWell(
-            onTap: onTap,
+            onTap: isInteractionEnabled ? onTap : null,
             child: child,
           ),
         );
@@ -169,11 +171,11 @@ class DiscoveryCardElements extends StatelessWidget {
     return Row(
       children: [
         if (provider?.favicon != null)
-          Expanded(child: withTap(faviconRow, onOpenUrl))
+          Expanded(child: maybeWithTap(faviconRow, onOpenUrl))
         else
           const Spacer(),
-        if (featureManager.isTtsEnabled) withTap(ttsIcon, onToggleTts),
-        withTap(openUrlIcon, onOpenUrl),
+        if (featureManager.isTtsEnabled) maybeWithTap(ttsIcon, onToggleTts),
+        maybeWithTap(openUrlIcon, onOpenUrl),
       ],
     );
   }
