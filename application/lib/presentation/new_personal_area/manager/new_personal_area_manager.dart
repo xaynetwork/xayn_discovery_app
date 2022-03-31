@@ -85,7 +85,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     final items = (await getAllCollectionsUseCase.singleOutput(none))
         .collections
         .map(
-          (e) => ListItemModel(
+          (e) => ListItemModel.collection(
             id: e.id,
             collection: e,
           ),
@@ -243,34 +243,35 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   void _updateItemsWithNewCollections(List<Collection> collections) {
     final List<ListItemModel> newCollectionItems = collections
         .map(
-          (e) => ListItemModel(
+          (e) => ListItemModel.collection(
             id: e.id,
             collection: e,
           ),
         )
         .toList();
-    if (_items.first.isTrialBanner) {
-      _items.replaceRange(1, _items.length, newCollectionItems);
-    } else {
-      _items = newCollectionItems;
-    }
+    _items.first.map(
+      payment: (_) => _items.replaceRange(1, _items.length, newCollectionItems),
+      collection: (_) => _items = newCollectionItems,
+    );
   }
 
   void _maybeAddOrUpdateTrialBannerToItems() {
+    final trialEndDate = _subscriptionStatus.trialEndDate;
     if (_featureManager.isPaymentEnabled &&
-        _subscriptionStatus.isFreeTrialActive) {
-      if (_items.first.isCollection) {
-        _items.insert(
+        _subscriptionStatus.isFreeTrialActive &&
+        trialEndDate != null) {
+      _items.first.map(
+        collection: (_) => _items.insert(
           0,
-          ListItemModel(
+          ListItemModel.payment(
             id: UniqueId(),
-            trialEndDate: _subscriptionStatus.trialEndDate,
+            trialEndDate: trialEndDate,
           ),
-        );
-      } else {
-        _items.first = _items.first
-            .copyWith(trialEndDate: _subscriptionStatus.trialEndDate);
-      }
+        ),
+        payment: (data) => _items.first = data.copyWith(
+          trialEndDate: trialEndDate,
+        ),
+      );
     }
   }
 
