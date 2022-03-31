@@ -216,6 +216,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           url: webResource.url,
           provider: provider,
           datePublished: webResource.datePublished,
+          isInteractionEnabled: widget.isPrimary,
           onLikePressed: () => discoveryCardManager.changeUserReaction(
             document: widget.document,
             userReaction: state.explicitDocumentUserReaction.isRelevant
