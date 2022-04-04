@@ -150,9 +150,4 @@ class PageRegistry {
     //ignore: prefer_const_constructors
     builder: (_, args) => PaymentScreen(),
   );
-
-  static final xayn.PageData<Widget, Object> pause = xayn.PageData(
-    name: 'pause',
-    builder: (_, args) => Container(),
-  );
 }

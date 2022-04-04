@@ -9,5 +9,6 @@ part 'app_state.freezed.dart';
 class AppState with _$AppState {
   const factory AppState({
     required AppTheme appTheme,
+    required bool isAppPaused,
   }) = _AppState;
 }
