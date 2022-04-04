@@ -21,10 +21,10 @@ class BottomSheetInformationalBody extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final body = Text(R.strings.errorGenericBodyPleaseTryAgainLater);
+    final bodyWidget = Text(body);
 
-    final header = BottomSheetHeader(
-      headerText: R.strings.errorGenericHeaderSomethingWentWrong,
+    final titleWidget = BottomSheetHeader(
+      headerText: title,
     );
 
     final errorCodeWidget = Text(
@@ -45,9 +45,9 @@ class BottomSheetInformationalBody extends StatelessWidget
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: R.dimen.unit),
-        header,
+        titleWidget,
         SizedBox(height: R.dimen.unit1_25),
-        body,
+        bodyWidget,
         if (errorCode != null) errorCodeWidget,
         SizedBox(height: R.dimen.unit2_5),
         closeButton,
