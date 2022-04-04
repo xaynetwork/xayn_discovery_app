@@ -7,8 +7,6 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
@@ -46,7 +44,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   final FeatureManager _featureManager;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
-  final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final UniqueIdHandler _uniqueIdHandler;
 
   NewPersonalAreaManager(
     this._getAllCollectionsUseCase,
@@ -57,7 +55,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
-    this._sendAnalyticsUseCase,
+    this._uniqueIdHandler,
   ) : super(NewPersonalAreaState.initial()) {
     _init();
   }
@@ -95,14 +93,6 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   }
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
-
-  void onTrialBannerTapped() {
-    _sendAnalyticsUseCase(
-      OpenSubscriptionWindowEvent(
-        currentView: SubscriptionWindowCurrentView.personalArea,
-      ),
-    );
-  }
 
   @override
   Future<NewPersonalAreaState?> computeState() async {
@@ -167,7 +157,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
         collection: (_) => _items.insert(
           0,
           ListItemModel.payment(
-            id: UniqueId(),
+            id: _uniqueIdHandler.generateUniqueId(),
             trialEndDate: trialEndDate,
           ),
         ),

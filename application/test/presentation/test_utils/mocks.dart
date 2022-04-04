@@ -21,11 +21,11 @@ import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_m
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_collection_and_bookmark_changes_identity_param_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_identity_param_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
@@ -36,8 +36,13 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_store
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_version_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
@@ -62,6 +67,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
@@ -87,6 +93,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   CrudExplicitDocumentFeedbackUseCase,
+  DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DiscoveryCardManager,
   Document,
@@ -98,6 +105,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   FeedSettingsRepository,
   FeedTypeMarketsRepository,
   FetchSessionUseCase,
+  GetAllCollectionsUseCase,
   GetAppSessionUseCase,
   GetAppThemeUseCase,
   GetAppVersionUseCase,
@@ -111,9 +119,11 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   InAppReview,
   IncrementAppSessionUseCase,
   ListenAppThemeUseCase,
+  ListenCollectionsUseCase,
   ListenReaderModeSettingsUseCase,
   ListenSubscriptionStatusUseCase,
   MapToAppVersionMapper,
+  NewPersonalAreaNavActions,
   PaymentFlowErrorToErrorMessageMapper,
   PaymentScreenNavActions,
   PaymentService,
@@ -125,6 +135,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   PurchasesErrorCodeToPaymentFlowErrorMapper,
   ReaderModeSettingsMapper,
   ReaderModeSettingsRepository,
+  RemoveCollectionUseCase,
+  RenameCollectionUseCase,
   RenameDefaultCollectionUseCase,
   RequestCodeRedemptionSheetUseCase,
   RestoreSubscriptionUseCase,
@@ -142,6 +154,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SettingsNavActions,
   SettingsScreenManager,
   ShareUriUseCase,
+  UniqueIdHandler,
   UpdateSessionUseCase,
   UrlOpener,
 ])
