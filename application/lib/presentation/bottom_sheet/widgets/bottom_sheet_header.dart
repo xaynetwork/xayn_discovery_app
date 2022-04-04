@@ -23,7 +23,6 @@ class BottomSheetHeader extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-        top: R.dimen.unit2,
         bottom: R.dimen.unit0_75,
       ),
       child: row,

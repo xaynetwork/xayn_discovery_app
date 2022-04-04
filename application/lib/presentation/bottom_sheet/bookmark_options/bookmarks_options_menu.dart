@@ -66,10 +66,7 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(height: R.dimen.unit2),
-        ...menuOptions.map(_buildRow).toList(),
-      ],
+      children: menuOptions.map(_buildRow).toList(),
     );
   }
 

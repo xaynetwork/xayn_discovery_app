@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
@@ -18,6 +19,10 @@ const String _kCoresArchEntry = 'arch';
 abstract class AnalyticsService {
   Future<void> send(AnalyticsEvent event);
 
+  Future<void> updateIdentityParam(IdentityParam param);
+
+  Future<void> updateIdentityParams(Set<IdentityParam> params);
+
   Future<void> flush();
 }
 
@@ -28,6 +33,8 @@ class AmplitudeAnalyticsService
     implements AnalyticsService {
   final Amplitude _amplitude;
   final String _userId;
+  @visibleForTesting
+  final identify = Identify();
 
   @visibleForTesting
   AmplitudeAnalyticsService({
@@ -80,8 +87,6 @@ class AmplitudeAnalyticsService
 
   /// uses setOnce to log info on the device's cores
   Future<void> _preamble() async {
-    final identify = Identify();
-
     identify.setOnce(
       _kCoresEntry,
       SysInfo.cores
@@ -97,6 +102,22 @@ class AmplitudeAnalyticsService
 
     await _amplitude.identify(identify);
   }
+
+  @override
+  Future<void> updateIdentityParam(IdentityParam param) async {
+    identify.set(param.key, param.value);
+    await _amplitude.identify(identify);
+    logger.i('Analytics identity param was changed: $param');
+  }
+
+  @override
+  Future<void> updateIdentityParams(Set<IdentityParam> params) async {
+    for (final param in params) {
+      identify.set(param.key, param.value);
+    }
+    await _amplitude.identify(identify);
+    logger.i('Analytics identity params were changed: $params');
+  }
 }
 
 /// Amplitude is disabled in debug mode
@@ -105,9 +126,25 @@ class AmplitudeAnalyticsService
 @testEnvironment
 class AnalyticsServiceDebugMode implements AnalyticsService {
   @override
-  Future<void> send(AnalyticsEvent event) async =>
-      logger.d(event.type + event.properties.toString());
+  Future<void> send(AnalyticsEvent event) async {
+    logger.i('DEBUG: Analytics event has been fired:\n${{
+      'type': event.type,
+      'properties': event.properties,
+    }}');
+  }
 
   @override
-  Future<void> flush() async {}
+  Future<void> flush() async {
+    logger.i('DEBUG: Analytics flashed');
+  }
+
+  @override
+  Future<void> updateIdentityParam(IdentityParam param) async {
+    logger.i('DEBUG: Analytics identity param was changed: $param');
+  }
+
+  @override
+  Future<void> updateIdentityParams(Set<IdentityParam> params) async {
+    logger.i('DEBUG: Analytics identity params were changed: $params');
+  }
 }

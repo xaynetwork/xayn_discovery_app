@@ -13,6 +13,6 @@ class Constants {
   static const xaynPressEmail = 'press@xayn.com';
 
   static const xaynPressPhone = '+49 (0) 30 896 3199 0';
-  static const xaynAddress =
-      '\nXayn AG\nUnter den Linden 42\n10117 Berlin, Germany\n';
+  static const xaynName = 'Xayn AG\n';
+  static const xaynAddress = 'Unter den Linden 42\n10117 Berlin, Germany\n';
 }

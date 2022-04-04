@@ -214,6 +214,10 @@ class TranslationsPl extends Translations {
   String get paymentFailedBottomSheetTitle => """Payment failed""";
   String get paymentFailedBottomSheetBody =>
       """The app store couldn’t process your payment. Please try again later. """;
+  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+  String get readerModeUnableToLoadDesc =>
+      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
+  String get readerModeUnableToLoadCTA => """Open in Browser""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -224,7 +228,8 @@ class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nie znaleziony :(""";
   String get itemAlreadyOwned => """Zostałeś już zasubskrybowany""";
   String get transactionFailed => """Transakcja płatnicza nie powiodła się""";
-  String get noActiveSubscriptionFound => """No active subscription found""";
+  String get noActiveSubscriptionFound =>
+      """We couldn't find an active subscription for this account.""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -353,7 +358,7 @@ Map<String, String> get translationsPlMap => {
       """paymentFlowError.transactionFailed""":
           """Transakcja płatnicza nie powiodła się""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """No active subscription found""",
+          """We couldn't find an active subscription for this account.""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Czy na pewno chcesz usunąć tę kolekcję?""",
       """bottomSheetMoveSingleBookmark""": """Przejdź do innej kolekcji""",
@@ -391,4 +396,8 @@ Map<String, String> get translationsPlMap => {
       """paymentFailedBottomSheetTitle""": """Payment failed""",
       """paymentFailedBottomSheetBody""":
           """The app store couldn’t process your payment. Please try again later. """,
+      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+      """readerModeUnableToLoadDesc""":
+          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
+      """readerModeUnableToLoadCTA""": """Open in Browser""",
     };

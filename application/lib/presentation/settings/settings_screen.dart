@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/contact_info/contact_info_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -82,7 +83,6 @@ class _SettingsScreenState extends State<SettingsScreen>
       if (state.isPaymentEnabled && buildSubscriptionSection)
         _buildSubscriptionSection(
           subscriptionStatus: state.subscriptionStatus,
-          subscriptionManagementURL: state.subscriptionManagementURL,
         ),
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
@@ -106,13 +106,11 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildSubscriptionSection({
     required SubscriptionStatus subscriptionStatus,
-    required String? subscriptionManagementURL,
   }) =>
       SubscriptionSection(
         subscriptionStatus: subscriptionStatus,
         onPressed: () => _onSubscriptionSectionPressed(
           subscriptionStatus: subscriptionStatus,
-          subscriptionManagementURL: subscriptionManagementURL,
         ),
       );
 
@@ -135,6 +133,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
+        onContactPressed: _showContactInfo,
         onAboutPressed: () => _manager.openExternalUrl(
             Constants.aboutXaynUrl, CurrentView.settings),
         onCarbonNeutralPressed: () => _manager.openExternalUrl(
@@ -175,14 +174,14 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   void _onSubscriptionSectionPressed({
     required SubscriptionStatus subscriptionStatus,
-    required String? subscriptionManagementURL,
   }) {
     if (subscriptionStatus.isSubscriptionActive) {
       showAppBottomSheet(
         context,
         builder: (_) => SubscriptionDetailsBottomSheet(
           subscriptionStatus: subscriptionStatus,
-          subscriptionManagementURL: subscriptionManagementURL,
+          onSubscriptionLinkCancelTapped: () =>
+              _manager.onSubscriptionLinkCancelTapped,
         ),
       );
     } else if (subscriptionStatus.isFreeTrialActive) {
@@ -191,5 +190,19 @@ class _SettingsScreenState extends State<SettingsScreen>
         builder: (_) => PaymentBottomSheet(),
       );
     }
+  }
+
+  _showContactInfo() {
+    showAppBottomSheet(
+      context,
+      builder: (buildContext) => ContactInfoBottomSheet(
+        onXaynSupportEmailTap: () => _manager.openExternalEmail(
+            Constants.xaynSupportEmail, CurrentView.settings),
+        onXaynPressEmailTap: () => _manager.openExternalEmail(
+            Constants.xaynPressEmail, CurrentView.settings),
+        onXaynUrlTap: () =>
+            _manager.openExternalUrl(Constants.xaynUrl, CurrentView.settings),
+      ),
+    );
   }
 }

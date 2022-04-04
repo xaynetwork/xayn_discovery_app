@@ -32,6 +32,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
 
   void search(String queryTerm) {
     _searchUseCaseSink ??= _getSearchUseCaseSink();
+    _lastUsedSearchTerm = queryTerm;
 
     _searchUseCaseSink!(queryTerm);
   }
