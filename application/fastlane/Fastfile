@@ -426,6 +426,7 @@ def capture_stdout()
 ensure
   $stdout.reopen original_stdout
   $stderr.reopen original_stderr
+  file.flush
   file.rewind
   output = file.read
   print output
