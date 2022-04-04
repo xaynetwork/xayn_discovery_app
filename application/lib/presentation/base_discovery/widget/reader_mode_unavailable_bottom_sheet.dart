@@ -32,7 +32,7 @@ class _ReaderModeUnavailable extends StatelessWidget with BottomSheetBodyMixin {
       onOpenViaBrowser?.call();
     }
 
-    final closeButton = AppRaisedButton.text(
+    final openViaBrowserButton = AppRaisedButton.text(
       text: R.strings.readerModeUnableToLoadCTA,
       onPressed: onPressed,
     );
@@ -45,8 +45,10 @@ class _ReaderModeUnavailable extends StatelessWidget with BottomSheetBodyMixin {
         header,
         SizedBox(height: R.dimen.unit1_25),
         body,
-        SizedBox(height: R.dimen.unit2_5),
-        closeButton,
+        if (onOpenViaBrowser != null) ...[
+          SizedBox(height: R.dimen.unit2_5),
+          openViaBrowserButton,
+        ],
         SizedBox(height: R.dimen.unit3_5),
       ],
     );
