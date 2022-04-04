@@ -19,9 +19,10 @@ class NewPersonalAreaState with _$NewPersonalAreaState {
     String? errorMsg,
   }) = _NewPersonalAreaState;
 
-  factory NewPersonalAreaState.initial() => NewPersonalAreaState(
+  factory NewPersonalAreaState.initial({DateTime? timestamp}) =>
+      NewPersonalAreaState(
         items: const [],
-        timestamp: DateTime.now(),
+        timestamp: timestamp ?? DateTime.now(),
       );
 
   factory NewPersonalAreaState.populated(
