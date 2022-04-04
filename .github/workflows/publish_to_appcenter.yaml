@@ -42,6 +42,7 @@ env:
   GITHUB_USERNAME: 'xayn-admin'
   # GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
   FASTLANE_SKIP_UPDATE_CHECK: '1'
+  GITHUB_STATUS: 'failure'
 
 jobs:
   publish_ios_internal:
@@ -261,3 +262,12 @@ jobs:
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta android_output:appbundle store:true
+          echo "SLACK_MESSAGE=$( awk '{printf "%s\\n", $0}' report.log | cut -c -3000  )" >> $GITHUB_ENV
+          echo "SLACK_STAUS=success" >> $GITHUB_ENV
+
+      - name: Slack Notification
+        if: always()
+        uses: ./.github/workflows/slack-notification.yaml
+        with:
+          message: ${{ env.SLACK_MESSAGE }}
+          status: ${{ env.SLACK_STATUS }}

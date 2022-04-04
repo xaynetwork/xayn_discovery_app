@@ -1,0 +1,47 @@
+on:
+  workflow_call:
+    inputs:
+      message:
+        required: true
+        type: string
+      status:
+        required: false
+        type: string
+        # success, failure
+        default: success
+jobs:
+  slack-notification:
+    name: build-tag-push-release
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Notify on Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: all
+          custom_payload: |
+            {
+                "username": "GitHub Actions",
+                "icon_emoji": ":octocat:",
+                "attachments": [
+                    {
+                        "color" : '${{ inputs.status }}' === 'success' ? '#55f244' : '${{ input.status }}' === 'failure' ? '#fc0a47' : '#f2c744',
+                        "blocks": [
+                            {
+                                "type": "section",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": ${{ inputs.message }}
+                                }
+                            },
+                        ]
+                    }
+                ]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BLUE_DEPLOYMENT_WEBHOOK_URL }}
