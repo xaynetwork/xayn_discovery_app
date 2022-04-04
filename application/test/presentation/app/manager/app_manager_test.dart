@@ -21,7 +21,6 @@ void main() {
   late MockSetInitialIdentityParamsUseCase setInitialIdentityParamsUseCase;
   late MockSetCollectionAndBookmarksChangesIdentityParam
       setCollectionAndBookmarksChangesIdentityParam;
-  late MockAppLifecycleUseCase appLifecycleUseCase;
 
   late Collection mockDefaultCollection;
 
@@ -37,7 +36,6 @@ void main() {
     setCollectionAndBookmarksChangesIdentityParam =
         MockSetCollectionAndBookmarksChangesIdentityParam();
     appSettingsRepository = MockAppSettingsRepository();
-    appLifecycleUseCase = MockAppLifecycleUseCase();
 
     when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
 
@@ -69,14 +67,18 @@ void main() {
         renameDefaultCollectionUseCase,
         setInitialIdentityParamsUseCase,
         setCollectionAndBookmarksChangesIdentityParam,
-        appLifecycleUseCase,
         appSettingsRepository,
       );
 
   blocTest<AppManager, AppState>(
     'GIVEN manager WHEN it is created THEN verify appTheme received',
     build: create,
-    expect: () => const [AppState(appTheme: AppTheme.system)],
+    expect: () => const [
+      AppState(
+        appTheme: AppTheme.system,
+        isAppPaused: false,
+      )
+    ],
     verify: (manager) {
       verifyInOrder([
         appSettingsRepository.settings,

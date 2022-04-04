@@ -25,7 +25,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_collect
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_lifecycle/app_lifecycle_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
@@ -79,7 +78,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   AppSettingsRepository,
   AppStatusRepository,
   AppVersionToMapMapper,
-  AppLifecycleUseCase,
   AreMarketsOutdatedUseCase,
   BookmarksScreenNavActions,
   BugReportingService,

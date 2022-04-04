@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_collection_and_bookmark_changes_identity_param_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/app_lifecycle/app_lifecycle_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
@@ -26,9 +25,11 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._renameDefaultCollectionUseCase,
     this._setInitialIdentityParamsUseCase,
     this._setCollectionAndBookmarksChangesIdentityParam,
-    this._appLifecycleUseCase,
     AppSettingsRepository appSettingsRepository,
-  ) : super(AppState(appTheme: appSettingsRepository.settings.appTheme)) {
+  ) : super(AppState(
+          appTheme: appSettingsRepository.settings.appTheme,
+          isAppPaused: false,
+        )) {
     _init();
   }
 
@@ -41,9 +42,9 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   final SetCollectionAndBookmarksChangesIdentityParam
       _setCollectionAndBookmarksChangesIdentityParam;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
-  final AppLifecycleUseCase _appLifecycleUseCase;
 
   bool _initDone = false;
+  bool _isPaused = false;
 
   void _init() async {
     scheduleComputeState(() async {
@@ -64,8 +65,13 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   @override
   Future<AppState?> computeState() async {
     if (!_initDone) return null;
+
     return fold(_appThemeHandler).foldAll(
-        (appTheme, _) => AppState(appTheme: appTheme ?? state.appTheme));
+      (appTheme, _) => AppState(
+        appTheme: appTheme ?? state.appTheme,
+        isAppPaused: _isPaused,
+      ),
+    );
   }
 
   void _setAnalyticsEvents() {
@@ -76,7 +82,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     _setCollectionAndBookmarksChangesIdentityParam.call(none);
   }
 
-  void onPause() => _appLifecycleUseCase.updateOnPause(true);
+  void onPause() => scheduleComputeState(() => _isPaused = true);
 
-  void onResume() => _appLifecycleUseCase.updateOnPause(false);
+  void onResume() => scheduleComputeState(() => _isPaused = false);
 }
