@@ -14,6 +14,5 @@ class SettingsScreenState with _$SettingsScreenState {
     required AppVersion appVersion,
     required bool isPaymentEnabled,
     required SubscriptionStatus subscriptionStatus,
-    required String? subscriptionManagementURL,
   }) = SettingsScreenStateReady;
 }

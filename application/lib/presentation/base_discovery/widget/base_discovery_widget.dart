@@ -314,8 +314,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     }
   }
 
-  void _showPaymentBottomSheet() => showAppBottomSheet(
-        context,
-        builder: (_) => PaymentBottomSheet(),
-      );
+  void _showPaymentBottomSheet() {
+    manager.onTrialBannerTapped();
+    showAppBottomSheet(
+      context,
+      builder: (_) => PaymentBottomSheet(),
+    );
+  }
 }
