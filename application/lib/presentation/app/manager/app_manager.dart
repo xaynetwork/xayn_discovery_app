@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/app_lifecycle/app_lifecycle_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
@@ -21,6 +22,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._incrementAppSessionUseCase,
     this._createOrGetDefaultCollectionUseCase,
     this._renameDefaultCollectionUseCase,
+    this._appLifecycleUseCase,
     AppSettingsRepository appSettingsRepository,
   ) : super(AppState(appTheme: appSettingsRepository.settings.appTheme)) {
     _init();
@@ -32,6 +34,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
       _createOrGetDefaultCollectionUseCase;
   final RenameDefaultCollectionUseCase _renameDefaultCollectionUseCase;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
+  final AppLifecycleUseCase _appLifecycleUseCase;
 
   bool _initDone = false;
 
@@ -55,4 +58,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     return fold(_appThemeHandler).foldAll(
         (appTheme, _) => AppState(appTheme: appTheme ?? state.appTheme));
   }
+
+  void onPause() => _appLifecycleUseCase.updateOnPause(true);
+
+  void onResume() => _appLifecycleUseCase.updateOnPause(false);
 }

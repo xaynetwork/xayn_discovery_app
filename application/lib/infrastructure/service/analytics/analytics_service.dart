@@ -105,7 +105,8 @@ class AmplitudeAnalyticsService
 @testEnvironment
 class AnalyticsServiceDebugMode implements AnalyticsService {
   @override
-  Future<void> send(AnalyticsEvent event) async {}
+  Future<void> send(AnalyticsEvent event) async =>
+      logger.d(event.type + event.properties.toString());
 
   @override
   Future<void> flush() async {}
