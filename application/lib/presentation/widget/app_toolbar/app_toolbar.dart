@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
 
 import 'app_toolbar_trailing_button.dart';
 
@@ -23,6 +24,10 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
         iconPath: data.iconPath,
         onPressed: data.onPressed,
         iconKey: data.iconkey,
+      ),
+      withTwoTrailingIcons: (data) => _buildWithTwoTrailingIcons(
+        iconModels: data.iconModels,
+        text: text,
       ),
     );
 
@@ -59,6 +64,37 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
             iconKey: iconKey,
             iconPath: iconPath,
             onPressed: onPressed,
+          ),
+        ],
+      );
+
+  Widget _buildWithTwoTrailingIcons({
+    required Text text,
+    required List<AppToolbarIconModel> iconModels,
+  }) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          text,
+          _buildIconsRow(iconModels: iconModels),
+        ],
+      );
+
+  Widget _buildIconsRow({
+    required List<AppToolbarIconModel> iconModels,
+  }) =>
+      Row(
+        children: [
+          AppToolbarTrailingIconButton(
+            iconKey: iconModels.first.iconKey,
+            iconPath: iconModels.first.iconPath,
+            onPressed: iconModels.first.onPressed,
+          ),
+          SizedBox(width: R.dimen.unit2),
+          AppToolbarTrailingIconButton(
+            iconKey: iconModels[1].iconKey,
+            iconPath: iconModels[1].iconPath,
+            onPressed: iconModels[1].onPressed,
           ),
         ],
       );

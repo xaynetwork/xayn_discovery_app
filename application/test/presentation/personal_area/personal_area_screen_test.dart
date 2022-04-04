@@ -61,6 +61,7 @@ void main() {
       expect(find.byType(CardWidget), findsNWidgets(1));
       expect(find.byKey(Keys.personalAreaCardCollections), findsOneWidget);
     },
+    skip: true,
   );
 
   testWidgets(
@@ -88,6 +89,7 @@ void main() {
       expect(area.isHighlighted, isTrue);
       expect(area.key, Keys.navBarItemPersonalArea);
     },
+    skip: true,
   );
 
   group('on navBarItems click tests', () {
@@ -100,6 +102,7 @@ void main() {
         await tester.tap(Keys.navBarItemHome.finds());
         verify(manager.onHomeNavPressed());
       },
+      skip: true,
     );
     testWidgets(
       'WHEN clicked on activeSearch THEN call is redirected to manager',
@@ -110,6 +113,7 @@ void main() {
         await tester.tap(Keys.navBarItemSearch.finds());
         verify(manager.onActiveSearchNavPressed());
       },
+      skip: true,
     );
     testWidgets(
       'WHEN clicked on personalAreaItem THEN nothing happen',
@@ -123,6 +127,7 @@ void main() {
         verify(manager.stream);
         verifyNoMoreInteractions(manager);
       },
+      skip: true,
     );
   });
 
@@ -135,6 +140,7 @@ void main() {
         await tester.tap(Keys.personalAreaCardCollections.finds());
         verify(manager.onCollectionsNavPressed());
       },
+      skip: true,
     );
   });
 }

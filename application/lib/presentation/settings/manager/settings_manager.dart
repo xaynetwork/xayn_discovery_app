@@ -4,7 +4,11 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
@@ -50,6 +54,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final GetSubscriptionManagementUrlUseCase
       _getSubscriptionManagementUrlUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -65,6 +70,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
     this._getSubscriptionManagementUrlUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -73,7 +79,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late AppTheme _theme;
   late final AppVersion _appVersion;
   late SubscriptionStatus _subscriptionStatus;
-  late String? _subscriptionManagementUrl;
   late final UseCaseValueStream<AppTheme> _appThemeHandler =
       consume(_listenAppThemeUseCase, initialData: none);
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
@@ -89,8 +94,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       _theme = await _getAppThemeUseCase.singleOutput(none);
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
-      _subscriptionManagementUrl =
-          (await _getSubscriptionManagementUrlUseCase.singleOutput(none)).url;
 
       _initDone = true;
     });
@@ -109,6 +112,31 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
+  void onTrialBannerTapped() {
+    _sendAnalyticsUseCase(
+      OpenSubscriptionWindowEvent(
+        currentView: SubscriptionWindowCurrentView.settings,
+      ),
+    );
+  }
+
+  Future<void> onSubscriptionLinkCancelTapped() async {
+    final subscriptionManagementUrl =
+        (await _getSubscriptionManagementUrlUseCase.singleOutput(none)).url;
+    if (subscriptionManagementUrl != null) {
+      _sendAnalyticsUseCase(
+        SubscriptionActionEvent(
+          action: SubscriptionAction.unsubscribe,
+        ),
+      );
+
+      openExternalUrl(
+        subscriptionManagementUrl,
+        CurrentView.settings,
+      );
+    }
+  }
+
   @override
   Future<SettingsScreenState?> computeState() async {
     if (!_initDone) return null;
@@ -117,7 +145,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
           subscriptionStatus: _subscriptionStatus,
-          subscriptionManagementURL: _subscriptionManagementUrl,
         );
     return fold2(
       _appThemeHandler,

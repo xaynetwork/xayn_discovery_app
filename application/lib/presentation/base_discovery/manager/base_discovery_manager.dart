@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
@@ -302,6 +303,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         context: FeedbackContext.implicit,
       );
     }
+  }
+
+  void onTrialBannerTapped() {
+    sendAnalyticsUseCase(
+      OpenSubscriptionWindowEvent(
+        currentView: SubscriptionWindowCurrentView.feed,
+      ),
+    );
   }
 }
 

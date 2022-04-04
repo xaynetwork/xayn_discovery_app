@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart'
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/purchase_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
@@ -21,6 +22,7 @@ void main() {
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockPurchaseEventMapper purchaseEventMapper;
 
   final testPurchaseEvent = PurchaseEvent(
@@ -38,6 +40,7 @@ void main() {
     listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
     sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     purchaseEventMapper = MockPurchaseEventMapper();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
@@ -48,6 +51,9 @@ void main() {
         UseCaseResult.success(testPurchaseEvent),
       ],
     );
+
+    when(restoreSubscriptionUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
@@ -60,6 +66,7 @@ void main() {
       listenSubscriptionStatusUseCase,
       requestCodeRedemptionSheetUseCase,
       sendMarketingAnalyticsUseCase,
+      sendAnalyticsUseCase,
       purchaseEventMapper,
     );
   });
@@ -167,6 +174,94 @@ void main() {
           sendMarketingAnalyticsUseCase.call(any),
         ]);
         verifyNoMoreInteractions(sendMarketingAnalyticsUseCase);
+      },
+    );
+
+    test(
+      'GIVEN subscribe is tapped THEN analytics event is sent',
+      () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              SubscriptionActionEvent(
+                action: SubscriptionAction.subscribe,
+              ),
+            ),
+          ],
+        );
+
+        manager.subscribe();
+
+        verifyInOrder([
+          sendAnalyticsUseCase.call(any),
+        ]);
+        verifyNoMoreInteractions(sendAnalyticsUseCase);
+      },
+    );
+
+    test(
+      'GIVEN promo code is tapped THEN analytics event is sent',
+      () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              SubscriptionActionEvent(
+                action: SubscriptionAction.promoCode,
+              ),
+            ),
+          ],
+        );
+
+        manager.enterRedeemCode();
+
+        verifyInOrder([
+          sendAnalyticsUseCase.call(any),
+        ]);
+        verifyNoMoreInteractions(sendAnalyticsUseCase);
+      },
+    );
+
+    test(
+      'GIVEN subscription cancel is tapped THEN analytics event is sent',
+      () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              SubscriptionActionEvent(
+                action: SubscriptionAction.cancel,
+              ),
+            ),
+          ],
+        );
+
+        manager.cancel();
+
+        verifyInOrder([
+          sendAnalyticsUseCase.call(any),
+        ]);
+        verifyNoMoreInteractions(sendAnalyticsUseCase);
+      },
+    );
+
+    test(
+      'GIVEN cancel is tapped THEN analytics event is sent',
+      () {
+        when(sendAnalyticsUseCase.call(any)).thenAnswer(
+          (_) async => [
+            UseCaseResult.success(
+              SubscriptionActionEvent(
+                action: SubscriptionAction.cancel,
+              ),
+            ),
+          ],
+        );
+
+        manager.cancel();
+
+        verifyInOrder([
+          sendAnalyticsUseCase.call(any),
+        ]);
+        verifyNoMoreInteractions(sendAnalyticsUseCase);
       },
     );
   });
