@@ -81,12 +81,14 @@ mixin ObserveSubscriptionWindowMixin<T> on UseCaseBlocHelper<T> {
             .singleOutput(PurchasableIds.subscription);
         final daysToSubscribe = subscriptionStatus.trialEndDate
             ?.calculateDifferenceInDays(DateTime.now());
+        final purchaseDate = subscriptionStatus.purchaseDate;
 
         sendAnalyticsUseCase(
           OpenSubscriptionWindowEvent(
             currentView: currentView,
             duration: observation.duration,
             daysToSubscribe: daysToSubscribe,
+            subscriptionDate: purchaseDate,
           ),
         );
       };
