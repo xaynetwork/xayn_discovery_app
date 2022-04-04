@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
@@ -29,12 +31,14 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
   final FeatureManager _featureManager;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   PersonalAreaManager(
     this._navActions,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(PersonalAreaState.initial()) {
     _init();
   }
@@ -57,6 +61,14 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
 
       _initDone = true;
     });
+  }
+
+  void onTrialBannerTapped() {
+    _sendAnalyticsUseCase(
+      OpenSubscriptionWindowEvent(
+        currentView: SubscriptionWindowCurrentView.personalArea,
+      ),
+    );
   }
 
   @override
