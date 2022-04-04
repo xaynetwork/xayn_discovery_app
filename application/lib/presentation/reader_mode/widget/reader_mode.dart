@@ -46,6 +46,7 @@ class ReaderMode extends StatefulWidget {
   final VoidCallback? onProcessedHtml;
   final ScrollHandler? onScroll;
   final EdgeInsets padding;
+  final ScrollController? scrollController;
 
   const ReaderMode({
     Key? key,
@@ -56,6 +57,7 @@ class ReaderMode extends StatefulWidget {
     this.padding = _kPadding,
     this.onProcessedHtml,
     this.onScroll,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -130,6 +132,7 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
 
         final readerMode = readability.ReaderMode(
           controller: _readerModeController,
+          scrollController: widget.scrollController,
           textStyle: _getReaderModeStyle(fontSettings),
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
@@ -148,12 +151,7 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
 
         return ColoredBox(
           color: fontSettings.backgroundColor.color,
-          child: Scrollbar(
-            thickness: R.dimen.unit0_5,
-            radius: Radius.circular(R.dimen.unit0_5),
-            isAlwaysShown: true,
-            child: readerMode,
-          ),
+          child: readerMode,
         );
       },
     );

@@ -110,7 +110,7 @@ class _DiscoveryFeedState
           buildNavBarItemArrowLeft(onPressed: () async {
             removeOverlay();
             await currentCardController?.animateToClose();
-            _manager.handleNavigateOutOfCard();
+            _manager.handleNavigateOutOfCard(document);
           }),
           buildNavBarItemLike(
             isLiked: managers.discoveryCardManager.state

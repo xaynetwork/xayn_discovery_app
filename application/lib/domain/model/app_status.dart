@@ -9,6 +9,7 @@ part 'app_status.freezed.dart';
 class AppStatus extends DbEntity with _$AppStatus {
   factory AppStatus._({
     required int numberOfSessions,
+    required DateTime lastSeenDate,
     required AppVersion lastKnownAppVersion,
     required DateTime firstAppLaunchDate,
     required UniqueId id,
@@ -18,11 +19,13 @@ class AppStatus extends DbEntity with _$AppStatus {
   factory AppStatus({
     required int numberOfSessions,
     required AppVersion lastKnownAppVersion,
+    required DateTime lastSeenDate,
     required DateTime firstAppLaunchDate,
     required UniqueId userId,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
+        lastSeenDate: lastSeenDate,
         lastKnownAppVersion: lastKnownAppVersion,
         firstAppLaunchDate: firstAppLaunchDate,
         id: AppStatus.globalId,
@@ -33,6 +36,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         numberOfSessions: 0,
         lastKnownAppVersion: AppVersion.initial(),
         firstAppLaunchDate: DateTime.now(),
+        lastSeenDate: DateTime.now(),
         id: AppStatus.globalId,
         userId: UniqueId(),
       );

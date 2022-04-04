@@ -1,22 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../test_utils/utils.dart';
-import 'observe_document_mixin_test.mocks.dart';
 
-@GenerateMocks([AnalyticsService])
 void main() {
   late MockAppDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
