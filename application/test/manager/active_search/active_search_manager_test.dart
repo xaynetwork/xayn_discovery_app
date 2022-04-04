@@ -31,6 +31,7 @@ void main() {
   late AppDiscoveryEngine engine;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   late MockFeatureManager featureManager;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
@@ -39,6 +40,7 @@ void main() {
     engine = MockAppDiscoveryEngine();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
     featureManager = MockFeatureManager();
 
     di
@@ -55,6 +57,9 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(getSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
+    when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
+      (_) => const Stream.empty(),
+    );
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -71,6 +76,7 @@ void main() {
           ),
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
+          listenReaderModeSettingsUseCase,
           featureManager,
         );
   });
