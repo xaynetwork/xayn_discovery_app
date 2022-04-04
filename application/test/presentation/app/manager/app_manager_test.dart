@@ -18,6 +18,8 @@ void main() {
       createOrGetDefaultCollectionUseCase;
   late MockAppSettingsRepository appSettingsRepository;
   late MockRenameDefaultCollectionUseCase renameDefaultCollectionUseCase;
+  late MockAppLifecycleUseCase appLifecycleUseCase;
+
   late Collection mockDefaultCollection;
 
   setUp(() {
@@ -29,6 +31,7 @@ void main() {
         MockCreateOrGetDefaultCollectionUseCase();
     renameDefaultCollectionUseCase = MockRenameDefaultCollectionUseCase();
     appSettingsRepository = MockAppSettingsRepository();
+    appLifecycleUseCase = MockAppLifecycleUseCase();
 
     when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
 
@@ -52,6 +55,7 @@ void main() {
         incrementAppSessionUseCase,
         createOrGetDefaultCollectionUseCase,
         renameDefaultCollectionUseCase,
+        appLifecycleUseCase,
         appSettingsRepository,
       );
 

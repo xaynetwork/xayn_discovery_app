@@ -3,9 +3,9 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class AppLifecycleUseCase {
-  Stream<bool> get pauseStream;
+  Stream<bool> get onPauseStream;
 
-  void updateOnPause(bool onPause);
+  void updateOnPause(bool value);
 }
 
 @LazySingleton(as: AppLifecycleUseCase)
@@ -22,8 +22,8 @@ class AppLifecycleUseCaseImpl implements AppLifecycleUseCase {
       AppLifecycleUseCaseImpl(initialPauseValue: false);
 
   @override
-  Stream<bool> get pauseStream => _pauseSubject.stream;
+  Stream<bool> get onPauseStream => _pauseSubject.stream.distinct();
 
   @override
-  void updateOnPause(bool onPause) => _pauseSubject.add(onPause);
+  void updateOnPause(bool value) => _pauseSubject.add(value);
 }
