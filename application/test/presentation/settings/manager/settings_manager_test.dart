@@ -287,7 +287,7 @@ void main() {
         ],
       );
       final manager = create();
-      await manager.onSubscriptionCancelTapped();
+      await manager.onSubscriptionLinkCancelTapped();
 
       verifyInOrder([
         sendAnalyticsUseCase.call(any),
