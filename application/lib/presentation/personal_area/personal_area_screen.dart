@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -16,7 +14,6 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_da
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
-import 'package:xayn_discovery_app/presentation/widget/spans.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
   const PersonalAreaScreen({Key? key}) : super(key: key);
@@ -98,7 +95,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       if (buildTrialBanner)
         _buildTrialBanner(state.subscriptionStatus.trialEndDate!),
       _buildCollection(),
-      _buildContactSection(),
     ]
         .map((e) => Padding(
               padding: EdgeInsets.only(bottom: R.dimen.unit2),
@@ -125,38 +121,4 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           key: Keys.personalAreaCardCollections,
         ),
       );
-
-  Widget _buildContactSection() {
-    void onXaynSupportEmailTap() => _manager.openExternalEmail(
-        Constants.xaynSupportEmail, CurrentView.settings);
-    void onXaynPressEmailTap() => _manager.openExternalEmail(
-        Constants.xaynPressEmail, CurrentView.settings);
-    void onXaynUrlTap() =>
-        _manager.openExternalUrl(Constants.xaynUrl, CurrentView.settings);
-
-    final space = ' '.span();
-    final newLine = '\n'.span();
-    return Text.rich(
-      [
-        R.strings.personalAreaContact.bold(),
-        Constants.xaynAddress.span(),
-        R.strings.contactSectionWeb.span(),
-        space,
-        Uri.parse(Constants.xaynUrl).host.link(onTap: onXaynUrlTap),
-        newLine,
-        R.strings.contactSectionSupportEmail.span(),
-        space,
-        Constants.xaynSupportEmail.link(onTap: () => onXaynSupportEmailTap),
-        newLine,
-        R.strings.contactSectionForPublishers.span(),
-        space,
-        Constants.xaynPressEmail.link(onTap: onXaynPressEmailTap),
-        newLine,
-        R.strings.contactSectionPhone.span(),
-        space,
-        Constants.xaynPressPhone.span(),
-      ].span(),
-      textAlign: TextAlign.start,
-    );
-  }
 }
