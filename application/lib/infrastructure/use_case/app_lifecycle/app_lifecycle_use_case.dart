@@ -10,17 +10,16 @@ abstract class AppLifecycleUseCase {
 
 @LazySingleton(as: AppLifecycleUseCase)
 class AppLifecycleUseCaseImpl implements AppLifecycleUseCase {
-  late final BehaviorSubject<bool> _pauseSubject = BehaviorSubject<bool>();
+  late final BehaviorSubject<bool> _pauseSubject;
 
   @visibleForTesting
   AppLifecycleUseCaseImpl({required bool initialPauseValue}) {
-    _pauseSubject.add(initialPauseValue);
+    _pauseSubject = BehaviorSubject<bool>.seeded(initialPauseValue);
   }
 
   @factoryMethod
-  AppLifecycleUseCaseImpl.autowired() {
-    _pauseSubject.add(false);
-  }
+  factory AppLifecycleUseCaseImpl.autowired() =>
+      AppLifecycleUseCaseImpl(initialPauseValue: false);
 
   @override
   Stream<bool> get pauseStream => _pauseSubject.stream;

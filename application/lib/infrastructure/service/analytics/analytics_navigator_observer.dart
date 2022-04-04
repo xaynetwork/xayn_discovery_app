@@ -26,18 +26,21 @@ class AnalyticsNavigatorObserver {
     /// The pauseStream maps to 'PageRegistry.pause' when isPaused = true
     /// but also it should map to '_appNavigationManager.stream.pages.last'
     /// when isPaused = false
-    final pauseStream = _appLifecycleUseCase.pauseStream
-        .where((isPaused) => isPaused)
-        .mapTo(PageRegistry.pause);
 
-    _appNavigationManager.stream
-        .map((event) => event.pages.last)
-        .startWith(_appNavigationManager.initialPage)
-        .doOnData(_sendOpenScreenEvent)
-        .mergeWith([pauseStream])
+    final onPause = _appLifecycleUseCase.pauseStream.distinct();
+
+    onPause
+        .switchMap(
+          (isPaused) => isPaused
+              ? Stream.value(PageRegistry.pause)
+              : _appNavigationManager.stream
+                  .map((it) => it.pages.last)
+                  .startWith(_appNavigationManager.state.pages.last)
+                  .doOnData(_sendOpenScreenEvent),
+        )
         .timestamp()
         .pairwise()
-        .where((pair) => pair.first.value != PageRegistry.pause)
+        .where((it) => it.first.value != PageRegistry.pause)
         .map(_calculateScreenTimeSpent)
         .listen(_sendAnalyticsUseCase);
   }
