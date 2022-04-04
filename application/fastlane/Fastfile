@@ -275,19 +275,19 @@ lane :publish do |options|
       )
     end
 
+    # Write Beta report
     if flavor == Flavors::BETA
       uploadedFile = output[/Release '\d+' committed: (.*)/, 1]
       report = File.new("../report.log", "w")
-      report.write("New Beta release #{version} BuildNuimber: #{options[Options::BUILD_NUMBER]}\n")
+      report.write("New Beta release *#{version}* BuildNumber: *#{options[Options::BUILD_NUMBER]}*\n")
       report.write("Appcenter file: #{uploadedFile}\n")
       if platform == Platforms::IOS
         report.write("Testflight: https://testflight.apple.com/join/ltxuzZh7\n")
-        report.write("Note that publishing might take a while, for instant testing use the internal version.\n")
       else
         report.write("Register: https://play.google.com/apps/testing/com.xayn.discovery\n")
         report.write("Install/Update: https://play.google.com/store/apps/details?id=com.xayn.discovery\n")
-        report.write("Note that publishing might take a while, for instant testing use the internal version.\n")
       end
+      report.write("_Note that publishing might take a while, for instant testing use the internal version._\n")
       report.write(gitShortChangeLog(version, -1, false))
     end
   end
