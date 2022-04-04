@@ -164,7 +164,7 @@ jobs:
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
-          fastlane publish platform:ios build_type:release download_profile:false flavor:beta
+          fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
 
   publish_android_internal:
     name: Publish Android Internal
@@ -260,4 +260,4 @@ jobs:
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build_type:release flavor:beta android_output:appbundle
+          fastlane publish platform:android build_type:release flavor:beta android_output:appbundle store:true

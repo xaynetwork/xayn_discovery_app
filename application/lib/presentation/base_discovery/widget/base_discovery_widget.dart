@@ -216,7 +216,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         onTapPrimary() {
           hideTooltip();
 
-          manager.handleNavigateIntoCard();
+          manager.handleNavigateIntoCard(document);
         }
 
         onTapSecondary() => _cardViewController.jump(JumpDirection.down);
@@ -236,7 +236,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 imageManager: managers.imageManager,
                 onDiscard: () {
                   manager.triggerHapticFeedbackMedium();
-                  return manager.handleNavigateOutOfCard();
+                  return manager.handleNavigateOutOfCard(document);
                 },
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
