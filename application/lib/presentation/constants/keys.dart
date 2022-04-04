@@ -12,8 +12,8 @@ class Keys {
 
   static const Key personalAreaCardCollections =
       Key('personal_area_card_collections');
-  static const Key personalAreaCardSettings =
-      Key('personal_area_card_settings');
+  static const Key personalAreaIconSettings =
+      Key('personal_area_icon_settings');
 
   static const Key settingsThemeSystem = Key('settings_theme_item_system');
   static const Key settingsThemeLight = Key('settings_theme_item_light');
@@ -27,6 +27,7 @@ class Keys {
   static const Key settingsSubscriptionPremium =
       Key('settings_subscription_premium');
 
+  static const Key settingsContactUs = Key('settings_contact_us');
   static const Key settingsAboutXayn = Key('settings_about_xayn');
   static const Key settingsCarbonNeutral = Key('settings_carbon_neutral');
   static const Key settingsImprint = Key('settings_imprint');

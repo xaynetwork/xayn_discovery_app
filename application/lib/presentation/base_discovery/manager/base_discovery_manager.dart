@@ -1,4 +1,5 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
@@ -8,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
@@ -19,7 +21,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -51,6 +53,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  final FeatureManager featureManager;
   final FeedType feedType;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
@@ -69,6 +72,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.crudExplicitDocumentFeedbackUseCase,
     this.hapticFeedbackMediumUseCase,
     this.getSubscriptionStatusUseCase,
+    this.featureManager,
   ) : super(DiscoveryState.initial());
 
   late final UseCaseValueStream<EngineEvent> engineEvents = consume(
@@ -91,9 +95,11 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       consume(
     getSubscriptionStatusUseCase,
     initialData: PurchasableIds.subscription,
-  )..autoSubscribe(
-          onError: (e, s) => onError(e, s ?? StackTrace.current),
-          onValue: (value) => handleShowPaywallIfNeeded(value));
+  ).transform(
+    (out) => out
+        .skipWhile((_) => !featureManager.isPaymentEnabled)
+        .doOnData(handleShowPaywallIfNeeded),
+  );
 
   /// requires to be implemented by concrete classes or mixins
   bool get isLoading;
@@ -105,21 +111,21 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   int? get currentCardIndex => _cardIndex;
 
-  void handleNavigateIntoCard() {
+  void handleNavigateIntoCard(Document document) {
     scheduleComputeState(() => _isFullScreen = true);
 
     sendAnalyticsUseCase(DocumentViewModeChangedEvent(
-      document: _observedDocument!,
+      document: document,
       viewMode: DocumentViewMode.reader,
       feedType: feedType,
     ));
   }
 
-  void handleNavigateOutOfCard() {
+  void handleNavigateOutOfCard(Document document) {
     scheduleComputeState(() => _isFullScreen = false);
 
     sendAnalyticsUseCase(DocumentViewModeChangedEvent(
-      document: _observedDocument!,
+      document: document,
       viewMode: DocumentViewMode.story,
       feedType: feedType,
     ));
@@ -301,6 +307,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         context: FeedbackContext.implicit,
       );
     }
+  }
+
+  void onTrialBannerTapped() {
+    sendAnalyticsUseCase(
+      OpenSubscriptionWindowEvent(
+        currentView: SubscriptionWindowCurrentView.feed,
+      ),
+    );
   }
 }
 
