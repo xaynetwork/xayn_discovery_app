@@ -70,6 +70,7 @@ void main() {
     input: [none],
     expect: [
       useCaseSuccess(settingsWithBlackBackgroundColor),
+      useCaseSuccess(settingsWithBlackBackgroundColor),
       useCaseSuccess(settingsWithSerifFontStyle),
     ],
   );
