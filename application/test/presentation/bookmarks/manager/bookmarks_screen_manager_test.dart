@@ -13,7 +13,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
@@ -27,7 +26,6 @@ import 'bookmarks_screen_manager_test.mocks.dart';
   ListenBookmarksUseCase,
   RemoveBookmarkUseCase,
   BookmarkErrorsEnumMapper,
-  DateTimeHandler,
 ])
 void main() {
   late MockListenBookmarksUseCase listenBookmarksUseCase;
