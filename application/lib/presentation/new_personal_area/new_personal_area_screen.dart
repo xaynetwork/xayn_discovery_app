@@ -23,7 +23,6 @@ import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_wi
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/utils/widget/custom_animated_list.dart';
-import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
@@ -78,13 +77,11 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
             iconModels: [
               AppToolbarIconModel(
                 iconPath: R.assets.icons.plus,
-                onPressed: () => _showAddCollectionBottomSheet(),
+                onPressed: _showAddCollectionBottomSheet,
               ),
               AppToolbarIconModel(
                 iconPath: R.assets.icons.gear,
-                onPressed: () {
-                  _manager.onSettingsNavPressed();
-                },
+                onPressed: _manager.onSettingsNavPressed,
                 iconKey: Keys.personalAreaIconSettings,
               ),
             ],
@@ -93,15 +90,11 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         body: _buildBody(),
       );
 
-  Widget _buildBody() {
-    Widget screenBloc =
-        BlocBuilder<NewPersonalAreaManager, NewPersonalAreaState>(
-      bloc: _manager,
-      builder: _buildList,
-    );
-
-    return ScreenStateSwitcher(child: screenBloc);
-  }
+  Widget _buildBody() =>
+      BlocBuilder<NewPersonalAreaManager, NewPersonalAreaState>(
+        bloc: _manager,
+        builder: _buildList,
+      );
 
   Widget _buildList(
     BuildContext context,
