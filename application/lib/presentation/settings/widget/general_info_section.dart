@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class SettingsGeneralInfoSection extends StatelessWidget {
+  final VoidCallback onContactPressed;
   final VoidCallback onAboutPressed;
   final VoidCallback onCarbonNeutralPressed;
   final VoidCallback onImprintPressed;
@@ -12,6 +13,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
 
   const SettingsGeneralInfoSection({
     Key? key,
+    required this.onContactPressed,
     required this.onAboutPressed,
     required this.onCarbonNeutralPressed,
     required this.onImprintPressed,
@@ -25,6 +27,7 @@ class SettingsGeneralInfoSection extends StatelessWidget {
   Widget build(BuildContext context) => SettingsSection(
         title: R.strings.settingsSectionTitleGeneralInfo,
         items: [
+          _getContact(),
           _getAboutXayn(),
           _getCarbonNeutral(),
           _getImprint(),
@@ -32,6 +35,16 @@ class SettingsGeneralInfoSection extends StatelessWidget {
           _getTC(),
         ],
       );
+
+  SettingsCardData _getContact() => SettingsCardData.fromTile(SettingsTileData(
+        title: R.strings.settingsContactUs,
+        svgIconPath: R.assets.icons.info,
+        action: SettingsTileActionIcon(
+          key: Keys.settingsContactUs,
+          svgIconPath: arrowRightIcon,
+          onPressed: onContactPressed,
+        ),
+      ));
 
   SettingsCardData _getAboutXayn() =>
       SettingsCardData.fromTile(SettingsTileData(
