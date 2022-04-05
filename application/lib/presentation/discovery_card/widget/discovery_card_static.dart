@@ -101,7 +101,7 @@ class _DiscoveryCardStaticState
           ),
           onBookmarkPressed: onBookmarkPressed,
           onBookmarkLongPressed: onBookmarkLongPressed(state),
-          isBookmarked: state.isBookmarked,
+          bookmarkStatus: state.bookmarkStatus,
           fractionSize: .0,
         );
 
@@ -120,7 +120,7 @@ class _DiscoveryCardStaticState
                 child: _buildReaderMode(
                   processHtmlResult: state.processedDocument?.processHtmlResult,
                   size: mediaQuery.size,
-                  isBookmarked: state.isBookmarked,
+                  bookmarkStatus: state.bookmarkStatus,
                 ),
               ),
               Positioned(
@@ -148,7 +148,7 @@ class _DiscoveryCardStaticState
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,
     required Size size,
-    required bool isBookmarked,
+    required BookmarkStatus bookmarkStatus,
   }) {
     final readerMode = ReaderMode(
       scrollController: _scrollController,
@@ -168,7 +168,7 @@ class _DiscoveryCardStaticState
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
       bloc: discoveryCardManager,
       builder: (context, state) {
-        if (state.isBookmarked != isBookmarked) {
+        if (state.bookmarkStatus != bookmarkStatus) {
           NavBarContainer.updateNavBar(context);
         }
 
@@ -182,8 +182,4 @@ class _DiscoveryCardStaticState
       },
     );
   }
-
-  @override
-  void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
 }

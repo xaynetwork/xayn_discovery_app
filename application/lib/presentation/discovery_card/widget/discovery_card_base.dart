@@ -95,13 +95,9 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         listener: (context, state) {
           if (state.error.hasError) {
             handleError(state.error, showTooltip);
-          } else {
-            discoveryCardStateListener(state);
           }
         },
       );
-
-  void discoveryCardStateListener(DiscoveryCardState state);
 
   Widget buildFromState(
     BuildContext context,
