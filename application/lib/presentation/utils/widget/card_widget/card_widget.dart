@@ -121,16 +121,19 @@ class CardWidget extends StatelessWidget {
       personalArea: (data) => null,
     );
 
-    return AppGhostButton(
-      contentPadding: EdgeInsets.zero,
-      onPressed: cardData.onPressed,
-      onLongPressed: onLongPressed,
-      child: item,
-      borderRadius: UnterDenLinden.getLinden(context).styles.roundBorder1_5,
-      backgroundColor: cardData.map(
-        personalArea: (v) => v.color,
-        collectionsScreen: (v) => v.color,
-        bookmark: (v) => R.colors.accent,
+    return Semantics(
+      label: (cardData.key as ValueKey).value,
+      child: AppGhostButton(
+        contentPadding: EdgeInsets.zero,
+        onPressed: cardData.onPressed,
+        onLongPressed: onLongPressed,
+        child: item,
+        borderRadius: UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+        backgroundColor: cardData.map(
+          personalArea: (v) => v.color,
+          collectionsScreen: (v) => v.color,
+          bookmark: (v) => R.colors.accent,
+        ),
       ),
     );
   }
@@ -150,6 +153,7 @@ class CardWidget extends StatelessWidget {
     );
     final titleText = Text(
       title,
+      semanticsLabel: "CardWidget.title",
       style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
     );
     final column = Column(
@@ -171,6 +175,7 @@ class CardWidget extends StatelessWidget {
   }) {
     final titleText = Text(
       title,
+      semanticsLabel: "CardWidget.title",
       style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
     );
 
@@ -180,6 +185,7 @@ class CardWidget extends StatelessWidget {
     final numOfItemsText = Text(
       numOfItems.toString() + ' ' + articleText,
       style: R.styles.mStyle.copyWith(color: R.colors.brightText),
+      semanticsLabel: "CardWidget.numOfItemsText",
     );
 
     final row = Row(
@@ -224,6 +230,7 @@ class CardWidget extends StatelessWidget {
             provider?.name ?? '',
             style: R.styles.sBoldStyle.copyWith(color: R.colors.brightText),
             overflow: TextOverflow.ellipsis,
+            semanticsLabel: "CardWidget.provider",
           ),
         ),
         SizedBox(
