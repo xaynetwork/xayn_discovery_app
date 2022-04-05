@@ -20,7 +20,7 @@ class ShimmeringFeedView extends StatelessWidget {
     title: '',
     snippet: '',
     url: Uri.base,
-    sourceDomain: Source(''),
+    sourceDomain: Source('none'),
     image: Uri.base,
     datePublished: DateTime.fromMicrosecondsSinceEpoch(0),
     rank: -1,
