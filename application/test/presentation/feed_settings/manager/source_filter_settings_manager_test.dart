@@ -13,7 +13,8 @@ import '../../../test_utils/fakes.dart';
 import '../../../test_utils/widget_test_utils.dart';
 
 main() {
-  final filter = DocumentFilter.fromSource(fakeDocument.resource.sourceDomain);
+  final filter =
+      DocumentFilter.fromSource(fakeDocument.resource.sourceDomain.toString());
   late DiscoveryEngine engine;
   late HiveDocumentFilterRepository repository;
   late FilterDeleteHistory history;
@@ -32,7 +33,7 @@ main() {
     final documentFilterUseCase = CrudDocumentFilterUseCase(repository);
     engine = di.get<DiscoveryEngine>();
     for (var e in engineValues) {
-      engine.addSourceToExcludedList(e);
+      engine.addSourceToExcludedList(Source(e));
     }
 
     final applyDocumentFilterUseCase =
@@ -87,7 +88,8 @@ main() {
         expect(history.removedFilters, {filter});
         expect(
           await engine.getExcludedSourcesList(),
-          EngineEvent.excludedSourcesListRequestSucceeded({filter.filterValue}),
+          EngineEvent.excludedSourcesListRequestSucceeded(
+              {Source(filter.filterValue)}),
         );
       });
 
@@ -112,7 +114,8 @@ main() {
         expect(history.removedFilters, isEmpty);
         expect(
           await engine.getExcludedSourcesList(),
-          EngineEvent.excludedSourcesListRequestSucceeded({filter.filterValue}),
+          EngineEvent.excludedSourcesListRequestSucceeded(
+              {Source(filter.filterValue)}),
         );
       });
 

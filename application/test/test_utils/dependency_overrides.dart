@@ -81,7 +81,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
 
   @override
   Stream<EngineEvent> get engineEvents => _onEngineEvent.stream;
-  final Set<String> _excludedSources = {};
+  final Set<Source> _excludedSources = {};
 
   @override
   Future<EngineEvent> logDocumentTime(
@@ -145,7 +145,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> addSourceToExcludedList(String source) async {
+  Future<EngineEvent> addSourceToExcludedList(Source source) async {
     _excludedSources.add(source);
     return const EngineEvent.clientEventSucceeded();
   }
@@ -163,7 +163,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> removeSourceFromExcludedList(String source) async {
+  Future<EngineEvent> removeSourceFromExcludedList(Source source) async {
     _excludedSources.remove(source);
     return const EngineEvent.clientEventSucceeded();
   }

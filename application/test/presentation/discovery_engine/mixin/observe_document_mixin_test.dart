@@ -24,7 +24,7 @@ void main() {
       title: '',
       snippet: '',
       url: Uri.base,
-      sourceDomain: 'example',
+      sourceDomain: Source('example'),
       image: Uri.base,
       datePublished: DateTime(2022),
       country: 'US',
