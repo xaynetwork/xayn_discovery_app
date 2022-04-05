@@ -34,7 +34,10 @@ void main() {
     blocTest<_TestBloc, bool>(
       'WHEN open url EXPECT url opener use case to be triggered',
       build: () => _TestBloc(),
-      act: (bloc) => bloc.openExternalUrl(mockUrl, CurrentView.reader),
+      act: (bloc) => bloc.openExternalUrl(
+        url: mockUrl,
+        currentView: CurrentView.reader,
+      ),
       verify: (manager) {
         verifyInOrder([
           urlOpener.openUrl(mockUrl),

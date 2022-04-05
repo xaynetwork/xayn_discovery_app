@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
@@ -90,8 +91,12 @@ class BookmarksScreenNavActionsImpl extends BookmarksScreenNavActions {
   void onBookmarkPressed({
     required bool isPrimary,
     required UniqueId bookmarkId,
+    FeedType? feedType,
   }) =>
-      changeStack((stack) => stack.push(PageRegistry.cardDetails(bookmarkId)));
+      changeStack((stack) => stack.push(PageRegistry.cardDetails(
+            documentId: bookmarkId,
+            feedType: feedType,
+          )));
 }
 
 @Injectable(as: SettingsNavActions)

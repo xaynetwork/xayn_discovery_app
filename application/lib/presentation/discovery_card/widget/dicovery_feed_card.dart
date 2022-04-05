@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -18,6 +19,7 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
     Key? key,
     required bool isPrimary,
     required Document document,
+    FeedType? feedType,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
     OnTtsData? onTtsData,
@@ -28,6 +30,7 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
           onTtsData: onTtsData,
+          feedType: feedType,
         );
 
   @override
@@ -71,6 +74,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
         discoveryCardManager.openWebResourceUrl(
           widget.document,
           CurrentView.story,
+          widget.feedType,
         );
       },
       onToggleTts: () => widget.onTtsData?.call(
@@ -82,9 +86,10 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
               .state.processedDocument?.processHtmlResult.contents,
         ),
       ),
-      onBookmarkPressed: onBookmarkPressed,
+      onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
       onBookmarkLongPressed: onBookmarkLongPressed(state),
       isBookmarked: state.isBookmarked,
+      feedType: widget.feedType,
     );
 
     return Stack(
@@ -100,5 +105,5 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
+      onBookmarkChanged(state, feedType: widget.feedType);
 }

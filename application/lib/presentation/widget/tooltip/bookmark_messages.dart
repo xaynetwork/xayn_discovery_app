@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
@@ -37,14 +38,16 @@ TooltipParams _getBookmarkedToDefault() {
       R.strings.bookmarkSnackBarSavedTo.format(defaultCollectionName);
 
   void onPressed(List? args) {
-    if (args == null || args.length < 4) return;
+    if (args == null || args.length < 5) return;
     final context = args[0];
     final document = args[1];
     final provider = args[2];
     final onError = args[3];
+    final feedType = args[4];
     if (context is! BuildContext ||
         document is! Document ||
         onError is! OnToolTipError ||
+        feedType is! FeedType ||
         provider is! DocumentProvider?) return;
 
     showAppBottomSheet(
@@ -53,6 +56,7 @@ TooltipParams _getBookmarkedToDefault() {
         document: document,
         onError: onError,
         provider: provider,
+        feedType: feedType,
       ),
     );
   }

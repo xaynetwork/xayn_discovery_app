@@ -1,3 +1,4 @@
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
@@ -22,7 +23,10 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
             UserReaction.negative;
   }
 
-  void onBookmarkChanged(DiscoveryCardState state) {
+  void onBookmarkChanged(
+    DiscoveryCardState state, {
+    FeedType? feedType,
+  }) {
     if (state.isBookmarkToggled && !_didShowBookmarkTooltip) {
       showTooltip(
         BookmarkToolTipKeys.bookmarkedToDefault,
@@ -31,6 +35,7 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
           widget.document,
           state.processedDocument?.getProvider(widget.document.resource),
           (tooltipKey) => showTooltip(tooltipKey),
+          feedType,
         ],
       );
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
@@ -95,7 +96,10 @@ class _ActiveSearchState
       final managers = managersOf(document);
 
       void onBookmarkPressed() =>
-          managers.discoveryCardManager.toggleBookmarkDocument(document);
+          managers.discoveryCardManager.toggleBookmarkDocument(
+            document,
+            feedType: FeedType.search,
+          );
 
       void onBookmarkLongPressed() => showAppBottomSheet(
             context,
@@ -104,6 +108,7 @@ class _ActiveSearchState
               provider: managers.discoveryCardManager.state.processedDocument
                   ?.getProvider(document.resource),
               onError: showTooltip,
+              feedType: FeedType.search,
             ),
           );
 
@@ -138,8 +143,10 @@ class _ActiveSearchState
             onLongPressed: onBookmarkLongPressed,
           ),
           buildNavBarItemShare(
-              onPressed: () =>
-                  managers.discoveryCardManager.shareUri(document)),
+              onPressed: () => managers.discoveryCardManager.shareUri(
+                    document: document,
+                    feedType: FeedType.search,
+                  )),
           if (featureManager.isReaderModeSettingsEnabled)
             buildNavBarItemEditFont(
               onPressed: onEditReaderModeSettingsPressed,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -42,6 +43,7 @@ class DiscoveryCard extends DiscoveryCardBase {
     Key? key,
     required bool isPrimary,
     required Document document,
+    required FeedType feedType,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
     this.onDiscard,
@@ -52,6 +54,7 @@ class DiscoveryCard extends DiscoveryCardBase {
           key: key,
           isPrimary: isPrimary,
           document: document,
+          feedType: feedType,
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
           onTtsData: onTtsData,
@@ -70,6 +73,7 @@ class DiscoveryCardStandaloneArgs {
   const DiscoveryCardStandaloneArgs({
     required this.isPrimary,
     required this.document,
+    required this.feedType,
     required this.discoveryCardManager,
     required this.imageManager,
     this.onDiscard,
@@ -77,7 +81,7 @@ class DiscoveryCardStandaloneArgs {
 
   final bool isPrimary;
   final Document document;
-
+  final FeedType feedType;
   final DiscoveryCardManager discoveryCardManager;
   final ImageManager imageManager;
   final VoidCallback? onDiscard;
@@ -95,6 +99,7 @@ class DiscoveryCardStandalone extends DiscoveryCard {
           discoveryCardManager: args.discoveryCardManager,
           imageManager: args.imageManager,
           onDiscard: args.onDiscard,
+          feedType: args.feedType,
         );
 
   @override
@@ -239,6 +244,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             discoveryCardManager.openWebResourceUrl(
               widget.document,
               CurrentView.reader,
+              widget.feedType,
             );
           },
           onToggleTts: () => widget.onTtsData?.call(
@@ -250,11 +256,12 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                   .state.processedDocument?.processHtmlResult.contents,
             ),
           ),
-          onBookmarkPressed: onBookmarkPressed,
+          onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
           fractionSize: normalizedValue,
           useLargeTitle: false,
+          feedType: widget.feedType,
         );
 
         // Limits the max scroll-away distance,
@@ -349,7 +356,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
+      onBookmarkChanged(state, feedType: widget.feedType);
 }
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
@@ -395,11 +402,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         ),
         buildNavBarItemBookmark(
           isBookmarked: _discoveryCardManager.state.isBookmarked,
-          onPressed: onBookmarkPressed,
+          onPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
         ),
         buildNavBarItemShare(
-          onPressed: () => _discoveryCardManager.shareUri(widget.document),
+          onPressed: () => _discoveryCardManager.shareUri(
+            document: widget.document,
+            feedType: widget.feedType,
+          ),
         ),
         buildNavBarItemDisLike(
           isDisLiked: _discoveryCardManager

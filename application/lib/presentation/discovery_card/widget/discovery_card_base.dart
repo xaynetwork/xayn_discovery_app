@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
@@ -20,6 +21,7 @@ typedef OnTtsData = void Function(TtsData);
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
   final Document document;
+  final FeedType? feedType;
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
   final BoxFit imageBoxFit;
@@ -29,6 +31,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     Key? key,
     required this.isPrimary,
     required this.document,
+    required this.feedType,
     this.discoveryCardManager,
     this.imageManager,
     this.imageBoxFit = _kImageBoxFit,
@@ -109,8 +112,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     Widget image,
   );
 
-  void onBookmarkPressed() =>
-      discoveryCardManager.toggleBookmarkDocument(widget.document);
+  void onBookmarkPressed({FeedType? feedType}) =>
+      discoveryCardManager.toggleBookmarkDocument(
+        widget.document,
+        feedType: feedType,
+      );
 
   void Function() onBookmarkLongPressed(DiscoveryCardState state) {
     return () {
@@ -122,6 +128,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
           provider:
               state.processedDocument?.getProvider(widget.document.resource),
           onError: (tooltipKey) => showTooltip(tooltipKey),
+          feedType: widget.feedType,
         ),
       );
     };

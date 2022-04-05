@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -36,6 +37,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.isBookmarked,
     required this.onOpenUrl,
     required this.onToggleTts,
+    required this.feedType,
     this.isInteractionEnabled = true,
     this.fractionSize = 1.0,
     this.provider,
@@ -59,6 +61,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final double fractionSize;
   final bool useLargeTitle;
   final bool isInteractionEnabled;
+  final FeedType? feedType;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +88,10 @@ class DiscoveryCardElements extends StatelessWidget {
         vertical: R.dimen.unit3,
       ),
       child: DiscoveryCardFooter(
-        onSharePressed: () => manager.shareUri(document),
+        onSharePressed: () => manager.shareUri(
+          document: document,
+          feedType: feedType,
+        ),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
         onBookmarkPressed: onBookmarkPressed,

@@ -217,7 +217,10 @@ void main() {
       final manager = create();
 
       expect(
-        () => manager.openExternalUrl(url, CurrentView.settings),
+        () => manager.openExternalUrl(
+          url: url,
+          currentView: CurrentView.settings,
+        ),
         returnsNormally,
       );
       verify(urlOpener.openUrl(url));
@@ -229,8 +232,8 @@ void main() {
     'GIVEN string with url WHEN openUrl method called THEN call ___ useCase',
     build: () => create(),
     act: (manager) => manager.openExternalUrl(
-      'https://xayn.com',
-      CurrentView.settings,
+      url: 'https://xayn.com',
+      currentView: CurrentView.settings,
     ),
     //default one, emitted when manager created
     expect: () => [stateReady],

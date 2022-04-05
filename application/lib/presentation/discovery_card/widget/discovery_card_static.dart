@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -29,6 +30,7 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
   const DiscoveryCardStatic({
     Key? key,
     required Document document,
+    FeedType? feedType,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
     OnTtsData? onTtsData,
@@ -39,6 +41,7 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
           onTtsData: onTtsData,
+          feedType: feedType,
         );
 
   @override
@@ -88,6 +91,7 @@ class _DiscoveryCardStaticState
             discoveryCardManager.openWebResourceUrl(
               widget.document,
               CurrentView.reader,
+              widget.feedType,
             );
           },
           onToggleTts: () => widget.onTtsData?.call(
@@ -99,10 +103,11 @@ class _DiscoveryCardStaticState
                   .state.processedDocument?.processHtmlResult.contents,
             ),
           ),
-          onBookmarkPressed: onBookmarkPressed,
+          onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           isBookmarked: state.isBookmarked,
           fractionSize: .0,
+          feedType: widget.feedType,
         );
 
         // Limits the max scroll-away distance,
@@ -185,5 +190,5 @@ class _DiscoveryCardStaticState
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
+      onBookmarkChanged(state, feedType: widget.feedType);
 }

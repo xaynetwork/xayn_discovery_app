@@ -243,6 +243,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                     currentCardController = controller,
                 onTtsData: (it) => setState(
                     () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
+                feedType: manager.feedType,
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
@@ -253,6 +254,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   imageManager: managers.imageManager,
                   onTtsData: (it) => setState(() =>
                       ttsData = ttsData.enabled ? TtsData.disabled() : it),
+                  feedType: manager.feedType,
                 ),
               );
 
