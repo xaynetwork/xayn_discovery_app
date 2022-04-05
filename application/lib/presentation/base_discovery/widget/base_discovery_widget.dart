@@ -248,8 +248,9 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 builder: (_) => ReaderModeUnavailableBottomSheet(
                   onOpenViaBrowser: () =>
                       managers.discoveryCardManager.openExternalUrl(
-                    document.resource.url.toString(),
-                    CurrentView.story,
+                    url: document.resource.url.toString(),
+                    currentView: CurrentView.story,
+                    feedType: manager.feedType,
                   ),
                 ),
                 allowStacking: false,
