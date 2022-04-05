@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -120,6 +121,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   bool _isLoading = false;
   bool _isBookmarked = false;
+  int? _userInteractionTag;
+  final _random = Random();
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -153,14 +156,17 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onFeedback({
     required Document document,
     required UserReaction userReaction,
-  }) =>
-      changeUserReaction(
-        document: document,
-        userReaction: userReaction,
-        context: FeedbackContext.explicit,
-      );
+  }) {
+    _onUserInteraction();
+    changeUserReaction(
+      document: document,
+      userReaction: userReaction,
+      context: FeedbackContext.explicit,
+    );
+  }
 
   void shareUri(Document document) {
+    _onUserInteraction();
     _shareUriUseCase.call(document.resource.url);
 
     _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
@@ -173,6 +179,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void toggleBookmarkDocument(Document document) {
+    _onUserInteraction();
     final isBookmarked = state.isBookmarked;
 
     _toggleBookmarkHandler(
@@ -192,6 +199,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void openWebResourceUrl(Document document, CurrentView currentView) {
+    _onUserInteraction();
     changeUserReaction(
       document: document,
       userReaction: UserReaction.positive,
@@ -226,6 +234,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         var nextState = DiscoveryCardState(
           isComplete: !_isLoading,
+          userInteractionTag: _userInteractionTag,
         );
 
         if (isBookmarked != null) {
@@ -257,4 +266,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   @override
   void onBackNavPressed() => _discoveryCardNavActions.onBackNavPressed();
+
+  _onUserInteraction() => _userInteractionTag = _random.nextInt(1000000);
 }
