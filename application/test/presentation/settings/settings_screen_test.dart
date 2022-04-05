@@ -174,7 +174,10 @@ void main() {
         manager.stream,
 
         // actual click happened here
-        manager.openExternalUrl(url, CurrentView.settings),
+        manager.openExternalUrl(
+          url: url,
+          currentView: CurrentView.settings,
+        ),
       ]);
       verifyNoMoreInteractions(manager);
     }
