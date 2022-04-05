@@ -100,5 +100,5 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
+      onDiscoveryCardStateChanged(state);
 }

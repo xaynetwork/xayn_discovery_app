@@ -349,7 +349,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
+      onDiscoveryCardStateChanged(state);
 }
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
