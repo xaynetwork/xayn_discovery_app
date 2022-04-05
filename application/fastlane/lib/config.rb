@@ -38,21 +38,21 @@ module Config
   ### All possible options should be described in this module
   ###
   module Options
-    def self.doc_ANDROID_OUTPUT() 'apk, appbundle' end
+    def self.doc_ANDROID_OUTPUT() "apk, appbundle" end
     ANDROID_OUTPUT = :android_output
 
     BUILD_NUMBER = :build_number
 
-    def self.doc_CLEAN() 'true, false' end
+    def self.doc_CLEAN() "true, false" end
     CLEAN = :clean
 
-    def self.doc_COVERAGE() 'true, false' end
+    def self.doc_COVERAGE() "true, false" end
     COVERAGE = :coverage
 
-    def self.doc_DOWNLOAD_PROFILE() 'true, false' end
+    def self.doc_DOWNLOAD_PROFILE() "true, false" end
     DOWNLOAD_PROFILE = :download_profile
 
-    def self.doc_FLAVOR() 'internal, beta' end
+    def self.doc_FLAVOR() "internal, beta" end
     FLAVOR = :flavor
 
     ISSUER_ID = :issuerId
@@ -61,39 +61,39 @@ module Config
 
     KEY_ID = :keyId
 
-    def self.doc_PLATFORM() 'ios, android' end
+    def self.doc_PLATFORM() "ios, android" end
     PLATFORM = :platform
 
-    def self.doc_BUILD_TYPE() 'debug, release' end
+    def self.doc_BUILD_TYPE() "debug, release" end
     BUILD_TYPE = :build_type
 
-    def self.doc_UPDATE_ASSETS() 'true, false' end
+    def self.doc_UPDATE_ASSETS() "true, false" end
     UPDATE_ASSETS = :update_assets
 
-    def self.doc_UPLOAD_TO_APPCENTER() 'true, false' end
+    def self.doc_UPLOAD_TO_APPCENTER() "true, false" end
     UPLOAD_TO_APPCENTER = :upload_to_appcenter
 
-    def self.doc_STORE() 'true, false' end
+    def self.doc_STORE() "true, false" end
     STORE = :store
 
     VERSION_NAME = :version_name
 
-    def self.doc_WATCH() 'true, false' end
+    def self.doc_WATCH() "true, false" end
     WATCH = :watch
 
-    def self.doc_TEST() 'true, false' end
+    def self.doc_TEST() "true, false" end
     TEST = :test
 
     def self.help()
-        Options.constants.map { |o|
-          doc = ""
-          begin
-            method = Options.method("doc_#{o.to_s}".to_sym)
-            doc = ": [#{method.call}]" if method
-          rescue
-          end
-          " - #{Options.const_get(o).to_s} #{doc}\n"
-        }.reduce("", :+)
+      Options.constants.map { |o|
+        doc = ""
+        begin
+          method = Options.method("doc_#{o.to_s}".to_sym)
+          doc = ": [#{method.call}]" if method
+        rescue
+        end
+        " - #{Options.const_get(o).to_s} #{doc}\n"
+      }.reduce("", :+)
     end
   end
 
