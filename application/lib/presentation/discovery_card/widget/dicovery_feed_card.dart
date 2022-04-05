@@ -84,7 +84,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       ),
       onBookmarkPressed: onBookmarkPressed,
       onBookmarkLongPressed: onBookmarkLongPressed(state),
-      isBookmarked: state.isBookmarked,
+      bookmarkStatus: state.bookmarkStatus,
     );
 
     return Stack(
@@ -97,8 +97,4 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       ],
     );
   }
-
-  @override
-  void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
 }

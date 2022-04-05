@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 
 NavBarItemBackButton buildNavBarItemBack({
   required VoidCallback onPressed,
@@ -122,10 +123,10 @@ NavBarItemIconButton buildNavBarItemPersonalArea({
 NavBarItemIconButton buildNavBarItemBookmark({
   required VoidCallback onPressed,
   required VoidCallback onLongPressed,
-  required bool isBookmarked,
+  required BookmarkStatus bookmarkStatus,
 }) =>
     NavBarItemIconButton(
-      svgIconPath: isBookmarked
+      svgIconPath: bookmarkStatus == BookmarkStatus.bookmarked
           ? R.assets.icons.bookmarkActive
           : R.assets.icons.bookmark,
       isHighlighted: false,

@@ -175,7 +175,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     _controller = DiscoveryCardController(_dragToCloseAnimation);
 
     _updateNavBarListener = discoveryCardManager.stream
-        .map((state) => state.isBookmarked)
+        .map((state) => state.bookmarkStatus == BookmarkStatus.bookmarked)
         .distinct()
         .map((_) => context)
         .listen(NavBarContainer.updateNavBar);
@@ -252,7 +252,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           ),
           onBookmarkPressed: onBookmarkPressed,
           onBookmarkLongPressed: onBookmarkLongPressed(state),
-          isBookmarked: state.isBookmarked,
+          bookmarkStatus: state.bookmarkStatus,
           fractionSize: normalizedValue,
           useLargeTitle: false,
         );
@@ -346,10 +346,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       ),
     );
   }
-
-  @override
-  void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
 }
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
@@ -394,7 +390,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
           ),
         ),
         buildNavBarItemBookmark(
-          isBookmarked: _discoveryCardManager.state.isBookmarked,
+          bookmarkStatus: _discoveryCardManager.state.bookmarkStatus,
           onPressed: onBookmarkPressed,
           onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
         ),

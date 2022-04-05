@@ -142,7 +142,7 @@ class _ActiveSearchState
             ),
           ),
           buildNavBarItemBookmark(
-            isBookmarked: managers.discoveryCardManager.state.isBookmarked,
+            bookmarkStatus: managers.discoveryCardManager.state.bookmarkStatus,
             onPressed: onBookmarkPressed,
             onLongPressed: onBookmarkLongPressed,
           ),
