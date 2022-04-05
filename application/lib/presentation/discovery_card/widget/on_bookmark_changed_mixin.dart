@@ -8,6 +8,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
     on DiscoveryCardBaseState<T> {
+  int? _lastUserInteractionTag;
   late bool _didShowBookmarkTooltip;
   late bool _didShowDocumentFilterTooltip;
   late final FeatureManager _featureManager = di.get();
@@ -23,7 +24,13 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
   }
 
   void onDiscoveryCardStateChanged(DiscoveryCardState state) {
-    if (state.isBookmarkToggled && !_didShowBookmarkTooltip) {
+    final newUserInteraction =
+        state.userInteractionTag != _lastUserInteractionTag;
+
+    if (state.isBookmarkToggled &&
+        !_didShowBookmarkTooltip &&
+        newUserInteraction) {
+      _lastUserInteractionTag = state.userInteractionTag;
       showTooltip(
         BookmarkToolTipKeys.bookmarkedToDefault,
         parameters: [
@@ -37,7 +44,9 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
 
     if (_featureManager.isDocumentFilterEnabled) {
       if (state.explicitDocumentUserReaction == UserReaction.negative &&
-          !_didShowDocumentFilterTooltip) {
+          !_didShowDocumentFilterTooltip &&
+          newUserInteraction) {
+        _lastUserInteractionTag = state.userInteractionTag;
         showTooltip(
           DocumentFilterKeys.documentFilter,
           parameters: [

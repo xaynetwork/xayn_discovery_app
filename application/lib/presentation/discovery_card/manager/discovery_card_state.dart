@@ -22,6 +22,10 @@ class DiscoveryCardState with _$DiscoveryCardState {
     @Default(ErrorObject()) ErrorObject error,
     ProcessedDocument? processedDocument,
     @Default(UserReaction.neutral) UserReaction explicitDocumentUserReaction,
+
+    /// The [userInteractionTag] helps to understand if this action related to a user interaction
+    /// that wasn't consumed yet.
+    int? userInteractionTag,
   }) = _DiscoveryCardState;
 
   // ignore: prefer_const_constructors
