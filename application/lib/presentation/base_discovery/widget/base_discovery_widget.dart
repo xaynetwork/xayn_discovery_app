@@ -114,9 +114,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
             /// feed should look the same in that process
             ///
             resizeToAvoidBottomInset: false,
-            // appBar: AppBar(
-            //   backgroundColor: Colors.red, // Status bar color
-            // ),
             backgroundColor: bgColor,
             body: Tts(
               data: ttsData,
