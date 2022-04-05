@@ -96,15 +96,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         )
         .followedBy(_injectReaderMetaDataUseCase),
   );
-  late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler =
+  late final UseCaseSink<UniqueId, BookmarkStatus> _isBookmarkedHandler =
       pipe(_listenIsBookmarkedUseCase);
   late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn, AnalyticsEvent>
       _toggleBookmarkHandler = pipe(_toggleBookmarkUseCase).transform(
     (out) => out
-        .scheduleComputeState(
-          consumeEvent: (_) => false,
-          run: (it) => _isBookmarked = it.isBookmarked,
-        )
         .map(
           (it) => DocumentBookmarkedEvent(
             document: it.document,
@@ -119,7 +115,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
-  bool _isBookmarked = false;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -173,7 +168,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void toggleBookmarkDocument(Document document) {
-    final isBookmarked = state.isBookmarked;
+    final isBookmarked = state.bookmarkStatus == BookmarkStatus.bookmarked;
 
     _toggleBookmarkHandler(
       CreateBookmarkFromDocumentUseCaseIn(
@@ -209,7 +204,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         _crudExplicitDocumentFeedbackHandler,
       ).foldAll((
         processedDocument,
-        isBookmarked,
+        bookmarkStatus,
         explicitDocumentFeedback,
         errorReport,
       ) {
@@ -228,11 +223,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           isComplete: !_isLoading,
         );
 
-        if (isBookmarked != null) {
-          nextState = nextState.copyWith(
-            isBookmarked: isBookmarked,
-          );
-        }
+        nextState = nextState.copyWith(
+          bookmarkStatus: bookmarkStatus ?? BookmarkStatus.unknown,
+        );
 
         if (processedDocument != null) {
           nextState = nextState.copyWith(
@@ -247,10 +240,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
             explicitDocumentUserReaction: reaction.userReaction,
           );
         }
-
-        nextState = nextState.copyWith(
-          isBookmarkToggled: _isBookmarked,
-        );
 
         return nextState;
       });
