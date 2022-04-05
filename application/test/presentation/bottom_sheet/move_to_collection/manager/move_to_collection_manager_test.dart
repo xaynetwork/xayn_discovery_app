@@ -48,7 +48,7 @@ void main() {
           documentId: DocumentId(),
           resource: NewsResource(
             image: Uri.parse('https://displayUrl.test.xayn.com'),
-            sourceDomain: 'example',
+            sourceDomain: Source('example'),
             topic: 'topic',
             score: .0,
             rank: -1,

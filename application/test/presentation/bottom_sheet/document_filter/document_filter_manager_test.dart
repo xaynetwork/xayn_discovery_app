@@ -14,7 +14,8 @@ import '../../../test_utils/widget_test_utils.dart';
 
 main() {
   late DocumentFilterManager manager;
-  final filter = DocumentFilter.fromSource(fakeDocument.resource.sourceDomain);
+  final filter =
+      DocumentFilter.fromSource(fakeDocument.resource.sourceDomain.toString());
   late DiscoveryEngine engine;
   late HiveDocumentFilterRepository repository;
   setUp(() async {
@@ -76,7 +77,7 @@ main() {
         expect(
             await engine.getExcludedSourcesList(),
             EngineEvent.excludedSourcesListRequestSucceeded(
-                {filter.filterValue}));
+                {Source(filter.filterValue)}));
       });
 
   blocTest<DocumentFilterManager, DocumentFilterState>(

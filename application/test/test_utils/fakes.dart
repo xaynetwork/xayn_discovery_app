@@ -16,7 +16,7 @@ final fakeDocument = Document(
   resource: NewsResource(
     image: Uri.parse(
         "https://www.reuters.com/resizer/K2oMuVX28AvBmJyt3DzgsFJPL9A=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcp"),
-    sourceDomain: 'example.com',
+    sourceDomain: Source('example.com'),
     country: 'US',
     language: 'en-US',
     rank: -1,
