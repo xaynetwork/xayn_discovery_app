@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_c
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_reaction_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -35,7 +36,9 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
 }
 
 class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
-    with OnBookmarkChangedMixin<DiscoveryFeedCard> {
+    with
+        OnBookmarkChangedMixin<DiscoveryFeedCard>,
+        OnReactionChangedMixin<DiscoveryFeedCard> {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {

@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_c
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_reaction_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
@@ -122,7 +123,10 @@ class DiscoveryCardController extends ChangeNotifier {
 }
 
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
-    with OnBookmarkChangedMixin<DiscoveryCard>, TickerProviderStateMixin {
+    with
+        OnBookmarkChangedMixin<DiscoveryCard>,
+        OnReactionChangedMixin<DiscoveryCard>,
+        TickerProviderStateMixin {
   late final AnimationController _openingAnimation;
   late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
