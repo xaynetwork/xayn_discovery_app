@@ -1,13 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
 
-import 'log_use_case_test.mocks.dart';
+import '../../presentation/test_utils/utils.dart';
 
-@GenerateMocks([Logger])
 void main() {
   late MockLogger logger;
 

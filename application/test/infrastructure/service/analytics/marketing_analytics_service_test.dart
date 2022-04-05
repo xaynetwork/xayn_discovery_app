@@ -1,13 +1,10 @@
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 
+import '../../../presentation/test_utils/utils.dart';
 import 'analytics_service_test_utils.dart';
-import 'marketing_analytics_service_test.mocks.dart';
 
-@GenerateMocks([AppsflyerSdk])
 void main() async {
   late MockAppsflyerSdk appsFlyer;
   late MarketingAnalyticsService marketingAnalyticsService;

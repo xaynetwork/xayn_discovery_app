@@ -1,19 +1,12 @@
-import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 
-import 'hive_app_settings_repository_test.mocks.dart';
+import '../../presentation/test_utils/utils.dart';
 
-@GenerateMocks([
-  AppSettingsMapper,
-  Box,
-])
 void main() async {
   late MockAppSettingsMapper mapper;
   late MockBox<Record> box;
