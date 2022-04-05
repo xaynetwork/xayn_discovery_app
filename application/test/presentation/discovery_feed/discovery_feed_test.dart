@@ -8,6 +8,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
@@ -300,6 +301,20 @@ void main() async {
         shouldUpdateNavBar: true,
         didReachEnd: false,
         subscriptionStatus: subscriptionStatusInitial,
+      ),
+      DiscoveryState(
+        results: {fakeDocumentA, fakeDocumentB},
+        cardIndex: 0,
+        isComplete: false,
+        isFullScreen: true,
+        isInErrorState: false,
+        shouldUpdateNavBar: false,
+        didReachEnd: false,
+        subscriptionStatus: subscriptionStatusInitial,
+        readerModeBackgroundColor: ReaderModeBackgroundColor(
+          dark: ReaderModeBackgroundDarkColor.dark,
+          light: ReaderModeBackgroundLightColor.white,
+        ),
       ),
     ],
     verify: (manager) {
