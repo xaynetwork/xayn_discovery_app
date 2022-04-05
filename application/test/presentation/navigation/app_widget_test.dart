@@ -3,7 +3,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
+import 'package:xayn_discovery_app/presentation/new_personal_area/new_personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 
 import '../test_utils/utils.dart';
@@ -65,11 +65,11 @@ void main() {
     await driver.navigateToPersonalArea();
 
     expect(find.byType(DiscoveryFeed), findsNothing);
-    expect(find.byType(PersonalAreaScreen), findsOneWidget);
+    expect(find.byType(NewPersonalAreaScreen), findsOneWidget);
   });
 
   testWidgets(
-      'In Settings (coming from PersonalAreaScreen) clicking back, navigates to PersonalAreaScreen',
+      'In Settings (coming from NewPersonalAreaScreen) clicking back, navigates to NewPersonalAreaScreen',
       (driver) async {
     await driver.initToDiscoveryPage();
     await driver.navigateToPersonalArea();
@@ -78,6 +78,6 @@ void main() {
     await driver.navigateBack();
 
     expect(find.byType(SettingsScreen), findsNothing);
-    expect(find.byType(PersonalAreaScreen), findsOneWidget);
+    expect(find.byType(NewPersonalAreaScreen), findsOneWidget);
   });
 }

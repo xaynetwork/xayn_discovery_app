@@ -212,6 +212,10 @@ class Translations {
   String get paymentFailedBottomSheetTitle => """Payment failed""";
   String get paymentFailedBottomSheetBody =>
       """The app store couldn’t process your payment. Please try again later. """;
+  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+  String get readerModeUnableToLoadDesc =>
+      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
+  String get readerModeUnableToLoadCTA => """Open in Browser""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -222,7 +226,8 @@ class PaymentFlowErrorTranslations {
   String get productNotFound => """Product not found :(""";
   String get itemAlreadyOwned => """You have already been subscribed""";
   String get transactionFailed => """Payment transaction failed""";
-  String get noActiveSubscriptionFound => """No active subscription found""";
+  String get noActiveSubscriptionFound =>
+      """We couldn't find an active subscription for this account.""";
 }
 
 Map<String, String> get translationsMap => {
@@ -347,7 +352,7 @@ Map<String, String> get translationsMap => {
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """No active subscription found""",
+          """We couldn't find an active subscription for this account.""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
@@ -384,4 +389,8 @@ Map<String, String> get translationsMap => {
       """paymentFailedBottomSheetTitle""": """Payment failed""",
       """paymentFailedBottomSheetBody""":
           """The app store couldn’t process your payment. Please try again later. """,
+      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+      """readerModeUnableToLoadDesc""":
+          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
+      """readerModeUnableToLoadCTA""": """Open in Browser""",
     };

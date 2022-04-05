@@ -14,21 +14,29 @@ class AppRouter extends xayn.NavigatorDelegate {
 
   @override
   Widget build(BuildContext context) {
+    final mQuery = MediaQuery.of(context);
+    final isKeyboardVisible = mQuery.viewInsets.bottom > 0;
     // The purpose to the extra bottom padding is to align the navbar
     // so that it's in the middle of current and next card
     // even on devices without the bottom safe area.
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final bottomPadding = mQuery.padding.bottom;
     final extraBottomPadding =
         bottomPadding > 0 ? bottomPadding : kExtraBottomOffset;
 
+    final defaultPadding = EdgeInsets.symmetric(
+      vertical: R.dimen.unit2,
+      horizontal: R.dimen.unit4,
+    );
+    final navbarPadding = isKeyboardVisible
+        ? defaultPadding
+        : defaultPadding.copyWith(bottom: R.dimen.unit2 + extraBottomPadding);
     final stack = Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
         buildNavigator(observers: [NavBarObserver()]),
         TooltipContextProvider(
           child: NavBar(
-            padding: EdgeInsets.all(R.dimen.unit2)
-                .copyWith(bottom: R.dimen.unit2 + extraBottomPadding),
+            padding: navbarPadding,
           ),
         ),
       ],

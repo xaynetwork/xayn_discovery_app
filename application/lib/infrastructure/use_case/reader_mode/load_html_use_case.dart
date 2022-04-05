@@ -44,11 +44,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      yield Progress.finish(
-        html:
-            '''<error status-code="${response.statusCode}">${response.reasonPhrase}</error> ''',
-        uri: param,
-      );
+      yield Progress.finish(html: '', uri: param);
     } else {
       yield Progress.finish(
         html: _extractResponseBody(await response.readAsBytes()),

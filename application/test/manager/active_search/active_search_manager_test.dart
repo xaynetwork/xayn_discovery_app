@@ -31,6 +31,8 @@ void main() {
   late AppDiscoveryEngine engine;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
+  late MockFeatureManager featureManager;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -38,6 +40,8 @@ void main() {
     engine = MockAppDiscoveryEngine();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
+    listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
+    featureManager = MockFeatureManager();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -53,6 +57,9 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(getSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
+    when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
+      (_) => const Stream.empty(),
+    );
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -69,6 +76,8 @@ void main() {
           ),
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
+          listenReaderModeSettingsUseCase,
+          featureManager,
         );
   });
 
@@ -90,6 +99,7 @@ void main() {
       );
       when(engine.getSearchTerm()).thenAnswer(
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(featureManager.isPaymentEnabled).thenReturn(true);
       return buildManager();
     },
     verify: (bloc) => expect(
@@ -120,6 +130,7 @@ void main() {
       );
       when(engine.getSearchTerm()).thenAnswer(
           (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(featureManager.isPaymentEnabled).thenReturn(false);
       return buildManager();
     },
     verify: (bloc) {
