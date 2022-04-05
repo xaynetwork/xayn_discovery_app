@@ -216,6 +216,10 @@ class TranslationsDe extends Translations {
   String get paymentFailedBottomSheetTitle => """Payment failed""";
   String get paymentFailedBottomSheetBody =>
       """The app store couldn’t process your payment. Please try again later. """;
+  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+  String get readerModeUnableToLoadDesc =>
+      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
+  String get readerModeUnableToLoadCTA => """Open in Browser""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -395,4 +399,8 @@ Map<String, String> get translationsDeMap => {
       """paymentFailedBottomSheetTitle""": """Payment failed""",
       """paymentFailedBottomSheetBody""":
           """The app store couldn’t process your payment. Please try again later. """,
+      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+      """readerModeUnableToLoadDesc""":
+          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
+      """readerModeUnableToLoadCTA""": """Open in Browser""",
     };

@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Payment transaction failed
-  noActiveSubscriptionFound: No active subscription found
+  noActiveSubscriptionFound: We couldn't find an active subscription for this account.
 bottomSheetDeleteCollectionWithNoItemsBody: Do you really want to delete this collection?
 bottomSheetMoveSingleBookmark: Move to another collection
 readerModeSettingsErrorChangesNotApplied: Changes couldn't be applied
@@ -156,3 +156,6 @@ paymentPromoCodeAndroidBottomSheetTitle: Have a promo code?
 paymentPromoCodeAndroidBottomSheetBody: You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.
 paymentFailedBottomSheetTitle: Payment failed
 paymentFailedBottomSheetBody: "The app store couldn’t process your payment. Please try again later. "
+readerModeUnableToLoadTitle: We couldn’t load this content
+readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
+readerModeUnableToLoadCTA: Open in Browser

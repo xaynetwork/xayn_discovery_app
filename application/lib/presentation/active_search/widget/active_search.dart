@@ -22,11 +22,20 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
             BuildContext context,
             double? width,
             double? height,
-          ) =>
-              FeedNoResultsCard(
-            width: width,
-            height: height,
-          ),
+          ) {
+            final state = context.findAncestorStateOfType<_ActiveSearchState>();
+
+            // lastUsedSearchTerm can only be null if a search was never done before,
+            // in that case, show an empty card.
+            // if lastUsedSearchTerm is not null, then we restore the past search / do a search without results,
+            // and then "no-results" is relevant again.
+            return state?.manager.lastUsedSearchTerm == null
+                ? Container()
+                : FeedNoResultsCard(
+                    width: width,
+                    height: height,
+                  );
+          },
           finalItemBuilder: (
             BuildContext context,
             double? width,
