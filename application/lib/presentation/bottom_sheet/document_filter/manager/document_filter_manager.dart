@@ -41,8 +41,8 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
         handler,
         errorReport,
       ) {
-        final filter =
-            DocumentFilter.fromSource(_document.resource.sourceDomain);
+        final filter = DocumentFilter.fromSource(
+            _document.resource.sourceDomain.toString());
         final list = (getAll ?? handler)?.mapOrNull(list: (v) => v.value) ?? [];
         list.removeWhere(
           (element) =>

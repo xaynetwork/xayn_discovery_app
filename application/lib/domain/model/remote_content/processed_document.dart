@@ -23,7 +23,8 @@ class ProcessedDocument {
     final favIcon = link ?? '/favicon.ico';
 
     return DocumentProvider(
-      name: processHtmlResult.metadata?.siteName ?? resource.sourceDomain,
+      name: processHtmlResult.metadata?.siteName ??
+          resource.sourceDomain.toString(),
       favicon: resource.url.resolve(favIcon).toString(),
     );
   }
