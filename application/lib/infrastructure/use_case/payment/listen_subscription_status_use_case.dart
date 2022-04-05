@@ -23,10 +23,12 @@ class ListenSubscriptionStatusUseCase
     return _paymentService.purchaserInfoStream.map((purchaserInfo) {
       final willRenew = purchaserInfo.willRenew;
       final expirationDate = purchaserInfo.expirationDate;
+      final purchaseDate = purchaserInfo.purchaseDate;
       return SubscriptionStatus(
         willRenew: willRenew,
         expirationDate: expirationDate,
         trialEndDate: _repository.appStatus.trialEndDate,
+        purchaseDate: purchaseDate,
       );
     });
   }

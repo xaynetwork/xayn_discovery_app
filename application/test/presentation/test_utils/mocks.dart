@@ -22,6 +22,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_se
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_collection_and_bookmark_changes_identity_param_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_identity_param_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
@@ -136,6 +137,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SendAnalyticsUseCase,
   SendMarketingAnalyticsUseCase,
   SetInitialIdentityParamsUseCase,
+  SetIdentityParamUseCase,
   SetCollectionAndBookmarksChangesIdentityParam,
   SettingsNavActions,
   SettingsScreenManager,
