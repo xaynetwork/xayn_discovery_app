@@ -21,6 +21,7 @@ import 'package:xayn_discovery_app/presentation/collections/util/collection_erro
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
+import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 
 import 'new_personal_area_state.dart';
 
@@ -36,7 +37,9 @@ abstract class NewPersonalAreaNavActions {
 
 @injectable
 class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
-    with UseCaseBlocHelper<NewPersonalAreaState>
+    with
+        UseCaseBlocHelper<NewPersonalAreaState>,
+        ObserveSubscriptionWindowMixin<NewPersonalAreaState>
     implements NewPersonalAreaNavActions {
   final CreateCollectionUseCase _createCollectionUseCase;
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
