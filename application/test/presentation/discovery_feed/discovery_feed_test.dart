@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
@@ -18,22 +17,19 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/sess
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
+import '../../presentation/test_utils/utils.dart';
 import '../test_utils/dependency_overrides.dart';
 import '../test_utils/utils.dart';
 import '../test_utils/widget_test_utils.dart';
-import 'discovery_feed_test.mocks.dart';
 
 /// todo: will need to be rewritten once we get rid of all the "fake" engine things,
 /// requestFeed and requestNextFeedBatch will be covered when we move away from
 /// the temporary test mixins.
-@GenerateMocks([
-  ConnectivityUseCase,
-  FeedRepository,
-])
+
 void main() async {
   late AppDiscoveryEngine engine;
   late MockAppDiscoveryEngine mockDiscoveryEngine;

@@ -1,36 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
-import 'collections_screen_manager_test.mocks.dart';
+import '../../test_utils/utils.dart';
 
-@GenerateMocks([
-  CreateCollectionUseCase,
-  RemoveCollectionUseCase,
-  RenameCollectionUseCase,
-  ListenCollectionsUseCase,
-  GetAllCollectionsUseCase,
-  GetAllBookmarksUseCase,
-  CollectionErrorsEnumMapper,
-  CollectionsScreenNavActions,
-  DateTimeHandler,
-  HapticFeedbackMediumUseCase,
-])
 void main() {
   late MockListenCollectionsUseCase listenCollectionsUseCase;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
