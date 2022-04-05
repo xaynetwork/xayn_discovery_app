@@ -50,7 +50,7 @@ For a more comprehensive list, check [pubspec.yaml](./pubspec.yaml).
 ## Analytics 📈
 
 The analytics implementation can be found as part of
-the [infrastructure/service/analytics](./lib/infrastructure/service/analytics). The plateforms used
+the [infrastructure/service/analytics](./lib/infrastructure/service/analytics). The platforms used
 are mentioned briefly [here](#analytics).
 
 ### Events
