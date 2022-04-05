@@ -22,7 +22,7 @@ mixin OnBookmarkChangedMixin<T extends DiscoveryCardBase>
             UserReaction.negative;
   }
 
-  void onBookmarkChanged(DiscoveryCardState state) {
+  void onDiscoveryCardStateChanged(DiscoveryCardState state) {
     if (state.isBookmarkToggled && !_didShowBookmarkTooltip) {
       showTooltip(
         BookmarkToolTipKeys.bookmarkedToDefault,

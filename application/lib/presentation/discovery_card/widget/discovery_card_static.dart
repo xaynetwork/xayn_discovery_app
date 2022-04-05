@@ -185,5 +185,5 @@ class _DiscoveryCardStaticState
 
   @override
   void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state);
+      onDiscoveryCardStateChanged(state);
 }
