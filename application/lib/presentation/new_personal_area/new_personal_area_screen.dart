@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
@@ -176,12 +177,20 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
   Widget _buildTrialBanner(DateTime trialEndDate) => Padding(
         padding: EdgeInsets.only(bottom: R.dimen.unit2),
         child: SubscriptionTrialBanner(
-          trialEndDate: trialEndDate,
-          onPressed: () => showAppBottomSheet(
-            context,
-            builder: (_) => PaymentBottomSheet(),
-          ),
-        ),
+            trialEndDate: trialEndDate,
+            onPressed: () {
+              _manager.onSubscriptionWindowOpened(
+                currentView: SubscriptionWindowCurrentView.personalArea,
+              );
+              showAppBottomSheet(
+                context,
+                builder: (_) => PaymentBottomSheet(
+                  onClosePressed: () => _manager.onSubscriptionWindowClosed(
+                    currentView: SubscriptionWindowCurrentView.personalArea,
+                  ),
+                ),
+              );
+            }),
       );
 
   _showAddCollectionBottomSheet() {

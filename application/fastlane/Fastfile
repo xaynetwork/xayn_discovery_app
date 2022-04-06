@@ -244,7 +244,7 @@ lane :publish do |options|
     android_prepare_key_properties(options)
   end
   output = flutter_build(options)
-  appcenter_buildfile = output[/.*Built (.*)[ .]/, 1]
+  appcenter_buildfile = output[/.*Built (.*\.(?:aab|ipa|apk))/, 1]
 
   if platform == Platforms::IOS
     Dir.chdir("../ios/fastlane") do
@@ -275,20 +275,10 @@ lane :publish do |options|
       )
     end
 
+    uploadedFile = output[/Release '\d+' committed: (.*)/, 1]
     # Write Beta report
     if flavor == Flavors::BETA
-      uploadedFile = output[/Release '\d+' committed: (.*)/, 1]
-      report = File.new("../report.log", "w")
-      report.write("New Beta release *#{version}* BuildNumber: *#{options[Options::BUILD_NUMBER]}*\n")
-      report.write("Appcenter file: #{uploadedFile}\n")
-      if platform == Platforms::IOS
-        report.write("Testflight: https://testflight.apple.com/join/ltxuzZh7\n")
-      else
-        report.write("Register: https://play.google.com/apps/testing/com.xayn.discovery\n")
-        report.write("Install/Update: https://play.google.com/store/apps/details?id=com.xayn.discovery\n")
-      end
-      report.write("_Note that publishing might take a while, for instant testing use the internal version._\n")
-      report.write(gitShortChangeLog(version, -1, false))
+      writeBetaReport(options, uploadedFile)
     end
   end
 end
@@ -422,14 +412,37 @@ def capture_stdout()
   original_stderr = $stderr.clone
   $stderr.reopen file
   $stdout.reopen file
-  yield()
-ensure
-  $stdout.reopen original_stdout
-  $stderr.reopen original_stderr
+  yield
+  $stdout.flush
+  $stderr.flush
   file.flush
   file.rewind
   output = file.read
-  print output
-  file.close
   return output
+ensure
+  file.close
+  $stdout.reopen original_stdout
+  $stderr.reopen original_stderr
+  print output
+end
+
+def writeBetaReport(options, uploadedFile)
+  version = options[Options::VERSION_NAME]
+  platform = options[Options::PLATFORM]
+  buildNumber = options[Options::BUILD_NUMBER]
+
+  report = StringIO.new()
+  report.write("New Beta release *#{version}* BuildNumber: *#{buildNumber}*\n")
+  report.write("Appcenter file: #{uploadedFile}\n")
+  if platform == Platforms::IOS
+    report.write("Testflight: https://testflight.apple.com/join/ltxuzZh7\n")
+  else
+    report.write("Register: https://play.google.com/apps/testing/com.xayn.discovery\n")
+    report.write("Install/Update: https://play.google.com/store/apps/details?id=com.xayn.discovery\n")
+  end
+  report.write("_Note that publishing might take a while, for instant testing use the internal version._\n")
+  report.write(gitShortChangeLog(version, -1, false))
+  file = File.new("../report.log", "w")
+  file.write(report.string.truncate(3000).to_json)
+  file.close
 end

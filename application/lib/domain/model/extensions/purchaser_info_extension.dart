@@ -11,4 +11,6 @@ extension PurchaserInfoExtension on PurchaserInfo {
     final entitlement = entitlements.active[EntitlementIds.unlimited];
     return DateTime.tryParse(entitlement?.expirationDate ?? '');
   }
+
+  DateTime? get purchaseDate => DateTime.tryParse(originalPurchaseDate ?? '');
 }

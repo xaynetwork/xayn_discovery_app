@@ -4,6 +4,8 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/feed_countries_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
@@ -19,11 +21,13 @@ class CountryFeedSettingsManager extends Cubit<CountryFeedSettingsState>
   final GetSupportedCountriesUseCase _getSupportedCountriesUseCase;
   final GetSelectedCountriesUseCase _getSelectedCountriesUseCase;
   final SaveSelectedCountriesUseCase _saveSelectedFeedMarketsUseCase;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   CountryFeedSettingsManager(
     this._getSupportedCountriesUseCase,
     this._getSelectedCountriesUseCase,
     this._saveSelectedFeedMarketsUseCase,
+    this._sendAnalyticsUseCase,
   ) : super(const CountryFeedSettingsState.initial());
 
   final _allCountries = <Country>{};
@@ -47,7 +51,10 @@ class CountryFeedSettingsManager extends Cubit<CountryFeedSettingsState>
       return;
     }
     _selectedCountries.add(country);
-    await _saveSelectedFeedMarketsUseCase.singleOutput(_selectedCountries);
+    await _saveSelectedFeedMarketsUseCase.singleOutput({..._selectedCountries});
+    _sendAnalyticsUseCase(
+      FeedCountriesChangedEvent(countries: {..._selectedCountries}),
+    );
     scheduleComputeState(() {});
   }
 
@@ -59,7 +66,10 @@ class CountryFeedSettingsManager extends Cubit<CountryFeedSettingsState>
       return;
     }
     _selectedCountries.remove(country);
-    await _saveSelectedFeedMarketsUseCase.singleOutput(_selectedCountries);
+    await _saveSelectedFeedMarketsUseCase.singleOutput({..._selectedCountries});
+    _sendAnalyticsUseCase(
+      FeedCountriesChangedEvent(countries: {..._selectedCountries}),
+    );
     scheduleComputeState(() {});
   }
 
