@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
@@ -109,7 +108,6 @@ class _DiscoveryCardStaticState
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset =
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
-        final maskedImage = DiscoveryCardHeadlineImage(child: image);
 
         return AppScrollbar(
           scrollController: _scrollController,
@@ -131,7 +129,7 @@ class _DiscoveryCardStaticState
                   alignment: Alignment.topCenter,
                   child: Stack(
                     children: [
-                      maskedImage,
+                      image,
                       elements,
                     ],
                   ),
