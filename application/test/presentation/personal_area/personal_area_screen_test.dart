@@ -12,8 +12,8 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
 
 import '../../test_utils/utils.dart';
 import '../../test_utils/widget_test_utils.dart';
