@@ -244,7 +244,7 @@ lane :publish do |options|
     android_prepare_key_properties(options)
   end
   output = flutter_build(options)
-  appcenter_buildfile = output[/.*Built (.*)[ .]/, 1]
+  appcenter_buildfile = output[/.*Built (.*\.(?:aab|ipa|apk))/, 1]
 
   if platform == Platforms::IOS
     Dir.chdir("../ios/fastlane") do
@@ -412,18 +412,18 @@ def capture_stdout()
   original_stderr = $stderr.clone
   $stderr.reopen file
   $stdout.reopen file
-  yield()
-ensure
+  yield
   $stdout.flush
   $stderr.flush
-  $stdout.reopen original_stdout
-  $stderr.reopen original_stderr
   file.flush
   file.rewind
   output = file.read
-  print output
-  file.close
   return output
+ensure
+  file.close
+  $stdout.reopen original_stdout
+  $stderr.reopen original_stderr
+  print output
 end
 
 def writeBetaReport(options, uploadedFile)
