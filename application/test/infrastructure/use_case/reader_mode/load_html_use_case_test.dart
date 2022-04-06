@@ -6,7 +6,7 @@ import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 import 'matchers.dart';
 
 void main() {
