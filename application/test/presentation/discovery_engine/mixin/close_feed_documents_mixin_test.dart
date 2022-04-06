@@ -13,7 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockAppDiscoveryEngine engine;

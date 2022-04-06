@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late GetSelectedCountriesUseCase useCase;

@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 
-import '../../presentation/test_utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() async {
   late MockAppSettingsMapper mapper;
