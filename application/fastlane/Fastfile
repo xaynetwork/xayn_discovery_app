@@ -443,6 +443,6 @@ def writeBetaReport(options, uploadedFile)
   report.write("_Note that publishing might take a while, for instant testing use the internal version._\n")
   report.write(gitShortChangeLog(version, -1, false))
   file = File.new("../report.log", "w")
-  file.write(report.string.to_json.truncate(3000))
+  file.write(report.string.truncate(3000).to_json)
   file.close
 end
