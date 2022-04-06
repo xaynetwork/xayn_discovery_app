@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
@@ -68,6 +69,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase,
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
+    ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
     FeatureManager featureManager,
   )   : _maxCardCount = _kMaxCardCount,
         super(
@@ -80,6 +82,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           crudExplicitDocumentFeedbackUseCase,
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
+          listenReaderModeSettingsUseCase,
           featureManager,
         );
 
