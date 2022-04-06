@@ -3,8 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
-    as xayn;
 
 class Thumbnail extends StatelessWidget {
   const Thumbnail({
@@ -91,13 +89,12 @@ Widget buildThumbnailFromFaviconHost(String host) {
   var defaultThumbnail = Thumbnail.assetImage(
       R.assets.graphics.formsEmptyCollection,
       backgroundColor: R.colors.collectionsScreenCard);
-  return xayn.CachedImage(
-    uri: Uri.parse('https://$host/favicon.ico'),
-    width: R.dimen.unit3.toInt(),
-    height: R.dimen.unit3.toInt(),
-    errorBuilder: (_) => defaultThumbnail,
-    loadingBuilder: (_, __) => defaultThumbnail,
-    noImageBuilder: (_) => defaultThumbnail,
+  return Image.network(
+    'https://$host/favicon.ico',
+    width: R.dimen.unit3,
+    height: R.dimen.unit3,
+    errorBuilder: (context, _, __) => defaultThumbnail,
+    loadingBuilder: (_, __, ___) => defaultThumbnail,
   );
 }
 
