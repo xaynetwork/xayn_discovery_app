@@ -18,22 +18,7 @@ class DiscoveryCardHeadlineImage extends StatelessWidget {
   final Color shadowColor;
 
   @override
-  Widget build(BuildContext context) => Container(
-        foregroundDecoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              shadowColor.withAlpha(120),
-              shadowColor.withAlpha(40),
-              shadowColor.withAlpha(255),
-              shadowColor.withAlpha(255),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0, 0.15, 0.8, 1],
-          ),
-        ),
-        child: child,
-      );
+  Widget build(BuildContext context) => child;
 }
 
 class DiscoveryCardReaderModeHeadlineImage extends StatefulWidget {

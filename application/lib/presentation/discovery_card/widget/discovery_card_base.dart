@@ -13,8 +13,6 @@ import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dar
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-const BoxFit _kImageBoxFit = BoxFit.cover;
-
 typedef OnTtsData = void Function(TtsData);
 
 /// The base class for the different feed cards.
@@ -24,7 +22,6 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   final FeedType? feedType;
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
-  final BoxFit imageBoxFit;
   final OnTtsData? onTtsData;
 
   const DiscoveryCardBase({
@@ -34,7 +31,6 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     required this.feedType,
     this.discoveryCardManager,
     this.imageManager,
-    this.imageBoxFit = _kImageBoxFit,
     this.onTtsData,
   }) : super(key: key);
 }
@@ -152,7 +148,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),
-      fit: widget.imageBoxFit,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => buildBackgroundPane(opaque: false),
