@@ -70,17 +70,19 @@ to the [analytics platforms]((./application#analytics-platform-integrations)) we
    4.1. In case you want to run on Android, add
    to [`application/android/custom.properties`](application/android) the following
 
-```properties
-INSTABUG_TOKEN=YOUR INSTABUG TOKEN
-```
+   ```properties
+   INSTABUG_TOKEN=YOUR INSTABUG TOKEN
+   ```
 
-4.2. Run on the root project terminal:
 
-```shell
-$ cd application
-$ flutter pub get
-$ flutter pub run build_runner build --delete-conflicting-outputs
-```
+    4.2. Run on the root project terminal:
+
+
+   ```shell
+   $ cd application
+   $ flutter pub get
+   $ flutter pub run build_runner build --delete-conflicting-outputs
+   ```
 
 5. Run the app during the development on simulators/emulators by simply executing on the
    terminal: `$ flutter run`.
