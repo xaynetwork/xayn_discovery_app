@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 abstract class DiscoveryCardScreenManagerNavActions {
   void onBackPressed();

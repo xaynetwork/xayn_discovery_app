@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/log_use_case.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 @lazySingleton
 class UrlOpener {
