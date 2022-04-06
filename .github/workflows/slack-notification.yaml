@@ -40,7 +40,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "${{ inputs.message }}"
+                        "text": ${{ inputs.message }}
                       }
                     },
                   ]
