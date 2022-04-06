@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -9,10 +8,10 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_reaction_changed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DiscoveryFeedCard extends DiscoveryCardBase {
   const DiscoveryFeedCard({
@@ -36,9 +35,7 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
 }
 
 class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
-    with
-        OnBookmarkChangedMixin<DiscoveryFeedCard>,
-        OnReactionChangedMixin<DiscoveryFeedCard> {
+    with TooltipControllerMixin<DiscoveryFeedCard> {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
@@ -56,18 +53,8 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       provider: provider,
       datePublished: webResource.datePublished,
       isInteractionEnabled: widget.isPrimary,
-      onLikePressed: () => discoveryCardManager.onFeedback(
-        document: widget.document,
-        userReaction: state.explicitDocumentUserReaction.isRelevant
-            ? UserReaction.neutral
-            : UserReaction.positive,
-      ),
-      onDislikePressed: () => discoveryCardManager.onFeedback(
-        document: widget.document,
-        userReaction: state.explicitDocumentUserReaction.isIrrelevant
-            ? UserReaction.neutral
-            : UserReaction.negative,
-      ),
+      onLikePressed: () => onFeedbackPressed(UserReaction.positive),
+      onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
       onOpenUrl: () {
         widget.onTtsData?.call(TtsData.disabled());
 

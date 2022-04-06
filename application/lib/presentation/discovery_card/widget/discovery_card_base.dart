@@ -105,6 +105,15 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     Widget image,
   );
 
+  void onFeedbackPressed(UserReaction requestedReaction) =>
+      discoveryCardManager.onFeedback(
+          document: widget.document,
+          userReaction:
+              discoveryCardManager.state.explicitDocumentUserReaction ==
+                      requestedReaction
+                  ? UserReaction.neutral
+                  : requestedReaction);
+
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);
 
