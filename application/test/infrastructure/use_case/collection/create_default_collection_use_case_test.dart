@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_default_collection_use_case.dart';
 
-import '../use_case_mocks/use_case_mocks.mocks.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockCollectionsRepository collectionsRepository;
