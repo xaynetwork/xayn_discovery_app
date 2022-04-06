@@ -89,7 +89,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         builder: (context, state) => buildFromState(
           context,
           state,
-          _buildImage(),
+          buildImage(),
         ),
         listener: (context, state) {
           if (state.error.hasError) {
@@ -136,7 +136,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     };
   }
 
-  Widget _buildImage() {
+  Widget buildImage() {
     final mediaQuery = MediaQuery.of(context);
 
     // allow opaque-when-loading, because the card will fade in on load completion.
@@ -148,6 +148,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.ceil(),
       height: mediaQuery.size.height.ceil(),
+      shadowColor: R.colors.swipeCardBackgroundDefault,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => buildBackgroundPane(opaque: false),

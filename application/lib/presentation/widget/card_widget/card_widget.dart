@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -57,19 +56,31 @@ class CardWidget extends StatelessWidget {
       Uint8List? backgroundImage,
       double? width,
     }) {
-      buildMemoryImage(Uint8List bytes) => Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-            width: width,
-            height: CardWidgetData.cardHeight,
+      buildMemoryImage(Uint8List bytes) => Container(
+            foregroundDecoration: BoxDecoration(
+                gradient: LinearGradient(
+              colors: [
+                R.colors.swipeCardBackgroundDefault.withAlpha(120),
+                R.colors.swipeCardBackgroundDefault.withAlpha(40),
+                R.colors.swipeCardBackgroundDefault.withAlpha(255),
+                R.colors.swipeCardBackgroundDefault.withAlpha(255),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [.0, .15, 8, 1.0],
+            )),
+            child: Image.memory(
+              bytes,
+              fit: BoxFit.cover,
+              width: width,
+              height: CardWidgetData.cardHeight,
+            ),
           );
 
       return backgroundImage != null
           ? ClipRRect(
               borderRadius: getCardRadius(context),
-              child: DiscoveryCardHeadlineImage(
-                child: buildMemoryImage(backgroundImage),
-              ),
+              child: buildMemoryImage(backgroundImage),
             )
           : SvgPicture.asset(
               R.assets.graphics.formsEmptyCollection,

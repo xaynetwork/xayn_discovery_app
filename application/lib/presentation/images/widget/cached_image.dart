@@ -16,6 +16,7 @@ typedef ImageErrorWidgetBuilder = Widget Function(BuildContext context);
 
 class CachedImage extends StatefulWidget {
   final Uri uri;
+  final Color shadowColor;
   final ImageLoadingBuilder? loadingBuilder;
   final ImageErrorWidgetBuilder? errorBuilder;
   final ImageErrorWidgetBuilder? noImageBuilder;
@@ -26,6 +27,7 @@ class CachedImage extends StatefulWidget {
   const CachedImage({
     Key? key,
     required this.uri,
+    required this.shadowColor,
     this.loadingBuilder,
     this.errorBuilder,
     this.noImageBuilder,
@@ -123,7 +125,7 @@ class _CachedImageState extends State<CachedImage> {
               height: widget.height?.toDouble(),
               bytes: bytes,
               noImageBuilder: noImageBuilder,
-              shadowColor: R.colors.swipeCardBackgroundDefault,
+              shadowColor: widget.shadowColor,
             );
           } else {
             // there is no image
