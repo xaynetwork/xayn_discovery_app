@@ -118,6 +118,7 @@ class _CachedImageState extends State<CachedImage> {
             opacity = 1.0;
 
             return AnimatedImage(
+              uri: widget.uri,
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),
               bytes: bytes,

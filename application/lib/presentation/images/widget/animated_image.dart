@@ -11,10 +11,12 @@ class AnimatedImage extends StatefulWidget {
   final double? height;
   final ImageErrorWidgetBuilder noImageBuilder;
   final Color shadowColor;
+  final Uri uri;
 
   const AnimatedImage({
     Key? key,
     required this.bytes,
+    required this.uri,
     required this.noImageBuilder,
     required this.shadowColor,
     this.width,
@@ -27,11 +29,12 @@ class AnimatedImage extends StatefulWidget {
 
 class _AnimatedImageState extends State<AnimatedImage>
     with SingleTickerProviderStateMixin {
-  late Future<ui.Image> _image;
+  static final _cache = <Uri, ui.Image>{};
+  ui.Image? _image;
 
   @override
   void initState() {
-    _image = _decodeBytes(widget.bytes);
+    _resolveImage();
 
     super.initState();
   }
@@ -39,33 +42,38 @@ class _AnimatedImageState extends State<AnimatedImage>
   @override
   void didUpdateWidget(AnimatedImage oldWidget) {
     if (oldWidget.bytes != widget.bytes) {
-      _image = _decodeBytes(widget.bytes);
+      _resolveImage();
     }
 
     super.didUpdateWidget(oldWidget);
   }
 
   @override
-  Widget build(BuildContext context) => _buildImage();
+  Widget build(BuildContext context) {
+    if (_image == null) return widget.noImageBuilder(context);
 
-  Widget _buildImage() => FutureBuilder<ui.Image>(
-        future: _image,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return widget.noImageBuilder(context);
+    return CustomPaint(
+      size: Size(widget.width ?? .0, widget.height ?? .0),
+      painter: StaticPainter(
+        image: _image!,
+        shadowColor: widget.shadowColor,
+      ),
+    );
+  }
 
-          return CustomPaint(
-            size: Size(widget.width ?? .0, widget.height ?? .0),
-            painter: StaticPainter(
-              image: snapshot.requireData,
-              shadowColor: widget.shadowColor,
-            ),
-          );
-        },
-      );
+  void _resolveImage() {
+    if (_cache.containsKey(widget.uri)) {
+      _image = _cache[widget.uri];
+    } else {
+      _decodeBytes(widget.bytes).then((it) => setState(() => _image = it));
+    }
+  }
 
   Future<ui.Image> _decodeBytes(Uint8List bytes) async {
     final codec = await ui.instantiateImageCodec(bytes);
     final frameInfo = await codec.getNextFrame();
+
+    _cache[widget.uri] = frameInfo.image;
 
     return frameInfo.image;
   }
