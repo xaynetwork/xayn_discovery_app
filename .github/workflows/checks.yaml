@@ -39,10 +39,10 @@ jobs:
         with:
           config-path: .gitleaks.toml
 
-      - name: Install Flutter
-        uses: britannio/action-install-flutter@v1
-        with:
-          version: $FLUTTER_VERSION
+      # - name: Install Flutter
+      #   uses: britannio/action-install-flutter@v1
+      #   with:
+      #     version: $FLUTTER_VERSION
 
       - name: Install lcov and jq
         run: |
@@ -64,4 +64,4 @@ jobs:
         working-directory: ./application
         run: |
           sudo chmod -R a+w /var/lib/gems/
-          fastlane check
+          fastlane test

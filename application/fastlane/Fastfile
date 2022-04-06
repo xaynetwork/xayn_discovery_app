@@ -406,6 +406,17 @@ def maybe_pub_get(options)
   end
 end
 
+lane :test do
+  bla = capture_stdout {
+    for a in 1..100
+      UI.success("#{a}")
+      puts "+"
+      UI.error("-")
+    end
+  }
+
+  puts "--------"
+  puts bla
 end
 
 def capture_stdout()
