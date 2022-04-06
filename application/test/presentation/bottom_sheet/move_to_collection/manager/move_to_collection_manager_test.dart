@@ -14,8 +14,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../../test_utils/fakes.dart';
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/fakes.dart';
+import '../../../../test_utils/utils.dart';
 
 void main() {
   group('Move document to collection manager ', () {

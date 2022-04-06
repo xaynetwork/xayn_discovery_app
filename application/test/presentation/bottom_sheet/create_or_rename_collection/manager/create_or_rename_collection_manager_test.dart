@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/colle
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_state.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/utils.dart';
 
 void main() {
   late MockCreateCollectionUseCase createCollectionUseCase;

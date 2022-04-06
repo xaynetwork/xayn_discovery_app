@@ -8,7 +8,7 @@ import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockFileHandler fileHandler;

@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/crud_out.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   const uid = UniqueId.fromTrustedString('id');

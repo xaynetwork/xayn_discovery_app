@@ -9,8 +9,8 @@ import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_fil
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../test_utils/fakes.dart';
-import '../../test_utils/widget_test_utils.dart';
+import '../../../test_utils/fakes.dart';
+import '../../../test_utils/widget_test_utils.dart';
 
 main() {
   final filter = DocumentFilter.fromSource(fakeDocument.resource.sourceDomain);
