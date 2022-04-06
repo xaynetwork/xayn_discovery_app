@@ -50,7 +50,7 @@ class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic>
     with
         OnBookmarkChangedMixin<DiscoveryCardStatic>,
-        OnReactionChangedMixin<DiscoveryCardStatic> {
+        TooltipControllerMixin<DiscoveryCardStatic> {
   late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
 
