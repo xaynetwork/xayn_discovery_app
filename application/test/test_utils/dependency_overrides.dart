@@ -14,8 +14,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 

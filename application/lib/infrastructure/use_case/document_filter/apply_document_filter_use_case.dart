@@ -3,7 +3,7 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_document_filter_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/apply_document_filter_in.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @injectable
