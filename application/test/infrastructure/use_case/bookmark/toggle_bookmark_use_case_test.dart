@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 
 import '../../../test_utils/fakes.dart';
-import '../use_case_mocks/use_case_mocks.mocks.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late ToggleBookmarkUseCase toggleBookmarkUseCase;

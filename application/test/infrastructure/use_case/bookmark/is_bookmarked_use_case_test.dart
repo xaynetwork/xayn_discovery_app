@@ -4,7 +4,7 @@ import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/is_bookmarked_use_case.dart';
 
 import '../../../test_utils/fakes.dart';
-import '../use_case_mocks/use_case_mocks.mocks.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late IsBookmarkedUseCase isBookmarkedUseCase;
