@@ -406,8 +406,6 @@ def maybe_pub_get(options)
   end
 end
 
-end
-
 def capture_stdout()
   file = Tempfile.new("stdoutput")
   original_stdout = $stdout.clone
