@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'create_or_rename_collection_state.dart';
 
