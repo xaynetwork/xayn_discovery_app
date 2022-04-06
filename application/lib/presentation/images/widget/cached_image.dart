@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/animated_image.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 
 typedef ImageLoadingBuilder = Widget Function(
@@ -21,7 +21,6 @@ class CachedImage extends StatefulWidget {
   final ImageErrorWidgetBuilder? noImageBuilder;
   final int? width;
   final int? height;
-  final BoxFit? fit;
   final ImageManager? imageManager;
 
   const CachedImage({
@@ -32,7 +31,6 @@ class CachedImage extends StatefulWidget {
     this.noImageBuilder,
     this.width,
     this.height,
-    this.fit,
     this.imageManager,
   }) : super(key: key);
 
@@ -42,8 +40,6 @@ class CachedImage extends StatefulWidget {
 
 class _CachedImageState extends State<CachedImage> {
   late final ImageManager _imageManager;
-  late final _svgByteDecoder =
-      SvgPicture.svgByteDecoderBuilder(const SvgTheme());
 
   @override
   void initState() {
@@ -121,28 +117,12 @@ class _CachedImageState extends State<CachedImage> {
           if (bytes != null) {
             opacity = 1.0;
 
-            return Image.memory(
-              bytes,
+            return AnimatedImage(
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),
-              fit: widget.fit,
-              gaplessPlayback: true,
-              errorBuilder: (_, e, s) => FutureBuilder<PictureInfo>(
-                  future: _svgByteDecoder(bytes, null, ''),
-                  builder: (_, snapshot) {
-                    // if decoding failed, or pending, return the fallback
-                    if (snapshot.hasError || !snapshot.hasData) {
-                      return noImageBuilder(context);
-                    }
-
-                    return SvgPicture.memory(
-                      bytes,
-                      width: widget.width?.toDouble(),
-                      height: widget.height?.toDouble(),
-                      fit: widget.fit ?? BoxFit.cover,
-                      placeholderBuilder: noImageBuilder,
-                    );
-                  }),
+              bytes: bytes,
+              noImageBuilder: noImageBuilder,
+              shadowColor: R.colors.swipeCardBackgroundDefault,
             );
           } else {
             // there is no image
