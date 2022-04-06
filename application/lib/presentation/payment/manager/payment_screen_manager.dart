@@ -58,6 +58,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _listenSubscriptionStatusUseCase,
     initialData: PurchasableIds.subscription,
   );
+
   final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
   late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
       _purchaseSubscriptionHandler = pipe(_purchaseSubscriptionUseCase);
