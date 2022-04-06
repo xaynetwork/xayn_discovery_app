@@ -18,8 +18,6 @@ abstract class BasePainter extends CustomPainter {
   void paint(ui.Canvas canvas, ui.Size size) {
     final rect = ui.Rect.fromLTWH(.0, .0, size.width, size.height);
 
-    canvas.save();
-
     paintMedia(canvas, _image, size, rect);
 
     canvas.drawRect(
@@ -37,8 +35,6 @@ abstract class BasePainter extends CustomPainter {
           const [0, 0.15, 0.8, 1],
         ),
     );
-
-    canvas.restore();
   }
 
   @override

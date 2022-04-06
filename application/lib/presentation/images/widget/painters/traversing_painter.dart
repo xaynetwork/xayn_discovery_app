@@ -16,14 +16,12 @@ class TraversingPainter extends BasePainter {
         );
 
   @override
-  void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect) =>
-      paintImage(
-        canvas: canvas,
-        rect: Rect.fromLTWH(
-            offset.dx, rect.top, rect.width - offset.dx, rect.height),
-        image: image,
-        fit: BoxFit.fitHeight,
-      );
+  void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect) {
+    final destination =
+        Rect.fromLTWH(rect.width + offset.dx, .0, rect.width, rect.height);
+
+    canvas.drawImageRect(image, destination, rect, Paint());
+  }
 
   @override
   bool shouldRepaint(TraversingPainter oldDelegate) {
