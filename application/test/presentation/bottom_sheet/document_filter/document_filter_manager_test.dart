@@ -9,8 +9,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/man
 import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/manager/document_filter_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../test_utils/fakes.dart';
-import '../../test_utils/widget_test_utils.dart';
+import '../../../test_utils/fakes.dart';
+import '../../../test_utils/widget_test_utils.dart';
 
 main() {
   late DocumentFilterManager manager;

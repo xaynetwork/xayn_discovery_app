@@ -22,9 +22,9 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../test_utils/fakes.dart';
-import '../../test_utils/utils.dart';
-import '../../test_utils/widget_test_utils.dart';
+import '../../../test_utils/fakes.dart';
+import '../../../test_utils/utils.dart';
+import '../../../test_utils/widget_test_utils.dart';
 
 void main() {
   late ActiveSearchManager Function() buildManager;

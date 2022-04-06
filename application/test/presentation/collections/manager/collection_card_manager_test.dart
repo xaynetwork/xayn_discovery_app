@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/collections/manager/collection_c
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockListenCollectionCardDataUseCase getcollectionCardDataUseCase;

@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_scree
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockListenBookmarksUseCase listenBookmarksUseCase;

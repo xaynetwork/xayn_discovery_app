@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_se
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_active_selected_countries_identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_total_sessions_identity_param.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 import 'analytics_service_test_utils.dart';
 
 void main() async {

@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
 
-import '../../presentation/test_utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late AppSettingsMapper mapper;
