@@ -8,18 +8,18 @@ personalised.
 
 The app is structured mainly to three components
 
-### [domain](./lib/domain)
+### ➡️ [domain](./lib/domain)
 
-A pure Dart package where models and abstract repository classes live.
+A package where models and abstract repository classes live.
 
-### [infrastructure](./lib/infrastructure)
+### ➡️ [infrastructure](./lib/infrastructure)
 
-A pure Dart package where use cases, repository implementation, and services live.
+A package where use cases, repository implementation, and services live.
 
-### [presentation](./lib/presentation)
+### ➡️ [presentation](./lib/presentation)
 
-A Flutter/Dart package where screens and widgets implementation live. The screens and widgets use
-managers that utilize the the infrastructure code.
+A package where screens and widgets implementation live. The screens and widgets use managers that
+utilize the infrastructure code.
 
 ## Dependencies 📦
 
@@ -36,14 +36,15 @@ managers that utilize the the infrastructure code.
 | --- | --- |
 | [xayn_design](https://github.com/xaynetwork/xayn_design) | Provides Xayn-styled shared design elements like icons, colors, styles, and themes. |
 | [xayn_architecture](https://github.com/xaynetwork/xayn_architecture) | Provides the underlying of usecases and helpers that allow for cleaner functional code. |
-| [xayn_swipe_it](https://github.com/xaynetwork/xayn_swipe_it) | Provides a performant, animated swipe widget with left and right customizable options that you can swipe or fling horizontally |
-| [xayn_card_view](https://github.com/xaynetwork/xayn_card_view) | Provides a performant solution to scroll cards in Xayn's discovery feed |
+| [xayn_swipe_it](https://github.com/xaynetwork/xayn_swipe_it) | Provides a performant, animated swipe widget with left and right customizable options that you can swipe or fling horizontally. |
+| [xayn_card_view](https://github.com/xaynetwork/xayn_card_view) | Provides a performant solution to scroll cards in Xayn's discovery feed. |
+| [xayn_readability](https://github.com/xaynetwork/xayn_readability) | Provides the reader mode widget, which renders html content as pure Flutter widgets. |
 
 ### Other third party dependencies
 
 | Dependency | Description |
 | --- | --- |
-| [Instabug](https://github.com/Instabug/Instabug-Flutter) | 1. A crash reporter tool that report crashes in the background so we build a more rebust app on the long run. <br/>2. In-app feedback feature -from the settings screen. |
+| [Instabug](https://github.com/Instabug/Instabug-Flutter) | 1. A crash reporter tool that report crashes in the background so we build a more rebust app on the long run. <br/>2. In-app feedback feature from the settings screen. |
 
 For a more comprehensive list, check [pubspec.yaml](./pubspec.yaml).
 
@@ -51,7 +52,7 @@ For a more comprehensive list, check [pubspec.yaml](./pubspec.yaml).
 
 The analytics implementation can be found as part of
 the [infrastructure/service/analytics](./lib/infrastructure/service/analytics). The platforms used
-are mentioned briefly [here](#analytics).
+are mentioned briefly [here](#analytics-platform-integrations).
 
 ### Events
 

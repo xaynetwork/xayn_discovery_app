@@ -44,12 +44,12 @@ follow [here](./application#component-overview-%EF%B8%8F).
 
 ## Analytics :chart_with_upwards_trend:
 
-Our understanding of a privacy-friendly discovery app is that, as a rule, we do not process any of
-the _personal_ data you input in the App. The data within the App is deleted once you delete the App
-from your device. For the sake of undertanding user behavior, we track certain user actions
-anonymously. For full transparency, you can check an
-up-to-date [list of tracked events and properties](./application#analytics-) that shouldn't violate
-your privacy that is sent to the analytics platforms we utilize.
+Our understanding of a privacy-friendly discovery app is that, as a rule, we aim not to process any
+of your _personal_ data you input in the App. Once you delete the App from your device, all your
+personal data should be deleted. Even though it's our long term goal, for our beta version, we track
+certain user actions to understand the collective user behavior. For full transparency, you can
+check an up-to-date [list of tracked events and properties](./application#analytics-) that is sent
+to the [analytics platforms]((./application#analytics-platform-integrations)) we utilize.
 
 [top :arrow_heading_up:](#xayn-discovery)
 
@@ -58,15 +58,23 @@ your privacy that is sent to the analytics platforms we utilize.
 ### Locally
 
 1. Fork the repository.
-2. To be able to run locally, you'll need to add an environment file `.env.debug` and `.end.pod`
+2. Add environment files `.env.debug` and `.end.pod`
    to [`application`](application)
    directory. An example of what to include in these files can be found
    in [`env.example`](application/.env.example).
-3. Provide your own keys and URLs to the newly created `.env.debug` and `.end.pod`. Alternatively,
-   you can use our [fastlane configuration](#fastlane) to automatically fill the secrets by
-   answering some wizard questions in the command line, just run on your
+3. Provide your own keys and URLs to the newly created `.env.debug` and `.end.pod` files.
+   Alternatively, you can use our [fastlane configuration](#fastlane) to automatically fill the
+   secrets by answering some wizard questions in the command line, just run on your
    terminal: `$ fastlane build_runner`.
-4. In case you chose to run `$ fastlane build_runner`, you can skip this step. Run on your terminal
+4. In case you chose to run `$ fastlane build_runner`, you can skip this step.  
+   4.1. In case you want to run on Android, add
+   to [`application/android/custom.properties`](application/android) the following
+
+```properties
+INSTABUG_TOKEN=YOUR INSTABUG TOKEN
+```
+
+4.2. Run on the root project terminal:
 
 ```shell
 $ cd application
@@ -79,9 +87,9 @@ $ flutter pub run build_runner build --delete-conflicting-outputs
 
 ### Real iOS device
 
-In order to run and debug the app on a real iOS device a provisioning profile and a developer
-certificate is necessary. A default development profile for development is part of this repository,
-to install it run:
+In order to run and debug the app on a real iOS device a provisioning profile, and a developer
+certificate is necessary. A default development profile for development is part of this repository.
+To install it run:
 
 ```shell 
 $ open ios/profiles/Xayn_Discovery_Internal_Develop_Profile.mobileprovision
@@ -130,15 +138,15 @@ your iOS and Android apps.
 
 First, check
 fastlane's [get started section](https://docs.fastlane.tools/getting-started/ios/setup/) in the
-documentation to make sure you setup it locally.
+documentation to make sure you install it locally.
 
 We have [custom fastlane scripts](application/fastlane) that you can run locally to make your life
 easier:
 
 - `$ fastlane build_runner` ensures that all dependencies are created, and property files are
   correctly set-up.
-- `$ fastlane check` setup all dependencies then checks if the code if properly formatted, no dart
-  analysis issues, and all tests are passing.
+- `$ fastlane check` setup all dependencies then checks if the code is properly formatted, does not
+  have any dart analysis issues, and all tests are passing.
 
 #### Gitleaks
 
