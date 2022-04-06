@@ -169,7 +169,7 @@ jobs:
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
-          echo "SLACK_MESSAGE=$( awk '{printf "%s\\n", $0}' report.log | cut -c -3000  )" >> $GITHUB_ENV
+          echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
           echo "SLACK_STATUS=success" >> $GITHUB_ENV
 
   publish_android_internal:
@@ -270,7 +270,7 @@ jobs:
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta android_output:appbundle store:true
-          echo "SLACK_MESSAGE=$( awk '{printf "%s\\n", $0}' report.log | cut -c -3000  )" >> $GITHUB_ENV
+          echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
           echo "SLACK_STATUS=success" >> $GITHUB_ENV
 
   slack-notification-android-beta:
