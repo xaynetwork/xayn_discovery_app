@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_background_color_use_case.dart';
 
-import '../use_case_mocks/use_case_mocks.mocks.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockReaderModeSettingsRepository repository;
