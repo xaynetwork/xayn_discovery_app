@@ -37,7 +37,10 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._listenSubscriptionStatusUseCase,
     this._setCollectionAndBookmarksChangesIdentityParam,
     AppSettingsRepository appSettingsRepository,
-  ) : super(AppState(appTheme: appSettingsRepository.settings.appTheme)) {
+  ) : super(AppState(
+          appTheme: appSettingsRepository.settings.appTheme,
+          isAppPaused: false,
+        )) {
     _init();
   }
 
@@ -57,6 +60,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
       _listenSubscriptionStatusHandler;
 
   bool _initDone = false;
+  bool _isPaused = false;
 
   void _init() async {
     scheduleComputeState(() async {
@@ -88,8 +92,13 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   @override
   Future<AppState?> computeState() async {
     if (!_initDone) return null;
+
     return fold2(_appThemeHandler, _listenSubscriptionStatusHandler).foldAll(
-        (appTheme, _, __) => AppState(appTheme: appTheme ?? state.appTheme));
+      (appTheme, _, __) => AppState(
+        appTheme: appTheme ?? state.appTheme,
+        isAppPaused: _isPaused,
+      ),
+    );
   }
 
   void _setAnalyticsEvents() {
@@ -106,4 +115,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   void _addListener() {
     _setCollectionAndBookmarksChangesIdentityParam.call(none);
   }
+
+  void onPause() => scheduleComputeState(() => _isPaused = true);
+
+  void onResume() => scheduleComputeState(() => _isPaused = false);
 }
