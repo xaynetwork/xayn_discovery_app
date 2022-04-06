@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/painters/traversing_painter.dart';
 
+const double _kFactor = 30;
+
 class AnimatedImage extends StatefulWidget {
   final Uint8List bytes;
   final double? width;
@@ -30,7 +32,10 @@ class AnimatedImage extends StatefulWidget {
 class _AnimatedImageState extends State<AnimatedImage>
     with SingleTickerProviderStateMixin {
   static final _cache = <Uri, ui.Image>{};
-  late final _controller = AnimationController(vsync: this);
+  late final _controller = AnimationController(
+    vsync: this,
+    animationBehavior: AnimationBehavior.preserve,
+  );
   ui.Image? _image;
   Animation? _animation;
 
@@ -61,13 +66,28 @@ class _AnimatedImageState extends State<AnimatedImage>
   Widget build(BuildContext context) {
     if (_image == null) return widget.noImageBuilder(context);
 
+    final image = _cache[widget.uri]!;
+    final dx =
+        (widget.width ?? image.width.toDouble()) - image.width.toDouble();
+
     return CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
       painter: TraversingPainter(
           image: _image!,
           shadowColor: widget.shadowColor,
-          offset: Offset(_animation?.value ?? .0, .0)),
+          offset: Offset(dx / 2 * (_animation?.value ?? .0), .0)),
     );
+  }
+
+  double get timeBasedPosition {
+    final image = _cache[widget.uri]!;
+    final dx = (widget.width ?? image.width) - image.width;
+    final time = DateTime.now().millisecondsSinceEpoch;
+    final durationInDirection = 1000 * dx.abs() ~/ _kFactor;
+    final totalDuration = durationInDirection * 2;
+    final segment = time % totalDuration;
+
+    return segment / totalDuration;
   }
 
   void _resolveImage() {
@@ -87,11 +107,14 @@ class _AnimatedImageState extends State<AnimatedImage>
   void _startAnimation() {
     final image = _cache[widget.uri]!;
     final dx = (widget.width ?? image.width) - image.width;
+    final durationInDirection = 1000 * dx.abs() ~/ _kFactor;
+    final position = timeBasedPosition;
 
-    _controller.duration = Duration(seconds: dx.abs() ~/ 10);
+    _controller.duration = _controller.reverseDuration =
+        Duration(milliseconds: durationInDirection);
 
     final curve = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    final tween = Tween(begin: dx, end: .0);
+    final tween = Tween(begin: -1.0, end: 1.0);
 
     _controller.duration;
 
@@ -105,7 +128,11 @@ class _AnimatedImageState extends State<AnimatedImage>
         }
       });
 
-    _controller.forward(from: .5);
+    if (position <= .5) {
+      _controller.forward(from: position * 2);
+    } else {
+      _controller.reverse(from: (position - .5) * 2);
+    }
   }
 
   Future<ui.Image> _decodeBytes(Uint8List bytes) async {
