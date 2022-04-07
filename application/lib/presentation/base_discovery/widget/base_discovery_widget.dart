@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
@@ -21,6 +23,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shaders/traversal/traversal_shader.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -269,6 +273,27 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           );
         }
 
+        primaryCardShader({
+          Key? key,
+          required Uint8List bytes,
+          required Uri uri,
+          required ImageErrorWidgetBuilder noImageBuilder,
+          required Color shadowColor,
+          Curve? curve,
+          double? width,
+          double? height,
+        }) =>
+            TraversalShader(
+              key: key,
+              bytes: bytes,
+              uri: uri,
+              noImageBuilder: noImageBuilder,
+              shadowColor: shadowColor,
+              width: width,
+              height: height,
+              curve: curve,
+            );
+
         final card = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
@@ -293,6 +318,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   document: document,
                   discoveryCardManager: managers.discoveryCardManager,
                   imageManager: managers.imageManager,
+                  primaryCardShader: primaryCardShader,
                   onTtsData: (it) => setState(() =>
                       ttsData = ttsData.enabled ? TtsData.disabled() : it),
                   feedType: manager.feedType,
