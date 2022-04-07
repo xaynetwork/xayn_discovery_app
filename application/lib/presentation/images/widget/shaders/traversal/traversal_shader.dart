@@ -6,12 +6,15 @@ import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_shade
 import 'package:xayn_discovery_app/presentation/images/widget/shaders/traversal/traversal_painter.dart';
 
 class TraversalShader extends BaseAnimationShader {
+  final bool rendersOnlyOnce;
+
   const TraversalShader({
     Key? key,
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
     required Color shadowColor,
+    this.rendersOnlyOnce = false,
     Curve? curve,
     double? width,
     double? height,
@@ -37,16 +40,13 @@ class _TraversalShaderState extends BaseAnimationShaderState<TraversalShader> {
 
     if (srcImage == null) return widget.noImageBuilder(context);
 
-    final width = srcImage.width.toDouble();
-    final dx = (widget.width ?? width) - width;
-
     return CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
       painter: TraversalPainter(
         image: srcImage,
         animationValue: animationValue,
-        imageSizeOverflow: dx / 2,
         shadowColor: widget.shadowColor,
+        rendersOnlyOnce: widget.rendersOnlyOnce,
       ),
     );
   }

@@ -4,13 +4,13 @@ import 'package:flutter/rendering.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_painter.dart';
 
 class TraversalPainter extends BaseAnimationPainter {
-  final double imageSizeOverflow;
+  final bool rendersOnlyOnce;
 
   TraversalPainter({
     required ui.Image image,
     required Color shadowColor,
     required double animationValue,
-    required this.imageSizeOverflow,
+    this.rendersOnlyOnce = false,
   }) : super(
           image: image,
           shadowColor: shadowColor,
@@ -19,17 +19,20 @@ class TraversalPainter extends BaseAnimationPainter {
 
   @override
   void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect) {
-    final destination = Rect.fromLTWH(
-        rect.width + imageSizeOverflow * animationValue,
-        .0,
-        rect.width,
-        rect.height);
+    // scale >= 1.0
+    final scale = image.height / rect.height;
+    final dx = image.width - rect.width;
+    final src = Rect.fromLTWH(
+      dx * animationValue / scale,
+      .0,
+      rect.width * scale,
+      rect.height * scale,
+    );
 
-    canvas.drawImageRect(image, destination, rect, Paint());
+    canvas.drawImageRect(image, src, rect, Paint());
   }
 
   @override
   bool shouldRepaint(TraversalPainter oldDelegate) =>
-      super.shouldRepaint(oldDelegate) ||
-      oldDelegate.imageSizeOverflow != imageSizeOverflow;
+      rendersOnlyOnce ? false : super.shouldRepaint(oldDelegate);
 }
