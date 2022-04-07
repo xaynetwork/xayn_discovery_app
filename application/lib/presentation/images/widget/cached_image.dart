@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +7,8 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/traversal/traversal_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shaders/static/static_shader.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 
 typedef ImageLoadingBuilder = Widget Function(
@@ -13,6 +16,16 @@ typedef ImageLoadingBuilder = Widget Function(
   double progress,
 );
 typedef ImageErrorWidgetBuilder = Widget Function(BuildContext context);
+typedef ShaderBuilder = BaseStaticShader Function({
+  Key? key,
+  required Uint8List bytes,
+  required Uri uri,
+  required ImageErrorWidgetBuilder noImageBuilder,
+  required Color shadowColor,
+  Curve? curve,
+  double? width,
+  double? height,
+});
 
 class CachedImage extends StatefulWidget {
   final Uri uri;
@@ -23,6 +36,26 @@ class CachedImage extends StatefulWidget {
   final int? width;
   final int? height;
   final ImageManager? imageManager;
+  final ShaderBuilder shaderBuilder;
+
+  static BaseStaticShader defaultShaderBuilder({
+    Key? key,
+    required Uint8List bytes,
+    required Uri uri,
+    required ImageErrorWidgetBuilder noImageBuilder,
+    required Color shadowColor,
+    Curve? curve,
+    double? width,
+    double? height,
+  }) =>
+      StaticShader(
+        bytes: bytes,
+        uri: uri,
+        noImageBuilder: noImageBuilder,
+        shadowColor: shadowColor,
+        width: width,
+        height: height,
+      );
 
   const CachedImage({
     Key? key,
@@ -34,6 +67,7 @@ class CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.imageManager,
+    this.shaderBuilder = defaultShaderBuilder,
   }) : super(key: key);
 
   @override
@@ -79,10 +113,7 @@ class _CachedImageState extends State<CachedImage> {
   @override
   Widget build(BuildContext context) {
     final loadingBuilder = widget.loadingBuilder ??
-        (
-          BuildContext context,
-          double progress,
-        ) =>
+        (BuildContext context, double progress) =>
             const WidgetTestableProgressIndicator();
     final errorBuilder = widget.errorBuilder ??
         (BuildContext context) => kReleaseMode
@@ -90,9 +121,8 @@ class _CachedImageState extends State<CachedImage> {
             : const Text('asset was not loaded here');
 
     final noImageBuilder = widget.noImageBuilder ??
-        (BuildContext context) => Container(
-              color: R.colors.swipeCardBackgroundHome,
-            );
+        (BuildContext context) =>
+            Container(color: R.colors.swipeCardBackgroundHome);
 
     return BlocBuilder<ImageManager, ImageManagerState>(
       bloc: _imageManager,
@@ -119,7 +149,7 @@ class _CachedImageState extends State<CachedImage> {
           if (bytes != null) {
             opacity = 1.0;
 
-            return TraversalShader(
+            return widget.shaderBuilder(
               uri: widget.uri,
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),

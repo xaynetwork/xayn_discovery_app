@@ -21,10 +21,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
-import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -312,29 +310,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 
   @override
-  Widget buildImage() {
-    final mediaQuery = MediaQuery.of(context);
-
-    // allow opaque-when-loading, because the card will fade in on load completion.
-    buildBackgroundPane({required bool opaque}) =>
-        Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
-
-    return BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
-      bloc: _shadowManager,
-      builder: (_, state) => CachedImage(
-        imageManager: imageManager,
-        uri: Uri.parse(imageUrl),
-        width: mediaQuery.size.width.ceil(),
-        height: mediaQuery.size.height.ceil(),
-        shadowColor: R.isDarkMode
-            ? state.readerModeBackgroundColor.color
-            : R.colors.swipeCardBackgroundDefault,
-        loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
-        errorBuilder: (_) => buildBackgroundPane(opaque: false),
-        noImageBuilder: (_) => buildBackgroundPane(opaque: false),
-      ),
-    );
-  }
+  Widget buildImage() =>
+      BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
+        bloc: _shadowManager,
+        builder: (_, state) => super.buildImage(),
+      );
 
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
