@@ -49,6 +49,7 @@ class CachedImage extends StatefulWidget {
     double? height,
   }) =>
       StaticShader(
+        key: key,
         bytes: bytes,
         uri: uri,
         noImageBuilder: noImageBuilder,
@@ -150,6 +151,7 @@ class _CachedImageState extends State<CachedImage> {
             opacity = 1.0;
 
             return widget.shaderBuilder(
+              key: Key(widget.uri.toString()),
               uri: widget.uri,
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),
