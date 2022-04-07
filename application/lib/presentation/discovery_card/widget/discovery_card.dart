@@ -15,7 +15,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scroll
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/tooltip_controller_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
@@ -122,7 +123,7 @@ class DiscoveryCardController extends ChangeNotifier {
 }
 
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
-    with TooltipControllerMixin<DiscoveryCard>, TickerProviderStateMixin {
+    with OverlayMixin<DiscoveryCard>, TickerProviderStateMixin {
   late final AnimationController _openingAnimation;
   late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
@@ -131,6 +132,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final StreamSubscription<BuildContext> _updateNavBarListener;
   late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
+
+  @override
+  OverlayManager get overlayManager => discoveryCardManager.overlayManager;
 
   @override
   void initState() {

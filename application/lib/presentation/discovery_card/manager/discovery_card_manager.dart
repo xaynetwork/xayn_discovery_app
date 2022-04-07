@@ -26,8 +26,11 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readabili
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -47,7 +50,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with
         UseCaseBlocHelper<DiscoveryCardState>,
         ChangeUserReactionMixin<DiscoveryCardState>,
-        OpenExternalUrlMixin<DiscoveryCardState>
+        OpenExternalUrlMixin<DiscoveryCardState>,
+        OverlayManagerMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
@@ -61,6 +65,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final FeatureManager _featureManager;
 
   /// html reader mode elements:
   ///
@@ -128,6 +133,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
+    this._featureManager,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -148,12 +154,19 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onFeedback({
     required Document document,
     required UserReaction userReaction,
-  }) =>
-      changeUserReaction(
-        document: document,
-        userReaction: userReaction,
-        context: FeedbackContext.explicit,
+  }) {
+    if (_featureManager.isDocumentFilterEnabled) {
+      showOverlay(
+        OverlayData.tooltipDocumentFilter(document: document),
+        when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
       );
+    }
+    changeUserReaction(
+      document: document,
+      userReaction: userReaction,
+      context: FeedbackContext.explicit,
+    );
+  }
 
   void shareUri(Document document) {
     _shareUriUseCase.call(document.resource.url);
@@ -168,6 +181,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void toggleBookmarkDocument(Document document) {
+    showOverlay(
+      OverlayData.tooltipBookmarked(
+        document: document,
+        provider: state.processedDocument?.getProvider(document.resource),
+        showTooltip: overlayManager.show,
+      ),
+      when: (oS, nS) =>
+          oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
+          nS.bookmarkStatus == BookmarkStatus.bookmarked,
+    );
     final isBookmarked = state.bookmarkStatus == BookmarkStatus.bookmarked;
 
     _toggleBookmarkHandler(
