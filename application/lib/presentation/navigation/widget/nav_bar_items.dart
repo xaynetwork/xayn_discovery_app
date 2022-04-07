@@ -72,7 +72,9 @@ NavBarItemIconButton buildNavBarItemHome({
   bool isActive = false,
 }) =>
     NavBarItemIconButton(
-      svgIconPath: R.linden.assets.icons.home,
+      svgIconPath: isActive
+          ? R.linden.assets.icons.homeActive
+          : R.linden.assets.icons.home,
       isHighlighted: isActive,
       onPressed: onPressed,
       key: Keys.navBarItemHome,
@@ -80,27 +82,23 @@ NavBarItemIconButton buildNavBarItemHome({
 
 NavBarItemIconButton buildNavBarItemSearch({
   required VoidCallback onPressed,
-  bool isActive = false,
-  bool isDisabled = false,
 }) =>
     NavBarItemIconButton(
       svgIconPath: R.linden.assets.icons.search,
-      isHighlighted: isActive && !isDisabled,
-      isDisabled: isDisabled,
+      isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemSearch,
     );
 
 NavBarItemEdit buildNavBarItemSearchActive({
   required OnSearchPressed onSearchPressed,
-  bool isActive = false,
   bool autofocus = true,
   String? hint,
   String? initialText,
 }) =>
     NavBarItemEdit(
-      svgIconPath: R.linden.assets.icons.search,
-      isHighlighted: isActive,
+      svgIconPath: R.linden.assets.icons.searchActive,
+      isHighlighted: true,
       onSearchPressed: onSearchPressed,
       hint: hint,
       autofocus: autofocus,
@@ -113,7 +111,9 @@ NavBarItemIconButton buildNavBarItemPersonalArea({
   bool isActive = false,
 }) =>
     NavBarItemIconButton(
-      svgIconPath: R.linden.assets.icons.person,
+      svgIconPath: isActive
+          ? R.linden.assets.icons.personActive
+          : R.linden.assets.icons.person,
       isHighlighted: isActive,
       onPressed: onPressed,
       key: Keys.navBarItemPersonalArea,
