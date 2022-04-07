@@ -12,7 +12,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scroll
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/tooltip_controller_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -47,9 +48,12 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 
 class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic>
-    with TooltipControllerMixin<DiscoveryCardStatic> {
+    with OverlayMixin<DiscoveryCardStatic> {
   late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
+
+  @override
+  OverlayManager get overlayManager => discoveryCardManager.overlayManager;
 
   @override
   Widget buildFromState(
