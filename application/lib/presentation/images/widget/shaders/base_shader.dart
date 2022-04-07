@@ -6,18 +6,21 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 
 const double _kFactor = 30;
 
+enum ShaderAnimationDirection { forward, reverse }
+
 class _Cache {
   static final _entries = <Uri, ui.Image>{};
-  static final _animationValue = <Uri, double>{};
+  static final _animationStatus = <Uri, ShaderAnimationStatus>{};
 
   static bool contains(Uri uri) => _entries.containsKey(uri);
   static ui.Image? of(Uri uri) => _entries[uri];
 
   static void put(Uri uri, ui.Image image) => _entries[uri] = image;
 
-  static double latestAnimationValue(Uri uri) => _animationValue[uri] ?? .5;
-  static void updateAnimationValue(Uri uri, double value) =>
-      _animationValue[uri] = value;
+  static ShaderAnimationStatus latestAnimationStatus(Uri uri) =>
+      _animationStatus[uri] ?? const ShaderAnimationStatus.start();
+  static void updateAnimationValue(Uri uri, ShaderAnimationStatus value) =>
+      _animationStatus[uri] = value;
 }
 
 abstract class BaseStaticShader extends StatefulWidget {
@@ -41,6 +44,7 @@ abstract class BaseStaticShader extends StatefulWidget {
 
 abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
+  ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
   ui.Image? _image;
 
   ui.Image? get image => _image ?? _Cache.of(widget.uri);
@@ -137,21 +141,53 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
       parent: _controller,
       curve: widget.curve,
     );
-    final tween = Tween(begin: -1.0, end: 1.0);
+    final tween = Tween(begin: .0, end: 1.0);
+    final status = _Cache.latestAnimationStatus(widget.uri);
 
-    _controller.duration;
+    updateAnimationValue() => _Cache.updateAnimationValue(
+        widget.uri,
+        ShaderAnimationStatus(
+          position: animationValue,
+          direction: _currentDirection,
+        ));
 
     _animation = tween.animate(curve)
-      ..addListener(() => setState(
-          () => _Cache.updateAnimationValue(widget.uri, animationValue)))
+      ..addListener(() => setState(updateAnimationValue))
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
+          _currentDirection = ShaderAnimationDirection.reverse;
           _controller.reverse();
+          updateAnimationValue();
         } else if (status == AnimationStatus.dismissed) {
+          _currentDirection = ShaderAnimationDirection.forward;
           _controller.forward();
+          updateAnimationValue();
         }
       });
 
-    _controller.forward(from: _Cache.latestAnimationValue(widget.uri));
+    switch (status.direction) {
+      case ShaderAnimationDirection.forward:
+        _currentDirection = ShaderAnimationDirection.forward;
+        _controller.forward(from: status.position);
+        break;
+      case ShaderAnimationDirection.reverse:
+        _currentDirection = ShaderAnimationDirection.reverse;
+        _controller.reverse(from: status.position);
+        break;
+    }
   }
+}
+
+class ShaderAnimationStatus {
+  final double position;
+  final ShaderAnimationDirection direction;
+
+  const ShaderAnimationStatus({
+    required this.position,
+    required this.direction,
+  });
+
+  const ShaderAnimationStatus.start()
+      : position = .5,
+        direction = ShaderAnimationDirection.forward;
 }
