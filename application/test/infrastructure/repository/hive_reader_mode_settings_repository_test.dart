@@ -5,8 +5,7 @@ import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_backgrou
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_reader_mode_settings_repository.dart';
 
-import '../../presentation/test_utils/utils.dart';
-import 'hive_app_settings_repository_test.mocks.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockReaderModeSettingsMapper mapper;

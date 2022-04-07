@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
 
-import '../test_utils/fakes.dart';
+import '../../test_utils/fakes.dart';
 
 void main() {
   test(

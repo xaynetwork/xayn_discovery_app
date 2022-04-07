@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
@@ -10,29 +9,14 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../../test_utils/fakes.dart';
-import 'move_to_collection_manager_test.mocks.dart';
+import '../../../../test_utils/fakes.dart';
+import '../../../../test_utils/utils.dart';
 
-@GenerateMocks([
-  ListenCollectionsUseCase,
-  MoveBookmarkUseCase,
-  RemoveBookmarkUseCase,
-  CreateBookmarkFromDocumentUseCase,
-  GetBookmarkUseCase,
-  GetAllCollectionsUseCase,
-  ChangeDocumentFeedbackUseCase,
-  SendAnalyticsUseCase,
-])
 void main() {
   group('Move document to collection manager ', () {
     late MockListenCollectionsUseCase listenCollectionsUseCase;

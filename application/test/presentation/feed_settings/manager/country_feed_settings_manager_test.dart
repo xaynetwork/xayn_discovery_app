@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/presentation/feed_settings/feed_settings_erro
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 part 'country_feed_settings_manager_test.utils.dart';
 

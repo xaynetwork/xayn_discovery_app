@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_pe
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late NewPersonalAreaNavActions actions;
