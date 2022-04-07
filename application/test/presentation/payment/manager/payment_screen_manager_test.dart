@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subsc
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late PaymentScreenManager manager;

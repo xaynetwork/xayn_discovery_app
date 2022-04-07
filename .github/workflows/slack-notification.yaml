@@ -1,0 +1,49 @@
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+    inputs:
+      message:
+        required: true
+        type: string
+      status:
+        required: true
+        type: string
+        # success, failure
+
+jobs:
+  slack-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Notify on Slack
+        uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
+          # this is an exception that this is available
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          status: custom
+          fields: all
+          custom_payload: |
+            {
+              "username": "GitHub Actions",
+              "icon_emoji": ":octocat:",
+              "attachments": [
+                {
+                  "color" : '${{ inputs.status }}' === 'success' ? '#55f244' : '${{ inputs.status }}' === 'failure' ? '#fc0a47' : '#f2c744',
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": ${{ inputs.message }}
+                      }
+                    },
+                  ]
+                }
+              ]
+            }

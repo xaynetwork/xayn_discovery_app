@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
@@ -10,20 +9,13 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/manager/delete_collection_confirmation_manager.dart';
 
-import 'delete_collection_confirmation_manager_test.mocks.dart';
+import '../../../../test_utils/utils.dart';
 
-@GenerateMocks([
-  RemoveCollectionUseCase,
-  RemoveBookmarksUseCase,
-  GetAllBookmarksUseCase,
-  SendAnalyticsUseCase,
-])
 void main() {
   late MockRemoveCollectionUseCase removeCollectionUseCase;
   late MockRemoveBookmarksUseCase removeBookmarksUseCase;

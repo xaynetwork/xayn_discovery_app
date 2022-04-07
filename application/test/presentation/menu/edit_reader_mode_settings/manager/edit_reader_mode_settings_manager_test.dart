@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
@@ -10,13 +9,11 @@ import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_background_color_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_font_size_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_font_style_changed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_state.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/utils.dart';
 
-@GenerateMocks([SendAnalyticsUseCase])
 void main() {
   late MockSaveReaderModeFontStyleUseCase saveReaderModeFontStyleUseCase;
   late MockSaveReaderModeFontSizeParamUseCase saveReaderModeFontSizeUseCase;

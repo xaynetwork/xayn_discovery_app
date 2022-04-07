@@ -111,6 +111,12 @@ private_lane :android_prepare_key_properties do |options|
   })
 end
 
+desc "Set a commit message template"
+private_lane :create_commit_template do |options|
+  sh "git config commit.template development/commit-msg-template"
+  UI.success "Commit-message template set 💪"
+end
+
 ####
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
@@ -136,6 +142,9 @@ desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
   maybe_pub_get(options)
+  if !is_ci
+    create_commit_template(options)
+  end
 
   update_assets(options)
 
@@ -210,7 +219,7 @@ lane :check do |options|
   else
     flutter("format ./")
   end
-  flutter('pub global activate dart_dot_reporter')
+  flutter("pub global activate dart_dot_reporter")
   if options[Options::COVERAGE]
     # Creates a fake test that imports all files so that lcov calculates the correct coverage
     shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
@@ -224,9 +233,9 @@ lane :check do |options|
     flutter("test --reporter=json > machine.log || echo 'Tests failed'")
   end
   begin
-    flutter('pub global run dart_dot_reporter machine.log --show-message')
+    flutter("pub global run dart_dot_reporter machine.log --show-message")
   rescue
-    UI.user_error!("Checks failed!");
+    UI.user_error!("Checks failed!")
   end
 end
 
@@ -244,7 +253,8 @@ lane :publish do |options|
     android_prepare_key_properties(options)
   end
   output = flutter_build(options)
-  appcenter_buildfile = output[/.*Built (.*) /, 1]
+  appcenter_buildfile = output[/.*Built (.*\.(?:aab|ipa|apk))/, 1]
+
   if platform == Platforms::IOS
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
@@ -254,23 +264,30 @@ lane :publish do |options|
   if options[Options::UPLOAD_TO_APPCENTER]
     UI.success "Will upload file #{appcenter_buildfile}"
     UI.user_error!("No $#{appcenter_token} provided!") unless ENV.key?(appcenter_token)
+    version = options[Options::VERSION_NAME]
 
     if options[Options::STORE]
-      uploadToStore(
+      output = uploadToStore(
         ENV[appcenter_token],
         appcenter_target,
         appcenter_buildfile,
-        options[Options::VERSION_NAME],
+        version,
         # maxChangeLogSize
-        platform ==  Platforms::ANDROID ? 500 : -1
+        platform == Platforms::ANDROID ? 500 : -1
       )
     else
-      uploadToAppCenter(
+      output = uploadToAppCenter(
         ENV[appcenter_token],
         appcenter_target,
         appcenter_buildfile,
-        options[Options::VERSION_NAME]
+        version
       )
+    end
+
+    uploadedFile = output[/Release '\d+' committed: (.*)/, 1]
+    # Write Beta report
+    if flavor == Flavors::BETA
+      writeBetaReport(options, uploadedFile)
     end
   end
 end
@@ -301,8 +318,8 @@ lane :increment_nightly_tag do |options|
 
   UI.user_error!("This commit (#{currentCommit}) already contains a tag (#{currentCommitTag})") unless currentCommitTag == ""
 
-  lastTag = shell('git describe --abbrev=0 --tags')
-  numbers = lastTag.split('.')
+  lastTag = shell("git describe --abbrev=0 --tags")
+  numbers = lastTag.split(".")
   minor = numbers[1].to_i + 1
   newTag = "#{numbers[0]}.#{minor}.0"
   shell("git tag #{newTag}")
@@ -329,31 +346,35 @@ end
 
 def uploadToAppCenter(token, appName, path, version, maxChangeLogSize = -1)
   changelog = gitShortChangeLog(version, maxChangeLogSize, false)
-  appcenter_upload(
-    api_token: token,
-    owner_name: Config::APPCENTER_OWNER_NAME,
-    owner_type: Config::APPCENTER_OWNER_TYPE,
-    app_name: appName,
-    file: path,
-    release_notes: changelog,
-    destinations: Config::APPCENTER_DEFAULT_TARGET,
-    notify_testers: true,
-  )
+  return capture_stdout {
+           appcenter_upload(
+             api_token: token,
+             owner_name: Config::APPCENTER_OWNER_NAME,
+             owner_type: Config::APPCENTER_OWNER_TYPE,
+             app_name: appName,
+             file: path,
+             release_notes: changelog,
+             destinations: Config::APPCENTER_DEFAULT_TARGET,
+             notify_testers: true,
+           )
+         }
 end
 
 def uploadToStore(token, appName, path, version, maxChangeLogSize = -1)
   changelog = gitShortChangeLog(version, maxChangeLogSize, false)
-  appcenter_upload(
-    api_token: token,
-    owner_name: Config::APPCENTER_OWNER_NAME,
-    owner_type: Config::APPCENTER_OWNER_TYPE,
-    app_name: appName,
-    file: path,
-    release_notes: changelog,
-    destinations: Config::APPCENTER_DEFAULT_STORE,
-    destination_type: Config::APPCENTER_DESTINATION_TYPE_STORE,
-    notify_testers: true,
-  )
+  return capture_stdout {
+           appcenter_upload(
+             api_token: token,
+             owner_name: Config::APPCENTER_OWNER_NAME,
+             owner_type: Config::APPCENTER_OWNER_TYPE,
+             app_name: appName,
+             file: path,
+             release_notes: changelog,
+             destinations: Config::APPCENTER_DEFAULT_STORE,
+             destination_type: Config::APPCENTER_DESTINATION_TYPE_STORE,
+             notify_testers: true,
+           )
+         }
 end
 
 def pathFromDependency(dependency)
@@ -372,7 +393,7 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath, justCreateEmpt
     if justCreateEmptyFiles
       path = "#{assetPath}/#{suffix}"
       FileUtils.mkdir_p File.dirname(path)
-      File.open(path, "w") {} unless File.exist?(path)
+      File.open(path, "w") { } unless File.exist?(path)
       UI.success "Created #{path}"
     else
       downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
@@ -392,4 +413,45 @@ def maybe_pub_get(options)
   if lastLock == nil || lastPackages == nil || lastLock < lastPubGet
     pub_get(options)
   end
+end
+
+def capture_stdout()
+  file = Tempfile.new("stdoutput")
+  original_stdout = $stdout.clone
+  original_stderr = $stderr.clone
+  $stderr.reopen file
+  $stdout.reopen file
+  yield
+  $stdout.flush
+  $stderr.flush
+  file.flush
+  file.rewind
+  output = file.read
+  return output
+ensure
+  file.close
+  $stdout.reopen original_stdout
+  $stderr.reopen original_stderr
+  print output
+end
+
+def writeBetaReport(options, uploadedFile)
+  version = options[Options::VERSION_NAME]
+  platform = options[Options::PLATFORM]
+  buildNumber = options[Options::BUILD_NUMBER]
+
+  report = StringIO.new()
+  report.write("New Beta release *#{version}* BuildNumber: *#{buildNumber}*\n")
+  report.write("Appcenter file: #{uploadedFile}\n")
+  if platform == Platforms::IOS
+    report.write("Testflight: https://testflight.apple.com/join/ltxuzZh7\n")
+  else
+    report.write("Register: https://play.google.com/apps/testing/com.xayn.discovery\n")
+    report.write("Install/Update: https://play.google.com/store/apps/details?id=com.xayn.discovery\n")
+  end
+  report.write("_Note that publishing might take a while, for instant testing use the internal version._\n")
+  report.write(gitShortChangeLog(version, -1, false))
+  file = File.new("../report.log", "w")
+  file.write(report.string.truncate(3000).to_json)
+  file.close
 end

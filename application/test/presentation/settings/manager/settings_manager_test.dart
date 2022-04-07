@@ -21,7 +21,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');

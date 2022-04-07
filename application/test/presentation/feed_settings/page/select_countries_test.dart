@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
 
-import '../../test_utils/extensions.dart';
+import '../../../test_utils/extensions.dart';
 
 part 'select_countries_test.utils.dart';
 

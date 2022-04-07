@@ -4,7 +4,7 @@ import 'package:purchases_flutter/errors.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 
-import '../../presentation/test_utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   late MockBugReportingService bugReportingService;

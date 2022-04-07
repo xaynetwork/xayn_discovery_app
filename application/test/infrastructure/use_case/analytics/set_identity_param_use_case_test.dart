@@ -4,7 +4,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_active_selected_countries_identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_identity_param_use_case.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late SetIdentityParamUseCase useCase;

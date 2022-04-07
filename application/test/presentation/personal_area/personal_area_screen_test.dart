@@ -15,8 +15,8 @@ import 'package:xayn_discovery_app/presentation/personal_area/personal_area_scre
 import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 
-import '../test_utils/utils.dart';
-import '../test_utils/widget_test_utils.dart';
+import '../../test_utils/utils.dart';
+import '../../test_utils/widget_test_utils.dart';
 
 void main() {
   late StreamController<PersonalAreaState> streamController;
