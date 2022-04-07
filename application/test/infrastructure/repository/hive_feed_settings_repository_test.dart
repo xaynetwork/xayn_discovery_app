@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart
 import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_settings_repository.dart';
 
 import '../../presentation/test_utils/utils.dart';
-import 'hive_app_settings_repository_test.mocks.dart';
 
 void main() {
   late MockFeedSettingsMapper mapper;
