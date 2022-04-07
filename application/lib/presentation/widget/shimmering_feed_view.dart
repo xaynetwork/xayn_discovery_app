@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_f
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
+final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.cardRadius);
 final double _kItemSpacing = R.dimen.unit;
 final EdgeInsets _kPadding = EdgeInsets.symmetric(horizontal: R.dimen.unit);
 
