@@ -26,10 +26,12 @@ class GetSubscriptionStatusUseCase
     final purchaserInfo = await _paymentService.getPurchaserInfo();
     final willRenew = purchaserInfo.willRenew;
     final expirationDate = purchaserInfo.expirationDate;
+    final purchaseDate = purchaserInfo.purchaseDate;
     yield SubscriptionStatus(
       willRenew: willRenew,
       expirationDate: expirationDate,
       trialEndDate: _repository.appStatus.trialEndDate,
+      purchaseDate: purchaseDate,
     );
   }
 }

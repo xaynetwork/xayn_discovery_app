@@ -42,12 +42,13 @@ env:
   GITHUB_USERNAME: 'xayn-admin'
   # GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
   FASTLANE_SKIP_UPDATE_CHECK: '1'
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BLUE_DEPLOYMENT_WEBHOOK_URL }}
 
 jobs:
   publish_ios_internal:
     name: Publish iOS Internal
     if: (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.ios_internal == 'true')
-    runs-on: macos-12
+    runs-on: macos-latest
     steps:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -106,9 +107,12 @@ jobs:
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
 
   publish_ios_beta:
+    outputs:
+      message: ${{ env.SLACK_MESSAGE  || 'Build Failed'  }}
+      status: ${{ env.SLACK_STATUS || 'failure' }}
     name: Publish iOS Beta
     if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.ios_beta == 'true')
-    runs-on: macos-12
+    runs-on: macos-latest
     steps:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -165,6 +169,8 @@ jobs:
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
+          echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
+          echo "SLACK_STATUS=success" >> $GITHUB_ENV
 
   publish_android_internal:
     name: Publish Android Internal
@@ -215,6 +221,9 @@ jobs:
           fastlane publish platform:android build_type:release flavor:internal
 
   publish_android_beta:
+    outputs:
+      message: ${{ env.SLACK_MESSAGE  || 'Build Failed'  }}
+      status: ${{ env.SLACK_STATUS || 'failure' }}
     name: Publish Android Beta
     if: (github.event_name == 'push' && contains(github.ref, 'refs/tags/')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.android_beta  == 'true')
     runs-on: ubuntu-latest
@@ -261,3 +270,23 @@ jobs:
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta android_output:appbundle store:true
+          echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
+          echo "SLACK_STATUS=success" >> $GITHUB_ENV
+
+  slack-notification-android-beta:
+    needs: publish_android_beta
+    uses: ./.github/workflows/slack-notification.yaml
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      message: ${{ needs.publish_android_beta.outputs.message }}
+      status:  ${{ needs.publish_android_beta.outputs.status }}
+
+  slack-notification-ios-beta:
+    needs: publish_ios_beta
+    uses: ./.github/workflows/slack-notification.yaml
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      message: ${{ needs.publish_ios_beta.outputs.message  }}
+      status:  ${{ needs.publish_ios_beta.outputs.status }}

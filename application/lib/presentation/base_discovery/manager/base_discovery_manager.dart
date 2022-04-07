@@ -5,11 +5,11 @@ import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart'
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
@@ -17,11 +17,13 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -44,7 +46,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     with
         UseCaseBlocHelper<DiscoveryState>,
         ObserveDocumentMixin<DiscoveryState>,
-        ChangeUserReactionMixin<DiscoveryState> {
+        ChangeUserReactionMixin<DiscoveryState>,
+        ObserveSubscriptionWindowMixin<DiscoveryState> {
   final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
@@ -53,6 +56,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final CrudExplicitDocumentFeedbackUseCase crudExplicitDocumentFeedbackUseCase;
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
+  final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
 
@@ -72,6 +76,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.crudExplicitDocumentFeedbackUseCase,
     this.hapticFeedbackMediumUseCase,
     this.getSubscriptionStatusUseCase,
+    this.listenReaderModeSettingsUseCase,
     this.featureManager,
   ) : super(DiscoveryState.initial());
 
@@ -82,6 +87,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: feedType)
           .transform((out) => out.take(1));
+
+  late final UseCaseValueStream<ReaderModeSettings> _readerModeSettingsHandler =
+      consume(
+    listenReaderModeSettingsUseCase,
+    initialData: none,
+  );
 
   /// When explicit feedback changes, we need to emit a new state,
   /// so that the feed can redraw like/dislike borders.
@@ -238,16 +249,18 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold4(
+  Future<DiscoveryState?> computeState() async => fold5(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         engineEvents,
         subscriptionStatusHandler,
+        _readerModeSettingsHandler,
       ).foldAll((
         cardIndex,
         explicitDocumentFeedback,
         engineEvent,
         subscriptionStatus,
+        readerModeSettings,
         errorReport,
       ) async {
         _cardIndex ??= cardIndex;
@@ -267,7 +280,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             explicitDocumentFeedback?.mapOrNull(single: (v) => v.value);
         final hasExplicitDocumentFeedbackChanged =
             state.latestExplicitDocumentFeedback != feedback;
-
         final nextState = DiscoveryState(
           results: sets.results,
           removedResults: sets.removedResults,
@@ -280,6 +292,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           shouldUpdateNavBar:
               hasIsFullScreenChanged || hasExplicitDocumentFeedbackChanged,
           subscriptionStatus: subscriptionStatus,
+          readerModeBackgroundColor:
+              _isFullScreen ? readerModeSettings?.backgroundColor : null,
         );
 
         // guard against same-state emission
@@ -303,14 +317,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         context: FeedbackContext.implicit,
       );
     }
-  }
-
-  void onTrialBannerTapped() {
-    sendAnalyticsUseCase(
-      OpenSubscriptionWindowEvent(
-        currentView: SubscriptionWindowCurrentView.feed,
-      ),
-    );
   }
 }
 
