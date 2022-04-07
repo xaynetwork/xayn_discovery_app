@@ -15,7 +15,10 @@ void main() {
     await setupWidgetTest();
     manager = MockAppManager();
     di.registerLazySingleton<AppManager>(() => manager);
-    when(manager.state).thenReturn(const AppState(appTheme: AppTheme.system));
+    when(manager.state).thenReturn(const AppState(
+      appTheme: AppTheme.system,
+      isAppPaused: false,
+    ));
     when(manager.stream).thenAnswer((_) => const Stream.empty());
   });
   tearDown(() async {
