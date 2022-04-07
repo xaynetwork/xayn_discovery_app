@@ -43,7 +43,7 @@ class ApplyDocumentFilterUseCase extends UseCase<ApplyDocumentFilterIn, void> {
     final event = await _engine.getExcludedSourcesList();
     if (event is ExcludedSourcesListRequestSucceeded) {
       final engineSources = event.excludedSources
-          .map((e) => DocumentFilter.fromSource(e.toString()))
+          .map((e) => DocumentFilter.fromSource(e.value))
           .toSet();
       final repoSources =
           _repository.getAll().where((element) => element.isSource).toSet();

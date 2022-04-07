@@ -15,7 +15,7 @@ import '../../../test_utils/widget_test_utils.dart';
 main() {
   late DocumentFilterManager manager;
   final filter =
-      DocumentFilter.fromSource(fakeDocument.resource.sourceDomain.toString());
+      DocumentFilter.fromSource(fakeDocument.resource.sourceDomain.value);
   late DiscoveryEngine engine;
   late HiveDocumentFilterRepository repository;
   setUp(() async {
