@@ -3,11 +3,11 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-abstract class BasePainter extends CustomPainter {
+abstract class BaseStaticPainter extends CustomPainter {
   final ui.Image _image;
   final Color _shadowColor;
 
-  BasePainter({
+  BaseStaticPainter({
     required ui.Image image,
     required Color shadowColor,
   })  : _image = image,
@@ -38,9 +38,27 @@ abstract class BasePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(covariant BaseStaticPainter oldDelegate) => false;
 
   void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect);
+}
+
+abstract class BaseAnimationPainter extends BaseStaticPainter {
+  final double _animationValue;
+
+  BaseAnimationPainter({
+    required ui.Image image,
+    required Color shadowColor,
+    required double animationValue,
+  })  : _animationValue = animationValue,
+        super(
+          image: image,
+          shadowColor: shadowColor,
+        );
+
+  double get animationValue => _animationValue;
+
+  @override
+  bool shouldRepaint(covariant BaseAnimationPainter oldDelegate) =>
+      oldDelegate._animationValue != animationValue;
 }
