@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
+import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -19,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
@@ -64,6 +66,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
+  final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final FeatureManager _featureManager;
 
@@ -134,6 +137,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
     this._featureManager,
+    this._crudDocumentFilterUseCase,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -154,12 +158,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onFeedback({
     required Document document,
     required UserReaction userReaction,
-  }) {
+  }) async {
     if (_featureManager.isDocumentFilterEnabled) {
-      showOverlay(
-        OverlayData.tooltipDocumentFilter(document: document),
-        when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
-      );
+      final res = await _crudDocumentFilterUseCase.singleOutput(DbCrudIn.get(
+          DocumentFilter.fromSource(document.resource.sourceDomain).id));
+      if (res.mapOrNull(single: (s) => s.value) == null) {
+        showOverlay(
+          OverlayData.tooltipDocumentFilter(document: document),
+          when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
+        );
+      }
     }
     changeUserReaction(
       document: document,
