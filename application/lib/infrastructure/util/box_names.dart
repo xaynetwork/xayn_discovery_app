@@ -12,4 +12,5 @@ abstract class BoxNames {
   static const feedTypeMarkets = 'feedTypeMarkets';
   static const explicitDocumentFeedback = 'explicitDocumentFeedback';
   static const readerModeSettings = 'readerModeSettings';
+  static const migrationInfo = 'migrationInfo';
 }
