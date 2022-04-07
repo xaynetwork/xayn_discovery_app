@@ -8,11 +8,16 @@ const double _kFactor = 30;
 
 class _Cache {
   static final _entries = <Uri, ui.Image>{};
+  static final _animationValue = <Uri, double>{};
 
   static bool contains(Uri uri) => _entries.containsKey(uri);
   static ui.Image? of(Uri uri) => _entries[uri];
 
   static void put(Uri uri, ui.Image image) => _entries[uri] = image;
+
+  static double latestAnimationValue(Uri uri) => _animationValue[uri] ?? .5;
+  static void updateAnimationValue(Uri uri, double value) =>
+      _animationValue[uri] = value;
 }
 
 abstract class BaseStaticShader extends StatefulWidget {
@@ -137,7 +142,8 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
     _controller.duration;
 
     _animation = tween.animate(curve)
-      ..addListener(() => setState(() {}))
+      ..addListener(() => setState(
+          () => _Cache.updateAnimationValue(widget.uri, animationValue)))
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _controller.reverse();
@@ -146,6 +152,6 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
         }
       });
 
-    _controller.forward();
+    _controller.forward(from: _Cache.latestAnimationValue(widget.uri));
   }
 }
