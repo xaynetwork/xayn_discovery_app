@@ -7,8 +7,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 
-import '../test_utils/fakes.dart';
-import '../test_utils/widget_test_utils.dart';
+import '../../test_utils/fakes.dart';
+import '../../test_utils/widget_test_utils.dart';
 
 void main() {
   late CreateBookmarkFromDocumentUseCase createBookmark;

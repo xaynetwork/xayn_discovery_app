@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;

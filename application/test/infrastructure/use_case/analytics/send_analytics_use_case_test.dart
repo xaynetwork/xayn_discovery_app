@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_screen_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockAnalyticsService analyticsService;

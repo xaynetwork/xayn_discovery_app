@@ -3,8 +3,8 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
-import '../../test_utils/utils.dart';
-import '../../test_utils/widget_test_utils.dart';
+import '../../../test_utils/utils.dart';
+import '../../../test_utils/widget_test_utils.dart';
 
 void main() {
   late MockFeatureManager manager;

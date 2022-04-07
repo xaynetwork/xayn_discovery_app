@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/manager/delete_collection_confirmation_manager.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/utils.dart';
 
 void main() {
   late MockRemoveCollectionUseCase removeCollectionUseCase;
