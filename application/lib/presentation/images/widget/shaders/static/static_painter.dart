@@ -1,9 +1,9 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/painters/base_painter.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_painter.dart';
 
-class StaticPainter extends BasePainter {
+class StaticPainter extends BaseStaticPainter {
   StaticPainter({
     required ui.Image image,
     required Color shadowColor,

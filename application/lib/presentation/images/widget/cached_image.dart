@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/animated_image.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shaders/traversal/traversal_shader.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 
 typedef ImageLoadingBuilder = Widget Function(
@@ -119,7 +119,7 @@ class _CachedImageState extends State<CachedImage> {
           if (bytes != null) {
             opacity = 1.0;
 
-            return AnimatedImage(
+            return TraversalShader(
               uri: widget.uri,
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),
