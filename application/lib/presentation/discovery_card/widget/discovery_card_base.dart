@@ -23,6 +23,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
   final OnTtsData? onTtsData;
+  final ShaderBuilder primaryCardShader;
 
   const DiscoveryCardBase({
     Key? key,
@@ -32,6 +33,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     this.discoveryCardManager,
     this.imageManager,
     this.onTtsData,
+    this.primaryCardShader = CachedImage.defaultShaderBuilder,
   }) : super(key: key);
 }
 
@@ -145,9 +147,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     return CachedImage(
       imageManager: imageManager,
+      shaderBuilder: widget.isPrimary
+          ? widget.primaryCardShader
+          : CachedImage.defaultShaderBuilder,
       uri: Uri.parse(imageUrl),
-      width: mediaQuery.size.width.ceil(),
-      height: mediaQuery.size.height.ceil(),
+      width: mediaQuery.size.width.floor(),
+      height: mediaQuery.size.height.floor(),
       shadowColor: R.colors.swipeCardBackgroundDefault,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
