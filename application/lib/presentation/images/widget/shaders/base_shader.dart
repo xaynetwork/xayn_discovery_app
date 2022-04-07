@@ -87,6 +87,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
 
 abstract class BaseAnimationShader extends BaseStaticShader {
   final Curve curve;
+  final bool rendersOnlyOnce;
 
   const BaseAnimationShader({
     Key? key,
@@ -97,6 +98,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     double? width,
     double? height,
     Curve? curve,
+    this.rendersOnlyOnce = false,
   })  : curve = curve ?? Curves.easeInOut,
         super(
           key: key,
@@ -154,6 +156,8 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
     _animation = tween.animate(curve)
       ..addListener(() => setState(updateAnimationValue))
       ..addStatusListener((status) {
+        if (widget.rendersOnlyOnce) return;
+
         if (status == AnimationStatus.completed) {
           _currentDirection = ShaderAnimationDirection.reverse;
           _controller.reverse();
@@ -165,15 +169,24 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
         }
       });
 
-    switch (status.direction) {
-      case ShaderAnimationDirection.forward:
-        _currentDirection = ShaderAnimationDirection.forward;
-        _controller.forward(from: status.position);
-        break;
-      case ShaderAnimationDirection.reverse:
-        _currentDirection = ShaderAnimationDirection.reverse;
-        _controller.reverse(from: status.position);
-        break;
+    if (widget.rendersOnlyOnce) {
+      _controller.value = status.position;
+      _controller.animateTo(
+        .5,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeOutExpo,
+      );
+    } else {
+      switch (status.direction) {
+        case ShaderAnimationDirection.forward:
+          _currentDirection = ShaderAnimationDirection.forward;
+          _controller.forward(from: status.position);
+          break;
+        case ShaderAnimationDirection.reverse:
+          _currentDirection = ShaderAnimationDirection.reverse;
+          _controller.reverse(from: status.position);
+          break;
+      }
     }
   }
 }
