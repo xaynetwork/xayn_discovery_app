@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
@@ -222,11 +223,11 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
           readability.BuildMetadata meta, readability.ImageSource src) =>
       ClipRRect(
         borderRadius: BorderRadius.circular(R.dimen.unit),
-        child: Image.network(
-          src.url,
-          errorBuilder: (_, __, ___) => Container(),
-          loadingBuilder: (_, __, ___) =>
-              const WidgetTestableProgressIndicator(),
+        child: CachedImage(
+          uri: Uri.parse(src.url),
+          errorBuilder: (_) => Container(),
+          noImageBuilder: (_) => Container(),
+          loadingBuilder: (_, __) => const WidgetTestableProgressIndicator(),
         ),
       );
 

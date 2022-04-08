@@ -1,23 +1,23 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 
 abstract class BaseStaticPainter extends CustomPainter {
   final ui.Image _image;
-  final Color _shadowColor;
-  late final gradientColors = [
-    _shadowColor.withAlpha(120),
-    _shadowColor.withAlpha(40),
-    _shadowColor.withAlpha(255),
-    _shadowColor.withAlpha(255),
-  ];
+  final List<Color> _gradientColors;
+  final bool _hasGradient;
 
   BaseStaticPainter({
     required ui.Image image,
-    required Color shadowColor,
+    Color? shadowColor,
   })  : _image = image,
-        _shadowColor = shadowColor;
+        _hasGradient = shadowColor != null,
+        _gradientColors = [
+          shadowColor?.withAlpha(120) ?? Colors.transparent,
+          shadowColor?.withAlpha(40) ?? Colors.transparent,
+          shadowColor?.withAlpha(255) ?? Colors.transparent,
+          shadowColor?.withAlpha(255) ?? Colors.transparent,
+        ];
 
   @override
   @protected
@@ -28,16 +28,18 @@ abstract class BaseStaticPainter extends CustomPainter {
 
     paintMedia(canvas, _image, size, rect);
 
-    canvas.drawRect(
-      rect,
-      Paint()
-        ..shader = ui.Gradient.linear(
-          size.topCenter(Offset.zero),
-          size.bottomCenter(Offset.zero),
-          gradientColors,
-          const [0, 0.15, 0.8, 1],
-        ),
-    );
+    if (_hasGradient) {
+      canvas.drawRect(
+        rect,
+        Paint()
+          ..shader = ui.Gradient.linear(
+            size.topCenter(Offset.zero),
+            size.bottomCenter(Offset.zero),
+            _gradientColors,
+            const [0, 0.15, 0.8, 1],
+          ),
+      );
+    }
 
     canvas.restore();
   }
@@ -53,8 +55,8 @@ abstract class BaseAnimationPainter extends BaseStaticPainter {
 
   BaseAnimationPainter({
     required ui.Image image,
-    required Color shadowColor,
     required double animationValue,
+    Color? shadowColor,
   })  : _animationValue = animationValue,
         super(
           image: image,

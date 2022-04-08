@@ -3,8 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-
-const double _kFactor = 30;
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 enum ShaderAnimationDirection { forward, reverse }
 
@@ -28,7 +27,7 @@ abstract class BaseStaticShader extends StatefulWidget {
   final double? width;
   final double? height;
   final ImageErrorWidgetBuilder noImageBuilder;
-  final Color shadowColor;
+  final Color? shadowColor;
   final Uri uri;
 
   const BaseStaticShader({
@@ -75,31 +74,40 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     }
   }
 
-  Future<ui.Image> _decodeBytes(Uint8List bytes) async {
-    final codec = await ui.instantiateImageCodec(bytes);
-    final frameInfo = await codec.getNextFrame();
+  Future<ui.Image?> _decodeBytes(Uint8List bytes) async {
+    try {
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frameInfo = await codec.getNextFrame();
 
-    _Cache.put(widget.uri, frameInfo.image);
+      _Cache.put(widget.uri, frameInfo.image);
 
-    return frameInfo.image;
+      return frameInfo.image;
+    } catch (e) {
+      logger.i('Unable to decode image at: ${widget.uri}');
+    }
+
+    return null;
   }
 }
 
 abstract class BaseAnimationShader extends BaseStaticShader {
   final Curve curve;
   final bool rendersOnlyOnce;
+  final Duration duration;
 
   const BaseAnimationShader({
     Key? key,
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
-    required Color shadowColor,
+    this.rendersOnlyOnce = false,
+    Color? shadowColor,
+    Duration? duration,
+    Curve? curve = Curves.easeInOut,
     double? width,
     double? height,
-    Curve? curve,
-    this.rendersOnlyOnce = false,
   })  : curve = curve ?? Curves.easeInOut,
+        duration = duration ?? const Duration(seconds: 15),
         super(
           key: key,
           uri: uri,
@@ -116,6 +124,7 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
   late final _controller = AnimationController(
     vsync: this,
     animationBehavior: AnimationBehavior.preserve,
+    duration: widget.duration,
   );
 
   Animation? _animation;
@@ -132,13 +141,6 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
 
   @override
   void didResolveImage() {
-    final srcImage = image!;
-    final dx = (widget.width ?? srcImage.width) - srcImage.width;
-    final durationInDirection = 1000 * dx.abs() ~/ _kFactor;
-
-    _controller.duration = _controller.reverseDuration =
-        Duration(milliseconds: durationInDirection);
-
     final curve = CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
