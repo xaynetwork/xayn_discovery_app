@@ -27,7 +27,7 @@ const double _kImageFractionSize = .4;
 
 /// Implementation of [DiscoveryCardBase] which is used inside the feed view.
 class DiscoveryCardStatic extends DiscoveryCardBase {
-  const DiscoveryCardStatic({
+  DiscoveryCardStatic({
     Key? key,
     required Document document,
     FeedType? feedType,

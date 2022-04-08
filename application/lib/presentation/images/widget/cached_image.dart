@@ -7,8 +7,8 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/static/static_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 
 typedef ImageLoadingBuilder = Widget Function(
@@ -38,27 +38,7 @@ class CachedImage extends StatefulWidget {
   final ImageManager? imageManager;
   final ShaderBuilder shaderBuilder;
 
-  static BaseStaticShader defaultShaderBuilder({
-    Key? key,
-    required Uint8List bytes,
-    required Uri uri,
-    required ImageErrorWidgetBuilder noImageBuilder,
-    Color? shadowColor,
-    Curve? curve,
-    double? width,
-    double? height,
-  }) =>
-      StaticShader(
-        key: key,
-        bytes: bytes,
-        uri: uri,
-        noImageBuilder: noImageBuilder,
-        shadowColor: shadowColor,
-        width: width,
-        height: height,
-      );
-
-  const CachedImage({
+  CachedImage({
     Key? key,
     required this.uri,
     this.shadowColor,
@@ -68,8 +48,10 @@ class CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.imageManager,
-    this.shaderBuilder = defaultShaderBuilder,
-  }) : super(key: key);
+    ShaderBuilder? shaderBuilder,
+  })  : shaderBuilder =
+            shaderBuilder ?? ShaderFactory.fromType(ShaderType.static),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CachedImageState();

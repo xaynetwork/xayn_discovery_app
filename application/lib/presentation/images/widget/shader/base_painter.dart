@@ -26,7 +26,7 @@ abstract class BaseStaticPainter extends CustomPainter {
 
     canvas.save();
 
-    paintMedia(canvas, _image, size, rect);
+    paintMedia(canvas, _image, rect);
 
     if (_hasGradient) {
       canvas.drawRect(
@@ -47,7 +47,7 @@ abstract class BaseStaticPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant BaseStaticPainter oldDelegate) => false;
 
-  void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect);
+  void paintMedia(ui.Canvas canvas, ui.Image image, Rect rect);
 }
 
 abstract class BaseAnimationPainter extends BaseStaticPainter {

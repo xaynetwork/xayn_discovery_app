@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_painter.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/base_painter.dart';
 
 class ZoomPainter extends BaseAnimationPainter {
   late final _paint = Paint();
@@ -18,7 +18,7 @@ class ZoomPainter extends BaseAnimationPainter {
         );
 
   @override
-  void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect) {
+  void paintMedia(ui.Canvas canvas, ui.Image image, Rect rect) {
     final imageAr = image.width / image.height;
     final rectAr = rect.width / rect.height;
     final ar = rectAr / imageAr;

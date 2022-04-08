@@ -2,11 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/zoom/zoom_painter.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/traversal/traversal_painter.dart';
 
-class ZoomShader extends BaseAnimationShader {
-  const ZoomShader({
+class TraversalShader extends BaseAnimationShader {
+  const TraversalShader({
     Key? key,
     required Uint8List bytes,
     required Uri uri,
@@ -29,10 +29,10 @@ class ZoomShader extends BaseAnimationShader {
         );
 
   @override
-  State<StatefulWidget> createState() => _ZoomShaderState();
+  State<StatefulWidget> createState() => _TraversalShaderState();
 }
 
-class _ZoomShaderState extends BaseAnimationShaderState<ZoomShader> {
+class _TraversalShaderState extends BaseAnimationShaderState<TraversalShader> {
   @override
   Widget build(BuildContext context) {
     final srcImage = image;
@@ -41,7 +41,7 @@ class _ZoomShaderState extends BaseAnimationShaderState<ZoomShader> {
 
     return CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
-      painter: ZoomPainter(
+      painter: TraversalPainter(
         image: srcImage,
         animationValue: animationValue,
         shadowColor: widget.shadowColor,

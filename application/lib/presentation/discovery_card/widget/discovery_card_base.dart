@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
@@ -25,7 +26,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   final OnTtsData? onTtsData;
   final ShaderBuilder primaryCardShader;
 
-  const DiscoveryCardBase({
+  DiscoveryCardBase({
     Key? key,
     required this.isPrimary,
     required this.document,
@@ -33,8 +34,10 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     this.discoveryCardManager,
     this.imageManager,
     this.onTtsData,
-    this.primaryCardShader = CachedImage.defaultShaderBuilder,
-  }) : super(key: key);
+    ShaderBuilder? primaryCardShader,
+  })  : primaryCardShader =
+            primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
+        super(key: key);
 }
 
 /// The base class for the different feed card states.
@@ -149,7 +152,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       imageManager: imageManager,
       shaderBuilder: widget.isPrimary
           ? widget.primaryCardShader
-          : CachedImage.defaultShaderBuilder,
+          : ShaderFactory.fromType(ShaderType.static),
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.floor(),
       height: mediaQuery.size.height.floor(),
