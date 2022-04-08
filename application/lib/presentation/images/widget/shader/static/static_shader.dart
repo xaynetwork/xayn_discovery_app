@@ -2,37 +2,33 @@ import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/traversal/traversal_painter.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
 
-class TraversalShader extends BaseAnimationShader {
-  const TraversalShader({
+class StaticShader extends BaseStaticShader {
+  const StaticShader({
     Key? key,
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
     Color? shadowColor,
-    bool? transitionToIdle,
-    Curve? curve,
     double? width,
     double? height,
   }) : super(
           key: key,
           bytes: bytes,
           noImageBuilder: noImageBuilder,
-          curve: curve,
           width: width,
           height: height,
           shadowColor: shadowColor,
           uri: uri,
-          transitionToIdle: transitionToIdle ?? false,
         );
 
   @override
-  State<StatefulWidget> createState() => _TraversalShaderState();
+  State<StatefulWidget> createState() => _StaticShaderState();
 }
 
-class _TraversalShaderState extends BaseAnimationShaderState<TraversalShader> {
+class _StaticShaderState extends BaseStaticShaderState<StaticShader> {
   @override
   Widget build(BuildContext context) {
     final srcImage = image;
@@ -41,9 +37,8 @@ class _TraversalShaderState extends BaseAnimationShaderState<TraversalShader> {
 
     return CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
-      painter: TraversalPainter(
+      painter: StaticPainter(
         image: srcImage,
-        animationValue: animationValue,
         shadowColor: widget.shadowColor,
       ),
     );

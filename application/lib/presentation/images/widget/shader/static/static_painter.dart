@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_painter.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/base_painter.dart';
 
 class StaticPainter extends BaseStaticPainter {
   StaticPainter({
@@ -13,8 +13,7 @@ class StaticPainter extends BaseStaticPainter {
         );
 
   @override
-  void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect) =>
-      paintImage(
+  void paintMedia(ui.Canvas canvas, ui.Image image, Rect rect) => paintImage(
         canvas: canvas,
         rect: rect,
         image: image,
