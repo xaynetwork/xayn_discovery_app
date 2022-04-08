@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_paint
 class StaticPainter extends BaseStaticPainter {
   StaticPainter({
     required ui.Image image,
-    required Color shadowColor,
+    Color? shadowColor,
   }) : super(
           image: image,
           shadowColor: shadowColor,
