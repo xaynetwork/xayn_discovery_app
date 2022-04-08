@@ -21,7 +21,7 @@ typedef ShaderBuilder = BaseStaticShader Function({
   required Uint8List bytes,
   required Uri uri,
   required ImageErrorWidgetBuilder noImageBuilder,
-  required Color shadowColor,
+  Color? shadowColor,
   Curve? curve,
   double? width,
   double? height,
@@ -29,7 +29,7 @@ typedef ShaderBuilder = BaseStaticShader Function({
 
 class CachedImage extends StatefulWidget {
   final Uri uri;
-  final Color shadowColor;
+  final Color? shadowColor;
   final ImageLoadingBuilder? loadingBuilder;
   final ImageErrorWidgetBuilder? errorBuilder;
   final ImageErrorWidgetBuilder? noImageBuilder;
@@ -43,7 +43,7 @@ class CachedImage extends StatefulWidget {
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
-    required Color shadowColor,
+    Color? shadowColor,
     Curve? curve,
     double? width,
     double? height,
@@ -61,7 +61,7 @@ class CachedImage extends StatefulWidget {
   const CachedImage({
     Key? key,
     required this.uri,
-    required this.shadowColor,
+    this.shadowColor,
     this.loadingBuilder,
     this.errorBuilder,
     this.noImageBuilder,

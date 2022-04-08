@@ -6,8 +6,8 @@ import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_paint
 class TraversalPainter extends BaseAnimationPainter {
   TraversalPainter({
     required ui.Image image,
-    required Color shadowColor,
     required double animationValue,
+    Color? shadowColor,
   }) : super(
           image: image,
           shadowColor: shadowColor,
@@ -18,8 +18,10 @@ class TraversalPainter extends BaseAnimationPainter {
   void paintMedia(ui.Canvas canvas, ui.Image image, ui.Size size, Rect rect) {
     final scale = image.height / rect.height;
     final dx = image.width - rect.width;
+    final tx = dx * animationValue;
+    final pos = scale < 1.0 ? tx * scale : tx / scale;
     final src = Rect.fromLTWH(
-      dx * animationValue / scale,
+      pos,
       .0,
       rect.width * scale,
       rect.height * scale,

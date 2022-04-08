@@ -11,7 +11,7 @@ class StaticShader extends BaseStaticShader {
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
-    required Color shadowColor,
+    Color? shadowColor,
     double? width,
     double? height,
   }) : super(

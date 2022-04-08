@@ -11,7 +11,7 @@ class TraversalShader extends BaseAnimationShader {
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
-    required Color shadowColor,
+    Color? shadowColor,
     bool? rendersOnlyOnce,
     Curve? curve,
     double? width,

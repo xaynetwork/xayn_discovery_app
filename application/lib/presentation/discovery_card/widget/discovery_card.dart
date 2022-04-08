@@ -69,7 +69,7 @@ class DiscoveryCard extends DiscoveryCardBase {
             required Uint8List bytes,
             required Uri uri,
             required ImageErrorWidgetBuilder noImageBuilder,
-            required Color shadowColor,
+            Color? shadowColor,
             Curve? curve,
             double? width,
             double? height,
