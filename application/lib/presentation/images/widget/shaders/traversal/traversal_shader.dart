@@ -12,7 +12,7 @@ class TraversalShader extends BaseAnimationShader {
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
     Color? shadowColor,
-    bool? rendersOnlyOnce,
+    bool? transitionToIdle,
     Curve? curve,
     double? width,
     double? height,
@@ -25,7 +25,7 @@ class TraversalShader extends BaseAnimationShader {
           height: height,
           shadowColor: shadowColor,
           uri: uri,
-          rendersOnlyOnce: rendersOnlyOnce ?? false,
+          transitionToIdle: transitionToIdle ?? false,
         );
 
   @override

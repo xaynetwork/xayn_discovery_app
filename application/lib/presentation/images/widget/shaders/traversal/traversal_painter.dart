@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shaders/base_painter.dart';
 
 class TraversalPainter extends BaseAnimationPainter {
+  late final _paint = Paint();
+
   TraversalPainter({
     required ui.Image image,
     required double animationValue,
@@ -27,6 +29,6 @@ class TraversalPainter extends BaseAnimationPainter {
       rect.height * scale,
     );
 
-    canvas.drawImageRect(image, src, rect, Paint());
+    canvas.drawImageRect(image, src, rect, _paint);
   }
 }

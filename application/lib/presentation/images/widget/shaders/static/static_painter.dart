@@ -18,6 +18,6 @@ class StaticPainter extends BaseStaticPainter {
         canvas: canvas,
         rect: rect,
         image: image,
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.cover,
       );
 }
