@@ -83,7 +83,7 @@ class DiscoveryCard extends DiscoveryCardBase {
             width: width,
             height: height,
             curve: curve,
-            rendersOnlyOnce: true,
+            transitionToIdle: true,
           ),
         );
 

@@ -92,7 +92,8 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
 
 abstract class BaseAnimationShader extends BaseStaticShader {
   final Curve curve;
-  final bool rendersOnlyOnce;
+  final bool transitionToIdle;
+  final bool looping;
   final Duration duration;
 
   const BaseAnimationShader({
@@ -100,7 +101,8 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
-    this.rendersOnlyOnce = false,
+    this.transitionToIdle = false,
+    this.looping = true,
     Color? shadowColor,
     Duration? duration,
     Curve? curve = Curves.easeInOut,
@@ -158,7 +160,7 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
     _animation = tween.animate(curve)
       ..addListener(() => setState(updateAnimationValue))
       ..addStatusListener((status) {
-        if (widget.rendersOnlyOnce) return;
+        if (widget.transitionToIdle || !widget.looping) return;
 
         if (status == AnimationStatus.completed) {
           _currentDirection = ShaderAnimationDirection.reverse;
@@ -171,7 +173,7 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
         }
       });
 
-    if (widget.rendersOnlyOnce) {
+    if (widget.transitionToIdle) {
       _controller.value = status.position;
       _controller.animateTo(
         .5,

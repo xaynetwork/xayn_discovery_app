@@ -137,7 +137,7 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
           userAgent: _kUserAgent,
           classesToPreserve: _kClassesToPreserve,
           rendererPadding: widget.padding,
-          factoryBuilder: () => _ReaderModeWidgetFactory(),
+          factoryBuilder: () => _ReaderModeWidgetFactory(baseUri: uri),
           loadingBuilder: () => loading,
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
@@ -212,6 +212,10 @@ class _ReaderModeState extends State<ReaderMode> with ErrorHandlingMixin {
 
 class _ReaderModeWidgetFactory extends readability.WidgetFactory
     with ChewieFactory {
+  final Uri baseUri;
+
+  _ReaderModeWidgetFactory({required this.baseUri});
+
   /// This property is actually used for link callbacks,
   /// we don't want to follow links, so this is set to be null.
   /// Simply remove this override to re-enable links, when needed.
@@ -224,7 +228,7 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
       ClipRRect(
         borderRadius: BorderRadius.circular(R.dimen.unit),
         child: CachedImage(
-          uri: Uri.parse(src.url),
+          uri: baseUri.resolve(src.url),
           errorBuilder: (_) => Container(),
           noImageBuilder: (_) => Container(),
           loadingBuilder: (_, __) => const WidgetTestableProgressIndicator(),
@@ -243,7 +247,7 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
     double? width,
   }) {
     var actualUrl = url;
-    final uri = Uri.parse(url);
+    final uri = baseUri.resolve(url);
     final maybeFile = uri.pathSegments.last;
 
     if (maybeFile.startsWith(_kMatchManifestRegExp)) {
