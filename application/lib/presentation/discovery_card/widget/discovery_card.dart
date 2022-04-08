@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +22,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shaders/traversal/traversal_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -56,6 +55,7 @@ class DiscoveryCard extends DiscoveryCardBase {
     this.onDrag,
     this.onController,
     OnTtsData? onTtsData,
+    ShaderBuilder? primaryCardShader,
   }) : super(
           key: key,
           isPrimary: isPrimary,
@@ -64,27 +64,11 @@ class DiscoveryCard extends DiscoveryCardBase {
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
           onTtsData: onTtsData,
-          primaryCardShader: ({
-            Key? key,
-            required Uint8List bytes,
-            required Uri uri,
-            required ImageErrorWidgetBuilder noImageBuilder,
-            Color? shadowColor,
-            Curve? curve,
-            double? width,
-            double? height,
-          }) =>
-              TraversalShader(
-            key: key,
-            bytes: bytes,
-            uri: uri,
-            noImageBuilder: noImageBuilder,
-            shadowColor: shadowColor,
-            width: width,
-            height: height,
-            curve: curve,
-            transitionToIdle: true,
-          ),
+          primaryCardShader: primaryCardShader ??
+              ShaderFactory.fromType(
+                ShaderType.traverse,
+                transitionToIdle: true,
+              ),
         );
 
   @override
