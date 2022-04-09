@@ -272,7 +272,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         late final ShaderType shaderType;
 
-        switch (document.hashCode % 3) {
+        switch (document.resource.hashCode % 3) {
           case 0:
             shaderType = ShaderType.static;
             break;

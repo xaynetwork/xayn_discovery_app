@@ -7,6 +7,8 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader_cache.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
+const Duration _kDefaultDuration = Duration(seconds: 20);
+
 enum ShaderAnimationDirection { forward, reverse }
 
 abstract class BaseStaticShader extends StatefulWidget {
@@ -32,13 +34,12 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
   late final ShaderCache _cache = di.get();
   ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
-  ui.Image? _image;
 
-  ui.Image? get image => _image ?? _cache.of(widget.uri);
+  ui.Image? get image => _cache.imageOf(widget.uri);
 
   @override
   void initState() {
-    _cache.refCountFor(widget.uri);
+    _cache.register(widget.uri);
 
     _resolveImage();
 
@@ -64,7 +65,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   void didResolveImage() {}
 
   void _resolveImage() {
-    if (_cache.contains(widget.uri)) {
+    if (_cache.hasImageOf(widget.uri)) {
       didResolveImage();
     } else {
       _decodeBytes(widget.bytes).whenComplete(() => setState(didResolveImage));
@@ -76,7 +77,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
       final codec = await ui.instantiateImageCodec(bytes);
       final frameInfo = await codec.getNextFrame();
 
-      _cache.put(widget.uri, frameInfo.image);
+      _cache.update(widget.uri, image: frameInfo.image);
 
       return frameInfo.image;
     } catch (e) {
@@ -106,7 +107,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     double? width,
     double? height,
   })  : curve = curve ?? Curves.easeInOut,
-        duration = duration ?? const Duration(seconds: 15),
+        duration = duration ?? _kDefaultDuration,
         super(
           key: key,
           uri: uri,
@@ -145,14 +146,15 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
       curve: widget.curve,
     );
     final tween = Tween(begin: .0, end: 1.0);
-    final status = _cache.latestAnimationStatus(widget.uri);
+    final status = _cache.animationStatusOf(widget.uri);
 
-    updateAnimationValue() => _cache.updateAnimationValue(
-        widget.uri,
-        ShaderAnimationStatus(
-          position: animationValue,
-          direction: _currentDirection,
-        ));
+    updateAnimationValue() => _cache.update(
+          widget.uri,
+          animationStatus: ShaderAnimationStatus(
+            position: animationValue,
+            direction: _currentDirection,
+          ),
+        );
 
     _animation = tween.animate(curve)
       ..addListener(() => setState(updateAnimationValue))
