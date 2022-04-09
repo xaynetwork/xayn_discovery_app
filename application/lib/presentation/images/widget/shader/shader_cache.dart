@@ -1,58 +1,114 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
 
-@lazySingleton
-class ShaderCache {
-  final _entries = <Uri, ui.Image>{};
-  final _refCount = <Uri, int>{};
-  final _animationStatus = <Uri, ShaderAnimationStatus>{};
+part 'shader_cache.freezed.dart';
 
-  bool contains(Uri uri) => _entries.containsKey(uri);
-  ui.Image? of(Uri uri) => _entries[uri];
+abstract class ShaderCache {
+  bool hasImageOf(Uri uri);
 
-  void refCountFor(Uri uri) {
-    final cnt = _refCount.putIfAbsent(uri, () => 0);
+  ui.Image? imageOf(Uri uri);
+  ShaderAnimationStatus animationStatusOf(Uri uri);
 
-    _refCount[uri] = cnt + 1;
+  void register(Uri uri);
+
+  void flush(Uri uri);
+
+  void update(
+    Uri uri, {
+    ui.Image? image,
+    int? refCount,
+    ShaderAnimationStatus? animationStatus,
+  });
+}
+
+@LazySingleton(as: ShaderCache)
+class InMemoryShaderCache implements ShaderCache {
+  final _entries = <Uri, ShaderCacheEntry>{};
+
+  @override
+  bool hasImageOf(Uri uri) => imageOf(uri) != null;
+
+  @override
+  ui.Image? imageOf(Uri uri) => _of(uri).image;
+  @override
+  ShaderAnimationStatus animationStatusOf(Uri uri) => _of(uri).animationStatus;
+
+  @override
+  void register(Uri uri) {
+    final entry = _of(uri);
+
+    update(uri, refCount: entry.refCount + 1);
   }
 
+  @override
   void flush(Uri uri) {
     if (_entries.containsKey(uri)) {
-      var cnt = _refCount.putIfAbsent(uri, () => 0);
+      final entry = _of(uri);
+      final refCount = entry.refCount - 1;
 
-      cnt = _refCount[uri] = cnt - 1;
+      _entries[uri] = entry.copyWith(refCount: refCount);
 
-      if (cnt > 0) return;
+      if (refCount > 0) return;
 
-      final entry = _entries[uri]!;
-
-      entry.dispose();
+      entry.image?.dispose();
 
       _entries.remove(uri);
-      _animationStatus.remove(uri);
     }
   }
 
-  void put(Uri uri, ui.Image image) => _entries[uri] = image;
+  @override
+  void update(
+    Uri uri, {
+    ui.Image? image,
+    int? refCount,
+    ShaderAnimationStatus? animationStatus,
+  }) {
+    final entry = _of(uri);
 
-  ShaderAnimationStatus latestAnimationStatus(Uri uri) =>
-      _animationStatus[uri] ?? const ShaderAnimationStatus.start();
-  void updateAnimationValue(Uri uri, ShaderAnimationStatus value) =>
-      _animationStatus[uri] = value;
+    _entries[uri] = entry.copyWith(
+      image: image ?? entry.image,
+      refCount: refCount ?? entry.refCount,
+      animationStatus: animationStatus ?? entry.animationStatus,
+    );
+  }
+
+  ShaderCacheEntry _of(Uri uri) =>
+      _entries.putIfAbsent(uri, ShaderCacheEntry.initial);
 }
 
-class ShaderAnimationStatus {
-  final double position;
-  final ShaderAnimationDirection direction;
+@freezed
+class ShaderCacheEntry with _$ShaderCacheEntry {
+  factory ShaderCacheEntry({
+    ui.Image? image,
+    required int refCount,
+    required ShaderAnimationStatus animationStatus,
+  }) = _ShaderCacheEntry;
 
-  const ShaderAnimationStatus({
-    required this.position,
-    required this.direction,
-  });
+  factory ShaderCacheEntry.initial() => ShaderCacheEntry(
+        refCount: 0,
+        animationStatus: ShaderAnimationStatus.random(),
+      );
+}
 
-  const ShaderAnimationStatus.start()
-      : position = .5,
-        direction = ShaderAnimationDirection.forward;
+@freezed
+class ShaderAnimationStatus with _$ShaderAnimationStatus {
+  factory ShaderAnimationStatus({
+    required double position,
+    required ShaderAnimationDirection direction,
+  }) = _ShaderAnimationStatus;
+
+  factory ShaderAnimationStatus.random() {
+    final random = Random();
+
+    return ShaderAnimationStatus(
+      position: random.nextDouble(),
+      direction: random.nextBool()
+          ? ShaderAnimationDirection.forward
+          : ShaderAnimationDirection.reverse,
+    );
+  }
 }
