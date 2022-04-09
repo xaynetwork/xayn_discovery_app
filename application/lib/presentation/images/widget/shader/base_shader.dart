@@ -2,25 +2,12 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader_cache.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 enum ShaderAnimationDirection { forward, reverse }
-
-class _Cache {
-  static final _entries = <Uri, ui.Image>{};
-  static final _animationStatus = <Uri, ShaderAnimationStatus>{};
-
-  static bool contains(Uri uri) => _entries.containsKey(uri);
-  static ui.Image? of(Uri uri) => _entries[uri];
-
-  static void put(Uri uri, ui.Image image) => _entries[uri] = image;
-
-  static ShaderAnimationStatus latestAnimationStatus(Uri uri) =>
-      _animationStatus[uri] ?? const ShaderAnimationStatus.start();
-  static void updateAnimationValue(Uri uri, ShaderAnimationStatus value) =>
-      _animationStatus[uri] = value;
-}
 
 abstract class BaseStaticShader extends StatefulWidget {
   final Uint8List bytes;
@@ -43,16 +30,26 @@ abstract class BaseStaticShader extends StatefulWidget {
 
 abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
+  late final ShaderCache _cache = di.get();
   ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
   ui.Image? _image;
 
-  ui.Image? get image => _image ?? _Cache.of(widget.uri);
+  ui.Image? get image => _image ?? _cache.of(widget.uri);
 
   @override
   void initState() {
+    _cache.refCountFor(widget.uri);
+
     _resolveImage();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _cache.flush(widget.uri);
+
+    super.dispose();
   }
 
   @override
@@ -67,7 +64,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   void didResolveImage() {}
 
   void _resolveImage() {
-    if (_Cache.contains(widget.uri)) {
+    if (_cache.contains(widget.uri)) {
       didResolveImage();
     } else {
       _decodeBytes(widget.bytes).whenComplete(() => setState(didResolveImage));
@@ -79,7 +76,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
       final codec = await ui.instantiateImageCodec(bytes);
       final frameInfo = await codec.getNextFrame();
 
-      _Cache.put(widget.uri, frameInfo.image);
+      _cache.put(widget.uri, frameInfo.image);
 
       return frameInfo.image;
     } catch (e) {
@@ -148,9 +145,9 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
       curve: widget.curve,
     );
     final tween = Tween(begin: .0, end: 1.0);
-    final status = _Cache.latestAnimationStatus(widget.uri);
+    final status = _cache.latestAnimationStatus(widget.uri);
 
-    updateAnimationValue() => _Cache.updateAnimationValue(
+    updateAnimationValue() => _cache.updateAnimationValue(
         widget.uri,
         ShaderAnimationStatus(
           position: animationValue,
@@ -193,18 +190,4 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
       }
     }
   }
-}
-
-class ShaderAnimationStatus {
-  final double position;
-  final ShaderAnimationDirection direction;
-
-  const ShaderAnimationStatus({
-    required this.position,
-    required this.direction,
-  });
-
-  const ShaderAnimationStatus.start()
-      : position = .5,
-        direction = ShaderAnimationDirection.forward;
 }

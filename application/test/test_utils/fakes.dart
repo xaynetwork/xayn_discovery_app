@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'mocks.mocks.dart';
