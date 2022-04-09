@@ -9,9 +9,6 @@ import 'package:xayn_discovery_app/domain/http_requests/common_params.dart';
 import 'package:xayn_discovery_app/domain/model/cache_manager/cache_manager_event.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 
-const Duration _kStalePeriod = Duration(days: 1);
-const int _kMaxNrOfCacheObjects = 200;
-
 /// A use case which calls an endpoint directly,
 /// as opposed to calling it via a proxy, such as the image fetcher for example.
 @injectable
@@ -70,21 +67,4 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
       yield CacheManagerEvent.completed(param, bytes);
     }
   }
-}
-
-@LazySingleton(as: ImageCacheManager)
-class AppImageCacheManager extends CacheManager with ImageCacheManager {
-  static const key = 'libAppCachedImageData';
-
-  static final AppImageCacheManager _instance = AppImageCacheManager._();
-  factory AppImageCacheManager() {
-    return _instance;
-  }
-
-  AppImageCacheManager._()
-      : super(Config(
-          key,
-          stalePeriod: _kStalePeriod,
-          maxNrOfCacheObjects: _kMaxNrOfCacheObjects,
-        ));
 }
