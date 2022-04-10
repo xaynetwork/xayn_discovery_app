@@ -16,6 +16,7 @@ class ZoomShader extends BaseAnimationShader {
     Curve? curve,
     double? width,
     double? height,
+    bool? singleFrameOnly,
   }) : super(
           key: key,
           bytes: bytes,
@@ -26,6 +27,7 @@ class ZoomShader extends BaseAnimationShader {
           shadowColor: shadowColor,
           uri: uri,
           transitionToIdle: transitionToIdle ?? false,
+          singleFrameOnly: singleFrameOnly ?? false,
         );
 
   @override

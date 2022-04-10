@@ -3,10 +3,12 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shader/traversal/traversal_painter.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/panning/panning_painter.dart';
 
-class TraversalShader extends BaseAnimationShader {
-  const TraversalShader({
+const int _kPixelDuration = 35;
+
+class PanningShader extends BaseAnimationShader {
+  const PanningShader({
     Key? key,
     required Uint8List bytes,
     required Uri uri,
@@ -16,6 +18,7 @@ class TraversalShader extends BaseAnimationShader {
     Curve? curve,
     double? width,
     double? height,
+    bool? singleFrameOnly,
   }) : super(
           key: key,
           bytes: bytes,
@@ -26,13 +29,14 @@ class TraversalShader extends BaseAnimationShader {
           shadowColor: shadowColor,
           uri: uri,
           transitionToIdle: transitionToIdle ?? false,
+          singleFrameOnly: singleFrameOnly ?? false,
         );
 
   @override
-  State<StatefulWidget> createState() => _TraversalShaderState();
+  State<StatefulWidget> createState() => _PanningShaderState();
 }
 
-class _TraversalShaderState extends BaseAnimationShaderState<TraversalShader> {
+class _PanningShaderState extends BaseAnimationShaderState<PanningShader> {
   @override
   Widget build(BuildContext context) {
     final srcImage = image;
@@ -41,11 +45,28 @@ class _TraversalShaderState extends BaseAnimationShaderState<TraversalShader> {
 
     return CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
-      painter: TraversalPainter(
+      painter: PanningPainter(
         image: srcImage,
         animationValue: animationValue,
         shadowColor: widget.shadowColor,
       ),
     );
+  }
+
+  @override
+  void didResolveImage() {
+    final srcImage = image;
+    final width = widget.width;
+
+    if (srcImage != null && width != null) {
+      final overflow = srcImage.width - width;
+
+      if (overflow > .0) {
+        updateDuration(
+            Duration(milliseconds: overflow.toInt() * _kPixelDuration));
+      }
+    }
+
+    super.didResolveImage();
   }
 }
