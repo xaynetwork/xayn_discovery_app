@@ -150,9 +150,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     return CachedImage(
       imageManager: imageManager,
-      shaderBuilder: widget.isPrimary
-          ? widget.primaryCardShader
-          : ShaderFactory.fromType(ShaderType.static),
+      shaderBuilder: widget.primaryCardShader,
+      singleFrameOnly: !widget.isPrimary,
       uri: Uri.parse(imageUrl),
       width: mediaQuery.size.width.floor(),
       height: mediaQuery.size.height.floor(),

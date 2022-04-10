@@ -22,9 +22,9 @@ typedef ShaderBuilder = BaseStaticShader Function({
   required Uri uri,
   required ImageErrorWidgetBuilder noImageBuilder,
   Color? shadowColor,
-  Curve? curve,
   double? width,
   double? height,
+  bool? singleFrameOnly,
 });
 
 class CachedImage extends StatefulWidget {
@@ -37,6 +37,7 @@ class CachedImage extends StatefulWidget {
   final int? height;
   final ImageManager? imageManager;
   final ShaderBuilder shaderBuilder;
+  final bool? singleFrameOnly;
 
   CachedImage({
     Key? key,
@@ -48,6 +49,7 @@ class CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.imageManager,
+    this.singleFrameOnly,
     ShaderBuilder? shaderBuilder,
   })  : shaderBuilder =
             shaderBuilder ?? ShaderFactory.fromType(ShaderType.static),
@@ -140,6 +142,7 @@ class _CachedImageState extends State<CachedImage> {
               bytes: bytes,
               noImageBuilder: noImageBuilder,
               shadowColor: widget.shadowColor,
+              singleFrameOnly: widget.singleFrameOnly,
             );
           } else {
             // there is no image

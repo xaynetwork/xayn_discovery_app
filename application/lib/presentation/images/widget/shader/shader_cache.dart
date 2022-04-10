@@ -56,7 +56,10 @@ class InMemoryShaderCache implements ShaderCache {
 
       entry.image?.dispose();
 
-      _entries.remove(uri);
+      _entries[uri] = ShaderCacheEntry(
+        refCount: 0,
+        animationStatus: entry.animationStatus,
+      );
     }
   }
 
