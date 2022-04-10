@@ -277,7 +277,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
             shaderType = ShaderType.static;
             break;
           case 1:
-            shaderType = ShaderType.traverse;
+            shaderType = ShaderType.pan;
             break;
           default:
             shaderType = ShaderType.zoom;

@@ -66,7 +66,7 @@ class DiscoveryCard extends DiscoveryCardBase {
           onTtsData: onTtsData,
           primaryCardShader: primaryCardShader ??
               ShaderFactory.fromType(
-                ShaderType.traverse,
+                ShaderType.pan,
                 transitionToIdle: true,
               ),
         );

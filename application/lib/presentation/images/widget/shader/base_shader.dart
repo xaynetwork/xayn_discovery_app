@@ -92,6 +92,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
   final Curve curve;
   final bool transitionToIdle;
   final bool looping;
+  final bool singleFrameOnly;
   final Duration duration;
 
   const BaseAnimationShader({
@@ -101,6 +102,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     required ImageErrorWidgetBuilder noImageBuilder,
     this.transitionToIdle = false,
     this.looping = true,
+    this.singleFrameOnly = false,
     Color? shadowColor,
     Duration? duration,
     Curve? curve = Curves.easeInOut,
@@ -121,16 +123,23 @@ abstract class BaseAnimationShader extends BaseStaticShader {
 
 abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
     extends BaseStaticShaderState<T> with SingleTickerProviderStateMixin {
-  late final _controller = AnimationController(
-    vsync: this,
-    animationBehavior: AnimationBehavior.preserve,
-    duration: widget.duration,
-  );
+  late final AnimationController _controller;
 
   Animation? _animation;
 
   Animation? get animation => _animation;
   double get animationValue => _animation?.value ?? .0;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      animationBehavior: AnimationBehavior.preserve,
+      duration: widget.duration,
+    );
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -140,21 +149,38 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
   }
 
   @override
+  void didUpdateWidget(T oldWidget) {
+    if (oldWidget.singleFrameOnly != widget.singleFrameOnly &&
+        oldWidget.uri == widget.uri) {
+      final status = _cache.animationStatusOf(widget.uri);
+
+      widget.singleFrameOnly
+          ? _stopAnimation(status)
+          : _resumeAnimation(status);
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @mustCallSuper
+  @override
   void didResolveImage() {
+    final status = _cache.animationStatusOf(widget.uri);
     final curve = CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
     );
     final tween = Tween(begin: .0, end: 1.0);
-    final status = _cache.animationStatusOf(widget.uri);
 
-    updateAnimationValue() => _cache.update(
-          widget.uri,
-          animationStatus: ShaderAnimationStatus(
-            position: animationValue,
-            direction: _currentDirection,
-          ),
-        );
+    updateAnimationValue() {
+      if (!widget.singleFrameOnly) {
+        _cache.update(widget.uri,
+            animationStatus: ShaderAnimationStatus(
+              position: _controller.value,
+              direction: _currentDirection,
+            ));
+      }
+    }
 
     _animation = tween.animate(curve)
       ..addListener(() => setState(updateAnimationValue))
@@ -164,11 +190,9 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
         if (status == AnimationStatus.completed) {
           _currentDirection = ShaderAnimationDirection.reverse;
           _controller.reverse();
-          updateAnimationValue();
         } else if (status == AnimationStatus.dismissed) {
           _currentDirection = ShaderAnimationDirection.forward;
           _controller.forward();
-          updateAnimationValue();
         }
       });
 
@@ -180,16 +204,29 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
         curve: Curves.easeOutExpo,
       );
     } else {
-      switch (status.direction) {
-        case ShaderAnimationDirection.forward:
-          _currentDirection = ShaderAnimationDirection.forward;
-          _controller.forward(from: status.position);
-          break;
-        case ShaderAnimationDirection.reverse:
-          _currentDirection = ShaderAnimationDirection.reverse;
-          _controller.reverse(from: status.position);
-          break;
-      }
+      widget.singleFrameOnly
+          ? _stopAnimation(status)
+          : _resumeAnimation(status);
+    }
+  }
+
+  void updateDuration(Duration duration) => _controller.duration = duration;
+
+  void _stopAnimation(ShaderAnimationStatus status) {
+    _controller.value = status.position;
+    _controller.stop(canceled: false);
+  }
+
+  void _resumeAnimation(ShaderAnimationStatus status) {
+    switch (status.direction) {
+      case ShaderAnimationDirection.forward:
+        _currentDirection = ShaderAnimationDirection.forward;
+        _controller.forward(from: status.position);
+        break;
+      case ShaderAnimationDirection.reverse:
+        _currentDirection = ShaderAnimationDirection.reverse;
+        _controller.reverse(from: status.position);
+        break;
     }
   }
 }

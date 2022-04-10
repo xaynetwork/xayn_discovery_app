@@ -4,10 +4,10 @@ import 'package:flutter/widgets.dart' hide ImageErrorWidgetBuilder;
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shader/traversal/traversal_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/panning/panning_shader.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/zoom/zoom_shader.dart';
 
-enum ShaderType { static, traverse, zoom }
+enum ShaderType { static, pan, zoom }
 
 class ShaderFactory {
   ShaderFactory._();
@@ -18,18 +18,18 @@ class ShaderFactory {
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
     Color? shadowColor,
-    Curve? curve,
     double? width,
     double? height,
+    bool? singleFrameOnly,
   }) fromType(ShaderType type, {bool transitionToIdle = false}) => ({
         Key? key,
         required Uint8List bytes,
         required Uri uri,
         required ImageErrorWidgetBuilder noImageBuilder,
         Color? shadowColor,
-        Curve? curve,
         double? width,
         double? height,
+        bool? singleFrameOnly,
       }) {
         switch (type) {
           case ShaderType.static:
@@ -42,8 +42,8 @@ class ShaderFactory {
               width: width,
               height: height,
             );
-          case ShaderType.traverse:
-            return TraversalShader(
+          case ShaderType.pan:
+            return PanningShader(
               key: key,
               bytes: bytes,
               uri: uri,
@@ -52,17 +52,20 @@ class ShaderFactory {
               width: width,
               height: height,
               transitionToIdle: transitionToIdle,
+              singleFrameOnly: singleFrameOnly,
             );
           case ShaderType.zoom:
             return ZoomShader(
               key: key,
               bytes: bytes,
               uri: uri,
+              curve: Curves.linear,
               noImageBuilder: noImageBuilder,
               shadowColor: shadowColor,
               width: width,
               height: height,
               transitionToIdle: transitionToIdle,
+              singleFrameOnly: singleFrameOnly,
             );
         }
       };

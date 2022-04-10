@@ -3,10 +3,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/base_painter.dart';
 
-class TraversalPainter extends BaseAnimationPainter {
+class PanningPainter extends BaseAnimationPainter {
   late final _paint = Paint();
 
-  TraversalPainter({
+  PanningPainter({
     required ui.Image image,
     required double animationValue,
     Color? shadowColor,
