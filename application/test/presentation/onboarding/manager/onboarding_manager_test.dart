@@ -5,7 +5,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late OnBoardingManager onBoardingManager;

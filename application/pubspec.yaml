@@ -75,7 +75,7 @@ dependencies:
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git
-      ref: 285e3b314d8114c68ea25067989f90d5dfe16bfb
+      ref: 1665c64af48058f116ffa0e71296c7748c3c6c1e
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
@@ -83,7 +83,7 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: bd3537b31c2d15b6679537f9832553293f6bcec4
+      ref: c3035b34a26e62fcfada7ffc7ad34ae0c5ad1b2b
       path: discovery_engine_flutter
   xayn_readability:
     git:

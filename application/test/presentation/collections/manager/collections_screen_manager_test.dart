@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_co
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockListenCollectionsUseCase listenCollectionsUseCase;

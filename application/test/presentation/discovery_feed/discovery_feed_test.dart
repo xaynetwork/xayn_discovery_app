@@ -21,10 +21,9 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../presentation/test_utils/utils.dart';
-import '../test_utils/dependency_overrides.dart';
-import '../test_utils/utils.dart';
-import '../test_utils/widget_test_utils.dart';
+import '../../test_utils/dependency_overrides.dart';
+import '../../test_utils/utils.dart';
+import '../../test_utils/widget_test_utils.dart';
 
 /// todo: will need to be rewritten once we get rid of all the "fake" engine things,
 /// requestFeed and requestNextFeedBatch will be covered when we move away from
@@ -46,7 +45,7 @@ void main() async {
         documentId: DocumentId(),
         resource: NewsResource(
           image: Uri.parse('https://displayUrl.test.xayn.com'),
-          sourceDomain: 'example',
+          sourceDomain: Source('example'),
           topic: 'topic',
           score: .0,
           rank: -1,

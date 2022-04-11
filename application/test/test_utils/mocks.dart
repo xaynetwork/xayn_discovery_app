@@ -5,8 +5,12 @@ import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/document_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repository.dart';
@@ -47,6 +51,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/save_app_
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/is_bookmarked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
@@ -117,12 +122,14 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   AreMarketsOutdatedUseCase,
   BookmarkErrorsEnumMapper,
   BookmarksScreenNavActions,
+  BookmarksRepository,
   Box,
   BugReportingService,
   BuildContext,
   ChangeDocumentFeedbackUseCase,
   Client,
   CollectionErrorsEnumMapper,
+  CollectionsRepository,
   CollectionsScreenNavActions,
   ConnectivityUseCase,
   CountryFeedSettingsManager,
@@ -135,6 +142,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DbEntityMapToFeedMarketMapper,
   DiscoveryCardManager,
   Document,
+  DocumentRepository,
   EditReaderModeSettingsManager,
   ExtractLogUseCase,
   FeatureManager,
@@ -162,6 +170,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   InAppReview,
   IncrementAppSessionUseCase,
   IntToAppThemeMapper,
+  IsBookmarkedUseCase,
   ListenAppThemeUseCase,
   ListenBookmarksUseCase,
   ListenCollectionCardDataUseCase,
@@ -176,6 +185,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   OnBoardingCompletedUseCase,
   OnBoardingManager,
   OnBoardingNavActions,
+  PackageInfo,
   PaymentFlowErrorToErrorMessageMapper,
   PaymentScreenNavActions,
   PaymentService,

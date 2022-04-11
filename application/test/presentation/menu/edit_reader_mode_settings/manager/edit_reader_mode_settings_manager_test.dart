@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reade
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_state.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/utils.dart';
 
 void main() {
   late MockSaveReaderModeFontStyleUseCase saveReaderModeFontStyleUseCase;

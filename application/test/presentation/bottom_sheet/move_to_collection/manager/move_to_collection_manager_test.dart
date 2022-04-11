@@ -14,8 +14,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../../../test_utils/fakes.dart';
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/fakes.dart';
+import '../../../../test_utils/utils.dart';
 
 void main() {
   group('Move document to collection manager ', () {
@@ -48,7 +48,7 @@ void main() {
           documentId: DocumentId(),
           resource: NewsResource(
             image: Uri.parse('https://displayUrl.test.xayn.com'),
-            sourceDomain: 'example',
+            sourceDomain: Source('example'),
             topic: 'topic',
             score: .0,
             rank: -1,
