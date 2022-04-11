@@ -65,11 +65,8 @@ class DiscoveryCard extends DiscoveryCardBase {
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
           onTtsData: onTtsData,
-          primaryCardShader: primaryCardShader ??
-              ShaderFactory.fromType(
-                ShaderType.pan,
-                transitionToIdle: true,
-              ),
+          primaryCardShader:
+              primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
         );
 
   @override
