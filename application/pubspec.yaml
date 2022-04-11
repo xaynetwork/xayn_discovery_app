@@ -52,7 +52,6 @@ dependencies:
   path_provider: 2.0.9
   purchases_flutter: 3.9.5
   rxdart: 0.27.3
-  sensors_plus: 1.3.0
   sprintf: 6.0.0
   share_plus: 4.0.3
   shimmer: 2.0.0
