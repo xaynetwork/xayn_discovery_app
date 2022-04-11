@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/card_managers_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DiFactories {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition.dart';
 
 /// When long pressing the wrapped widget move/animate it to the center
 /// of the screen and add a transparent layer as background.
