@@ -22,15 +22,18 @@ abstract class BaseStaticPainter extends CustomPainter {
   @override
   @protected
   void paint(ui.Canvas canvas, ui.Size size) {
-    final rect = ui.Rect.fromLTWH(.0, .0, size.width, size.height);
-
-    canvas.save();
+    final rect = ui.Rect.fromLTWH(
+      .0,
+      .0,
+      size.width.ceilToDouble(),
+      size.height.ceilToDouble(),
+    );
 
     paintMedia(canvas, _image, rect);
 
     if (_hasGradient) {
       canvas.drawRect(
-        rect,
+        rect.inflate(1.0),
         Paint()
           ..shader = ui.Gradient.linear(
             size.topCenter(Offset.zero),
@@ -40,8 +43,6 @@ abstract class BaseStaticPainter extends CustomPainter {
           ),
       );
     }
-
-    canvas.restore();
   }
 
   @override
