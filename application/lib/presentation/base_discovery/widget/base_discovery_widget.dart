@@ -270,20 +270,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           );
         }
 
-        late final ShaderType shaderType;
-
-        switch (document.resource.hashCode % 3) {
-          case 0:
-            shaderType = ShaderType.static;
-            break;
-          case 1:
-            shaderType = ShaderType.pan;
-            break;
-          default:
-            shaderType = ShaderType.zoom;
-            break;
-        }
-
+        final shaderType = _getShaderType(document.resource);
         final card = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
@@ -334,6 +321,22 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
         );
       };
+
+  ShaderType _getShaderType(NewsResource newsResource) {
+    // A document doesn't have a unique 'index',
+    // and also, the index within the feed is not static, as older
+    // documents are removed.
+    // So while not ideal, using hashcode to consistently resolve the exact
+    // same shader does work:
+    switch (newsResource.hashCode % 3) {
+      case 0:
+        return ShaderType.static;
+      case 1:
+        return ShaderType.pan;
+      default:
+        return ShaderType.zoom;
+    }
+  }
 
   BoxBorder? Function(int) _boxBorderBuilder({
     required Set<Document> results,
