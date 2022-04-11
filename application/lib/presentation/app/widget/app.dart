@@ -36,6 +36,20 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _appManager.onResume();
+        break;
+      case AppLifecycleState.paused:
+        _appManager.onPause();
+        break;
+      default:
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();

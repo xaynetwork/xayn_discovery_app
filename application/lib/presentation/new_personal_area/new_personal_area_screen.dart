@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
@@ -18,14 +19,14 @@ import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_pe
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/custom_animated_list.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
+import 'package:xayn_discovery_app/presentation/widget/custom_animated_list.dart';
 
 class NewPersonalAreaScreen extends StatefulWidget {
   const NewPersonalAreaScreen({Key? key}) : super(key: key);
@@ -176,12 +177,20 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
   Widget _buildTrialBanner(DateTime trialEndDate) => Padding(
         padding: EdgeInsets.only(bottom: R.dimen.unit2),
         child: SubscriptionTrialBanner(
-          trialEndDate: trialEndDate,
-          onPressed: () => showAppBottomSheet(
-            context,
-            builder: (_) => PaymentBottomSheet(),
-          ),
-        ),
+            trialEndDate: trialEndDate,
+            onPressed: () {
+              _manager.onSubscriptionWindowOpened(
+                currentView: SubscriptionWindowCurrentView.personalArea,
+              );
+              showAppBottomSheet(
+                context,
+                builder: (_) => PaymentBottomSheet(
+                  onClosePressed: () => _manager.onSubscriptionWindowClosed(
+                    currentView: SubscriptionWindowCurrentView.personalArea,
+                  ),
+                ),
+              );
+            }),
       );
 
   _showAddCollectionBottomSheet() {

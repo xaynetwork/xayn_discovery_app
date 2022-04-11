@@ -1,15 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/onboarding_completed_use_case.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_state.dart';
 
-import 'onboarding_manager_test.mocks.dart';
+import '../../../test_utils/utils.dart';
 
-@GenerateMocks([OnBoardingCompletedUseCase, OnBoardingNavActions])
 void main() {
   late OnBoardingManager onBoardingManager;
   late OnBoardingState initialState;

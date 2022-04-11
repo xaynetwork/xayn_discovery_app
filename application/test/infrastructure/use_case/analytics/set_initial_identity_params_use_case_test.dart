@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/las
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_total_sessions_identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late SetInitialIdentityParamsUseCase useCase;

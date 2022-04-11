@@ -42,7 +42,7 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
         errorReport,
       ) {
         final filter =
-            DocumentFilter.fromSource(_document.resource.sourceDomain);
+            DocumentFilter.fromSource(_document.resource.sourceDomain.value);
         final list = (getAll ?? handler)?.mapOrNull(list: (v) => v.value) ?? [];
         list.removeWhere(
           (element) =>

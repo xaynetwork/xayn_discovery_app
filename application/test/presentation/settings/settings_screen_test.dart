@@ -21,8 +21,8 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 
-import '../test_utils/utils.dart';
-import '../test_utils/widget_test_utils.dart';
+import '../../test_utils/utils.dart';
+import '../../test_utils/widget_test_utils.dart';
 
 void main() {
   late StreamController<SettingsScreenState> streamController;

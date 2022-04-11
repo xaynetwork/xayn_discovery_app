@@ -82,7 +82,6 @@ class _ActiveSearchState
               _manager.onHomeNavPressed();
             }),
             buildNavBarItemSearchActive(
-              isActive: true,
               autofocus: _manager.state.results.isEmpty,
               hint: _manager.lastUsedSearchTerm,
               initialText: _manager.state.results.isNotEmpty
