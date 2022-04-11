@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -318,10 +319,14 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 
   @override
-  Widget buildImage() =>
+  Widget buildImage(Color shadowColor) =>
       BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
         bloc: _shadowManager,
-        builder: (_, state) => super.buildImage(),
+        builder: (_, state) => super.buildImage(
+          R.isDarkMode
+              ? state.readerModeBackgroundColor.color
+              : R.colors.swipeCardBackgroundDefault,
+        ),
       );
 
   Future<bool> _onWillPopScope() async {
