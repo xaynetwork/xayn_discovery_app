@@ -8,11 +8,13 @@ class SubscriptionStatus with _$SubscriptionStatus {
     required bool willRenew,
     required DateTime? expirationDate,
     required DateTime? trialEndDate,
+    required DateTime? purchaseDate,
   }) = _SubscriptionStatus;
 
   factory SubscriptionStatus.initial() => const SubscriptionStatus(
         willRenew: false,
         expirationDate: null,
         trialEndDate: null,
+        purchaseDate: null,
       );
 }

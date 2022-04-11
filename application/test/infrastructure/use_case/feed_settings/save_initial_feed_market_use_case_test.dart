@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_in
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_type_markets/save_feed_type_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late SaveInitialFeedMarketUseCase useCase;

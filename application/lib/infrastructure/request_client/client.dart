@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 const String _kUserAgent =

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -10,10 +11,10 @@ import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dar
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
 
 class PersonalAreaScreen extends StatefulWidget {
   const PersonalAreaScreen({Key? key}) : super(key: key);
@@ -106,10 +107,16 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   Widget _buildTrialBanner(DateTime trialEndDate) => SubscriptionTrialBanner(
       trialEndDate: trialEndDate,
       onPressed: () {
-        _manager.onTrialBannerTapped();
+        _manager.onSubscriptionWindowOpened(
+          currentView: SubscriptionWindowCurrentView.personalArea,
+        );
         showAppBottomSheet(
           context,
-          builder: (_) => PaymentBottomSheet(),
+          builder: (_) => PaymentBottomSheet(
+            onClosePressed: () => _manager.onSubscriptionWindowClosed(
+              currentView: SubscriptionWindowCurrentView.personalArea,
+            ),
+          ),
         );
       });
 

@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart'
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 
-import '../../../presentation/test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 import 'payment_test_data.dart';
 
 void main() {

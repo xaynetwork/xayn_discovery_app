@@ -14,17 +14,20 @@ class ListenReaderModeSettingsUseCase
   ListenReaderModeSettingsUseCase(this._repository);
 
   @override
-  Stream<ReaderModeSettings> transaction(None param) =>
-      _repository.watch().transform(
-        StreamTransformer.fromHandlers(
-          handleData: (RepositoryEvent<ReaderModeSettings> event,
-              EventSink<ReaderModeSettings> sink) {
-            if (event is ChangedEvent) {
-              final settings =
-                  (event as ChangedEvent<ReaderModeSettings>).newObject;
-              sink.add(settings);
-            }
-          },
-        ),
-      );
+  Stream<ReaderModeSettings> transaction(None param) async* {
+    yield _repository.settings;
+
+    yield* _repository.watch().transform(
+      StreamTransformer.fromHandlers(
+        handleData: (RepositoryEvent<ReaderModeSettings> event,
+            EventSink<ReaderModeSettings> sink) {
+          if (event is ChangedEvent) {
+            final settings =
+                (event as ChangedEvent<ReaderModeSettings>).newObject;
+            sink.add(settings);
+          }
+        },
+      ),
+    );
+  }
 }

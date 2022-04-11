@@ -19,4 +19,5 @@ abstract class IdentityKeys {
   static const String numberOfTotalSession = 'numberOfTotalSession';
   static const String numberOfActiveSelectedCountries =
       'numberOfActiveSelectedCountries';
+  static const String subscriptionType = 'subscriptionType';
 }

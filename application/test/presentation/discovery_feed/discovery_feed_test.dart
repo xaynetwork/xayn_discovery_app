@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
@@ -17,22 +17,18 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/sess
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-import '../test_utils/dependency_overrides.dart';
-import '../test_utils/utils.dart';
-import '../test_utils/widget_test_utils.dart';
-import 'discovery_feed_test.mocks.dart';
+import '../../test_utils/dependency_overrides.dart';
+import '../../test_utils/utils.dart';
+import '../../test_utils/widget_test_utils.dart';
 
 /// todo: will need to be rewritten once we get rid of all the "fake" engine things,
 /// requestFeed and requestNextFeedBatch will be covered when we move away from
 /// the temporary test mixins.
-@GenerateMocks([
-  ConnectivityUseCase,
-  FeedRepository,
-])
+
 void main() async {
   late AppDiscoveryEngine engine;
   late MockAppDiscoveryEngine mockDiscoveryEngine;
@@ -49,7 +45,7 @@ void main() async {
         documentId: DocumentId(),
         resource: NewsResource(
           image: Uri.parse('https://displayUrl.test.xayn.com'),
-          sourceDomain: 'example',
+          sourceDomain: Source('example'),
           topic: 'topic',
           score: .0,
           rank: -1,
@@ -300,6 +296,20 @@ void main() async {
         shouldUpdateNavBar: true,
         didReachEnd: false,
         subscriptionStatus: subscriptionStatusInitial,
+      ),
+      DiscoveryState(
+        results: {fakeDocumentA, fakeDocumentB},
+        cardIndex: 0,
+        isComplete: false,
+        isFullScreen: true,
+        isInErrorState: false,
+        shouldUpdateNavBar: false,
+        didReachEnd: false,
+        subscriptionStatus: subscriptionStatusInitial,
+        readerModeBackgroundColor: ReaderModeBackgroundColor(
+          dark: ReaderModeBackgroundDarkColor.dark,
+          light: ReaderModeBackgroundLightColor.white,
+        ),
       ),
     ],
     verify: (manager) {
