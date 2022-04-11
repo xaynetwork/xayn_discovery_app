@@ -1,10 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_shader.dart';
+import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -17,6 +23,7 @@ class CardWidgetData {
 }
 
 class CardWidget extends StatelessWidget {
+  late final DiscoveryCardShadowManager _shadowManager = di.get();
   final CardData cardData;
 
   CardWidget({
@@ -56,24 +63,18 @@ class CardWidget extends StatelessWidget {
       Uint8List? backgroundImage,
       double? width,
     }) {
-      buildMemoryImage(Uint8List bytes) => Container(
-            foregroundDecoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                R.colors.swipeCardBackgroundDefault.withAlpha(120),
-                R.colors.swipeCardBackgroundDefault.withAlpha(40),
-                R.colors.swipeCardBackgroundDefault.withAlpha(255),
-                R.colors.swipeCardBackgroundDefault.withAlpha(255),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: const [.0, .15, 8, 1.0],
-            )),
-            child: Image.memory(
-              bytes,
-              fit: BoxFit.cover,
+      buildMemoryImage(Uint8List bytes) =>
+          BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
+            bloc: _shadowManager,
+            builder: (_, state) => StaticShader(
+              uri: Uri.dataFromBytes(bytes),
               width: width,
               height: CardWidgetData.cardHeight,
+              bytes: bytes,
+              shadowColor: R.isDarkMode
+                  ? state.readerModeBackgroundColor.color
+                  : R.colors.swipeCardBackgroundDefault,
+              noImageBuilder: (_) => Container(),
             ),
           );
 
