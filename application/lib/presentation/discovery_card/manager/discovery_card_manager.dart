@@ -160,8 +160,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required UserReaction userReaction,
   }) async {
     if (_featureManager.isDocumentFilterEnabled) {
-      final res = await _crudDocumentFilterUseCase.singleOutput(DbCrudIn.get(
-          DocumentFilter.fromSource(document.resource.sourceDomain).id));
+      final url = document.resource.sourceDomain.value;
+      final filter = DocumentFilter.fromSource(url);
+      final op = DbCrudIn.get(filter.id);
+      final res = await _crudDocumentFilterUseCase.singleOutput(op);
+
       if (res.mapOrNull(single: (s) => s.value) == null) {
         showOverlay(
           OverlayData.tooltipDocumentFilter(document: document),
@@ -169,6 +172,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         );
       }
     }
+
     changeUserReaction(
       document: document,
       userReaction: userReaction,
