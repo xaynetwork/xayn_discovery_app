@@ -26,6 +26,9 @@ class CardWidget extends StatelessWidget {
           key: cardData.key,
         );
 
+  BorderRadius getCardRadius(BuildContext context) =>
+      UnterDenLinden.getLinden(context).styles.roundBorderCard;
+
   @override
   Widget build(BuildContext context) {
     final contentPadding = R.dimen.unit3;
@@ -63,8 +66,7 @@ class CardWidget extends StatelessWidget {
 
       return backgroundImage != null
           ? ClipRRect(
-              borderRadius:
-                  UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+              borderRadius: getCardRadius(context),
               child: DiscoveryCardHeadlineImage(
                 child: buildMemoryImage(backgroundImage),
               ),
@@ -126,7 +128,7 @@ class CardWidget extends StatelessWidget {
       onPressed: cardData.onPressed,
       onLongPressed: onLongPressed,
       child: item,
-      borderRadius: UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+      borderRadius: getCardRadius(context),
       backgroundColor: cardData.map(
         personalArea: (v) => v.color,
         collectionsScreen: (v) => v.color,
