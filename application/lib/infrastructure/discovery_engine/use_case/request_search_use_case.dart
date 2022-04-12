@@ -4,14 +4,19 @@ import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connecti
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
-class RequestSearchUseCase extends UseCase<String, EngineEvent>
-    with ConnectivityUseCaseMixin<String, EngineEvent> {
+class RequestSearchUseCase extends UseCase<String, EngineEvent> {
   final DiscoveryEngine _engine;
+  final ConnectivityObserver _connectivityObserver;
 
-  RequestSearchUseCase(this._engine);
+  RequestSearchUseCase(
+    this._engine,
+    this._connectivityObserver,
+  );
 
   @override
   Stream<EngineEvent> transaction(String param) async* {
+    await _connectivityObserver.isUp();
+
     yield await _engine.requestSearch(param);
   }
 }
