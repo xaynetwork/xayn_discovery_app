@@ -14,9 +14,7 @@ class ConnectionSnackBar extends StatelessWidget {
         alignment: Alignment.center,
         child: DefaultTextStyle(
           style: R.styles.connectionErrorMessageTextStyle,
-          child: Text(
-            'No internet connection',
-          ),
+          child: Text(R.strings.noInternetConnection),
         ),
       );
 }
