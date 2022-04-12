@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http_client/http_client.dart' as http;
@@ -64,13 +63,7 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
         await cachedVersion.file.readAsBytes(),
       );
     } else {
-      observeConnectivity() async* {
-        yield await connectivityObserver.checkConnectivity();
-        yield* connectivityObserver.onConnectivityChanged;
-      }
-
-      await observeConnectivity()
-          .firstWhere((it) => it != ConnectivityResult.none);
+      await connectivityObserver.isUp();
 
       final response = await client.sendWithRedirectGuard(
         http.Request(
