@@ -23,7 +23,6 @@ void main() {
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
-  late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   late MockPurchaseEventMapper purchaseEventMapper;
 
   final testPurchaseEvent = PurchaseEvent(
@@ -42,7 +41,6 @@ void main() {
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
     sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
-    errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
     purchaseEventMapper = MockPurchaseEventMapper();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
@@ -69,7 +67,6 @@ void main() {
       requestCodeRedemptionSheetUseCase,
       sendMarketingAnalyticsUseCase,
       sendAnalyticsUseCase,
-      errorMessageMapper,
       purchaseEventMapper,
     );
   });
