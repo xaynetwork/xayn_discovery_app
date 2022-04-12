@@ -4,14 +4,25 @@ import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connecti
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
-class RequestNextSearchBatchUseCase extends UseCase<None, EngineEvent>
-    with ConnectivityUseCaseMixin<None, EngineEvent> {
+class RequestNextSearchBatchUseCase extends UseCase<None, EngineEvent> {
   final DiscoveryEngine _engine;
+  final ConnectivityObserver _connectivityObserver;
 
-  RequestNextSearchBatchUseCase(this._engine);
+  RequestNextSearchBatchUseCase(
+    this._engine,
+    this._connectivityObserver,
+  );
 
   @override
   Stream<EngineEvent> transaction(None param) async* {
-    yield await _engine.requestNextSearchBatch();
+    final event = await _engine.requestNextSearchBatch();
+
+    yield event;
+
+    if (event is NextSearchBatchRequestFailed) {
+      await _connectivityObserver.isUp();
+
+      yield await _engine.requestNextSearchBatch();
+    }
   }
 }
