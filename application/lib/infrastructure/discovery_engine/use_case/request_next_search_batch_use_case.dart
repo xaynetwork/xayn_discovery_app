@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
@@ -20,9 +21,13 @@ class RequestNextSearchBatchUseCase extends UseCase<None, EngineEvent> {
     yield event;
 
     if (event is NextSearchBatchRequestFailed) {
-      await _connectivityObserver.isUp();
+      final status = await _connectivityObserver.checkConnectivity();
 
-      yield await _engine.requestNextSearchBatch();
+      if (status == ConnectivityResult.none) {
+        await _connectivityObserver.isUp();
+
+        yield await _engine.requestNextSearchBatch();
+      }
     }
   }
 }
