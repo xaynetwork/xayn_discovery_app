@@ -132,7 +132,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CollectionErrorsEnumMapper,
   CollectionsRepository,
   CollectionsScreenNavActions,
-  ConnectivityUseCase,
+  ConnectivityObserver,
   CountryFeedSettingsManager,
   CreateBookmarkFromDocumentUseCase,
   CreateCollectionUseCase,
