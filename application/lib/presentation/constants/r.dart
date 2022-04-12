@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/translations/translati
 class R {
   const R._();
 
-  static Linden _linden = Linden();
+  static late Linden _linden = Linden();
 
   static Linden get linden => _linden;
 

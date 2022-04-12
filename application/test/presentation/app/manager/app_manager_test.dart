@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
-import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
@@ -26,6 +26,7 @@ void main() {
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockSetCollectionAndBookmarksChangesIdentityParam
       setCollectionAndBookmarksChangesIdentityParam;
+  late MockPlatformBrightnessProvider platformBrightnessProvider;
 
   late Collection mockDefaultCollection;
   final subscriptionStatus = SubscriptionStatus.initial();
@@ -45,6 +46,7 @@ void main() {
     setCollectionAndBookmarksChangesIdentityParam =
         MockSetCollectionAndBookmarksChangesIdentityParam();
     appSettingsRepository = MockAppSettingsRepository();
+    platformBrightnessProvider = MockPlatformBrightnessProvider();
 
     when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
 
@@ -76,6 +78,8 @@ void main() {
     when(setIdentityParamUseCase.call(any)).thenAnswer(
       (_) async => const [UseCaseResult.success(none)],
     );
+    when(platformBrightnessProvider.brightness)
+        .thenAnswer((realInvocation) => Brightness.dark);
   });
 
   AppManager create() => AppManager(
@@ -89,6 +93,7 @@ void main() {
         listenSubscriptionStatusUseCase,
         setCollectionAndBookmarksChangesIdentityParam,
         appSettingsRepository,
+        platformBrightnessProvider,
       );
 
   blocTest<AppManager, AppState>(
@@ -96,7 +101,7 @@ void main() {
     build: create,
     expect: () => const [
       AppState(
-        appTheme: AppTheme.system,
+        brightness: Brightness.dark,
         isAppPaused: false,
       )
     ],
