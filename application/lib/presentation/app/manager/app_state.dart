@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 
 part 'app_state.freezed.dart';
@@ -8,7 +8,7 @@ part 'app_state.freezed.dart';
 @freezed
 class AppState with _$AppState {
   const factory AppState({
-    required AppTheme appTheme,
+    required Brightness brightness,
     required bool isAppPaused,
   }) = _AppState;
 }
