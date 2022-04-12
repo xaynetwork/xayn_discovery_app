@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,6 +22,13 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
+
+@injectable
+class PlatformBrightnessProvider {
+  Brightness get brightness =>
+      WidgetsBinding.instance!.window.platformBrightness;
+}
 
 /// Manages the state for the material app.
 ///
@@ -37,8 +47,11 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._listenSubscriptionStatusUseCase,
     this._setCollectionAndBookmarksChangesIdentityParam,
     AppSettingsRepository appSettingsRepository,
-  ) : super(AppState(
-          appTheme: appSettingsRepository.settings.appTheme,
+    this._platformBrightnessProvider,
+  )   : _lastPlatformBrightness = _platformBrightnessProvider.brightness,
+        super(AppState(
+          brightness: appSettingsRepository.settings.appTheme
+              .computeBrightness(_platformBrightnessProvider.brightness),
           isAppPaused: false,
         )) {
     _init();
@@ -58,6 +71,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
   late final UseCaseValueStream<SubscriptionStatus>
       _listenSubscriptionStatusHandler;
+  late final PlatformBrightnessProvider _platformBrightnessProvider;
+  Brightness _lastPlatformBrightness;
 
   bool _initDone = false;
   bool _isPaused = false;
@@ -94,10 +109,13 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     if (!_initDone) return null;
 
     return fold2(_appThemeHandler, _listenSubscriptionStatusHandler).foldAll(
-      (appTheme, _, __) => AppState(
-        appTheme: appTheme ?? state.appTheme,
-        isAppPaused: _isPaused,
-      ),
+      (appTheme, _, __) {
+        return AppState(
+          isAppPaused: _isPaused,
+          brightness: appTheme?.computeBrightness(_lastPlatformBrightness) ??
+              state.brightness,
+        );
+      },
     );
   }
 
@@ -116,7 +134,29 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     _setCollectionAndBookmarksChangesIdentityParam.call(none);
   }
 
-  void onPause() => scheduleComputeState(() => _isPaused = true);
+  void onChangedPlatformBrightness() {
+    /// On iOS we experience an issue where [WidgetsBindingObserver.didChangePlatformBrightness] is called
+    /// when moving iOS to background with PlatformBrightness.light (regardless of current system appearance)
+    /// This would cause an invalid update on the [AppState] that can cause a flickering on the screen.
+    ///
+    if (Platform.isIOS && _isPaused) {
+      return;
+    }
+    _lastPlatformBrightness = _platformBrightnessProvider.brightness;
+    scheduleComputeState(() {});
+  }
 
-  void onResume() => scheduleComputeState(() => _isPaused = false);
+  void onPause() {
+    _isPaused = true;
+    scheduleComputeState(() {});
+  }
+
+  void onResume() {
+    _isPaused = false;
+
+    /// Because of [onChangedPlatformBrightness] we need to reassign the platformBrightness onResume,
+    /// otherwise we might miss a valid brightness update.
+    _lastPlatformBrightness = _platformBrightnessProvider.brightness;
+    scheduleComputeState(() {});
+  }
 }
