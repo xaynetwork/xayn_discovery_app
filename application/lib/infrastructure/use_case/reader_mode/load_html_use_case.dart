@@ -7,13 +7,15 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/http_requests/common_params.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 
 /// A [UseCase] which uses a Platform-specific client to fetch the html
 /// contents at the Uri that was provided as input.
 ///
 /// This [UseCase] emits both a start and finish [Progress].
 @injectable
-class LoadHtmlUseCase extends UseCase<Uri, Progress> {
+class LoadHtmlUseCase extends UseCase<Uri, Progress>
+    with ConnectivityUseCaseMixin<Uri, Progress> {
   final Client client;
   final Map<String, String> headers;
 
