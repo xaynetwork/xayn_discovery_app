@@ -1,5 +1,6 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -154,6 +155,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   FeedTypeMarketsRepository,
   FetchSessionUseCase,
   FileHandler,
+  File,
   GetAllBookmarksUseCase,
   GetAllCollectionsUseCase,
   GetAppSessionUseCase,

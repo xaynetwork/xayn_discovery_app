@@ -8,12 +8,22 @@ abstract class ConnectivityObserver {
   Stream<ConnectivityResult> get onConnectivityChanged;
 
   Future<ConnectivityResult> checkConnectivity();
+
+  Future<ConnectivityResult> isUp() {
+    observeConnectivity() async* {
+      yield await checkConnectivity();
+      yield* onConnectivityChanged;
+    }
+
+    return observeConnectivity()
+        .firstWhere((it) => it != ConnectivityResult.none);
+  }
 }
 
 @LazySingleton(as: ConnectivityObserver)
 @releaseEnvironment
 @debugEnvironment
-class AppConnectivityObserver implements ConnectivityObserver {
+class AppConnectivityObserver extends ConnectivityObserver {
   late final Connectivity _connectivity = Connectivity();
 
   @override
@@ -27,7 +37,7 @@ class AppConnectivityObserver implements ConnectivityObserver {
 
 @LazySingleton(as: ConnectivityObserver)
 @test
-class TestConnectivityObserver implements ConnectivityObserver {
+class TestConnectivityObserver extends ConnectivityObserver {
   @override
   Stream<ConnectivityResult> get onConnectivityChanged =>
       Stream.value(ConnectivityResult.wifi);

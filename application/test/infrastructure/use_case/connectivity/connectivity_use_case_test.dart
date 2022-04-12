@@ -50,7 +50,7 @@ void main() {
       final useCase = _TestUseCase();
       final stream = data.switchedBy(useCase);
 
-      expect(stream, emitsInOrder([emitsError(isConnectivityError)]));
+      expect(stream, emitsInOrder([emitsDone]));
     });
 
     test(
@@ -78,9 +78,7 @@ void main() {
       expect(
           stream,
           emitsInOrder([
-            emitsError(isConnectivityError),
             'marco',
-            emitsError(isConnectivityError),
             'polo',
             emitsDone,
           ]));
