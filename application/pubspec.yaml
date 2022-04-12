@@ -5,7 +5,7 @@ version: 0.0.1
 
 environment:
   sdk: '>=2.16.1 <3.0.0'
-  flutter: '>=2.10.3'
+  flutter: '>=2.10.4'
 
 # Please list dependencies alphabetically!
 dependencies:
@@ -38,35 +38,30 @@ dependencies:
   http: 0.13.4
   html_unescape: 2.0.0
   hydrated_bloc: 7.1.0
-  in_app_notification: 1.0.1
+  in_app_notification: 1.1.0
   in_app_review: 2.0.4
   i18n: 4.0.0-alpha.0
   injectable: 1.5.3
-  instabug_flutter: 10.11.0
+  instabug_flutter: 10.13.0
   intl: 0.17.0
   json_annotation: 4.3.0
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
-  package_info_plus: 1.3.1
+  package_info_plus: 1.4.0
   path_provider: 2.0.9
-  provider: 6.0.2
-  purchases_flutter: 3.9.3
+  purchases_flutter: 3.9.5
   rxdart: 0.27.3
   sprintf: 6.0.0
-  share_plus: 3.0.5
+  share_plus: 4.0.3
   shimmer: 2.0.0
-  story:
-    git:
-      url: git@github.com:xaynetwork/story.git
-      ref: cd93531ce08e4afd4490d8bc5f436432a8c0bacd
   super_rich_text:
     git:
       url: git@github.com:Bestfastfire/super_rich_text.git
       ref: f9d3963421682e2e0dd99c1ab553b99e38766ea1
   system_info2: 2.0.3
   url_launcher: 6.0.20
-  uuid: 3.0.5
+  uuid: 3.0.6
   version: 2.0.0
   xayn_architecture:
     git:
@@ -93,7 +88,7 @@ dependencies:
 
 dependency_overrides:
   json_annotation: 4.4.0
-  hive: 2.0.5
+  hive: 2.1.0
   freezed_annotation: 1.1.0
   analyzer: 3.3.0
   provider: 6.0.2
@@ -102,7 +97,7 @@ dependency_overrides:
 # Please list dependencies alphabetically!
 dev_dependencies:
   bloc_test: 8.5.0
-  build_runner: 2.1.7
+  build_runner: 2.1.8
   envify_generator: 2.0.2
   flutter_lints: 1.0.4
   flutter_test:
