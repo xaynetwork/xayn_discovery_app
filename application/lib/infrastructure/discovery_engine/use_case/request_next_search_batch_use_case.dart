@@ -20,7 +20,7 @@ class RequestNextSearchBatchUseCase extends UseCase<None, EngineEvent> {
 
     yield event;
 
-    if (event is NextSearchBatchRequestFailed) {
+    if (event is! NextSearchBatchRequestSucceeded) {
       final status = await _connectivityObserver.checkConnectivity();
 
       if (status == ConnectivityResult.none) {
