@@ -186,7 +186,7 @@ class TranslationsDe extends Translations {
       """Bitte versuche es später noch einmal.""";
   String get errorClose => """Schließen""";
   String get sourceHandlingTooltipLabel =>
-      """Wovon willst du weniger Vorschläge bekommen?""";
+      """Wovon möchtest du weniger sehen?""";
   String get sourceHandlingTooltipHighlightedWord => """Was""";
   String get enableTextToSpeech => """Text-zu-Sprache aktivieren""";
   String get settingsSectionTitleOptions => """Optionen""";
@@ -220,6 +220,7 @@ class TranslationsDe extends Translations {
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
   String get readerModeUnableToLoadCTA => """Open in Browser""";
+  String get noInternetConnection => """No internet connection""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -369,8 +370,7 @@ Map<String, String> get translationsDeMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Bitte versuche es später noch einmal.""",
       """errorClose""": """Schließen""",
-      """sourceHandlingTooltipLabel""":
-          """Wovon willst du weniger Vorschläge bekommen?""",
+      """sourceHandlingTooltipLabel""": """Wovon möchtest du weniger sehen?""",
       """sourceHandlingTooltipHighlightedWord""": """Was""",
       """enableTextToSpeech""": """Text-zu-Sprache aktivieren""",
       """settingsSectionTitleOptions""": """Optionen""",
@@ -403,4 +403,5 @@ Map<String, String> get translationsDeMap => {
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
       """readerModeUnableToLoadCTA""": """Open in Browser""",
+      """noInternetConnection""": """No internet connection""",
     };

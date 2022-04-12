@@ -216,6 +216,7 @@ class Translations {
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
   String get readerModeUnableToLoadCTA => """Open in Browser""";
+  String get noInternetConnection => """No internet connection""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -393,4 +394,5 @@ Map<String, String> get translationsMap => {
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
       """readerModeUnableToLoadCTA""": """Open in Browser""",
+      """noInternetConnection""": """No internet connection""",
     };
