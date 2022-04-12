@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_a
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockPersonalAreaNavActions actions;

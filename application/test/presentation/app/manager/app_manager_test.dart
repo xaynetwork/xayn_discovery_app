@@ -11,7 +11,7 @@ import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockListenAppThemeUseCase listenAppThemeUseCase;
@@ -26,6 +26,7 @@ void main() {
   late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
   late MockSetCollectionAndBookmarksChangesIdentityParam
       setCollectionAndBookmarksChangesIdentityParam;
+
   late Collection mockDefaultCollection;
   final subscriptionStatus = SubscriptionStatus.initial();
 
@@ -93,7 +94,12 @@ void main() {
   blocTest<AppManager, AppState>(
     'GIVEN manager WHEN it is created THEN verify appTheme received',
     build: create,
-    expect: () => const [AppState(appTheme: AppTheme.system)],
+    expect: () => const [
+      AppState(
+        appTheme: AppTheme.system,
+        isAppPaused: false,
+      )
+    ],
     verify: (manager) {
       verifyInOrder([
         appSettingsRepository.settings,

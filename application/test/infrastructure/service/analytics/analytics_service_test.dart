@@ -1,17 +1,14 @@
 import 'dart:collection';
 
-import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_active_selected_countries_identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/number_of_total_sessions_identity_param.dart';
 
-import 'analytics_service_test.mocks.dart';
+import '../../../test_utils/utils.dart';
 import 'analytics_service_test_utils.dart';
 
-@GenerateMocks([Amplitude])
 void main() async {
   late MockAmplitude amplitude;
   late AmplitudeAnalyticsService analyticsService;
