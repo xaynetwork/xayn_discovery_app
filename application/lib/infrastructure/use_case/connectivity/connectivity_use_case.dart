@@ -70,4 +70,4 @@ mixin ConnectivityUseCaseMixin<In, Out> on UseCase<In, Out> {
   }
 }
 
-class ConnectivityError extends Error {}
+class ConnectivityError extends SilentError {}
