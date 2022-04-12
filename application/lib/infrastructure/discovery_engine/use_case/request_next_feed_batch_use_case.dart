@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
@@ -8,7 +9,10 @@ class RequestNextFeedBatchUseCase extends UseCase<None, EngineEvent> {
   final DiscoveryEngine _engine;
   final ConnectivityObserver _connectivityObserver;
 
-  RequestNextFeedBatchUseCase(this._engine, this._connectivityObserver);
+  RequestNextFeedBatchUseCase(
+    this._engine,
+    this._connectivityObserver,
+  );
 
   @override
   Stream<EngineEvent> transaction(None param) async* {
@@ -17,9 +21,13 @@ class RequestNextFeedBatchUseCase extends UseCase<None, EngineEvent> {
     yield event;
 
     if (event is NextFeedBatchRequestFailed) {
-      await _connectivityObserver.isUp();
+      final status = await _connectivityObserver.checkConnectivity();
 
-      yield await _engine.requestNextFeedBatch();
+      if (status == ConnectivityResult.none) {
+        await _connectivityObserver.isUp();
+
+        yield await _engine.requestNextFeedBatch();
+      }
     }
   }
 }
