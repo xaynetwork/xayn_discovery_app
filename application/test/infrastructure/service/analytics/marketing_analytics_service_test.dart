@@ -56,15 +56,5 @@ void main() async {
       marketingAnalyticsService.setCurrentDeviceLanguage(mockLanguage);
       verify(appsFlyer.setCurrentDeviceLanguage(mockLanguage)).called(1);
     });
-
-    test('setPushNotification to true', () {
-      marketingAnalyticsService.setPushNotification(true);
-      verify(appsFlyer.setPushNotification(true)).called(1);
-    });
-
-    test('setPushNotification to false', () {
-      marketingAnalyticsService.setPushNotification(false);
-      verify(appsFlyer.setPushNotification(false)).called(1);
-    });
   });
 }
