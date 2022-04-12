@@ -3,24 +3,35 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-class ErrorBottomSheet extends BottomSheetBase {
-  const ErrorBottomSheet({
+/// Informative bottom sheet body has only title and body strings
+/// and only one action button to close the bottom sheet
+///
+class BottomSheetInformationalBody extends StatelessWidget
+    with BottomSheetBodyMixin {
+  const BottomSheetInformationalBody({
     Key? key,
-  }) : super(
-          key: key,
-          body: const _ErrorBottomSheet(),
-        );
-}
+    required this.title,
+    required this.body,
+    this.errorCode,
+  }) : super(key: key);
 
-class _ErrorBottomSheet extends StatelessWidget with BottomSheetBodyMixin {
-  const _ErrorBottomSheet({Key? key}) : super(key: key);
+  final String title;
+  final String body;
+  final String? errorCode;
 
   @override
   Widget build(BuildContext context) {
-    final body = Text(R.strings.errorGenericBodyPleaseTryAgainLater);
+    final bodyWidget = Text(body);
 
-    final header = BottomSheetHeader(
-      headerText: R.strings.errorGenericHeaderSomethingWentWrong,
+    final titleWidget = BottomSheetHeader(
+      headerText: title,
+    );
+
+    final errorCodeWidget = Text(
+      '(Error: ${errorCode ?? ''})',
+      style: R.styles.sStyle.copyWith(
+        color: R.colors.secondaryText,
+      ),
     );
 
     final closeButton = AppGhostButton.text(
@@ -34,9 +45,10 @@ class _ErrorBottomSheet extends StatelessWidget with BottomSheetBodyMixin {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: R.dimen.unit),
-        header,
+        titleWidget,
         SizedBox(height: R.dimen.unit1_25),
-        body,
+        bodyWidget,
+        if (errorCode != null) errorCodeWidget,
         SizedBox(height: R.dimen.unit2_5),
         closeButton,
         SizedBox(height: R.dimen.unit3_5),

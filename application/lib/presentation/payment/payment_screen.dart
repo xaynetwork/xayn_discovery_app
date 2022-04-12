@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/no_active_subscription_found_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_failed_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
+import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -14,7 +21,7 @@ class PaymentScreen extends StatefulWidget {
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
   late final manager = di.get<PaymentScreenManager>();
 
   @override
@@ -31,14 +38,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _handlePurchasedOrRestored({
     required PaymentScreenState state,
     required BuildContext context,
-  }) {
-    // When the user purchases or restores subscription - show the feed screen
-    state.whenOrNull(ready: (product, _) {
-      if (product.status.isPurchased || product.status.isRestored) {
-        manager.onDismiss();
-      }
-    });
-  }
+  }) =>
+      state.whenOrNull(ready: (product, error) {
+        if (product.status.isPurchased || product.status.isRestored) {
+          manager.onDismiss();
+        }
+        if (error != null) _handleError(context, error);
+        return null;
+      });
 
   Widget _buildLoading() => SizedBox(
         height: R.dimen.unit52,
@@ -58,7 +65,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: TrialExpired(
           product: product,
           onSubscribe: manager.subscribe,
-          onPromoCode: manager.enterRedeemCode,
+          onPromoCode: () => manager.enterRedeemCode(),
           onRestore: manager.restore,
           padding: EdgeInsets.zero,
         ),
@@ -67,7 +74,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildScreen(PaymentScreenState state) {
     final content = state.map(
       initial: (_) => _buildLoading(),
-      error: _buildErrorScreen,
+      error: (_) {
+        openErrorScreen();
+      },
       ready: (state) => _buildTrialExpired(state.product),
     );
     return Scaffold(
@@ -75,8 +84,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildErrorScreen(PaymentScreenStateError stateError) {
-    final text = Text(stateError.errorMsg);
-    return Center(child: text);
+  void _handleError(BuildContext context, PaymentFlowError error) {
+    if (error == PaymentFlowError.itemAlreadyOwned) {
+      manager.onDismiss();
+      return;
+    }
+
+    late BottomSheetBase body;
+    if (error == PaymentFlowError.paymentFailed) {
+      body = PaymentFailedErrorBottomSheet();
+    } else if (error == PaymentFlowError.noActiveSubscriptionFound) {
+      body = NoActiveSubscriptionFoundErrorBottomSheet();
+    } else {
+      body = GenericErrorBottomSheet(
+        errorCode: error.errorCode,
+      );
+    }
+
+    showAppBottomSheet(
+      context,
+      builder: (_) => body,
+      allowStacking: true,
+    );
   }
 }
