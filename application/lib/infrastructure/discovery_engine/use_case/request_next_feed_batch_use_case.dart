@@ -20,7 +20,7 @@ class RequestNextFeedBatchUseCase extends UseCase<None, EngineEvent> {
 
     yield event;
 
-    if (event is NextFeedBatchRequestFailed) {
+    if (event is! NextFeedBatchRequestSucceeded) {
       final status = await _connectivityObserver.checkConnectivity();
 
       if (status == ConnectivityResult.none) {
