@@ -30,6 +30,15 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
 
   @override
   Stream<CacheManagerEvent> transaction(Uri param) async* {
+    if (param.scheme == 'data') {
+      yield CacheManagerEvent.completed(
+        param,
+        UriData.fromUri(param).contentAsBytes(),
+      );
+
+      return;
+    }
+
     if (param == Uri.base) {
       // there is no image in this case
       yield CacheManagerEvent.completed(param, null);
