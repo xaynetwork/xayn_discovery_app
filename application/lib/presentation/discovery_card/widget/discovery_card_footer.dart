@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DiscoveryCardFooter extends StatelessWidget {
@@ -14,7 +15,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onDislikePressed,
     required this.onBookmarkPressed,
     required this.onBookmarkLongPressed,
-    required this.isBookmarked,
+    required this.bookmarkStatus,
     required this.document,
     required this.explicitDocumentUserReaction,
   }) : super(key: key);
@@ -24,7 +25,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
   final VoidCallback onBookmarkLongPressed;
-  final bool isBookmarked;
+  final BookmarkStatus bookmarkStatus;
   final Document document;
   final UserReaction explicitDocumentUserReaction;
 
@@ -39,7 +40,9 @@ class DiscoveryCardFooter extends StatelessWidget {
     );
 
     final bookmarkButton = AppGhostButton.icon(
-      isBookmarked ? R.assets.icons.bookmarkActive : R.assets.icons.bookmark,
+      bookmarkStatus == BookmarkStatus.bookmarked
+          ? R.assets.icons.bookmarkActive
+          : R.assets.icons.bookmark,
       onPressed: onBookmarkPressed,
       onLongPressed: onBookmarkLongPressed,
       iconColor: R.colors.brightIcon,

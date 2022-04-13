@@ -300,7 +300,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               );
 
         return SwipeableDiscoveryCard(
-          manager: managers.discoveryCardManager,
+          onSwipe: (option) => managers.discoveryCardManager.onFeedback(
+            document: document,
+            userReaction: option.toUserReaction(),
+            feedType: manager.feedType,
+          ),
           isPrimary: isPrimary,
           document: document,
           explicitDocumentUserReaction:
@@ -308,7 +312,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
           onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
-          feedType: manager.feedType,
         );
       };
 
@@ -370,5 +373,18 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         ),
       ),
     );
+  }
+}
+
+extension on SwipeOption {
+  UserReaction toUserReaction() {
+    switch (this) {
+      case SwipeOption.like:
+        return UserReaction.positive;
+      case SwipeOption.neutral:
+        return UserReaction.neutral;
+      case SwipeOption.dislike:
+        return UserReaction.negative;
+    }
   }
 }

@@ -36,7 +36,6 @@ class PageRegistry {
     countryFeedSettings,
     sourceFeedSettings,
     collections,
-    error,
     payment,
   };
 
@@ -145,11 +144,14 @@ class PageRegistry {
     builder: (_, args) => CollectionsScreen(),
   );
 
-  static final error = xayn.PageData(
-    name: "error",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => SomethingWentWrongErrorScreen(),
-  );
+  static error(String? errorCode) => xayn.PageData(
+        name: "error",
+        arguments: errorCode,
+        //ignore: prefer_const_constructors
+        builder: (_, String? args) => SomethingWentWrongErrorScreen(
+          errorCode: args,
+        ),
+      );
 
   static final payment = xayn.PageData(
     name: "payment",

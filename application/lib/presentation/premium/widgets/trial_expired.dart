@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -26,7 +28,7 @@ class TrialExpired extends StatelessWidget {
   /// Handler for when the restore button was tapped.
   final VoidCallback _onRestore;
 
-  /// Custom content paddding.
+  /// Custom content padding.
   final EdgeInsetsGeometry? _padding;
 
   const TrialExpired({
@@ -159,17 +161,6 @@ class TrialExpired extends StatelessWidget {
   }
 
   Widget _buildSubscriptionOptions() {
-    final promoCode = TextButton(
-      child: Text(
-        R.strings.subscriptionPromoCode,
-        style: R.styles.sBoldStyle.copyWith(
-          decoration: TextDecoration.underline,
-          color: R.colors.secondaryText,
-        ),
-      ),
-      onPressed: _onPromoCode,
-    );
-
     final spacer = SizedBox(
       width: R.dimen.unit,
     );
@@ -194,6 +185,19 @@ class TrialExpired extends StatelessWidget {
         ],
       ),
       onPressed: _onRestore,
+    );
+
+    if (!Platform.isIOS) return Center(child: restore);
+
+    final promoCode = TextButton(
+      child: Text(
+        R.strings.subscriptionPromoCode,
+        style: R.styles.sBoldStyle.copyWith(
+          decoration: TextDecoration.underline,
+          color: R.colors.secondaryText,
+        ),
+      ),
+      onPressed: _onPromoCode,
     );
 
     return Row(

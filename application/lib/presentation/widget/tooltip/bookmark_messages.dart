@@ -8,10 +8,9 @@ import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
-
-import 'messages.dart';
 
 const maxDisplayableCollectionName = 20;
 
@@ -46,7 +45,7 @@ TooltipParams _getBookmarkedToDefault() {
     final feedType = args[4];
     if (context is! BuildContext ||
         document is! Document ||
-        onError is! OnToolTipError ||
+        onError is! Function(OverlayData) ||
         feedType is! FeedType ||
         provider is! DocumentProvider?) return;
 
@@ -54,7 +53,9 @@ TooltipParams _getBookmarkedToDefault() {
       context,
       builder: (_) => MoveDocumentToCollectionBottomSheet(
         document: document,
-        onError: onError,
+
+        /// TODO convert onError to nativly use OverlayData
+        onError: (key) => onError(OverlayData.tooltip(key: key)),
         provider: provider,
         feedType: feedType,
       ),

@@ -169,6 +169,6 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
       bookmarksIds: widget.bookmarksIds,
       collectionIdToRemove: widget.collectionIdToRemove,
     );
-    closeBottomSheet(context);
+    if (mounted) closeBottomSheet(context);
   }
 }

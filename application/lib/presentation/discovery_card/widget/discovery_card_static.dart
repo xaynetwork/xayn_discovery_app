@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -14,10 +13,12 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scroll
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
 /// the fraction height of the card image.
@@ -50,9 +51,12 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 
 class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic>
-    with OnBookmarkChangedMixin<DiscoveryCardStatic> {
+    with OverlayMixin<DiscoveryCardStatic> {
   late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
+
+  @override
+  OverlayManager get overlayManager => discoveryCardManager.overlayManager;
 
   @override
   Widget buildFromState(
@@ -73,20 +77,8 @@ class _DiscoveryCardStaticState
           provider: provider,
           datePublished: webResource.datePublished,
           isInteractionEnabled: true,
-          onLikePressed: () => discoveryCardManager.onFeedback(
-            document: widget.document,
-            userReaction: state.explicitDocumentUserReaction.isRelevant
-                ? UserReaction.neutral
-                : UserReaction.positive,
-            feedType: widget.feedType,
-          ),
-          onDislikePressed: () => discoveryCardManager.onFeedback(
-            document: widget.document,
-            userReaction: state.explicitDocumentUserReaction.isIrrelevant
-                ? UserReaction.neutral
-                : UserReaction.negative,
-            feedType: widget.feedType,
-          ),
+          onLikePressed: () => onFeedbackPressed(UserReaction.positive),
+          onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
           onOpenUrl: () {
             widget.onTtsData?.call(TtsData.disabled());
 
@@ -107,7 +99,7 @@ class _DiscoveryCardStaticState
           ),
           onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onBookmarkLongPressed: onBookmarkLongPressed(state),
-          isBookmarked: state.isBookmarked,
+          bookmarkStatus: state.bookmarkStatus,
           fractionSize: .0,
           feedType: widget.feedType,
         );
@@ -127,7 +119,7 @@ class _DiscoveryCardStaticState
                 child: _buildReaderMode(
                   processHtmlResult: state.processedDocument?.processHtmlResult,
                   size: mediaQuery.size,
-                  isBookmarked: state.isBookmarked,
+                  bookmarkStatus: state.bookmarkStatus,
                 ),
               ),
               Positioned(
@@ -155,7 +147,7 @@ class _DiscoveryCardStaticState
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,
     required Size size,
-    required bool isBookmarked,
+    required BookmarkStatus bookmarkStatus,
   }) {
     final readerMode = ReaderMode(
       scrollController: _scrollController,
@@ -175,7 +167,7 @@ class _DiscoveryCardStaticState
     return BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
       bloc: discoveryCardManager,
       builder: (context, state) {
-        if (state.isBookmarked != isBookmarked) {
+        if (state.bookmarkStatus != bookmarkStatus) {
           NavBarContainer.updateNavBar(context);
         }
 
@@ -189,8 +181,4 @@ class _DiscoveryCardStaticState
       },
     );
   }
-
-  @override
-  void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state, feedType: widget.feedType);
 }

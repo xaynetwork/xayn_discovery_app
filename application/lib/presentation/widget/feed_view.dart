@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 const Curve _kAnimationCurveIn = Curves.linearToEaseOut;
 const Curve _kAnimationCurveOut = Curves.elasticOut;
 const Curve _kAnimationSnapCurve = Curves.linearToEaseOut;
-final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.unit1_5);
+final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.cardRadius);
 final double _kItemSpacing = R.dimen.unit;
 final EdgeInsets _kPadding = EdgeInsets.symmetric(horizontal: R.dimen.unit);
 
@@ -57,7 +57,7 @@ class FeedView extends StatelessWidget {
             : _kItemSpacing,
         borderRadius = isFullScreen
             ? BorderRadius.all(
-                Radius.circular(fullScreenOffsetFraction * R.dimen.unit1_5))
+                Radius.circular(fullScreenOffsetFraction * R.dimen.cardRadius))
             : _kBorderRadius,
         super(key: key);
 

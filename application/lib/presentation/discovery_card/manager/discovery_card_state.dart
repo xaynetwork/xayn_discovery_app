@@ -6,6 +6,8 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 part 'discovery_card_state.freezed.dart';
 
+enum BookmarkStatus { unknown, bookmarked, notBookmarked }
+
 /// Represents the state of the [DiscoveryCardManager].
 @freezed
 class DiscoveryCardState with _$DiscoveryCardState {
@@ -13,12 +15,7 @@ class DiscoveryCardState with _$DiscoveryCardState {
 
   const factory DiscoveryCardState({
     @Default(false) bool isComplete,
-    @Default(false) bool isBookmarked,
-
-    /// Since a special snackbar shows only when the bookmark icon is toggled,
-    /// we use this variable to detect if the isBookmarked change was due to the
-    /// button toggling and was not originated from long pressing the bookmark icon.
-    @Default(false) bool isBookmarkToggled,
+    @Default(BookmarkStatus.unknown) BookmarkStatus bookmarkStatus,
     @Default(ErrorObject()) ErrorObject error,
     ProcessedDocument? processedDocument,
     @Default(UserReaction.neutral) UserReaction explicitDocumentUserReaction,

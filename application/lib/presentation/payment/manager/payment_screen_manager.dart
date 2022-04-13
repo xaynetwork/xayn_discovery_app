@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -33,6 +32,8 @@ enum PaymentAction {
 abstract class PaymentScreenNavActions {
   void onDismiss();
 }
+
+const _ignoredPaymentErrors = [PaymentFlowError.canceled];
 
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
@@ -58,8 +59,6 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _listenSubscriptionStatusUseCase,
     initialData: PurchasableIds.subscription,
   );
-
-  final PaymentFlowErrorToErrorMessageMapper _errorMessageMapper;
   late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
       _purchaseSubscriptionHandler = pipe(_purchaseSubscriptionUseCase);
   late final UseCaseSink<None, PurchasableProductStatus>
@@ -78,7 +77,6 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._requestCodeRedemptionSheetUseCase,
     this._sendMarketingAnalyticsUseCase,
     this._sendAnalyticsUseCase,
-    this._errorMessageMapper,
     this._purchaseEventMapper,
   ) : super(const PaymentScreenState.initial()) {
     _init();
@@ -188,12 +186,9 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           _subscriptionStatus = subscriptionStatus;
         }
 
-        final paymentFlowError =
-            errors.firstWhereOrNull((element) => element is PaymentFlowError)
-                as PaymentFlowError?;
-        final paymentFlowErrorMsg = paymentFlowError == null
-            ? null
-            : _errorMessageMapper.map(paymentFlowError);
+        final paymentFlowError = errors.firstWhereOrNull(
+          (it) => it is PaymentFlowError && !_ignoredPaymentErrors.contains(it),
+        ) as PaymentFlowError?;
 
         _subscriptionProduct = getUpdatedProduct(
           _subscriptionProduct ?? product,
@@ -206,12 +201,12 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
         sendPurchaseEventIfNeeded(_subscriptionProduct);
 
-        if (_subscriptionProduct == null && paymentFlowErrorMsg != null) {
-          return PaymentScreenState.error(errorMsg: paymentFlowErrorMsg);
+        if (_subscriptionProduct == null && paymentFlowError != null) {
+          return PaymentScreenState.error(error: paymentFlowError);
         } else if (_subscriptionProduct != null) {
           return PaymentScreenState.ready(
             product: _subscriptionProduct!,
-            errorMsg: paymentFlowErrorMsg,
+            error: paymentFlowError,
           );
         }
       });

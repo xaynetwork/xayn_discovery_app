@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
@@ -17,11 +16,13 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scroll
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/on_bookmark_changed_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
 /// maximum context height.
@@ -127,7 +128,7 @@ class DiscoveryCardController extends ChangeNotifier {
 }
 
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
-    with OnBookmarkChangedMixin<DiscoveryCard>, TickerProviderStateMixin {
+    with OverlayMixin<DiscoveryCard>, TickerProviderStateMixin {
   late final AnimationController _openingAnimation;
   late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
@@ -136,6 +137,9 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final StreamSubscription<BuildContext> _updateNavBarListener;
   late final _scrollController = ScrollController(keepScrollOffset: false);
   double _scrollOffset = .0;
+
+  @override
+  OverlayManager get overlayManager => discoveryCardManager.overlayManager;
 
   @override
   void initState() {
@@ -180,7 +184,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     _controller = DiscoveryCardController(_dragToCloseAnimation);
 
     _updateNavBarListener = discoveryCardManager.stream
-        .map((state) => state.isBookmarked)
+        .map((state) => state.bookmarkStatus == BookmarkStatus.bookmarked)
         .distinct()
         .map((_) => context)
         .listen(NavBarContainer.updateNavBar);
@@ -224,22 +228,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           provider: provider,
           datePublished: webResource.datePublished,
           isInteractionEnabled: widget.isPrimary,
-          onLikePressed: () => discoveryCardManager.changeUserReaction(
-            document: widget.document,
-            userReaction: state.explicitDocumentUserReaction.isRelevant
-                ? UserReaction.neutral
-                : UserReaction.positive,
-            context: FeedbackContext.explicit,
-            feedType: widget.feedType,
-          ),
-          onDislikePressed: () => discoveryCardManager.changeUserReaction(
-            document: widget.document,
-            userReaction: state.explicitDocumentUserReaction.isIrrelevant
-                ? UserReaction.neutral
-                : UserReaction.negative,
-            context: FeedbackContext.explicit,
-            feedType: widget.feedType,
-          ),
+          onLikePressed: () => onFeedbackPressed(UserReaction.positive),
+          onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
           onOpenUrl: () {
             widget.onTtsData?.call(TtsData.disabled());
 
@@ -260,7 +250,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           ),
           onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onBookmarkLongPressed: onBookmarkLongPressed(state),
-          isBookmarked: state.isBookmarked,
+          bookmarkStatus: state.bookmarkStatus,
           fractionSize: normalizedValue,
           useLargeTitle: false,
           feedType: widget.feedType,
@@ -355,10 +345,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       ),
     );
   }
-
-  @override
-  void discoveryCardStateListener(DiscoveryCardState state) =>
-      onBookmarkChanged(state, feedType: widget.feedType);
 }
 
 class _DiscoveryCardPageState extends _DiscoveryCardState
@@ -394,17 +380,10 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         buildNavBarItemLike(
           isLiked: _discoveryCardManager
               .state.explicitDocumentUserReaction.isRelevant,
-          onPressed: () => _discoveryCardManager.onFeedback(
-            document: widget.document,
-            userReaction: _discoveryCardManager
-                    .state.explicitDocumentUserReaction.isRelevant
-                ? UserReaction.neutral
-                : UserReaction.positive,
-            feedType: widget.feedType,
-          ),
+          onPressed: () => onFeedbackPressed(UserReaction.positive),
         ),
         buildNavBarItemBookmark(
-          isBookmarked: _discoveryCardManager.state.isBookmarked,
+          bookmarkStatus: _discoveryCardManager.state.bookmarkStatus,
           onPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
         ),
@@ -417,14 +396,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         buildNavBarItemDisLike(
           isDisLiked: _discoveryCardManager
               .state.explicitDocumentUserReaction.isIrrelevant,
-          onPressed: () => _discoveryCardManager.onFeedback(
-            document: widget.document,
-            userReaction: _discoveryCardManager
-                    .state.explicitDocumentUserReaction.isIrrelevant
-                ? UserReaction.neutral
-                : UserReaction.negative,
-            feedType: widget.feedType,
-          ),
+          onPressed: () => onFeedbackPressed(UserReaction.positive),
         ),
       ],
       isWidthExpanded: true,
