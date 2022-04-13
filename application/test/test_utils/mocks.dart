@@ -35,6 +35,7 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_r
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -227,6 +228,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   UniqueIdHandler,
   UpdateSessionUseCase,
   UrlOpener,
+  DeepLinkManager,
 ])
 class Mocks {
   Mocks._();
