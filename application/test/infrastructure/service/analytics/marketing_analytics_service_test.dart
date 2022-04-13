@@ -7,6 +7,7 @@ import 'analytics_service_test_utils.dart';
 
 void main() async {
   late MockAppsflyerSdk appsFlyer;
+  late MockDeepLinkManager deepLinkManager;
   late MarketingAnalyticsService marketingAnalyticsService;
 
   const mockUID = '123';
@@ -15,7 +16,9 @@ void main() async {
 
   setUp(() {
     appsFlyer = MockAppsflyerSdk();
-    marketingAnalyticsService = AppsFlyerMarketingAnalyticsService(appsFlyer);
+    deepLinkManager = MockDeepLinkManager();
+    marketingAnalyticsService =
+        AppsFlyerMarketingAnalyticsService(appsFlyer, deepLinkManager);
   });
 
   group('Marketing Analytics Service', () {
