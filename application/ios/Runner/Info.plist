@@ -30,13 +30,13 @@
 				<string>xayn-discovery://mainactivity</string>
 			</array>
 		</dict>
-		<dict>
-            <key>com.apple.developer.associated-domains</key>
-            <array>
-                <string>applinks:news-app.onelink.me</string>
-            </array>
-        </dict>
 	</array>
+	<dict>
+        <key>com.apple.developer.associated-domains</key>
+        <array>
+            <string>applinks:test.onelink.me</string>
+        </array>
+    </dict>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>

@@ -29,7 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -37,12 +36,13 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="mainactivity"
-                    android:scheme="xayn-discovery" />
-
-                <data
+                    android:pathPrefix="/gvbN"
                     android:host="news-app.onelink.me"
                     android:scheme="https" />
+
+                <data
+                    android:host="mainactivity"
+                    android:scheme="xayn-discovery" />
             </intent-filter>
 
             <!-- Displays an Android View that continues showing the launch screen
