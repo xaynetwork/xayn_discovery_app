@@ -1,4 +1,4 @@
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 abstract class BaseMigration {
   String get migrationId => runtimeType.toString();
