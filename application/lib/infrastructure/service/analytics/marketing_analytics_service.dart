@@ -10,6 +10,15 @@ import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
+enum DeepLinkValue {
+  none,
+  activeSearch,
+}
+
+abstract class DeepLinkManager {
+  void onDeepLink(DeepLinkValue deepLink);
+}
+
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
   /// discover your app, and attribute them to specific campaigns/media-sources.
@@ -27,10 +36,11 @@ abstract class MarketingAnalyticsService {
 @LazySingleton(as: MarketingAnalyticsService)
 @releaseEnvironment
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
+  final DeepLinkManager _deepLinkManager;
   final AppsflyerSdk _appsflyer;
 
   @visibleForTesting
-  AppsFlyerMarketingAnalyticsService(this._appsflyer) {
+  AppsFlyerMarketingAnalyticsService(this._appsflyer, this._deepLinkManager) {
     _appsflyer.onDeepLinking(_onDeepLinking);
     _appsflyer.setMinTimeBetweenSessions(5);
     _appsflyer.setPushNotification(true);
@@ -39,6 +49,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   @factoryMethod
   static MarketingAnalyticsService initialized(
     AppStatusRepository appStatusRepository,
+    DeepLinkManager deepLinkManager,
   ) {
     final options = Platform.isIOS
         ? AppsFlyerOptions(
@@ -57,9 +68,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     appsFlyer.initSdk(registerOnDeepLinkingCallback: true);
     final userId = appStatusRepository.appStatus.userId.value;
     appsFlyer.setCustomerUserId(userId);
-    logger.i('>>>>> USER_ID: $userId');
 
-    return AppsFlyerMarketingAnalyticsService(appsFlyer);
+    return AppsFlyerMarketingAnalyticsService(appsFlyer, deepLinkManager);
   }
 
   /// The logEvent method allows you to send in-app events to AppsFlyer analytics.
@@ -103,8 +113,12 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   _onDeepLinking(dynamic res) {
     if (res is DeepLinkResult && res.status == Status.FOUND) {
-      final String? deepLinkValue = res.deepLink?.deepLinkValue;
-      if (deepLinkValue != null) logger.d(deepLinkValue);
+      final deepLinkString = res.deepLink?.deepLinkValue;
+      final _deepLinkValue = DeepLinkValue.values.firstWhere(
+        (it) => it.name == deepLinkString,
+        orElse: () => DeepLinkValue.none,
+      );
+      _deepLinkManager.onDeepLink(_deepLinkValue);
     }
   }
 }
