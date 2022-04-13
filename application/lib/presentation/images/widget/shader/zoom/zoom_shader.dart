@@ -39,7 +39,13 @@ class _ZoomShaderState extends BaseAnimationShaderState<ZoomShader> {
   Widget build(BuildContext context) {
     final srcImage = image;
 
-    if (srcImage == null) return widget.noImageBuilder(context);
+    if (srcImage == null) {
+      return SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: widget.noImageBuilder(context),
+      );
+    }
 
     return CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
