@@ -308,6 +308,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           card: card,
           isSwipingEnabled: isSwipingEnabled,
           onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
+          feedType: manager.feedType,
         );
       };
 

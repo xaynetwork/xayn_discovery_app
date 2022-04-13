@@ -78,12 +78,14 @@ class _DiscoveryCardStaticState
             userReaction: state.explicitDocumentUserReaction.isRelevant
                 ? UserReaction.neutral
                 : UserReaction.positive,
+            feedType: widget.feedType,
           ),
           onDislikePressed: () => discoveryCardManager.onFeedback(
             document: widget.document,
             userReaction: state.explicitDocumentUserReaction.isIrrelevant
                 ? UserReaction.neutral
                 : UserReaction.negative,
+            feedType: widget.feedType,
           ),
           onOpenUrl: () {
             widget.onTtsData?.call(TtsData.disabled());

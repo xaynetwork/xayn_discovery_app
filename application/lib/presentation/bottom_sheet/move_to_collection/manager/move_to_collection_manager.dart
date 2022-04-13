@@ -136,6 +136,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
         document: document,
         userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
+        feedType: feedType,
       );
       _sendAnalyticsUseCase(
         DocumentBookmarkedEvent(

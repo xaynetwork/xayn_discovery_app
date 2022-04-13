@@ -155,11 +155,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onFeedback({
     required Document document,
     required UserReaction userReaction,
+    required FeedType? feedType,
   }) =>
       changeUserReaction(
         document: document,
         userReaction: userReaction,
         context: FeedbackContext.explicit,
+        feedType: feedType,
       );
 
   void shareUri({
@@ -177,6 +179,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       document: document,
       userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
+      feedType: feedType,
     );
   }
 
@@ -199,6 +202,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         document: document,
         userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
+        feedType: feedType,
       );
     }
   }
@@ -212,6 +216,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       document: document,
       userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
+      feedType: feedType,
     );
     openExternalUrl(
         url: document.resource.url.toString(),

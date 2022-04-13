@@ -113,6 +113,7 @@ class _DiscoveryFeedState
                       .explicitDocumentUserReaction.isRelevant
                   ? UserReaction.neutral
                   : UserReaction.positive,
+              feedType: FeedType.feed,
             ),
           ),
           buildNavBarItemBookmark(
@@ -138,6 +139,7 @@ class _DiscoveryFeedState
                       .explicitDocumentUserReaction.isIrrelevant
                   ? UserReaction.neutral
                   : UserReaction.negative,
+              feedType: FeedType.feed,
             ),
           ),
         ],

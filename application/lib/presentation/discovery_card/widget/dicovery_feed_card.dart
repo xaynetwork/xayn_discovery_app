@@ -57,16 +57,17 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       datePublished: webResource.datePublished,
       isInteractionEnabled: widget.isPrimary,
       onLikePressed: () => discoveryCardManager.onFeedback(
-        document: widget.document,
-        userReaction: state.explicitDocumentUserReaction.isRelevant
-            ? UserReaction.neutral
-            : UserReaction.positive,
-      ),
+          document: widget.document,
+          userReaction: state.explicitDocumentUserReaction.isRelevant
+              ? UserReaction.neutral
+              : UserReaction.positive,
+          feedType: widget.feedType),
       onDislikePressed: () => discoveryCardManager.onFeedback(
         document: widget.document,
         userReaction: state.explicitDocumentUserReaction.isIrrelevant
             ? UserReaction.neutral
             : UserReaction.negative,
+        feedType: widget.feedType,
       ),
       onOpenUrl: () {
         widget.onTtsData?.call(TtsData.disabled());

@@ -143,6 +143,7 @@ class _ActiveSearchState
                       .explicitDocumentUserReaction.isRelevant
                   ? UserReaction.neutral
                   : UserReaction.positive,
+              feedType: FeedType.search,
             ),
           ),
           buildNavBarItemBookmark(
@@ -168,6 +169,7 @@ class _ActiveSearchState
                       .explicitDocumentUserReaction.isIrrelevant
                   ? UserReaction.neutral
                   : UserReaction.negative,
+              feedType: FeedType.search,
             ),
           ),
         ],

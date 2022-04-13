@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -22,6 +23,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     required this.isPrimary,
     this.isSwipingEnabled = true,
     this.onFling,
+    required this.feedType,
   }) : super(key: key);
 
   final DiscoveryCardManager manager;
@@ -31,6 +33,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   final bool isPrimary;
   final bool isSwipingEnabled;
   final VoidCallback? onFling;
+  final FeedType? feedType;
 
   @override
   Widget build(BuildContext context) {
@@ -76,18 +79,21 @@ class SwipeableDiscoveryCard extends StatelessWidget {
         manager.onFeedback(
           document: document,
           userReaction: UserReaction.positive,
+          feedType: feedType,
         );
         break;
       case SwipeOption.neutral:
         manager.onFeedback(
           document: document,
           userReaction: UserReaction.neutral,
+          feedType: feedType,
         );
         break;
       case SwipeOption.dislike:
         manager.onFeedback(
           document: document,
           userReaction: UserReaction.negative,
+          feedType: feedType,
         );
         break;
     }

@@ -230,6 +230,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 ? UserReaction.neutral
                 : UserReaction.positive,
             context: FeedbackContext.explicit,
+            feedType: widget.feedType,
           ),
           onDislikePressed: () => discoveryCardManager.changeUserReaction(
             document: widget.document,
@@ -237,6 +238,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                 ? UserReaction.neutral
                 : UserReaction.negative,
             context: FeedbackContext.explicit,
+            feedType: widget.feedType,
           ),
           onOpenUrl: () {
             widget.onTtsData?.call(TtsData.disabled());
@@ -398,6 +400,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
                     .state.explicitDocumentUserReaction.isRelevant
                 ? UserReaction.neutral
                 : UserReaction.positive,
+            feedType: widget.feedType,
           ),
         ),
         buildNavBarItemBookmark(
@@ -420,6 +423,7 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
                     .state.explicitDocumentUserReaction.isIrrelevant
                 ? UserReaction.neutral
                 : UserReaction.negative,
+            feedType: widget.feedType,
           ),
         ),
       ],

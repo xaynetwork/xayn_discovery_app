@@ -319,6 +319,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         document: document,
         userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
+        feedType: feedType,
       );
     }
   }
