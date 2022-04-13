@@ -40,10 +40,9 @@
                     android:host="mainactivity"
                     android:scheme="xayn-discovery" />
 
-                <!-- TODO: Android Link -->
-                <!--                <data android:scheme="https"-->
-                <!--                    android:host="yourcompany.onelink.me"-->
-                <!--                    android:pathPrefix="your path prefix" />-->
+                <data
+                    android:host="news-app.onelink.me"
+                    android:scheme="https" />
             </intent-filter>
 
             <!-- Displays an Android View that continues showing the launch screen
