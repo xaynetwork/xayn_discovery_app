@@ -6,7 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations_de.i18n.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:yaml/yaml.dart';
 
 void main() async {

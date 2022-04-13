@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_provider.dart'
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
-import 'package:xayn_discovery_app/presentation/utils/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
 class CardWidgetData {
@@ -25,6 +25,9 @@ class CardWidget extends StatelessWidget {
   }) : super(
           key: cardData.key,
         );
+
+  BorderRadius getCardRadius(BuildContext context) =>
+      UnterDenLinden.getLinden(context).styles.roundBorderCard;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +66,7 @@ class CardWidget extends StatelessWidget {
 
       return backgroundImage != null
           ? ClipRRect(
-              borderRadius:
-                  UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+              borderRadius: getCardRadius(context),
               child: DiscoveryCardHeadlineImage(
                 child: buildMemoryImage(backgroundImage),
               ),
@@ -126,7 +128,7 @@ class CardWidget extends StatelessWidget {
       onPressed: cardData.onPressed,
       onLongPressed: onLongPressed,
       child: item,
-      borderRadius: UnterDenLinden.getLinden(context).styles.roundBorder1_5,
+      borderRadius: getCardRadius(context),
       backgroundColor: cardData.map(
         personalArea: (v) => v.color,
         collectionsScreen: (v) => v.color,

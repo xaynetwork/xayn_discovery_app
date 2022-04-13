@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
+import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -19,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
@@ -26,9 +28,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readabili
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -47,7 +52,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     with
         UseCaseBlocHelper<DiscoveryCardState>,
         ChangeUserReactionMixin<DiscoveryCardState>,
-        OpenExternalUrlMixin<DiscoveryCardState>
+        OpenExternalUrlMixin<DiscoveryCardState>,
+        OverlayManagerMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
@@ -60,7 +66,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
+  final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final FeatureManager _featureManager;
 
   /// html reader mode elements:
   ///
@@ -96,15 +104,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         )
         .followedBy(_injectReaderMetaDataUseCase),
   );
-  late final UseCaseSink<UniqueId, bool> _isBookmarkedHandler =
+  late final UseCaseSink<UniqueId, BookmarkStatus> _isBookmarkedHandler =
       pipe(_listenIsBookmarkedUseCase);
   late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn, AnalyticsEvent>
       _toggleBookmarkHandler = pipe(_toggleBookmarkUseCase).transform(
     (out) => out
-        .scheduleComputeState(
-          consumeEvent: (_) => false,
-          run: (it) => _isBookmarked = it.isBookmarked,
-        )
         .map(
           (it) => DocumentBookmarkedEvent(
             document: it.document,
@@ -119,7 +123,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
-  bool _isBookmarked = false;
 
   DiscoveryCardManager(
     this._connectivityUseCase,
@@ -133,6 +136,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
+    this._featureManager,
+    this._crudDocumentFilterUseCase,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -153,12 +158,27 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onFeedback({
     required Document document,
     required UserReaction userReaction,
-  }) =>
-      changeUserReaction(
-        document: document,
-        userReaction: userReaction,
-        context: FeedbackContext.explicit,
-      );
+  }) async {
+    if (_featureManager.isDocumentFilterEnabled) {
+      final url = document.resource.sourceDomain.value;
+      final filter = DocumentFilter.fromSource(url);
+      final op = DbCrudIn.get(filter.id);
+      final res = await _crudDocumentFilterUseCase.singleOutput(op);
+
+      if (res.mapOrNull(single: (s) => s.value) == null) {
+        showOverlay(
+          OverlayData.tooltipDocumentFilter(document: document),
+          when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
+        );
+      }
+    }
+
+    changeUserReaction(
+      document: document,
+      userReaction: userReaction,
+      context: FeedbackContext.explicit,
+    );
+  }
 
   void shareUri(Document document) {
     _shareUriUseCase.call(document.resource.url);
@@ -173,7 +193,17 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }
 
   void toggleBookmarkDocument(Document document) {
-    final isBookmarked = state.isBookmarked;
+    showOverlay(
+      OverlayData.tooltipBookmarked(
+        document: document,
+        provider: state.processedDocument?.getProvider(document.resource),
+        showTooltip: overlayManager.show,
+      ),
+      when: (oS, nS) =>
+          oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
+          nS.bookmarkStatus == BookmarkStatus.bookmarked,
+    );
+    final isBookmarked = state.bookmarkStatus == BookmarkStatus.bookmarked;
 
     _toggleBookmarkHandler(
       CreateBookmarkFromDocumentUseCaseIn(
@@ -209,7 +239,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         _crudExplicitDocumentFeedbackHandler,
       ).foldAll((
         processedDocument,
-        isBookmarked,
+        bookmarkStatus,
         explicitDocumentFeedback,
         errorReport,
       ) {
@@ -228,11 +258,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           isComplete: !_isLoading,
         );
 
-        if (isBookmarked != null) {
-          nextState = nextState.copyWith(
-            isBookmarked: isBookmarked,
-          );
-        }
+        nextState = nextState.copyWith(
+          bookmarkStatus: bookmarkStatus ?? BookmarkStatus.unknown,
+        );
 
         if (processedDocument != null) {
           nextState = nextState.copyWith(
@@ -247,10 +275,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
             explicitDocumentUserReaction: reaction.userReaction,
           );
         }
-
-        nextState = nextState.copyWith(
-          isBookmarkToggled: _isBookmarked,
-        );
 
         return nextState;
       });

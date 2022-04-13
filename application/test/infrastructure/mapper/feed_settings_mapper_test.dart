@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
 
-import '../../presentation/test_utils/utils.dart';
+import '../../test_utils/utils.dart';
 
 void main() {
   const uaMap = {0: 'UA', 1: 'uk'};

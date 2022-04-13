@@ -1,10 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.xayn_discovery_app">
 
+    <!-- needed for AppsFlyer
+         tools:replace="android:fullBackupContent"
+         android:fullBackupContent="true" -->
     <application
         android:name=".CustomFlutterApplication"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        tools:replace="android:fullBackupContent">
 
         <activity
             android:name=".MainActivity"
@@ -44,6 +50,7 @@
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

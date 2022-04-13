@@ -27,10 +27,10 @@ class SubscriptionTrialBanner extends StatelessWidget {
         child: stack,
         decoration: BoxDecoration(
           color: R.colors.settingsCardBackground,
-          borderRadius: R.styles.roundBorder,
+          borderRadius: R.styles.roundBorderCard,
         ),
       ),
-      borderRadius: R.styles.roundBorder,
+      borderRadius: R.styles.roundBorderCard,
     );
   }
 

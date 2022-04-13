@@ -222,8 +222,15 @@ class ErrorNavActionsImpl extends ErrorNavActions {
       : changeStack = manager.manipulateStack;
 
   @override
-  void openErrorScreen() =>
-      changeStack((stack) => stack.replace(PageRegistry.error));
+  void openErrorScreen({String? errorCode, bool replaceCurrentRoute = true}) =>
+      changeStack((stack) {
+        final page = PageRegistry.error(errorCode);
+        if (replaceCurrentRoute) {
+          stack.replace(page);
+        } else {
+          stack.push(page);
+        }
+      });
 
   @override
   void onClosePressed() => changeStack((stack) => stack.pop());

@@ -1,16 +1,14 @@
-import 'package:html/dom.dart' as dom;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:http_client/http_client.dart' as http;
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 
-import 'load_html_use_case_test.mocks.dart';
+import '../../../test_utils/utils.dart';
 import 'matchers.dart';
 
-@GenerateMocks([Client])
 void main() {
   late MockClient client = MockClient();
   final uri = Uri.dataFromString('<p>hi!</p>');

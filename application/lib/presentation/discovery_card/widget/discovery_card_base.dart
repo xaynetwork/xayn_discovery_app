@@ -95,19 +95,24 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         listener: (context, state) {
           if (state.error.hasError) {
             handleError(state.error, showTooltip);
-          } else {
-            discoveryCardStateListener(state);
           }
         },
       );
-
-  void discoveryCardStateListener(DiscoveryCardState state);
 
   Widget buildFromState(
     BuildContext context,
     DiscoveryCardState state,
     Widget image,
   );
+
+  void onFeedbackPressed(UserReaction requestedReaction) =>
+      discoveryCardManager.onFeedback(
+          document: widget.document,
+          userReaction:
+              discoveryCardManager.state.explicitDocumentUserReaction ==
+                      requestedReaction
+                  ? UserReaction.neutral
+                  : requestedReaction);
 
   void onBookmarkPressed() =>
       discoveryCardManager.toggleBookmarkDocument(widget.document);

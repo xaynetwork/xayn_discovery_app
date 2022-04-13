@@ -1,26 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_renamed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/manager/create_or_rename_collection_state.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 
-import 'create_or_rename_collection_manager_test.mocks.dart';
+import '../../../../test_utils/utils.dart';
 
-@GenerateMocks([
-  CreateCollectionUseCase,
-  RenameCollectionUseCase,
-  CollectionErrorsEnumMapper,
-  SendAnalyticsUseCase,
-])
 void main() {
   late MockCreateCollectionUseCase createCollectionUseCase;
   late MockRenameCollectionUseCase renameCollectionUseCase;

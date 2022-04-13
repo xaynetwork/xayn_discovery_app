@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/error/widget/error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/utils/tooltip_utils.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
@@ -12,7 +12,7 @@ mixin ErrorHandlingMixin<T extends StatefulWidget> on State<T> {
 
   void showErrorBottomSheet({bool allowStacking = false}) => showAppBottomSheet(
         context,
-        builder: (_) => const ErrorBottomSheet(),
+        builder: (_) => GenericErrorBottomSheet(),
         allowStacking: allowStacking,
       );
 

@@ -8,8 +8,9 @@ import 'package:xayn_discovery_app/domain/model/document/document_provider.dart'
 import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 
-import '../use_case_mocks/use_case_mocks.mocks.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late MockBookmarksRepository bookmarksRepository;
@@ -53,7 +54,7 @@ void main() {
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
-      expect: [useCaseSuccess(true)],
+      expect: [useCaseSuccess(BookmarkStatus.bookmarked)],
     );
 
     useCaseTest(
@@ -78,7 +79,7 @@ void main() {
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
-      expect: [useCaseSuccess(false)],
+      expect: [useCaseSuccess(BookmarkStatus.notBookmarked)],
     );
   });
 }

@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subsc
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
-import '../../test_utils/utils.dart';
+import '../../../test_utils/utils.dart';
 
 void main() {
   late PaymentScreenManager manager;
@@ -23,7 +23,6 @@ void main() {
   late MockRequestCodeRedemptionSheetUseCase requestCodeRedemptionSheetUseCase;
   late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
-  late MockPaymentFlowErrorToErrorMessageMapper errorMessageMapper;
   late MockPurchaseEventMapper purchaseEventMapper;
 
   final testPurchaseEvent = PurchaseEvent(
@@ -42,7 +41,6 @@ void main() {
     requestCodeRedemptionSheetUseCase = MockRequestCodeRedemptionSheetUseCase();
     sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
-    errorMessageMapper = MockPaymentFlowErrorToErrorMessageMapper();
     purchaseEventMapper = MockPurchaseEventMapper();
 
     when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
@@ -69,7 +67,6 @@ void main() {
       requestCodeRedemptionSheetUseCase,
       sendMarketingAnalyticsUseCase,
       sendAnalyticsUseCase,
-      errorMessageMapper,
       purchaseEventMapper,
     );
   });

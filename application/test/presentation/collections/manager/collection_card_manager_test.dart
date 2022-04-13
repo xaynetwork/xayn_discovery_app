@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
@@ -12,9 +11,8 @@ import 'package:xayn_discovery_app/presentation/collections/manager/collection_c
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-import 'collection_card_manager_test.mocks.dart';
+import '../../../test_utils/utils.dart';
 
-@GenerateMocks([ListenCollectionCardDataUseCase])
 void main() {
   late MockListenCollectionCardDataUseCase getcollectionCardDataUseCase;
   late CollectionErrorsEnumMapper collectionErrorsEnumMapper;

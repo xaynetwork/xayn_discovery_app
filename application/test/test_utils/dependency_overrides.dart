@@ -14,8 +14,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -81,7 +81,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
 
   @override
   Stream<EngineEvent> get engineEvents => _onEngineEvent.stream;
-  final Set<String> _excludedSources = {};
+  final Set<Source> _excludedSources = {};
 
   @override
   Future<EngineEvent> logDocumentTime(
@@ -145,7 +145,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> addSourceToExcludedList(String source) async {
+  Future<EngineEvent> addSourceToExcludedList(Source source) async {
     _excludedSources.add(source);
     return const EngineEvent.clientEventSucceeded();
   }
@@ -163,7 +163,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> removeSourceFromExcludedList(String source) async {
+  Future<EngineEvent> removeSourceFromExcludedList(Source source) async {
     _excludedSources.remove(source);
     return const EngineEvent.clientEventSucceeded();
   }
