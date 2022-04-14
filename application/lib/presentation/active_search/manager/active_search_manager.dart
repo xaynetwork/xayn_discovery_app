@@ -18,6 +18,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -51,7 +53,7 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @injectable
 class ActiveSearchManager extends BaseDiscoveryManager
-    with SearchMixin<DiscoveryState>
+    with SearchMixin<DiscoveryState>, OverlayManagerMixin<DiscoveryState>
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
@@ -89,6 +91,12 @@ class ActiveSearchManager extends BaseDiscoveryManager
   bool get didReachEnd => _didReachEnd;
 
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
+        final trimmed = searchTerm.trim();
+
+        if (trimmed.isEmpty) {
+          return showOverlay(OverlayData.tooltipInvalidSearch());
+        }
+
         _isLoading = true;
         _didReachEnd = false;
         resetCardIndex();

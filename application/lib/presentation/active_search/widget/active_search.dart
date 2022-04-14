@@ -7,9 +7,11 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_info_card.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// A widget which displays a list of discovery results,
@@ -54,6 +56,7 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   late final ActiveSearchManager _manager;
+  late final TooltipController _tooltipController = TooltipController();
 
   @override
   ActiveSearchManager get manager => _manager;
@@ -68,6 +71,7 @@ class _ActiveSearchState
   @override
   void dispose() {
     _manager.close();
+    _tooltipController.dispose();
 
     super.dispose();
   }
@@ -84,9 +88,6 @@ class _ActiveSearchState
             buildNavBarItemSearchActive(
               autofocus: _manager.state.results.isEmpty,
               hint: _manager.lastUsedSearchTerm,
-              initialText: _manager.state.results.isNotEmpty
-                  ? _manager.lastUsedSearchTerm
-                  : null,
               onSearchPressed: _manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(
