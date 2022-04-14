@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_moved_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
@@ -118,6 +119,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
 
   void onApplyToDocumentPressed({
     required Document document,
+    FeedType? feedType,
     DocumentProvider? provider,
   }) {
     final hasSelected = state.selectedCollectionId != null;
@@ -127,12 +129,14 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
         document: document,
         provider: provider,
         collectionId: state.selectedCollectionId!,
+        feedType: feedType,
       );
       _createBookmarkHandler(param);
       changeUserReaction(
         document: document,
         userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
+        feedType: feedType,
       );
       _sendAnalyticsUseCase(
         DocumentBookmarkedEvent(
@@ -140,6 +144,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
           isBookmarked: true,
           toDefaultCollection:
               state.selectedCollectionId == Collection.readLaterId,
+          feedType: feedType,
         ),
       );
     }
@@ -150,6 +155,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
           document: document,
           isBookmarked: false,
           toDefaultCollection: false,
+          feedType: feedType,
         ),
       );
     }

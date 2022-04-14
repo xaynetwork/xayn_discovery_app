@@ -136,15 +136,25 @@ class _SettingsScreenState extends State<SettingsScreen>
       SettingsGeneralInfoSection(
         onContactPressed: _showContactInfo,
         onAboutPressed: () => _manager.openExternalUrl(
-            Constants.aboutXaynUrl, CurrentView.settings),
+          url: Constants.aboutXaynUrl,
+          currentView: CurrentView.settings,
+        ),
         onCarbonNeutralPressed: () => _manager.openExternalUrl(
-            Constants.carbonNeutralUrl, CurrentView.settings),
+          url: Constants.carbonNeutralUrl,
+          currentView: CurrentView.settings,
+        ),
         onImprintPressed: () => _manager.openExternalUrl(
-            Constants.imprintUrl, CurrentView.settings),
+          url: Constants.imprintUrl,
+          currentView: CurrentView.settings,
+        ),
         onPrivacyPressed: () => _manager.openExternalUrl(
-            Constants.privacyPolicyUrl, CurrentView.settings),
+          url: Constants.privacyPolicyUrl,
+          currentView: CurrentView.settings,
+        ),
         onTermsPressed: () => _manager.openExternalUrl(
-            Constants.termsAndConditionsUrl, CurrentView.settings),
+          url: Constants.termsAndConditionsUrl,
+          currentView: CurrentView.settings,
+        ),
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
@@ -208,8 +218,10 @@ class _SettingsScreenState extends State<SettingsScreen>
             Constants.xaynSupportEmail, CurrentView.settings),
         onXaynPressEmailTap: () => _manager.openExternalEmail(
             Constants.xaynPressEmail, CurrentView.settings),
-        onXaynUrlTap: () =>
-            _manager.openExternalUrl(Constants.xaynUrl, CurrentView.settings),
+        onXaynUrlTap: () => _manager.openExternalUrl(
+          url: Constants.xaynUrl,
+          currentView: CurrentView.settings,
+        ),
       ),
     );
   }

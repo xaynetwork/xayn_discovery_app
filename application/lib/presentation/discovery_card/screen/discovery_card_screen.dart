@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -18,9 +19,11 @@ class DiscoveryCardScreen extends StatefulWidget {
   const DiscoveryCardScreen({
     Key? key,
     required this.documentId,
+    this.feedType,
   }) : super(key: key);
 
   final UniqueId documentId;
+  final FeedType? feedType;
 
   @override
   State<DiscoveryCardScreen> createState() => _DiscoveryCardScreenState();
@@ -63,7 +66,10 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
         /// Like and dislike can not be called because the Document is not related to the feed anymore and will not be updated
         buildNavBarItemShare(
-            onPressed: () => discoveryCardManager.shareUri(document)),
+            onPressed: () => discoveryCardManager.shareUri(
+                  document: document,
+                  feedType: widget.feedType,
+                )),
       ],
       isWidthExpanded: false,
     );
@@ -110,6 +116,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       imageManager: cardManagers.imageManager,
       onTtsData: (it) =>
           setState(() => ttsData = ttsData.enabled ? TtsData.disabled() : it),
+      feedType: widget.feedType,
     );
   }
 }

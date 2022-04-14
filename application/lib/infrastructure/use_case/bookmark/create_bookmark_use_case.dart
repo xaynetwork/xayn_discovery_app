@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/document_repository.dart';
@@ -119,11 +120,13 @@ class CreateBookmarkUseCaseIn {
 
 class CreateBookmarkFromDocumentUseCaseIn {
   final Document document;
+  final FeedType? feedType;
   final DocumentProvider? provider;
   final UniqueId collectionId;
 
   CreateBookmarkFromDocumentUseCaseIn({
     required this.document,
+    this.feedType,
     this.provider,
     this.collectionId = Collection.readLaterId,
   });

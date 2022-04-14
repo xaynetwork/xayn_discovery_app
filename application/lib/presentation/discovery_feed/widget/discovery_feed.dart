@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
@@ -67,7 +68,10 @@ class _DiscoveryFeedState
       final managers = managersOf(document);
 
       void onBookmarkPressed() =>
-          managers.discoveryCardManager.toggleBookmarkDocument(document);
+          managers.discoveryCardManager.toggleBookmarkDocument(
+            document,
+            feedType: FeedType.feed,
+          );
 
       void onBookmarkLongPressed() {
         managers.discoveryCardManager.triggerHapticFeedbackMedium();
@@ -78,6 +82,7 @@ class _DiscoveryFeedState
             provider: managers.discoveryCardManager.state.processedDocument
                 ?.getProvider(document.resource),
             onError: showTooltip,
+            feedType: FeedType.feed,
           ),
         );
       }
@@ -108,6 +113,7 @@ class _DiscoveryFeedState
                       .explicitDocumentUserReaction.isRelevant
                   ? UserReaction.neutral
                   : UserReaction.positive,
+              feedType: FeedType.feed,
             ),
           ),
           buildNavBarItemBookmark(
@@ -116,8 +122,10 @@ class _DiscoveryFeedState
             onLongPressed: onBookmarkLongPressed,
           ),
           buildNavBarItemShare(
-              onPressed: () =>
-                  managers.discoveryCardManager.shareUri(document)),
+              onPressed: () => managers.discoveryCardManager.shareUri(
+                    document: document,
+                    feedType: FeedType.feed,
+                  )),
           if (featureManager.isReaderModeSettingsEnabled)
             buildNavBarItemEditFont(
               onPressed: onEditReaderModeSettingsPressed,
@@ -131,6 +139,7 @@ class _DiscoveryFeedState
                       .explicitDocumentUserReaction.isIrrelevant
                   ? UserReaction.neutral
                   : UserReaction.negative,
+              feedType: FeedType.feed,
             ),
           ),
         ],
