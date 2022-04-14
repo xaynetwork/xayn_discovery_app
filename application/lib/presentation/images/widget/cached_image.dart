@@ -38,6 +38,7 @@ class CachedImage extends StatefulWidget {
   final ImageManager? imageManager;
   final ShaderBuilder shaderBuilder;
   final bool? singleFrameOnly;
+  final String? semanticsLabel;
 
   CachedImage({
     Key? key,
@@ -50,6 +51,7 @@ class CachedImage extends StatefulWidget {
     this.height,
     this.imageManager,
     this.singleFrameOnly,
+    this.semanticsLabel,
     ShaderBuilder? shaderBuilder,
   })  : shaderBuilder =
             shaderBuilder ?? ShaderFactory.fromType(ShaderType.static),
@@ -150,7 +152,12 @@ class _CachedImageState extends State<CachedImage> {
           }
         }
 
-        final child = buildChild();
+        final child = widget.semanticsLabel != null
+            ? Semantics(
+                child: buildChild(),
+                image: true,
+              )
+            : buildChild();
 
         return AnimatedOpacity(
           opacity: opacity,
