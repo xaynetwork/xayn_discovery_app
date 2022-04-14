@@ -25,7 +25,7 @@ class HiveDB {
 
     registerHiveAdapters();
 
-// Open this box only for migration info
+    // Open this box only for migration info
     await _openBox<Map>(BoxNames.migrationInfo, inMemory: !isPersistedOnDisk);
 
     final status = isPersistedOnDisk

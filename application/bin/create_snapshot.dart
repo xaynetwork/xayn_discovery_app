@@ -59,25 +59,22 @@ void main(List<String> args) async {
   if (args.length != 2) {
     // ignore: avoid_print
     print(
-        'Need to provide a snapshot directory (i.e. test/db_snapshots/v42) and version (i.e. 42)');
+        'Need to provide a snapshot directory (i.e. test/db_snapshots) and version (i.e. 42)');
     exit(1);
   }
 
-  final snapshotDir = args[0];
   final version = int.tryParse(args[1]);
+  final snapshotDir = '${args[0]}/v$version';
 
   // ignore: avoid_print
-  print('Create snapshot in $args');
+  print('Create snapshot in $snapshotDir');
 
   // use alternative method when creating an older map based snapshot
   await _prepareHiveRecords(snapshotDir);
 
   _createMigrationInfo(version!);
   _createAppSettings();
-  final colId1 = UniqueId();
-  _createCollections(
-    {colId1: 'Test Collection'},
-  );
+  _createCollections();
   _createBookmarks();
   _createDocuments();
   _createDocumentFilters();
@@ -106,18 +103,15 @@ void _createAppSettings() {
   repository.save(appSettings);
 }
 
-void _createCollections(Map<UniqueId, String> collections) {
+void _createCollections() {
   final mapper = CollectionMapper();
   final repository = HiveCollectionsRepository(mapper);
-
-  for (var index = 0; index < collections.entries.length; index++) {
-    final collection = collections.entries.elementAt(index);
-    repository.save(Collection(
-      id: collection.key,
-      name: collection.value,
-      index: index,
-    ));
-  }
+  final collection = Collection(
+    id: UniqueId(),
+    name: 'Test Collection',
+    index: 0,
+  );
+  repository.save(collection);
 }
 
 void _createBookmarks() {

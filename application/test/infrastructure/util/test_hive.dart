@@ -2,6 +2,7 @@ import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:hive/hive.dart';
+import 'package:hive_crdt/hive_crdt.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 /// In order to create a new snapshot run:
@@ -25,6 +26,7 @@ class HiveSnapshot {
   static Future<void> _openBoxes(
       String path, List<String> deprecatedBoxes) async {
     await Future.wait([
+      _openBox(BoxNames.appSettings, path),
       _openBox(BoxNames.collections, path),
       _openBox(BoxNames.bookmarks, path),
       _openBox(BoxNames.documents, path),
@@ -40,10 +42,11 @@ class HiveSnapshot {
     ]);
   }
 
-  static Future<Box<Map>> _openBox(String name, String path) {
+  static Future<Box<Record>> _openBox(String name, String path) {
     var file = io.File('$path/${name.toLowerCase()}.hive');
+    // ignore: avoid_print
     print('load $file which exists: ${file.existsSync()}');
-    return Hive.openBox<Map>(name,
+    return Hive.openBox<Record>(name,
         bytes: file.existsSync() ? file.readAsBytesSync() : Uint8List(0));
   }
 
