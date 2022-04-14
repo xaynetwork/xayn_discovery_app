@@ -16,11 +16,13 @@ abstract class ConnectivityObserver {
 @debugEnvironment
 class AppConnectivityObserver extends ConnectivityObserver {
   late final Connectivity _connectivity = Connectivity();
+  Stream<ConnectivityResult>? _stream;
 
   @override
   Stream<ConnectivityResult> get onConnectivityChanged =>
+      _stream ??
       Stream.fromFuture(_connectivity.checkConnectivity())
-          .asyncExpand((_) => _connectivity.onConnectivityChanged)
+          .asyncExpand((event) => _connectivity.onConnectivityChanged)
           .distinct();
 
   @override
