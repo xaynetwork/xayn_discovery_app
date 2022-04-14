@@ -7,15 +7,8 @@ abstract class ConnectivityObserver {
 
   Future<ConnectivityResult> checkConnectivity();
 
-  Future<ConnectivityResult> isUp() {
-    observeConnectivity() async* {
-      yield await checkConnectivity();
-      yield* onConnectivityChanged;
-    }
-
-    return observeConnectivity()
-        .firstWhere((it) => it != ConnectivityResult.none);
-  }
+  Future<ConnectivityResult> isUp() =>
+      onConnectivityChanged.firstWhere((it) => it != ConnectivityResult.none);
 }
 
 @LazySingleton(as: ConnectivityObserver)
@@ -26,7 +19,9 @@ class AppConnectivityObserver extends ConnectivityObserver {
 
   @override
   Stream<ConnectivityResult> get onConnectivityChanged =>
-      _connectivity.onConnectivityChanged;
+      Stream.fromFuture(_connectivity.checkConnectivity())
+          .asyncExpand((_) => _connectivity.onConnectivityChanged)
+          .distinct();
 
   @override
   Future<ConnectivityResult> checkConnectivity() =>
