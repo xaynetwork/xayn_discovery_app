@@ -1,6 +1,8 @@
+import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 
+@lazySingleton
 class MigrationInfoMapper extends BaseDbEntityMapper<MigrationInfo> {
   @override
   MigrationInfo? fromMap(Map? map) {
