@@ -23,11 +23,13 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>xayn-discovery</string>
 			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
+			<string>None</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>xayn-discovery://mainactivity</string>
+				<string>mainactivity</string>
 			</array>
 		</dict>
 	</array>
