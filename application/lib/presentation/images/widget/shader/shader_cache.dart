@@ -7,6 +7,14 @@ import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader
 
 part 'shader_cache.freezed.dart';
 
+/// Because shaders are created from byte code, and the conversion from bytes to an actual shader is async,
+/// this cache keeps converted bytes 'alive' between UI changes.
+/// For example, the transition between a feed card and a reader mode card, uses the same bytes,
+/// but the purpose is different.
+/// E.g. in the feed, the shader plays in a loop, and when opening a reader mode card, it
+/// transitions from motion to static.
+/// To prevent flickering between these two states, the [ShaderCache] keeps the conversion alive.
+/// When all UI children did dispose, then the cache will evict the converted shader as well.
 abstract class ShaderCache {
   bool hasImageOf(Uri uri);
 
@@ -44,6 +52,7 @@ class InMemoryShaderCache implements ShaderCache {
     update(uri, refCount: entry.refCount + 1);
   }
 
+  @mustCallSuper
   @override
   void flush(Uri uri) {
     if (_entries.containsKey(uri)) {
@@ -63,6 +72,7 @@ class InMemoryShaderCache implements ShaderCache {
     }
   }
 
+  @mustCallSuper
   @override
   void update(
     Uri uri, {
@@ -83,6 +93,8 @@ class InMemoryShaderCache implements ShaderCache {
       _entries.putIfAbsent(uri, ShaderCacheEntry.initial);
 }
 
+/// A single entry inside the [ShaderCache].
+@protected
 @freezed
 class ShaderCacheEntry with _$ShaderCacheEntry {
   factory ShaderCacheEntry({
@@ -97,6 +109,11 @@ class ShaderCacheEntry with _$ShaderCacheEntry {
       );
 }
 
+/// Keeps track of the exact animation state of a single shader.
+/// When being reused, the other shader can then seamlessly continue from
+/// the exact same animation status.
+/// See [ShaderCache].
+@protected
 @freezed
 class ShaderAnimationStatus with _$ShaderAnimationStatus {
   factory ShaderAnimationStatus({
