@@ -74,7 +74,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: a05099d6f89de39bb7e6fc0da78cbad2cb6d14e2
+      ref: 1badb5f6ad95d574f7ba6321550e1fed2f32a347
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -90,7 +90,7 @@ dependency_overrides:
   json_annotation: 4.4.0
   hive: 2.1.0
   freezed_annotation: 1.1.0
-  analyzer: 3.3.0
+  analyzer: 3.4.1
   provider: 6.0.2
   dart_style: 2.2.2
 
