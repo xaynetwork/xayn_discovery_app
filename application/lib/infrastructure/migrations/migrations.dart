@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
-import 'package:xayn_discovery_app/domain/repository/migration_info_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migrate_0_to_1.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_migration_info_repository.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 enum MigrationStatus { completed, failed }
@@ -23,12 +23,13 @@ final _migrations = <int, BaseMigration Function()>{
 typedef BoxOpener<T> = Box<T> Function(String name);
 
 class HiveMigrations implements Migrations {
-  final MigrationInfoRepository _repository = di.get();
+  final _repository = HiveMigrationInfoRepository(MigrationInfoMapper());
 
   HiveMigrations();
 
   @override
   Future<MigrationStatus> migrate({int? toVersion}) async {
+    // ignore: prefer_typing_uninitialized_variables
     var currentVersion;
 
     final versionToMigrate = toVersion ?? MigrationInfo.dbVersion;

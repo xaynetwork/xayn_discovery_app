@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart' as engine;
+import 'package:xayn_discovery_engine/discovery_engine.dart' as engine;
 
 typedef FeedMarkets = Set<FeedMarket>;
 

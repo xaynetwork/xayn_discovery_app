@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/domain/repository/document_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/document_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'hive_repository.dart';
 

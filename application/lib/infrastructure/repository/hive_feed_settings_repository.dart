@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
@@ -9,8 +9,6 @@ import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.d
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 import 'hive_repository.dart';
-
-typedef GetCurrentLocale = Locale Function();
 
 @LazySingleton(as: FeedSettingsRepository)
 class HiveFeedSettingsRepository extends HiveRepository<FeedSettings>

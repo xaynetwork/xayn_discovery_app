@@ -20,30 +20,44 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/bookmarks_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/document_filter_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/document_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/explicit_document_feedback_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/migration_info_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/collection_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/document_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/feed_type_markets_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_app_status_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_bookmarks_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_collections_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_document_filter_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_document_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_type_markets_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_migration_info_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_constants.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// Creates a database snapshot in the given directory
 void main(List<String> args) async {
   EquatableConfig.stringify = true;
 
   if (args.length != 2) {
+    // ignore: avoid_print
     print(
         'Need to provide a snapshot directory (i.e. test/db_snapshots/v42) and version (i.e. 42)');
     exit(1);
@@ -52,15 +66,11 @@ void main(List<String> args) async {
   final snapshotDir = args[0];
   final version = int.tryParse(args[1]);
 
+  // ignore: avoid_print
   print('Create snapshot in $args');
 
   // use alternative method when creating an older map based snapshot
   await _prepareHiveRecords(snapshotDir);
-
-  await configureDependencies(
-    environment: debugEnvironment,
-  );
-  initServices();
 
   _createMigrationInfo(version!);
   _createAppSettings();
@@ -80,19 +90,25 @@ void main(List<String> args) async {
 }
 
 void _createMigrationInfo(int version) async {
-  final MigrationInfoRepository repository = di.get();
+  final mapper = MigrationInfoMapper();
+  final repository = HiveMigrationInfoRepository(mapper);
   final migrationInfo = MigrationInfo(version: version);
   repository.save(migrationInfo);
 }
 
 void _createAppSettings() {
-  final AppSettingsRepository repository = di.get();
+  const mapper = AppSettingsMapper(
+    IntToAppThemeMapper(),
+    AppThemeToIntMapper(),
+  );
+  final repository = HiveAppSettingsRepository(mapper);
   final appSettings = AppSettings.initial();
   repository.save(appSettings);
 }
 
 void _createCollections(Map<UniqueId, String> collections) {
-  final CollectionsRepository repository = di.get();
+  final mapper = CollectionMapper();
+  final repository = HiveCollectionsRepository(mapper);
 
   for (var index = 0; index < collections.entries.length; index++) {
     final collection = collections.entries.elementAt(index);
@@ -105,7 +121,8 @@ void _createCollections(Map<UniqueId, String> collections) {
 }
 
 void _createBookmarks() {
-  final BookmarksRepository repository = di.get();
+  final mapper = BookmarkMapper();
+  final repository = HiveBookmarksRepository(mapper);
   final provider = DocumentProvider(
     name: 'Provider name',
     favicon: 'https://www.foo.com/favicon.ico',
@@ -122,7 +139,8 @@ void _createBookmarks() {
 }
 
 void _createDocuments() {
-  final DocumentRepository repository = di.get();
+  final mapper = DocumentMapper();
+  final repository = HiveDocumentRepository(mapper);
   final document = Document(
     documentId: DocumentId(),
     userReaction: UserReaction.neutral,
@@ -146,19 +164,24 @@ void _createDocuments() {
 }
 
 void _createDocumentFilters() {
-  final DocumentFilterRepository repository = di.get();
+  final repository = HiveDocumentFilterRepository();
   final documentFilter = DocumentFilter.fromSource('xayn.com');
   repository.save(documentFilter);
 }
 
 void _createAppStatus() {
-  final AppStatusRepository repository = di.get();
+  const mapper = AppStatusMapper(
+    MapToAppVersionMapper(),
+    AppVersionToMapMapper(),
+  );
+  final repository = HiveAppStatusRepository(mapper);
   final appStatus = AppStatus.initial();
   repository.save(appStatus);
 }
 
 void _createFeed() {
-  final FeedRepository repository = di.get();
+  final mapper = FeedMapper();
+  final repository = HiveFeedRepository(mapper);
   final feed = Feed(
     id: UniqueId(),
     cardIndexFeed: 0,
@@ -168,26 +191,36 @@ void _createFeed() {
 }
 
 void _createFeedSettings() {
-  final FeedSettingsRepository repository = di.get();
+  final mapper = FeedSettingsMapper(
+    DbEntityMapToFeedMarketMapper(),
+    FeedMarketToDbEntityMapMapper(),
+  );
+  final repository = HiveFeedSettingsRepository(mapper);
   final feedSettings = FeedSettings.initial();
   repository.save(feedSettings);
 }
 
 void _createFeedTypeMarkets() {
-  final FeedTypeMarketsRepository repository = di.get();
+  final mapper = FeedTypeMarketsMapper(
+    DbEntityMapToFeedMarketMapper(),
+    FeedMarketToDbEntityMapMapper(),
+  );
+  final repository = HiveFeedTypeMarketsRepository(mapper);
   final feedMarkets = {defaultFeedMarket};
   final feedTypeMarkets = FeedTypeMarkets.forFeed(feedMarkets);
   repository.save(feedTypeMarkets);
 }
 
 void _createExplicitDocumentFeedback() {
-  final ExplicitDocumentFeedbackRepository repository = di.get();
+  final mapper = ExplicitDocumentFeedbackMapper();
+  final repository = HiveExplicitDocumentFeedbackRepository(mapper);
   final explicitDocumentFeedback = ExplicitDocumentFeedback(id: UniqueId());
   repository.save(explicitDocumentFeedback);
 }
 
 void _createReaderModeSettings() {
-  final ReaderModeSettingsRepository repository = di.get();
+  const mapper = ReaderModeSettingsMapper();
+  final repository = HiveReaderModeSettingsRepository(mapper);
   final readerModeSettings = ReaderModeSettings.initial();
   repository.save(readerModeSettings);
 }
