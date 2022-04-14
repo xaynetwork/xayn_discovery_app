@@ -104,7 +104,9 @@ class _BookmarksScreenState extends State<BookmarksScreen>
             key: Key(bookmark.title),
             title: bookmark.title,
             onPressed: () => _bookmarkManager.onBookmarkPressed(
-                bookmarkId: bookmark.id, isPrimary: false),
+              bookmarkId: bookmark.id,
+              isPrimary: false,
+            ),
             backgroundImage: bookmark.image,
             created: DateTime.parse(bookmark.createdAt),
             provider: bookmark.provider,

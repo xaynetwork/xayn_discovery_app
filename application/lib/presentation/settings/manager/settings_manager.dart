@@ -136,8 +136,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       );
 
       openExternalUrl(
-        subscriptionManagementUrl,
-        CurrentView.settings,
+        url: subscriptionManagementUrl,
+        currentView: CurrentView.settings,
       );
     }
   }

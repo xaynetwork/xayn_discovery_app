@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
@@ -114,6 +115,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
             document: it.document,
             isBookmarked: it.isBookmarked,
             toDefaultCollection: true,
+            feedType: it.feedType,
           ),
         )
         .cast<AnalyticsEvent>()
@@ -158,6 +160,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onFeedback({
     required Document document,
     required UserReaction userReaction,
+    required FeedType? feedType,
   }) async {
     if (_featureManager.isDocumentFilterEnabled) {
       final url = document.resource.sourceDomain.value;
@@ -177,22 +180,33 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       document: document,
       userReaction: userReaction,
       context: FeedbackContext.explicit,
+      feedType: feedType,
     );
   }
 
-  void shareUri(Document document) {
+  void shareUri({
+    required Document document,
+    required FeedType? feedType,
+  }) {
     _shareUriUseCase.call(document.resource.url);
 
-    _sendAnalyticsUseCase(DocumentSharedEvent(document: document));
+    _sendAnalyticsUseCase(DocumentSharedEvent(
+      document: document,
+      feedType: feedType,
+    ));
 
     changeUserReaction(
       document: document,
       userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
+      feedType: feedType,
     );
   }
 
-  void toggleBookmarkDocument(Document document) {
+  void toggleBookmarkDocument(
+    Document document, {
+    FeedType? feedType,
+  }) {
     showOverlay(
       OverlayData.tooltipBookmarked(
         document: document,
@@ -209,6 +223,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       CreateBookmarkFromDocumentUseCaseIn(
         document: document,
         provider: state.processedDocument?.getProvider(document.resource),
+        feedType: feedType,
       ),
     );
 
@@ -217,17 +232,26 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         document: document,
         userReaction: UserReaction.positive,
         context: FeedbackContext.implicit,
+        feedType: feedType,
       );
     }
   }
 
-  void openWebResourceUrl(Document document, CurrentView currentView) {
+  void openWebResourceUrl(
+    Document document,
+    CurrentView currentView,
+    FeedType? feedType,
+  ) {
     changeUserReaction(
       document: document,
       userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
+      feedType: feedType,
     );
-    openExternalUrl(document.resource.url.toString(), currentView);
+    openExternalUrl(
+        url: document.resource.url.toString(),
+        currentView: currentView,
+        feedType: feedType);
   }
 
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);

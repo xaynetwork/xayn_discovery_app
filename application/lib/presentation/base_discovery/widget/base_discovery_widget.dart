@@ -249,8 +249,9 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 builder: (_) => ReaderModeUnavailableBottomSheet(
                   onOpenViaBrowser: () =>
                       managers.discoveryCardManager.openExternalUrl(
-                    document.resource.url.toString(),
-                    CurrentView.story,
+                    url: document.resource.url.toString(),
+                    currentView: CurrentView.story,
+                    feedType: manager.feedType,
                   ),
                 ),
                 allowStacking: false,
@@ -283,6 +284,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                     currentCardController = controller,
                 onTtsData: (it) => setState(
                     () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
+                feedType: manager.feedType,
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
@@ -293,12 +295,16 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   imageManager: managers.imageManager,
                   onTtsData: (it) => setState(() =>
                       ttsData = ttsData.enabled ? TtsData.disabled() : it),
+                  feedType: manager.feedType,
                 ),
               );
 
         return SwipeableDiscoveryCard(
           onSwipe: (option) => managers.discoveryCardManager.onFeedback(
-              document: document, userReaction: option.toUserReaction()),
+            document: document,
+            userReaction: option.toUserReaction(),
+            feedType: manager.feedType,
+          ),
           isPrimary: isPrimary,
           document: document,
           explicitDocumentUserReaction:
