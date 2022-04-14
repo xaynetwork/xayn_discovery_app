@@ -280,6 +280,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           manager.sendAnalyticsUseCase(
             EngineExceptionRaisedEvent(
               event: event,
+              feedType: FeedType.feed,
             ),
           );
 

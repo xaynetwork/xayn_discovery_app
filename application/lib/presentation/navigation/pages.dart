@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
@@ -79,11 +80,16 @@ class PageRegistry {
         ),
       );
 
-  static cardDetails(UniqueId documentId) => xayn.PageData(
+  static cardDetails({
+    required UniqueId documentId,
+    FeedType? feedType,
+  }) =>
+      xayn.PageData(
         name: "cardDetails",
         arguments: documentId,
         builder: (_, UniqueId? args) => DiscoveryCardScreen(
           documentId: args!,
+          feedType: feedType,
         ),
       );
 
