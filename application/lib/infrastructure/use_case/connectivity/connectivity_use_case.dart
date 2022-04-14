@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 
 abstract class ConnectivityObserver {
@@ -16,14 +17,18 @@ abstract class ConnectivityObserver {
 @debugEnvironment
 class AppConnectivityObserver extends ConnectivityObserver {
   late final Connectivity _connectivity = Connectivity();
-  Stream<ConnectivityResult>? _stream;
+  late final BehaviorSubject<ConnectivityResult> _onSubject =
+      BehaviorSubject<ConnectivityResult>();
+
+  AppConnectivityObserver() {
+    _connectivity.checkConnectivity().then((it) {
+      _onSubject.add(it);
+      _onSubject.addStream(_connectivity.onConnectivityChanged);
+    });
+  }
 
   @override
-  Stream<ConnectivityResult> get onConnectivityChanged =>
-      _stream ??
-      Stream.fromFuture(_connectivity.checkConnectivity())
-          .asyncExpand((event) => _connectivity.onConnectivityChanged)
-          .distinct();
+  Stream<ConnectivityResult> get onConnectivityChanged => _onSubject.stream;
 
   @override
   Future<ConnectivityResult> checkConnectivity() =>
