@@ -11,6 +11,7 @@ const Duration _kDefaultDuration = Duration(seconds: 20);
 
 enum ShaderAnimationDirection { forward, reverse }
 
+/// A shader which is static, i.e. does not transition using an animation.
 abstract class BaseStaticShader extends StatefulWidget {
   final Uint8List bytes;
   final double? width;
@@ -30,6 +31,7 @@ abstract class BaseStaticShader extends StatefulWidget {
   }) : super(key: key);
 }
 
+/// The state of [BasicStaticShader].
 abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
   late final ShaderCache _cache = di.get();
@@ -88,6 +90,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   }
 }
 
+/// A shader which runs upon an underlying animation.
 abstract class BaseAnimationShader extends BaseStaticShader {
   final Curve curve;
   final bool transitionToIdle;
@@ -121,6 +124,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
         );
 }
 
+/// The state of [BaseAnimationShader].
 abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
     extends BaseStaticShaderState<T> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
@@ -210,6 +214,7 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
     }
   }
 
+  @mustCallSuper
   void updateDuration(Duration duration) => _controller.duration = duration;
 
   void _stopAnimation(ShaderAnimationStatus status) {
