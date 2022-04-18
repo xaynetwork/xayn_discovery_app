@@ -5,6 +5,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
@@ -28,6 +29,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
     required Document document,
     required OnToolTipError onError,
     required DocumentProvider? provider,
+    FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
   }) : super(
           key: key,
@@ -36,6 +38,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
             provider: provider,
             initialSelectedCollectionId: initialSelectedCollectionId,
             onError: onError,
+            feedType: feedType,
           ),
         );
 }
@@ -45,12 +48,14 @@ class _MoveDocumentToCollection extends StatefulWidget {
   final DocumentProvider? provider;
   final UniqueId? initialSelectedCollectionId;
   final OnToolTipError onError;
+  final FeedType? feedType;
 
   const _MoveDocumentToCollection({
     Key? key,
     required this.document,
     required this.onError,
     required this.provider,
+    this.feedType,
     this.initialSelectedCollectionId,
   }) : super(key: key);
 
@@ -141,6 +146,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
               _moveDocumentToCollectionManager?.onApplyToDocumentPressed(
             document: widget.document,
             provider: widget.provider,
+            feedType: widget.feedType,
           ),
         ),
       ),
@@ -179,6 +185,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
           provider: widget.provider,
           initialSelectedCollectionId: newCollectionId,
           onError: widget.onError,
+          feedType: widget.feedType,
         ),
       );
 }

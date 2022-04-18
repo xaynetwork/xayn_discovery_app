@@ -1,11 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_shader.dart';
+import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -18,6 +23,7 @@ class CardWidgetData {
 }
 
 class CardWidget extends StatelessWidget {
+  late final DiscoveryCardShadowManager _shadowManager = di.get();
   final CardData cardData;
 
   CardWidget({
@@ -57,19 +63,25 @@ class CardWidget extends StatelessWidget {
       Uint8List? backgroundImage,
       double? width,
     }) {
-      buildMemoryImage(Uint8List bytes) => Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-            width: width,
-            height: CardWidgetData.cardHeight,
+      buildMemoryImage(Uint8List bytes) =>
+          BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
+            bloc: _shadowManager,
+            builder: (_, state) => StaticShader(
+              uri: Uri.dataFromBytes(bytes),
+              width: width,
+              height: CardWidgetData.cardHeight,
+              bytes: bytes,
+              shadowColor: R.isDarkMode
+                  ? state.readerModeBackgroundColor.color
+                  : R.colors.swipeCardBackgroundDefault,
+              noImageBuilder: (_) => Container(),
+            ),
           );
 
       return backgroundImage != null
           ? ClipRRect(
               borderRadius: getCardRadius(context),
-              child: DiscoveryCardHeadlineImage(
-                child: buildMemoryImage(backgroundImage),
-              ),
+              child: buildMemoryImage(backgroundImage),
             )
           : SvgPicture.asset(
               R.assets.graphics.formsEmptyCollection,

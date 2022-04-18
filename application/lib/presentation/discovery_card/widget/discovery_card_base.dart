@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
@@ -10,9 +11,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
-
-const BoxFit _kImageBoxFit = BoxFit.cover;
 
 typedef OnTtsData = void Function(TtsData);
 
@@ -20,20 +20,24 @@ typedef OnTtsData = void Function(TtsData);
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
   final Document document;
+  final FeedType? feedType;
   final DiscoveryCardManager? discoveryCardManager;
   final ImageManager? imageManager;
-  final BoxFit imageBoxFit;
   final OnTtsData? onTtsData;
+  final ShaderBuilder primaryCardShader;
 
-  const DiscoveryCardBase({
+  DiscoveryCardBase({
     Key? key,
     required this.isPrimary,
     required this.document,
+    required this.feedType,
     this.discoveryCardManager,
     this.imageManager,
-    this.imageBoxFit = _kImageBoxFit,
     this.onTtsData,
-  }) : super(key: key);
+    ShaderBuilder? primaryCardShader,
+  })  : primaryCardShader =
+            primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
+        super(key: key);
 }
 
 /// The base class for the different feed card states.
@@ -90,7 +94,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         builder: (context, state) => buildFromState(
           context,
           state,
-          _buildImage(),
+          buildImage(R.colors.swipeCardBackgroundDefault),
         ),
         listener: (context, state) {
           if (state.error.hasError) {
@@ -107,15 +111,19 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   void onFeedbackPressed(UserReaction requestedReaction) =>
       discoveryCardManager.onFeedback(
-          document: widget.document,
-          userReaction:
-              discoveryCardManager.state.explicitDocumentUserReaction ==
-                      requestedReaction
-                  ? UserReaction.neutral
-                  : requestedReaction);
+        document: widget.document,
+        userReaction: discoveryCardManager.state.explicitDocumentUserReaction ==
+                requestedReaction
+            ? UserReaction.neutral
+            : requestedReaction,
+        feedType: widget.feedType,
+      );
 
-  void onBookmarkPressed() =>
-      discoveryCardManager.toggleBookmarkDocument(widget.document);
+  void onBookmarkPressed({FeedType? feedType}) =>
+      discoveryCardManager.toggleBookmarkDocument(
+        widget.document,
+        feedType: feedType,
+      );
 
   void Function() onBookmarkLongPressed(DiscoveryCardState state) {
     return () {
@@ -127,12 +135,13 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
           provider:
               state.processedDocument?.getProvider(widget.document.resource),
           onError: (tooltipKey) => showTooltip(tooltipKey),
+          feedType: widget.feedType,
         ),
       );
     };
   }
 
-  Widget _buildImage() {
+  Widget buildImage(Color shadowColor) {
     final mediaQuery = MediaQuery.of(context);
 
     // allow opaque-when-loading, because the card will fade in on load completion.
@@ -141,10 +150,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
     return CachedImage(
       imageManager: imageManager,
+      shaderBuilder: widget.primaryCardShader,
+      singleFrameOnly: !widget.isPrimary,
       uri: Uri.parse(imageUrl),
-      width: mediaQuery.size.width.ceil(),
-      height: mediaQuery.size.height.ceil(),
-      fit: widget.imageBoxFit,
+      width: mediaQuery.size.width.floor(),
+      height: mediaQuery.size.height.floor(),
+      shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => buildBackgroundPane(opaque: false),

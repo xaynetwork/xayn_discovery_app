@@ -1,25 +1,31 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -39,23 +45,28 @@ class DiscoveryCard extends DiscoveryCardBase {
   /// In pixels, how far must be dragged, before snapping back into feed view
   static const double dragThreshold = 200.0;
 
-  const DiscoveryCard({
+  DiscoveryCard({
     Key? key,
     required bool isPrimary,
     required Document document,
+    required FeedType feedType,
     DiscoveryCardManager? discoveryCardManager,
     ImageManager? imageManager,
     this.onDiscard,
     this.onDrag,
     this.onController,
     OnTtsData? onTtsData,
+    ShaderBuilder? primaryCardShader,
   }) : super(
           key: key,
           isPrimary: isPrimary,
           document: document,
+          feedType: feedType,
           discoveryCardManager: discoveryCardManager,
           imageManager: imageManager,
           onTtsData: onTtsData,
+          primaryCardShader:
+              primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
         );
 
   @override
@@ -71,6 +82,7 @@ class DiscoveryCardStandaloneArgs {
   const DiscoveryCardStandaloneArgs({
     required this.isPrimary,
     required this.document,
+    required this.feedType,
     required this.discoveryCardManager,
     required this.imageManager,
     this.onDiscard,
@@ -78,7 +90,7 @@ class DiscoveryCardStandaloneArgs {
 
   final bool isPrimary;
   final Document document;
-
+  final FeedType feedType;
   final DiscoveryCardManager discoveryCardManager;
   final ImageManager imageManager;
   final VoidCallback? onDiscard;
@@ -96,6 +108,7 @@ class DiscoveryCardStandalone extends DiscoveryCard {
           discoveryCardManager: args.discoveryCardManager,
           imageManager: args.imageManager,
           onDiscard: args.onDiscard,
+          feedType: args.feedType,
         );
 
   @override
@@ -131,6 +144,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final DiscoveryCardController _controller;
   late final StreamSubscription<BuildContext> _updateNavBarListener;
   late final _scrollController = ScrollController(keepScrollOffset: false);
+  late final DiscoveryCardShadowManager _shadowManager = di.get();
   double _scrollOffset = .0;
 
   @override
@@ -197,6 +211,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     _dragToCloseAnimation.dispose();
     _controller.dispose();
 
+    _shadowManager.close();
+
     super.dispose();
   }
 
@@ -212,7 +228,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
     final body = LayoutBuilder(
       builder: (context, constraints) {
-        final maskedImage = DiscoveryCardReaderModeHeadlineImage(child: image);
         final elements = DiscoveryCardElements(
           manager: discoveryCardManager,
           document: widget.document,
@@ -231,6 +246,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             discoveryCardManager.openWebResourceUrl(
               widget.document,
               CurrentView.reader,
+              widget.feedType,
             );
           },
           onToggleTts: () => widget.onTtsData?.call(
@@ -242,11 +258,12 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                   .state.processedDocument?.processHtmlResult.contents,
             ),
           ),
-          onBookmarkPressed: onBookmarkPressed,
+          onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onBookmarkLongPressed: onBookmarkLongPressed(state),
           bookmarkStatus: state.bookmarkStatus,
           fractionSize: normalizedValue,
           useLargeTitle: false,
+          feedType: widget.feedType,
         );
 
         // Limits the max scroll-away distance,
@@ -276,7 +293,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
-                      maskedImage,
+                      image,
                       elements,
                     ],
                   ),
@@ -297,6 +314,17 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       ),
     );
   }
+
+  @override
+  Widget buildImage(Color shadowColor) =>
+      BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
+        bloc: _shadowManager,
+        builder: (_, state) => super.buildImage(
+          R.isDarkMode
+              ? state.readerModeBackgroundColor.color
+              : R.colors.swipeCardBackgroundDefault,
+        ),
+      );
 
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
@@ -377,11 +405,14 @@ class _DiscoveryCardPageState extends _DiscoveryCardState
         ),
         buildNavBarItemBookmark(
           bookmarkStatus: _discoveryCardManager.state.bookmarkStatus,
-          onPressed: onBookmarkPressed,
+          onPressed: () => onBookmarkPressed(feedType: widget.feedType),
           onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
         ),
         buildNavBarItemShare(
-          onPressed: () => _discoveryCardManager.shareUri(widget.document),
+          onPressed: () => _discoveryCardManager.shareUri(
+            document: widget.document,
+            feedType: widget.feedType,
+          ),
         ),
         buildNavBarItemDisLike(
           isDisLiked: _discoveryCardManager

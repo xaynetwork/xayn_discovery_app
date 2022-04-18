@@ -8,6 +8,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
@@ -77,6 +78,7 @@ void main() {
       document: fakeDocument,
       userReaction: UserReaction.positive,
       context: FeedbackContext.explicit,
+      feedType: FeedType.feed,
     ),
     verify: (manager) {
       verify(engine.engineEvents);
@@ -96,6 +98,7 @@ void main() {
       document: fakeDocument,
       userReaction: UserReaction.positive,
       context: FeedbackContext.explicit,
+      feedType: FeedType.feed,
     ),
     verify: (manager) {
       verify(
@@ -120,6 +123,7 @@ void main() {
       document: fakeDocument,
       userReaction: UserReaction.positive,
       context: FeedbackContext.implicit,
+      feedType: FeedType.feed,
     ),
     verify: (manager) {
       verifyNever(crudExplicitDocumentFeedbackUseCase.singleOutput(any));

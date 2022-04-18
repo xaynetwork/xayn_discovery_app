@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_deleted_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -20,6 +21,7 @@ abstract class BookmarksScreenNavActions {
   void onBookmarkPressed({
     required bool isPrimary,
     required UniqueId bookmarkId,
+    FeedType? feedType,
   });
 }
 
@@ -144,7 +146,11 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   void onBookmarkPressed({
     required bool isPrimary,
     required UniqueId bookmarkId,
+    FeedType? feedType,
   }) =>
       _bookmarksScreenNavActions.onBookmarkPressed(
-          bookmarkId: bookmarkId, isPrimary: true);
+        bookmarkId: bookmarkId,
+        isPrimary: true,
+        feedType: feedType,
+      );
 }
