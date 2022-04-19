@@ -1,11 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 
 typedef ImageLoadingBuilder = Widget Function(
@@ -13,28 +16,44 @@ typedef ImageLoadingBuilder = Widget Function(
   double progress,
 );
 typedef ImageErrorWidgetBuilder = Widget Function(BuildContext context);
+typedef ShaderBuilder = BaseStaticShader Function({
+  Key? key,
+  required Uint8List bytes,
+  required Uri uri,
+  required ImageErrorWidgetBuilder noImageBuilder,
+  Color? shadowColor,
+  double? width,
+  double? height,
+  bool? singleFrameOnly,
+});
 
 class CachedImage extends StatefulWidget {
   final Uri uri;
+  final Color? shadowColor;
   final ImageLoadingBuilder? loadingBuilder;
   final ImageErrorWidgetBuilder? errorBuilder;
   final ImageErrorWidgetBuilder? noImageBuilder;
   final int? width;
   final int? height;
-  final BoxFit? fit;
   final ImageManager? imageManager;
+  final ShaderBuilder shaderBuilder;
+  final bool? singleFrameOnly;
 
-  const CachedImage({
+  CachedImage({
     Key? key,
     required this.uri,
+    this.shadowColor,
     this.loadingBuilder,
     this.errorBuilder,
     this.noImageBuilder,
     this.width,
     this.height,
-    this.fit,
     this.imageManager,
-  }) : super(key: key);
+    this.singleFrameOnly,
+    ShaderBuilder? shaderBuilder,
+  })  : shaderBuilder =
+            shaderBuilder ?? ShaderFactory.fromType(ShaderType.static),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CachedImageState();
@@ -42,8 +61,6 @@ class CachedImage extends StatefulWidget {
 
 class _CachedImageState extends State<CachedImage> {
   late final ImageManager _imageManager;
-  late final _svgByteDecoder =
-      SvgPicture.svgByteDecoderBuilder(const SvgTheme());
 
   @override
   void initState() {
@@ -81,10 +98,7 @@ class _CachedImageState extends State<CachedImage> {
   @override
   Widget build(BuildContext context) {
     final loadingBuilder = widget.loadingBuilder ??
-        (
-          BuildContext context,
-          double progress,
-        ) =>
+        (BuildContext context, double progress) =>
             const WidgetTestableProgressIndicator();
     final errorBuilder = widget.errorBuilder ??
         (BuildContext context) => kReleaseMode
@@ -92,9 +106,8 @@ class _CachedImageState extends State<CachedImage> {
             : const Text('asset was not loaded here');
 
     final noImageBuilder = widget.noImageBuilder ??
-        (BuildContext context) => Container(
-              color: R.colors.swipeCardBackgroundHome,
-            );
+        (BuildContext context) =>
+            Container(color: R.colors.swipeCardBackgroundHome);
 
     return BlocBuilder<ImageManager, ImageManagerState>(
       bloc: _imageManager,
@@ -121,28 +134,15 @@ class _CachedImageState extends State<CachedImage> {
           if (bytes != null) {
             opacity = 1.0;
 
-            return Image.memory(
-              bytes,
+            return widget.shaderBuilder(
+              key: Key(widget.uri.toString()),
+              uri: widget.uri,
               width: widget.width?.toDouble(),
               height: widget.height?.toDouble(),
-              fit: widget.fit,
-              gaplessPlayback: true,
-              errorBuilder: (_, e, s) => FutureBuilder<PictureInfo>(
-                  future: _svgByteDecoder(bytes, null, ''),
-                  builder: (_, snapshot) {
-                    // if decoding failed, or pending, return the fallback
-                    if (snapshot.hasError || !snapshot.hasData) {
-                      return noImageBuilder(context);
-                    }
-
-                    return SvgPicture.memory(
-                      bytes,
-                      width: widget.width?.toDouble(),
-                      height: widget.height?.toDouble(),
-                      fit: widget.fit ?? BoxFit.cover,
-                      placeholderBuilder: noImageBuilder,
-                    );
-                  }),
+              bytes: bytes,
+              noImageBuilder: noImageBuilder,
+              shadowColor: widget.shadowColor,
+              singleFrameOnly: widget.singleFrameOnly,
             );
           } else {
             // there is no image

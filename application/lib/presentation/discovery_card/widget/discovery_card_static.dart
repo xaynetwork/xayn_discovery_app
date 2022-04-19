@@ -5,18 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_card_headline_image.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -28,7 +31,7 @@ const double _kImageFractionSize = .4;
 
 /// Implementation of [DiscoveryCardBase] which is used inside the feed view.
 class DiscoveryCardStatic extends DiscoveryCardBase {
-  const DiscoveryCardStatic({
+  DiscoveryCardStatic({
     Key? key,
     required Document document,
     FeedType? feedType,
@@ -53,6 +56,7 @@ class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic>
     with OverlayMixin<DiscoveryCardStatic> {
   late final _scrollController = ScrollController(keepScrollOffset: false);
+  late final DiscoveryCardShadowManager _shadowManager = di.get();
   double _scrollOffset = .0;
 
   @override
@@ -109,7 +113,6 @@ class _DiscoveryCardStaticState
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset =
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
-        final maskedImage = DiscoveryCardHeadlineImage(child: image);
 
         return AppScrollbar(
           scrollController: _scrollController,
@@ -131,7 +134,7 @@ class _DiscoveryCardStaticState
                   alignment: Alignment.topCenter,
                   child: Stack(
                     children: [
-                      maskedImage,
+                      image,
                       elements,
                     ],
                   ),
@@ -143,6 +146,17 @@ class _DiscoveryCardStaticState
       },
     );
   }
+
+  @override
+  Widget buildImage(Color shadowColor) =>
+      BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
+        bloc: _shadowManager,
+        builder: (_, state) => super.buildImage(
+          R.isDarkMode
+              ? state.readerModeBackgroundColor.color
+              : R.colors.swipeCardBackgroundDefault,
+        ),
+      );
 
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,

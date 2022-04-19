@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
@@ -21,6 +21,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
@@ -269,6 +270,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           );
         }
 
+        final shaderType = _getShaderType(document.resource);
         final card = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
@@ -285,6 +287,10 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 onTtsData: (it) => setState(
                     () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
                 feedType: manager.feedType,
+                primaryCardShader: ShaderFactory.fromType(
+                  shaderType,
+                  transitionToIdle: true,
+                ),
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
@@ -293,6 +299,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   document: document,
                   discoveryCardManager: managers.discoveryCardManager,
                   imageManager: managers.imageManager,
+                  primaryCardShader: ShaderFactory.fromType(shaderType),
                   onTtsData: (it) => setState(() =>
                       ttsData = ttsData.enabled ? TtsData.disabled() : it),
                   feedType: manager.feedType,
@@ -314,6 +321,22 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
         );
       };
+
+  ShaderType _getShaderType(NewsResource newsResource) {
+    // A document doesn't have a unique 'index',
+    // and also, the index within the feed is not static, as older
+    // documents are removed.
+    // So while not ideal, using hashcode to consistently resolve the exact
+    // same shader does work:
+    switch (newsResource.hashCode % 3) {
+      case 0:
+        return ShaderType.static;
+      case 1:
+        return ShaderType.pan;
+      default:
+        return ShaderType.zoom;
+    }
+  }
 
   BoxBorder? Function(int) _boxBorderBuilder({
     required Set<Document> results,
