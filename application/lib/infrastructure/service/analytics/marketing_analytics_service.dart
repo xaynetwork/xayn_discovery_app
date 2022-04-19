@@ -40,7 +40,10 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   final AppsflyerSdk _appsflyer;
 
   @visibleForTesting
-  AppsFlyerMarketingAnalyticsService(this._appsflyer, this._deepLinkManager) {
+  AppsFlyerMarketingAnalyticsService(
+    this._appsflyer,
+    this._deepLinkManager,
+  ) {
     _appsflyer.onDeepLinking(_onDeepLinking);
     _appsflyer.setMinTimeBetweenSessions(5);
     _appsflyer.setPushNotification(true);
@@ -69,7 +72,10 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     final userId = appStatusRepository.appStatus.userId.value;
     appsFlyer.setCustomerUserId(userId);
 
-    return AppsFlyerMarketingAnalyticsService(appsFlyer, deepLinkManager);
+    return AppsFlyerMarketingAnalyticsService(
+      appsFlyer,
+      deepLinkManager,
+    );
   }
 
   /// The logEvent method allows you to send in-app events to AppsFlyer analytics.
