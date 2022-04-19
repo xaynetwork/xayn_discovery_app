@@ -93,13 +93,19 @@ class PageRegistry {
         ),
       );
 
-  static bookmarks(UniqueId collectionId) => xayn.PageData(
-        name: "bookmarks",
-        arguments: collectionId,
-        builder: (_, UniqueId? args) => BookmarksScreen(
+  static bookmarks(UniqueId collectionId) {
+    final bookmarksKey = GlobalKey();
+    return xayn.PageData(
+      name: "bookmarks",
+      arguments: collectionId,
+      builder: (_, UniqueId? args) {
+        return BookmarksScreen(
           collectionId: args!,
-        ),
-      );
+          key: bookmarksKey,
+        );
+      },
+    );
+  }
 
   static final personalArea = xayn.PageData(
     name: "personalArea",

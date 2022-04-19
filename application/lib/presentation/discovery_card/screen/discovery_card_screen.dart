@@ -45,11 +45,6 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
   TtsData ttsData = TtsData.disabled();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   NavBarConfig get navBarConfig => _discoveryCardScreenManager.state.map(
         initial: (_) => NavBarConfig.backBtn(
           buildNavBarItemBack(
@@ -63,7 +58,8 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       );
 
   NavBarConfig _createDocumentNavbar(Document document) {
-    final cardManagers = di.get<CardManagers>(param1: document);
+    CardManagers cardManagers =
+        CardManagersMixin.getManagers(context, document);
     final discoveryCardManager = cardManagers.discoveryCardManager;
 
     void onBookmarkPressed() => discoveryCardManager.toggleBookmarkDocument(
@@ -142,7 +138,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       });
 
   Widget _createCard(Document document) {
-    final cardManagers = di.get<CardManagers>(param1: document);
+    final cardManagers = CardManagersMixin.getManagers(context, document);
 
     return DiscoveryCardStatic(
       document: document,
