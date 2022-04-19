@@ -17,8 +17,10 @@ void main() async {
   setUp(() {
     appsFlyer = MockAppsflyerSdk();
     deepLinkManager = MockDeepLinkManager();
-    marketingAnalyticsService =
-        AppsFlyerMarketingAnalyticsService(appsFlyer, deepLinkManager);
+    marketingAnalyticsService = AppsFlyerMarketingAnalyticsService(
+      appsFlyer,
+      deepLinkManager,
+    );
   });
 
   group('Marketing Analytics Service', () {
