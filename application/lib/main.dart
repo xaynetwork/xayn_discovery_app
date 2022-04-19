@@ -84,8 +84,11 @@ Future<void> _maybeClearXaynLegacyData(
 }
 
 Widget getApp() {
+  final initialLinden = R.linden.updateBrightness(
+    WidgetsBinding.instance!.window.platformBrightness,
+  );
   final unterDenLinden = UnterDenLinden(
-    initialLinden: R.linden,
+    initialLinden: initialLinden,
     onLindenUpdated: R.updateLinden,
     child: const App(),
   );
