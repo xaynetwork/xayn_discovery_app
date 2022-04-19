@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:http_client/http_client.dart' as http;
@@ -11,6 +12,9 @@ import 'matchers.dart';
 
 void main() {
   late MockClient client = MockClient();
+  late MockAppImageCacheManager cacheManager = MockAppImageCacheManager();
+  late MockConnectivityObserver connectivityObserver =
+      MockConnectivityObserver();
   final uri = Uri.dataFromString('<p>hi!</p>');
   final yahooWebLink = Uri.parse(
       'https://finance.yahoo.com/news/mike-morales-joins-vector-laboratories-110000153.html');
@@ -38,6 +42,15 @@ void main() {
         '<p>hi!</p>',
       ),
     );
+    when(cacheManager.getFileFromCache(any)).thenAnswer((_) async => null);
+    when(cacheManager.putFile(any, any, maxAge: anyNamed('maxAge')))
+        .thenAnswer((_) async => MockFile());
+    when(connectivityObserver.isUp())
+        .thenAnswer((_) async => ConnectivityResult.wifi);
+    when(connectivityObserver.checkConnectivity())
+        .thenAnswer((_) async => ConnectivityResult.wifi);
+    when(connectivityObserver.onConnectivityChanged)
+        .thenAnswer((_) => Stream.value(ConnectivityResult.wifi));
   });
 
   group('LoadHtmlUseCase: ', () {
@@ -45,6 +58,8 @@ void main() {
       'Loads website data: ',
       build: () => LoadHtmlUseCase.standard(
         client: client,
+        cacheManager: cacheManager,
+        connectivityObserver: connectivityObserver,
       ),
       input: [uri],
       expect: [
@@ -61,6 +76,8 @@ void main() {
         'Loads Yahoo data: ',
         build: () => LoadHtmlUseCase.standard(
           client: Client(),
+          cacheManager: cacheManager,
+          connectivityObserver: connectivityObserver,
         ),
         input: [yahooWebLink],
         expect: [
@@ -80,6 +97,8 @@ void main() {
         'Fails to load Yahoo data with basic headers: ',
         build: () => LoadHtmlUseCase(
           client: Client(),
+          cacheManager: cacheManager,
+          connectivityObserver: connectivityObserver,
           headers: basicHeaders,
         ),
         input: [yahooWebLink],

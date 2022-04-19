@@ -162,7 +162,7 @@ class TranslationsEs extends Translations {
   String get subscriptionRestore => """Reiniciar Subscripción""";
   String get subscriptionPromoCode => """Tengo un código promocional""";
   String get subscriptionDisclaimer =>
-      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
+      """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros _Términos y Condiciones_. Tú confirmas que has leído nuestra _Política de Privacidad_. """;
   String get settingsSubscribedToHeader => """Tu estás subscrito a""";
   String get doneButtonTitle => """Hecho""";
   String get subscriptionRenewsMonthlyText =>
@@ -185,40 +185,42 @@ class TranslationsEs extends Translations {
       """Por favor intente más tarde""";
   String get errorClose => """Cerrar""";
   String get sourceHandlingTooltipLabel =>
-      """What do you want to see less of?""";
-  String get sourceHandlingTooltipHighlightedWord => """What""";
-  String get enableTextToSpeech => """Enable text -to-speech""";
-  String get settingsSectionTitleOptions => """Options""";
-  String get personalAreaContact => """Contact""";
-  String get settingsContactUs => """Contact""";
+      """¿Qué contenido quieres ver menos?""";
+  String get sourceHandlingTooltipHighlightedWord => """Que""";
+  String get enableTextToSpeech => """Activar texto a voz""";
+  String get settingsSectionTitleOptions => """Opciones""";
+  String get personalAreaContact => """Contacto""";
+  String get settingsContactUs => """Contacto""";
   String get contactSectionWeb => """Web:""";
-  String get contactSectionSupportEmail => """Support eMail:""";
-  String get contactSectionForPublishers => """For Publishers:""";
-  String get contactSectionPhone => """Phone:""";
-  String get searchNoResultsFound => """No results""";
-  String get searchEndOfResults => """That's all!""";
+  String get contactSectionSupportEmail => """Email de soporte:""";
+  String get contactSectionForPublishers => """Para editores:""";
+  String get contactSectionPhone => """Teléfono:""";
+  String get searchNoResultsFound => """Sin resultados""";
+  String get searchEndOfResults => """Eso es todo!""";
   String get searchNoResultsFoundDesc =>
-      """We couldn’t find any stories for your search. Try different or more general keywords.""";
+      """No pudimos encontrar ninguna historia para tu búsqueda. Intenta otra o más palabras claves.""";
   String get searchEndOfResultsDesc =>
-      """Didn’t see what you're looking for? Try different or more general keywords.""";
+      """No viste lo que estabas buscando? Intenta otra o más palabras claves. """;
   String get feedSettingsScreenSourceFilterExplanation =>
-      """Sources that you disliked will not be shown in your Discovery Feed anymore.""";
-  String get feedSettingsScreenTabCountries => """Countries""";
-  String get feedSettingsScreenTabSources => """Sources""";
+      """Las fuentes no gustadas no van a ser mostradas más en su Discovery Feed.""";
+  String get feedSettingsScreenTabCountries => """Países""";
+  String get feedSettingsScreenTabSources => """Fuentes""";
   String get feedSettingsScreenSubtitleDislikedSources =>
-      """Disliked Sources""";
-  String get settingsSectionHomeFeed => """Feed setup""";
+      """Fuentes no gustadas""";
+  String get settingsSectionHomeFeed => """Configuración del feed""";
   String get paymentPromoCodeAndroidBottomSheetTitle =>
-      """Have a promo code?""";
+      """Tienes un código promocional?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""";
-  String get paymentFailedBottomSheetTitle => """Payment failed""";
+      """Puedes entrar al presionar "Subscribirse ahora", luego presionando en el método de paga y seleccionando "Validar código".""";
+  String get paymentFailedBottomSheetTitle => """Pago fallido""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later. """;
-  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+      """La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""";
+  String get readerModeUnableToLoadTitle =>
+      """No pudimos cargar el contenido""";
   String get readerModeUnableToLoadDesc =>
-      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
-  String get readerModeUnableToLoadCTA => """Open in Browser""";
+      """Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.""";
+  String get readerModeUnableToLoadCTA => """Abrir en el navegador""";
+  String get noInternetConnection => """No internet connection""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -231,7 +233,7 @@ class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
   String get itemAlreadyOwned => """Tu ya te subscribiste""";
   String get transactionFailed => """Transacción de pago fallida""";
   String get noActiveSubscriptionFound =>
-      """We couldn't find an active subscription for this account.""";
+      """No pudimos encontrar ninguna subscripción activa para esta cuenta.""";
 }
 
 Map<String, String> get translationsEsMap => {
@@ -341,7 +343,7 @@ Map<String, String> get translationsEsMap => {
       """subscriptionRestore""": """Reiniciar Subscripción""",
       """subscriptionPromoCode""": """Tengo un código promocional""",
       """subscriptionDisclaimer""":
-          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
+          """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros _Términos y Condiciones_. Tú confirmas que has leído nuestra _Política de Privacidad_. """,
       """settingsSubscribedToHeader""": """Tu estás subscrito a""",
       """doneButtonTitle""": """Hecho""",
       """subscriptionRenewsMonthlyText""":
@@ -360,7 +362,7 @@ Map<String, String> get translationsEsMap => {
       """paymentFlowError.transactionFailed""":
           """Transacción de pago fallida""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """We couldn't find an active subscription for this account.""",
+          """No pudimos encontrar ninguna subscripción activa para esta cuenta.""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Estás seguro de que quieres borrar esta colección?""",
       """bottomSheetMoveSingleBookmark""": """Moverse a otra colección""",
@@ -370,36 +372,39 @@ Map<String, String> get translationsEsMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Por favor intente más tarde""",
       """errorClose""": """Cerrar""",
-      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
-      """sourceHandlingTooltipHighlightedWord""": """What""",
-      """enableTextToSpeech""": """Enable text -to-speech""",
-      """settingsSectionTitleOptions""": """Options""",
-      """personalAreaContact""": """Contact""",
-      """settingsContactUs""": """Contact""",
+      """sourceHandlingTooltipLabel""": """¿Qué contenido quieres ver menos?""",
+      """sourceHandlingTooltipHighlightedWord""": """Que""",
+      """enableTextToSpeech""": """Activar texto a voz""",
+      """settingsSectionTitleOptions""": """Opciones""",
+      """personalAreaContact""": """Contacto""",
+      """settingsContactUs""": """Contacto""",
       """contactSectionWeb""": """Web:""",
-      """contactSectionSupportEmail""": """Support eMail:""",
-      """contactSectionForPublishers""": """For Publishers:""",
-      """contactSectionPhone""": """Phone:""",
-      """searchNoResultsFound""": """No results""",
-      """searchEndOfResults""": """That's all!""",
+      """contactSectionSupportEmail""": """Email de soporte:""",
+      """contactSectionForPublishers""": """Para editores:""",
+      """contactSectionPhone""": """Teléfono:""",
+      """searchNoResultsFound""": """Sin resultados""",
+      """searchEndOfResults""": """Eso es todo!""",
       """searchNoResultsFoundDesc""":
-          """We couldn’t find any stories for your search. Try different or more general keywords.""",
+          """No pudimos encontrar ninguna historia para tu búsqueda. Intenta otra o más palabras claves.""",
       """searchEndOfResultsDesc""":
-          """Didn’t see what you're looking for? Try different or more general keywords.""",
+          """No viste lo que estabas buscando? Intenta otra o más palabras claves. """,
       """feedSettingsScreenSourceFilterExplanation""":
-          """Sources that you disliked will not be shown in your Discovery Feed anymore.""",
-      """feedSettingsScreenTabCountries""": """Countries""",
-      """feedSettingsScreenTabSources""": """Sources""",
-      """feedSettingsScreenSubtitleDislikedSources""": """Disliked Sources""",
-      """settingsSectionHomeFeed""": """Feed setup""",
-      """paymentPromoCodeAndroidBottomSheetTitle""": """Have a promo code?""",
+          """Las fuentes no gustadas no van a ser mostradas más en su Discovery Feed.""",
+      """feedSettingsScreenTabCountries""": """Países""",
+      """feedSettingsScreenTabSources""": """Fuentes""",
+      """feedSettingsScreenSubtitleDislikedSources""":
+          """Fuentes no gustadas""",
+      """settingsSectionHomeFeed""": """Configuración del feed""",
+      """paymentPromoCodeAndroidBottomSheetTitle""":
+          """Tienes un código promocional?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""",
-      """paymentFailedBottomSheetTitle""": """Payment failed""",
+          """Puedes entrar al presionar "Subscribirse ahora", luego presionando en el método de paga y seleccionando "Validar código".""",
+      """paymentFailedBottomSheetTitle""": """Pago fallido""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later. """,
-      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+          """La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""",
+      """readerModeUnableToLoadTitle""": """No pudimos cargar el contenido""",
       """readerModeUnableToLoadDesc""":
-          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
-      """readerModeUnableToLoadCTA""": """Open in Browser""",
+          """Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.""",
+      """readerModeUnableToLoadCTA""": """Abrir en el navegador""",
+      """noInternetConnection""": """No internet connection""",
     };

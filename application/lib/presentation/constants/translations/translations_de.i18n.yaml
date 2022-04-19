@@ -125,7 +125,7 @@ readerModeSettingsErrorChangesNotApplied: Die Änderungen konnten nicht gespeich
 errorGenericHeaderSomethingWentWrong: Da ging wohl was schief
 errorGenericBodyPleaseTryAgainLater: Bitte versuche es später noch einmal.
 errorClose: Schließen
-sourceHandlingTooltipLabel: Wovon willst du weniger Vorschläge bekommen?
+sourceHandlingTooltipLabel: Wovon möchtest du weniger sehen?
 sourceHandlingTooltipHighlightedWord: Was
 enableTextToSpeech: Text-zu-Sprache aktivieren
 settingsSectionTitleOptions: Optionen
@@ -151,3 +151,4 @@ paymentFailedBottomSheetBody: "The app store couldn’t process your payment. Pl
 readerModeUnableToLoadTitle: We couldn’t load this content
 readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
 readerModeUnableToLoadCTA: Open in Browser
+noInternetConnection: No internet connection

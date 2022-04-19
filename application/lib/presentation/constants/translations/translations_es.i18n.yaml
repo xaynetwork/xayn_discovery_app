@@ -95,7 +95,7 @@ subscriptionPerk5: Cancelación en cualquier momento
 subscriptionSubscribeNow: Subscribete Ahora
 subscriptionRestore: Reiniciar Subscripción
 subscriptionPromoCode: Tengo un código promocional
-subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
+subscriptionDisclaimer: "Al presionar \"Subscribir Ahora\" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros _Términos y Condiciones_. Tú confirmas que has leído nuestra _Política de Privacidad_. "
 settingsSubscribedToHeader: Tu estás subscrito a
 doneButtonTitle: Hecho
 subscriptionRenewsMonthlyText: 'La subscripción se renueva mensualmente en: %s'
@@ -118,36 +118,37 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Transacción de pago fallida
-  noActiveSubscriptionFound: We couldn't find an active subscription for this account.
+  noActiveSubscriptionFound: No pudimos encontrar ninguna subscripción activa para esta cuenta.
 bottomSheetDeleteCollectionWithNoItemsBody: Estás seguro de que quieres borrar esta colección?
 bottomSheetMoveSingleBookmark: Moverse a otra colección
 readerModeSettingsErrorChangesNotApplied: Los cambios no pudieron ser aplicado
 errorGenericHeaderSomethingWentWrong: Algo salió mal
 errorGenericBodyPleaseTryAgainLater: Por favor intente más tarde
 errorClose: Cerrar
-sourceHandlingTooltipLabel: What do you want to see less of?
-sourceHandlingTooltipHighlightedWord: What
-enableTextToSpeech: Enable text -to-speech
-settingsSectionTitleOptions: Options
-personalAreaContact: Contact
-settingsContactUs: Contact
+sourceHandlingTooltipLabel: ¿Qué contenido quieres ver menos?
+sourceHandlingTooltipHighlightedWord: Que
+enableTextToSpeech: Activar texto a voz
+settingsSectionTitleOptions: Opciones
+personalAreaContact: Contacto
+settingsContactUs: Contacto
 contactSectionWeb: 'Web:'
-contactSectionSupportEmail: 'Support eMail:'
-contactSectionForPublishers: 'For Publishers:'
-contactSectionPhone: 'Phone:'
-searchNoResultsFound: No results
-searchEndOfResults: That's all!
-searchNoResultsFoundDesc: We couldn’t find any stories for your search. Try different or more general keywords.
-searchEndOfResultsDesc: Didn’t see what you're looking for? Try different or more general keywords.
-feedSettingsScreenSourceFilterExplanation: Sources that you disliked will not be shown in your Discovery Feed anymore.
-feedSettingsScreenTabCountries: Countries
-feedSettingsScreenTabSources: Sources
-feedSettingsScreenSubtitleDislikedSources: Disliked Sources
-settingsSectionHomeFeed: Feed setup
-paymentPromoCodeAndroidBottomSheetTitle: Have a promo code?
-paymentPromoCodeAndroidBottomSheetBody: You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.
-paymentFailedBottomSheetTitle: Payment failed
-paymentFailedBottomSheetBody: "The app store couldn’t process your payment. Please try again later. "
-readerModeUnableToLoadTitle: We couldn’t load this content
-readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
-readerModeUnableToLoadCTA: Open in Browser
+contactSectionSupportEmail: 'Email de soporte:'
+contactSectionForPublishers: 'Para editores:'
+contactSectionPhone: 'Teléfono:'
+searchNoResultsFound: Sin resultados
+searchEndOfResults: Eso es todo!
+searchNoResultsFoundDesc: No pudimos encontrar ninguna historia para tu búsqueda. Intenta otra o más palabras claves.
+searchEndOfResultsDesc: "No viste lo que estabas buscando? Intenta otra o más palabras claves. "
+feedSettingsScreenSourceFilterExplanation: Las fuentes no gustadas no van a ser mostradas más en su Discovery Feed.
+feedSettingsScreenTabCountries: Países
+feedSettingsScreenTabSources: Fuentes
+feedSettingsScreenSubtitleDislikedSources: Fuentes no gustadas
+settingsSectionHomeFeed: Configuración del feed
+paymentPromoCodeAndroidBottomSheetTitle: Tienes un código promocional?
+paymentPromoCodeAndroidBottomSheetBody: Puedes entrar al presionar "Subscribirse ahora", luego presionando en el método de paga y seleccionando "Validar código".
+paymentFailedBottomSheetTitle: Pago fallido
+paymentFailedBottomSheetBody: La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.
+readerModeUnableToLoadTitle: No pudimos cargar el contenido
+readerModeUnableToLoadDesc: Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.
+readerModeUnableToLoadCTA: Abrir en el navegador
+noInternetConnection: No internet connection

@@ -9,7 +9,15 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
+
+enum DeepLinkValue {
+  none,
+  activeSearch,
+}
+
+abstract class DeepLinkManager {
+  void onDeepLink(DeepLinkValue deepLink);
+}
 
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
@@ -18,8 +26,6 @@ abstract class MarketingAnalyticsService {
   void send(AnalyticsEvent event);
 
   void optOut(bool state);
-
-  void setPushNotification(bool isEnabled);
 
   /// TODO: call this function in language change
   void setCurrentDeviceLanguage(String language);
@@ -30,19 +36,23 @@ abstract class MarketingAnalyticsService {
 @LazySingleton(as: MarketingAnalyticsService)
 @releaseEnvironment
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
+  final DeepLinkManager _deepLinkManager;
   final AppsflyerSdk _appsflyer;
 
   @visibleForTesting
-  AppsFlyerMarketingAnalyticsService(this._appsflyer) {
-    _appsflyer.onAppOpenAttribution(_onAppOpenAttribution);
-    _appsflyer.onInstallConversionData(_onInstallConversionData);
+  AppsFlyerMarketingAnalyticsService(
+    this._appsflyer,
+    this._deepLinkManager,
+  ) {
     _appsflyer.onDeepLinking(_onDeepLinking);
     _appsflyer.setMinTimeBetweenSessions(5);
+    _appsflyer.setPushNotification(true);
   }
 
   @factoryMethod
   static MarketingAnalyticsService initialized(
     AppStatusRepository appStatusRepository,
+    DeepLinkManager deepLinkManager,
   ) {
     final options = Platform.isIOS
         ? AppsFlyerOptions(
@@ -58,19 +68,14 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
             disableAdvertisingIdentifier: false,
           );
     final appsFlyer = AppsflyerSdk(options);
-    appsFlyer.initSdk(
-      /// NOTE: when sending registerOnDeepLinkingCallback flag, the sdk will
-      /// ignore onAppOpenAttribution (registerOnAppOpenAttributionCallback flag)!
-      ///
-      registerOnDeepLinkingCallback: false,
-      registerConversionDataCallback: false,
-      registerOnAppOpenAttributionCallback: false,
-    );
+    appsFlyer.initSdk(registerOnDeepLinkingCallback: true);
     final userId = appStatusRepository.appStatus.userId.value;
     appsFlyer.setCustomerUserId(userId);
-    logger.i('>>>>> USER_ID: $userId');
 
-    return AppsFlyerMarketingAnalyticsService(appsFlyer);
+    return AppsFlyerMarketingAnalyticsService(
+      appsFlyer,
+      deepLinkManager,
+    );
   }
 
   /// The logEvent method allows you to send in-app events to AppsFlyer analytics.
@@ -96,17 +101,6 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     if (Platform.isIOS) _appsflyer.disableSKAdNetwork(isOptOut);
   }
 
-  /// For Android: Make sure to call this API inside the page of every activity that is launched after clicking the notification.
-  ///
-  /// For iOS: This API can be called once at the initialization phase.
-  ///
-  /// Please check the following guide in order to understand the relevant payload needed for AppsFlyer to attribute the push notification:
-  /// https://support.appsflyer.com/hc/en-us/articles/207364076-Measuring-push-notification-re-engagement-campaigns
-  ///
-  @override
-  void setPushNotification(bool isEnabled) =>
-      _appsflyer.setPushNotification(isEnabled);
-
   /// Use this API in order to set the language
   /// e.g.: setCurrentDeviceLanguage('en');
   @override
@@ -116,44 +110,21 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   @override
   Future<String?> getUID() => _appsflyer.getAppsFlyerUID();
 
-  /// Handle the Direct Deeplinking with [_onAppOpenAttribution]
-  ///
-  /// Direct Deep Linking - Directly serving personalized content to existing
-  /// users, which already have the mobile app installed.
-  ///
-  /// For testing purposes we send in-app events when [_onAppOpenAttribution] handler is triggered
-  _onAppOpenAttribution(dynamic res) {
-    if (res is DeepLinkResult && res.status == Status.FOUND) {
-      _appsflyer.logEvent('onAppOpenAttribution',
-          res.deepLink?.clickEvent.toSerializableMap() ?? {});
-    }
-  }
-
-  /// Handle the Deferred deeplink with [_onInstallConversionData]
-  ///
-  /// Deferred Deep Linking is Serving personalized content to new or former
-  /// users, directly after the installation.
-  ///
-  /// For testing purposes we send in-app events when [_onInstallConversionData] handler is triggered
-  ///
-  _onInstallConversionData(dynamic res) {
-    if (res is DeepLinkResult && res.status == Status.FOUND) {
-      _appsflyer.logEvent('onInstallConversionData',
-          res.deepLink?.clickEvent.toSerializableMap() ?? {});
-    }
-  }
-
   /// Handle the Unified deep linking with [_onDeepLinking]
   ///
   /// Unified deep linking - Unified deep linking sends new and existing users
   /// to a specific in-app activity as soon as the app is opened.
   ///
-  /// For testing purposes we send in-app events when [_onDeepLinking] handler is triggered
+  /// It handles Deferred & Direct Deep link in a single callback
   ///
   _onDeepLinking(dynamic res) {
     if (res is DeepLinkResult && res.status == Status.FOUND) {
-      _appsflyer.logEvent(
-          'onDeepLinking', res.deepLink?.clickEvent.toSerializableMap() ?? {});
+      final deepLinkString = res.deepLink?.deepLinkValue;
+      final _deepLinkValue = DeepLinkValue.values.firstWhere(
+        (it) => it.name == deepLinkString,
+        orElse: () => DeepLinkValue.none,
+      );
+      _deepLinkManager.onDeepLink(_deepLinkValue);
     }
   }
 }
@@ -168,9 +139,6 @@ class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
 
   @override
   void optOut(bool state) {}
-
-  @override
-  void setPushNotification(bool isEnabled) {}
 
   @override
   void setCurrentDeviceLanguage(String language) {}
