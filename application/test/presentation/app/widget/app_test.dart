@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
@@ -16,7 +15,7 @@ void main() {
     manager = MockAppManager();
     di.registerLazySingleton<AppManager>(() => manager);
     when(manager.state).thenReturn(const AppState(
-      appTheme: AppTheme.system,
+      brightness: Brightness.dark,
       isAppPaused: false,
     ));
     when(manager.stream).thenAnswer((_) => const Stream.empty());

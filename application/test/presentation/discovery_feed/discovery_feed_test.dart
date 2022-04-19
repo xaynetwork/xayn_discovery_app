@@ -15,7 +15,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
@@ -33,7 +32,6 @@ void main() async {
   late AppDiscoveryEngine engine;
   late MockAppDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
-  late MockConnectivityUseCase connectivityUseCase;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockFetchSessionUseCase fetchSessionUseCase;
@@ -67,7 +65,6 @@ void main() async {
 
   setUp(() async {
     eventsController = StreamController<EngineEvent>();
-    connectivityUseCase = MockConnectivityUseCase();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     fetchSessionUseCase = MockFetchSessionUseCase();
@@ -82,10 +79,6 @@ void main() async {
           cardIndexFeed: 0,
           cardIndexSearch: 0,
         ));
-    when(connectivityUseCase.transform(any))
-        .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(connectivityUseCase.transaction(any)).thenAnswer(
-        (invocation) => Stream.value(invocation.positionalArguments.first));
     when(mockDiscoveryEngine.engineEvents)
         .thenAnswer((_) => eventsController.stream);
     when(areMarketsOutdatedUseCase.transaction(FeedType.feed))
@@ -112,8 +105,6 @@ void main() async {
     await configureTestDependencies();
 
     di.registerSingleton<DiscoveryEngine>(mockDiscoveryEngine);
-    di.registerSingletonAsync<ConnectivityUseCase>(
-        () => Future.value(connectivityUseCase));
     di.registerSingleton<FeedRepository>(feedRepository);
     di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
     di.registerLazySingleton<GetSubscriptionStatusUseCase>(
@@ -286,33 +277,24 @@ void main() async {
     act: (manager) async {
       manager.handleNavigateIntoCard(fakeDocumentA);
     },
-    expect: () => [
-      DiscoveryState(
-        results: {fakeDocumentA, fakeDocumentB},
-        cardIndex: 0,
-        isComplete: false,
-        isFullScreen: true,
-        isInErrorState: false,
-        shouldUpdateNavBar: true,
-        didReachEnd: false,
-        subscriptionStatus: subscriptionStatusInitial,
-      ),
-      DiscoveryState(
-        results: {fakeDocumentA, fakeDocumentB},
-        cardIndex: 0,
-        isComplete: false,
-        isFullScreen: true,
-        isInErrorState: false,
-        shouldUpdateNavBar: false,
-        didReachEnd: false,
-        subscriptionStatus: subscriptionStatusInitial,
-        readerModeBackgroundColor: ReaderModeBackgroundColor(
-          dark: ReaderModeBackgroundDarkColor.dark,
-          light: ReaderModeBackgroundLightColor.white,
-        ),
-      ),
-    ],
     verify: (manager) {
+      expect(
+        manager.state,
+        DiscoveryState(
+          results: {fakeDocumentA, fakeDocumentB},
+          cardIndex: 0,
+          isComplete: false,
+          isFullScreen: true,
+          isInErrorState: false,
+          shouldUpdateNavBar: false,
+          didReachEnd: false,
+          subscriptionStatus: subscriptionStatusInitial,
+          readerModeBackgroundColor: ReaderModeBackgroundColor(
+            dark: ReaderModeBackgroundDarkColor.dark,
+            light: ReaderModeBackgroundLightColor.white,
+          ),
+        ),
+      );
       verify(mockDiscoveryEngine.engineEvents);
       verify(mockDiscoveryEngine.restoreFeed());
       verify(mockDiscoveryEngine.requestNextFeedBatch());

@@ -8,6 +8,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/http_requests/common_params.dart';
 import 'package:xayn_discovery_app/domain/model/cache_manager/cache_manager_event.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 
 /// A use case which calls an endpoint directly,
 /// as opposed to calling it via a proxy, such as the image fetcher for example.
@@ -16,17 +17,22 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
   final Client client;
   final Map<String, String> headers;
   final ImageCacheManager cacheManager;
+  final ConnectivityObserver connectivityObserver;
 
   @visibleForTesting
   DirectUriUseCase({
     required this.client,
     required this.headers,
     required this.cacheManager,
+    required this.connectivityObserver,
   });
 
   @factoryMethod
-  DirectUriUseCase.standard({required this.client, required this.cacheManager})
-      : headers = CommonHttpRequestParams.httpRequestHeaders;
+  DirectUriUseCase.standard({
+    required this.client,
+    required this.cacheManager,
+    required this.connectivityObserver,
+  }) : headers = CommonHttpRequestParams.httpRequestHeaders;
 
   @override
   Stream<CacheManagerEvent> transaction(Uri param) async* {
@@ -57,6 +63,8 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
         await cachedVersion.file.readAsBytes(),
       );
     } else {
+      await connectivityObserver.isUp();
+
       final response = await client.sendWithRedirectGuard(
         http.Request(
           CommonHttpRequestParams.httpRequestGet,

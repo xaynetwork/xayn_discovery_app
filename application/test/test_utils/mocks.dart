@@ -1,5 +1,6 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -30,6 +31,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_map
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
@@ -132,7 +134,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CollectionErrorsEnumMapper,
   CollectionsRepository,
   CollectionsScreenNavActions,
-  ConnectivityUseCase,
+  ConnectivityObserver,
   CountryFeedSettingsManager,
   CreateBookmarkFromDocumentUseCase,
   CreateCollectionUseCase,
@@ -154,6 +156,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   FeedTypeMarketsRepository,
   FetchSessionUseCase,
   FileHandler,
+  File,
   GetAllBookmarksUseCase,
   GetAllCollectionsUseCase,
   GetAppSessionUseCase,
@@ -168,6 +171,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetSupportedCountriesUseCase,
   HapticFeedbackMediumUseCase,
   HiveExplicitDocumentFeedbackRepository,
+  HiveAppSettingsRepository,
   InAppReview,
   IncrementAppSessionUseCase,
   IntToAppThemeMapper,
@@ -196,6 +200,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   PurchaseEventMapper,
   PurchaseSubscriptionUseCase,
   PurchasesErrorCodeToPaymentFlowErrorMapper,
+  PlatformBrightnessProvider,
   ReaderModeSettingsMapper,
   ReaderModeSettingsRepository,
   RemoveBookmarkUseCase,
