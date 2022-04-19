@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
@@ -22,7 +23,7 @@ class HiveFeedSettingsRepository extends HiveRepository<FeedSettings>
   HiveFeedSettingsRepository.test(this._mapper, this._box);
 
   @override
-  Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.feedSettings);
+  Box<Record> get box => _box ??= Hive.safeBox<Record>(BoxNames.feedSettings);
 
   @override
   BaseDbEntityMapper<FeedSettings> get mapper => _mapper;

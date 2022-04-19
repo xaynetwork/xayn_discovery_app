@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_provider.dart'
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
@@ -84,6 +85,8 @@ void main(List<String> args) async {
   _createFeedTypeMarkets();
   _createExplicitDocumentFeedback();
   _createReaderModeSettings();
+
+  await closeHive();
 }
 
 void _createMigrationInfo(int version) async {
@@ -233,6 +236,8 @@ Future _prepareHiveRecords(String snapshotDir) async {
 
 Future _openBoxes<T>() => Future.wait(
       BoxNames.values.map(
-        (boxName) => Hive.openBox<T>(boxName),
+        (boxName) => Hive.openSafeBox<T>(boxName),
       ),
     );
+
+Future<void> closeHive() => Hive.close();

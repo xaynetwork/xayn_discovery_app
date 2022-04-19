@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/collection_mapper.dart';
@@ -22,7 +23,7 @@ class HiveCollectionsRepository extends HiveRepository<Collection>
   BaseDbEntityMapper<Collection> get mapper => _mapper;
 
   @override
-  Box<Record> get box => Hive.box<Record>(BoxNames.collections);
+  Box<Record> get box => Hive.safeBox<Record>(BoxNames.collections);
 
   /// return the list of collection sorted in the following order:
   /// 1. Default collection

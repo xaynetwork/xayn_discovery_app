@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:crdt/crdt.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_adapters.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migrations.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
@@ -54,20 +55,21 @@ class HiveDB {
 
   static Future<void> _openBoxes({bool inMemory = false}) async {
     await Future.wait(
-      BoxNames.valuesWithoutMigrationInfo.map(
+      BoxNamesExtension.valuesWithoutMigrationInfo.map(
         (boxName) => _openBox<Record>(boxName, inMemory: inMemory),
       ),
     );
   }
 
   static Future<Box<T>> _openBox<T>(
-    String name, {
+    BoxNames boxNames, {
     bool inMemory = false,
   }) async {
-    if (Hive.isBoxOpen(name)) {
-      return Hive.box<T>(name);
+    if (Hive.isBoxOpen(boxNames.name)) {
+      return Hive.safeBox<T>(boxNames);
     } else {
-      return Hive.openBox<T>(name, bytes: inMemory ? Uint8List(0) : null);
+      return Hive.openSafeBox<T>(boxNames,
+          bytes: inMemory ? Uint8List(0) : null);
     }
   }
 

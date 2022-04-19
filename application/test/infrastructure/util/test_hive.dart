@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 /// In order to create a new snapshot run:
@@ -14,7 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 class HiveSnapshot {
   static Future<void> load({
     required int version,
-    List<String> deprecatedBoxes = const [],
+    List<BoxNames> deprecatedBoxes = const [],
     bool openBoxes = true,
   }) async {
     final path = _createAbsolutePath('test/db_snapshots/v$version');
@@ -23,17 +24,17 @@ class HiveSnapshot {
     }
   }
 
-  static Future<void> _openBoxes(String path, List<String> deprecatedBoxes) =>
+  static Future<void> _openBoxes(String path, List<BoxNames> deprecatedBoxes) =>
       Future.wait([
         ...BoxNames.values.map((boxName) => _openBox(boxName, path)),
         ...deprecatedBoxes.map((boxName) => _openBox(boxName, path)),
       ]);
 
-  static Future<Box<Record>> _openBox(String name, String path) {
-    var file = io.File('$path/${name.toLowerCase()}.hive');
+  static Future<Box<Record>> _openBox(BoxNames boxNames, String path) {
+    var file = io.File('$path/${boxNames.name.toLowerCase()}.hive');
     // ignore: avoid_print
     print('load $file which exists: ${file.existsSync()}');
-    return Hive.openBox<Record>(name,
+    return Hive.openSafeBox<Record>(boxNames,
         bytes: file.existsSync() ? file.readAsBytesSync() : Uint8List(0));
   }
 

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/repository/migration_info_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
@@ -25,7 +26,7 @@ class HiveDbMigrationInfoRepository extends HiveRepository<DbMigrationInfo>
   BaseDbEntityMapper<DbMigrationInfo> get mapper => _mapper;
 
   @override
-  Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.migrationInfo);
+  Box<Record> get box => _box ??= Hive.safeBox<Record>(BoxNames.migrationInfo);
 
   @override
   DbMigrationInfo? get migrationInfo => getById(DbMigrationInfo.globalId);
