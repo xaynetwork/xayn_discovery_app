@@ -1,16 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
-import 'package:xayn_discovery_app/domain/model/repository_event.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../test_utils/widget_test_utils.dart';
 
 void main() {
-  late MockAppSettingsRepository repository;
+  late HiveAppSettingsRepository repository;
   late ListenAppThemeUseCase useCase;
 
   final settingsWithDarkTheme =
@@ -18,24 +18,16 @@ void main() {
   final settingsWithLightTheme =
       AppSettings.initial().copyWith(appTheme: AppTheme.light);
 
-  setUp(() {
-    repository = MockAppSettingsRepository();
+  setUp(() async {
+    await setupWidgetTest();
+    repository = di.get<HiveAppSettingsRepository>();
     useCase = ListenAppThemeUseCase(repository);
-
-    when(repository.settings).thenAnswer((_) => settingsWithDarkTheme);
   });
 
   useCaseTest<ListenAppThemeUseCase, None, AppTheme>(
     'WHEN repository emit single value THEN useCase emit it as well',
     setUp: () {
-      when(repository.watch()).thenAnswer(
-        (_) => Stream.value(
-          ChangedEvent(
-            newObject: settingsWithDarkTheme,
-            id: settingsWithDarkTheme.id,
-          ),
-        ),
-      );
+      repository.save(settingsWithDarkTheme);
     },
     build: () => useCase,
     input: [none],
@@ -44,19 +36,9 @@ void main() {
 
   useCaseTest<ListenAppThemeUseCase, None, AppTheme>(
     'WHEN repository emit multiple values THEN useCase emit them as well',
-    setUp: () {
-      when(repository.watch()).thenAnswer(
-        (_) => Stream.fromIterable([
-          ChangedEvent(
-            newObject: settingsWithDarkTheme,
-            id: settingsWithDarkTheme.id,
-          ),
-          ChangedEvent(
-            newObject: settingsWithLightTheme,
-            id: settingsWithLightTheme.id,
-          ),
-        ]),
-      );
+    act: () {
+      repository.save(settingsWithDarkTheme);
+      repository.save(settingsWithLightTheme);
     },
     build: () => useCase,
     input: [none],
