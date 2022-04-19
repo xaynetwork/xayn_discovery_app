@@ -70,6 +70,7 @@ class AppRouter extends xayn.NavigatorDelegate {
   }
 
   Widget _buildScaffold(ConnectivityObserver connectivityObserver) => Scaffold(
+        resizeToAvoidBottomInset: false,
         body: StreamBuilder<Object>(
           stream: connectivityObserver.onConnectivityChanged,
           builder: (context, snapshot) =>
