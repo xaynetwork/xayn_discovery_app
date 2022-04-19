@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/app_settings.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
@@ -10,7 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dar
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
 /// Hive's [AppSettings] repository implementation.
-@Singleton(as: AppSettingsRepository)
+@singleton
 class HiveAppSettingsRepository extends HiveRepository<AppSettings>
     implements AppSettingsRepository {
   final AppSettingsMapper _mapper;
@@ -28,6 +29,11 @@ class HiveAppSettingsRepository extends HiveRepository<AppSettings>
   Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.appSettings);
 
   @override
-  AppSettings get settings =>
-      getById(AppSettings.globalId) ?? AppSettings.initial();
+  AppSettings get settings => getById(AppSettings.globalId)!;
+
+  @override
+  AppSettings? getById(UniqueId id) {
+    return super.getById(id) ??
+        (id == AppSettings.globalId ? AppSettings.initial() : null);
+  }
 }

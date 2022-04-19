@@ -4,7 +4,6 @@ import 'package:in_app_notification/in_app_notification.dart';
 import 'package:instabug_flutter/Instabug.dart';
 import 'package:provider/provider.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
@@ -14,7 +13,6 @@ import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_router.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_locale.dart';
-import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -23,17 +21,11 @@ class App extends StatefulWidget {
   State<StatefulWidget> createState() => _AppState();
 }
 
-class _AppState extends State<App> with WidgetsBindingObserver {
-  late final AppManager _appManager = di.get();
-  late final AppNavigationManager _navigatorManager = di.get();
-  late final ApplicationTooltipController _applicationTooltipController =
-      ApplicationTooltipController();
+class _Observer extends WidgetsBindingObserver {
+  final AppManager _appManager;
+  final BuildContext context;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-  }
+  _Observer(this._appManager, this.context);
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -50,14 +42,29 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    _appManager.onChangedPlatformBrightness();
+  }
+}
+
+class _AppState extends State<App> {
+  late final AppManager _appManager = di.get();
+  late final AppNavigationManager _navigatorManager = di.get();
+  late final ApplicationTooltipController _applicationTooltipController =
+      ApplicationTooltipController();
+  late final _observer = _Observer(_appManager, context);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(_observer);
   }
 
   @override
-  void didChangePlatformBrightness() {
-    _changeBrightness(_appManager.state.appTheme);
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(_observer);
+    super.dispose();
   }
 
   @override
@@ -72,12 +79,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             : systemLocales;
         final appLocale = locales.first.toAppLocale();
 
-        // TODO retrieve the last language from the app state
-        // if (savedAppLanguageTag != null) {
-        //   appLocale = convertLanguageTagToLocale(savedAppLanguageTag) ??
-        //       locales?.first.toIntlLocale();
-        // }
-
         final currentLanguage = AppLanguageHelper.from(
           locale: appLocale,
         );
@@ -90,30 +91,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       },
     );
 
-    return BlocConsumer<AppManager, AppState>(
+    final newLinden = R.linden.updateBrightness(_appManager.state.brightness);
+    R.updateLinden(newLinden);
+
+    /// This [BlocListener] just returns the [materialApp] and does not rebuild a new App
+    /// on a new [AppState], in contrast It will trigger an Update of [UnterDenLinden] that will cause
+    /// a rebuild only when the brightness is different. This is important to prevent additional rebuild
+    /// passes.
+    return BlocListener<AppManager, AppState>(
       bloc: _appManager,
-      builder: (_, state) {
-        // Update initial linden with correct brightness.
-        // This needs to happen in the builder to avoid "white flash" issue in dark mode.
-        _updateBrightnessIfNeeded(state.appTheme);
-
-        return Provider<ApplicationTooltipController>.value(
-          value: _applicationTooltipController,
-          child: InAppNotification(child: materialApp),
-        );
+      // CAREFUL the app should NOT rebuild on appState.isAppPaused, this would
+      // cause unnecessary flickering
+      listenWhen: (s1, s2) => s1.brightness != s2.brightness,
+      listener: (bc, s) {
+        UnterDenLinden.of(context).changeBrightness(s.brightness);
       },
-      listener: (_, state) => _changeBrightness(state.appTheme),
+      child: Provider<ApplicationTooltipController>.value(
+        value: _applicationTooltipController,
+        child: InAppNotification(child: materialApp),
+      ),
     );
-  }
-
-  void _updateBrightnessIfNeeded(AppTheme appTheme) {
-    if (R.brightness != appTheme.brightness) {
-      final newLinden = R.linden.updateBrightness(appTheme.brightness);
-      R.updateLinden(newLinden);
-    }
-  }
-
-  void _changeBrightness(AppTheme appTheme) {
-    UnterDenLinden.of(context).changeBrightness(appTheme.brightness);
   }
 }
