@@ -10,7 +10,7 @@ const String _kParamIsVisible = 'isVisible';
 class ReaderModeSettingsMenuDisplayedEvent extends FeedAnalyticsEvent {
   ReaderModeSettingsMenuDisplayedEvent({
     required bool isVisible,
-    required FeedType feedType,
+    FeedType? feedType,
   }) : super(
           _kEventType,
           feedType: feedType,
