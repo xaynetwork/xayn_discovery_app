@@ -3,6 +3,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
 
 NavBarItemBackButton buildNavBarItemBack({
   required VoidCallback onPressed,
@@ -33,6 +34,7 @@ NavBarItemIconButton buildNavBarItemLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemLike,
+      semanticsLabel: 'data-test=like_button'
     );
 
 NavBarItemIconButton buildNavBarItemDisLike({
@@ -46,6 +48,8 @@ NavBarItemIconButton buildNavBarItemDisLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemDisLike,
+      semanticsLabel: 'data-test=dislike_button'
+
     );
 
 NavBarItemIconButton buildNavBarItemShare({
@@ -56,6 +60,7 @@ NavBarItemIconButton buildNavBarItemShare({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemShare,
+      semanticsLabel: 'data-test=share_button'
     );
 
 NavBarItemIconButton buildNavBarItemEditFont({
@@ -66,6 +71,7 @@ NavBarItemIconButton buildNavBarItemEditFont({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemEditFontSize,
+      semanticsLabel: 'data-test=edit_front_button'
     );
 
 NavBarItemIconButton buildNavBarItemHome({
@@ -79,6 +85,7 @@ NavBarItemIconButton buildNavBarItemHome({
       isHighlighted: isActive,
       onPressed: onPressed,
       key: Keys.navBarItemHome,
+      semanticsLabel: 'data-test=home_button'
     );
 
 NavBarItemIconButton buildNavBarItemSearch({
@@ -89,6 +96,7 @@ NavBarItemIconButton buildNavBarItemSearch({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemSearch,
+      semanticsLabel: 'data-test=search_button'
     );
 
 NavBarItemEdit buildNavBarItemSearchActive({
@@ -118,6 +126,7 @@ NavBarItemIconButton buildNavBarItemPersonalArea({
       isHighlighted: isActive,
       onPressed: onPressed,
       key: Keys.navBarItemPersonalArea,
+      semanticsLabel: 'data-test=personal_area_button'
     );
 
 NavBarItemIconButton buildNavBarItemBookmark({
@@ -133,6 +142,7 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onPressed: onPressed,
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
+      semanticsLabel: 'data-test=bookmark_button'
     );
 
 const configIdSearch = NavBarConfigId('active_search');
