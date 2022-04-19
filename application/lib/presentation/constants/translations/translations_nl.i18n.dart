@@ -183,8 +183,7 @@ class TranslationsNl extends Translations {
   String get errorGenericBodyPleaseTryAgainLater =>
       """Probeer het later nog eens.""";
   String get errorClose => """Sluiten""";
-  String get sourceHandlingTooltipLabel =>
-      """What do you want to see less of?""";
+  String get sourceHandlingTooltipLabel => """Waar wil je minder van zien?""";
   String get sourceHandlingTooltipHighlightedWord => """What""";
   String get enableTextToSpeech => """Enable text -to-speech""";
   String get settingsSectionTitleOptions => """Options""";
@@ -218,6 +217,7 @@ class TranslationsNl extends Translations {
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
   String get readerModeUnableToLoadCTA => """Open in Browser""";
+  String get noInternetConnection => """No internet connection""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -366,7 +366,7 @@ Map<String, String> get translationsNlMap => {
       """errorGenericBodyPleaseTryAgainLater""":
           """Probeer het later nog eens.""",
       """errorClose""": """Sluiten""",
-      """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
+      """sourceHandlingTooltipLabel""": """Waar wil je minder van zien?""",
       """sourceHandlingTooltipHighlightedWord""": """What""",
       """enableTextToSpeech""": """Enable text -to-speech""",
       """settingsSectionTitleOptions""": """Options""",
@@ -398,4 +398,5 @@ Map<String, String> get translationsNlMap => {
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
       """readerModeUnableToLoadCTA""": """Open in Browser""",
+      """noInternetConnection""": """No internet connection""",
     };

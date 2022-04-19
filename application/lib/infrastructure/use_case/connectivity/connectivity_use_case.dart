@@ -1,41 +1,48 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 
-/// A use case which checks for connectivity.
-/// If we have connection enabled, it simply returns the input and closes.
-/// If we don't, it adds a [ConnectivityError] to the queue and
-/// awaits until connection is enabled.
-class ConnectivityUseCase<T> extends UseCase<T, T> {
-  final Connectivity connectivity = Connectivity();
+abstract class ConnectivityObserver {
+  Stream<ConnectivityResult> get onConnectivityChanged;
 
-  ConnectivityUseCase();
+  Future<ConnectivityResult> checkConnectivity();
+
+  Future<ConnectivityResult> isUp() =>
+      onConnectivityChanged.firstWhere((it) => it != ConnectivityResult.none);
+}
+
+@LazySingleton(as: ConnectivityObserver)
+@releaseEnvironment
+@debugEnvironment
+class AppConnectivityObserver extends ConnectivityObserver {
+  late final Connectivity _connectivity = Connectivity();
+  late final BehaviorSubject<ConnectivityResult> _onSubject =
+      BehaviorSubject<ConnectivityResult>();
+
+  AppConnectivityObserver() {
+    _connectivity.checkConnectivity().then((it) {
+      _onSubject.add(it);
+      _onSubject.addStream(_connectivity.onConnectivityChanged);
+    });
+  }
 
   @override
-  Stream<T> transaction(T param) async* {
-    final startingValue = await connectivity.checkConnectivity();
+  Stream<ConnectivityResult> get onConnectivityChanged => _onSubject.stream;
 
-    mapper(ConnectivityResult it) {
-      switch (it) {
-        case ConnectivityResult.none:
-          return Stream<T>.error(ConnectivityError(), StackTrace.current);
-        default:
-          return Stream.value(param);
-      }
-    }
-
-    yield* connectivity.onConnectivityChanged
-        .startWith(startingValue)
-        .distinct()
-        .switchMap(mapper)
-        .take(1);
-  }
+  @override
+  Future<ConnectivityResult> checkConnectivity() =>
+      _connectivity.checkConnectivity();
 }
 
-@injectable
-class ConnectivityUriUseCase extends ConnectivityUseCase<Uri> {
-  ConnectivityUriUseCase();
-}
+@LazySingleton(as: ConnectivityObserver)
+@test
+class TestConnectivityObserver extends ConnectivityObserver {
+  @override
+  Stream<ConnectivityResult> get onConnectivityChanged =>
+      Stream.value(ConnectivityResult.wifi);
 
-class ConnectivityError extends Error {}
+  @override
+  Future<ConnectivityResult> checkConnectivity() =>
+      Future.value(ConnectivityResult.wifi);
+}

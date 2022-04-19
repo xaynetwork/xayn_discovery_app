@@ -21,14 +21,6 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import 'fakes.dart';
 
-@Injectable(as: ConnectivityUriUseCase)
-class AlwaysConnectedConnectivityUseCase extends ConnectivityUriUseCase {
-  @override
-  Stream<Uri> transaction(Uri param) {
-    return Stream.value(param);
-  }
-}
-
 @Singleton(as: InitLoggerUseCase)
 class JustLogToConsoleUseCase extends InitLoggerUseCase {
   JustLogToConsoleUseCase(FileHandler fileHandler, LoggerHandler loggerHandler)
@@ -214,5 +206,6 @@ class TestableDirectUriUseCase extends DirectUriUseCase {
           client: client,
           headers: const {},
           cacheManager: createFakeImageCacheManager(),
+          connectivityObserver: TestConnectivityObserver(),
         );
 }

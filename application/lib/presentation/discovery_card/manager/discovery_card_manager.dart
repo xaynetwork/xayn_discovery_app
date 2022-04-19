@@ -18,7 +18,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
@@ -56,7 +55,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         OpenExternalUrlMixin<DiscoveryCardState>,
         OverlayManagerMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
-  final ConnectivityUriUseCase _connectivityUseCase;
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
   final InjectReaderMetaDataUseCase _injectReaderMetaDataUseCase;
@@ -78,10 +76,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   /// - transforms the loaded html into reader mode html
   /// - extracts lists of html elements from the html tree, to display in story mode
   late final UseCaseSink<Uri, ProcessedDocument> _updateUri =
-      pipe(_connectivityUseCase).transform(
+      pipe(_loadHtmlUseCase).transform(
     (out) => out
-        .distinct()
-        .followedBy(_loadHtmlUseCase)
         .scheduleComputeState(
           consumeEvent: (it) => !it.isCompleted,
           run: (it) => _isLoading = !it.isCompleted,
@@ -127,7 +123,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   bool _isLoading = false;
 
   DiscoveryCardManager(
-    this._connectivityUseCase,
     this._loadHtmlUseCase,
     this._readabilityUseCase,
     this._injectReaderMetaDataUseCase,

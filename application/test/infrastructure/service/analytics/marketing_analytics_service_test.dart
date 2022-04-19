@@ -7,6 +7,7 @@ import 'analytics_service_test_utils.dart';
 
 void main() async {
   late MockAppsflyerSdk appsFlyer;
+  late MockDeepLinkManager deepLinkManager;
   late MarketingAnalyticsService marketingAnalyticsService;
 
   const mockUID = '123';
@@ -15,7 +16,11 @@ void main() async {
 
   setUp(() {
     appsFlyer = MockAppsflyerSdk();
-    marketingAnalyticsService = AppsFlyerMarketingAnalyticsService(appsFlyer);
+    deepLinkManager = MockDeepLinkManager();
+    marketingAnalyticsService = AppsFlyerMarketingAnalyticsService(
+      appsFlyer,
+      deepLinkManager,
+    );
   });
 
   group('Marketing Analytics Service', () {
@@ -55,16 +60,6 @@ void main() async {
     test('setCurrentDeviceLanguage', () {
       marketingAnalyticsService.setCurrentDeviceLanguage(mockLanguage);
       verify(appsFlyer.setCurrentDeviceLanguage(mockLanguage)).called(1);
-    });
-
-    test('setPushNotification to true', () {
-      marketingAnalyticsService.setPushNotification(true);
-      verify(appsFlyer.setPushNotification(true)).called(1);
-    });
-
-    test('setPushNotification to false', () {
-      marketingAnalyticsService.setPushNotification(false);
-      verify(appsFlyer.setPushNotification(false)).called(1);
     });
   });
 }
