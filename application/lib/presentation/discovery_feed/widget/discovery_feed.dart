@@ -20,17 +20,10 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
 
 class _DiscoveryFeedState
     extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed> {
-  late final DiscoveryFeedManager _manager;
+  late final DiscoveryFeedManager _manager = di.get();
 
   @override
   DiscoveryFeedManager get manager => _manager;
-
-  @override
-  void initState() {
-    _manager = di.get();
-
-    super.initState();
-  }
 
   @override
   void dispose() {
