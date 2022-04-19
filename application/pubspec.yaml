@@ -48,6 +48,7 @@ dependencies:
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
+  navigation_history_observer: 1.1.0
   package_info_plus: 1.4.0
   path_provider: 2.0.9
   purchases_flutter: 3.9.5
@@ -66,7 +67,7 @@ dependencies:
   xayn_architecture:
     git:
       url: git@github.com:xaynetwork/xayn_architecture.git
-      ref: aaffef5c6fd20deddf9978cbd159c4363fb28846
+      ref: b5912c9ab5ac5ffe6a875cc7720628196ebc4678
   xayn_card_view:
     git:
       url: git@github.com:xaynetwork/xayn_card_view.git

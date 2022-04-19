@@ -4,7 +4,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_factories.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookmark_card.dart';
@@ -12,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/bookmark_options/bo
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
@@ -31,11 +31,13 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen>
-    with NavBarConfigMixin, TooltipStateMixin, CardWidgetTransitionMixin {
+    with
+        NavBarConfigMixin,
+        TooltipStateMixin,
+        CardWidgetTransitionMixin,
+        CardManagersMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
-  final VoidCallback _dispose =
-      DiFactories.registerCardManagerCacheInDi('bookmarks');
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +130,6 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         onError: showTooltip,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _dispose();
-    super.dispose();
   }
 
   _showBookmarkCardOptions(
