@@ -9,24 +9,24 @@ import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart
 import 'package:xayn_discovery_app/infrastructure/repository/hive_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 
-/// Hive's [MigrationInfo] repository implementation.
-@Singleton(as: MigrationInfoRepository)
-class HiveMigrationInfoRepository extends HiveRepository<MigrationInfo>
-    implements MigrationInfoRepository {
+/// Hive's [DbMigrationInfo] repository implementation.
+@Singleton(as: DbMigrationInfoRepository)
+class HiveDbMigrationInfoRepository extends HiveRepository<DbMigrationInfo>
+    implements DbMigrationInfoRepository {
   final MigrationInfoMapper _mapper;
   Box<Record>? _box;
 
-  HiveMigrationInfoRepository(this._mapper);
+  HiveDbMigrationInfoRepository(this._mapper);
 
   @visibleForTesting
-  HiveMigrationInfoRepository.test(this._mapper, this._box);
+  HiveDbMigrationInfoRepository.test(this._mapper, this._box);
 
   @override
-  BaseDbEntityMapper<MigrationInfo> get mapper => _mapper;
+  BaseDbEntityMapper<DbMigrationInfo> get mapper => _mapper;
 
   @override
   Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.migrationInfo);
 
   @override
-  MigrationInfo? get migrationInfo => getById(MigrationInfo.globalId);
+  DbMigrationInfo? get migrationInfo => getById(DbMigrationInfo.globalId);
 }

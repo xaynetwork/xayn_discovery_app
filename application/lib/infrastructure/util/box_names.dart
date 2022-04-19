@@ -13,4 +13,20 @@ abstract class BoxNames {
   static const explicitDocumentFeedback = 'explicitDocumentFeedback';
   static const readerModeSettings = 'readerModeSettings';
   static const migrationInfo = 'migrationInfo';
+
+  static List<String> valuesWithoutMigrationInfo = [
+    appSettings,
+    collections,
+    bookmarks,
+    documents,
+    documentFilters,
+    appStatus,
+    feed,
+    feedSettings,
+    feedTypeMarkets,
+    explicitDocumentFeedback,
+    readerModeSettings,
+  ];
+
+  static List<String> values = valuesWithoutMigrationInfo..add(migrationInfo);
 }

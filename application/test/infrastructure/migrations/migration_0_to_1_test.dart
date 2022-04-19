@@ -11,14 +11,14 @@ import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import '../util/test_hive.dart';
 
 void main() async {
-  late HiveMigrationInfoRepository repository;
+  late HiveDbMigrationInfoRepository repository;
 
   setUp(() async {
     EquatableConfig.stringify = true;
     HiveDB.registerHiveAdapters();
     await HiveSnapshot.load(version: 0);
     final mapper = MigrationInfoMapper();
-    repository = HiveMigrationInfoRepository(mapper);
+    repository = HiveDbMigrationInfoRepository(mapper);
   });
 
   tearDown(() async {
@@ -82,75 +82,75 @@ void main() async {
 
   group('After Migration from 0 to 1: ', () {
     test('Status should be completed', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       final migrationStatus = await migrations.migrate(toVersion: 1);
-      expect(migrationStatus, MigrationStatus.completed);
+      expect(migrationStatus, DbMigrationStatus.completed);
       expect(repository.migrationInfo!.version, 1);
     });
 
     test('AppSettings should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.appSettings).values, isNotEmpty);
     });
 
     test('Collections should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.collections).values, isNotEmpty);
     });
 
     test('Bookmarks should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.bookmarks).values, isNotEmpty);
     });
 
     test('Documents should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.documents).values, isNotEmpty);
     });
 
     test('DocumentFilters should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.documentFilters).values, isNotEmpty);
     });
 
     test('AppStatus should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.appStatus).values, isNotEmpty);
     });
 
     test('Feed should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.feed).values, isNotEmpty);
     });
 
     test('FeedSettings should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.feedSettings).values, isNotEmpty);
     });
 
     test('FeedTypeMarkets should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.feedTypeMarkets).values, isNotEmpty);
     });
 
     test('ExplicitDocumentFeedback should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.explicitDocumentFeedback).values,
           isNotEmpty);
     });
 
     test('ReaderModeSettings should be set', () async {
-      final migrations = HiveMigrations();
+      final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.box<Record>(BoxNames.readerModeSettings).values, isNotEmpty);
     });

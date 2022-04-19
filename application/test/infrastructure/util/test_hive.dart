@@ -23,24 +23,11 @@ class HiveSnapshot {
     }
   }
 
-  static Future<void> _openBoxes(
-      String path, List<String> deprecatedBoxes) async {
-    await Future.wait([
-      _openBox(BoxNames.appSettings, path),
-      _openBox(BoxNames.collections, path),
-      _openBox(BoxNames.bookmarks, path),
-      _openBox(BoxNames.documents, path),
-      _openBox(BoxNames.documentFilters, path),
-      _openBox(BoxNames.appStatus, path),
-      _openBox(BoxNames.feed, path),
-      _openBox(BoxNames.feedSettings, path),
-      _openBox(BoxNames.feedTypeMarkets, path),
-      _openBox(BoxNames.explicitDocumentFeedback, path),
-      _openBox(BoxNames.readerModeSettings, path),
-      _openBox(BoxNames.migrationInfo, path),
-      ...deprecatedBoxes.map((boxName) => _openBox(boxName, path)),
-    ]);
-  }
+  static Future<void> _openBoxes(String path, List<String> deprecatedBoxes) =>
+      Future.wait([
+        ...BoxNames.values.map((boxName) => _openBox(boxName, path)),
+        ...deprecatedBoxes.map((boxName) => _openBox(boxName, path)),
+      ]);
 
   static Future<Box<Record>> _openBox(String name, String path) {
     var file = io.File('$path/${name.toLowerCase()}.hive');

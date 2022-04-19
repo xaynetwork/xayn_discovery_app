@@ -88,8 +88,8 @@ void main(List<String> args) async {
 
 void _createMigrationInfo(int version) async {
   final mapper = MigrationInfoMapper();
-  final repository = HiveMigrationInfoRepository(mapper);
-  final migrationInfo = MigrationInfo(version: version);
+  final repository = HiveDbMigrationInfoRepository(mapper);
+  final migrationInfo = DbMigrationInfo(version: version);
   repository.save(migrationInfo);
 }
 
@@ -219,15 +219,6 @@ void _createReaderModeSettings() {
   repository.save(readerModeSettings);
 }
 
-// can be used for older snapshots
-// ignore: unused_element
-Future _prepareHive(String snapshotDir) async {
-  Hive.init(snapshotDir);
-  await _openBoxes<Map>();
-  await Hive.deleteFromDisk();
-  await _openBoxes<Map>();
-}
-
 Future _prepareHiveRecords(String snapshotDir) async {
   Hive
     ..init(snapshotDir)
@@ -240,17 +231,8 @@ Future _prepareHiveRecords(String snapshotDir) async {
   await _openBoxes<Record>();
 }
 
-Future _openBoxes<T>() async {
-  await Hive.openBox<T>(BoxNames.appSettings);
-  await Hive.openBox<T>(BoxNames.collections);
-  await Hive.openBox<T>(BoxNames.bookmarks);
-  await Hive.openBox<T>(BoxNames.documents);
-  await Hive.openBox<T>(BoxNames.documentFilters);
-  await Hive.openBox<T>(BoxNames.appStatus);
-  await Hive.openBox<T>(BoxNames.feed);
-  await Hive.openBox<T>(BoxNames.feedSettings);
-  await Hive.openBox<T>(BoxNames.feedTypeMarkets);
-  await Hive.openBox<T>(BoxNames.explicitDocumentFeedback);
-  await Hive.openBox<T>(BoxNames.readerModeSettings);
-  await Hive.openBox<T>(BoxNames.migrationInfo);
-}
+Future _openBoxes<T>() => Future.wait(
+      BoxNames.values.map(
+        (boxName) => Hive.openBox<T>(boxName),
+      ),
+    );

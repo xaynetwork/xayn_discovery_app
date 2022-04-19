@@ -6,33 +6,39 @@ import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart
 import 'package:xayn_discovery_app/infrastructure/repository/hive_migration_info_repository.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-enum MigrationStatus { completed, failed }
+enum DbMigrationStatus { completed, failed }
 
-abstract class Migrations {
+abstract class DbMigrations {
   /// Run migration. The `toVersion` param is optional and should be used
   /// only in tests.
-  Future<MigrationStatus> migrate({int toVersion});
+  Future<DbMigrationStatus> migrate({int toVersion});
 }
 
 /// This table defines all the migrations from version X to any other version.
 /// Those migrations will be executed in sequence.
-final _migrations = <int, BaseMigration Function()>{
+final _migrations = <int, BaseDbMigration Function()>{
   0: () => Migration_0_To_1(),
 };
 
 typedef BoxOpener<T> = Box<T> Function(String name);
 
-class HiveMigrations implements Migrations {
-  final _repository = HiveMigrationInfoRepository(MigrationInfoMapper());
+class HiveDbMigrations implements DbMigrations {
+  final _repository = HiveDbMigrationInfoRepository(MigrationInfoMapper());
 
-  HiveMigrations();
+  HiveDbMigrations();
 
   @override
-  Future<MigrationStatus> migrate({int? toVersion}) async {
+  Future<DbMigrationStatus> migrate({int? toVersion}) async {
     // ignore: prefer_typing_uninitialized_variables
     var currentVersion;
 
-    final versionToMigrate = toVersion ?? MigrationInfo.dbVersion;
+    final versionToMigrate = toVersion ?? DbMigrationInfo.dbVersion;
+
+    // No migrations required. Save the latest version and return.
+    if (_readCurrentVersion() == null) {
+      await _writeVersion(DbMigrationInfo.dbVersion);
+      return DbMigrationStatus.completed;
+    }
 
     while ((currentVersion = _readCurrentVersion()) != versionToMigrate) {
       // Find the next migration
@@ -41,7 +47,7 @@ class HiveMigrations implements Migrations {
       if (step == null) {
         logger.i(
             'No migration found for $currentVersion will write latest version to db');
-        await _writeVersion(MigrationInfo.dbVersion);
+        await _writeVersion(DbMigrationInfo.dbVersion);
       } else {
         final nextStep = step();
         logger.i('Will execute $nextStep as migration from $currentVersion');
@@ -52,7 +58,7 @@ class HiveMigrations implements Migrations {
         if (newVersion <= currentVersion) {
           logger.i(
               '$newVersion is lower or equal like current version, migration failed.');
-          return MigrationStatus.failed;
+          return DbMigrationStatus.failed;
         } else {
           logger.i('writing new version $newVersion to migration info.');
           await _writeVersion(newVersion);
@@ -60,15 +66,15 @@ class HiveMigrations implements Migrations {
       }
     }
 
-    return MigrationStatus.completed;
+    return DbMigrationStatus.completed;
   }
 
-  int _readCurrentVersion() {
+  int? _readCurrentVersion() {
     final info = _repository.migrationInfo;
-    return info?.version ?? 0;
+    return info?.version;
   }
 
   Future<void> _writeVersion(int version) async {
-    return _repository.save(MigrationInfo(version: version));
+    return _repository.save(DbMigrationInfo(version: version));
   }
 }

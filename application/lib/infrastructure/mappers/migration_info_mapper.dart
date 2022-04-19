@@ -3,18 +3,18 @@ import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 
 @lazySingleton
-class MigrationInfoMapper extends BaseDbEntityMapper<MigrationInfo> {
+class MigrationInfoMapper extends BaseDbEntityMapper<DbMigrationInfo> {
   @override
-  MigrationInfo? fromMap(Map? map) {
+  DbMigrationInfo? fromMap(Map? map) {
     if (map == null) return null;
 
-    return MigrationInfo(
+    return DbMigrationInfo(
       version: map[_Fields.version] as int,
     );
   }
 
   @override
-  DbEntityMap toMap(MigrationInfo entity) => {
+  DbEntityMap toMap(DbMigrationInfo entity) => {
         _Fields.version: entity.version,
       };
 }

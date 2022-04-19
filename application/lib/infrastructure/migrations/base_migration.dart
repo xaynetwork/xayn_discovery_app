@@ -1,6 +1,6 @@
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-abstract class BaseMigration {
+abstract class BaseDbMigration {
   String get migrationId => runtimeType.toString();
 
   // returns the version that it migrated to

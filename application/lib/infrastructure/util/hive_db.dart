@@ -14,7 +14,7 @@ class HiveDB {
   // workaround for testing, can't be null in productive context
   static String get nodeId => _nodeId ?? UniqueId().value;
 
-  final MigrationStatus status;
+  final DbMigrationStatus status;
 
   HiveDB._(this.status);
 
@@ -26,11 +26,12 @@ class HiveDB {
     registerHiveAdapters();
 
     // Open this box only for migration info
-    await _openBox<Map>(BoxNames.migrationInfo, inMemory: !isPersistedOnDisk);
+    await _openBox<Record>(BoxNames.migrationInfo,
+        inMemory: !isPersistedOnDisk);
 
     final status = isPersistedOnDisk
         ? await _performMigrations(inMemory: !isPersistedOnDisk)
-        : MigrationStatus.completed;
+        : DbMigrationStatus.completed;
 
     await _openBoxes(inMemory: !isPersistedOnDisk);
 
@@ -52,19 +53,11 @@ class HiveDB {
   }
 
   static Future<void> _openBoxes({bool inMemory = false}) async {
-    await Future.wait([
-      _openBox<Record>(BoxNames.appSettings, inMemory: inMemory),
-      _openBox<Record>(BoxNames.appStatus, inMemory: inMemory),
-      _openBox<Record>(BoxNames.feed, inMemory: inMemory),
-      _openBox<Record>(BoxNames.feedSettings, inMemory: inMemory),
-      _openBox<Record>(BoxNames.feedTypeMarkets, inMemory: inMemory),
-      _openBox<Record>(BoxNames.bookmarks, inMemory: inMemory),
-      _openBox<Record>(BoxNames.documents, inMemory: inMemory),
-      _openBox<Record>(BoxNames.documentFilters, inMemory: inMemory),
-      _openBox<Record>(BoxNames.collections, inMemory: inMemory),
-      _openBox<Record>(BoxNames.explicitDocumentFeedback, inMemory: inMemory),
-      _openBox<Record>(BoxNames.readerModeSettings, inMemory: inMemory),
-    ]);
+    await Future.wait(
+      BoxNames.valuesWithoutMigrationInfo.map(
+        (boxName) => _openBox<Record>(boxName, inMemory: inMemory),
+      ),
+    );
   }
 
   static Future<Box<T>> _openBox<T>(
@@ -80,28 +73,21 @@ class HiveDB {
 
   static Future<void> _openDeprecatedBoxesForMigration(
       {bool inMemory = false}) async {
-    await Future.wait([
-      _openBox<Map>(BoxNames.appSettings, inMemory: inMemory),
-      _openBox<Map>(BoxNames.bookmarks, inMemory: inMemory),
-      _openBox<Map>(BoxNames.documents, inMemory: inMemory),
-      _openBox<Map>(BoxNames.documentFilters, inMemory: inMemory),
-      _openBox<Map>(BoxNames.appStatus, inMemory: inMemory),
-      _openBox<Map>(BoxNames.feed, inMemory: inMemory),
-      _openBox<Map>(BoxNames.feedSettings, inMemory: inMemory),
-      _openBox<Map>(BoxNames.feedTypeMarkets, inMemory: inMemory),
-      _openBox<Map>(BoxNames.explicitDocumentFeedback, inMemory: inMemory),
-      _openBox<Map>(BoxNames.readerModeSettings, inMemory: inMemory),
-    ]);
+    await Future.wait(
+      BoxNames.valuesWithoutMigrationInfo.map(
+        (boxName) => _openBox<Record>(boxName, inMemory: inMemory),
+      ),
+    );
   }
 
   static Future<void> _closeBoxes() => Hive.close();
 
-  static Future<MigrationStatus> _performMigrations(
+  static Future<DbMigrationStatus> _performMigrations(
       {bool inMemory = false}) async {
     await _openDeprecatedBoxesForMigration(inMemory: inMemory);
     // Migrations should all expect open boxes finish with open boxes (easier to test)
     // if they change the box type, they should close the respective box and open a new one
-    final status = await HiveMigrations().migrate();
+    final status = await HiveDbMigrations().migrate();
     // close all boxes, so they can be opened safely with correct types
     await _closeBoxes();
     return status;

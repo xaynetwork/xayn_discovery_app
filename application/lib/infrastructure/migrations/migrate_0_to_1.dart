@@ -3,7 +3,7 @@ import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart
 /// This Migration migrates from a stale old db version before migrations have been added
 /// It basically delets the old database.
 // ignore: camel_case_types
-class Migration_0_To_1 extends BaseMigration {
+class Migration_0_To_1 extends BaseDbMigration {
   @override
   Migration_0_To_1();
 

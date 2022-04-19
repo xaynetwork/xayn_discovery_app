@@ -5,22 +5,22 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 part 'migration_info.freezed.dart';
 
 @freezed
-class MigrationInfo extends DbEntity with _$MigrationInfo {
+class DbMigrationInfo extends DbEntity with _$DbMigrationInfo {
   /// Increment this version for each change on the DB structure, new fields etc and
   /// write a migration
   static const int dbVersion = 1;
 
-  factory MigrationInfo._({
+  factory DbMigrationInfo._({
     required int version,
     required UniqueId id,
-  }) = _MigrationInfo;
+  }) = _DbMigrationInfo;
 
-  factory MigrationInfo({
+  factory DbMigrationInfo({
     required int version,
   }) =>
-      MigrationInfo._(
+      DbMigrationInfo._(
         version: version,
-        id: MigrationInfo.globalId,
+        id: DbMigrationInfo.globalId,
       );
 
   static UniqueId globalId =
