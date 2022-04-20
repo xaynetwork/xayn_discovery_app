@@ -36,6 +36,7 @@ TooltipParams _getBookmarkedToDefault() {
   final savedToDefaultString =
       R.strings.bookmarkSnackBarSavedTo.format(defaultCollectionName);
 
+  /// The args value are listed in the [OverlayData] object
   void onPressed(List? args) {
     if (args == null || args.length < 5) return;
     final context = args[0];
