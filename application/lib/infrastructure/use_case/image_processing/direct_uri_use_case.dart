@@ -18,6 +18,7 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
   final Map<String, String> headers;
   final ImageCacheManager cacheManager;
   final ConnectivityObserver connectivityObserver;
+  final Map<Uri, Future<Uint8List>> _tempCache = <Uri, Future<Uint8List>>{};
 
   @visibleForTesting
   DirectUriUseCase({
@@ -63,23 +64,27 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
         await cachedVersion.file.readAsBytes(),
       );
     } else {
-      await connectivityObserver.isUp();
+      final bytes = await _tempCache.putIfAbsent(param, () async {
+        await connectivityObserver.isUp();
 
-      final response = await client.sendWithRedirectGuard(
-        http.Request(
-          CommonHttpRequestParams.httpRequestGet,
-          url,
-          followRedirects: false,
-          headers: headers,
-          timeout: CommonHttpRequestParams.httpRequestTimeout,
-        ),
-      );
+        final response = await client.sendWithRedirectGuard(
+          http.Request(
+            CommonHttpRequestParams.httpRequestGet,
+            url,
+            followRedirects: false,
+            headers: headers,
+            timeout: CommonHttpRequestParams.httpRequestTimeout,
+          ),
+        );
 
-      final bytes = Uint8List.fromList(
-        await response.readAsBytes(),
-      );
+        return Uint8List.fromList(
+          await response.readAsBytes(),
+        );
+      });
 
       await cacheManager.putFile(url, bytes);
+
+      _tempCache.remove(param);
 
       yield CacheManagerEvent.completed(param, bytes);
     }

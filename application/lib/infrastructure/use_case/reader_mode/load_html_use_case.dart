@@ -25,6 +25,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
   final ImageCacheManager cacheManager;
   final ConnectivityObserver connectivityObserver;
   final Map<String, String> headers;
+  final Map<Uri, Future<String>> _tempCache = <Uri, Future<String>>{};
 
   @visibleForTesting
   LoadHtmlUseCase({
@@ -57,26 +58,26 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         uri: param,
       );
     } else {
-      await connectivityObserver.isUp();
+      final html = await _tempCache.putIfAbsent(param, () async {
+        await connectivityObserver.isUp();
 
-      final response = await client.sendWithRedirectGuard(
-        http.Request(
-          CommonHttpRequestParams.httpRequestGet,
-          url,
-          followRedirects: false,
-          encoding: utf8,
-          headers: headers,
-          timeout: CommonHttpRequestParams.httpRequestTimeout,
-        ),
-      );
+        final response = await client.sendWithRedirectGuard(
+          http.Request(
+            CommonHttpRequestParams.httpRequestGet,
+            url,
+            followRedirects: false,
+            encoding: utf8,
+            headers: headers,
+            timeout: CommonHttpRequestParams.httpRequestTimeout,
+          ),
+        );
 
-      late final String html;
+        if (response.statusCode < 200 || response.statusCode >= 300) {
+          return '';
+        }
 
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        html = '';
-      } else {
-        html = _extractResponseBody(await response.readAsBytes());
-      }
+        return _extractResponseBody(await response.readAsBytes());
+      });
 
       yield Progress.finish(html: html, uri: param);
 
@@ -85,6 +86,8 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         const Utf8Encoder().convert(html),
         maxAge: _kCacheDuration,
       );
+
+      _tempCache.remove(param);
     }
   }
 
