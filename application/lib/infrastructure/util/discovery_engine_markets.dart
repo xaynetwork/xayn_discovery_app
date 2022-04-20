@@ -1,6 +1,4 @@
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/feed_market_to_flag_path_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/language_code_to_language_name_mapper.dart';
 
 /// If you change this file,
 /// please also update [FeedMarketToFlagAssetPathMapper]

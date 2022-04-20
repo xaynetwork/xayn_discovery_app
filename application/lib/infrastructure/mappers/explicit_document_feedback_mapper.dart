@@ -3,7 +3,7 @@ import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedb
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @singleton
 class ExplicitDocumentFeedbackMapper

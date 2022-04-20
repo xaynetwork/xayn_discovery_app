@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
@@ -26,7 +27,8 @@ class HiveReaderModeSettingsRepository
   BaseDbEntityMapper<ReaderModeSettings> get mapper => _mapper;
 
   @override
-  Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.readerModeSettings);
+  Box<Record> get box =>
+      _box ??= Hive.safeBox<Record>(BoxNames.readerModeSettings);
 
   @override
   ReaderModeSettings get settings =>
