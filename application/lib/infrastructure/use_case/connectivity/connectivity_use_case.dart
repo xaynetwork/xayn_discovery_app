@@ -4,9 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-
-/// Google IP, should be always up
-const String _kAlwaysUpAddress = '8.8.8.8';
+import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
 abstract class ConnectivityObserver {
   Stream<ConnectivityResult> get onConnectivityChanged;
@@ -24,6 +22,7 @@ class AppConnectivityObserver extends ConnectivityObserver {
   late final Connectivity _connectivity = Connectivity();
   late final BehaviorSubject<ConnectivityResult> _onSubject =
       BehaviorSubject<ConnectivityResult>();
+  late final String _host = Uri.parse(Env.searchApiBaseUrl).host;
 
   AppConnectivityObserver() {
     _connectivity.checkConnectivity().then((it) async {
@@ -45,7 +44,7 @@ class AppConnectivityObserver extends ConnectivityObserver {
   Future<ConnectivityResult> _verifyConnectivity(
       ConnectivityResult value) async {
     try {
-      final result = await InternetAddress.lookup(_kAlwaysUpAddress);
+      final result = await InternetAddress.lookup(_host);
 
       // rewrites a false negative if needed
       maybeOverrideValueWhenUp(ConnectivityResult value) =>
