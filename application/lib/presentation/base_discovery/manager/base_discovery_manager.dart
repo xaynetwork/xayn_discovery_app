@@ -188,6 +188,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       _cardIndex = nextCardIndex;
       _observedDocument = nextDocument;
     });
+
+    if (index == state.results.length - 2) {
+      handleLoadMore();
+    }
   }
 
   /// Triggers a new observation for [document], if that document matches
