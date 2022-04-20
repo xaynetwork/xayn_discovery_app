@@ -35,5 +35,5 @@ class OverlayData with _$OverlayData {
       );
 
   factory OverlayData.tooltipInvalidSearch() =>
-      const OverlayData.tooltip(key: ActiveSearchKeys.invalidSearch);
+      const OverlayData.tooltip(key: ActiveSearchTooltipKeys.invalidSearch);
 }

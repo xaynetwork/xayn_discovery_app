@@ -17,6 +17,8 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
@@ -52,14 +54,18 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     with
         WidgetsBindingObserver,
         NavBarConfigMixin,
-        CardManagersMixin,
-        TooltipStateMixin,
-        SubscriptionTrialBannerStateMixin,
-        OverlayStateMixin,
-        ErrorHandlingMixin {
+        CardManagersMixin<W>,
+        TooltipStateMixin<W>,
+        SubscriptionTrialBannerStateMixin<W>,
+        OverlayMixin<W>,
+        OverlayStateMixin<W>,
+        ErrorHandlingMixin<W> {
   late final CardViewController _cardViewController = CardViewController();
   late final RatingDialogManager _ratingDialogManager = di.get();
   late final FeatureManager featureManager = di.get();
+
+  @override
+  OverlayManager get overlayManager => manager.overlayManager;
 
   /// no need to dispose here, handled by the Card Widget itself
   DiscoveryCardController? currentCardController;

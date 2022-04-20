@@ -212,17 +212,19 @@ class TranslationsFr extends Translations {
       """Sources que vous n’aimez pas""";
   String get settingsSectionHomeFeed => """Configuration du flux""";
   String get paymentPromoCodeAndroidBottomSheetTitle =>
-      """Have a promo code?""";
+      """Avez vous un code de réduction?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""";
-  String get paymentFailedBottomSheetTitle => """Payment failed""";
+      """Pour saisir le code promotionnel, sélectionnez "Utiliser le code" comme méthode de paiement.""";
+  String get paymentFailedBottomSheetTitle => """Paiement échoué""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later. """;
-  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+      """The app store couldn’t process your payment. Please try again later.""";
+  String get readerModeUnableToLoadTitle =>
+      """Impossible de charger ce contenu""";
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
-  String get readerModeUnableToLoadCTA => """Open in Browser""";
-  String get noInternetConnection => """No internet connection""";
+  String get readerModeUnableToLoadCTA => """Ouvrir dans le navigateur""";
+  String get noInternetConnection => """Pas de connexion Internet""";
+  String get invalidSearch => """Please enter a valid search term""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -398,15 +400,17 @@ Map<String, String> get translationsFrMap => {
       """feedSettingsScreenSubtitleDislikedSources""":
           """Sources que vous n’aimez pas""",
       """settingsSectionHomeFeed""": """Configuration du flux""",
-      """paymentPromoCodeAndroidBottomSheetTitle""": """Have a promo code?""",
+      """paymentPromoCodeAndroidBottomSheetTitle""":
+          """Avez vous un code de réduction?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""",
-      """paymentFailedBottomSheetTitle""": """Payment failed""",
+          """Pour saisir le code promotionnel, sélectionnez "Utiliser le code" comme méthode de paiement.""",
+      """paymentFailedBottomSheetTitle""": """Paiement échoué""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later. """,
-      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+          """The app store couldn’t process your payment. Please try again later.""",
+      """readerModeUnableToLoadTitle""": """Impossible de charger ce contenu""",
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
-      """readerModeUnableToLoadCTA""": """Open in Browser""",
-      """noInternetConnection""": """No internet connection""",
+      """readerModeUnableToLoadCTA""": """Ouvrir dans le navigateur""",
+      """noInternetConnection""": """Pas de connexion Internet""",
+      """invalidSearch""": """Please enter a valid search term""",
     };
