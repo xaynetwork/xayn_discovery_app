@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+
+/// Google IP, should be always up
+const String _kAlwaysUpAddress = '8.8.8.8';
 
 abstract class ConnectivityObserver {
   Stream<ConnectivityResult> get onConnectivityChanged;
@@ -21,9 +26,10 @@ class AppConnectivityObserver extends ConnectivityObserver {
       BehaviorSubject<ConnectivityResult>();
 
   AppConnectivityObserver() {
-    _connectivity.checkConnectivity().then((it) {
-      _onSubject.add(it);
-      _onSubject.addStream(_connectivity.onConnectivityChanged);
+    _connectivity.checkConnectivity().then((it) async {
+      _onSubject.add(await _verifyConnectivity(it));
+      _onSubject.addStream(
+          _connectivity.onConnectivityChanged.asyncMap(_verifyConnectivity));
     });
   }
 
@@ -33,6 +39,25 @@ class AppConnectivityObserver extends ConnectivityObserver {
   @override
   Future<ConnectivityResult> checkConnectivity() =>
       _connectivity.checkConnectivity();
+
+  /// [ConnectivityResult] can sometimes be a false positive/negative
+  /// Therefore, we do an IP ping to verify if the value is correct.
+  Future<ConnectivityResult> _verifyConnectivity(
+      ConnectivityResult value) async {
+    try {
+      final result = await InternetAddress.lookup(_kAlwaysUpAddress);
+
+      // rewrites a false negative if needed
+      maybeOverrideValueWhenUp(ConnectivityResult value) =>
+          value == ConnectivityResult.none ? ConnectivityResult.wifi : value;
+
+      return result.isNotEmpty && result.first.rawAddress.isNotEmpty
+          ? maybeOverrideValueWhenUp(value)
+          : ConnectivityResult.none;
+    } on SocketException catch (_) {
+      return ConnectivityResult.none;
+    }
+  }
 }
 
 @LazySingleton(as: ConnectivityObserver)
