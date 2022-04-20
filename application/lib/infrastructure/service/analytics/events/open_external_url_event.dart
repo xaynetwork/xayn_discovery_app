@@ -25,4 +25,5 @@ enum CurrentView {
   story,
   reader,
   settings,
+  bookmark,
 }
