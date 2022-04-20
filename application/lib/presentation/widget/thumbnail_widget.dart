@@ -89,12 +89,18 @@ Widget buildThumbnailFromFaviconHost(String host) {
   var defaultThumbnail = Thumbnail.assetImage(
       R.assets.graphics.formsEmptyCollection,
       backgroundColor: R.colors.collectionsScreenCard);
-  return Image.network(
+
+  final image = Image.network(
     'https://$host/favicon.ico',
     width: R.dimen.unit3,
     height: R.dimen.unit3,
     errorBuilder: (context, _, __) => defaultThumbnail,
-    loadingBuilder: (_, __, ___) => defaultThumbnail,
+    loadingBuilder: (_, image, progress) =>
+        progress == null ? image : defaultThumbnail,
+  );
+  return ClipRRect(
+    borderRadius: R.styles.roundBorder0_5,
+    child: image,
   );
 }
 
