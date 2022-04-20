@@ -112,6 +112,10 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         ),
       ),
       areItemsTheSame: (a, b) => a.id == b.id,
+
+      /// When opening the personal area screen and the collection list contains
+      /// only one item (the default one), don't animate
+      forceWithoutAnimation: screenState.items.length == 1,
     );
 
     final bottomPadding = R.dimen.unit2;
