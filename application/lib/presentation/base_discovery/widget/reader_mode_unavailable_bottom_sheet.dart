@@ -5,20 +5,29 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class ReaderModeUnavailableBottomSheet extends BottomSheetBase {
   final VoidCallback? onOpenViaBrowser;
+  final VoidCallback? onClosePressed;
 
   ReaderModeUnavailableBottomSheet({
     Key? key,
     this.onOpenViaBrowser,
+    this.onClosePressed,
   }) : super(
           key: key,
-          body: _ReaderModeUnavailable(onOpenViaBrowser: onOpenViaBrowser),
+          body: _ReaderModeUnavailable(
+            onOpenViaBrowser: onOpenViaBrowser,
+            onClosePressed: onClosePressed,
+          ),
         );
 }
 
 class _ReaderModeUnavailable extends StatelessWidget with BottomSheetBodyMixin {
   final VoidCallback? onOpenViaBrowser;
+  final VoidCallback? onClosePressed;
 
-  const _ReaderModeUnavailable({this.onOpenViaBrowser});
+  const _ReaderModeUnavailable({
+    this.onOpenViaBrowser,
+    this.onClosePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +43,10 @@ class _ReaderModeUnavailable extends StatelessWidget with BottomSheetBodyMixin {
 
     final closeButton = AppGhostButton.text(
       R.strings.errorClose,
-      onPressed: () => closeBottomSheet(context),
+      onPressed: () {
+        closeBottomSheet(context);
+        if (onClosePressed != null) onClosePressed!();
+      },
       backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
     );
     final openViaBrowserButton = AppRaisedButton.text(
