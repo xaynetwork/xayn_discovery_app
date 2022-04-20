@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repository.dart';
@@ -26,7 +27,8 @@ class HiveFeedTypeMarketsRepository extends HiveRepository<FeedTypeMarkets>
   BaseDbEntityMapper<FeedTypeMarkets> get mapper => _mapper;
 
   @override
-  Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.feedTypeMarkets);
+  Box<Record> get box =>
+      _box ??= Hive.safeBox<Record>(BoxNames.feedTypeMarkets);
 
   @override
   FeedTypeMarkets get feed =>
