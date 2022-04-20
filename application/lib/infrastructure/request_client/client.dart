@@ -1,37 +1,56 @@
 import 'dart:io';
 
+import 'package:http_client/console.dart' as client;
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_readability/xayn_readability.dart';
 
 const String _kUserAgent =
-    'Mozilla/5.0 (Linux; Android 8.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36';
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36';
 const int _kMaxRedirectCount = 10;
+const String _kConnectionClosed =
+    'connection closed before full header was received';
+const Duration _kRetryTimeout = Duration(seconds: 1);
 
 @injectable
 class Client implements http.Client {
-  final http.Client _client;
-
-  Client() : _client = createHttpClient(userAgent: _kUserAgent);
+  late final http.Client _client = client.ConsoleClient(
+    userAgent: _kUserAgent,
+    ignoreBadCertificates: true,
+  );
 
   @override
   Future close({bool force = false}) => _client.close(force: force);
 
   @override
-  Future<http.Response> send(http.Request request) => _client.send(request);
+  Future<http.Response> send(http.Request request) =>
+      _sendWithRedirectGuard(request);
 
-  Future<http.Response> sendWithRedirectGuard(
+  Future<http.Response> _sendWithRedirectGuard(
     http.Request request, {
     int count = 0,
   }) async {
     if (count >= _kMaxRedirectCount) throw MaxRedirectError(count);
 
-    final response = await send(request);
+    final response = await _client.send(request).catchError(
+      (e) async {
+        // "connection closed before full header was received" appears to be a Flutter issue
+        // I couldn't reproduce it myself, but the issue thread did suggest a retry when it triggers.
+        await Future.delayed(_kRetryTimeout);
+
+        return _sendWithRedirectGuard(request, count: count + 1);
+      },
+      test: (e) =>
+          e is HttpException &&
+          e.message.toLowerCase().startsWith(_kConnectionClosed),
+    );
 
     // test if in redirect status code range
     if (response.isRedirect) {
       final location = _getNextLocation(response, request.uri);
+      final hasSetCookie = response.headers.containsKey('set-cookie');
+
+      if (request.uri == location && !hasSetCookie) throw SameRedirectError();
 
       logger.i(
           'Redirect detected (${response.statusCode})\nNext location: $location');
@@ -40,10 +59,10 @@ class Client implements http.Client {
       // some sites simply return a 302 and expect then to be called
       // again, but with those cookies then set.
       // this is an anti-scraping measure.
-      if (response.headers.containsKey('set-cookie')) {
+      if (hasSetCookie) {
         logger.i('Server cookies detected');
 
-        return await sendWithRedirectGuard(
+        return await _sendWithRedirectGuard(
           request.change(
             uri: location,
             headers: request.headers.clone()..remove('cookie'),
@@ -53,7 +72,7 @@ class Client implements http.Client {
         );
       }
 
-      return await sendWithRedirectGuard(
+      return await _sendWithRedirectGuard(
         request.change(uri: location),
         count: count + 1,
       );
@@ -63,7 +82,7 @@ class Client implements http.Client {
   }
 
   Uri _getNextLocation(http.Response response, Uri originalUri) {
-    final redirects = response.redirects
+    late final redirects = response.redirects
             ?.map((it) => it.location)
             .map((it) => it.toString())
             .toList() ??
@@ -96,12 +115,21 @@ extension _IsRedirectExtension on http.Response {
   bool get isRedirect => statusCode >= 300 && statusCode < 400;
 }
 
-class MaxRedirectError extends Error {
-  final int numRedirects;
-  final String message = 'redirect loop detected';
+class ClientError extends Error {
+  final String message;
 
-  MaxRedirectError(this.numRedirects);
+  ClientError(this.message);
 
   @override
   String toString() => message;
+}
+
+class MaxRedirectError extends ClientError {
+  final int numRedirects;
+
+  MaxRedirectError(this.numRedirects) : super('redirect loop detected');
+}
+
+class SameRedirectError extends ClientError {
+  SameRedirectError() : super('redirect same url detected');
 }

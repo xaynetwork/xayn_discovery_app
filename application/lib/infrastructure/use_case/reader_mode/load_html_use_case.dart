@@ -59,7 +59,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     } else {
       await connectivityObserver.isUp();
 
-      final response = await client.sendWithRedirectGuard(
+      final response = await client.send(
         http.Request(
           CommonHttpRequestParams.httpRequestGet,
           url,

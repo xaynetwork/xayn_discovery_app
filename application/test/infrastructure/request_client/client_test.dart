@@ -11,7 +11,7 @@ void main() {
   });
 
   test('Redirect with Set-Cookie ignores invalid cookies', () async {
-    final response = await client.sendWithRedirectGuard(
+    final response = await client.send(
       http.Request(
         CommonHttpRequestParams.httpRequestGet,
         'https://www.tnonline.com/20220226/public-notice-panther-valley-school-district-advertisement-invitation-3',
@@ -25,7 +25,7 @@ void main() {
   });
 
   test('Redirect with Set-Cookie ignores previously set cookies', () async {
-    final response = await client.sendWithRedirectGuard(
+    final response = await client.send(
       http.Request(
         CommonHttpRequestParams.httpRequestGet,
         'https://news.google.com/__i/rss/rd/articles/CBMiXGh0dHBzOi8vd3d3Lndhc2hpbmd0b25wb3N0LmNvbS93b3JsZC8yMDIyLzAyLzI1L3VrcmFpbmUtcnVzc2lhLWNoZXJub2J5bC1ob3N0YWdlcy1yYWRpYXRpb24v0gEA?oc=5',
