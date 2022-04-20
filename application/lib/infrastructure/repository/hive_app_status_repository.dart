@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
@@ -25,7 +26,7 @@ class HiveAppStatusRepository extends HiveRepository<AppStatus>
   BaseDbEntityMapper<AppStatus> get mapper => _mapper;
 
   @override
-  Box<Record> get box => _box ??= Hive.box<Record>(BoxNames.appStatus);
+  Box<Record> get box => _box ??= Hive.safeBox<Record>(BoxNames.appStatus);
 
   @override
   AppStatus get appStatus {
