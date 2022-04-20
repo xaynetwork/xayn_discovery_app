@@ -207,6 +207,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         document: document,
         provider: state.processedDocument?.getProvider(document.resource),
         showTooltip: overlayManager.show,
+        feedType: feedType,
       ),
       when: (oS, nS) =>
           oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
