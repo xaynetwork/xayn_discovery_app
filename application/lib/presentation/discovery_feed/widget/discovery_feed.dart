@@ -51,7 +51,7 @@ class _DiscoveryFeedState
     NavBarConfig buildReaderMode() {
       final document =
           _manager.state.results.elementAt(_manager.state.cardIndex);
-      final managers = managersOf(document);
+      final managers = cardManagersCache.managersOf(document);
 
       void onBookmarkPressed() =>
           managers.discoveryCardManager.toggleBookmarkDocument(
