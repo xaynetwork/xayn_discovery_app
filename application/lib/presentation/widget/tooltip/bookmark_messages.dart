@@ -38,7 +38,11 @@ TooltipParams _getBookmarkedToDefault() {
 
   /// The args value are listed in the [OverlayData] object
   void onPressed(List? args) {
-    if (args == null || args.length < 5) return;
+    if (args == null || args.length < 5) {
+      throw BookmarkMessageError(
+        'Missing one or more needed arguments in order to show the collections bottom sheet',
+      );
+    }
     final context = args[0];
     final document = args[1];
     final provider = args[2];
@@ -88,4 +92,9 @@ Map<TooltipKey, TooltipParams> _getErrorMap() {
         builder: (_) => _builder,
       )
   };
+}
+
+class BookmarkMessageError extends Error {
+  final String? message;
+  BookmarkMessageError([this.message]);
 }
