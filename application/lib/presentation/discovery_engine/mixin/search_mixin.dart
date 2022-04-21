@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_search_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_search_term_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_search_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_search_use_case.dart';
@@ -22,7 +23,6 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       di.get<RequestNextSearchBatchUseCase>();
   late final RequestSearchUseCase searchUseCase =
       di.get<RequestSearchUseCase>();
-  final Completer _preambleCompleter = Completer();
   UseCaseSink<None, EngineEvent>? _nextBatchUseCaseSink;
   UseCaseSink<String, EngineEvent>? _searchUseCaseSink;
   bool _didStartConsuming = false;
@@ -51,8 +51,7 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       _startConsuming();
     }
 
-    return Stream.fromFuture(_preambleCompleter.future)
-        .asyncExpand((_) => super.stream);
+    return super.stream;
   }
 
   UseCaseSink<None, EngineEvent> _getNextBatchUseCaseSink() {
@@ -69,44 +68,33 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
     _didStartConsuming = true;
 
     final requestSearchUseCase = di.get<RestoreSearchUseCase>();
-    final areMarketsOutdatedUseCase = di.get<AreMarketsOutdatedUseCase>();
-    final areMarketsOutdated =
-        await areMarketsOutdatedUseCase.singleOutput(FeedType.search);
     final lastUsedSearchTerm =
         _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
 
-    if (areMarketsOutdated && lastUsedSearchTerm != null) {
-      final closeSearchUseCase = di.get<CloseSearchUseCase>();
-      final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
+    final closeSearchUseCase = di.get<CloseSearchUseCase>();
+    final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
 
-      onResetParameters(_) => resetParameters();
-      onRestore(EngineEvent it) => it is RestoreSearchSucceeded
-          ? {...it.items.map((it) => it.documentId)}
-          : const <DocumentId>{};
-      onError(Object e, StackTrace? s) =>
-          this.onError(e, s ?? StackTrace.current);
+    onResetParameters(_) => resetParameters();
+    onRestore(EngineEvent it) => it is RestoreSearchSucceeded
+        ? {...it.items.map((it) => it.documentId)}
+        : const <DocumentId>{};
+    onError(Object e, StackTrace? s) =>
+        this.onError(e, s ?? StackTrace.current);
 
-      consume(requestSearchUseCase, initialData: none)
-          .transform(
-            (out) => out
-                .doOnData(onResetParameters)
-                .map(onRestore)
-                .doOnData(_closeExplicitFeedback)
-                .mapTo(none)
-                .followedBy(closeSearchUseCase)
-                .mapTo(FeedType.search)
-                .followedBy(changeMarketsUseCase)
-                .doOnData(_preambleCompleter.complete)
-                .mapTo(lastUsedSearchTerm)
-                .doOnData(search),
-          )
-          .autoSubscribe(onError: onError);
-    } else {
-      _preambleCompleter.complete();
-
-      consume(requestSearchUseCase, initialData: none).autoSubscribe(
-          onError: (e, s) => onError(e, s ?? StackTrace.current));
-    }
+    consume(requestSearchUseCase, initialData: none)
+        .transform((out) => out
+            .whereMarketsChanged()
+            .doOnData(onResetParameters)
+            .map(onRestore)
+            .doOnData(_closeExplicitFeedback)
+            .mapTo(none)
+            .followedBy(closeSearchUseCase)
+            .mapTo(FeedType.search)
+            .followedBy(changeMarketsUseCase)
+            .mapTo(lastUsedSearchTerm)
+            .whereType<String>()
+            .doOnData(search))
+        .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
   Future<String?> _restoreLastUsedSearchTerm() async {
@@ -126,4 +114,15 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
       );
     }
   }
+}
+
+extension _StreamExtension on Stream<EngineEvent> {
+  Stream<EngineEvent> whereMarketsChanged() => switchMap(
+        (engineEvent) => Stream.value(const DbCrudIn.watchAllChanged())
+            .followedBy(di.get<CrudFeedSettingsUseCase>())
+            .mapTo(FeedType.feed)
+            .followedBy(di.get<AreMarketsOutdatedUseCase>())
+            .where((didMarketsChange) => didMarketsChange)
+            .mapTo(engineEvent),
+      );
 }
