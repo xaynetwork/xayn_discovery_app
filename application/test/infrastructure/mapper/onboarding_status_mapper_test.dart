@@ -30,7 +30,7 @@ void main() {
     OnboardingStatusFields.collectionsManageDone: false,
   };
   group('toMap', () {
-    final mapper = OnboardingStatusToDbEntityMapMapper();
+    const mapper = OnboardingStatusToDbEntityMapMapper();
     test(
       'GIVEN status all true THEN return correct map',
       () {
@@ -47,7 +47,7 @@ void main() {
     );
   });
   group('fromMap', () {
-    final mapper = DbEntityMapToOnboardingStatusMapper();
+    const mapper = DbEntityMapToOnboardingStatusMapper();
     test(
       'GIVEN nullable map THEN return initial OnboardingStatus',
       () {
