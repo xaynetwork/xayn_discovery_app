@@ -89,7 +89,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   late final FetchSessionUseCase _fetchSessionUseCase;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
 
-  bool _didChangeMarkets = false;
   bool _isLoading = true;
 
   @override
@@ -102,10 +101,14 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
+    final stateDiffResult = await super.maybeReduceCardCount(results);
     final observedDocument = currentObservedDocument;
 
     if (observedDocument == null || results.length <= _maxCardCount) {
-      return ResultSets(results: results);
+      return ResultSets(
+        results: results,
+        removedResults: stateDiffResult.removedResults,
+      );
     }
 
     var nextResults = results.toSet();
@@ -129,7 +132,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       // in front, which should be avoided.
       // Only remove documents when scrolled far enough, so that the impact
       // is seamless to the user.
-      return ResultSets(results: results);
+      return ResultSets(
+        results: results,
+        removedResults: stateDiffResult.removedResults,
+      );
     }
 
     // Invoke the use case which closes these Documents for the engine
@@ -155,7 +161,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     return ResultSets(
       nextCardIndex: cardIndex,
       results: nextResults,
-      removedResults: flaggedForDisposal,
+      removedResults: {
+        ...flaggedForDisposal,
+        ...stateDiffResult.removedResults,
+      },
     );
   }
 
@@ -193,17 +202,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     observeDocument();
     // clear the inner-stored current observation...
     resetObservedDocument();
-  }
-
-  @override
-  Future<DiscoveryState?> computeState() async {
-    if (_didChangeMarkets) {
-      _didChangeMarkets = false;
-
-      return state.copyWith(results: const <Document>{});
-    }
-
-    return super.computeState();
   }
 
   /// A higher-order Function, which tracks the last event passed in,

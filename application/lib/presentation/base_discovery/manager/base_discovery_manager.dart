@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -239,8 +240,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   /// override this method, if your view needs to dispose older items, as
   /// the total results grow in size
+  @mustCallSuper
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
-      ResultSets(results: results);
+      ResultSets(
+        results: results,
+        removedResults: state.results.toSet()..removeWhere(results.contains),
+      );
 
   void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
 
