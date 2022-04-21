@@ -156,7 +156,7 @@ class _DiscoveryCardStaticState
         builder: (_, state) => super.buildImage(
           R.isDarkMode
               ? state.readerModeBackgroundColor.color
-              : R.colors.swipeCardBackgroundDefault,
+              : R.colors.swipeCardBackgroundHome,
         ),
       );
 
