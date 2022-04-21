@@ -5,7 +5,6 @@ enum Feature {
   readerModeSettings,
   discoveryEngineReportOverlay,
   ratingDialog,
-  documentFilter,
   tts,
 }
 
