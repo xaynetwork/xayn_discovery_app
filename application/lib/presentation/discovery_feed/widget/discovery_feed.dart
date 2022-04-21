@@ -26,13 +26,6 @@ class _DiscoveryFeedState
   DiscoveryFeedManager get manager => _manager;
 
   @override
-  void dispose() {
-    _manager.close();
-
-    super.dispose();
-  }
-
-  @override
   NavBarConfig get navBarConfig {
     NavBarConfig buildDefault() => NavBarConfig(
           configIdDiscoveryFeed,
