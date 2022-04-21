@@ -91,14 +91,14 @@ An event is data sent to the analytics platforms when the user triggers an actio
 
 #### Bookmarking/Saving an article
 
-| Event                                                                                                 | Description                                               | Properties                                                                                                                                                             |
-| ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [bookmarkDeleted](./lib/infrastructure/service/analytics/events/bookmark_deleted_event.dart)          | triggers when a bookmark is deleted from bookmarks screen |                                                                                                                                                                        | `bool` **fromDefaultCollection**: is deleted from default collection ("Read later") |
-| [bookmarkMoved](./lib/infrastructure/service/analytics/events/bookmark_moved_event.dart)              | triggers when a bookmark is moved to another collection   | `bool` **toDefaultCollection**: is moved to default collection ("Read later")                                                                                          |
-| [collectionCreatedEvent](./lib/infrastructure/service/analytics/events/collection_created_event.dart) | triggers when a new collection is created                 | -                                                                                                                                                                      |
-| [collectionDeleted](./lib/infrastructure/service/analytics/events/collection_deleted_event.dart)      | triggers when a collection is deleted                     | `enum` **deleteCollectionContext**: [moveBookmarks (when all bookmarks are moved), deleteBookmarks (when all bookmarks are deleted), empty (the collection was empty)] |
-| [collectionRenamed](./lib/infrastructure/service/analytics/events/collection_renamed_event.dart)      | triggers when a collection is renamed                     | -                                                                                                                                                                      |
-| [documentBookmarked](./lib/infrastructure/service/analytics/events/document_bookmarked_event.dart)    | triggers when an article is bookmarked or unbookmarked    | `bool` **isBookmarked**: is true when bookmarked, false when not.<br/>`Document` **document**: the article.                                                            |
+| Event | Description | Properties |
+| --- | --- | --- |
+| [bookmarkDeleted](./lib/infrastructure/service/analytics/events/bookmark_deleted_event.dart) | triggers when a bookmark is deleted from bookmarks screen | | `bool` **fromDefaultCollection**: is deleted from default collection ("Read later") |
+| [bookmarkMoved](./lib/infrastructure/service/analytics/events/bookmark_moved_event.dart) | triggers when a bookmark is moved to another collection | `bool` **toDefaultCollection**: is moved to default collection ("Read later") |
+| [collectionCreatedEvent](./lib/infrastructure/service/analytics/events/collection_created_event.dart) | triggers when a new collection is created | - |
+| [collectionDeleted](./lib/infrastructure/service/analytics/events/collection_deleted_event.dart) | triggers when a collection is deleted | `enum` **deleteCollectionContext**: [moveBookmarks (when all bookmarks are moved), deleteBookmarks (when all bookmarks are deleted), empty (the collection was empty)] |
+| [collectionRenamed](./lib/infrastructure/service/analytics/events/collection_renamed_event.dart) | triggers when a collection is renamed | - |
+| [documentBookmarked](./lib/infrastructure/service/analytics/events/document_bookmarked_event.dart) | triggers when an article is bookmarked or unbookmarked | `bool` **isBookmarked**: is true when bookmarked, false when not.<br/>`Document` **document**: the article. |
 
 #### Discovery screen/Swiping cards
 
