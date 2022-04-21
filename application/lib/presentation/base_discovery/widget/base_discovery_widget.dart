@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/reader_mode_unavailable_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
@@ -26,7 +27,6 @@ import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dar
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
-import 'package:xayn_discovery_app/presentation/utils/mixin/card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
@@ -52,7 +52,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     with
         WidgetsBindingObserver,
         NavBarConfigMixin,
-        CardManagersMixin,
         TooltipStateMixin,
         SubscriptionTrialBannerStateMixin,
         OverlayStateMixin,
@@ -60,6 +59,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   late final CardViewController _cardViewController = CardViewController();
   late final RatingDialogManager _ratingDialogManager = di.get();
   late final FeatureManager featureManager = di.get();
+  late final CardManagersCache cardManagersCache = di.get();
 
   /// no need to dispose here, handled by the Card Widget itself
   DiscoveryCardController? currentCardController;
@@ -156,7 +156,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       final isMissingNoItemsBuilders =
           totalResults == 0 && widget.noItemsBuilder == null;
 
-      removeObsoleteCardManagers(state.removedResults);
+      cardManagersCache.removeObsoleteCardManagers(state.removedResults);
 
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
@@ -229,7 +229,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       (BuildContext context, int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
-        final managers = managersOf(document);
+        final managers = cardManagersCache.managersOf(document);
 
         onTapPrimary() async {
           hideTooltip();
@@ -347,7 +347,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
-        final managers = managersOf(document);
+        final managers = cardManagersCache.managersOf(document);
         final state = managers.discoveryCardManager.state;
 
         switch (state.explicitDocumentUserReaction) {

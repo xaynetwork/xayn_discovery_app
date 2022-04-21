@@ -4,7 +4,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_factories.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookmark_card.dart';
@@ -34,8 +33,6 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     with NavBarConfigMixin, TooltipStateMixin, CardWidgetTransitionMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
-  final VoidCallback _dispose =
-      DiFactories.registerCardManagerCacheInDi('bookmarks');
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +125,6 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         onError: showTooltip,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _dispose();
-    super.dispose();
   }
 
   _showBookmarkCardOptions(
