@@ -32,7 +32,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_da
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -67,7 +66,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       _crudExplicitDocumentFeedbackUseCase;
   final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
-  final FeatureManager _featureManager;
 
   /// html reader mode elements:
   ///
@@ -133,7 +131,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
-    this._featureManager,
     this._crudDocumentFilterUseCase,
   ) : super(DiscoveryCardState.initial());
 
@@ -157,18 +154,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required UserReaction userReaction,
     required FeedType? feedType,
   }) async {
-    if (_featureManager.isDocumentFilterEnabled) {
-      final url = document.resource.sourceDomain.value;
-      final filter = DocumentFilter.fromSource(url);
-      final op = DbCrudIn.get(filter.id);
-      final res = await _crudDocumentFilterUseCase.singleOutput(op);
+    final url = document.resource.sourceDomain.value;
+    final filter = DocumentFilter.fromSource(url);
+    final op = DbCrudIn.get(filter.id);
+    final res = await _crudDocumentFilterUseCase.singleOutput(op);
 
-      if (res.mapOrNull(single: (s) => s.value) == null) {
-        showOverlay(
-          OverlayData.tooltipDocumentFilter(document: document),
-          when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
-        );
-      }
+    if (res.mapOrNull(single: (s) => s.value) == null) {
+      showOverlay(
+        OverlayData.tooltipDocumentFilter(document: document),
+        when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
+      );
     }
 
     changeUserReaction(
