@@ -19,10 +19,16 @@ void main() {
   final now = DateTime.now();
   late final lastSeen = now.subtract(const Duration(minutes: 1));
 
+  const numberOfSessions = 10;
+  const userIdValue = 'userId';
   const onboardingMap = {
     0: 'hi there',
   };
-  final onboardingValue = OnboardingStatus.initial();
+  const onboardingValue = OnboardingStatus.initial();
+  final appVersionMap = {
+    0: 'hi there',
+  };
+  final appVersionValue = AppVersion.initial();
 
   setUp(() async {
     mockMapToAppVersionMapper = MockMapToAppVersionMapper();
@@ -40,64 +46,54 @@ void main() {
 
   group('AppSettingsMapper tests: ', () {
     test('fromMap', () {
-      when(mockMapToAppVersionMapper.map({0: '1.0.0', 1: '123'})).thenAnswer(
-        (_) => const AppVersion(version: '1.0.0', build: '123'),
-      );
+      when(mockMapToAppVersionMapper.map(appVersionMap))
+          .thenReturn(appVersionValue);
       when(mockMapToOnboardingMapper.map(onboardingMap))
           .thenReturn(onboardingValue);
 
       final map = {
-        0: 10,
-        1: {0: '1.0.0', 1: '123'},
-        2: now,
-        3: 'userId',
-        4: lastSeen,
+        AppSettingsFields.numberOfSessions: numberOfSessions,
+        AppSettingsFields.appVersion: appVersionMap,
+        AppSettingsFields.firstAppLaunchDate: now,
+        AppSettingsFields.userId: userIdValue,
+        AppSettingsFields.lastSeenDate: lastSeen,
         AppSettingsFields.onboardingStatus: onboardingMap,
       };
       final appStatus = mapper.fromMap(map);
       expect(
         appStatus,
         AppStatus(
-          numberOfSessions: 10,
-          lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
+          numberOfSessions: numberOfSessions,
+          lastKnownAppVersion: appVersionValue,
           firstAppLaunchDate: now,
-          userId: const UniqueId.fromTrustedString('userId'),
+          userId: const UniqueId.fromTrustedString(userIdValue),
           lastSeenDate: lastSeen,
-          onboardingStatus: OnboardingStatus.initial(),
+          onboardingStatus: const OnboardingStatus.initial(),
         ),
       );
     });
 
     test('toMap', () {
-      when(mockAppVersionToMapMapper
-              .map(const AppVersion(version: '1.0.0', build: '123')))
-          .thenAnswer(
-        (_) => {
-          0: '1.0.0',
-          1: '123',
-        },
-      );
+      when(mockAppVersionToMapMapper.map(appVersionValue))
+          .thenReturn(appVersionMap);
       when(mockOnboardingToMapMapper.map(onboardingValue))
           .thenReturn(onboardingMap);
 
       final appStatus = AppStatus(
-        numberOfSessions: 10,
-        lastKnownAppVersion: const AppVersion(version: '1.0.0', build: '123'),
+        numberOfSessions: numberOfSessions,
+        lastKnownAppVersion: appVersionValue,
         firstAppLaunchDate: now,
-        userId: const UniqueId.fromTrustedString('userId'),
+        userId: const UniqueId.fromTrustedString(userIdValue),
         lastSeenDate: lastSeen,
         onboardingStatus: onboardingValue,
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
-        0: 10,
-        1: {
-          0: '1.0.0',
-          1: '123',
-        },
-        2: now,
-        3: 'userId',
-        4: lastSeen,
+        AppSettingsFields.numberOfSessions: numberOfSessions,
+        AppSettingsFields.appVersion: appVersionMap,
+        AppSettingsFields.firstAppLaunchDate: now,
+        AppSettingsFields.userId: userIdValue,
+        AppSettingsFields.lastSeenDate: lastSeen,
         AppSettingsFields.onboardingStatus: onboardingMap,
       };
       expect(map, expectedMap);

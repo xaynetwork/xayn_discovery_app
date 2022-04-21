@@ -43,7 +43,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         lastSeenDate: DateTime.now(),
         id: AppStatus.globalId,
         userId: UniqueId(),
-        onboardingStatus: OnboardingStatus.initial(),
+        onboardingStatus: const OnboardingStatus.initial(),
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');
