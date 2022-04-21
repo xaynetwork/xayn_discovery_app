@@ -53,24 +53,10 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
-  late final ActiveSearchManager _manager;
+  late final ActiveSearchManager _manager = di.get();
 
   @override
   ActiveSearchManager get manager => _manager;
-
-  @override
-  void initState() {
-    _manager = di.get();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _manager.close();
-
-    super.dispose();
-  }
 
   @override
   NavBarConfig get navBarConfig {
