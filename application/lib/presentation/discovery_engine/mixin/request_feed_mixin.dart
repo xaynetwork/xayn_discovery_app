@@ -52,7 +52,6 @@ mixin RequestFeedMixin<T extends DiscoveryState> on UseCaseBlocHelper<T> {
   void _startConsuming() async {
     late final fetchCardIndexUseCase = di.get<FetchCardIndexUseCase>();
     final updateSessionUseCase = di.get<UpdateSessionUseCase>();
-    final requestFeedUseCase = di.get<RequestFeedUseCase>();
     final fetchSessionUseCase = di.get<FetchSessionUseCase>();
     final session = await fetchSessionUseCase.singleOutput(none);
     final sessionUpdate = session.copyWith(didRequestFeed: true);
@@ -93,8 +92,7 @@ mixin RequestFeedMixin<T extends DiscoveryState> on UseCaseBlocHelper<T> {
               .map(onRestore)
               .asyncMap(onCloseOldDocuments)
               .doOnData(_preambleCompleter.complete)
-              .followedBy(requestFeedUseCase)
-              .doRequestNextBatch()
+              .doResetFeedAndRequestNextBatch()
               .doOnData(onResetParameters(1))
               .whereMarketsChanged()
               // following section triggers each time markets change
