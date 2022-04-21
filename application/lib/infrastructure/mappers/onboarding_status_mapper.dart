@@ -6,6 +6,8 @@ import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
 @singleton
 class OnboardingStatusToDbEntityMapMapper
     extends Mapper<OnboardingStatus, DbEntityMap> {
+  const OnboardingStatusToDbEntityMapMapper();
+
   @override
   DbEntityMap map(OnboardingStatus input) => {
         OnboardingStatusFields.homeVerticalSwipeDone:
@@ -21,6 +23,8 @@ class OnboardingStatusToDbEntityMapMapper
 @singleton
 class DbEntityMapToOnboardingStatusMapper
     extends Mapper<DbEntityMap?, OnboardingStatus> {
+  const DbEntityMapToOnboardingStatusMapper();
+
   @override
   OnboardingStatus map(Map? input) {
     if (input == null) return const OnboardingStatus.initial();
