@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -38,8 +37,6 @@ abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
 
   void onPersonalAreaNavPressed();
-
-  void onCardDetailsPressed(DiscoveryCardStandaloneArgs args);
 
   void onTrialExpired();
 }
@@ -115,10 +112,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
   void onSearchNavPressed() {
     // TODO probably go to the top of the feed
   }
-
-  @override
-  void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) =>
-      _activeSearchNavActions.onCardDetailsPressed(args);
 
   @override
   void onTrialExpired() => _activeSearchNavActions.onTrialExpired();
