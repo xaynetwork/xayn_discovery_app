@@ -54,7 +54,6 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   late final ActiveSearchManager _manager;
-  late final TooltipController _tooltipController = TooltipController();
 
   @override
   ActiveSearchManager get manager => _manager;
@@ -69,7 +68,6 @@ class _ActiveSearchState
   @override
   void dispose() {
     _manager.close();
-    _tooltipController.dispose();
 
     super.dispose();
   }
