@@ -88,17 +88,28 @@ mixin RequestFeedMixin<T extends DiscoveryState> on UseCaseBlocHelper<T> {
         .transform(
           (out) => out
               .take(1)
+              // restore the feed from the previous app session
               .doRequestFeed()
+              // convert all to DocumentId's
               .map(onRestore)
+              // close all documents except the single one that the user had
+              // up in a previous session
               .asyncMap(onCloseOldDocuments)
+              // release the [stream] for consumption
               .doOnData(_preambleCompleter.complete)
+              // we now have just 1 document, so fetch a next batch of fresh ones
               .doResetFeedAndRequestNextBatch()
+              // increment the feed index, so that the old document is moved up
               .doOnData(onResetParameters(1))
+              // pause here and only continue on a market change
               .whereMarketsChanged()
-              // following section triggers each time markets change
+              // cleanup the old feed, from the previous market
               .asyncMap(onCloseExplicitFeedback)
+              // update the feed, it is now using the new market
               .finalizeFeedMarketsChange()
+              // reset the feed to the start index
               .doOnData(onResetParameters())
+              // finally load documents in the new market
               .doResetFeedAndRequestNextBatch(),
         )
         .autoSubscribe(onError: onError);
