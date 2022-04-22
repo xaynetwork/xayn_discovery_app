@@ -7,6 +7,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
@@ -101,6 +102,8 @@ void main() async {
               fakeDocumentD,
             ]));
 
+    di.reset();
+
     await configureTestDependencies();
 
     di.registerSingleton<DiscoveryEngine>(mockDiscoveryEngine);
@@ -177,7 +180,7 @@ void main() async {
     },
   );
 
-  /*blocTest<DiscoveryFeedManager, DiscoveryState>(
+  blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN closing documents THEN the discovery engine is notified ',
     build: () => manager,
     setUp: () async {
@@ -192,13 +195,23 @@ void main() async {
 
         return event;
       });
+
+      // wait for requestFeed to complete
+      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
     act: (manager) async {
       manager.closeFeedDocuments({fakeDocumentA.documentId});
     },
     verify: (manager) {
       verifyInOrder([
-
+        mockDiscoveryEngine.restoreFeed(),
+        // after restore, old user index in feed is 0, so other cards are now closed
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentB.documentId}),
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.requestNextFeedBatch(),
+        // the close from the act handler
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
       ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
@@ -236,14 +249,11 @@ void main() async {
       },
       verify: (manager) {
         verifyInOrder([
-          mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.restoreFeed(),
+          mockDiscoveryEngine.closeFeedDocuments({fakeDocumentB.documentId}),
+          mockDiscoveryEngine.restoreFeed(),
+          mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.requestNextFeedBatch(),
-          mockDiscoveryEngine.logDocumentTime(
-            documentId: fakeDocumentA.documentId,
-            mode: DocumentViewMode.story,
-            seconds: 1,
-          ),
         ]);
         verifyNoMoreInteractions(mockDiscoveryEngine);
       });
@@ -274,10 +284,14 @@ void main() async {
           ),
         ),
       );
-      verify(mockDiscoveryEngine.engineEvents);
-      verify(mockDiscoveryEngine.restoreFeed());
-      verify(mockDiscoveryEngine.requestNextFeedBatch());
+      verifyInOrder([
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentB.documentId}),
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.requestNextFeedBatch(),
+      ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
-  );*/
+  );
 }
