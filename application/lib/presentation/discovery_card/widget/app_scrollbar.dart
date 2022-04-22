@@ -23,7 +23,7 @@ class AppScrollbar extends StatelessWidget {
           controller: scrollController,
           thickness: R.dimen.unit0_5,
           radius: Radius.circular(R.dimen.unit0_5),
-          isAlwaysShown: scrollController.hasClients,
+          thumbVisibility: scrollController.hasClients,
           child: child,
         ),
       );

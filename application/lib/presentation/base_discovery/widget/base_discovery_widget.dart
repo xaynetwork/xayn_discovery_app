@@ -135,14 +135,14 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     _cardViewController.dispose();
     featureManager.close();
 
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
   }
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     super.initState();
   }
