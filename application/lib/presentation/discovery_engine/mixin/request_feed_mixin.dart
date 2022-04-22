@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_feed_documents_use_case.dart';
@@ -84,35 +85,47 @@ mixin RequestFeedMixin<T extends DiscoveryState> on UseCaseBlocHelper<T> {
     onError(Object e, StackTrace? s) =>
         this.onError(e, s ?? StackTrace.current);
 
-    consume(updateSessionUseCase, initialData: sessionUpdate)
-        .transform(
-          (out) => out
-              .take(1)
-              // restore the feed from the previous app session
-              .doRequestFeed()
-              // convert all to DocumentId's
-              .map(onRestore)
-              // close all documents except the single one that the user had
-              // up in a previous session
-              .asyncMap(onCloseOldDocuments)
-              // release the [stream] for consumption
-              .doOnData(_preambleCompleter.complete)
-              // we now have just 1 document, so fetch a next batch of fresh ones
-              .doResetFeedAndRequestNextBatch()
-              // increment the feed index, so that the old document is moved up
-              .doOnData(onResetParameters(1))
-              // pause here and only continue on a market change
-              .whereMarketsChanged()
-              // cleanup the old feed, from the previous market
-              .asyncMap(onCloseExplicitFeedback)
-              // update the feed, it is now using the new market
-              .finalizeFeedMarketsChange()
-              // reset the feed to the start index
-              .doOnData(onResetParameters())
-              // finally load documents in the new market
-              .doResetFeedAndRequestNextBatch(),
-        )
-        .autoSubscribe(onError: onError);
+    // loads the old session's feed, and keeps only 1 document,
+    // namely the very one that was being displayed as the "main" card,
+    // in the previous app session.
+    makeCleanedUpOldFeed(Stream<Session> stream) => stream
+        .take(1)
+        // restore the feed from the previous app session
+        .doRequestFeed()
+        // convert all to DocumentId's
+        .map(onRestore)
+        // close all documents except the single one that the user had
+        // up in a previous session
+        .asyncMap(onCloseOldDocuments)
+        // release the [stream] for consumption
+        .doOnData(_preambleCompleter.complete);
+
+    // pulls in fresh/actual documents
+    makeActualizeFeed(Stream<None> stream) => stream
+        // we now have just 1 document, so fetch a next batch of fresh ones
+        .doResetFeedAndRequestNextBatch()
+        // increment the feed index, so that the old document is moved up
+        .doOnData(onResetParameters(1));
+
+    // rebuilds the feed when the market(s) change
+    makeMarketChangedFeed(Stream<bool> stream) => stream
+        // cleanup the old feed, from the previous market
+        .asyncMap(onCloseExplicitFeedback)
+        // update the feed, it is now using the new market
+        .finalizeFeedMarketsChange()
+        // reset the feed to the start index
+        .doOnData(onResetParameters())
+        // finally load documents in the new market
+        .doResetFeedAndRequestNextBatch();
+
+    consume(updateSessionUseCase, initialData: sessionUpdate).transform(
+      (out) {
+        final cleanedUpOldFeed = makeCleanedUpOldFeed(out);
+        final actualizedFeed = makeActualizeFeed(cleanedUpOldFeed);
+
+        return makeMarketChangedFeed(actualizedFeed.whereMarketsChanged());
+      },
+    ).autoSubscribe(onError: onError);
   }
 
   Future<void> _closeExplicitFeedback(Set<DocumentId> documents) async {
