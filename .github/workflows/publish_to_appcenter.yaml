@@ -34,8 +34,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  flutter_channel: 'stable'
-  flutter_version: '2.10.4'
+  flutter_channel: 'beta'
+  flutter_version: '2.13.0-0.2.pre'
   java_version: '12.x'
   ios_device: 'iPhone 11 Pro (14.5)'
   # Common environment variables used inside ./build_scripts files
