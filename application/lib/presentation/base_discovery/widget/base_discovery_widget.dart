@@ -156,8 +156,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       final isMissingNoItemsBuilders =
           totalResults == 0 && widget.noItemsBuilder == null;
 
-      cardManagersCache.removeObsoleteCardManagers(state.removedResults);
-
       if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
       if (!state.isComplete || isMissingNoItemsBuilders) {
