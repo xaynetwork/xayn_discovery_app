@@ -273,8 +273,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
             ? DiscoveryCard(
                 isPrimary: true,
                 document: document,
-                discoveryCardManager: managers.discoveryCardManager,
-                imageManager: managers.imageManager,
                 onDiscard: () {
                   manager.triggerHapticFeedbackMedium();
                   return manager.handleNavigateOutOfCard(document);
@@ -295,8 +293,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 child: DiscoveryFeedCard(
                   isPrimary: isPrimary,
                   document: document,
-                  discoveryCardManager: managers.discoveryCardManager,
-                  imageManager: managers.imageManager,
                   primaryCardShader: ShaderFactory.fromType(shaderType),
                   onTtsData: (it) => setState(() =>
                       ttsData = ttsData.enabled ? TtsData.disabled() : it),
