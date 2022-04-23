@@ -7,7 +7,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @lazySingleton
 class CardManagersCache {
-  late final Map<DocumentId, CardManagers> _cardManagers = {};
+  late final Map<Uri, CardManagers> _cardManagers = {};
 
   void dispose() {
     _cardManagers
@@ -18,13 +18,13 @@ class CardManagersCache {
   @mustCallSuper
   void removeObsoleteCardManagers(Iterable<Document> results) {
     for (var key in results) {
-      _cardManagers.remove(key.documentId)?.closeAll();
+      _cardManagers.remove(key.resource.url)?.closeAll();
     }
   }
 
   @mustCallSuper
   CardManagers managersOf(Document document) => _cardManagers.putIfAbsent(
-        document.documentId,
+        document.resource.url,
         () => CardManagers(
           imageManager: di.get()..getImage(document.resource.image),
           discoveryCardManager: di.get()..updateDocument(document),

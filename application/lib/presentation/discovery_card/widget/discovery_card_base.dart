@@ -56,12 +56,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void initState() {
     super.initState();
 
-    final managers = cardManagersCache.managersOf(widget.document);
-
-    discoveryCardManager = managers.discoveryCardManager
-      ..updateDocument(widget.document);
-    imageManager = managers.imageManager
-      ..getImage(widget.document.resource.image);
+    updateManagers();
   }
 
   @override
@@ -69,12 +64,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      final managers = cardManagersCache.managersOf(widget.document);
-
-      discoveryCardManager = managers.discoveryCardManager
-        ..updateDocument(widget.document);
-      imageManager = managers.imageManager
-        ..getImage(widget.document.resource.image);
+      if (oldWidget.document.resource.url != widget.document.resource.url) {
+        updateManagers();
+      } else {
+        discoveryCardManager.updateDocument(widget.document);
+      }
     }
   }
 
@@ -151,5 +145,14 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => buildBackgroundPane(opaque: false),
     );
+  }
+
+  void updateManagers() {
+    final managers = cardManagersCache.managersOf(widget.document);
+
+    discoveryCardManager = managers.discoveryCardManager
+      ..updateDocument(widget.document);
+    imageManager = managers.imageManager
+      ..getImage(widget.document.resource.image);
   }
 }

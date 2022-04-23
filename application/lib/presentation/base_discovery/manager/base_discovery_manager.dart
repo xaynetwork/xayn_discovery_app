@@ -309,7 +309,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
               _isFullScreen ? readerModeSettings?.backgroundColor : null,
         );
 
-        cardManagersCache.removeObsoleteCardManagers(sets.removedResults);
+        final uriList = sets.results.map((it) => it.resource.url).toSet();
+
+        cardManagersCache.removeObsoleteCardManagers(sets.removedResults
+            .where((it) => !uriList.contains(it.resource.url)));
 
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
