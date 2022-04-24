@@ -53,6 +53,7 @@ class AmplitudeAnalyticsService
     await _amplitude.init(Env.amplitudeApiKey);
     await _amplitude.trackingSessionEvents(true);
     await _amplitude.setUseDynamicConfig(true);
+    await _amplitude.enableCoppaControl();
     await _amplitude.setUserId(_userId);
     await _preamble();
   }
