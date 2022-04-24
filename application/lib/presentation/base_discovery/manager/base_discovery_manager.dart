@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -20,6 +21,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -59,6 +61,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
+  final CardManagersCache cardManagersCache;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
@@ -78,6 +81,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
     this.featureManager,
+    this.cardManagersCache,
   ) : super(DiscoveryState.initial());
 
   late final UseCaseValueStream<EngineEvent> engineEvents = consume(
@@ -239,8 +243,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   /// override this method, if your view needs to dispose older items, as
   /// the total results grow in size
+  @mustCallSuper
   Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
-      ResultSets(results: results);
+      ResultSets(
+        results: results,
+        removedResults: state.results.toSet()..removeWhere(results.contains),
+      );
 
   void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
 
@@ -286,7 +294,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             state.latestExplicitDocumentFeedback != feedback;
         final nextState = DiscoveryState(
           results: sets.results,
-          removedResults: sets.removedResults,
           isComplete: !isLoading,
           isInErrorState: isInErrorState,
           isFullScreen: _isFullScreen,
@@ -299,6 +306,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           readerModeBackgroundColor:
               _isFullScreen ? readerModeSettings?.backgroundColor : null,
         );
+
+        cardManagersCache.removeObsoleteCardManagers(sets.removedResults);
 
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;

@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/reader_mode_unavailable_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
@@ -17,7 +18,6 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
-import 'package:xayn_discovery_app/presentation/utils/mixin/card_managers_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
@@ -44,13 +44,9 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
   late final DiscoveryCardScreenManager _discoveryCardScreenManager =
       di.get(param1: widget.documentId);
   late final FeatureManager featureManager = di.get();
+  late final CardManagersCache _cardManagersCache = di.get();
 
   TtsData ttsData = TtsData.disabled();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   NavBarConfig get navBarConfig => _discoveryCardScreenManager.state.map(
@@ -66,8 +62,8 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       );
 
   NavBarConfig _createDocumentNavbar(Document document) {
-    final cardManagers = di.get<CardManagers>(param1: document);
-    final discoveryCardManager = cardManagers.discoveryCardManager;
+    final discoveryCardManager =
+        _cardManagersCache.managersOf(document).discoveryCardManager;
 
     void onBookmarkPressed() => discoveryCardManager.toggleBookmarkDocument(
           document,
@@ -148,7 +144,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
   }
 
   Widget _createCard(Document document) {
-    final cardManagers = di.get<CardManagers>(param1: document);
+    final cardManagers = _cardManagersCache.managersOf(document);
 
     return DiscoveryCardStatic(
       document: document,

@@ -7,12 +7,14 @@ class CustomAnimatedList<T> extends StatefulWidget {
   final ItemBuilder<T> itemBuilder;
   final List<T> items;
   final bool Function(T a, T b) areItemsTheSame;
+  final bool forceWithoutAnimation;
 
   CustomAnimatedList({
     Key? key,
     required this.itemBuilder,
     required Iterable items,
     required this.areItemsTheSame,
+    this.forceWithoutAnimation = false,
   })  : items = List<T>.from(items, growable: false),
         super(key: key);
 
@@ -62,12 +64,12 @@ class _CustomAnimatedListState<T> extends State<CustomAnimatedList<T>> {
     final l1 = outgoing.length, l2 = incoming.length;
     final delta = (l2 - l1).abs();
 
-    if (delta != 1) {
+    if (delta != 1 || widget.forceWithoutAnimation) {
       // we want to animate only when adding/removing an item
       // if delta is larger than 1, then we can assume the List grew
       // in size a lot, for example by loading the items,
       // in this case, we do not want to animate these items.
-      return _updateListWithoutAnimation();
+      return _updateListforceWithoutAnimation();
     }
 
     if (l1 < l2) {
@@ -106,7 +108,7 @@ class _CustomAnimatedListState<T> extends State<CustomAnimatedList<T>> {
     }
   }
 
-  void _updateListWithoutAnimation() {
+  void _updateListforceWithoutAnimation() {
     // to force an update, without inserting or removing each
     // individual item in the List, we can simply reassign the GlobalKey
     // of the animated list.

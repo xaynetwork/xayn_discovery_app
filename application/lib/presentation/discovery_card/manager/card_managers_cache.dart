@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-mixin CardManagersMixin<T extends StatefulWidget> on State<T> {
+@lazySingleton
+class CardManagersCache {
   late final Map<DocumentId, CardManagers> _cardManagers = {};
 
-  @override
   void dispose() {
     _cardManagers
       ..forEach((_, managers) => managers.closeAll())
       ..clear();
-
-    super.dispose();
   }
 
   @mustCallSuper
