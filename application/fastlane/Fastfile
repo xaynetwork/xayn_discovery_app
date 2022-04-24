@@ -296,7 +296,13 @@ desc "Update the assets folder based on the Assets Manifest from xayn_discovery_
 lane :update_assets do |options|
   isUnderTest = options[Options::TEST]
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
-  manifestPath["file://"] = ""
+  if not manifestPath.include?("file://")
+    # if manifestPath does not include file:// it means that it is define as a relative path in the pubspec.yaml.
+    # since the relative path is from 'application' we add '../' to adjust it w.r.t. the current file.
+    manifestPath = File.join("..", manifestPath)
+  else
+    manifestPath["file://"] = ""
+  end
   raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
