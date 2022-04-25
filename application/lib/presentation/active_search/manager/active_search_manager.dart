@@ -1,14 +1,17 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
+import 'package:xayn_discovery_app/domain/model/trending_topics/topic.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_search_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_search_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/trending/use_case/fetch_trending_topics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -54,6 +57,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
+    this._fetchTrendingTopicsUseCase,
     EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
@@ -80,6 +84,12 @@ class ActiveSearchManager extends BaseDiscoveryManager
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;
+  final FetchTrendingTopicsUseCase _fetchTrendingTopicsUseCase;
+  late final UseCaseValueStream<Set<Topic>> _fetchTrendingTopicsValueStream =
+      consume(
+    _fetchTrendingTopicsUseCase,
+    initialData: none,
+  );
   bool _isLoading = true;
   bool _didReachEnd = false;
 
@@ -254,4 +264,13 @@ class ActiveSearchManager extends BaseDiscoveryManager
       _activeSearchNavActions.onTrialExpired();
     }
   }
+
+  @override
+  Future<DiscoveryState?> computeState() async =>
+      fold(_fetchTrendingTopicsValueStream)
+          .foldAll((trendingTopics, errorReport) async {
+        final state = await super.computeState();
+
+        return state?.copyWith(trendingTopics: trendingTopics);
+      });
 }

@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
@@ -164,5 +165,19 @@ class _ActiveSearchState
     }
 
     return _manager.state.isFullScreen ? buildReaderMode() : buildDefault();
+  }
+
+  @override
+  Widget buildFeedView(DiscoveryState state) {
+    final trendingTopics = state.trendingTopics;
+    print('has topics? ${trendingTopics != null}');
+    if (trendingTopics != null) {
+      print('count: ${trendingTopics.length}');
+      for (final topic in trendingTopics) {
+        print(topic.toString());
+      }
+    }
+
+    return super.buildFeedView(state);
   }
 }

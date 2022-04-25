@@ -107,7 +107,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           // - etc...
           final topPadding = MediaQuery.of(context).viewPadding.top;
 
-          final feed = _buildFeedView(state);
+          final feed = buildFeedView(state);
 
           final readerModeBgColor = state.readerModeBackgroundColor;
           final bgColor = readerModeBgColor == null
@@ -153,7 +153,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     super.initState();
   }
 
-  Widget _buildFeedView(DiscoveryState state) {
+  Widget buildFeedView(DiscoveryState state) {
     return LayoutBuilder(builder: (context, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;

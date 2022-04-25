@@ -35,6 +35,9 @@ abstract class Env {
       : (Platform.isIOS
           ? _EnvProd.revenueCatSdkKeyIos
           : _EnvProd.revenueCatSdkKeyAndroid);
+  static const String trendingTopicsApiKey = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.trendingTopicsApiKey
+      : _EnvProd.trendingTopicsApiKey;
 }
 
 /// Standard Env config.
@@ -51,6 +54,7 @@ abstract class _EnvDev {
   static const String revenueCatSdkKeyIos = __EnvDev.revenueCatSdkKeyIos;
   static const String revenueCatSdkKeyAndroid =
       __EnvDev.revenueCatSdkKeyAndroid;
+  static const String trendingTopicsApiKey = __EnvDev.trendingTopicsApiKey;
 }
 
 /// Standard Env config.
@@ -67,4 +71,5 @@ abstract class _EnvProd {
   static const String revenueCatSdkKeyIos = __EnvProd.revenueCatSdkKeyIos;
   static const String revenueCatSdkKeyAndroid =
       __EnvProd.revenueCatSdkKeyAndroid;
+  static const String trendingTopicsApiKey = __EnvProd.trendingTopicsApiKey;
 }

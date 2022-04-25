@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
+import 'package:xayn_discovery_app/domain/model/trending_topics/topic.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -25,6 +26,7 @@ class DiscoveryState with _$DiscoveryState {
     required bool didReachEnd,
     SubscriptionStatus? subscriptionStatus,
     ReaderModeBackgroundColor? readerModeBackgroundColor,
+    Set<Topic>? trendingTopics,
   }) = _DiscoveryState;
 
   factory DiscoveryState.initial() => const DiscoveryState(
@@ -43,5 +45,6 @@ class DiscoveryState with _$DiscoveryState {
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(results, other.results) &&
       subscriptionStatus == other.subscriptionStatus &&
-      readerModeBackgroundColor == other.readerModeBackgroundColor;
+      readerModeBackgroundColor == other.readerModeBackgroundColor &&
+      _setEquality.equals(trendingTopics, other.trendingTopics);
 }

@@ -34,6 +34,7 @@ void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   late MockFeatureManager featureManager;
+  late MockFetchTrendingTopicsUseCase fetchTrendingTopicsUseCase;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -43,6 +44,7 @@ void main() {
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
     featureManager = MockFeatureManager();
+    fetchTrendingTopicsUseCase = MockFetchTrendingTopicsUseCase();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -64,6 +66,7 @@ void main() {
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
+          fetchTrendingTopicsUseCase,
           EngineEventsUseCase(engine),
           FetchCardIndexUseCase(feedRepository),
           UpdateCardIndexUseCase(feedRepository),
