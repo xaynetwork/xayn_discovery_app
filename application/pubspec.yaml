@@ -90,6 +90,7 @@ dependency_overrides:
   analyzer: 3.4.1
   provider: 6.0.2
   dart_style: 2.2.2
+  super_rich_text: 1.0.0
 
 # Please list dependencies alphabetically!
 dev_dependencies:
