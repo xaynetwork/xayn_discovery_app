@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/active_search_messages.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/document_filter_messages.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -19,6 +20,7 @@ class OverlayData with _$OverlayData {
   factory OverlayData.tooltipBookmarked({
     required Document document,
     required DocumentProvider? provider,
+    required FeedType? feedType,
     required Function(TooltipData) showTooltip,
   }) =>
       OverlayData.tooltip(

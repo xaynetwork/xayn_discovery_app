@@ -230,6 +230,7 @@ Future _prepareHiveRecords(String snapshotDir) async {
         HlcCompatAdapter(hlcCompactAdapterTypeId, UniqueId().value))
     ..registerAdapter(RecordAdapter(recordAdapterTypeId));
   await _openBoxes<Record>();
+  // To clear all boxes in the same directory, delete and open boxes again.
   await Hive.deleteFromDisk();
   await _openBoxes<Record>();
 }

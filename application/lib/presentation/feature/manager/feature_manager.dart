@@ -27,8 +27,6 @@ extension on Feature {
       case Feature.ratingDialog:
         return EnvironmentHelper.kIsDebug ||
             EnvironmentHelper.kIsInternalFlavor;
-      case Feature.documentFilter:
-        return EnvironmentHelper.kIsDebug;
       case Feature.tts:
         return false;
     }
@@ -63,8 +61,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
-
-  bool get isDocumentFilterEnabled => isEnabled(Feature.documentFilter);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
