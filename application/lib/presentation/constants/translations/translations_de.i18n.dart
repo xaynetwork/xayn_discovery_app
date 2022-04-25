@@ -203,24 +203,26 @@ class TranslationsDe extends Translations {
   String get searchEndOfResultsDesc =>
       """Noch nicht gefunden, wonach Du suchst? Versuch's mit anderen oder allgemeineren Stichwörtern.""";
   String get feedSettingsScreenSourceFilterExplanation =>
-      """Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Disvoery Feed angezeigt.""";
+      """Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Discovery Feed angezeigt.""";
   String get feedSettingsScreenTabCountries => """Länder""";
   String get feedSettingsScreenTabSources => """Quellen""";
   String get feedSettingsScreenSubtitleDislikedSources =>
       """Aussortierte Quellen""";
   String get settingsSectionHomeFeed => """Feedeinstellungen""";
   String get paymentPromoCodeAndroidBottomSheetTitle =>
-      """Have a promo code?""";
+      """Du hast einen Aktionscode?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""";
-  String get paymentFailedBottomSheetTitle => """Payment failed""";
+      """Um den Aktionscode einzugeben, wähle einfach „Code einlösen“ als Zahlungsmethode aus.""";
+  String get paymentFailedBottomSheetTitle => """Bezahlung fehlgeschlagen""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later. """;
-  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+      """The app store couldn’t process your payment. Please try again later.""";
+  String get readerModeUnableToLoadTitle =>
+      """Dieser Inhalt konnte nicht geladen werden""";
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
-  String get readerModeUnableToLoadCTA => """Open in Browser""";
-  String get noInternetConnection => """No internet connection""";
+  String get readerModeUnableToLoadCTA => """Im Browser öffnen""";
+  String get noInternetConnection => """Keine Internetverbindung""";
+  String get invalidSearch => """Please enter a valid search term""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -387,21 +389,24 @@ Map<String, String> get translationsDeMap => {
       """searchEndOfResultsDesc""":
           """Noch nicht gefunden, wonach Du suchst? Versuch's mit anderen oder allgemeineren Stichwörtern.""",
       """feedSettingsScreenSourceFilterExplanation""":
-          """Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Disvoery Feed angezeigt.""",
+          """Quellen, die Du nicht mochtest, werden nicht mehr in Deinem Discovery Feed angezeigt.""",
       """feedSettingsScreenTabCountries""": """Länder""",
       """feedSettingsScreenTabSources""": """Quellen""",
       """feedSettingsScreenSubtitleDislikedSources""":
           """Aussortierte Quellen""",
       """settingsSectionHomeFeed""": """Feedeinstellungen""",
-      """paymentPromoCodeAndroidBottomSheetTitle""": """Have a promo code?""",
+      """paymentPromoCodeAndroidBottomSheetTitle""":
+          """Du hast einen Aktionscode?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""",
-      """paymentFailedBottomSheetTitle""": """Payment failed""",
+          """Um den Aktionscode einzugeben, wähle einfach „Code einlösen“ als Zahlungsmethode aus.""",
+      """paymentFailedBottomSheetTitle""": """Bezahlung fehlgeschlagen""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later. """,
-      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+          """The app store couldn’t process your payment. Please try again later.""",
+      """readerModeUnableToLoadTitle""":
+          """Dieser Inhalt konnte nicht geladen werden""",
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
-      """readerModeUnableToLoadCTA""": """Open in Browser""",
-      """noInternetConnection""": """No internet connection""",
+      """readerModeUnableToLoadCTA""": """Im Browser öffnen""",
+      """noInternetConnection""": """Keine Internetverbindung""",
+      """invalidSearch""": """Please enter a valid search term""",
     };

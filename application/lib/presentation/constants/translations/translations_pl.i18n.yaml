@@ -95,7 +95,7 @@ subscriptionPerk5: Anuluj w dowolnym momencie
 subscriptionSubscribeNow: Zapisz się teraz
 subscriptionRestore: Przywróć subskrypcję
 subscriptionPromoCode: Mam kod promocyjny
-subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
+subscriptionDisclaimer: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.
 settingsSubscribedToHeader: Subskrybujesz
 doneButtonTitle: Gotowy
 subscriptionRenewsMonthlyText: 'Subskrypcja odnawia się co miesiąc w dniu: %s'
@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Transakcja płatnicza nie powiodła się
-  noActiveSubscriptionFound: We couldn't find an active subscription for this account.
+  noActiveSubscriptionFound: Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta.
 bottomSheetDeleteCollectionWithNoItemsBody: Czy na pewno chcesz usunąć tę kolekcję?
 bottomSheetMoveSingleBookmark: Przejdź do innej kolekcji
 readerModeSettingsErrorChangesNotApplied: Nie udało się zastosować zmian
@@ -126,29 +126,30 @@ errorGenericHeaderSomethingWentWrong: Coś poszło nie tak
 errorGenericBodyPleaseTryAgainLater: Spróbuj ponownie później.
 errorClose: Blisko
 sourceHandlingTooltipLabel: Czego chcesz mniej widzieć?
-sourceHandlingTooltipHighlightedWord: What
-enableTextToSpeech: Enable text -to-speech
-settingsSectionTitleOptions: Options
-personalAreaContact: Contact
-settingsContactUs: Contact
-contactSectionWeb: 'Web:'
-contactSectionSupportEmail: 'Support eMail:'
-contactSectionForPublishers: 'For Publishers:'
-contactSectionPhone: 'Phone:'
-searchNoResultsFound: No results
-searchEndOfResults: That's all!
-searchNoResultsFoundDesc: We couldn’t find any stories for your search. Try different or more general keywords.
-searchEndOfResultsDesc: Didn’t see what you're looking for? Try different or more general keywords.
-feedSettingsScreenSourceFilterExplanation: Sources that you disliked will not be shown in your Discovery Feed anymore.
-feedSettingsScreenTabCountries: Countries
-feedSettingsScreenTabSources: Sources
-feedSettingsScreenSubtitleDislikedSources: Disliked Sources
-settingsSectionHomeFeed: Feed setup
-paymentPromoCodeAndroidBottomSheetTitle: Have a promo code?
-paymentPromoCodeAndroidBottomSheetBody: You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.
-paymentFailedBottomSheetTitle: Payment failed
-paymentFailedBottomSheetBody: "The app store couldn’t process your payment. Please try again later. "
-readerModeUnableToLoadTitle: We couldn’t load this content
-readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
-readerModeUnableToLoadCTA: Open in Browser
-noInternetConnection: No internet connection
+sourceHandlingTooltipHighlightedWord: Co
+enableTextToSpeech: Włącz zamianę tekstu na mowę
+settingsSectionTitleOptions: Opcje
+personalAreaContact: Kontakt
+settingsContactUs: Kontakt
+contactSectionWeb: 'Strona WWW:'
+contactSectionSupportEmail: 'E-mail:'
+contactSectionForPublishers: 'Dla wydawców:'
+contactSectionPhone: 'Telefon:'
+searchNoResultsFound: Brak wyników
+searchEndOfResults: To wszystko!
+searchNoResultsFoundDesc: Nie znaleźliśmy żadnych artykułów do Twojego wyszukiwania. Wypróbuj inne lub bardziej ogólne słowa kluczowe.
+searchEndOfResultsDesc: Nie widzisz tego, czego szukasz? Wypróbuj inne lub bardziej ogólne słowa kluczowe.
+feedSettingsScreenSourceFilterExplanation: Źródła, których nie lubisz, nie będą już wyświetlane w Twoim kanale Discovery.
+feedSettingsScreenTabCountries: Kraje
+feedSettingsScreenTabSources: Źródła
+feedSettingsScreenSubtitleDislikedSources: Nielubiane źródła
+settingsSectionHomeFeed: Konfiguracja kanału
+paymentPromoCodeAndroidBottomSheetTitle: Masz kod promocyjny?
+paymentPromoCodeAndroidBottomSheetBody: Aby wprowadzić kod promocyjny, wybierz „Zrealizuj kod” jako metodę płatności.
+paymentFailedBottomSheetTitle: Płatność nie powiodła się
+paymentFailedBottomSheetBody: Sklep z aplikacjami nie mógł przetworzyć Twojej płatności. Spróbuj ponownie później.
+readerModeUnableToLoadTitle: Nie udało się załadować tej treści
+readerModeUnableToLoadDesc: Ten artykuł nie został udostępniony do czytania w naszej aplikacji. Aby go przeczytać, przejdź do niego za pomocą przeglądarki.
+readerModeUnableToLoadCTA: Otwórz w przeglądarce
+noInternetConnection: Brak połączenia z internetem
+invalidSearch: Please enter a valid search term

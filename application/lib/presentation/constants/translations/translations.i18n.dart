@@ -205,18 +205,18 @@ class Translations {
   String get feedSettingsScreenSubtitleDislikedSources =>
       """Disliked Sources""";
   String get settingsSectionHomeFeed => """Feed setup""";
-  String get paymentPromoCodeAndroidBottomSheetTitle =>
-      """Have a promo code?""";
+  String get paymentPromoCodeAndroidBottomSheetTitle => """Got a promo code?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""";
+      """To enter the promo code, select “Redeem code” as payments method.""";
   String get paymentFailedBottomSheetTitle => """Payment failed""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later. """;
+      """The app store couldn’t process your payment. Please try again later.""";
   String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
   String get readerModeUnableToLoadCTA => """Open in Browser""";
   String get noInternetConnection => """No internet connection""";
+  String get invalidSearch => """Please enter a valid search term""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -384,15 +384,16 @@ Map<String, String> get translationsMap => {
       """feedSettingsScreenTabSources""": """Sources""",
       """feedSettingsScreenSubtitleDislikedSources""": """Disliked Sources""",
       """settingsSectionHomeFeed""": """Feed setup""",
-      """paymentPromoCodeAndroidBottomSheetTitle""": """Have a promo code?""",
+      """paymentPromoCodeAndroidBottomSheetTitle""": """Got a promo code?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""",
+          """To enter the promo code, select “Redeem code” as payments method.""",
       """paymentFailedBottomSheetTitle""": """Payment failed""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later. """,
+          """The app store couldn’t process your payment. Please try again later.""",
       """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
       """readerModeUnableToLoadCTA""": """Open in Browser""",
       """noInternetConnection""": """No internet connection""",
+      """invalidSearch""": """Please enter a valid search term""",
     };

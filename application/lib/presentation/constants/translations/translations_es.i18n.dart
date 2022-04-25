@@ -162,7 +162,7 @@ class TranslationsEs extends Translations {
   String get subscriptionRestore => """Reiniciar Subscripción""";
   String get subscriptionPromoCode => """Tengo un código promocional""";
   String get subscriptionDisclaimer =>
-      """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros _Términos y Condiciones_. Tú confirmas que has leído nuestra _Política de Privacidad_. """;
+      """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros __Términos y Condiciones__. Tú confirmas que has leído nuestra __Política de Privacidad__.""";
   String get settingsSubscribedToHeader => """Tu estás subscrito a""";
   String get doneButtonTitle => """Hecho""";
   String get subscriptionRenewsMonthlyText =>
@@ -170,9 +170,9 @@ class TranslationsEs extends Translations {
   String get promoCodeValidUntilText =>
       """Tu código promocional es valido hasta: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el _Apple App Store_.""";
+      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el Google Play Store_.""";
+      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.""";
   PaymentFlowErrorTranslationsEs get paymentFlowError =>
       PaymentFlowErrorTranslationsEs(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -211,7 +211,7 @@ class TranslationsEs extends Translations {
   String get paymentPromoCodeAndroidBottomSheetTitle =>
       """Tienes un código promocional?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """Puedes entrar al presionar "Subscribirse ahora", luego presionando en el método de paga y seleccionando "Validar código".""";
+      """Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.""";
   String get paymentFailedBottomSheetTitle => """Pago fallido""";
   String get paymentFailedBottomSheetBody =>
       """La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""";
@@ -220,7 +220,8 @@ class TranslationsEs extends Translations {
   String get readerModeUnableToLoadDesc =>
       """Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.""";
   String get readerModeUnableToLoadCTA => """Abrir en el navegador""";
-  String get noInternetConnection => """No internet connection""";
+  String get noInternetConnection => """No hay conexión de internet""";
+  String get invalidSearch => """Please enter a valid search term""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -343,7 +344,7 @@ Map<String, String> get translationsEsMap => {
       """subscriptionRestore""": """Reiniciar Subscripción""",
       """subscriptionPromoCode""": """Tengo un código promocional""",
       """subscriptionDisclaimer""":
-          """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros _Términos y Condiciones_. Tú confirmas que has leído nuestra _Política de Privacidad_. """,
+          """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros __Términos y Condiciones__. Tú confirmas que has leído nuestra __Política de Privacidad__.""",
       """settingsSubscribedToHeader""": """Tu estás subscrito a""",
       """doneButtonTitle""": """Hecho""",
       """subscriptionRenewsMonthlyText""":
@@ -351,9 +352,9 @@ Map<String, String> get translationsEsMap => {
       """promoCodeValidUntilText""":
           """Tu código promocional es valido hasta: %s""",
       """subscriptionPlatformInfoApple""":
-          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el _Apple App Store_.""",
+          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el Google Play Store_.""",
+          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.""",
       """paymentFlowError.unknown""": """Error desconocido ocurrió""",
       """paymentFlowError.storeNotAvailable""":
           """La tienda no está disponible en este momento""",
@@ -398,7 +399,7 @@ Map<String, String> get translationsEsMap => {
       """paymentPromoCodeAndroidBottomSheetTitle""":
           """Tienes un código promocional?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """Puedes entrar al presionar "Subscribirse ahora", luego presionando en el método de paga y seleccionando "Validar código".""",
+          """Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.""",
       """paymentFailedBottomSheetTitle""": """Pago fallido""",
       """paymentFailedBottomSheetBody""":
           """La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""",
@@ -406,5 +407,6 @@ Map<String, String> get translationsEsMap => {
       """readerModeUnableToLoadDesc""":
           """Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.""",
       """readerModeUnableToLoadCTA""": """Abrir en el navegador""",
-      """noInternetConnection""": """No internet connection""",
+      """noInternetConnection""": """No hay conexión de internet""",
+      """invalidSearch""": """Please enter a valid search term""",
     };
