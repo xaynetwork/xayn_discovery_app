@@ -9,6 +9,8 @@ environment:
 dependencies:
   http: ^0.13.4
   html: ^0.15.0
+#  fast_gbk: ^1.0.0
+  enough_convert: ^1.4.0
 
 # Please list dependencies alphabetically!
 dev_dependencies:

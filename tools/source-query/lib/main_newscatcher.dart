@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:enough_convert/enough_convert.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:source_query/results.dart' as res;
@@ -111,23 +112,29 @@ Future<List<String>> getSources({
 Future<String> getTitle({
   required String source,
 }) async {
-  final queryParameters = <String, String>{};
-  final uri = Uri.https(source, '', queryParameters);
+  HttpClientResponse? response;
   try {
+    final uri = Uri.https(source, '');
+
     final client = new HttpClient();
+    client.userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0';
+    client.badCertificateCallback = (_, __, ___) => true;
     client.connectionTimeout = const Duration(seconds: 10);
-    var request = await client.getUrl(uri);
+    final request = await client.getUrl(uri);
     request.followRedirects = true;
+    request.maxRedirects = 10;
+
     request.headers.set(
-      HttpHeaders.userAgentHeader,
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0',
+      HttpHeaders.acceptHeader,
+      '*/*',
     );
 
-    final response = await request.close();
+    response = await request.close();
 
     if (response.statusCode != 200) {
       printE(
-          'Failed get title for: $source -> ${response.reasonPhrase} (${response.statusCode})');
+          'Failed get title for: $source -> ${response.reasonPhrase} (${response.statusCode}) ${response.headers.contentType}');
       return '';
     }
     final body = await readResponse(response)
@@ -140,14 +147,83 @@ Future<String> getTitle({
             .firstWhere((element) => element.isNotEmpty, orElse: () => '') ??
         '';
   } catch (e) {
-    printE('Failed get title for: $source -> $e');
+    ContentType? type = null;
+    try {
+      type = response?.headers.contentType;
+    } catch (e) {
+      printE('$e');
+    }
+    printE('Failed (parsing) get title for: $source -> $e $type');
     return '';
   }
 }
 
 Future<String> readResponse(HttpClientResponse response) async {
   final contents = StringBuffer();
-  await for (var data in response.transform(utf8.decoder)) {
+  final charset = response.headers.contentType?.charset;
+  Converter<List<int>, String> decoder = utf8.decoder;
+  switch (charset) {
+    case 'gbk':
+    case 'gb2312':
+      decoder = gbk.decoder;
+      break;
+    case 'iso-8859-1':
+      decoder = Latin1Decoder();
+      break;
+    case 'iso-8859-2':
+      decoder = Latin2Decoder();
+      break;
+    case 'iso-8859-3':
+      decoder = Latin3Decoder();
+      break;
+    case 'iso-8859-4':
+      decoder = Latin4Decoder();
+      break;
+    case 'iso-8859-5':
+      decoder = Latin5Decoder();
+      break;
+    case 'iso-8859-6':
+      decoder = Latin6Decoder();
+      break;
+    case 'iso-8859-7':
+      decoder = Latin7Decoder();
+      break;
+    case 'iso-8859-8':
+      decoder = Latin8Decoder();
+      break;
+    case 'iso-8859-9':
+      decoder = Latin9Decoder();
+      break;
+    case 'iso-8859-10':
+      decoder = Latin10Decoder();
+      break;
+    case 'iso-8859-11':
+      decoder = Latin11Decoder();
+      break;
+    case 'iso-8859-13':
+      decoder = Latin13Decoder();
+      break;
+    case 'iso-8859-14':
+      decoder = Latin14Decoder();
+      break;
+    case 'iso-8859-15':
+      decoder = Latin15Decoder();
+      break;
+    case 'iso-8859-16':
+      decoder = Latin16Decoder();
+      break;
+    case 'windows-1250':
+      decoder = Windows1250Decoder();
+      break;
+    case '':
+    case null:
+    case 'utf-8':
+      break;
+    default:
+      printE('Unknown charset: $charset');
+  }
+
+  await for (var data in response.transform(decoder)) {
     contents.write(data);
   }
   return contents.toString();
