@@ -20,6 +20,7 @@ NavBarItemIconButton buildNavBarItemArrowLeft({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemArrowLeft,
+      semanticsLabel: 'data-test=arrow_left'
     );
 
 NavBarItemIconButton buildNavBarItemLike({
@@ -48,7 +49,6 @@ NavBarItemIconButton buildNavBarItemDisLike({
       onPressed: onPressed,
       key: Keys.navBarItemDisLike,
       semanticsLabel: 'data-test=dislike_button'
-
     );
 
 NavBarItemIconButton buildNavBarItemShare({
