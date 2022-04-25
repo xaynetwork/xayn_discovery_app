@@ -217,6 +217,12 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
   @mustCallSuper
   void updateDuration(Duration duration) => _controller.duration = duration;
 
+  void stop() {
+    final status = _cache.animationStatusOf(widget.uri);
+
+    _stopAnimation(status);
+  }
+
   void _stopAnimation(ShaderAnimationStatus status) {
     _controller.value = status.position;
     _controller.stop(canceled: false);
