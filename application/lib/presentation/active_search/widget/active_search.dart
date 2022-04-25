@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_info_card.dart';
@@ -54,6 +55,7 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   late final ActiveSearchManager _manager = di.get();
+  late final CardManagersCache _cardManagersCache = di.get();
 
   @override
   ActiveSearchManager get manager => _manager;
@@ -87,7 +89,7 @@ class _ActiveSearchState
     NavBarConfig buildReaderMode() {
       final document =
           _manager.state.results.elementAt(_manager.state.cardIndex);
-      final managers = managersOf(document);
+      final managers = _cardManagersCache.managersOf(document);
 
       void onBookmarkPressed() =>
           managers.discoveryCardManager.toggleBookmarkDocument(

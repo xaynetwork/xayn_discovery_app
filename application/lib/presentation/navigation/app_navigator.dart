@@ -159,10 +159,6 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
 
   @override
-  void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) => changeStack(
-      (stack) => stack.push(PageRegistry.cardDetailsStandalone(args)));
-
-  @override
   void onTrialExpired() =>
       changeStack((stack) => stack.replace(PageRegistry.payment));
 }

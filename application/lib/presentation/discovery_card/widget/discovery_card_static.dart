@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
-import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -35,15 +34,11 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
     Key? key,
     required Document document,
     FeedType? feedType,
-    DiscoveryCardManager? discoveryCardManager,
-    ImageManager? imageManager,
     OnTtsData? onTtsData,
   }) : super(
           key: key,
           isPrimary: true,
           document: document,
-          discoveryCardManager: discoveryCardManager,
-          imageManager: imageManager,
           onTtsData: onTtsData,
           feedType: feedType,
         );
@@ -61,6 +56,13 @@ class _DiscoveryCardStaticState
 
   @override
   OverlayManager get overlayManager => discoveryCardManager.overlayManager;
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    cardManagersCache.removeObsoleteCardManagers([widget.document]);
+  }
 
   @override
   Widget buildFromState(
