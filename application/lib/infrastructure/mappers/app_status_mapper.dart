@@ -19,13 +19,13 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
   AppStatus? fromMap(Map? map) {
     if (map == null) return null;
 
-    final numberOfSessions = map[AppSettingsFields.numberOfSessions] as int?;
+    final numberOfSessions = map[AppStatusFields.numberOfSessions] as int?;
     final appVersion =
-        _mapToAppVersionMapper.map(map[AppSettingsFields.appVersion]);
+        _mapToAppVersionMapper.map(map[AppStatusFields.appVersion]);
     final firstAppLaunchDate =
-        map[AppSettingsFields.firstAppLaunchDate] as DateTime?;
-    final lastSeenDate = map[AppSettingsFields.lastSeenDate] as DateTime?;
-    final userId = map[AppSettingsFields.userId] as String?;
+        map[AppStatusFields.firstAppLaunchDate] as DateTime?;
+    final lastSeenDate = map[AppStatusFields.lastSeenDate] as DateTime?;
+    final userId = map[AppStatusFields.userId] as String?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
@@ -38,17 +38,17 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
 
   @override
   DbEntityMap toMap(AppStatus entity) => {
-        AppSettingsFields.numberOfSessions: entity.numberOfSessions,
-        AppSettingsFields.appVersion:
+        AppStatusFields.numberOfSessions: entity.numberOfSessions,
+        AppStatusFields.appVersion:
             _appVersionToMapMapper.map(entity.lastKnownAppVersion),
-        AppSettingsFields.firstAppLaunchDate: entity.firstAppLaunchDate,
-        AppSettingsFields.userId: entity.userId.value,
-        AppSettingsFields.lastSeenDate: entity.lastSeenDate,
+        AppStatusFields.firstAppLaunchDate: entity.firstAppLaunchDate,
+        AppStatusFields.userId: entity.userId.value,
+        AppStatusFields.lastSeenDate: entity.lastSeenDate,
       };
 }
 
-abstract class AppSettingsFields {
-  AppSettingsFields._();
+abstract class AppStatusFields {
+  AppStatusFields._();
 
   static const int numberOfSessions = 0;
   static const int appVersion = 1;

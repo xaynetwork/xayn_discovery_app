@@ -31,7 +31,7 @@ class HiveDB {
         inMemory: !isPersistedOnDisk);
 
     final status = isPersistedOnDisk
-        ? await _performMigrations()
+        ? await _performMigrations(inMemory: !isPersistedOnDisk)
         : DbMigrationStatus.completed;
 
     await _openBoxes(inMemory: !isPersistedOnDisk);
@@ -53,13 +53,11 @@ class HiveDB {
     }
   }
 
-  static Future<void> _openBoxes({bool inMemory = false}) async {
-    await Future.wait(
-      BoxNamesExtension.valuesWithoutMigrationInfo.map(
-        (boxName) => _openBox<Record>(boxName, inMemory: inMemory),
-      ),
-    );
-  }
+  static Future<void> _openBoxes({bool inMemory = false}) => Future.wait(
+        BoxNamesExtension.valuesWithoutMigrationInfo.map(
+          (boxName) => _openBox<Record>(boxName, inMemory: inMemory),
+        ),
+      );
 
   static Future<Box<T>> _openBox<T>(
     BoxNames boxNames, {
@@ -75,7 +73,10 @@ class HiveDB {
 
   static Future<void> _closeBoxes() => Hive.close();
 
-  static Future<DbMigrationStatus> _performMigrations() async {
+  static Future<DbMigrationStatus> _performMigrations(
+      {bool inMemory = false}) async {
+    await _openBoxes(inMemory: inMemory);
+
     // Migrations should all expect open boxes finish with open boxes (easier to test)
     // if they change the box type, they should close the respective box and open a new one
     final status = await HiveDbMigrations().migrate();
