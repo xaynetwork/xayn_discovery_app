@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
@@ -21,8 +22,6 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
   final Document document;
   final FeedType? feedType;
-  final DiscoveryCardManager? discoveryCardManager;
-  final ImageManager? imageManager;
   final OnTtsData? onTtsData;
   final ShaderBuilder primaryCardShader;
 
@@ -31,8 +30,6 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     required this.isPrimary,
     required this.document,
     required this.feedType,
-    this.discoveryCardManager,
-    this.imageManager,
     this.onTtsData,
     ShaderBuilder? primaryCardShader,
   })  : primaryCardShader =
@@ -43,8 +40,9 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> with TooltipStateMixin, ErrorHandlingMixin {
-  late final DiscoveryCardManager discoveryCardManager;
-  late final ImageManager imageManager;
+  late final CardManagersCache cardManagersCache = di.get();
+  late DiscoveryCardManager discoveryCardManager;
+  late ImageManager imageManager;
 
   NewsResource get webResource => widget.document.resource;
 
@@ -58,23 +56,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   void initState() {
     super.initState();
 
-    discoveryCardManager = widget.discoveryCardManager ?? di.get()
-      ..updateDocument(widget.document);
-    imageManager = widget.imageManager ?? di.get()
-      ..getImage(widget.document.resource.image);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    if (widget.discoveryCardManager == null) {
-      discoveryCardManager.close();
-    }
-
-    if (widget.imageManager == null) {
-      imageManager.close();
-    }
+    updateManagers();
   }
 
   @override
@@ -82,8 +64,11 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     super.didUpdateWidget(oldWidget);
 
     if (widget.isPrimary && oldWidget.document != widget.document) {
-      discoveryCardManager.updateDocument(widget.document);
-      imageManager.getImage(widget.document.resource.image);
+      if (oldWidget.document.resource.url != widget.document.resource.url) {
+        updateManagers();
+      } else {
+        discoveryCardManager.updateDocument(widget.document);
+      }
     }
   }
 
@@ -160,5 +145,14 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => buildBackgroundPane(opaque: false),
     );
+  }
+
+  void updateManagers() {
+    final managers = cardManagersCache.managersOf(widget.document);
+
+    discoveryCardManager = managers.discoveryCardManager
+      ..updateDocument(widget.document);
+    imageManager = managers.imageManager
+      ..getImage(widget.document.resource.image);
   }
 }
