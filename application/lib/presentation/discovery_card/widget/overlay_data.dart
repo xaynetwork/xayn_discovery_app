@@ -25,7 +25,12 @@ class OverlayData with _$OverlayData {
   }) =>
       OverlayData.tooltip(
         key: BookmarkToolTipKeys.bookmarkedToDefault,
-        tooltipArgs: [document, provider, showTooltip],
+        tooltipArgs: [
+          document,
+          provider,
+          showTooltip,
+          feedType,
+        ],
       );
 
   factory OverlayData.tooltipDocumentFilter({
@@ -33,7 +38,9 @@ class OverlayData with _$OverlayData {
   }) =>
       OverlayData.tooltip(
         key: DocumentFilterKeys.documentFilter,
-        tooltipArgs: [document],
+        tooltipArgs: [
+          document,
+        ],
       );
 
   factory OverlayData.tooltipInvalidSearch() =>
