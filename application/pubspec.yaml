@@ -55,10 +55,7 @@ dependencies:
   sprintf: 6.0.0
   share_plus: 4.0.3
   shimmer: 2.0.0
-  super_rich_text:
-    git:
-      url: git@github.com:Bestfastfire/super_rich_text.git
-      ref: f9d3963421682e2e0dd99c1ab553b99e38766ea1
+  super_rich_text: 1.0.0
   system_info2: 2.0.3
   url_launcher: 6.0.20
   uuid: 3.0.6
