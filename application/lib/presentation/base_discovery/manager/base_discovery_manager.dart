@@ -23,6 +23,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -51,7 +52,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         UseCaseBlocHelper<DiscoveryState>,
         ObserveDocumentMixin<DiscoveryState>,
         ChangeUserReactionMixin<DiscoveryState>,
-        ObserveSubscriptionWindowMixin<DiscoveryState> {
+        ObserveSubscriptionWindowMixin<DiscoveryState>,
+        OverlayManagerMixin<DiscoveryState> {
   final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;

@@ -72,9 +72,6 @@ class _ActiveSearchState
             buildNavBarItemSearchActive(
               autofocus: _manager.state.results.isEmpty,
               hint: _manager.lastUsedSearchTerm,
-              initialText: _manager.state.results.isNotEmpty
-                  ? _manager.lastUsedSearchTerm
-                  : null,
               onSearchPressed: _manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(

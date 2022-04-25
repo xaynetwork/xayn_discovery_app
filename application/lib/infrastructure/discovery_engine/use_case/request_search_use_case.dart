@@ -18,6 +18,8 @@ class RequestSearchUseCase extends UseCase<String, EngineEvent> {
 
   @override
   Stream<EngineEvent> transaction(String param) async* {
+    assert(param.trim().isNotEmpty, 'The search term cannot be empty');
+
     // store the request count locally
     final localRequestCount = _requestCount = _requestCount + 1;
 

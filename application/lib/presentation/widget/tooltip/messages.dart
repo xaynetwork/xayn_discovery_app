@@ -5,6 +5,7 @@ import 'package:xayn_design/xayn_design.dart'
         TooltipKey,
         TooltipParams;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/active_search_messages.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/bookmark_messages.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/collection_messages.dart';
 import 'package:xayn_discovery_app/presentation/widget/tooltip/document_filter_messages.dart';
@@ -21,7 +22,7 @@ abstract class XaynMessageProvider {
   XaynMessageProvider._();
 
   static MessageFactory of(Iterable<XaynMessageSet> sets) {
-    final activeSearchMessages = {
+    final settingsMessages = {
       TooltipKeys.feedSettingsScreenMinSelectedCountries: TooltipParams(
         label: R.strings.feedSettingsScreenMinSelectedCountriesError,
         builder: (_) => CustomizedTextualNotification(
@@ -32,7 +33,7 @@ abstract class XaynMessageProvider {
     return Map.fromEntries(sets.map((it) {
       switch (it) {
         case XaynMessageSet.activeSearch:
-          return activeSearchMessages.entries;
+          return [...activeSearchMessages.entries, ...settingsMessages.entries];
         case XaynMessageSet.bookmark:
           return bookmarkMessages.entries;
         case XaynMessageSet.collection:
