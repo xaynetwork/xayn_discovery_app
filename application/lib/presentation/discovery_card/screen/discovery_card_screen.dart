@@ -143,18 +143,12 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         });
   }
 
-  Widget _createCard(Document document) {
-    final cardManagers = _cardManagersCache.managersOf(document);
-
-    return DiscoveryCardStatic(
-      document: document,
-      discoveryCardManager: cardManagers.discoveryCardManager,
-      imageManager: cardManagers.imageManager,
-      onTtsData: (it) =>
-          setState(() => ttsData = ttsData.enabled ? TtsData.disabled() : it),
-      feedType: widget.feedType,
-    );
-  }
+  Widget _createCard(Document document) => DiscoveryCardStatic(
+        document: document,
+        onTtsData: (it) =>
+            setState(() => ttsData = ttsData.enabled ? TtsData.disabled() : it),
+        feedType: widget.feedType,
+      );
 
   void onEditReaderModeSettingsPressed() {
     toggleOverlay(

@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -19,7 +18,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
-import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
@@ -48,8 +46,6 @@ class DiscoveryCard extends DiscoveryCardBase {
     required bool isPrimary,
     required Document document,
     required FeedType feedType,
-    DiscoveryCardManager? discoveryCardManager,
-    ImageManager? imageManager,
     this.onDiscard,
     this.onDrag,
     this.onController,
@@ -60,8 +56,6 @@ class DiscoveryCard extends DiscoveryCardBase {
           isPrimary: isPrimary,
           document: document,
           feedType: feedType,
-          discoveryCardManager: discoveryCardManager,
-          imageManager: imageManager,
           onTtsData: onTtsData,
           primaryCardShader:
               primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
