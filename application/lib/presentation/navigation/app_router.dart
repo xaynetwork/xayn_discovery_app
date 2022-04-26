@@ -8,12 +8,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connecti
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
+import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/widget/connection_snackbar/connection_snackbar.dart';
 
 const double kExtraBottomOffset = 18.0;
 
 class AppRouter extends xayn.NavigatorDelegate {
-  AppRouter(AppNavigationManager navigationManager) : super(navigationManager);
+  final AppNavigationManager navigationManager;
+  AppRouter(this.navigationManager) : super(navigationManager);
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +69,36 @@ class AppRouter extends xayn.NavigatorDelegate {
     );
   }
 
-  Widget _buildScaffold(ConnectivityObserver connectivityObserver) => Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: StreamBuilder<Object>(
-          stream: connectivityObserver.onConnectivityChanged,
-          builder: (context, snapshot) =>
-              snapshot.data == ConnectivityResult.none
-                  ? _buildNavigatorWithPadding()
-                  : buildNavigator(
-                      observers: [NavBarObserver()],
-                    ),
-        ),
+  Widget _buildScaffold(ConnectivityObserver connectivityObserver) =>
+      StreamBuilder<xayn.NavigatorState>(
+        stream: navigationManager.stream,
+        builder: (_, snapshot) {
+          Color backgroundColor = R.colors.swipeCardBackgroundHome;
+          if (snapshot.data != null) {
+            final currentPageName = snapshot.data!.pages.first.name;
+
+            /// When in the discovery feed and active search the background color
+            /// of the screen is the same of the background color of the card
+            if (currentPageName == PageRegistry.discovery.name ||
+                currentPageName == PageRegistry.search.name) {
+              backgroundColor = R.colors.cardBackground;
+            }
+          }
+
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: backgroundColor,
+            body: StreamBuilder<ConnectivityResult>(
+              stream: connectivityObserver.onConnectivityChanged,
+              builder: (context, snapshot) =>
+                  snapshot.data == ConnectivityResult.none
+                      ? _buildNavigatorWithPadding()
+                      : buildNavigator(
+                          observers: [NavBarObserver()],
+                        ),
+            ),
+          );
+        },
       );
 
   Widget _buildSnackBarConnection(ConnectivityObserver connectivityObserver) =>
