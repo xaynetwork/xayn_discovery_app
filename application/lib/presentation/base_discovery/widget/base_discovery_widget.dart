@@ -277,7 +277,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         return Semantics(
           label: 'data-test=discovery_card',
-            excludeSemantics: true,
             child : SwipeableDiscoveryCard(
           onSwipe: (option) => managers.discoveryCardManager.onFeedback(
             document: document,
