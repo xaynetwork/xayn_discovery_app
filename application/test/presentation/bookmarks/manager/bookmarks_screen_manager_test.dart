@@ -25,6 +25,9 @@ void main() {
   late MockDateTimeHandler dateTimeHandler;
   late BookmarksScreenManager bookmarksScreenManager;
   late BookmarksScreenNavActions bookmarksScreenNavActions;
+  late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
+  late MockMarkOnboardingTypeCompletedUseCase
+      markOnboardingTypeCompletedUseCase;
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
@@ -49,6 +52,9 @@ void main() {
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
     bookmarksScreenNavActions = MockBookmarksScreenNavActions();
+    needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
+    markOnboardingTypeCompletedUseCase =
+        MockMarkOnboardingTypeCompletedUseCase();
     dateTimeHandler = MockDateTimeHandler();
 
     when(listenBookmarksUseCase.transform(any))
@@ -65,6 +71,8 @@ void main() {
       bookmarkErrorsEnumMapper,
       dateTimeHandler,
       bookmarksScreenNavActions,
+      needToShowOnboardingUseCase,
+      markOnboardingTypeCompletedUseCase,
       sendAnalyticsUseCase,
     );
 
