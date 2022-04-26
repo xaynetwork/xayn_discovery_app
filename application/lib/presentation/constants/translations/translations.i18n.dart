@@ -217,6 +217,9 @@ class Translations {
   String get readerModeUnableToLoadCTA => """Open in Browser""";
   String get noInternetConnection => """No internet connection""";
   String get invalidSearch => """Please enter a valid search term""";
+  OnboardingBottomDialogTranslations get onboardingBottomDialog =>
+      OnboardingBottomDialogTranslations(this);
+  GeneralTranslations get general => GeneralTranslations(this);
 }
 
 class PaymentFlowErrorTranslations {
@@ -229,6 +232,28 @@ class PaymentFlowErrorTranslations {
   String get transactionFailed => """Payment transaction failed""";
   String get noActiveSubscriptionFound =>
       """We couldn't find an active subscription for this account.""";
+}
+
+class OnboardingBottomDialogTranslations {
+  final Translations _parent;
+  const OnboardingBottomDialogTranslations(this._parent);
+  String get homeSwipeVerticalTitle =>
+      """Swipe upwards to see the next article""";
+  String get homeSwipeVerticalMsg =>
+      """Our continuous feed gets better and better every time you like and dislike the content here.""";
+  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+  String get homeManageBookmarksTitle =>
+      """Long press the save button to manage it""";
+  String get collectionManageTitle =>
+      """Long press or swipe to manage your collections""";
+  String get bookmarksManageTitle =>
+      """Long press or swipe to manage your bookmarks""";
+}
+
+class GeneralTranslations {
+  final Translations _parent;
+  const GeneralTranslations(this._parent);
+  String get btnClose => """Close""";
 }
 
 Map<String, String> get translationsMap => {
@@ -396,4 +421,17 @@ Map<String, String> get translationsMap => {
       """readerModeUnableToLoadCTA""": """Open in Browser""",
       """noInternetConnection""": """No internet connection""",
       """invalidSearch""": """Please enter a valid search term""",
+      """onboardingBottomDialog.homeSwipeVerticalTitle""":
+          """Swipe upwards to see the next article""",
+      """onboardingBottomDialog.homeSwipeVerticalMsg""":
+          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+      """onboardingBottomDialog.homeSwipeSideTitle""":
+          """Swipe sideways to like or dislike""",
+      """onboardingBottomDialog.homeManageBookmarksTitle""":
+          """Long press the save button to manage it""",
+      """onboardingBottomDialog.collectionManageTitle""":
+          """Long press or swipe to manage your collections""",
+      """onboardingBottomDialog.bookmarksManageTitle""":
+          """Long press or swipe to manage your bookmarks""",
+      """general.btnClose""": """Close""",
     };
