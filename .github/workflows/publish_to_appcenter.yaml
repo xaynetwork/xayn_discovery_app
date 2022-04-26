@@ -102,6 +102,8 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
+          TRENDING_TOPICS_API_KEY_DEBUG: ${{ secrets.TRENDING_TOPICS_API_KEY }}
+          TRENDING_TOPICS_API_KEY_PRODUCTION: ${{ secrets.TRENDING_TOPICS_API_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -166,6 +168,8 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
+          TRENDING_TOPICS_API_KEY_DEBUG: ${{ secrets.TRENDING_TOPICS_API_KEY }}
+          TRENDING_TOPICS_API_KEY_PRODUCTION: ${{ secrets.TRENDING_TOPICS_API_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
@@ -216,6 +220,8 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
+          TRENDING_TOPICS_API_KEY_DEBUG: ${{ secrets.TRENDING_TOPICS_API_KEY }}
+          TRENDING_TOPICS_API_KEY_PRODUCTION: ${{ secrets.TRENDING_TOPICS_API_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -267,6 +273,8 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
+          TRENDING_TOPICS_API_KEY_DEBUG: ${{ secrets.TRENDING_TOPICS_API_KEY }}
+          TRENDING_TOPICS_API_KEY_PRODUCTION: ${{ secrets.TRENDING_TOPICS_API_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta android_output:appbundle store:true

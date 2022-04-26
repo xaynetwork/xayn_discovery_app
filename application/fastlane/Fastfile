@@ -166,6 +166,7 @@ lane :check_config_files do |options|
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
     "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
     "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
+    "TRENDING_TOPICS_API_KEY_DEBUG" => "TRENDING_TOPICS_API_KEY"
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -180,6 +181,7 @@ lane :check_config_files do |options|
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
     "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
     "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
+    "TRENDING_TOPICS_API_KEY_PRODUCTION" => "TRENDING_TOPICS_API_KEY"
   }, Config::ENV_DEFAULTS)
 
   if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
