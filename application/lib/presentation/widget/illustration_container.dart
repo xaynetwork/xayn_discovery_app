@@ -21,7 +21,6 @@ class IllustrationContainer extends StatelessWidget {
     );
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         illustration,
         Expanded(child: child),
