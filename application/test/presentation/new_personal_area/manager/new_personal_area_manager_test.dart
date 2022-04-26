@@ -21,6 +21,9 @@ void main() {
   late MockFeatureManager featureManager;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
   late MockListenCollectionsUseCase listenCollectionsUseCase;
+  late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
+  late MockMarkOnboardingTypeCompletedUseCase
+      markOnboardingTypeCompletedUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockDateTimeHandler dateTimeHandler;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
@@ -108,6 +111,9 @@ void main() {
       urlOpener = MockUrlOpener();
       di.registerLazySingleton<UrlOpener>(() => urlOpener);
       getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
+      needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
+      markOnboardingTypeCompletedUseCase =
+          MockMarkOnboardingTypeCompletedUseCase();
       listenCollectionsUseCase = MockListenCollectionsUseCase();
       hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
       dateTimeHandler = MockDateTimeHandler();
@@ -130,6 +136,8 @@ void main() {
         getSubscriptionStatusUseCase,
         listenSubscriptionStatusUseCase,
         uniqueIdHandler,
+        needToShowOnboardingUseCase,
+        markOnboardingTypeCompletedUseCase,
       );
 
   blocTest<NewPersonalAreaManager, NewPersonalAreaState>(

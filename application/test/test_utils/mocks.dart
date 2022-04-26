@@ -77,6 +77,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
@@ -185,7 +187,9 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   Logger,
   LoggerHandler,
   MapToAppVersionMapper,
+  MarkOnboardingTypeCompletedUseCase,
   NewPersonalAreaNavActions,
+  NeedToShowOnboardingUseCase,
   MoveBookmarkUseCase,
   OnboardingStatusToDbEntityMapMapper,
   PackageInfo,
