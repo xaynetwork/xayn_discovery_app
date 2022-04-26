@@ -161,7 +161,7 @@ class TranslationsPl extends Translations {
   String get subscriptionRestore => """Przywróć subskrypcję""";
   String get subscriptionPromoCode => """Mam kod promocyjny""";
   String get subscriptionDisclaimer =>
-      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
+      """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""";
   String get settingsSubscribedToHeader => """Subskrybujesz""";
   String get doneButtonTitle => """Gotowy""";
   String get subscriptionRenewsMonthlyText =>
@@ -184,40 +184,42 @@ class TranslationsPl extends Translations {
       """Spróbuj ponownie później.""";
   String get errorClose => """Blisko""";
   String get sourceHandlingTooltipLabel => """Czego chcesz mniej widzieć?""";
-  String get sourceHandlingTooltipHighlightedWord => """What""";
-  String get enableTextToSpeech => """Enable text -to-speech""";
-  String get settingsSectionTitleOptions => """Options""";
-  String get personalAreaContact => """Contact""";
-  String get settingsContactUs => """Contact""";
-  String get contactSectionWeb => """Web:""";
-  String get contactSectionSupportEmail => """Support eMail:""";
-  String get contactSectionForPublishers => """For Publishers:""";
-  String get contactSectionPhone => """Phone:""";
-  String get searchNoResultsFound => """No results""";
-  String get searchEndOfResults => """That's all!""";
+  String get sourceHandlingTooltipHighlightedWord => """Co""";
+  String get enableTextToSpeech => """Włącz zamianę tekstu na mowę""";
+  String get settingsSectionTitleOptions => """Opcje""";
+  String get personalAreaContact => """Kontakt""";
+  String get settingsContactUs => """Kontakt""";
+  String get contactSectionWeb => """Strona WWW:""";
+  String get contactSectionSupportEmail => """E-mail:""";
+  String get contactSectionForPublishers => """Dla wydawców:""";
+  String get contactSectionPhone => """Telefon:""";
+  String get searchNoResultsFound => """Brak wyników""";
+  String get searchEndOfResults => """To wszystko!""";
   String get searchNoResultsFoundDesc =>
-      """We couldn’t find any stories for your search. Try different or more general keywords.""";
+      """Nie znaleźliśmy żadnych artykułów do Twojego wyszukiwania. Wypróbuj inne lub bardziej ogólne słowa kluczowe.""";
   String get searchEndOfResultsDesc =>
-      """Didn’t see what you're looking for? Try different or more general keywords.""";
+      """Nie widzisz tego, czego szukasz? Wypróbuj inne lub bardziej ogólne słowa kluczowe.""";
   String get feedSettingsScreenSourceFilterExplanation =>
-      """Sources that you disliked will not be shown in your Discovery Feed anymore.""";
-  String get feedSettingsScreenTabCountries => """Countries""";
-  String get feedSettingsScreenTabSources => """Sources""";
+      """Źródła, których nie lubisz, nie będą już wyświetlane w Twoim kanale Discovery.""";
+  String get feedSettingsScreenTabCountries => """Kraje""";
+  String get feedSettingsScreenTabSources => """Źródła""";
   String get feedSettingsScreenSubtitleDislikedSources =>
-      """Disliked Sources""";
-  String get settingsSectionHomeFeed => """Feed setup""";
+      """Nielubiane źródła""";
+  String get settingsSectionHomeFeed => """Konfiguracja kanału""";
   String get paymentPromoCodeAndroidBottomSheetTitle =>
-      """Have a promo code?""";
+      """Masz kod promocyjny?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""";
-  String get paymentFailedBottomSheetTitle => """Payment failed""";
+      """Aby wprowadzić kod promocyjny, wybierz „Zrealizuj kod” jako metodę płatności.""";
+  String get paymentFailedBottomSheetTitle => """Płatność nie powiodła się""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later. """;
-  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+      """Sklep z aplikacjami nie mógł przetworzyć Twojej płatności. Spróbuj ponownie później.""";
+  String get readerModeUnableToLoadTitle =>
+      """Nie udało się załadować tej treści""";
   String get readerModeUnableToLoadDesc =>
-      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
-  String get readerModeUnableToLoadCTA => """Open in Browser""";
-  String get noInternetConnection => """No internet connection""";
+      """Ten artykuł nie został udostępniony do czytania w naszej aplikacji. Aby go przeczytać, przejdź do niego za pomocą przeglądarki.""";
+  String get readerModeUnableToLoadCTA => """Otwórz w przeglądarce""";
+  String get noInternetConnection => """Brak połączenia z internetem""";
+  String get invalidSearch => """Please enter a valid search term""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -229,7 +231,7 @@ class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
   String get itemAlreadyOwned => """Zostałeś już zasubskrybowany""";
   String get transactionFailed => """Transakcja płatnicza nie powiodła się""";
   String get noActiveSubscriptionFound =>
-      """We couldn't find an active subscription for this account.""";
+      """Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta.""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -338,7 +340,7 @@ Map<String, String> get translationsPlMap => {
       """subscriptionRestore""": """Przywróć subskrypcję""",
       """subscriptionPromoCode""": """Mam kod promocyjny""",
       """subscriptionDisclaimer""":
-          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
+          """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a mi neque. Mauris non volutpat nisi, w iaculis purus. Aenean id semper nibh. Donec finibus elitar ac massa ornare luctus. Etiam vitae dolor at lorem venenatis tincidunt. Sed mattis euismod justo vitae placerat. Pellentesque laoreet sed mi ac laoreet. Mauris mauris mi, commodo vitae enim non, ultrices pellentesque tellus. Pellentesque non tempor nulla, imperdiet metus. Nullam ac congue tellus. Sed w sollicitudin orci. W ac fringilla augue, w hendrerit erat. Aliquam lectus mauris, pellentesque eget ante eget, tristique interdum sem.""",
       """settingsSubscribedToHeader""": """Subskrybujesz""",
       """doneButtonTitle""": """Gotowy""",
       """subscriptionRenewsMonthlyText""":
@@ -358,7 +360,7 @@ Map<String, String> get translationsPlMap => {
       """paymentFlowError.transactionFailed""":
           """Transakcja płatnicza nie powiodła się""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """We couldn't find an active subscription for this account.""",
+          """Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta.""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Czy na pewno chcesz usunąć tę kolekcję?""",
       """bottomSheetMoveSingleBookmark""": """Przejdź do innej kolekcji""",
@@ -369,36 +371,38 @@ Map<String, String> get translationsPlMap => {
           """Spróbuj ponownie później.""",
       """errorClose""": """Blisko""",
       """sourceHandlingTooltipLabel""": """Czego chcesz mniej widzieć?""",
-      """sourceHandlingTooltipHighlightedWord""": """What""",
-      """enableTextToSpeech""": """Enable text -to-speech""",
-      """settingsSectionTitleOptions""": """Options""",
-      """personalAreaContact""": """Contact""",
-      """settingsContactUs""": """Contact""",
-      """contactSectionWeb""": """Web:""",
-      """contactSectionSupportEmail""": """Support eMail:""",
-      """contactSectionForPublishers""": """For Publishers:""",
-      """contactSectionPhone""": """Phone:""",
-      """searchNoResultsFound""": """No results""",
-      """searchEndOfResults""": """That's all!""",
+      """sourceHandlingTooltipHighlightedWord""": """Co""",
+      """enableTextToSpeech""": """Włącz zamianę tekstu na mowę""",
+      """settingsSectionTitleOptions""": """Opcje""",
+      """personalAreaContact""": """Kontakt""",
+      """settingsContactUs""": """Kontakt""",
+      """contactSectionWeb""": """Strona WWW:""",
+      """contactSectionSupportEmail""": """E-mail:""",
+      """contactSectionForPublishers""": """Dla wydawców:""",
+      """contactSectionPhone""": """Telefon:""",
+      """searchNoResultsFound""": """Brak wyników""",
+      """searchEndOfResults""": """To wszystko!""",
       """searchNoResultsFoundDesc""":
-          """We couldn’t find any stories for your search. Try different or more general keywords.""",
+          """Nie znaleźliśmy żadnych artykułów do Twojego wyszukiwania. Wypróbuj inne lub bardziej ogólne słowa kluczowe.""",
       """searchEndOfResultsDesc""":
-          """Didn’t see what you're looking for? Try different or more general keywords.""",
+          """Nie widzisz tego, czego szukasz? Wypróbuj inne lub bardziej ogólne słowa kluczowe.""",
       """feedSettingsScreenSourceFilterExplanation""":
-          """Sources that you disliked will not be shown in your Discovery Feed anymore.""",
-      """feedSettingsScreenTabCountries""": """Countries""",
-      """feedSettingsScreenTabSources""": """Sources""",
-      """feedSettingsScreenSubtitleDislikedSources""": """Disliked Sources""",
-      """settingsSectionHomeFeed""": """Feed setup""",
-      """paymentPromoCodeAndroidBottomSheetTitle""": """Have a promo code?""",
+          """Źródła, których nie lubisz, nie będą już wyświetlane w Twoim kanale Discovery.""",
+      """feedSettingsScreenTabCountries""": """Kraje""",
+      """feedSettingsScreenTabSources""": """Źródła""",
+      """feedSettingsScreenSubtitleDislikedSources""": """Nielubiane źródła""",
+      """settingsSectionHomeFeed""": """Konfiguracja kanału""",
+      """paymentPromoCodeAndroidBottomSheetTitle""": """Masz kod promocyjny?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """You can enter it by taping “Subscribe now”, then taping over your payment method and selecting “Redeem code”.""",
-      """paymentFailedBottomSheetTitle""": """Payment failed""",
+          """Aby wprowadzić kod promocyjny, wybierz „Zrealizuj kod” jako metodę płatności.""",
+      """paymentFailedBottomSheetTitle""": """Płatność nie powiodła się""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later. """,
-      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+          """Sklep z aplikacjami nie mógł przetworzyć Twojej płatności. Spróbuj ponownie później.""",
+      """readerModeUnableToLoadTitle""":
+          """Nie udało się załadować tej treści""",
       """readerModeUnableToLoadDesc""":
-          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
-      """readerModeUnableToLoadCTA""": """Open in Browser""",
-      """noInternetConnection""": """No internet connection""",
+          """Ten artykuł nie został udostępniony do czytania w naszej aplikacji. Aby go przeczytać, przejdź do niego za pomocą przeglądarki.""",
+      """readerModeUnableToLoadCTA""": """Otwórz w przeglądarce""",
+      """noInternetConnection""": """Brak połączenia z internetem""",
+      """invalidSearch""": """Please enter a valid search term""",
     };
