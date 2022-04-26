@@ -191,7 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         context,
         builder: (_) => SubscriptionDetailsBottomSheet(
           subscriptionStatus: subscriptionStatus,
-          onSubscriptionLinkCancelTapped: () =>
+          onSubscriptionLinkCancelTapped:
               _manager.onSubscriptionLinkCancelTapped,
         ),
       );
