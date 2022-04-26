@@ -1,16 +1,17 @@
 import 'dart:ffi';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_design/xayn_design.dart' as design;
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/widget/document_filter_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/onboarding/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -89,6 +90,12 @@ class OverlayData {
           args: document,
           builder: (context, document) =>
               DocumentFilterBottomSheet(document: document!));
+
+  static bottomSheetOnboarding(OnboardingType type, VoidCallback onDismiss) =>
+      BottomSheetData<OnboardingType>(
+          args: type,
+          builder: (__, _) =>
+              OnboardingBottomSheet(type: type, onDismiss: onDismiss));
 
   static bottomSheetGenericError({bool allowStacking = false}) =>
       BottomSheetData<Void>(
