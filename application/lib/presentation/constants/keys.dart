@@ -5,11 +5,6 @@ class Keys {
 
   static const Key featureSelectionButton = Key('featureSelectionButton');
 
-  static const Key onBoardingPageOne = Key('onBoardingPageOne');
-  static const Key onBoardingPageTwo = Key('onBoardingPageTwo');
-  static const Key onBoardingPageThree = Key('onBoardingPageThree');
-  static const Key onBoardingPageTapDetector = Key('onBoardingPageTapDetector');
-
   static const Key personalAreaCardCollections =
       Key('personal_area_card_collections');
   static const Key personalAreaIconSettings =
