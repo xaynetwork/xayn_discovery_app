@@ -270,15 +270,59 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 
   @override
-  Widget buildImage(Color shadowColor) =>
-      BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
-        bloc: _shadowManager,
-        builder: (_, state) => super.buildImage(
-          R.isDarkMode
-              ? state.readerModeBackgroundColor.color
-              : R.colors.swipeCardBackgroundDefault,
-        ),
-      );
+  Widget buildImage(Color shadowColor) {
+    final normalizedValue = 1 -
+        (_openingAnimation.value - _kMinImageFractionSize) /
+            (1.0 - _kMinImageFractionSize);
+
+    return BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
+      bloc: _shadowManager,
+      builder: (_, state) {
+        /// The reader mode might have a different color from the one of the card in the feed.
+        /// Therefore, when animating from the feed to the reader mode, let's calculate
+        /// the color to show while transitioning from one color to the other
+        final color = _calculateAnimatedColor(
+          R.colors.swipeCardBackgroundHome,
+          state.readerModeBackgroundColor.color,
+          normalizedValue,
+        );
+
+        return super.buildImage(
+          R.isDarkMode ? color : R.colors.swipeCardBackgroundHome,
+        );
+      },
+    );
+  }
+
+  /// Calculate the color to show while animating from one color to another
+  Color _calculateAnimatedColor(
+      Color startingColor, Color endingColor, double normalizedValue) {
+    calculateColorInt(int value1, int value2, double animationValue) =>
+        (animationValue + (value2 - value1) * animationValue).toInt();
+
+    return Color.fromARGB(
+      calculateColorInt(
+        startingColor.alpha,
+        endingColor.alpha,
+        normalizedValue,
+      ),
+      calculateColorInt(
+        startingColor.red,
+        endingColor.red,
+        normalizedValue,
+      ),
+      calculateColorInt(
+        startingColor.green,
+        endingColor.green,
+        normalizedValue,
+      ),
+      calculateColorInt(
+        startingColor.blue,
+        endingColor.blue,
+        normalizedValue,
+      ),
+    );
+  }
 
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();

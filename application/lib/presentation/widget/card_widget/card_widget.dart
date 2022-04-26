@@ -73,7 +73,7 @@ class CardWidget extends StatelessWidget {
               bytes: bytes,
               shadowColor: R.isDarkMode
                   ? state.readerModeBackgroundColor.color
-                  : R.colors.swipeCardBackgroundDefault,
+                  : R.colors.swipeCardBackgroundHome,
               noImageBuilder: (_) => Container(),
             ),
           );
