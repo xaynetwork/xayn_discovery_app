@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
 
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
@@ -37,7 +38,7 @@ class DiscoveryCardFooter extends StatelessWidget {
           : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
       iconColor: R.colors.brightIcon,
-    );
+    ).withSemanticsLabel('data-test=like_button');
 
     final bookmarkButton = AppGhostButton.icon(
       bookmarkStatus == BookmarkStatus.bookmarked
@@ -46,13 +47,13 @@ class DiscoveryCardFooter extends StatelessWidget {
       onPressed: onBookmarkPressed,
       onLongPressed: onBookmarkLongPressed,
       iconColor: R.colors.brightIcon,
-    );
+    ).withSemanticsLabel('data-test="bookmark_button');
 
     final shareButton = AppGhostButton.icon(
       R.assets.icons.share,
       onPressed: onSharePressed,
       iconColor: R.colors.brightIcon,
-    );
+    ).withSemanticsLabel("data-test=share_button");
 
     final dislikeButton = AppGhostButton.icon(
       explicitDocumentUserReaction.isIrrelevant
@@ -60,7 +61,7 @@ class DiscoveryCardFooter extends StatelessWidget {
           : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,
       iconColor: R.colors.brightIcon,
-    );
+    ).withSemanticsLabel('data-test=dislike_button');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
