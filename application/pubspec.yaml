@@ -72,9 +72,7 @@ dependencies:
       url: git@github.com:xaynetwork/xayn_card_view.git
       ref: 1665c64af48058f116ffa0e71296c7748c3c6c1e
   xayn_design:
-    git:
-      url: git@github.com:xaynetwork/xayn_design.git
-      ref: 656e562cf54eca1309bc067b24b03c0061ee4b14
+    path: ../../xayn_design
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -158,6 +156,17 @@ flutter:
     - packages/xayn_design/assets/lottie/mange_collection.json
     - packages/xayn_design/assets/lottie/splash_screen.json
     - packages/xayn_design/assets/lottie/splash_screen_dark.json
+
+    # lottie contextual illustrations
+    - packages/xayn_design/assets/lottie/contextual/delete_collection.json
+    - packages/xayn_design/assets/lottie/contextual/empty_collection.json
+    - packages/xayn_design/assets/lottie/contextual/empty_sources.json
+    - packages/xayn_design/assets/lottie/contextual/error.json
+    - packages/xayn_design/assets/lottie/contextual/no_image.json
+    - packages/xayn_design/assets/lottie/contextual/payment_pending.json
+    - packages/xayn_design/assets/lottie/contextual/premium.json
+    - packages/xayn_design/assets/lottie/contextual/source_filter.json
+    - packages/xayn_design/assets/lottie/contextual/subscription_active.json
 
     # graphics
     - packages/xayn_design/assets/graphics/forms_green.svg
