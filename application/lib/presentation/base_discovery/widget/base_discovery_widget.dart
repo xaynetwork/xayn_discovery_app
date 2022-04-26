@@ -275,20 +275,25 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 ),
               );
 
-         return SwipeableDiscoveryCard(
-          onSwipe: (option) => managers.discoveryCardManager.onFeedback(
-            document: document,
-            userReaction: option.toUserReaction(),
-            feedType: manager.feedType,
-          ),
-          isPrimary: isPrimary,
-          document: document,
-          explicitDocumentUserReaction:
-              managers.discoveryCardManager.state.explicitDocumentUserReaction,
-          card: card,
-          isSwipingEnabled: isSwipingEnabled,
-          onFling: managers.discoveryCardManager.triggerHapticFeedbackMedium,
-        );
+        return Semantics(
+            child: SwipeableDiscoveryCard(
+              onSwipe: (option) => managers.discoveryCardManager.onFeedback(
+                document: document,
+                userReaction: option.toUserReaction(),
+                feedType: manager.feedType,
+              ),
+              isPrimary: isPrimary,
+              document: document,
+              explicitDocumentUserReaction: managers
+                  .discoveryCardManager.state.explicitDocumentUserReaction,
+              card: card,
+              isSwipingEnabled: isSwipingEnabled,
+              onFling:
+                  managers.discoveryCardManager.triggerHapticFeedbackMedium,
+            ),
+            label: 'data-test=discovery-card',
+            enabled: true,
+            button: true);
       };
 
   ShaderType _getShaderType(NewsResource newsResource) {
