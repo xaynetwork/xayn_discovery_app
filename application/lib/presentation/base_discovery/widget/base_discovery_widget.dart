@@ -293,8 +293,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
             ),
             label: 'data-test=discovery-card',
             enabled: true,
-            button: true,
-            excludeSemantics: true);
+            button: true);
       };
 
   ShaderType _getShaderType(NewsResource newsResource) {
