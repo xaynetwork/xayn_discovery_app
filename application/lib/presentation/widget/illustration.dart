@@ -7,12 +7,16 @@ class Illustration extends StatefulWidget {
   final String asset;
   final bool isLooping;
   final VoidCallback? onFinished;
+  final double? width;
+  final double? height;
 
   const Illustration.asset(
     this.asset, {
     Key? key,
     this.isLooping = true,
     this.onFinished,
+    this.width,
+    this.height,
   }) : super(key: key);
 
   @override
@@ -44,7 +48,9 @@ class _IllustrationState extends State<Illustration>
 
     return Lottie.asset(
       widget.asset,
-      controller: _controller,width: 200.0, height: 200.0,
+      controller: _controller,
+      width: widget.width,
+      height: widget.height,
       onLoaded: (composition) {
         _controller
           ..duration = composition.duration
