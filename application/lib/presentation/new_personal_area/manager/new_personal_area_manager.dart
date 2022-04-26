@@ -88,7 +88,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
 
-      _maybeAddOrUpdateTrialBannerToItems();
+      _maybeUpdateTrialBannerToItems();
     });
   }
 
@@ -122,7 +122,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
         }
         if (subscriptionStatus != null) {
           _subscriptionStatus = subscriptionStatus;
-          _maybeAddOrUpdateTrialBannerToItems();
+          _maybeUpdateTrialBannerToItems();
         }
 
         return NewPersonalAreaState.populated(
@@ -148,11 +148,10 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     );
   }
 
-  void _maybeAddOrUpdateTrialBannerToItems() {
+  void _maybeUpdateTrialBannerToItems() {
     final trialEndDate = _subscriptionStatus.trialEndDate;
-    if (_featureManager.isPaymentEnabled &&
-        _subscriptionStatus.isFreeTrialActive &&
-        trialEndDate != null) {
+    if (!_featureManager.isPaymentEnabled || trialEndDate == null) return;
+    if (_subscriptionStatus.isFreeTrialActive) {
       _items.first.map(
         collection: (_) => _items.insert(
           0,
@@ -164,6 +163,11 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
         payment: (data) => _items.first = data.copyWith(
           trialEndDate: trialEndDate,
         ),
+      );
+    } else {
+      _items.first.map(
+        payment: (_) => _items.removeAt(0),
+        collection: (item) => item,
       );
     }
   }
