@@ -452,6 +452,7 @@ def writeBetaReport(options, uploadedFile)
   if platform == Platforms::IOS
     report.write("Testflight: https://testflight.apple.com/join/ltxuzZh7\n")
   else
+    report.write("Download from store: https://play.google.com/apps/test/com.xayn.discovery/#{buildNumber}\n")
     report.write("Register: https://play.google.com/apps/testing/com.xayn.discovery\n")
     report.write("Install/Update: https://play.google.com/store/apps/details?id=com.xayn.discovery\n")
   end
