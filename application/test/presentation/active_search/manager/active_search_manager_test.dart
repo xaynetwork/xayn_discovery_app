@@ -19,6 +19,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -78,6 +79,7 @@ void main() {
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
           featureManager,
+          CardManagersCache(),
         );
   });
 

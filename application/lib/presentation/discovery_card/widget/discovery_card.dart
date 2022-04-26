@@ -4,14 +4,12 @@ import 'dart:math';
 import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -20,10 +18,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
-import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -50,8 +46,6 @@ class DiscoveryCard extends DiscoveryCardBase {
     required bool isPrimary,
     required Document document,
     required FeedType feedType,
-    DiscoveryCardManager? discoveryCardManager,
-    ImageManager? imageManager,
     this.onDiscard,
     this.onDrag,
     this.onController,
@@ -62,8 +56,6 @@ class DiscoveryCard extends DiscoveryCardBase {
           isPrimary: isPrimary,
           document: document,
           feedType: feedType,
-          discoveryCardManager: discoveryCardManager,
-          imageManager: imageManager,
           onTtsData: onTtsData,
           primaryCardShader:
               primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
@@ -75,44 +67,6 @@ class DiscoveryCard extends DiscoveryCardBase {
 
 abstract class DiscoveryCardNavActions {
   void onBackNavPressed();
-}
-
-@immutable
-class DiscoveryCardStandaloneArgs {
-  const DiscoveryCardStandaloneArgs({
-    required this.isPrimary,
-    required this.document,
-    required this.feedType,
-    required this.discoveryCardManager,
-    required this.imageManager,
-    this.onDiscard,
-  });
-
-  final bool isPrimary;
-  final Document document;
-  final FeedType feedType;
-  final DiscoveryCardManager discoveryCardManager;
-  final ImageManager imageManager;
-  final VoidCallback? onDiscard;
-}
-
-/// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
-class DiscoveryCardStandalone extends DiscoveryCard {
-  DiscoveryCardStandalone({
-    Key? key,
-    required DiscoveryCardStandaloneArgs args,
-  }) : super(
-          key: key,
-          isPrimary: args.isPrimary,
-          document: args.document,
-          discoveryCardManager: args.discoveryCardManager,
-          imageManager: args.imageManager,
-          onDiscard: args.onDiscard,
-          feedType: args.feedType,
-        );
-
-  @override
-  State<StatefulWidget> createState() => _DiscoveryCardPageState();
 }
 
 /// A controller which allows to programmatically close this widget
@@ -364,63 +318,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         maxWidth: width,
         child: readerMode,
       ),
-    );
-  }
-}
-
-class _DiscoveryCardPageState extends _DiscoveryCardState
-    with NavBarConfigMixin {
-  late final DiscoveryCardManager _discoveryCardManager;
-
-  @override
-  void initState() {
-    _discoveryCardManager = di.get();
-
-    super.initState();
-  }
-
-  @override
-  Widget buildFromState(
-          BuildContext context, DiscoveryCardState state, Widget image) =>
-      Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          bottom: false,
-          child: super.buildFromState(context, state, image),
-        ),
-      );
-
-  @override
-  NavBarConfig get navBarConfig {
-    return NavBarConfig(
-      configIdDiscoveryCard,
-      [
-        buildNavBarItemArrowLeft(
-          onPressed: () => _discoveryCardManager.onBackNavPressed(),
-        ),
-        buildNavBarItemLike(
-          isLiked: _discoveryCardManager
-              .state.explicitDocumentUserReaction.isRelevant,
-          onPressed: () => onFeedbackPressed(UserReaction.positive),
-        ),
-        buildNavBarItemBookmark(
-          bookmarkStatus: _discoveryCardManager.state.bookmarkStatus,
-          onPressed: () => onBookmarkPressed(feedType: widget.feedType),
-          onLongPressed: onBookmarkLongPressed(_discoveryCardManager.state),
-        ),
-        buildNavBarItemShare(
-          onPressed: () => _discoveryCardManager.shareUri(
-            document: widget.document,
-            feedType: widget.feedType,
-          ),
-        ),
-        buildNavBarItemDisLike(
-          isDisLiked: _discoveryCardManager
-              .state.explicitDocumentUserReaction.isIrrelevant,
-          onPressed: () => onFeedbackPressed(UserReaction.positive),
-        ),
-      ],
-      isWidthExpanded: true,
     );
   }
 }

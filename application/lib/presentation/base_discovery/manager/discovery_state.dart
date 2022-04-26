@@ -16,7 +16,6 @@ class DiscoveryState with _$DiscoveryState {
 
   const factory DiscoveryState({
     @Default(<Document>{}) Set<Document> results,
-    @Default(<Document>{}) Set<Document> removedResults,
     required int cardIndex,
     required bool isComplete,
     @Default(false) bool isFullScreen,
@@ -43,7 +42,6 @@ class DiscoveryState with _$DiscoveryState {
       isInErrorState == other.isInErrorState &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(results, other.results) &&
-      _setEquality.equals(removedResults, other.removedResults) &&
       subscriptionStatus == other.subscriptionStatus &&
       readerModeBackgroundColor == other.readerModeBackgroundColor;
 }

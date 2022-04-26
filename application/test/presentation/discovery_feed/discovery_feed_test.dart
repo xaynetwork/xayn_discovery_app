@@ -102,6 +102,8 @@ void main() async {
               fakeDocumentD,
             ]));
 
+    di.reset();
+
     await configureTestDependencies();
 
     di.registerSingleton<DiscoveryEngine>(mockDiscoveryEngine);
@@ -142,25 +144,6 @@ void main() async {
   );
 
   blocTest<DiscoveryFeedManager, DiscoveryState>(
-    'WHEN feed loads THEN verify call stack - non-first render after startup version ',
-    build: () => manager,
-    setUp: () async {
-      when(fetchSessionUseCase.singleOutput(none))
-          .thenAnswer((_) async => Session.withFeedRequested());
-      // wait for requestFeed to complete
-      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
-    },
-    verify: (manager) {
-      verifyInOrder([
-        mockDiscoveryEngine.engineEvents,
-        mockDiscoveryEngine.restoreFeed(),
-        mockDiscoveryEngine.requestNextFeedBatch(),
-      ]);
-      verifyNoMoreInteractions(mockDiscoveryEngine);
-    },
-  );
-
-  blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
     setUp: () async {
@@ -187,6 +170,8 @@ void main() async {
       verifyInOrder([
         // when manager inits
         feedRepository.get(),
+        // request feed mixin
+        feedRepository.get(),
         // check value just before save
         feedRepository.get(),
         feedRepository.save(any),
@@ -210,16 +195,23 @@ void main() async {
 
         return event;
       });
+
+      // wait for requestFeed to complete
+      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
     act: (manager) async {
       manager.closeFeedDocuments({fakeDocumentA.documentId});
     },
     verify: (manager) {
       verifyInOrder([
-        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
-        mockDiscoveryEngine.engineEvents,
         mockDiscoveryEngine.restoreFeed(),
+        // after restore, old user index in feed is 0, so other cards are now closed
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentB.documentId}),
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.engineEvents,
         mockDiscoveryEngine.requestNextFeedBatch(),
+        // the close from the act handler
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentA.documentId}),
       ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
@@ -257,14 +249,11 @@ void main() async {
       },
       verify: (manager) {
         verifyInOrder([
-          mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.restoreFeed(),
+          mockDiscoveryEngine.closeFeedDocuments({fakeDocumentB.documentId}),
+          mockDiscoveryEngine.restoreFeed(),
+          mockDiscoveryEngine.engineEvents,
           mockDiscoveryEngine.requestNextFeedBatch(),
-          mockDiscoveryEngine.logDocumentTime(
-            documentId: fakeDocumentA.documentId,
-            mode: DocumentViewMode.story,
-            seconds: 1,
-          ),
         ]);
         verifyNoMoreInteractions(mockDiscoveryEngine);
       });
@@ -295,9 +284,13 @@ void main() async {
           ),
         ),
       );
-      verify(mockDiscoveryEngine.engineEvents);
-      verify(mockDiscoveryEngine.restoreFeed());
-      verify(mockDiscoveryEngine.requestNextFeedBatch());
+      verifyInOrder([
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.closeFeedDocuments({fakeDocumentB.documentId}),
+        mockDiscoveryEngine.restoreFeed(),
+        mockDiscoveryEngine.engineEvents,
+        mockDiscoveryEngine.requestNextFeedBatch(),
+      ]);
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );

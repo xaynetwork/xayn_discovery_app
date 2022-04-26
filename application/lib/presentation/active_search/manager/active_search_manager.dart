@@ -17,7 +17,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -39,8 +40,6 @@ abstract class ActiveSearchNavActions {
 
   void onPersonalAreaNavPressed();
 
-  void onCardDetailsPressed(DiscoveryCardStandaloneArgs args);
-
   void onTrialExpired();
 }
 
@@ -49,7 +48,7 @@ abstract class ActiveSearchNavActions {
 /// It consumes events from the discovery engine and emits a state
 /// which contains a list of discovery news items which should be displayed
 /// in a list format by widgets.
-@injectable
+@lazySingleton
 class ActiveSearchManager extends BaseDiscoveryManager
     with SearchMixin<DiscoveryState>
     implements ActiveSearchNavActions {
@@ -64,6 +63,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
     FeatureManager featureManager,
+    CardManagersCache cardManagersCache,
   ) : super(
           FeedType.search,
           engineEventsUseCase,
@@ -76,6 +76,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
           featureManager,
+          cardManagersCache,
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;
@@ -89,6 +90,14 @@ class ActiveSearchManager extends BaseDiscoveryManager
   bool get didReachEnd => _didReachEnd;
 
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
+        final trimmed = searchTerm.trim();
+
+        if (trimmed.isEmpty) {
+          return showOverlay(OverlayData.tooltipInvalidSearch());
+        }
+
+        if (trimmed == lastUsedSearchTerm) return;
+
         _isLoading = true;
         _didReachEnd = false;
         resetCardIndex();
@@ -115,10 +124,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
   void onSearchNavPressed() {
     // TODO probably go to the top of the feed
   }
-
-  @override
-  void onCardDetailsPressed(DiscoveryCardStandaloneArgs args) =>
-      _activeSearchNavActions.onCardDetailsPressed(args);
 
   @override
   void onTrialExpired() => _activeSearchNavActions.onTrialExpired();

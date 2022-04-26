@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/presentation/active_search/widget/active_sear
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
@@ -69,16 +68,6 @@ class PageRegistry {
       key: searchKey,
     ),
   );
-
-  static cardDetailsStandalone(DiscoveryCardStandaloneArgs args) =>
-      xayn.PageData(
-        name: "cardDetailsStandalone",
-        arguments: args,
-        builder: (_, DiscoveryCardStandaloneArgs? args) =>
-            DiscoveryCardStandalone(
-          args: args!,
-        ),
-      );
 
   static cardDetails({
     required UniqueId documentId,
