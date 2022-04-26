@@ -18,18 +18,15 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
   AppSettings? fromMap(Map? map) {
     if (map == null) return null;
 
-    final isOnboardingDone = map[AppSettingsFields.isOnboardingDone] as bool?;
     final appTheme = _intToAppThemeMapper.map(map[AppSettingsFields.appTheme]);
 
     return AppSettings.global(
-      isOnboardingDone: isOnboardingDone ?? false,
       appTheme: appTheme,
     );
   }
 
   @override
   DbEntityMap toMap(AppSettings entity) => {
-        AppSettingsFields.isOnboardingDone: entity.isOnboardingDone,
         AppSettingsFields.appTheme: _appThemeToIntMapper.map(entity.appTheme),
       };
 }
@@ -37,6 +34,5 @@ class AppSettingsMapper extends BaseDbEntityMapper<AppSettings> {
 abstract class AppSettingsFields {
   AppSettingsFields._();
 
-  static const int isOnboardingDone = 0;
   static const int appTheme = 1;
 }

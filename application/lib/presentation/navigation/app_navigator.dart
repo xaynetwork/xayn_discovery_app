@@ -9,10 +9,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
@@ -20,15 +18,7 @@ import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_man
 
 @lazySingleton
 class AppNavigationManager extends xayn.NavigatorManager {
-  final FeatureManager _featureManager;
-
-  AppNavigationManager(this._featureManager) : super(pages: PageRegistry.pages);
-
-  @override
-  List<xayn.UntypedPageData> computeInitialPages() => [
-        ...super.computeInitialPages(),
-        if (_featureManager.showOnboardingScreen) PageRegistry.onboarding,
-      ];
+  AppNavigationManager() : super(pages: PageRegistry.pages);
 }
 
 @Injectable(as: SplashScreenNavActions)
@@ -187,18 +177,6 @@ class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
   @override
   void onSettingsNavPressed() =>
       changeStack((stack) => stack.push(PageRegistry.settings));
-}
-
-@Injectable(as: OnBoardingNavActions)
-class Impl implements OnBoardingNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  Impl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onClosePressed() => changeStack((stack) => stack.pop());
 }
 
 @Injectable(as: DiscoveryCardScreenManagerNavActions)
