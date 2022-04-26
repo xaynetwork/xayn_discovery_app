@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -43,7 +44,7 @@ class _IllustrationState extends State<Illustration>
 
     return Lottie.asset(
       widget.asset,
-      controller: _controller,
+      controller: _controller,width: 200.0, height: 200.0,
       onLoaded: (composition) {
         _controller
           ..duration = composition.duration
