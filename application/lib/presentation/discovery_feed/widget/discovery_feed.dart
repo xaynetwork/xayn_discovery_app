@@ -134,4 +134,10 @@ class _DiscoveryFeedState
 
     return _manager.state.isFullScreen ? buildReaderMode() : buildDefault();
   }
+
+  @override
+  void initState() {
+    manager.checkIfNeedToShowOnboarding();
+    super.initState();
+  }
 }
