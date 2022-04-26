@@ -163,7 +163,8 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
   void _checkIfDocumentNotProcessable(Document document) async {
     final discoveryCardManager =
-        di.get<CardManagers>(param1: document).discoveryCardManager;
+        _cardManagersCache.managersOf(document).discoveryCardManager;
+
     final processedDocument = await discoveryCardManager.stream
         .map((it) => it.processedDocument)
         .startWith(discoveryCardManager.state.processedDocument)
