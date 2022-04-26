@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/trending_topics/topic.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
+import 'package:xayn_discovery_app/presentation/images/manager/image_manager_state.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_info_card.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -73,6 +80,7 @@ class _ActiveSearchState
             buildNavBarItemSearchActive(
               autofocus: _manager.state.results.isEmpty,
               hint: _manager.lastUsedSearchTerm,
+              initialText: _manager.lastUsedSearchTerm,
               onSearchPressed: _manager.handleSearchTerm,
             ),
             buildNavBarItemPersonalArea(
@@ -169,15 +177,54 @@ class _ActiveSearchState
 
   @override
   Widget buildFeedView(DiscoveryState state) {
-    final trendingTopics = state.trendingTopics;
-    print('has topics? ${trendingTopics != null}');
-    if (trendingTopics != null) {
-      print('count: ${trendingTopics.length}');
-      for (final topic in trendingTopics) {
-        print(topic.toString());
-      }
+    final trendingTopics = state.trendingTopics.toList();
+    if (manager.lastUsedSearchTerm?.isNotEmpty == true &&
+        (state.results.isNotEmpty || trendingTopics.isEmpty)) {
+      return super.buildFeedView(state);
+    } else {
+      final bottom = MediaQuery.of(context).viewInsets.bottom;
+      return Padding(
+        padding: EdgeInsets.fromLTRB(8, 16, 8, bottom + 120),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Trending Topics',
+                  style: R.styles.lBoldStyle,
+                ),
+              ),
+              ...trendingTopics.take(10).map(_buildTopic),
+            ],
+          ),
+        ),
+      );
     }
+  }
 
-    return super.buildFeedView(state);
+  Widget _buildTopic(Topic trendingTopic) {
+    var term = trendingTopic.query.split(' ').first;
+    return Padding(
+      padding: const EdgeInsets.all(2),
+      child: BlocBuilder<ImageManager, ImageManagerState>(
+        bloc: di.get()..getImage(trendingTopic.image),
+        builder: (context, state) => CardWidget(
+          cardData: CardData.collectionsScreen(
+            key: const Key(''),
+            title: trendingTopic.query,
+            color: R.colors.accent,
+            onPressed: () => manager.handleSearchTerm(term),
+            numOfItems: 0,
+            cardWidth: 100,
+            backgroundImage: state.bytes,
+          ),
+          // trendingTopic.query,
+          // style: R.styles.mStyle.copyWith(color: R.colors.accent),
+        ),
+      ),
+    );
   }
 }

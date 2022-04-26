@@ -34,6 +34,7 @@ class FetchTrendingTopicsUseCase extends UseCase<None, Set<Topic>> {
     final singleMarket = markets.first;
     final mkt =
         '${singleMarket.langCode.toLowerCase()}-${singleMarket.countryCode.toUpperCase()}';
+    print(mkt);
     final response = await client.send(
       http.Request(
         CommonHttpRequestParams.httpRequestGet,

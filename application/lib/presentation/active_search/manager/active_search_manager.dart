@@ -4,7 +4,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
-import 'package:xayn_discovery_app/domain/model/trending_topics/topic.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
@@ -20,7 +19,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -85,11 +83,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   final ActiveSearchNavActions _activeSearchNavActions;
   final FetchTrendingTopicsUseCase _fetchTrendingTopicsUseCase;
-  late final UseCaseValueStream<Set<Topic>> _fetchTrendingTopicsValueStream =
-      consume(
-    _fetchTrendingTopicsUseCase,
-    initialData: none,
-  );
+  late final _fetchTrendingTopicsHandler = pipe(_fetchTrendingTopicsUseCase)
+    ..call(none);
   bool _isLoading = true;
   bool _didReachEnd = false;
 
@@ -103,12 +98,13 @@ class ActiveSearchManager extends BaseDiscoveryManager
         final trimmed = searchTerm.trim();
 
         if (trimmed.isEmpty) {
-          return showOverlay(OverlayData.tooltipInvalidSearch());
+          _fetchTrendingTopicsHandler(none);
+          // return showOverlay(OverlayData.tooltipInvalidSearch());
         }
 
         if (trimmed == lastUsedSearchTerm) return;
 
-        _isLoading = true;
+        _isLoading = trimmed.isNotEmpty;
         _didReachEnd = false;
         resetCardIndex();
 
@@ -141,7 +137,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void handleLoadMore() {
     if (_didReachEnd) return;
-
     requestNextSearchBatch();
   }
 
@@ -267,10 +262,17 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   Future<DiscoveryState?> computeState() async =>
-      fold(_fetchTrendingTopicsValueStream)
+      fold(_fetchTrendingTopicsHandler)
           .foldAll((trendingTopics, errorReport) async {
-        final state = await super.computeState();
+        final state = await super.computeState() ?? this.state;
 
-        return state?.copyWith(trendingTopics: trendingTopics);
+        return state.copyWith(trendingTopics: trendingTopics ?? {});
       });
+
+  @override
+  void search(String queryTerm) {
+    scheduleComputeState(() {
+      super.search(queryTerm);
+    });
+  }
 }

@@ -26,7 +26,7 @@ class DiscoveryState with _$DiscoveryState {
     required bool didReachEnd,
     SubscriptionStatus? subscriptionStatus,
     ReaderModeBackgroundColor? readerModeBackgroundColor,
-    Set<Topic>? trendingTopics,
+    @Default({}) Set<Topic> trendingTopics,
   }) = _DiscoveryState;
 
   factory DiscoveryState.initial() => const DiscoveryState(

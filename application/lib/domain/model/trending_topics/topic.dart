@@ -1,23 +1,19 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'topic.freezed.dart';
-
-@freezed
+import 'package:equatable/equatable.dart';
 
 /// Hold session information,
 /// Currently, this is limited to the detection of the app startup ([feedBatchRequestCount]),
 /// feel free to extend this class when needed.
-class Topic with _$Topic {
-  factory Topic({
-    required String name,
-    required Uri image,
-    required String query,
-  }) = _Topic;
+class Topic extends Equatable {
+  final String name;
+  final String query;
+  final Uri image;
+
+  const Topic({
+    required this.name,
+    required this.image,
+    required this.query,
+  });
 
   @override
-  String toString() => {
-        'name': name,
-        'image': image.toString(),
-        'query': query,
-      }.toString();
+  List<Object?> get props => [name, image, query];
 }
