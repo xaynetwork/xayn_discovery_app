@@ -7,6 +7,8 @@ extension SemanticsExtension on Widget {
   }) =>
       Semantics(
         label: semanticsLabel,
+        enabled: true,
+        button: true,
         child: excludeChildren ? ExcludeSemantics(child: this) : this,
       );
 }
