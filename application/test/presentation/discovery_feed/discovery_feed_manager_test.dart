@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
@@ -15,6 +16,8 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
@@ -30,11 +33,15 @@ import '../../test_utils/widget_test_utils.dart';
 
 void main() async {
   late AppDiscoveryEngine engine;
+  late MockOverlayManager<DiscoveryState> overlayManager;
   late MockAppDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockFetchSessionUseCase fetchSessionUseCase;
+  late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
+  late MockMarkOnboardingTypeCompletedUseCase
+      markOnboardingTypeCompletedUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
@@ -65,10 +72,14 @@ void main() async {
 
   setUp(() async {
     eventsController = StreamController<EngineEvent>();
+    overlayManager = MockOverlayManager();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     fetchSessionUseCase = MockFetchSessionUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
+    needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
+    markOnboardingTypeCompletedUseCase =
+        MockMarkOnboardingTypeCompletedUseCase();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
     feedRepository = MockFeedRepository();
 
@@ -112,6 +123,10 @@ void main() async {
     di.registerLazySingleton<GetSubscriptionStatusUseCase>(
         () => getSubscriptionStatusUseCase);
     di.registerSingleton<FetchSessionUseCase>(fetchSessionUseCase);
+    di.registerSingleton<NeedToShowOnboardingUseCase>(
+        needToShowOnboardingUseCase);
+    di.registerSingleton<MarkOnboardingTypeCompletedUseCase>(
+        markOnboardingTypeCompletedUseCase);
 
     manager = di.get<DiscoveryFeedManager>();
   });
@@ -294,4 +309,123 @@ void main() async {
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );
+
+  group('test onboarding', () {
+    setUp(() {
+      manager.setOverlayManager(overlayManager);
+      when(fetchSessionUseCase.singleOutput(none))
+          .thenAnswer((_) async => Session.start());
+    });
+
+    blocTest<DiscoveryFeedManager, DiscoveryState>(
+      'GIVEN true WHEN _needToShowOnboardingUseCase is called THEN overlayManager.show called',
+      build: () => manager,
+      setUp: () {
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeVerticalSwipe))
+            .thenAnswer((_) async => true);
+      },
+      act: (manager) => manager.checkIfNeedToShowOnboarding(),
+      verify: (manager) {
+        // return;
+        verifyInOrder([
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeVerticalSwipe),
+          overlayManager.show(any),
+          overlayManager.onNewState(any),
+        ]);
+        verifyNoMoreInteractions(needToShowOnboardingUseCase);
+        verifyNoMoreInteractions(manager.overlayManager);
+      },
+    );
+
+    blocTest<DiscoveryFeedManager, DiscoveryState>(
+      'GIVEN true WHEN _needToShowOnboardingUseCase is called THEN overlayManager.show called',
+      build: () => manager,
+      setUp: () {
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeVerticalSwipe))
+            .thenAnswer((_) async => false);
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeHorizontalSwipe))
+            .thenAnswer((_) async => true);
+      },
+      act: (manager) => manager.checkIfNeedToShowOnboarding(),
+      verify: (manager) {
+        // return;
+        verifyInOrder([
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeVerticalSwipe),
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeHorizontalSwipe),
+          overlayManager.show(any),
+          overlayManager.onNewState(any),
+        ]);
+        verifyNoMoreInteractions(needToShowOnboardingUseCase);
+        verifyNoMoreInteractions(manager.overlayManager);
+      },
+    );
+
+    blocTest<DiscoveryFeedManager, DiscoveryState>(
+      'GIVEN true WHEN _needToShowOnboardingUseCase is called THEN overlayManager.show called',
+      build: () => manager,
+      setUp: () {
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeVerticalSwipe))
+            .thenAnswer((_) async => false);
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeHorizontalSwipe))
+            .thenAnswer((_) async => false);
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeBookmarksManage))
+            .thenAnswer((_) async => true);
+      },
+      act: (manager) => manager.checkIfNeedToShowOnboarding(),
+      verify: (manager) {
+        // return;
+        verifyInOrder([
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeVerticalSwipe),
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeHorizontalSwipe),
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeBookmarksManage),
+          overlayManager.show(any),
+          overlayManager.onNewState(any),
+        ]);
+        verifyNoMoreInteractions(needToShowOnboardingUseCase);
+        verifyNoMoreInteractions(manager.overlayManager);
+      },
+    );
+
+    blocTest<DiscoveryFeedManager, DiscoveryState>(
+      'GIVEN false WHEN _needToShowOnboardingUseCase is called THEN overlayManager.show called',
+      build: () => manager,
+      setUp: () {
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeVerticalSwipe))
+            .thenAnswer((_) async => false);
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeHorizontalSwipe))
+            .thenAnswer((_) async => false);
+        when(needToShowOnboardingUseCase
+                .singleOutput(OnboardingType.homeBookmarksManage))
+            .thenAnswer((_) async => false);
+      },
+      act: (manager) => manager.checkIfNeedToShowOnboarding(),
+      verify: (manager) {
+        // return;
+        verifyInOrder([
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeVerticalSwipe),
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeHorizontalSwipe),
+          needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.homeBookmarksManage),
+        ]);
+        verifyNoMoreInteractions(needToShowOnboardingUseCase);
+        verifyZeroInteractions(manager.overlayManager);
+      },
+    );
+  });
 }
