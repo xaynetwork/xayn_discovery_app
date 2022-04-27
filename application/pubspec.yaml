@@ -72,7 +72,9 @@ dependencies:
       url: git@github.com:xaynetwork/xayn_card_view.git
       ref: 1665c64af48058f116ffa0e71296c7748c3c6c1e
   xayn_design:
-    path: ../../xayn_design
+    git:
+      url: git@github.com:xaynetwork/xayn_design.git
+      ref: 28d8dc6f5457df222c145fadcc893a5f3172d5ed
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
