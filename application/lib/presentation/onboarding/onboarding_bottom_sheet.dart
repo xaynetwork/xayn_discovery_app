@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
@@ -10,10 +11,10 @@ class OnboardingBottomSheet extends BottomSheetBase {
     required OnboardingType type,
     required VoidCallback onDismiss,
   }) : super(
-          key: key,
-          body: _OnboardingView(type: type, onDismiss: onDismiss),
-          onSystemPop: onDismiss,
-        );
+    key: key,
+    body: _OnboardingView(type: type, onDismiss: onDismiss),
+    onSystemPop: onDismiss,
+  );
 }
 
 class _OnboardingView extends StatefulWidget {
@@ -31,7 +32,26 @@ class _OnboardingView extends StatefulWidget {
 }
 
 class _OnboardingViewState extends State<_OnboardingView>
-    with BottomSheetBodyMixin {
+    with BottomSheetBodyMixin, TickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _controller.forward(from: 0);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final text = _buildText();
@@ -52,13 +72,26 @@ class _OnboardingViewState extends State<_OnboardingView>
     return column;
   }
 
-  Widget _buildAnimation() => Container(
-        width: R.dimen.unit29,
-        height: R.dimen.unit29,
-        color: Colors.orangeAccent,
-      );
+  Widget _buildAnimation() {
+    final animation = Lottie.asset(
+      _getAnimationPath(),
+      repeat: true,
+      controller: _controller,
+      onLoaded: (composition) {
+        _controller
+          ..duration = composition.duration
+          ..forward();
+      },
+    );
+    return SizedBox(
+      width: R.dimen.unit29,
+      height: R.dimen.unit29,
+      child: animation,
+    );
+  }
 
-  Widget _buildCloseBtn() => SizedBox(
+  Widget _buildCloseBtn() =>
+      SizedBox(
         width: double.maxFinite,
         child: AppGhostButton.text(
           R.strings.general.btnClose,
@@ -108,5 +141,20 @@ class _OnboardingViewState extends State<_OnboardingView>
       text,
       textAlign: TextAlign.center,
     );
+  }
+
+  String _getAnimationPath() {
+    switch (widget.type) {
+      case OnboardingType.homeVerticalSwipe:
+        return R.assets.lottie.feedSwipeVertical;
+      case OnboardingType.homeHorizontalSwipe:
+        return R.assets.lottie.feedSwipeHorizontal;
+      case OnboardingType.homeBookmarksManage:
+        return R.assets.lottie.bookmarkClick;
+      case OnboardingType.collectionsManage:
+        return R.assets.lottie.manageCollection;
+      case OnboardingType.bookmarksManage:
+        return R.assets.lottie.manageCollection;
+    }
   }
 }
