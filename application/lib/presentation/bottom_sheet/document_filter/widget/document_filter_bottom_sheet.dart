@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -39,30 +40,31 @@ class _DocumentFilterList extends StatefulWidget {
 }
 
 class _DocumentFilterListState extends State<_DocumentFilterList>
-    with BottomSheetBodyMixin {
+    with
+        BottomSheetBodyMixin,
+        AnimationPlayerChildBuilderStateMixin<_DocumentFilterList> {
   late final DocumentFilterManager _manager = di.get(param1: widget.document);
+  @override
+  final String illustrationAssetName = R.assets.lottie.contextual.sourceFilter;
 
   @override
-  Widget build(BuildContext context) {
-    Widget body(DocumentFilterState state) {
-      var filters = state.filters;
-      if (filters.isNotEmpty) {
-        return SelectItemList<DocumentFilter>(
-          items: filters.keys.toList(),
-          preSelectedItems:
-              filters.entries.where((e) => e.value).map((e) => e.key).toSet(),
-          onSelectItem: _manager.onFilterTogglePressed,
-          getTitle: (e) => e.fold((host) => host, (topic) => topic),
-          getImage: (e) => e.fold(
-              (host) => buildThumbnailFromFaviconHost(host),
+  Widget buildChild(BuildContext context) {
+    body(Map<DocumentFilter, bool> filters) => filters.isNotEmpty
+        ? SelectItemList<DocumentFilter>(
+            items: filters.keys.toList(),
+            preSelectedItems:
+                filters.entries.where((e) => e.value).map((e) => e.key).toSet(),
+            onSelectItem: _manager.onFilterTogglePressed,
+            getTitle: (e) => e.fold((host) => host, (topic) => topic),
+            getImage: (e) => e.fold(
+              buildThumbnailFromFaviconHost,
               (topic) => Thumbnail.assetImage(
-                  R.assets.graphics.formsEmptyCollection,
-                  backgroundColor: R.colors.collectionsScreenCard)),
-        );
-      }
-
-      return const SizedBox.shrink();
-    }
+                R.assets.graphics.formsEmptyCollection,
+                backgroundColor: R.colors.collectionsScreenCard,
+              ),
+            ),
+          )
+        : const SizedBox.shrink();
 
     final header = BottomSheetHeader(
       headerText: R.strings.sourceHandlingTooltipLabel,
@@ -89,7 +91,7 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 header,
-                Flexible(child: body(state)),
+                Flexible(child: body(state.filters)),
                 footer(state),
               ],
             ));

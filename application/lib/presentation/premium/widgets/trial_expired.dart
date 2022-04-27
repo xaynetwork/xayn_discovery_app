@@ -6,6 +6,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 /// A widget which we use to highlight the 'perks' of subscribing,
 /// includes a number of handlers to cancel, subscribe or enter a promo code.
@@ -58,7 +59,7 @@ class TrialExpired extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            spacer3,
+            AnimationPlayer.asset(R.assets.lottie.contextual.premium),
             _buildTitle(),
             _buildPricing(),
             _buildPerks(),

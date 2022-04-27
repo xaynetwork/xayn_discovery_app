@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 abstract class ErrorNavActions {
   void openErrorScreen({String? errorCode, bool replaceCurrentRoute = true});
@@ -56,6 +57,7 @@ class _ErrorScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          AnimationPlayer.asset(R.assets.lottie.contextual.error),
           header,
           SizedBox(height: R.dimen.unit),
           subHeader,

@@ -25,20 +25,21 @@ class AnimationPlayer extends StatefulWidget {
 
 class _AnimationPlayerState extends State<AnimationPlayer>
     with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(vsync: this);
+  AnimationController? _controller;
 
   @override
   void initState() {
-    super.initState();
+    _controller = AnimationController(vsync: this)
+      ..addStatusListener(_animationStatusListener);
 
-    _controller.addStatusListener(_animationStatusListener);
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _controller?.dispose();
 
-    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,7 +53,7 @@ class _AnimationPlayerState extends State<AnimationPlayer>
       width: widget.width,
       height: widget.height,
       onLoaded: (composition) {
-        _controller
+        _controller!
           ..duration = composition.duration
           ..forward();
       },
@@ -62,8 +63,17 @@ class _AnimationPlayerState extends State<AnimationPlayer>
   void _animationStatusListener(AnimationStatus status) {
     final onFinished = widget.onFinished;
 
-    if (status == AnimationStatus.completed && onFinished != null) {
-      onFinished();
+    switch (status) {
+      case AnimationStatus.completed:
+        onFinished?.call();
+
+        if (widget.isLooping) {
+          _controller!.forward(from: .0);
+        }
+
+        break;
+      default:
+        break;
     }
   }
 }
