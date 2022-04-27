@@ -1,5 +1,6 @@
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_status_repository.dart';
 
@@ -21,6 +22,8 @@ class Migration_1_To_2 extends BaseDbMigration {
     const mapper = AppStatusMapper(
       MapToAppVersionMapper(),
       AppVersionToMapMapper(),
+      OnboardingStatusToDbEntityMapMapper(),
+      DbEntityMapToOnboardingStatusMapper(),
     );
     final repository = HiveAppStatusRepository(mapper);
     final appStatus = repository.appStatus;

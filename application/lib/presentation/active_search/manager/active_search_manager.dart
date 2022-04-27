@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -89,6 +90,14 @@ class ActiveSearchManager extends BaseDiscoveryManager
   bool get didReachEnd => _didReachEnd;
 
   void handleSearchTerm(String searchTerm) => scheduleComputeState(() {
+        final trimmed = searchTerm.trim();
+
+        if (trimmed.isEmpty) {
+          return showOverlay(OverlayData.tooltipInvalidSearch());
+        }
+
+        if (trimmed == lastUsedSearchTerm) return;
+
         _isLoading = true;
         _didReachEnd = false;
         resetCardIndex();
