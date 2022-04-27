@@ -3,14 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
-class Illustration extends StatefulWidget {
+class AnimationPlayer extends StatefulWidget {
   final String asset;
   final bool isLooping;
   final VoidCallback? onFinished;
   final double? width;
   final double? height;
 
-  const Illustration.asset(
+  const AnimationPlayer.asset(
     this.asset, {
     Key? key,
     this.isLooping = true,
@@ -20,10 +20,10 @@ class Illustration extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _IllustrationState();
+  State<StatefulWidget> createState() => _AnimationPlayerState();
 }
 
-class _IllustrationState extends State<Illustration>
+class _AnimationPlayerState extends State<AnimationPlayer>
     with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(vsync: this);
 
