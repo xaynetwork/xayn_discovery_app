@@ -9,7 +9,8 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
-import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
@@ -39,7 +40,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 
 /// The base class for the different feed card states.
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
-    extends State<T> with TooltipStateMixin, ErrorHandlingMixin {
+    extends State<T> with OverlayMixin<T> {
   late final CardManagersCache cardManagersCache = di.get();
   late DiscoveryCardManager discoveryCardManager;
   late ImageManager imageManager;
@@ -53,10 +54,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   String get title => webResource.title;
 
   @override
-  void initState() {
-    super.initState();
+  OverlayManager get overlayManager => discoveryCardManager.overlayManager;
 
+  @override
+  void initState() {
     updateManagers();
+    super.initState();
   }
 
   @override
@@ -74,18 +77,13 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
   @override
   Widget build(BuildContext context) =>
-      BlocConsumer<DiscoveryCardManager, DiscoveryCardState>(
+      BlocBuilder<DiscoveryCardManager, DiscoveryCardState>(
         bloc: discoveryCardManager,
         builder: (context, state) => buildFromState(
           context,
           state,
           buildImage(R.colors.swipeCardBackgroundDefault),
         ),
-        listener: (context, state) {
-          if (state.error.hasError) {
-            handleError(state.error, showTooltip);
-          }
-        },
       );
 
   Widget buildFromState(
@@ -119,7 +117,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
           document: widget.document,
           provider:
               state.processedDocument?.getProvider(widget.document.resource),
-          onError: (tooltipKey) => showTooltip(tooltipKey),
           feedType: widget.feedType,
         ),
       );

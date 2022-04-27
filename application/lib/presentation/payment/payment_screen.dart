@@ -8,7 +8,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/no_active_subscription_found_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_failed_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
@@ -21,8 +22,12 @@ class PaymentScreen extends StatefulWidget {
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
+class _PaymentScreenState extends State<PaymentScreen>
+    with OverlayMixin<PaymentScreen> {
   late final manager = di.get<PaymentScreenManager>();
+
+  @override
+  OverlayManager get overlayManager => manager.overlayManager;
 
   @override
   Widget build(BuildContext context) =>
@@ -74,10 +79,8 @@ class _PaymentScreenState extends State<PaymentScreen> with ErrorHandlingMixin {
   Widget _buildScreen(PaymentScreenState state) {
     final content = state.map(
       initial: (_) => _buildLoading(),
-      error: (_) {
-        openErrorScreen();
-      },
       ready: (state) => _buildTrialExpired(state.product),
+      error: (_) {},
     );
     return Scaffold(
       body: SingleChildScrollView(child: content),
