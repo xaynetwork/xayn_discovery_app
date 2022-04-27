@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
@@ -201,8 +201,8 @@ class PaymentScreenNavActionsImpl implements PaymentScreenNavActions {
       changeStack((stack) => stack.replace(PageRegistry.discovery));
 }
 
-@Injectable(as: NewPersonalAreaNavActions)
-class NewPersonalAreaNavActionsImpl implements NewPersonalAreaNavActions {
+@Injectable(as: PersonalAreaNavActions)
+class NewPersonalAreaNavActionsImpl implements PersonalAreaNavActions {
   final xayn.StackManipulationFunction changeStack;
 
   NewPersonalAreaNavActionsImpl(AppNavigationManager manager)

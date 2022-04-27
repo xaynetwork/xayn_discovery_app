@@ -102,7 +102,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
@@ -188,7 +188,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   LoggerHandler,
   MapToAppVersionMapper,
   MarkOnboardingTypeCompletedUseCase,
-  NewPersonalAreaNavActions,
   NeedToShowOnboardingUseCase,
   MoveBookmarkUseCase,
   OnboardingStatusToDbEntityMapMapper,
@@ -197,6 +196,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   PaymentFlowErrorToErrorMessageMapper,
   PaymentScreenNavActions,
   PaymentService,
+  PersonalAreaNavActions,
   PurchasableProductMapper,
   PurchaseEventMapper,
   PurchaseSubscriptionUseCase,
