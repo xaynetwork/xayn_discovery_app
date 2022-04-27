@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_provider.dart'
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_moved_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
@@ -16,10 +17,11 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -27,7 +29,9 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     with
         UseCaseBlocHelper<MoveToCollectionState>,
-        ChangeUserReactionMixin<MoveToCollectionState> {
+        ChangeUserReactionMixin<MoveToCollectionState>,
+        OverlayManagerMixin<MoveToCollectionState>,
+        ErrorHandlingManagerMixin<MoveToCollectionState> {
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final MoveBookmarkUseCase _moveBookmarkUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
@@ -43,7 +47,6 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
       _createBookmarkHandler;
   late final UseCaseSink<UniqueId, Bookmark> _removeBookmarkHandler;
   late final UseCaseSink<MoveBookmarkUseCaseIn, Bookmark> _moveBookmarkHandler;
-
   UniqueId? _selectedCollectionId;
   bool _isBookmarked = false;
 
@@ -60,18 +63,16 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
   }
 
   @factoryMethod
-  static Future<MoveToCollectionManager> create(
-    GetAllCollectionsUseCase getAllCollectionsUseCase,
+  static MoveToCollectionManager create(
+    CollectionsRepository collectionsRepository,
     ListenCollectionsUseCase listenCollectionsUseCase,
     MoveBookmarkUseCase moveBookmarkUseCase,
     RemoveBookmarkUseCase removeBookmarkUseCase,
     GetBookmarkUseCase getBookmarkUseCase,
     CreateBookmarkFromDocumentUseCase createBookmarkUseCase,
     SendAnalyticsUseCase sendAnalyticsUseCase,
-  ) async {
-    final collections =
-        (await getAllCollectionsUseCase.singleOutput(none)).collections;
-
+  ) {
+    final collections = collectionsRepository.getAll();
     return MoveToCollectionManager._(
       listenCollectionsUseCase,
       moveBookmarkUseCase,
@@ -212,7 +213,8 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
               errorReport.of(_moveBookmarkHandler) ??
               errorReport.of(_removeBookmarkHandler);
           logger.e(report!.error);
-          return state.copyWith(errorObj: report.error);
+          handleError(report.error);
+          return state;
         }
 
         if (collectionHandlerOut != null) {

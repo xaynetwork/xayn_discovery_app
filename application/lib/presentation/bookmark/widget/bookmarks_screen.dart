@@ -30,7 +30,7 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen>
-    with NavBarConfigMixin, TooltipStateMixin, CardWidgetTransitionMixin {
+    with NavBarConfigMixin, CardWidgetTransitionMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
 
@@ -122,7 +122,6 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       context,
       builder: (_) => MoveBookmarkToCollectionBottomSheet(
         bookmarkId: bookmarkId,
-        onError: showTooltip,
       ),
     );
   }
@@ -135,7 +134,6 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       showBarrierColor: false,
       builder: (buildContext) => BookmarkOptionsBottomSheet(
         bookmarkId: bookmarkId,
-        onError: showTooltip,
 
         /// Close the route with the focused card
         onSystemPop: closeCardWidgetTransition,
