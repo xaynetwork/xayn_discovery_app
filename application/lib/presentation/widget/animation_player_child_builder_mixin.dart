@@ -1,15 +1,15 @@
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/presentation/widget/illustration_container.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player_container.dart';
 
 const double _kWidth = 200.0;
 const double _kHeight = 200.0;
 
-mixin IllustrationMixin<T extends StatefulWidget> on State<T> {
+mixin AnimationPlayerChildBuilderMixin<T extends StatefulWidget> on State<T> {
   String get illustrationAssetName;
 
   @override
   @mustCallSuper
-  Widget build(BuildContext context) => IllustrationContainer.asset(
+  Widget build(BuildContext context) => AnimationPlayerContainer.asset(
         illustrationAssetName,
         child: buildChild(context),
         width: _kWidth,
