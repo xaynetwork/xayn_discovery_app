@@ -45,7 +45,11 @@ class _AnimationPlayerState extends State<AnimationPlayer>
   @override
   Widget build(BuildContext context) {
     // avoid animations in test
-    if (EnvironmentHelper.kIsInTest) return Container();
+    if (EnvironmentHelper.kIsInTest) {
+      widget.onFinished?.call();
+
+      return Container();
+    }
 
     return Lottie.asset(
       widget.asset,
@@ -61,19 +65,12 @@ class _AnimationPlayerState extends State<AnimationPlayer>
   }
 
   void _animationStatusListener(AnimationStatus status) {
-    final onFinished = widget.onFinished;
+    if (status == AnimationStatus.completed) {
+      widget.onFinished?.call();
 
-    switch (status) {
-      case AnimationStatus.completed:
-        onFinished?.call();
-
-        if (widget.isLooping) {
-          _controller!.forward(from: .0);
-        }
-
-        break;
-      default:
-        break;
+      if (widget.isLooping) {
+        _controller!.forward(from: .0);
+      }
     }
   }
 }
