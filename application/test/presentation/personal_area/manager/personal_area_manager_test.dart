@@ -10,16 +10,16 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 
 import '../../../test_utils/utils.dart';
 
 void main() {
-  late NewPersonalAreaNavActions actions;
-  late MockOverlayManager<NewPersonalAreaState> overlayManager;
+  late PersonalAreaNavActions actions;
+  late MockOverlayManager<PersonalAreaState> overlayManager;
   late MockFeatureManager featureManager;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
   late MockListenCollectionsUseCase listenCollectionsUseCase;
@@ -60,12 +60,12 @@ void main() {
     contacts,
   ];
 
-  final populatedStateOnlyCollections = NewPersonalAreaState.populated(
+  final populatedStateOnlyCollections = PersonalAreaState.populated(
     collectionsList,
     timeStamp,
   );
 
-  final populatedStateWithTrialBanner = NewPersonalAreaState.populated(
+  final populatedStateWithTrialBanner = PersonalAreaState.populated(
     [
       ListItemModel.payment(
         id: paymentItemId,
@@ -120,7 +120,7 @@ void main() {
       listenCollectionsUseCase = MockListenCollectionsUseCase();
       hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
       dateTimeHandler = MockDateTimeHandler();
-      actions = MockNewPersonalAreaNavActions();
+      actions = MockPersonalAreaNavActions();
       featureManager = MockFeatureManager();
       getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
       listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
@@ -129,10 +129,10 @@ void main() {
     },
   );
 
-  NewPersonalAreaManager create({
+  PersonalAreaManager create({
     bool setMockOverlayManager = false,
   }) {
-    final manager = NewPersonalAreaManager(
+    final manager = PersonalAreaManager(
       getAllCollectionsUseCase,
       listenCollectionsUseCase,
       hapticFeedbackMediumUseCase,
@@ -151,7 +151,7 @@ void main() {
     return manager;
   }
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN manager is created and the free trial is NOT active THEN get collections and emit state populated with only collections',
     build: () => create(),
     verify: (manager) {
@@ -159,7 +159,7 @@ void main() {
     },
   );
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN manager is created and the free trial is active THEN emit state populated with trial banner and collections',
     build: () => create(),
     setUp: () {
@@ -173,7 +173,7 @@ void main() {
     },
   );
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onHomeNavPressed is called THEN redirected to action',
     build: () => create(),
     act: (manager) => manager.onHomeNavPressed(),
@@ -183,7 +183,7 @@ void main() {
     },
   );
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onActiveSearchNavPressed is called THEN redirected to action',
     build: () => create(),
     act: (manager) => manager.onActiveSearchNavPressed(),
@@ -193,7 +193,7 @@ void main() {
     },
   );
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'WHEN onSettingsNavPressed is called THEN redirected to action',
     build: () => create(),
     act: (manager) => manager.onSettingsNavPressed(),
@@ -203,7 +203,7 @@ void main() {
     },
   );
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'GIVEN true WHEN _needToShowOnboardingUseCase is called THEN overlay manager called',
     build: () => create(setMockOverlayManager: true),
     setUp: () {
@@ -224,7 +224,7 @@ void main() {
     },
   );
 
-  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+  blocTest<PersonalAreaManager, PersonalAreaState>(
     'GIVEN false WHEN _needToShowOnboardingUseCase is called THEN overlay manager NOT called',
     build: () => create(setMockOverlayManager: true),
     setUp: () {
