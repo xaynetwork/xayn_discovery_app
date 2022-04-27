@@ -12,7 +12,6 @@ import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
 
@@ -151,32 +150,6 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   @override
   void onTrialExpired() =>
       changeStack((stack) => stack.replace(PageRegistry.payment));
-}
-
-@Injectable(as: PersonalAreaNavActions)
-class PersonalAreaNavActionsImpl implements PersonalAreaNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  PersonalAreaNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onHomeNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
-
-  @override
-  void onActiveSearchNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.search));
-
-  @override
-  void onCollectionsNavPressed() {
-    changeStack((stack) => stack.push(PageRegistry.collections));
-  }
-
-  @override
-  void onSettingsNavPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.settings));
 }
 
 @Injectable(as: DiscoveryCardScreenManagerNavActions)
