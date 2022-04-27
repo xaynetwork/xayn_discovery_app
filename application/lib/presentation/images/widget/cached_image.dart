@@ -126,6 +126,9 @@ class _CachedImageState extends State<CachedImage> {
           if (state.hasError) {
             return errorBuilder(context);
           } else if (state.progress < 1.0) {
+            /// We need to set the opacity to 1.0 otherwise
+            /// the loading widget would not be visible
+            opacity = 1.0;
             return loadingBuilder(context, state.progress);
           }
 
