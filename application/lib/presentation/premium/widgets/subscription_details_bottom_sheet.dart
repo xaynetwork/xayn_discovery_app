@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 const String _kTextPlaceholder = '__';
 
@@ -26,18 +27,22 @@ class SubscriptionDetailsBottomSheet extends BottomSheetBase {
         );
 }
 
-class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
+class _SubscriptionDetails extends StatelessWidget
+    with BottomSheetBodyMixin, AnimationPlayerChildBuilderMixin {
   final SubscriptionStatus subscriptionStatus;
   final OnSubscriptionLinkCancelTapped onSubscriptionLinkCancelTapped;
+  @override
+  final String illustrationAssetName =
+      R.assets.lottie.contextual.subscriptionActive;
 
-  const _SubscriptionDetails({
+  _SubscriptionDetails({
     Key? key,
     required this.subscriptionStatus,
     required this.onSubscriptionLinkCancelTapped,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildChild(BuildContext context) {
     final spacer0_5 = SizedBox(height: R.dimen.unit0_5);
     final spacer2 = SizedBox(height: R.dimen.unit2);
     final spacer3 = SizedBox(height: R.dimen.unit3);

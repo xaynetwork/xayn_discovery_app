@@ -14,13 +14,17 @@ class BottomSheetInformationalBody extends StatelessWidget
     required this.title,
     required this.body,
     this.errorCode,
-  }) : super(key: key);
+    String? illustrationAssetName,
+  })  : _illustrationAssetName =
+            illustrationAssetName ?? R.assets.lottie.contextual.error,
+        super(key: key);
 
   final String title;
   final String body;
   final String? errorCode;
+  final String _illustrationAssetName;
   @override
-  final String illustrationAssetName = R.assets.lottie.contextual.error;
+  String get illustrationAssetName => _illustrationAssetName;
 
   @override
   Widget buildChild(BuildContext context) {
