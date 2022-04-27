@@ -275,8 +275,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                 ),
               );
 
-        return Semantics(
-            child: SwipeableDiscoveryCard(
+        return  SwipeableDiscoveryCard(
               onSwipe: (option) => managers.discoveryCardManager.onFeedback(
                 document: document,
                 userReaction: option.toUserReaction(),
@@ -290,10 +289,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               isSwipingEnabled: isSwipingEnabled,
               onFling:
                   managers.discoveryCardManager.triggerHapticFeedbackMedium,
-            ),
-            label: 'data-test=discovery-card',
-            enabled: true,
-            button: true);
+            );
       };
 
   ShaderType _getShaderType(NewsResource newsResource) {

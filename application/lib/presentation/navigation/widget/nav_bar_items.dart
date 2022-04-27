@@ -20,7 +20,7 @@ NavBarItemIconButton buildNavBarItemArrowLeft({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemArrowLeft,
-      semanticsLabel: 'data-test=arrow_left'
+      semanticsLabel: Keys.navBarItemArrowLeft.toString()
     );
 
 NavBarItemIconButton buildNavBarItemLike({
@@ -34,7 +34,7 @@ NavBarItemIconButton buildNavBarItemLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemLike,
-      semanticsLabel: 'data-test=like_button'
+      semanticsLabel: Keys.navBarItemLike.toString()
     );
 
 NavBarItemIconButton buildNavBarItemDisLike({
@@ -48,7 +48,7 @@ NavBarItemIconButton buildNavBarItemDisLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemDisLike,
-      semanticsLabel: 'data-test=dislike_button'
+      semanticsLabel: Keys.navBarItemDisLike.toString()
     );
 
 NavBarItemIconButton buildNavBarItemShare({
@@ -59,7 +59,7 @@ NavBarItemIconButton buildNavBarItemShare({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemShare,
-      semanticsLabel: 'data-test=share_button'
+      semanticsLabel: Keys.navBarItemShare.toString()
     );
 
 NavBarItemIconButton buildNavBarItemEditFont({
@@ -70,7 +70,7 @@ NavBarItemIconButton buildNavBarItemEditFont({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemEditFontSize,
-      semanticsLabel: 'data-test=edit_front_button'
+      semanticsLabel: Keys.navBarItemEditFontSize.toString()
     );
 
 NavBarItemIconButton buildNavBarItemHome({
@@ -84,7 +84,7 @@ NavBarItemIconButton buildNavBarItemHome({
       isHighlighted: isActive,
       onPressed: onPressed,
       key: Keys.navBarItemHome,
-      semanticsLabel: 'data-test=home_button'
+      semanticsLabel: Keys.navBarItemHome.toString()
     );
 
 NavBarItemIconButton buildNavBarItemSearch({
@@ -95,7 +95,7 @@ NavBarItemIconButton buildNavBarItemSearch({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemSearch,
-      semanticsLabel: 'data-test=search_button'
+      semanticsLabel: Keys.navBarItemSearch.toString()
     );
 
 NavBarItemEdit buildNavBarItemSearchActive({
@@ -125,7 +125,7 @@ NavBarItemIconButton buildNavBarItemPersonalArea({
       isHighlighted: isActive,
       onPressed: onPressed,
       key: Keys.navBarItemPersonalArea,
-      semanticsLabel: 'data-test=personal_area_button'
+      semanticsLabel: Keys.navBarItemPersonalArea.toString()
     );
 
 NavBarItemIconButton buildNavBarItemBookmark({
@@ -141,7 +141,7 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onPressed: onPressed,
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
-      semanticsLabel: 'data-test=bookmark_button'
+      semanticsLabel: Keys.navBarItemBookmark.toString()
     );
 
 const configIdSearch = NavBarConfigId('active_search');
