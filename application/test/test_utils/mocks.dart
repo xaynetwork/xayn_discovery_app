@@ -98,6 +98,7 @@ import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_en
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
@@ -192,6 +193,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   NeedToShowOnboardingUseCase,
   MoveBookmarkUseCase,
   OnboardingStatusToDbEntityMapMapper,
+  OverlayManager,
   PackageInfo,
   PaymentFlowErrorToErrorMessageMapper,
   PaymentScreenNavActions,
