@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'app_status.freezed.dart';
@@ -14,6 +15,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required DateTime firstAppLaunchDate,
     required UniqueId id,
     required UniqueId userId,
+    required OnboardingStatus onboardingStatus,
   }) = _AppStatus;
 
   factory AppStatus({
@@ -22,6 +24,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required DateTime lastSeenDate,
     required DateTime firstAppLaunchDate,
     required UniqueId userId,
+    required OnboardingStatus onboardingStatus,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
@@ -30,6 +33,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         firstAppLaunchDate: firstAppLaunchDate,
         id: AppStatus.globalId,
         userId: userId,
+        onboardingStatus: onboardingStatus,
       );
 
   factory AppStatus.initial() => AppStatus._(
@@ -39,6 +43,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         lastSeenDate: DateTime.now(),
         id: AppStatus.globalId,
         userId: UniqueId(),
+        onboardingStatus: const OnboardingStatus.initial(),
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');

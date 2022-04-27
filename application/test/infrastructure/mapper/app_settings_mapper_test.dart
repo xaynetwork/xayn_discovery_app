@@ -29,14 +29,12 @@ void main() {
       );
 
       final map = {
-        0: true,
-        1: 2,
+        AppSettingsFields.appTheme: 2,
       };
       final settings = mapper.fromMap(map);
       expect(
         settings,
         AppSettings.global(
-          isOnboardingDone: true,
           appTheme: AppTheme.dark,
         ),
       );
@@ -48,13 +46,11 @@ void main() {
       );
 
       final settings = AppSettings.global(
-        isOnboardingDone: true,
         appTheme: AppTheme.dark,
       );
       final map = mapper.toMap(settings);
       final expectedMap = {
-        0: true,
-        1: 2,
+        AppSettingsFields.appTheme: 2,
       };
       expect(map, expectedMap);
     });

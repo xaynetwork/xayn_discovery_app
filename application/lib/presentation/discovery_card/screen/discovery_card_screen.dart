@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/widget/reader_mode_unavailable_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
@@ -129,13 +132,16 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
     );
   }
 
-  void checkForError(BuildContext context, DiscoveryCardScreenState state) =>
-      state.whenOrNull(error: (error) {
-        if (error.hasError) {
-          openErrorScreen();
-        }
-        return null;
-      });
+  void checkForError(BuildContext context, DiscoveryCardScreenState state) {
+    state.whenOrNull(
+        populated: _checkIfDocumentNotProcessable,
+        error: (error) {
+          if (error.hasError) {
+            openErrorScreen();
+          }
+          return null;
+        });
+  }
 
   Widget _createCard(Document document) => DiscoveryCardStatic(
         document: document,
@@ -153,5 +159,36 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
     _discoveryCardScreenManager.onReaderModeMenuDisplayed(
       isVisible: isOverlayShown,
     );
+  }
+
+  void _checkIfDocumentNotProcessable(Document document) async {
+    final discoveryCardManager =
+        _cardManagersCache.managersOf(document).discoveryCardManager;
+
+    final processedDocument = await discoveryCardManager.stream
+        .map((it) => it.processedDocument)
+        .startWith(discoveryCardManager.state.processedDocument)
+        .firstWhere((it) => it != null, orElse: () => null);
+
+    if (mounted && processedDocument != null) {
+      final html = processedDocument.processHtmlResult.contents ?? '';
+      final isInvalidHtml = html.trim().isEmpty;
+      if (isInvalidHtml) {
+        final unavailableBottomSheet = ReaderModeUnavailableBottomSheet(
+          onOpenViaBrowser: () => discoveryCardManager.openExternalUrl(
+            url: document.resource.url.toString(),
+            currentView: CurrentView.bookmark,
+          ),
+          onClosePressed: _discoveryCardScreenManager.onBackPressed,
+        );
+
+        showAppBottomSheet(
+          context,
+          builder: (_) => unavailableBottomSheet,
+          allowStacking: false,
+          isDismissible: false,
+        );
+      }
+    }
   }
 }
