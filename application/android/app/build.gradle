@@ -110,7 +110,9 @@ android {
                     'proguard-rules.pro'
 
             ndk {
-                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a
+                /// TEMPORARY disabling armeabi-v7 so that Yellow can fix some v7 issues in the meanwhile
+                /// "armeabi", "armeabi-v7a",
+                abiFilters "arm64-v8a"
             }
         }
 
