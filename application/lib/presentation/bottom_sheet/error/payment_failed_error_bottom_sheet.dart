@@ -11,6 +11,7 @@ class PaymentFailedErrorBottomSheet extends BottomSheetBase {
           body: BottomSheetInformationalBody(
             title: R.strings.paymentFailedBottomSheetTitle,
             body: R.strings.paymentFailedBottomSheetBody,
+            illustrationAssetName: R.assets.lottie.contextual.paymentFailed,
           ),
         );
 }
