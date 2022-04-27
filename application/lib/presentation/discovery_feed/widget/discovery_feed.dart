@@ -67,7 +67,6 @@ class _DiscoveryFeedState
             document: document,
             provider: managers.discoveryCardManager.state.processedDocument
                 ?.getProvider(document.resource),
-            onError: showTooltip,
             feedType: FeedType.feed,
           ),
         );

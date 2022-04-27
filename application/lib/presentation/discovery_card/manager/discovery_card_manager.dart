@@ -32,6 +32,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_da
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -52,7 +53,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         UseCaseBlocHelper<DiscoveryCardState>,
         ChangeUserReactionMixin<DiscoveryCardState>,
         OpenExternalUrlMixin<DiscoveryCardState>,
-        OverlayManagerMixin<DiscoveryCardState>
+        OverlayManagerMixin<DiscoveryCardState>,
+        ErrorHandlingManagerMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
@@ -201,11 +203,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }) {
     showOverlay(
       OverlayData.tooltipBookmarked(
-        document: document,
-        provider: state.processedDocument?.getProvider(document.resource),
-        showTooltip: overlayManager.show,
-        feedType: feedType,
-      ),
+          document: document,
+          onTap: () {
+            showOverlay(OverlayData.bottomSheetMoveDocumentToCollection(
+              document: document,
+              provider: state.processedDocument?.getProvider(document.resource),
+              feedType: feedType,
+            ));
+          }),
       when: (oS, nS) =>
           oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
           nS.bookmarkStatus == BookmarkStatus.bookmarked,
@@ -266,8 +271,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
               errorReport.of(_toggleBookmarkHandler);
           if (report != null) {
             logger.e(report.error);
-
-            return DiscoveryCardState.error(report.error);
+            handleError(report.error);
+            return DiscoveryCardState.error();
           }
         }
 
