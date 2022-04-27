@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -14,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
@@ -140,7 +142,10 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
-      noImageBuilder: (_) => buildBackgroundPane(opaque: false),
+      noImageBuilder: (_) => ColoredBox(
+        color: R.colors.swipeCardBackgroundHome,
+        child: AnimationPlayer.asset(R.assets.lottie.contextual.noImage),
+      ),
     );
   }
 

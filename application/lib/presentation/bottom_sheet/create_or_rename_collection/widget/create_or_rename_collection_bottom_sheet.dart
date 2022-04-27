@@ -55,7 +55,7 @@ class _CreateOrRenameCollection extends StatefulWidget {
 class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
     with
         BottomSheetBodyMixin,
-        AnimationPlayerChildBuilderMixin<_CreateOrRenameCollection> {
+        AnimationPlayerChildBuilderStateMixin<_CreateOrRenameCollection> {
   late final CreateOrRenameCollectionManager _createOrRenameCollectionManager =
       di.get();
   late final TextEditingController _textEditingController;
