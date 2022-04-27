@@ -53,7 +53,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
               ]
             : const [],
         minFlingVelocity: _kMinFlingVelocity,
-        minFlingDragDistanceFraction: .333,
+        minFlingDragDistanceFraction: .222,
         onFling: isPrimary
             ? (options) {
                 onFling?.call();
