@@ -23,7 +23,7 @@ extension on Feature {
       case Feature.discoveryEngineReportOverlay:
         return false;
       case Feature.payment:
-        return EnvironmentHelper.kAppId == 'com.xayn.discovery';
+        return EnvironmentHelper.kIsProductionFlavor;
       case Feature.ratingDialog:
         return EnvironmentHelper.kIsDebug ||
             EnvironmentHelper.kIsInternalFlavor;
