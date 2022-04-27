@@ -19,9 +19,9 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
@@ -33,14 +33,14 @@ import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_t
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/custom_animated_list.dart';
 
-class NewPersonalAreaScreen extends StatefulWidget {
-  const NewPersonalAreaScreen({Key? key}) : super(key: key);
+class PersonalAreaScreen extends StatefulWidget {
+  const PersonalAreaScreen({Key? key}) : super(key: key);
 
   @override
-  NewPersonalAreaScreenState createState() => NewPersonalAreaScreenState();
+  PersonalAreaScreenState createState() => PersonalAreaScreenState();
 }
 
-class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
+class PersonalAreaScreenState extends State<PersonalAreaScreen>
     with
         NavBarConfigMixin,
         TooltipStateMixin,
@@ -48,7 +48,7 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         BottomSheetBodyMixin,
         OverlayMixin,
         CardWidgetTransitionMixin {
-  late final NewPersonalAreaManager _manager = di.get();
+  late final PersonalAreaManager _manager = di.get();
 
   @override
   void initState() {
@@ -106,15 +106,14 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         body: _buildBody(),
       );
 
-  Widget _buildBody() =>
-      BlocBuilder<NewPersonalAreaManager, NewPersonalAreaState>(
+  Widget _buildBody() => BlocBuilder<PersonalAreaManager, PersonalAreaState>(
         bloc: _manager,
         builder: _buildList,
       );
 
   Widget _buildList(
     BuildContext context,
-    NewPersonalAreaState screenState,
+    PersonalAreaState screenState,
   ) {
     final list = CustomAnimatedList<ListItemModel>(
       items: screenState.items,

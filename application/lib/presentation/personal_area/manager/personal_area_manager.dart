@@ -20,13 +20,13 @@ import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
-import 'new_personal_area_state.dart';
+import 'personal_area_state.dart';
 
-abstract class NewPersonalAreaNavActions {
+abstract class PersonalAreaNavActions {
   void onHomeNavPressed();
 
   void onActiveSearchNavPressed();
@@ -37,16 +37,16 @@ abstract class NewPersonalAreaNavActions {
 }
 
 @injectable
-class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
+class PersonalAreaManager extends Cubit<PersonalAreaState>
     with
-        UseCaseBlocHelper<NewPersonalAreaState>,
-        OverlayManagerMixin<NewPersonalAreaState>,
-        OpenExternalUrlMixin<NewPersonalAreaState>,
-        ObserveSubscriptionWindowMixin<NewPersonalAreaState>
-    implements NewPersonalAreaNavActions {
+        UseCaseBlocHelper<PersonalAreaState>,
+        OverlayManagerMixin<PersonalAreaState>,
+        OpenExternalUrlMixin<PersonalAreaState>,
+        ObserveSubscriptionWindowMixin<PersonalAreaState>
+    implements PersonalAreaNavActions {
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
-  final NewPersonalAreaNavActions _navActions;
+  final PersonalAreaNavActions _navActions;
   final DateTimeHandler _dateTimeHandler;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final FeatureManager _featureManager;
@@ -56,7 +56,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
   final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
 
-  NewPersonalAreaManager(
+  PersonalAreaManager(
     this._getAllCollectionsUseCase,
     this._listenCollectionsUseCase,
     this._hapticFeedbackMediumUseCase,
@@ -68,7 +68,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     this._uniqueIdHandler,
     this._needToShowOnboardingUseCase,
     this._markOnboardingTypeCompletedUseCase,
-  ) : super(NewPersonalAreaState.initial()) {
+  ) : super(PersonalAreaState.initial()) {
     _init();
   }
 
@@ -110,7 +110,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
   @override
-  Future<NewPersonalAreaState?> computeState() async {
+  Future<PersonalAreaState?> computeState() async {
     String errorMsg;
     if (_useCaseError != null) {
       return state.copyWith(errorMsg: _useCaseError);
@@ -141,7 +141,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
           _maybeAddOrUpdateTrialBannerToItems();
         }
 
-        return NewPersonalAreaState.populated(
+        return PersonalAreaState.populated(
           _items,
           newTimestamp,
         );
