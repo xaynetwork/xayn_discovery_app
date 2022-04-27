@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
@@ -62,9 +63,15 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   Widget _buildEmptyScreen() => Padding(
         child: Center(
-          child: Text(
-            R.strings.bookmarkScreenNoArticles,
-            style: R.styles.xlBoldStyle,
+          child: Column(
+            children: [
+              AnimationPlayer.asset(
+                  R.linden.assets.lottie.contextual.emptyCollectionB),
+              Text(
+                R.strings.bookmarkScreenNoArticles,
+                style: R.styles.xlBoldStyle,
+              ),
+            ],
           ),
         ),
         padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
