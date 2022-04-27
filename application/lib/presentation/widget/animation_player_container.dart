@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/presentation/widget/illustration.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
-class IllustrationContainer extends StatelessWidget {
+class AnimationPlayerContainer extends StatelessWidget {
   final Widget child;
   final String assetName;
   final VoidCallback? onFinished;
   final double? width;
   final double? height;
 
-  const IllustrationContainer.asset(
+  const AnimationPlayerContainer.asset(
     this.assetName, {
     Key? key,
     required this.child,
@@ -19,7 +19,7 @@ class IllustrationContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final illustration = Illustration.asset(
+    final illustration = AnimationPlayer.asset(
       assetName,
       width: width,
       height: height,
