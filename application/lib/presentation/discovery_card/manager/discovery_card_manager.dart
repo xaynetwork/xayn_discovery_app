@@ -161,9 +161,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
     if (res.mapOrNull(single: (s) => s.value) == null) {
       showOverlay(
-        OverlayData.tooltipDocumentFilter(onTap: () {
-          showOverlay(OverlayData.bottomSheetDocumentFilter(document));
-        }),
+        OverlayData.tooltipDocumentFilter(document: document),
         when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
       );
     }
