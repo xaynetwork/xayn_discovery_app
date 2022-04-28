@@ -59,7 +59,9 @@ class TrialExpired extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AnimationPlayer.asset(R.assets.lottie.contextual.premium),
+            Expanded(
+                child:
+                    AnimationPlayer.asset(R.assets.lottie.contextual.premium)),
             _buildTitle(),
             _buildPricing(),
             _buildPerks(),
