@@ -111,7 +111,6 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
 
           errorMsg = error.toString();
 
-          /// TODO missing error handling
           return state.copyWith(
             errorMsg: errorMsg,
           );
