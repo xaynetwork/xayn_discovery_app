@@ -125,8 +125,7 @@ mixin RequestFeedMixin<T extends DiscoveryState>
         final cleanedUpOldFeed = makeCleanedUpOldFeed(out);
         final actualizedFeed = makeActualizeFeed(cleanedUpOldFeed);
 
-        return makeMarketChangedFeed(
-            actualizedFeed.whereMarketsChanged(onHasActiveListeners));
+        return makeMarketChangedFeed(actualizedFeed.whereMarketsChanged());
       },
     ).autoSubscribe(onError: onError);
   }
@@ -156,13 +155,11 @@ extension _StreamExtension<T> on Stream<T> {
   Stream<EngineEvent> doResetFeedAndRequestNextBatch() =>
       doRequestFeed().doRequestNextBatch();
 
-  Stream<bool> whereMarketsChanged(Stream<bool> sampleOn) =>
-      mapTo(const DbCrudIn.watchAllChanged())
-          .sample(sampleOn)
-          .followedBy(di.get<CrudFeedSettingsUseCase>())
-          .mapTo(FeedType.feed)
-          .followedBy(di.get<AreMarketsOutdatedUseCase>())
-          .where((didMarketsChange) => didMarketsChange);
+  Stream<bool> whereMarketsChanged() => mapTo(const DbCrudIn.watchAllChanged())
+      .followedBy(di.get<CrudFeedSettingsUseCase>())
+      .mapTo(FeedType.feed)
+      .switchedBy(di.get<AreMarketsOutdatedUseCase>())
+      .where((didMarketsChange) => didMarketsChange);
 
   Stream<EngineEvent> finalizeFeedMarketsChange() =>
       mapTo(FeedType.feed).followedBy(di.get<UpdateMarketsUseCase>());

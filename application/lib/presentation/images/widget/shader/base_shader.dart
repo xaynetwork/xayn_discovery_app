@@ -70,7 +70,11 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     if (_cache.hasImageOf(widget.uri)) {
       didResolveImage();
     } else {
-      _decodeBytes(widget.bytes).whenComplete(() => setState(didResolveImage));
+      _decodeBytes(widget.bytes).whenComplete(() {
+        if (mounted) {
+          setState(didResolveImage);
+        }
+      });
     }
   }
 

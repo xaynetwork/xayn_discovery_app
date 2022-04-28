@@ -19,13 +19,11 @@ typedef OnObservation = void Function(
     DiscoveryCardMeasuredObservation observation);
 
 mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
-  StreamSubscription<bool>? _noListenersSubscription;
   UseCaseSink<DiscoveryCardObservation, EngineEvent>? _useCaseSink;
 
   @override
   Future<void> close() {
     _useCaseSink = null;
-    _noListenersSubscription?.cancel();
 
     return super.close();
   }
@@ -45,6 +43,13 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
     );
   }
 
+  @override
+  void onCancel() {
+    observeDocument();
+
+    super.onCancel();
+  }
+
   UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink(
       OnObservation? onObservation) {
     final useCase = di.get<LogDocumentTimeUseCase>();
@@ -55,9 +60,6 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
     final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
     final changeDocumentFeedbackUseCase =
         di.get<ChangeDocumentFeedbackUseCase>();
-
-    _noListenersSubscription =
-        onHasNoActiveListeners.listen((_) => observeDocument());
 
     return pipe(discoveryCardObservationUseCase).transform(
       (out) => out
