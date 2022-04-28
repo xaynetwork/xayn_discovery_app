@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
@@ -29,11 +30,21 @@ class AnimationPlayerContainer extends StatelessWidget {
       onFinished: onFinished,
     );
 
-    return Column(
-      children: [
-        Expanded(child: illustration),
-        child,
-      ],
+    return IntrinsicHeight(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: LimitedBox(
+              maxHeight: _kHeight,
+              child: illustration,
+            ),
+          ),
+          child,
+        ],
+      ),
     );
   }
 }
