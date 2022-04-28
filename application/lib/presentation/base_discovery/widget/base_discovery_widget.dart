@@ -22,7 +22,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
-import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
@@ -57,8 +56,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         TooltipStateMixin<W>,
         SubscriptionTrialBannerStateMixin<W>,
         OverlayMixin<W>,
-        OverlayStateMixin<W>,
-        ErrorHandlingMixin<W> {
+        OverlayStateMixin<W> {
   late final CardViewController _cardViewController = CardViewController();
   late final RatingDialogManager _ratingDialogManager = di.get();
   late final FeatureManager featureManager = di.get();

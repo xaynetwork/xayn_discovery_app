@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
 import 'package:xayn_discovery_app/presentation/widget/connection_snackbar/connection_snackbar.dart';
-import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 const double kExtraBottomOffset = 18.0;
 
@@ -61,7 +60,6 @@ class AppRouter extends xayn.NavigatorDelegate {
         theme: R.linden.themeData,
         home: NavBarContainer(
           child: ApplicationTooltipProvider(
-            messageFactory: XaynMessageProvider.of(XaynMessageSet.values),
             child: stack,
           ),
         ),

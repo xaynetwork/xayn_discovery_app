@@ -21,6 +21,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subs
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
@@ -37,7 +39,10 @@ const _ignoredPaymentErrors = [PaymentFlowError.canceled];
 
 @injectable
 class PaymentScreenManager extends Cubit<PaymentScreenState>
-    with UseCaseBlocHelper<PaymentScreenState>
+    with
+        UseCaseBlocHelper<PaymentScreenState>,
+        OverlayManagerMixin<PaymentScreenState>,
+        ErrorHandlingManagerMixin<PaymentScreenState>
     implements PaymentScreenNavActions {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
@@ -202,7 +207,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
         sendPurchaseEventIfNeeded(_subscriptionProduct);
 
         if (_subscriptionProduct == null && paymentFlowError != null) {
-          return PaymentScreenState.error(error: paymentFlowError);
+          openErrorScreen();
+          return state;
         } else if (_subscriptionProduct != null) {
           return PaymentScreenState.ready(
             product: _subscriptionProduct!,
