@@ -57,12 +57,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   }
 
   @override
-  void dispose() {
-    _manager.close();
-    super.dispose();
-  }
-
-  @override
   OverlayManager get overlayManager => _manager.overlayManager;
 
   @override
