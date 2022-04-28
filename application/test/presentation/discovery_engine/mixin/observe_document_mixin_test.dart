@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../../test_utils/utils.dart';
@@ -90,7 +91,10 @@ void main() {
 }
 
 class _TestBloc extends Cubit<bool>
-    with UseCaseBlocHelper<bool>, ObserveDocumentMixin<bool> {
+    with
+        UseCaseBlocHelper<bool>,
+        SingletonSubscriptionObserver<bool>,
+        ObserveDocumentMixin<bool> {
   _TestBloc() : super(false);
 
   @override
