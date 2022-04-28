@@ -18,7 +18,7 @@ mixin ErrorHandlingManagerMixin<T> on OverlayManagerMixin<T> {
     if (error is ErrorObject && !error.hasError || error == null) return;
 
     if (!showTooltip) {
-      showErrorBottomSheet();
+      showErrorBottomSheet(allowStacking: true);
       return;
     }
 
@@ -26,7 +26,7 @@ mixin ErrorHandlingManagerMixin<T> on OverlayManagerMixin<T> {
         error is ErrorObject ? error.errorObject : error);
 
     if (data == null) {
-      showErrorBottomSheet();
+      showErrorBottomSheet(allowStacking: true);
       return;
     }
 
