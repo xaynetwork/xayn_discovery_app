@@ -54,6 +54,6 @@ class Keys {
 }
 
 extension ValueKeyExtension on Key {
-  String get value => this is ValueKey ? value.toString() : toString();
+  String get valueKey => this is ValueKey ? (this as ValueKey).value : toString();
 
 }
