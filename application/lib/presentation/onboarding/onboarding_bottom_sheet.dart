@@ -11,10 +11,10 @@ class OnboardingBottomSheet extends BottomSheetBase {
     required OnboardingType type,
     required VoidCallback onDismiss,
   }) : super(
-    key: key,
-    body: _OnboardingView(type: type, onDismiss: onDismiss),
-    onSystemPop: onDismiss,
-  );
+          key: key,
+          body: _OnboardingView(type: type, onDismiss: onDismiss),
+          onSystemPop: onDismiss,
+        );
 }
 
 class _OnboardingView extends StatefulWidget {
@@ -90,8 +90,7 @@ class _OnboardingViewState extends State<_OnboardingView>
     );
   }
 
-  Widget _buildCloseBtn() =>
-      SizedBox(
+  Widget _buildCloseBtn() => SizedBox(
         width: double.maxFinite,
         child: AppGhostButton.text(
           R.strings.general.btnClose,
