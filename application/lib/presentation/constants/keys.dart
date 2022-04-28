@@ -12,6 +12,7 @@ class Keys {
   static const Key settingsThemeLight = Key('settings_theme_item_light');
   static const Key settingsThemeDark = Key('settings_theme_item_dark');
 
+
   static const Key settingsScrollDirectionVertical =
       Key('settings_scroll_direction_vertical');
   static const Key settingsScrollDirectionHorizontal =
@@ -50,4 +51,9 @@ class Keys {
   static Key collectionItem(String value) => Key('collectionItem' + value);
   static Key generateCollectionsScreenCardKey(String collectionId) =>
       Key('collections_screen_card' + collectionId);
+}
+
+extension ValueKeyExtension on Key {
+  String get value => this is ValueKey ? value.toString() : toString();
+
 }
