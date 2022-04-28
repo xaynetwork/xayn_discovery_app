@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
@@ -25,9 +24,6 @@ mixin OverlayMixin<T extends StatefulWidget> on TooltipStateMixin<T> {
             style: tooltip.style,
             parameters: <dynamic>[context] + tooltip.tooltipArgs,
           ),
-          bottomSheet: (BottomSheetData<dynamic> bottomSheet) {
-            showAppBottomSheet(context, builder: bottomSheet.build);
-          },
         );
 
         overlayManager.onOverlayRemoved(e);
