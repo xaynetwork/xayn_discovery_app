@@ -255,14 +255,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void triggerHapticFeedbackMedium() => _hapticFeedbackMediumUseCase.call(none);
 
   @override
-  Future<DiscoveryCardState?> computeState() async => fold3(
+  Future<DiscoveryCardState?> computeState() async => fold4(
         _updateUri,
         _isBookmarkedHandler,
         _crudExplicitDocumentFeedbackHandler,
+        _toggleBookmarkHandler,
       ).foldAll((
         processedDocument,
         bookmarkStatus,
         explicitDocumentFeedback,
+        toggleBookmark,
         errorReport,
       ) {
         if (errorReport.isNotEmpty) {
