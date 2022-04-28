@@ -6,12 +6,14 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 import '../../bookmark/manager/bookmarks_screen_manager.dart';
 
 class BookmarkOptionsBottomSheet extends BottomSheetBase {
   BookmarkOptionsBottomSheet({
     required UniqueId bookmarkId,
+    required OnToolTipError onError,
     required VoidCallback onSystemPop,
     Key? key,
   }) : super(
@@ -19,6 +21,7 @@ class BookmarkOptionsBottomSheet extends BottomSheetBase {
           onSystemPop: onSystemPop,
           body: _BookmarkOptions(
             bookmarkId: bookmarkId,
+            onError: onError,
             onSystemPop: onSystemPop,
           ),
         );
@@ -26,13 +29,13 @@ class BookmarkOptionsBottomSheet extends BottomSheetBase {
 
 class _BookmarkOptions extends StatefulWidget {
   final UniqueId bookmarkId;
+  final OnToolTipError onError;
   final VoidCallback? onSystemPop;
-
   const _BookmarkOptions({
     required this.bookmarkId,
+    required this.onError,
     this.onSystemPop,
   });
-
   @override
   __BookmarkOptionsState createState() => __BookmarkOptionsState();
 }
@@ -40,7 +43,6 @@ class _BookmarkOptions extends StatefulWidget {
 class __BookmarkOptionsState extends State<_BookmarkOptions>
     with BottomSheetBodyMixin {
   late final _bookmarkManager = di.get<BookmarksScreenManager>();
-
   @override
   Widget build(BuildContext context) {
     final menuOptions = [
@@ -98,6 +100,7 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
       showBarrierColor: false,
       builder: (_) => MoveBookmarkToCollectionBottomSheet(
         bookmarkId: bookmarkId,
+        onError: widget.onError,
         onSystemPop: widget.onSystemPop,
       ),
     );
