@@ -74,7 +74,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 1badb5f6ad95d574f7ba6321550e1fed2f32a347
+      ref: e1c50a2d58aa33605df61ebdb22049272b18ff25
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release

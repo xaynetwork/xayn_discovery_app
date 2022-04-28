@@ -52,6 +52,7 @@ class ShaderFactory {
               key: key,
               bytes: bytes,
               uri: uri,
+              curve: Curves.linear,
               noImageBuilder: noImageBuilder,
               shadowColor: shadowColor,
               width: width,

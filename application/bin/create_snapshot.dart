@@ -34,6 +34,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_type_markets_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
@@ -170,6 +171,8 @@ void _createAppStatus() {
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
     AppVersionToMapMapper(),
+    OnboardingStatusToDbEntityMapMapper(),
+    DbEntityMapToOnboardingStatusMapper(),
   );
   final repository = HiveAppStatusRepository(mapper);
   final appStatus = AppStatus.initial();

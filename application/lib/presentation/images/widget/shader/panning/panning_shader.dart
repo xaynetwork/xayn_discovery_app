@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart'
 import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/panning/panning_painter.dart';
 
-const int _kPixelDuration = 35;
+const int _kPixelDuration = 45000;
 
 class PanningShader extends BaseAnimationShader {
   const PanningShader({
@@ -65,11 +65,14 @@ class _PanningShaderState extends BaseAnimationShaderState<PanningShader> {
     final width = widget.width;
 
     if (srcImage != null && width != null) {
-      final overflow = srcImage.width - width;
+      final overflow = srcImage.height / srcImage.width;
 
-      if (overflow > .0) {
-        updateDuration(
-            Duration(milliseconds: overflow.toInt() * _kPixelDuration));
+      if (overflow <= .75) {
+        updateDuration(Duration(
+            milliseconds:
+                ((1.0 - overflow * overflow) * _kPixelDuration).toInt()));
+      } else {
+        stop();
       }
     }
 

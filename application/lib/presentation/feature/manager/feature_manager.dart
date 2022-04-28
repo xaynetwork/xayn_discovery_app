@@ -13,8 +13,6 @@ FeatureMap kInitialFeatureMap = {
 extension on Feature {
   bool get defaultValue {
     switch (this) {
-      case Feature.onBoarding:
-        return false;
       case Feature.readerModeSettings:
         return true;
       case Feature.featuresScreen:
@@ -48,8 +46,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get showFeaturesScreen =>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
-
-  bool get showOnboardingScreen => isEnabled(Feature.onBoarding);
 
   bool get isReaderModeSettingsEnabled => isEnabled(Feature.readerModeSettings);
 

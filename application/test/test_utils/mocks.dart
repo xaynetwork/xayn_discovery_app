@@ -27,6 +27,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart'
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
@@ -76,7 +77,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_sel
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/onboarding_completed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
@@ -100,7 +100,6 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
@@ -143,6 +142,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CrudExplicitDocumentFeedbackUseCase,
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
+  DbEntityMapToOnboardingStatusMapper,
   DiscoveryCardManager,
   Document,
   DocumentRepository,
@@ -187,9 +187,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   MapToAppVersionMapper,
   NewPersonalAreaNavActions,
   MoveBookmarkUseCase,
-  OnBoardingCompletedUseCase,
-  OnBoardingManager,
-  OnBoardingNavActions,
+  OnboardingStatusToDbEntityMapMapper,
   PackageInfo,
   PaymentFlowErrorToErrorMessageMapper,
   PaymentScreenNavActions,
