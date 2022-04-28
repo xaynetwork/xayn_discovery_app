@@ -19,11 +19,4 @@ mixin SingletonSubscriptionObserver<T> on UseCaseBlocHelper<T> {
       .stream
       .doOnListen(() => _onSubscriptionActivity.add(true))
       .doOnCancel(() => _onSubscriptionActivity.add(false));
-
-  @override
-  Future<void> close() async {
-    await _onSubscriptionActivity.close();
-
-    return super.close();
-  }
 }
