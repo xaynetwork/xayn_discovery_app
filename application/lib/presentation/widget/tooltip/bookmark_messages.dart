@@ -60,7 +60,7 @@ TooltipParams _getBookmarkedToDefault() {
         document: document,
 
         /// TODO convert onError to nativly use OverlayData
-        onError: (key) => onError(OverlayData.tooltipError(key)),
+        onError: (key) => onError(OverlayData.tooltip(key: key)),
         provider: provider,
         feedType: feedType,
       ),
