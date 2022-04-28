@@ -42,6 +42,7 @@ void main() {
       Provider<ApplicationTooltipController>.value(
         value: tooltipController,
         child: const ApplicationTooltipProvider(
+          messageFactory: {},
           child: PersonalAreaScreen(),
         ),
       ),

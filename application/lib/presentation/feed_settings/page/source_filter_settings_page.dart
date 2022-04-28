@@ -4,6 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
@@ -18,7 +19,8 @@ class SourceFilterSettingsPage extends StatefulWidget {
       _SourceFilterSettingsPageState();
 }
 
-class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage> {
+class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
+    with TooltipStateMixin, ErrorHandlingMixin {
   late final SourceFilterSettingsManager _manager = di.get();
 
   @override
@@ -43,9 +45,10 @@ class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage> {
       );
     }
 
-    return BlocBuilder<SourceFilterSettingsManager, SourceFilterSettingsState>(
+    return BlocConsumer<SourceFilterSettingsManager, SourceFilterSettingsState>(
       bloc: _manager,
       builder: (_, state) => buildReadyState(state),
+      listener: (_, state) => handleError(state.error, showTooltip),
     );
   }
 
