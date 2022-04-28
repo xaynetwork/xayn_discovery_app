@@ -44,6 +44,10 @@ class AppConnectivityObserver extends ConnectivityObserver {
   Future<ConnectivityResult> _verifyConnectivity(
       ConnectivityResult value) async {
     try {
+      // this is required, as the connectivity event seems to be emitted too soon sometimes
+      // the delay adds some time to await the effects
+      await Future.delayed(const Duration(milliseconds: 100));
+
       final result = await InternetAddress.lookup(_host);
 
       // rewrites a false negative if needed
