@@ -12,16 +12,14 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_c
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/swipeable_collection_card.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
+import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
+import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
@@ -33,32 +31,27 @@ import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_t
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/custom_animated_list.dart';
 
-class PersonalAreaScreen extends StatefulWidget {
-  const PersonalAreaScreen({Key? key}) : super(key: key);
+class NewPersonalAreaScreen extends StatefulWidget {
+  const NewPersonalAreaScreen({Key? key}) : super(key: key);
 
   @override
-  PersonalAreaScreenState createState() => PersonalAreaScreenState();
+  NewPersonalAreaScreenState createState() => NewPersonalAreaScreenState();
 }
 
-class PersonalAreaScreenState extends State<PersonalAreaScreen>
+class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
     with
         NavBarConfigMixin,
         TooltipStateMixin,
+        CollectionCardManagersMixin,
         BottomSheetBodyMixin,
-        OverlayMixin,
         CardWidgetTransitionMixin {
-  late final PersonalAreaManager _manager = di.get();
-  late final CollectionCardManagersCache _collectionCardManagersCache =
-      di.get();
+  late final NewPersonalAreaManager _manager = di.get();
 
   @override
-  void initState() {
-    _manager.checkIfNeedToShowOnboarding();
-    super.initState();
+  void dispose() {
+    _manager.close();
+    super.dispose();
   }
-
-  @override
-  OverlayManager get overlayManager => _manager.overlayManager;
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
@@ -99,14 +92,15 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         body: _buildBody(),
       );
 
-  Widget _buildBody() => BlocBuilder<PersonalAreaManager, PersonalAreaState>(
+  Widget _buildBody() =>
+      BlocBuilder<NewPersonalAreaManager, NewPersonalAreaState>(
         bloc: _manager,
         builder: _buildList,
       );
 
   Widget _buildList(
     BuildContext context,
-    PersonalAreaState screenState,
+    NewPersonalAreaState screenState,
   ) {
     final list = CustomAnimatedList<ListItemModel>(
       items: screenState.items,
@@ -158,7 +152,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
-        bloc: _collectionCardManagersCache.managerOf(collection.id),
+        bloc: managerOf(collection.id),
         builder: (context, cardState) {
           final sidePaddings = 2 * R.dimen.unit3;
           return CardWidget(
