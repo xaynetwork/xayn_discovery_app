@@ -12,6 +12,7 @@ class MoveToCollectionState with _$MoveToCollectionState {
   const factory MoveToCollectionState({
     required List<Collection> collections,
     UniqueId? selectedCollectionId,
+    Object? errorObj,
     @Default(false) bool isBookmarked,
     @Default(false) bool shouldClose,
   }) = _MoveToCollectionState;
@@ -32,4 +33,8 @@ class MoveToCollectionState with _$MoveToCollectionState {
         isBookmarked: isBookmarked,
         shouldClose: shouldClose,
       );
+}
+
+extension MoveDocumentToCollectionStateExtension on MoveToCollectionState {
+  bool get hasError => errorObj != null;
 }
