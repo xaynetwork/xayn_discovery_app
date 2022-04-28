@@ -85,7 +85,7 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
     consume(requestSearchUseCase, initialData: none)
         .transform(
           (out) => out
-              .whereMarketsChanged(onHasActiveListeners)
+              .whereMarketsChanged()
               .doOnData(onResetParameters)
               .map(onRestore)
               .doOnData(_closeExplicitFeedback)
@@ -120,11 +120,11 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
 }
 
 extension _StreamExtension on Stream<EngineEvent> {
-  Stream<EngineEvent> whereMarketsChanged(Stream<bool> sampleOn) => switchMap(
+  Stream<EngineEvent> whereMarketsChanged() => switchMap(
         (engineEvent) => Stream.value(const DbCrudIn.watchAllChanged())
             .followedBy(di.get<CrudFeedSettingsUseCase>())
             .mapTo(FeedType.search)
-            .followedBy(di.get<AreMarketsOutdatedUseCase>())
+            .switchedBy(di.get<AreMarketsOutdatedUseCase>())
             .where((didMarketsChange) => didMarketsChange)
             .mapTo(engineEvent),
       );
