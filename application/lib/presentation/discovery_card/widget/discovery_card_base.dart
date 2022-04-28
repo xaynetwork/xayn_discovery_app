@@ -144,7 +144,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => ColoredBox(
         color: R.colors.swipeCardBackgroundHome,
-        child: AnimationPlayer.asset(R.assets.lottie.contextual.noImage),
+        child: AnimationPlayer.assetUnrestrictedSize(
+            R.assets.lottie.contextual.noImage),
       ),
     );
   }

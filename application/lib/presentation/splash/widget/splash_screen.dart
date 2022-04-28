@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(body: _buildBody());
 
   Widget _buildBody() => Center(
-        child: AnimationPlayer.asset(
+        child: AnimationPlayer.assetUnrestrictedSize(
           assetName,
           onFinished: _splashScreenManager.onSplashScreenAnimationFinished,
         ),

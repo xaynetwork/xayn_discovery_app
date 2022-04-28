@@ -56,7 +56,7 @@ abstract class BaseAnimationPainter extends BaseStaticPainter {
   final double _animationValue;
 
   BaseAnimationPainter({
-    required ui.Image image,
+    ui.Image? image,
     required double animationValue,
     Color? shadowColor,
   })  : _animationValue = animationValue,

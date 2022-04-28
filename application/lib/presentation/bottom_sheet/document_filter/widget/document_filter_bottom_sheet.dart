@@ -12,7 +12,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
-import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
