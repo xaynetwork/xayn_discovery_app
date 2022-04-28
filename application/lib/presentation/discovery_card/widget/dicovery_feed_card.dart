@@ -7,8 +7,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -36,11 +34,8 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryFeedCardState();
 }
 
-class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
-    with OverlayMixin<DiscoveryFeedCard> {
-  @override
-  OverlayManager get overlayManager => discoveryCardManager.overlayManager;
-
+class _DiscoveryFeedCardState
+    extends DiscoveryCardBaseState<DiscoveryFeedCard> {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
