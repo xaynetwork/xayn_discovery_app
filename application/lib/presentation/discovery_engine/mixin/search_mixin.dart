@@ -15,10 +15,11 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/requ
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/restore_search_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/update_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-mixin SearchMixin<T> on UseCaseBlocHelper<T> {
+mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
   late final RequestNextSearchBatchUseCase requestNextSearchBatchUseCase =
       di.get<RequestNextSearchBatchUseCase>();
   late final RequestSearchUseCase searchUseCase =
@@ -82,18 +83,20 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
         this.onError(e, s ?? StackTrace.current);
 
     consume(requestSearchUseCase, initialData: none)
-        .transform((out) => out
-            .whereMarketsChanged()
-            .doOnData(onResetParameters)
-            .map(onRestore)
-            .doOnData(_closeExplicitFeedback)
-            .mapTo(none)
-            .followedBy(closeSearchUseCase)
-            .mapTo(FeedType.search)
-            .followedBy(changeMarketsUseCase)
-            .mapTo(lastUsedSearchTerm)
-            .whereType<String>()
-            .doOnData(search))
+        .transform(
+          (out) => out
+              .whereMarketsChanged(onHasActiveListeners)
+              .doOnData(onResetParameters)
+              .map(onRestore)
+              .doOnData(_closeExplicitFeedback)
+              .mapTo(none)
+              .followedBy(closeSearchUseCase)
+              .mapTo(FeedType.search)
+              .followedBy(changeMarketsUseCase)
+              .mapTo(lastUsedSearchTerm)
+              .whereType<String>()
+              .doOnData(search),
+        )
         .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
 
@@ -117,10 +120,10 @@ mixin SearchMixin<T> on UseCaseBlocHelper<T> {
 }
 
 extension _StreamExtension on Stream<EngineEvent> {
-  Stream<EngineEvent> whereMarketsChanged() => switchMap(
+  Stream<EngineEvent> whereMarketsChanged(Stream<bool> sampleOn) => switchMap(
         (engineEvent) => Stream.value(const DbCrudIn.watchAllChanged())
             .followedBy(di.get<CrudFeedSettingsUseCase>())
-            .mapTo(FeedType.feed)
+            .mapTo(FeedType.search)
             .followedBy(di.get<AreMarketsOutdatedUseCase>())
             .where((didMarketsChange) => didMarketsChange)
             .mapTo(engineEvent),

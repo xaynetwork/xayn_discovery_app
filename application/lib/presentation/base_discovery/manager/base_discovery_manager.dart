@@ -27,6 +27,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_mana
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -50,6 +51,7 @@ const int _kThresholdDurationSecondsImplicitLike = 5;
 abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     with
         UseCaseBlocHelper<DiscoveryState>,
+        SingletonSubscriptionObserver<DiscoveryState>,
         ObserveDocumentMixin<DiscoveryState>,
         ChangeUserReactionMixin<DiscoveryState>,
         ObserveSubscriptionWindowMixin<DiscoveryState>,
