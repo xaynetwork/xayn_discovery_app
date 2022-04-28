@@ -3,20 +3,23 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
+const double _kWidth = 200.0;
+const double _kHeight = 200.0;
+
 class AnimationPlayer extends StatefulWidget {
   final String asset;
   final bool isLooping;
   final VoidCallback? onFinished;
-  final double? width;
-  final double? height;
+  final double width;
+  final double height;
 
   const AnimationPlayer.asset(
     this.asset, {
     Key? key,
     this.isLooping = true,
     this.onFinished,
-    this.width,
-    this.height,
+    this.width = _kWidth,
+    this.height = _kHeight,
   }) : super(key: key);
 
   @override

@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -40,15 +41,11 @@ class _DocumentFilterList extends StatefulWidget {
 }
 
 class _DocumentFilterListState extends State<_DocumentFilterList>
-    with
-        BottomSheetBodyMixin,
-        AnimationPlayerChildBuilderStateMixin<_DocumentFilterList> {
+    with BottomSheetBodyMixin {
   late final DocumentFilterManager _manager = di.get(param1: widget.document);
-  @override
-  final String illustrationAssetName = R.assets.lottie.contextual.sourceFilter;
 
   @override
-  Widget buildChild(BuildContext context) {
+  Widget build(BuildContext context) {
     body(Map<DocumentFilter, bool> filters) => filters.isNotEmpty
         ? SelectItemList<DocumentFilter>(
             items: filters.keys.toList(),
@@ -85,15 +82,17 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
         );
 
     return BlocBuilder<DocumentFilterManager, DocumentFilterState>(
-        bloc: _manager,
-        builder: (_, state) => Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                header,
-                Flexible(child: body(state.filters)),
-                footer(state),
-              ],
-            ));
+      bloc: _manager,
+      builder: (_, state) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AnimationPlayer.asset(R.assets.lottie.contextual.sourceFilter),
+          header,
+          Flexible(child: body(state.filters)),
+          footer(state),
+        ],
+      ),
+    );
   }
 }
