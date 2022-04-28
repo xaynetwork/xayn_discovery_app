@@ -16,8 +16,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 
 class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarksToCollectionBottomSheet({
@@ -58,16 +57,9 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 }
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
-    with
-        BottomSheetBodyMixin,
-        CollectionCardManagersMixin,
-        OverlayMixin<_MoveBookmarkToCollection> {
-  late final MoveBookmarksToCollectionManager
-      _moveBookmarksToCollectionManager = di.get();
-
-  @override
-  OverlayManager get overlayManager =>
-      _moveBookmarksToCollectionManager.overlayManager;
+    with BottomSheetBodyMixin, ErrorHandlingMixin, CollectionCardManagersMixin {
+  final MoveBookmarksToCollectionManager _moveBookmarksToCollectionManager =
+      di.get();
 
   @override
   void initState() {
@@ -86,9 +78,12 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   @override
   Widget build(BuildContext context) {
-    final body = BlocBuilder<MoveBookmarksToCollectionManager,
+    final body = BlocConsumer<MoveBookmarksToCollectionManager,
         MoveBookmarksToCollectionState>(
       bloc: _moveBookmarksToCollectionManager,
+      listener: (_, state) {
+        if (state.error.hasError) showErrorBottomSheet(allowStacking: true);
+      },
       builder: (_, state) => state.collections.isNotEmpty
           ? _buildCollectionsList(state)
           : const SizedBox.shrink(),

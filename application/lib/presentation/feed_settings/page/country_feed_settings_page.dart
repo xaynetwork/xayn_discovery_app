@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
+import 'package:xayn_discovery_app/presentation/widget/tooltip/messages.dart';
 
 typedef OnCountryPressed = Function(Country country);
 
@@ -23,11 +24,8 @@ class CountryFeedSettingsPage extends StatefulWidget {
 }
 
 class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
-    with OverlayMixin<CountryFeedSettingsPage> {
+    with TooltipStateMixin, ErrorHandlingMixin {
   late final CountryFeedSettingsManager _manager = di.get();
-
-  @override
-  OverlayManager get overlayManager => _manager.overlayManager;
 
   @override
   void initState() {
@@ -51,6 +49,17 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
 
   Widget _buildBody(BuildContext context) {
     Widget buildReadyState(CountryFeedSettingsStateReady ready) {
+      registerTooltip(
+        key: TooltipKeys.feedSettingsScreenMaxSelectedCountries,
+        params: TooltipParams(
+          label: R.strings.feedSettingsScreenMaxSelectedCountriesError
+              .format(ready.maxSelectedCountryAmount.toString()),
+          builder: (_) => CustomizedTextualNotification(
+            labelTextStyle: R.styles.tooltipHighlightTextStyle,
+          ),
+        ),
+      );
+
       return SelectCountries(
         maxSelectedCountryAmount: ready.maxSelectedCountryAmount,
         selectedCountries: ready.selectedCountries,
@@ -60,11 +69,14 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
       );
     }
 
-    return BlocBuilder<CountryFeedSettingsManager, CountryFeedSettingsState>(
+    return BlocConsumer<CountryFeedSettingsManager, CountryFeedSettingsState>(
       bloc: _manager,
       builder: (_, state) => state.map(
         initial: (state) => const Center(),
         ready: buildReadyState,
+      ),
+      listener: (_, state) => state.whenOrNull(
+        ready: (_, __, ___, error) => handleError(error, showTooltip),
       ),
     );
   }

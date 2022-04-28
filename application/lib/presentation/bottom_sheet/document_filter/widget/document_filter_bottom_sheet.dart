@@ -14,6 +14,8 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
+typedef OnMoveDocumentToCollectionError = void Function(TooltipKey);
+
 class DocumentFilterBottomSheet extends BottomSheetBase {
   DocumentFilterBottomSheet({
     Key? key,

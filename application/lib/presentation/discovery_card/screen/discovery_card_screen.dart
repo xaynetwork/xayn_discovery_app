@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_mana
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -35,7 +36,11 @@ class DiscoveryCardScreen extends StatefulWidget {
 }
 
 class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
-    with NavBarConfigMixin, OverlayStateMixin {
+    with
+        NavBarConfigMixin,
+        ErrorHandlingMixin,
+        TooltipStateMixin,
+        OverlayStateMixin {
   late final DiscoveryCardScreenManager _discoveryCardScreenManager =
       di.get(param1: widget.documentId);
   late final FeatureManager featureManager = di.get();
@@ -50,6 +55,10 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
               onPressed: _discoveryCardScreenManager.onBackPressed),
         ),
         populated: (p) => _createDocumentNavbar(p.document),
+        error: (_) => NavBarConfig.backBtn(
+          buildNavBarItemBack(
+              onPressed: _discoveryCardScreenManager.onBackPressed),
+        ),
       );
 
   NavBarConfig _createDocumentNavbar(Document document) {
@@ -66,6 +75,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
             document: document,
             provider: discoveryCardManager.state.processedDocument
                 ?.getProvider(document.resource),
+            onError: showTooltip,
           ),
         );
 
@@ -107,11 +117,13 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         data: ttsData,
         child: Padding(
           padding: EdgeInsets.only(top: topPadding),
-          child:
-              BlocBuilder<DiscoveryCardScreenManager, DiscoveryCardScreenState>(
+          child: BlocConsumer<DiscoveryCardScreenManager,
+              DiscoveryCardScreenState>(
+            listener: checkForError,
             builder: (context, state) => state.map(
               populated: (v) => _createCard(v.document),
               initial: (_) => Container(),
+              error: (_) => Container(),
             ),
             bloc: _discoveryCardScreenManager,
           ),
@@ -122,9 +134,13 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
   void checkForError(BuildContext context, DiscoveryCardScreenState state) {
     state.whenOrNull(
-      /// TODO move this to manager
-      populated: _checkIfDocumentNotProcessable,
-    );
+        populated: _checkIfDocumentNotProcessable,
+        error: (error) {
+          if (error.hasError) {
+            openErrorScreen();
+          }
+          return null;
+        });
   }
 
   Widget _createCard(Document document) => DiscoveryCardStatic(
