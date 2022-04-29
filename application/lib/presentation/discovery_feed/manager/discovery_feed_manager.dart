@@ -200,6 +200,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   void resetParameters([int nextCardIndex = 0]) {
+    _isLoading = nextCardIndex == 0;
+
     resetCardIndex(nextCardIndex);
     // clears the current pending observation, if any...
     observeDocument();

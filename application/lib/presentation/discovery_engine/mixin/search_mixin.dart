@@ -69,11 +69,10 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
     _didStartConsuming = true;
 
     final requestSearchUseCase = di.get<RestoreSearchUseCase>();
-    final lastUsedSearchTerm =
-        _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
-
     final closeSearchUseCase = di.get<CloseSearchUseCase>();
     final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
+
+    _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
 
     onResetParameters(_) => resetParameters();
     onRestore(EngineEvent it) => it is RestoreSearchSucceeded
@@ -81,6 +80,13 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
         : const <DocumentId>{};
     onError(Object e, StackTrace? s) =>
         this.onError(e, s ?? StackTrace.current);
+    onReloadSearchInNewMarket([_]) async {
+      final searchTerm = await _restoreLastUsedSearchTerm();
+
+      await changeMarketsUseCase(FeedType.search);
+
+      if (searchTerm != null) search(searchTerm);
+    }
 
     consume(requestSearchUseCase, initialData: none)
         .transform(
@@ -91,11 +97,7 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
               .doOnData(_closeExplicitFeedback)
               .mapTo(none)
               .followedBy(closeSearchUseCase)
-              .mapTo(FeedType.search)
-              .followedBy(changeMarketsUseCase)
-              .mapTo(lastUsedSearchTerm)
-              .whereType<String>()
-              .doOnData(search),
+              .asyncMap(onReloadSearchInNewMarket),
         )
         .autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
   }
@@ -104,7 +106,9 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
     final getSearchTermUseCase = di.get<GetSearchTermUseCase>();
     final result = await getSearchTermUseCase.singleOutput(none);
 
-    return result is SearchTermRequestSucceeded ? result.searchTerm : null;
+    return result is SearchTermRequestSucceeded
+        ? result.searchTerm
+        : _lastUsedSearchTerm;
   }
 
   void _closeExplicitFeedback(Set<DocumentId> documents) {
