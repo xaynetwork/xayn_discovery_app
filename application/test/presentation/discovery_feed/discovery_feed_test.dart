@@ -159,7 +159,7 @@ void main() async {
       DiscoveryState(
         results: {fakeDocumentA, fakeDocumentB},
         cardIndex: 1,
-        isComplete: false,
+        isComplete: true,
         isFullScreen: false,
         isInErrorState: false,
         didReachEnd: false,
