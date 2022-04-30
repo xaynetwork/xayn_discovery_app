@@ -112,6 +112,7 @@ NavBarItemEdit buildNavBarItemSearchActive({
       autofocus: autofocus,
       initialText: initialText,
       key: Keys.navBarItemSearch,
+      semanticsLabel: Keys.navBarItemSearch.valueKey
     );
 
 NavBarItemIconButton buildNavBarItemPersonalArea({
