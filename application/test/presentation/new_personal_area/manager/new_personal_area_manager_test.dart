@@ -100,8 +100,10 @@ void main() {
   setUp(
     () {
       di.allowReassignment = true;
-      di.registerLazySingleton<SendAnalyticsUseCase>(
-          () => SendAnalyticsUseCase(MockAnalyticsService()));
+      di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
+            MockAnalyticsService(),
+            MockMarketingAnalyticsService(),
+          ));
       urlOpener = MockUrlOpener();
       di.registerLazySingleton<UrlOpener>(() => urlOpener);
       getAllCollectionsUseCase = MockGetAllCollectionsUseCase();

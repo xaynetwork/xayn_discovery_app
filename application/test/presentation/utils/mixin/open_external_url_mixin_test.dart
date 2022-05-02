@@ -15,16 +15,21 @@ import '../../../test_utils/utils.dart';
 void main() {
   late MockUrlOpener urlOpener;
   late MockAnalyticsService analyticsService;
+  late MockMarketingAnalyticsService marketingAnalyticsService;
+
   const mockUrl =
       'https://www.msn.com/en-us/news/world/biden-says-nord-stream-2-won-t-go-forward-if-russia-invades-ukraine-but-german-chancellor-demurs/ar-AATzYRX';
 
   setUp(() {
     urlOpener = MockUrlOpener();
     analyticsService = MockAnalyticsService();
+    marketingAnalyticsService = MockMarketingAnalyticsService();
 
     di.registerLazySingleton<UrlOpener>(() => urlOpener);
-    di.registerLazySingleton<SendAnalyticsUseCase>(
-        () => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
+          analyticsService,
+          marketingAnalyticsService,
+        ));
 
     when(analyticsService.send(any)).thenAnswer((_) => Future.value());
     when(urlOpener.openUrl(any)).thenReturn(null);
