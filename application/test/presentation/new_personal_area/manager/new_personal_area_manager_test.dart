@@ -41,6 +41,7 @@ void main() {
       Collection(id: UniqueId(), name: 'Collection1 name', index: 0);
   final collection2 =
       Collection(id: UniqueId(), name: 'Collection2 name', index: 1);
+  final contacts = ListItemModel.contact(id: paymentItemId);
 
   final collectionsList = [
     ListItemModel.collection(
@@ -50,7 +51,8 @@ void main() {
     ListItemModel.collection(
       id: collection2.id,
       collection: collection2,
-    )
+    ),
+    contacts,
   ];
 
   final populatedStateOnlyCollections = NewPersonalAreaState.populated(
@@ -66,6 +68,7 @@ void main() {
       ),
       collectionsList[0],
       collectionsList[1],
+      contacts,
     ],
     timeStamp,
   );
