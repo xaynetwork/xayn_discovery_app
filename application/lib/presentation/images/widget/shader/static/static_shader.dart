@@ -33,6 +33,8 @@ class _StaticShaderState extends BaseStaticShaderState<StaticShader> {
   Widget build(BuildContext context) {
     final srcImage = image;
 
+    if (!hasImage) return Container();
+
     if (srcImage == null) {
       return SizedBox(
         width: widget.width,
