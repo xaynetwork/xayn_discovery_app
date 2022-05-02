@@ -10,7 +10,7 @@ import 'package:xayn_discovery_app/presentation/collections/manager/collection_c
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/swipeable_collection_card.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -35,10 +35,10 @@ class CollectionsScreen extends StatefulWidget {
 class _CollectionsScreenState extends State<CollectionsScreen>
     with
         NavBarConfigMixin,
-        CollectionCardManagersMixin,
         BottomSheetBodyMixin,
         CardWidgetTransitionMixin {
   CollectionsScreenManager? _collectionsScreenManager;
+  late final CollectionCardManagersCache _collectionCardManagersCache = di.get();
 
   @override
   void initState() {
@@ -139,7 +139,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
 
   Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
-        bloc: managerOf(collection.id),
+        bloc: _collectionCardManagersCache.managerOf(collection.id),
         builder: (context, cardState) {
           return CardWidget(
             cardData: CardData.collectionsScreen(
