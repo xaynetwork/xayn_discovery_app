@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
 import 'new_personal_area_state.dart';
 
@@ -34,6 +35,7 @@ abstract class NewPersonalAreaNavActions {
 class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     with
         UseCaseBlocHelper<NewPersonalAreaState>,
+        OpenExternalUrlMixin<NewPersonalAreaState>,
         ObserveSubscriptionWindowMixin<NewPersonalAreaState>
     implements NewPersonalAreaNavActions {
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
@@ -70,6 +72,8 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   );
   late SubscriptionStatus _subscriptionStatus;
   List<ListItemModel> _items = [];
+  late final _contactItem =
+      ListItemModel.contact(id: _uniqueIdHandler.generateUniqueId());
   String? _useCaseError;
 
   void _init() {
@@ -83,7 +87,8 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
               collection: e,
             ),
           )
-          .toList();
+          .toList()
+        ..add(_contactItem);
 
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
@@ -142,10 +147,12 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
             collection: e,
           ),
         )
-        .toList();
+        .toList()
+      ..add(_contactItem);
     _items.first.map(
       payment: (_) => _items.replaceRange(1, _items.length, newCollectionItems),
       collection: (_) => _items = newCollectionItems,
+      contact: (_) => _items = newCollectionItems,
     );
   }
 
@@ -165,6 +172,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
         payment: (data) => _items.first = data.copyWith(
           trialEndDate: trialEndDate,
         ),
+        contact: (data) => {},
       );
     }
   }
