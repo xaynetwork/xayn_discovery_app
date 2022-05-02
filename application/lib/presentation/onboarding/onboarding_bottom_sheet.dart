@@ -62,6 +62,7 @@ class _OnboardingViewState extends State<_OnboardingView>
         width: double.maxFinite,
         child: AppGhostButton.text(
           R.strings.general.btnClose,
+          backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
           onPressed: () {
             widget.onDismiss();
             closeBottomSheet(context);
