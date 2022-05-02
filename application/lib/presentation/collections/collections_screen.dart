@@ -33,12 +33,10 @@ class CollectionsScreen extends StatefulWidget {
 }
 
 class _CollectionsScreenState extends State<CollectionsScreen>
-    with
-        NavBarConfigMixin,
-        BottomSheetBodyMixin,
-        CardWidgetTransitionMixin {
+    with NavBarConfigMixin, BottomSheetBodyMixin, CardWidgetTransitionMixin {
   CollectionsScreenManager? _collectionsScreenManager;
-  late final CollectionCardManagersCache _collectionCardManagersCache = di.get();
+  late final CollectionCardManagersCache _collectionCardManagersCache =
+      di.get();
 
   @override
   void initState() {
