@@ -38,6 +38,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
 
   ui.Image? get image => _cache.imageOf(widget.uri);
+  bool get hasImage => _cache.hasImageOf(widget.uri);
 
   @override
   void initState() {
@@ -79,6 +80,8 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   }
 
   Future<ui.Image?> _decodeBytes(Uint8List bytes) async {
+    if (_cache.hasImageOf(widget.uri)) return _cache.imageOf(widget.uri);
+
     try {
       final codec = await ui.instantiateImageCodec(bytes);
       final frameInfo = await codec.getNextFrame();
@@ -93,6 +96,8 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
       return frameInfo.image;
     } catch (e) {
       logger.i('Unable to decode image at: ${widget.uri}');
+
+      _cache.update(widget.uri, image: null);
     }
 
     return null;
