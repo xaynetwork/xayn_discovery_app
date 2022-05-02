@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -73,7 +74,8 @@ class CardWidget extends StatelessWidget {
           BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
             bloc: _shadowManager,
             builder: (_, state) => StaticShader(
-              uri: Uri.dataFromString(title),
+              /// ignore the encoding of the title
+              uri: Uri.dataFromBytes(utf8.encode(title)),
               noImageBuilderIsShadowless: true,
               width: width,
               height: CardWidgetData.cardHeight,
