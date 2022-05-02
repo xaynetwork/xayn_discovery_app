@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
-import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 
 part 'country_feed_settings_state.freezed.dart';
 
@@ -12,6 +11,5 @@ class CountryFeedSettingsState with _$CountryFeedSettingsState {
     required int maxSelectedCountryAmount,
     required List<Country> selectedCountries,
     required List<Country> unSelectedCountries,
-    @Default(ErrorObject()) ErrorObject error,
   }) = CountryFeedSettingsStateReady;
 }

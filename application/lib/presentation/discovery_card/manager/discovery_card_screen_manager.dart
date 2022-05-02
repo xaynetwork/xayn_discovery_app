@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 abstract class DiscoveryCardScreenManagerNavActions {
@@ -15,7 +16,10 @@ abstract class DiscoveryCardScreenManagerNavActions {
 
 @injectable
 class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
-    with UseCaseBlocHelper<DiscoveryCardScreenState>
+    with
+        UseCaseBlocHelper<DiscoveryCardScreenState>,
+        OverlayManagerMixin<DiscoveryCardScreenState>,
+        ErrorHandlingManagerMixin<DiscoveryCardScreenState>
     implements DiscoveryCardScreenManagerNavActions {
   DiscoveryCardScreenManager(
     @factoryParam UniqueId? documentId,
@@ -46,7 +50,8 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
           final error = errorReport.of(_getDocumentHandler);
           logger.e(
               'Could not retrieve document', error?.error, error?.stackTrace);
-          return DiscoveryCardScreenState.error(error: ErrorObject(error));
+          openErrorScreen();
+          // return DiscoveryCardScreenState.error();
         }
       });
 

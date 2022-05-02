@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
@@ -11,6 +10,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmar
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'move_bookmarks_to_collection_state.dart';
@@ -18,7 +19,10 @@ import 'move_bookmarks_to_collection_state.dart';
 @injectable
 class MoveBookmarksToCollectionManager
     extends Cubit<MoveBookmarksToCollectionState>
-    with UseCaseBlocHelper<MoveBookmarksToCollectionState> {
+    with
+        UseCaseBlocHelper<MoveBookmarksToCollectionState>,
+        OverlayManagerMixin<MoveBookmarksToCollectionState>,
+        ErrorHandlingManagerMixin<MoveBookmarksToCollectionState> {
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final MoveBookmarksUseCase _moveBookmarksUseCase;
   final RemoveCollectionUseCase _removeCollectionUseCase;
@@ -93,7 +97,8 @@ class MoveBookmarksToCollectionManager
         if (errorReport.isNotEmpty) {
           final error = errorReport.of(_collectionsHandler)!.error;
           logger.e(error);
-          return state.copyWith(error: ErrorObject(error));
+          handleError(error);
+          return state;
         }
 
         if (usecaseOut != null) {
