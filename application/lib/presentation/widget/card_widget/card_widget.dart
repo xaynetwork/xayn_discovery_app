@@ -62,6 +62,7 @@ class CardWidget extends StatelessWidget {
     Widget withBackgroundImage({
       Uint8List? backgroundImage,
       double? width,
+      required String title,
     }) {
       final empty = SvgPicture.asset(
         R.assets.graphics.formsEmptyCollection,
@@ -72,7 +73,7 @@ class CardWidget extends StatelessWidget {
           BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
             bloc: _shadowManager,
             builder: (_, state) => StaticShader(
-              uri: Uri.dataFromBytes(bytes),
+              uri: Uri.dataFromString(title),
               noImageBuilderIsShadowless: true,
               width: width,
               height: CardWidgetData.cardHeight,
@@ -103,10 +104,12 @@ class CardWidget extends StatelessWidget {
       collectionsScreen: (it) => withBackgroundImage(
         backgroundImage: it.backgroundImage,
         width: it.cardWidth,
+        title: it.title,
       ),
       bookmark: (it) => withBackgroundImage(
         backgroundImage: it.backgroundImage,
         width: it.cardWidth,
+        title: it.title,
       ),
     );
 
