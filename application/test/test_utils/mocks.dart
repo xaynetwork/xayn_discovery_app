@@ -3,6 +3,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
+import 'dart:ui' as ui;
 import 'package:in_app_review/in_app_review.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
@@ -175,6 +176,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HiveExplicitDocumentFeedbackRepository,
   HiveAppSettingsRepository,
   InAppReview,
+  ui.Image,
   IncrementAppSessionUseCase,
   IntToAppThemeMapper,
   IsBookmarkedUseCase,
