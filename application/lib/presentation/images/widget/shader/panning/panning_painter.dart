@@ -7,7 +7,7 @@ class PanningPainter extends BaseAnimationPainter {
   late final _paint = Paint();
 
   PanningPainter({
-    required ui.Image image,
+    ui.Image? image,
     required double animationValue,
     Color? shadowColor,
   }) : super(

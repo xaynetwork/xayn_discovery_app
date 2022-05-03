@@ -82,6 +82,11 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     try {
       final codec = await ui.instantiateImageCodec(bytes);
       final frameInfo = await codec.getNextFrame();
+      final minWidth = widget.width ?? double.maxFinite;
+
+      if (frameInfo.image.width < minWidth) {
+        return null;
+      }
 
       _cache.update(widget.uri, image: frameInfo.image);
 

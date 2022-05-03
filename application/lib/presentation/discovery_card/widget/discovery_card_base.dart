@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -14,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
@@ -130,6 +132,36 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     buildBackgroundPane({required bool opaque}) =>
         Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
 
+    getDeterministicNoImage() {
+      final deterministicRandom = widget.document.resource.hashCode % 4;
+      late String assetName;
+      late Color background;
+
+      switch (deterministicRandom) {
+        case 0:
+          background = R.colors.noImage1;
+          assetName = R.assets.lottie.contextual.noImageA;
+          break;
+        case 1:
+          background = R.colors.noImage2;
+          assetName = R.assets.lottie.contextual.noImageB;
+          break;
+        case 2:
+          background = R.colors.noImage3;
+          assetName = R.assets.lottie.contextual.noImageC;
+          break;
+        default:
+          background = R.colors.noImage4;
+          assetName = R.assets.lottie.contextual.noImageD;
+          break;
+      }
+
+      return ColoredBox(
+        color: background,
+        child: AnimationPlayer.assetUnrestrictedSize(assetName),
+      );
+    }
+
     return CachedImage(
       imageManager: imageManager,
       shaderBuilder: widget.primaryCardShader,
@@ -140,7 +172,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
-      noImageBuilder: (_) => buildBackgroundPane(opaque: false),
+      noImageBuilder: (_) => getDeterministicNoImage(),
     );
   }
 

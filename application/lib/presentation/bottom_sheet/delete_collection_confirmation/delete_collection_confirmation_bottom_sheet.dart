@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_c
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 import 'manager/delete_collection_confirmation_manager.dart';
 
@@ -50,13 +51,18 @@ class _DeleteCollection extends StatefulWidget {
 }
 
 class _CreateCollectionState extends State<_DeleteCollection>
-    with BottomSheetBodyMixin {
+    with
+        BottomSheetBodyMixin,
+        AnimationPlayerChildBuilderStateMixin<_DeleteCollection> {
   late final DeleteCollectionConfirmationManager
       _deleteCollectionConfirmationManager = di.get()
         ..enteringScreen(widget.collectionId);
+  @override
+  final String illustrationAssetName =
+      R.assets.lottie.contextual.deleteCollection;
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<
+  Widget buildChild(BuildContext context) => BlocBuilder<
           DeleteCollectionConfirmationManager,
           DeleteCollectionConfirmationState>(
         bloc: _deleteCollectionConfirmationManager,

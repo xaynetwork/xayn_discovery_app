@@ -63,18 +63,27 @@ class CardWidget extends StatelessWidget {
       Uint8List? backgroundImage,
       double? width,
     }) {
+      final empty = SvgPicture.asset(
+        R.assets.graphics.formsEmptyCollection,
+        height: CardWidgetData.cardHeight,
+      );
+
       buildMemoryImage(Uint8List bytes) =>
           BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
             bloc: _shadowManager,
             builder: (_, state) => StaticShader(
               uri: Uri.dataFromBytes(bytes),
+              noImageBuilderIsShadowless: true,
               width: width,
               height: CardWidgetData.cardHeight,
               bytes: bytes,
               shadowColor: R.isDarkMode
                   ? state.readerModeBackgroundColor.color
                   : R.colors.swipeCardBackgroundHome,
-              noImageBuilder: (_) => Container(),
+              noImageBuilder: (_) => Align(
+                alignment: Alignment.centerRight,
+                child: empty,
+              ),
             ),
           );
 
@@ -83,10 +92,7 @@ class CardWidget extends StatelessWidget {
               borderRadius: getCardRadius(context),
               child: buildMemoryImage(backgroundImage),
             )
-          : SvgPicture.asset(
-              R.assets.graphics.formsEmptyCollection,
-              height: CardWidgetData.cardHeight,
-            );
+          : empty;
     }
 
     final Widget background = cardData.map(

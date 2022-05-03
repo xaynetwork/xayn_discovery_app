@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 typedef _OnApplyPressed = Function(Collection)?;
 
@@ -52,10 +53,15 @@ class _CreateOrRenameCollection extends StatefulWidget {
 }
 
 class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
-    with BottomSheetBodyMixin {
+    with
+        BottomSheetBodyMixin,
+        AnimationPlayerChildBuilderStateMixin<_CreateOrRenameCollection> {
   late final CreateOrRenameCollectionManager _createOrRenameCollectionManager =
       di.get();
   late final TextEditingController _textEditingController;
+  @override
+  final String illustrationAssetName =
+      R.assets.lottie.contextual.createCollection;
 
   bool get isRenameMode => widget.collection != null;
 
@@ -72,7 +78,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
   }
 
   @override
-  Widget build(BuildContext context) => BlocConsumer<
+  Widget buildChild(BuildContext context) => BlocConsumer<
           CreateOrRenameCollectionManager, CreateOrRenameCollectionState>(
         bloc: _createOrRenameCollectionManager,
         listenWhen: (_, current) => current.newCollection != null,
