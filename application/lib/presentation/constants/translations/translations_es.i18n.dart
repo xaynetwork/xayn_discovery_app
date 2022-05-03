@@ -222,6 +222,9 @@ class TranslationsEs extends Translations {
   String get readerModeUnableToLoadCTA => """Abrir en el navegador""";
   String get noInternetConnection => """No hay conexión de internet""";
   String get invalidSearch => """Please enter a valid search term""";
+  OnboardingBottomDialogTranslationsEs get onboardingBottomDialog =>
+      OnboardingBottomDialogTranslationsEs(this);
+  GeneralTranslationsEs get general => GeneralTranslationsEs(this);
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -235,6 +238,29 @@ class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
   String get transactionFailed => """Transacción de pago fallida""";
   String get noActiveSubscriptionFound =>
       """No pudimos encontrar ninguna subscripción activa para esta cuenta.""";
+}
+
+class OnboardingBottomDialogTranslationsEs
+    extends OnboardingBottomDialogTranslations {
+  final TranslationsEs _parent;
+  const OnboardingBottomDialogTranslationsEs(this._parent) : super(_parent);
+  String get homeSwipeVerticalTitle =>
+      """Swipe upwards to see the next article""";
+  String get homeSwipeVerticalMsg =>
+      """Our continuous feed gets better and better every time you like and dislike the content here.""";
+  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+  String get homeManageBookmarksTitle =>
+      """Long press the save button to manage it""";
+  String get collectionManageTitle =>
+      """Long press or swipe to manage your collections""";
+  String get bookmarksManageTitle =>
+      """Long press or swipe to manage your bookmarks""";
+}
+
+class GeneralTranslationsEs extends GeneralTranslations {
+  final TranslationsEs _parent;
+  const GeneralTranslationsEs(this._parent) : super(_parent);
+  String get btnClose => """Close""";
 }
 
 Map<String, String> get translationsEsMap => {
@@ -409,4 +435,17 @@ Map<String, String> get translationsEsMap => {
       """readerModeUnableToLoadCTA""": """Abrir en el navegador""",
       """noInternetConnection""": """No hay conexión de internet""",
       """invalidSearch""": """Please enter a valid search term""",
+      """onboardingBottomDialog.homeSwipeVerticalTitle""":
+          """Swipe upwards to see the next article""",
+      """onboardingBottomDialog.homeSwipeVerticalMsg""":
+          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+      """onboardingBottomDialog.homeSwipeSideTitle""":
+          """Swipe sideways to like or dislike""",
+      """onboardingBottomDialog.homeManageBookmarksTitle""":
+          """Long press the save button to manage it""",
+      """onboardingBottomDialog.collectionManageTitle""":
+          """Long press or swipe to manage your collections""",
+      """onboardingBottomDialog.bookmarksManageTitle""":
+          """Long press or swipe to manage your bookmarks""",
+      """general.btnClose""": """Close""",
     };

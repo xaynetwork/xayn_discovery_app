@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_deleted_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -11,7 +12,11 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 
 import 'bookmarks_screen_state.dart';
 
@@ -27,7 +32,9 @@ abstract class BookmarksScreenNavActions {
 
 @injectable
 class BookmarksScreenManager extends Cubit<BookmarksScreenState>
-    with UseCaseBlocHelper<BookmarksScreenState>
+    with
+        UseCaseBlocHelper<BookmarksScreenState>,
+        OverlayManagerMixin<BookmarksScreenState>
     implements BookmarksScreenNavActions {
   final ListenBookmarksUseCase _listenBookmarksUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
@@ -37,6 +44,8 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final UniqueId? _collectionId;
+  final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
+  final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
 
   BookmarksScreenManager(
     this._listenBookmarksUseCase,
@@ -45,6 +54,8 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     this._bookmarkErrorsEnumMapper,
     this._dateTimeHandler,
     this._bookmarksScreenNavActions,
+    this._needToShowOnboardingUseCase,
+    this._markOnboardingTypeCompletedUseCase,
     this._sendAnalyticsUseCase, {
 
     /// Required param to load a collection when entering a screen, alternatively call [enteringScreen]
@@ -153,4 +164,14 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
         isPrimary: true,
         feedType: feedType,
       );
+
+  void checkIfNeedToShowOnboarding() async {
+    const type = OnboardingType.bookmarksManage;
+    final show = await _needToShowOnboardingUseCase.singleOutput(type);
+    if (!show) return;
+    final data = OverlayData.bottomSheetOnboarding(type, () {
+      _markOnboardingTypeCompletedUseCase.call(type);
+    });
+    showOverlay(data);
+  }
 }

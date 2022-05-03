@@ -16,6 +16,8 @@ import 'package:xayn_discovery_app/presentation/collections/util/collection_card
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
@@ -44,14 +46,24 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
         TooltipStateMixin,
         CollectionCardManagersMixin,
         BottomSheetBodyMixin,
+        OverlayMixin,
         CardWidgetTransitionMixin {
   late final NewPersonalAreaManager _manager = di.get();
+
+  @override
+  void initState() {
+    _manager.checkIfNeedToShowOnboarding();
+    super.initState();
+  }
 
   @override
   void dispose() {
     _manager.close();
     super.dispose();
   }
+
+  @override
+  OverlayManager get overlayManager => _manager.overlayManager;
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig(
