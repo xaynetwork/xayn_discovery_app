@@ -48,7 +48,6 @@ void main() async {
         final appSettings = repository.settings;
 
         expect(appSettings, isNotNull);
-        expect(appSettings.isOnboardingDone, isFalse);
         expect(
           appSettings.appTheme,
           equals(AppTheme.system),

@@ -11,7 +11,6 @@ import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source_filter_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/new_personal_area_screen.dart';
-import 'package:xayn_discovery_app/presentation/onboarding/widget/onboarding_screen.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
@@ -31,7 +30,6 @@ class PageRegistry {
     search,
     personalArea,
     settings,
-    onboarding,
     countryFeedSettings,
     sourceFeedSettings,
     collections,
@@ -99,20 +97,6 @@ class PageRegistry {
     name: "settings",
     //ignore: prefer_const_constructors
     builder: (_, args) => SettingsScreen(),
-  );
-  static final onboarding = xayn.PageData(
-    name: "onboarding",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => OnBoardingScreen(),
-    pageBuilder: (_, widget) => xayn.CustomTransitionPage(
-      name: "onboarding",
-      child: widget,
-      opaque: false,
-      transitionsBuilder: (_, a1, a2, widget) => FadeTransition(
-        opacity: a1,
-        child: widget,
-      ),
-    ),
   );
 
   static final sourceFeedSettings = xayn.PageData(

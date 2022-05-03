@@ -14,7 +14,6 @@ void main() {
     di.registerLazySingleton<FeatureManager>(() => manager);
     when(manager.isRatingDialogEnabled).thenReturn(true);
     when(manager.showFeaturesScreen).thenReturn(true);
-    when(manager.showOnboardingScreen).thenReturn(false);
   });
   tearDown(() async {
     await tearDownWidgetTest();

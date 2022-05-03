@@ -5,18 +5,24 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/new_personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
 import 'new_personal_area_state.dart';
 
@@ -34,6 +40,8 @@ abstract class NewPersonalAreaNavActions {
 class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     with
         UseCaseBlocHelper<NewPersonalAreaState>,
+        OverlayManagerMixin<NewPersonalAreaState>,
+        OpenExternalUrlMixin<NewPersonalAreaState>,
         ObserveSubscriptionWindowMixin<NewPersonalAreaState>
     implements NewPersonalAreaNavActions {
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
@@ -45,6 +53,8 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
   final UniqueIdHandler _uniqueIdHandler;
+  final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
+  final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
 
   NewPersonalAreaManager(
     this._getAllCollectionsUseCase,
@@ -56,6 +66,8 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
     this._uniqueIdHandler,
+    this._needToShowOnboardingUseCase,
+    this._markOnboardingTypeCompletedUseCase,
   ) : super(NewPersonalAreaState.initial()) {
     _init();
   }
@@ -70,6 +82,8 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
   );
   late SubscriptionStatus _subscriptionStatus;
   List<ListItemModel> _items = [];
+  late final _contactItem =
+      ListItemModel.contact(id: _uniqueIdHandler.generateUniqueId());
   String? _useCaseError;
 
   void _init() {
@@ -83,7 +97,8 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
               collection: e,
             ),
           )
-          .toList();
+          .toList()
+        ..add(_contactItem);
 
       _subscriptionStatus = await _getSubscriptionStatusUseCase
           .singleOutput(PurchasableIds.subscription);
@@ -111,6 +126,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
 
           errorMsg = error.toString();
 
+          /// TODO missing error handling
           return state.copyWith(
             errorMsg: errorMsg,
           );
@@ -141,10 +157,12 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
             collection: e,
           ),
         )
-        .toList();
+        .toList()
+      ..add(_contactItem);
     _items.first.map(
       payment: (_) => _items.replaceRange(1, _items.length, newCollectionItems),
       collection: (_) => _items = newCollectionItems,
+      contact: (_) => _items = newCollectionItems,
     );
   }
 
@@ -164,6 +182,7 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
         payment: (data) => _items.first = data.copyWith(
           trialEndDate: trialEndDate,
         ),
+        contact: (data) => {},
       );
     }
   }
@@ -180,4 +199,14 @@ class NewPersonalAreaManager extends Cubit<NewPersonalAreaState>
 
   @override
   void onSettingsNavPressed() => _navActions.onSettingsNavPressed();
+
+  void checkIfNeedToShowOnboarding() async {
+    const type = OnboardingType.collectionsManage;
+    final show = await _needToShowOnboardingUseCase.singleOutput(type);
+    if (!show) return;
+    final data = OverlayData.bottomSheetOnboarding(type, () {
+      _markOnboardingTypeCompletedUseCase.call(type);
+    });
+    showOverlay(data);
+  }
 }

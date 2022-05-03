@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -18,9 +19,13 @@ import '../../../test_utils/utils.dart';
 
 void main() {
   late NewPersonalAreaNavActions actions;
+  late MockOverlayManager<NewPersonalAreaState> overlayManager;
   late MockFeatureManager featureManager;
   late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
   late MockListenCollectionsUseCase listenCollectionsUseCase;
+  late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
+  late MockMarkOnboardingTypeCompletedUseCase
+      markOnboardingTypeCompletedUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockDateTimeHandler dateTimeHandler;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
@@ -41,6 +46,7 @@ void main() {
       Collection(id: UniqueId(), name: 'Collection1 name', index: 0);
   final collection2 =
       Collection(id: UniqueId(), name: 'Collection2 name', index: 1);
+  final contacts = ListItemModel.contact(id: paymentItemId);
 
   final collectionsList = [
     ListItemModel.collection(
@@ -50,7 +56,8 @@ void main() {
     ListItemModel.collection(
       id: collection2.id,
       collection: collection2,
-    )
+    ),
+    contacts,
   ];
 
   final populatedStateOnlyCollections = NewPersonalAreaState.populated(
@@ -66,6 +73,7 @@ void main() {
       ),
       collectionsList[0],
       collectionsList[1],
+      contacts,
     ],
     timeStamp,
   );
@@ -104,7 +112,11 @@ void main() {
           () => SendAnalyticsUseCase(MockAnalyticsService()));
       urlOpener = MockUrlOpener();
       di.registerLazySingleton<UrlOpener>(() => urlOpener);
+      overlayManager = MockOverlayManager();
       getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
+      needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
+      markOnboardingTypeCompletedUseCase =
+          MockMarkOnboardingTypeCompletedUseCase();
       listenCollectionsUseCase = MockListenCollectionsUseCase();
       hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
       dateTimeHandler = MockDateTimeHandler();
@@ -117,17 +129,27 @@ void main() {
     },
   );
 
-  NewPersonalAreaManager create() => NewPersonalAreaManager(
-        getAllCollectionsUseCase,
-        listenCollectionsUseCase,
-        hapticFeedbackMediumUseCase,
-        actions,
-        dateTimeHandler,
-        featureManager,
-        getSubscriptionStatusUseCase,
-        listenSubscriptionStatusUseCase,
-        uniqueIdHandler,
-      );
+  NewPersonalAreaManager create({
+    bool setMockOverlayManager = false,
+  }) {
+    final manager = NewPersonalAreaManager(
+      getAllCollectionsUseCase,
+      listenCollectionsUseCase,
+      hapticFeedbackMediumUseCase,
+      actions,
+      dateTimeHandler,
+      featureManager,
+      getSubscriptionStatusUseCase,
+      listenSubscriptionStatusUseCase,
+      uniqueIdHandler,
+      needToShowOnboardingUseCase,
+      markOnboardingTypeCompletedUseCase,
+    );
+    if (setMockOverlayManager) {
+      manager.setOverlayManager(overlayManager);
+    }
+    return manager;
+  }
 
   blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
     'WHEN manager is created and the free trial is NOT active THEN get collections and emit state populated with only collections',
@@ -178,6 +200,44 @@ void main() {
     verify: (manager) {
       verify(actions.onSettingsNavPressed());
       verifyNoMoreInteractions(actions);
+    },
+  );
+
+  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+    'GIVEN true WHEN _needToShowOnboardingUseCase is called THEN overlay manager called',
+    build: () => create(setMockOverlayManager: true),
+    setUp: () {
+      when(needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.collectionsManage))
+          .thenAnswer((_) async => true);
+    },
+    act: (manager) => manager.checkIfNeedToShowOnboarding(),
+    verify: (manager) {
+      verifyInOrder([
+        needToShowOnboardingUseCase
+            .singleOutput(OnboardingType.collectionsManage),
+        overlayManager.show(any),
+        overlayManager.onNewState(any)
+      ]);
+      verifyNoMoreInteractions(needToShowOnboardingUseCase);
+      verifyNoMoreInteractions(manager.overlayManager);
+    },
+  );
+
+  blocTest<NewPersonalAreaManager, NewPersonalAreaState>(
+    'GIVEN false WHEN _needToShowOnboardingUseCase is called THEN overlay manager NOT called',
+    build: () => create(setMockOverlayManager: true),
+    setUp: () {
+      when(needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.collectionsManage))
+          .thenAnswer((_) async => false);
+    },
+    act: (manager) => manager.checkIfNeedToShowOnboarding(),
+    verify: (manager) {
+      verify(needToShowOnboardingUseCase
+          .singleOutput(OnboardingType.collectionsManage));
+      verifyNoMoreInteractions(needToShowOnboardingUseCase);
+      verifyZeroInteractions(manager.overlayManager);
     },
   );
 }

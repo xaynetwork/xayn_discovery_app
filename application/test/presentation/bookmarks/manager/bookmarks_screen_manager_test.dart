@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_deleted_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
@@ -18,13 +19,16 @@ import '../../../test_utils/utils.dart';
 
 void main() {
   late MockListenBookmarksUseCase listenBookmarksUseCase;
+  late MockOverlayManager<BookmarksScreenState> overlayManager;
   late MockRemoveBookmarkUseCase removeBookmarkUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockHapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   late MockBookmarkErrorsEnumMapper bookmarkErrorsEnumMapper;
   late MockDateTimeHandler dateTimeHandler;
-  late BookmarksScreenManager bookmarksScreenManager;
   late BookmarksScreenNavActions bookmarksScreenNavActions;
+  late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
+  late MockMarkOnboardingTypeCompletedUseCase
+      markOnboardingTypeCompletedUseCase;
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
@@ -42,13 +46,37 @@ void main() {
     )
   ];
 
+  BookmarksScreenManager create({
+    bool setMockOverlayManager = false,
+  }) {
+    final manager = BookmarksScreenManager(
+      listenBookmarksUseCase,
+      removeBookmarkUseCase,
+      hapticFeedbackMediumUseCase,
+      bookmarkErrorsEnumMapper,
+      dateTimeHandler,
+      bookmarksScreenNavActions,
+      needToShowOnboardingUseCase,
+      markOnboardingTypeCompletedUseCase,
+      sendAnalyticsUseCase,
+    );
+    if (setMockOverlayManager) {
+      manager.setOverlayManager(overlayManager);
+    }
+    return manager;
+  }
+
   setUp(() {
+    overlayManager = MockOverlayManager();
     listenBookmarksUseCase = MockListenBookmarksUseCase();
     removeBookmarkUseCase = MockRemoveBookmarkUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     hapticFeedbackMediumUseCase = MockHapticFeedbackMediumUseCase();
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
     bookmarksScreenNavActions = MockBookmarksScreenNavActions();
+    needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
+    markOnboardingTypeCompletedUseCase =
+        MockMarkOnboardingTypeCompletedUseCase();
     dateTimeHandler = MockDateTimeHandler();
 
     when(listenBookmarksUseCase.transform(any))
@@ -56,16 +84,6 @@ void main() {
 
     when(listenBookmarksUseCase.transaction(any)).thenAnswer(
       (_) => Stream.value(ListenBookmarksUseCaseOut(bookmarks, 'Read Later')),
-    );
-
-    bookmarksScreenManager = BookmarksScreenManager(
-      listenBookmarksUseCase,
-      removeBookmarkUseCase,
-      hapticFeedbackMediumUseCase,
-      bookmarkErrorsEnumMapper,
-      dateTimeHandler,
-      bookmarksScreenNavActions,
-      sendAnalyticsUseCase,
     );
 
     populatedState =
@@ -87,7 +105,7 @@ void main() {
     () {
       blocTest<BookmarksScreenManager, BookmarksScreenState>(
         'WHEN manager is created THEN state is initial ',
-        build: () => bookmarksScreenManager,
+        build: () => create(),
 
         /// Here we check that the list of bookmark is not empty because when
         /// the manager is created the initial state is not actually emitted
@@ -96,7 +114,7 @@ void main() {
 
       blocTest<BookmarksScreenManager, BookmarksScreenState>(
         'WHEN enteringScreen method has been called THEN call the usecase and emit populate state ',
-        build: () => bookmarksScreenManager,
+        build: () => create(),
         act: (manager) {
           manager.enteringScreen(collectionId);
         },
@@ -126,7 +144,7 @@ void main() {
             ],
           ),
         ),
-        build: () => bookmarksScreenManager,
+        build: () => create(),
         act: (manager) {
           manager.removeBookmark(
             bookmarks.first.id,
@@ -164,7 +182,7 @@ void main() {
             ),
           );
         },
-        build: () => bookmarksScreenManager,
+        build: () => create(),
         act: (manager) {
           manager.removeBookmark(
             bookmarks.first.id,
@@ -186,6 +204,43 @@ void main() {
           );
         },
       );
+    },
+  );
+
+  blocTest<BookmarksScreenManager, BookmarksScreenState>(
+    'GIVEN true WHEN _needToShowOnboardingUseCase is called THEN overlay manager called',
+    build: () => create(setMockOverlayManager: true),
+    setUp: () {
+      when(needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.bookmarksManage))
+          .thenAnswer((_) async => true);
+    },
+    act: (manager) => manager.checkIfNeedToShowOnboarding(),
+    verify: (manager) {
+      verifyInOrder([
+        needToShowOnboardingUseCase
+            .singleOutput(OnboardingType.bookmarksManage),
+        overlayManager.show(any),
+      ]);
+      verifyNoMoreInteractions(needToShowOnboardingUseCase);
+      verifyNoMoreInteractions(manager.overlayManager);
+    },
+  );
+
+  blocTest<BookmarksScreenManager, BookmarksScreenState>(
+    'GIVEN false WHEN _needToShowOnboardingUseCase is called THEN overlay manager NOT called',
+    build: () => create(setMockOverlayManager: true),
+    setUp: () {
+      when(needToShowOnboardingUseCase
+              .singleOutput(OnboardingType.bookmarksManage))
+          .thenAnswer((_) async => false);
+    },
+    act: (manager) => manager.checkIfNeedToShowOnboarding(),
+    verify: (manager) {
+      verify(needToShowOnboardingUseCase
+          .singleOutput(OnboardingType.bookmarksManage));
+      verifyNoMoreInteractions(needToShowOnboardingUseCase);
+      verifyZeroInteractions(manager.overlayManager);
     },
   );
 }

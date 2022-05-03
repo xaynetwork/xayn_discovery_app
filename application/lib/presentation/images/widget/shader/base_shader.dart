@@ -70,7 +70,11 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     if (_cache.hasImageOf(widget.uri)) {
       didResolveImage();
     } else {
-      _decodeBytes(widget.bytes).whenComplete(() => setState(didResolveImage));
+      _decodeBytes(widget.bytes).whenComplete(() {
+        if (mounted) {
+          setState(didResolveImage);
+        }
+      });
     }
   }
 
@@ -216,6 +220,12 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
 
   @mustCallSuper
   void updateDuration(Duration duration) => _controller.duration = duration;
+
+  void stop() {
+    final status = _cache.animationStatusOf(widget.uri);
+
+    _stopAnimation(status);
+  }
 
   void _stopAnimation(ShaderAnimationStatus status) {
     _controller.value = status.position;
