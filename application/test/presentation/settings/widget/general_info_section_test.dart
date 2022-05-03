@@ -13,7 +13,6 @@ void main() {
     (final WidgetTester tester) async {
       await tester.pumpLindenApp(
         SettingsGeneralInfoSection(
-          onContactPressed: () {},
           onAboutPressed: () {},
           onImprintPressed: () {},
           onCarbonNeutralPressed: () {},
@@ -23,7 +22,7 @@ void main() {
         initialLinden: linden,
       );
 
-      const kidsAmount = 6;
+      const kidsAmount = 5;
       expect(
         find.text(R.strings.settingsSectionTitleGeneralInfo),
         findsOneWidget,
@@ -45,7 +44,6 @@ void main() {
     'GIVEN section WHEN clicked btn THEN proper callbacks are called',
     (final WidgetTester tester) async {
       final callbacks = {
-        Keys.settingsContactUs: false,
         Keys.settingsAboutXayn: false,
         Keys.settingsImprint: false,
         Keys.settingsCarbonNeutral: false,
@@ -53,7 +51,6 @@ void main() {
         Keys.settingsPrivacyPolicy: false,
       };
       final widget = SettingsGeneralInfoSection(
-        onContactPressed: () => callbacks[Keys.settingsContactUs] = true,
         onAboutPressed: () => callbacks[Keys.settingsAboutXayn] = true,
         onImprintPressed: () => callbacks[Keys.settingsImprint] = true,
         onCarbonNeutralPressed: () =>

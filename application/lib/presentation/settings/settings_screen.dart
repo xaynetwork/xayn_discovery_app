@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/contact_info/contact_info_bottom_sheet.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -134,7 +133,6 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onContactPressed: _showContactInfo,
         onAboutPressed: () => _manager.openExternalUrl(
           url: Constants.aboutXaynUrl,
           currentView: CurrentView.settings,
@@ -208,21 +206,5 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       );
     }
-  }
-
-  _showContactInfo() {
-    showAppBottomSheet(
-      context,
-      builder: (buildContext) => ContactInfoBottomSheet(
-        onXaynSupportEmailTap: () => _manager.openExternalEmail(
-            Constants.xaynSupportEmail, CurrentView.settings),
-        onXaynPressEmailTap: () => _manager.openExternalEmail(
-            Constants.xaynPressEmail, CurrentView.settings),
-        onXaynUrlTap: () => _manager.openExternalUrl(
-          url: Constants.xaynUrl,
-          currentView: CurrentView.settings,
-        ),
-      ),
-    );
   }
 }

@@ -153,3 +153,12 @@ readerModeUnableToLoadDesc: This article was not made available to be read on ou
 readerModeUnableToLoadCTA: Im Browser öffnen
 noInternetConnection: Keine Internetverbindung
 invalidSearch: Please enter a valid search term
+onboardingBottomDialog:
+  homeSwipeVerticalTitle: Swipe upwards to see the next article
+  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
+  homeSwipeSideTitle: Swipe sideways to like or dislike
+  homeManageBookmarksTitle: Long press the save button to manage it
+  collectionManageTitle: Long press or swipe to manage your collections
+  bookmarksManageTitle: Long press or swipe to manage your bookmarks
+general:
+  btnClose: Close

@@ -10,6 +10,8 @@ import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookma
 import 'package:xayn_discovery_app/presentation/bottom_sheet/bookmark_options/bookmarks_options_menu.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -30,9 +32,18 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen>
-    with NavBarConfigMixin, CardWidgetTransitionMixin {
+    with NavBarConfigMixin, CardWidgetTransitionMixin, OverlayMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
+
+  @override
+  OverlayManager get overlayManager => _bookmarkManager.overlayManager;
+
+  @override
+  void initState() {
+    _bookmarkManager.checkIfNeedToShowOnboarding();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
