@@ -1,8 +1,7 @@
+import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
-import 'package:xayn_discovery_app/infrastructure/repository/hive_app_status_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/migrations/single_value_migration_repository.dart';
 
 /// This Migration resets the [firstAppLaunchDate], required when enabling payments in prod.
 // ignore: camel_case_types
@@ -19,17 +18,16 @@ class Migration_1_To_2 extends BaseDbMigration {
   Future<int> runMigration(int fromVersion) async {
     assert(fromVersion == 1);
 
-    const mapper = AppStatusMapper(
-      MapToAppVersionMapper(),
-      AppVersionToMapMapper(),
-      OnboardingStatusToDbEntityMapMapper(),
-      DbEntityMapToOnboardingStatusMapper(),
+    final repository = SingleValueMigrationRepository(
+      box:
+          'appStatus', // important hardcoded string to avoid accidental refactors
+      key: AppStatus.globalId,
+      transform: (map) {
+        map[AppStatusFields.firstAppLaunchDate] = DateTime.now();
+        return map;
+      },
     );
-    final repository = HiveAppStatusRepository(mapper);
-    final appStatus = repository.appStatus;
-    final updatedAppStatus =
-        appStatus.copyWith(firstAppLaunchDate: DateTime.now());
-    repository.save(updatedAppStatus);
+    repository.migrate();
 
     return 2;
   }
