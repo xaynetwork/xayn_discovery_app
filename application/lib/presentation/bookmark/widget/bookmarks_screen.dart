@@ -14,7 +14,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';

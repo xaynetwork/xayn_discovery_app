@@ -3,12 +3,13 @@ import 'package:in_app_notification/in_app_notification.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_design/xayn_design.dart' hide NavBarObserver;
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
 
 const double kExtraBottomOffset = 18.0;
 
 class AppRouter extends xayn.NavigatorDelegate {
-  AppRouter(navigationManager) : super(navigationManager);
+  AppRouter(AppNavigationManager navigationManager) : super(navigationManager);
 
   @override
   Widget build(BuildContext context) {
