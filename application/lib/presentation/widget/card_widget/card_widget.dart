@@ -146,20 +146,17 @@ class CardWidget extends StatelessWidget {
       personalArea: (data) => null,
     );
 
-    return Semantics(
-      label: cardData.semanticsLabel,
-      child: AppGhostButton(
-        semanticsLabel: cardData.semanticsLabel,
-        contentPadding: EdgeInsets.zero,
-        onPressed: cardData.onPressed,
-        onLongPressed: onLongPressed,
-        child: item,
-        borderRadius: getCardRadius(context),
-        backgroundColor: cardData.map(
-          personalArea: (v) => v.color,
-          collectionsScreen: (v) => v.color,
-          bookmark: (v) => R.colors.accent,
-        ),
+    return AppGhostButton(
+      semanticsLabel: cardData.semanticsLabel,
+      contentPadding: EdgeInsets.zero,
+      onPressed: cardData.onPressed,
+      onLongPressed: onLongPressed,
+      child: item,
+      borderRadius: getCardRadius(context),
+      backgroundColor: cardData.map(
+        personalArea: (v) => v.color,
+        collectionsScreen: (v) => v.color,
+        bookmark: (v) => R.colors.accent,
       ),
     );
   }
