@@ -132,6 +132,36 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     buildBackgroundPane({required bool opaque}) =>
         Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
 
+    getDeterministicNoImage() {
+      final deterministicRandom = widget.document.resource.hashCode % 4;
+      late String assetName;
+      late Color background;
+
+      switch (deterministicRandom) {
+        case 0:
+          background = R.colors.noImage1;
+          assetName = R.assets.lottie.contextual.noImageA;
+          break;
+        case 1:
+          background = R.colors.noImage2;
+          assetName = R.assets.lottie.contextual.noImageB;
+          break;
+        case 2:
+          background = R.colors.noImage3;
+          assetName = R.assets.lottie.contextual.noImageC;
+          break;
+        default:
+          background = R.colors.noImage4;
+          assetName = R.assets.lottie.contextual.noImageD;
+          break;
+      }
+
+      return ColoredBox(
+        color: background,
+        child: AnimationPlayer.assetUnrestrictedSize(assetName),
+      );
+    }
+
     return CachedImage(
       imageManager: imageManager,
       shaderBuilder: widget.primaryCardShader,
@@ -142,11 +172,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
-      noImageBuilder: (_) => ColoredBox(
-        color: R.colors.swipeCardBackgroundHome,
-        child: AnimationPlayer.assetUnrestrictedSize(
-            R.assets.lottie.contextual.noImage),
-      ),
+      noImageBuilder: (_) => getDeterministicNoImage(),
     );
   }
 
