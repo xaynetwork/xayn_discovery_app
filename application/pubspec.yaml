@@ -74,7 +74,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 656e562cf54eca1309bc067b24b03c0061ee4b14
+      ref: 2e20f1aeff35b77185eae8a0983e402cfd91eaaa
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -167,7 +167,10 @@ flutter:
     - packages/xayn_design/assets/lottie/contextual/empty_search.json
     - packages/xayn_design/assets/lottie/contextual/empty_sources.json
     - packages/xayn_design/assets/lottie/contextual/error.json
-    - packages/xayn_design/assets/lottie/contextual/no_image.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_1.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_2.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_3.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_4.json
     - packages/xayn_design/assets/lottie/contextual/payment_failed.json
     - packages/xayn_design/assets/lottie/contextual/payment_pending.json
     - packages/xayn_design/assets/lottie/contextual/premium.json
