@@ -1,20 +1,25 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/manager/app_scaffold_manager.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/manager/app_scaffold_state.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_additional_widget_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/connection_snackbar/connection_snackbar.dart';
 
+/// Custom version of the Scaffold introduced for handling
+/// the displaying of the error message when connection is down
+/// To be used for every screen
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final Color? backgroundColor;
   final bool? resizeToAvoidBottomInset;
   final AppToolbarData? appToolbarData;
 
-  late final ConnectivityObserver connectivityObserver = di.get();
+  late final AppScaffoldManager _appScaffoldManager = di.get();
   AppScaffold({
     required this.body,
     this.backgroundColor,
@@ -24,15 +29,17 @@ class AppScaffold extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-        stream: connectivityObserver.onConnectivityChanged,
-        builder: (_, snapshot) => snapshot.data != ConnectivityResult.none
-            ? _buildScaffolWithoutErrorMessage()
-            : appToolbarData == null
-                ? _buildBaseScaffoldWithErrorMessage(
-                    MediaQuery.of(context).padding.top)
-                : _buildScaffoldWithToolBarAndErrorMessage(
-                    MediaQuery.of(context).padding.top),
+  Widget build(BuildContext context) =>
+      BlocBuilder<AppScaffoldManager, AppScaffoldState>(
+        bloc: _appScaffoldManager,
+        builder: (_, state) =>
+            state.connectivityResult != ConnectivityResult.none
+                ? _buildScaffolWithoutErrorMessage()
+                : appToolbarData == null
+                    ? _buildBaseScaffoldWithErrorMessage(
+                        MediaQuery.of(context).padding.top)
+                    : _buildScaffoldWithToolBarAndErrorMessage(
+                        MediaQuery.of(context).padding.top),
       );
 
   Widget _buildScaffolWithoutErrorMessage() => Scaffold(
@@ -57,7 +64,7 @@ class AppScaffold extends StatelessWidget {
               top: topPadding,
               right: 0.0,
               left: 0.0,
-              child: ConnectionSnackBar(),
+              child: const ConnectionSnackBar(),
             ),
           ],
         ),
@@ -74,7 +81,7 @@ class AppScaffold extends StatelessWidget {
             ? AppToolbar(
                 appToolbarData: appToolbarData!,
                 additionalWidgetData: AppToolbarAdditionalWidgetData(
-                  widget: ConnectionSnackBar(),
+                  widget: const ConnectionSnackBar(),
                   widgetHeight: R.dimen.collectionItemBottomSheetHeight,
                 ),
               )
