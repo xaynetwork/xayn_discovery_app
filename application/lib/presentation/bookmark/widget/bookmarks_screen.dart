@@ -49,32 +49,35 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
-      builder: (ctx, state) => Scaffold(
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-              title: state.collectionName ?? R.strings.personalAreaCollections),
-        ),
-        body:
-            state.bookmarks.isEmpty ? _buildEmptyScreen() : _buildScreen(state),
+      builder: (ctx, state) => Stack(
+        children: [
+          Scaffold(
+            appBar: AppToolbar(
+              appToolbarData: AppToolbarData.titleOnly(
+                  title: state.collectionName ??
+                      R.strings.personalAreaCollections),
+            ),
+            body: state.bookmarks.isEmpty ? Container() : _buildScreen(state),
+          ),
+          if (state.bookmarks.isEmpty) _buildEmptyScreen()
+        ],
       ),
       bloc: _bookmarkManager,
     );
   }
 
-  Widget _buildEmptyScreen() => Padding(
-        child: Center(
-          child: Column(
-            children: [
-              AnimationPlayer.asset(
-                  R.linden.assets.lottie.contextual.emptyCollectionB),
-              Text(
-                R.strings.bookmarkScreenNoArticles,
-                style: R.styles.xlBoldStyle,
-              ),
-            ],
-          ),
+  Widget _buildEmptyScreen() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimationPlayer.asset(
+                R.linden.assets.lottie.contextual.emptyCollectionB),
+            Text(
+              R.strings.bookmarkScreenNoArticles,
+              style: R.styles.xlBoldStyle,
+            ),
+          ],
         ),
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
       );
 
   Widget _buildScreen(BookmarksScreenState state) {
