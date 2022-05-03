@@ -107,6 +107,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
   @override
   void resetParameters() {
+    _isLoading = true;
+
     resetCardIndex();
     // clears the current pending observation, if any...
     observeDocument();

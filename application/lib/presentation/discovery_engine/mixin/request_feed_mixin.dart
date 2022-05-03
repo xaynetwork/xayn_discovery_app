@@ -17,10 +17,12 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/upda
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-mixin RequestFeedMixin<T extends DiscoveryState> on UseCaseBlocHelper<T> {
+mixin RequestFeedMixin<T extends DiscoveryState>
+    on SingletonSubscriptionObserver<T> {
   late final RequestNextFeedBatchUseCase requestNextFeedBatchUseCase =
       di.get<RequestNextFeedBatchUseCase>();
   final Completer _preambleCompleter = Completer();
@@ -51,13 +53,13 @@ mixin RequestFeedMixin<T extends DiscoveryState> on UseCaseBlocHelper<T> {
   }
 
   void _startConsuming() async {
+    _didStartConsuming = true;
+
     late final fetchCardIndexUseCase = di.get<FetchCardIndexUseCase>();
     final updateSessionUseCase = di.get<UpdateSessionUseCase>();
     final fetchSessionUseCase = di.get<FetchSessionUseCase>();
     final session = await fetchSessionUseCase.singleOutput(none);
     final sessionUpdate = session.copyWith(didRequestFeed: true);
-
-    _didStartConsuming = true;
 
     onResetParameters([int nextIndex = 0]) => (_) => resetParameters(nextIndex);
     onRestore(EngineEvent it) => it is RestoreFeedSucceeded
@@ -156,7 +158,7 @@ extension _StreamExtension<T> on Stream<T> {
   Stream<bool> whereMarketsChanged() => mapTo(const DbCrudIn.watchAllChanged())
       .followedBy(di.get<CrudFeedSettingsUseCase>())
       .mapTo(FeedType.feed)
-      .followedBy(di.get<AreMarketsOutdatedUseCase>())
+      .switchedBy(di.get<AreMarketsOutdatedUseCase>())
       .where((didMarketsChange) => didMarketsChange);
 
   Stream<EngineEvent> finalizeFeedMarketsChange() =>

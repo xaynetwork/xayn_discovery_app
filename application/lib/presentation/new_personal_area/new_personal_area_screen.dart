@@ -3,14 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/contact_info/contact_info_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/swipeable_collection_card.dart';
 import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -103,14 +106,19 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
   ) {
     final list = CustomAnimatedList<ListItemModel>(
       items: screenState.items,
-      itemBuilder: (_, index, __, item) => item.map(
-        collection: (itemModel) => _buildCard(
-          itemModel.collection,
-        ),
-        payment: (itemModel) => _buildTrialBanner(
-          itemModel.trialEndDate,
-        ),
-      ),
+      itemBuilder: (_, index, __, item) {
+        final child = item.map(
+          collection: (itemModel) => _buildCard(
+            itemModel.collection,
+          ),
+          payment: (itemModel) => _buildTrialBanner(
+            itemModel.trialEndDate,
+          ),
+          contact: (_) => _buildContact(),
+        );
+        final isLastItem = index == screenState.items.length - 1;
+        return isLastItem ? _withBottomPadding(child) : child;
+      },
       areItemsTheSame: (a, b) => a.id == b.id,
 
       /// When opening the personal area screen and the collection list contains
@@ -118,16 +126,10 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
       forceWithoutAnimation: screenState.items.length == 1,
     );
 
-    final bottomPadding = R.dimen.unit2;
     final sidePadding = R.dimen.unit3;
     final withPadding = Padding(
       child: list,
-      padding: EdgeInsets.fromLTRB(
-        sidePadding,
-        0,
-        sidePadding,
-        bottomPadding,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: sidePadding),
     );
     return withPadding;
   }
@@ -233,4 +235,38 @@ class NewPersonalAreaScreenState extends State<NewPersonalAreaScreen>
               ),
             ),
       };
+
+  Widget _withBottomPadding(Widget child) {
+    final padding = (R.dimen.navBarBottomPadding * 2) + R.dimen.navBarHeight;
+    return Padding(padding: EdgeInsets.only(bottom: padding), child: child);
+  }
+
+  SettingsCard _buildContact() {
+    final data = SettingsCardData.fromTile(SettingsTileData(
+      title: R.strings.settingsContactUs,
+      svgIconPath: R.assets.icons.info,
+      action: SettingsTileActionIcon(
+        key: Keys.settingsContactUs,
+        svgIconPath: R.assets.icons.arrowRight,
+        onPressed: _showContactInfo,
+      ),
+    ));
+    return SettingsCard(data: data);
+  }
+
+  _showContactInfo() {
+    showAppBottomSheet(
+      context,
+      builder: (buildContext) => ContactInfoBottomSheet(
+        onXaynSupportEmailTap: () => _manager.openExternalEmail(
+            Constants.xaynSupportEmail, CurrentView.settings),
+        onXaynPressEmailTap: () => _manager.openExternalEmail(
+            Constants.xaynPressEmail, CurrentView.settings),
+        onXaynUrlTap: () => _manager.openExternalUrl(
+          url: Constants.xaynUrl,
+          currentView: CurrentView.settings,
+        ),
+      ),
+    );
+  }
 }

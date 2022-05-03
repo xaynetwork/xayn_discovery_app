@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_time_spent_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -17,7 +18,7 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 typedef OnObservation = void Function(
     DiscoveryCardMeasuredObservation observation);
 
-mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
+mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
   UseCaseSink<DiscoveryCardObservation, EngineEvent>? _useCaseSink;
 
   @override
@@ -40,6 +41,13 @@ mixin ObserveDocumentMixin<T> on UseCaseBlocHelper<T> {
         viewType: mode,
       ),
     );
+  }
+
+  @override
+  void onCancel() {
+    observeDocument();
+
+    super.onCancel();
   }
 
   UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink(

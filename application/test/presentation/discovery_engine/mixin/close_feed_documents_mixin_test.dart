@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/crud_out.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import '../../../test_utils/utils.dart';
@@ -77,6 +78,9 @@ void main() {
 }
 
 class _TestBloc extends Cubit<bool>
-    with UseCaseBlocHelper<bool>, CloseFeedDocumentsMixin<bool> {
+    with
+        UseCaseBlocHelper<bool>,
+        SingletonSubscriptionObserver<bool>,
+        CloseFeedDocumentsMixin<bool> {
   _TestBloc() : super(false);
 }
