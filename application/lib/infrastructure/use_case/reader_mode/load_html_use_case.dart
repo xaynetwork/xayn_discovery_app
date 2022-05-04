@@ -86,9 +86,6 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
     }
   }
 
-  @override
-  Stream<Uri> transform(Stream<Uri> incoming) => incoming.distinct();
-
   String _extractResponseBody(List<int> bytes) {
     try {
       // we did a request for utf-8...
