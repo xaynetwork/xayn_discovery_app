@@ -12,12 +12,18 @@ const String _kParamToDefaultCollection = 'toDefaultCollection';
 /// - [isBookmarked] is true when bookmarked, false when not.
 /// - [feedType] indicates the current screen the event was triggered from.
 class DocumentBookmarkedEvent extends FeedAnalyticsEvent {
+  final Document? previous;
+  final bool isBookmarked;
+  final Document document;
+  final bool toDefaultCollection;
+  final FeedType? feedType;
+
   DocumentBookmarkedEvent({
-    Document? previous,
-    required Document document,
-    required bool isBookmarked,
-    required bool toDefaultCollection,
-    FeedType? feedType,
+    this.previous,
+    required this.isBookmarked,
+    required this.document,
+    required this.toDefaultCollection,
+    this.feedType,
   }) : super(
           _kEventType,
           feedType: feedType,

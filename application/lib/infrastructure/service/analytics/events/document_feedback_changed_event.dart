@@ -14,10 +14,14 @@ const String _kParamContext = 'context';
 /// The document must already have [Document.feedback] updated, as the full
 /// document will be logged in the event.
 class DocumentFeedbackChangedEvent extends FeedAnalyticsEvent {
+  final Document document;
+  final FeedbackContext context;
+  final FeedType? feedType;
+
   DocumentFeedbackChangedEvent({
-    required Document document,
-    required FeedbackContext context,
-    required FeedType? feedType,
+    required this.document,
+    required this.context,
+    required this.feedType,
   }) : super(
           _kEventType,
           feedType: feedType,

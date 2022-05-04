@@ -5,8 +5,8 @@ const String _kParamPrice = 'af_price';
 const String _kParamCurrency = 'af_currency';
 const String _kParamContentId = 'af_content_id';
 
-class PurchaseEvent extends AnalyticsEvent {
-  PurchaseEvent({
+class PurchaseMarketingEvent extends AnalyticsEvent {
+  PurchaseMarketingEvent({
     required String productIdentifier,
     required String price,
     required String currency,
