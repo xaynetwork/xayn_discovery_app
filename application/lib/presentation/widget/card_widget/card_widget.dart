@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ class CardWidget extends StatelessWidget {
     Widget withBackgroundImage({
       Uint8List? backgroundImage,
       double? width,
+      required String title,
     }) {
       final empty = SvgPicture.asset(
         R.assets.graphics.formsEmptyCollection,
@@ -72,7 +74,8 @@ class CardWidget extends StatelessWidget {
           BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
             bloc: _shadowManager,
             builder: (_, state) => StaticShader(
-              uri: Uri.dataFromBytes(bytes),
+              /// ignore the encoding of the title
+              uri: Uri.dataFromBytes(utf8.encode(title)),
               noImageBuilderIsShadowless: true,
               width: width,
               height: CardWidgetData.cardHeight,
@@ -103,10 +106,12 @@ class CardWidget extends StatelessWidget {
       collectionsScreen: (it) => withBackgroundImage(
         backgroundImage: it.backgroundImage,
         width: it.cardWidth,
+        title: it.title,
       ),
       bookmark: (it) => withBackgroundImage(
         backgroundImage: it.backgroundImage,
         width: it.cardWidth,
+        title: it.title,
       ),
     );
 

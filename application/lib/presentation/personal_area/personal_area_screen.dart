@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_c
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/swipeable_collection_card.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -44,22 +44,17 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
     with
         NavBarConfigMixin,
         TooltipStateMixin,
-        CollectionCardManagersMixin,
         BottomSheetBodyMixin,
         OverlayMixin,
         CardWidgetTransitionMixin {
   late final PersonalAreaManager _manager = di.get();
+  late final CollectionCardManagersCache _collectionCardManagersCache =
+      di.get();
 
   @override
   void initState() {
     _manager.checkIfNeedToShowOnboarding();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _manager.close();
-    super.dispose();
   }
 
   @override
@@ -165,7 +160,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
-        bloc: managerOf(collection.id),
+        bloc: _collectionCardManagersCache.managerOf(collection.id),
         builder: (context, cardState) {
           final sidePaddings = 2 * R.dimen.unit3;
           return CardWidget(

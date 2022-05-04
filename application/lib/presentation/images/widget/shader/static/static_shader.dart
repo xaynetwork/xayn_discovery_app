@@ -36,6 +36,9 @@ class _StaticShaderState extends BaseStaticShaderState<StaticShader> {
   @override
   Widget build(BuildContext context) {
     final srcImage = image;
+
+    if (!hasDecodedImage) return Container();
+
     final paint = CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
       painter: StaticPainter(

@@ -36,7 +36,7 @@ abstract class PersonalAreaNavActions {
   void onCollectionPressed(UniqueId collectionId);
 }
 
-@injectable
+@lazySingleton
 class PersonalAreaManager extends Cubit<PersonalAreaState>
     with
         UseCaseBlocHelper<PersonalAreaState>,

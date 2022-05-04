@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections_image.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
@@ -54,11 +54,10 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 }
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
-    with
-        BottomSheetBodyMixin,
-        CollectionCardManagersMixin,
-        OverlayMixin<_MoveBookmarkToCollection> {
+    with BottomSheetBodyMixin, OverlayMixin<_MoveBookmarkToCollection> {
   late final MoveToCollectionManager _moveBookmarkToCollectionManager =
+      di.get();
+  late final CollectionCardManagersCache _collectionCardManagersCache =
       di.get();
 
   @override
@@ -98,7 +97,8 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
             onSelectItem: (c) =>
                 _moveBookmarkToCollectionManager.updateSelectedCollection(c.id),
             getTitle: (c) => c.name,
-            getImage: (c) => buildCollectionImage(managerOf(c.id)),
+            getImage: (c) => buildCollectionImage(
+                _collectionCardManagersCache.managerOf(c.id)),
             preSelectedItems:
                 selectedCollection == null ? {} : {selectedCollection},
           );
