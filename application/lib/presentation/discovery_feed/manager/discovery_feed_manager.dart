@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
@@ -65,6 +66,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   final int _maxCardCount;
   final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
   final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
+  Set<DocumentId> _resultsSnapshot = const <DocumentId>{};
 
   DiscoveryFeedManager(
     this._fetchSessionUseCase,
@@ -177,6 +179,35 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         ...stateDiffResult.removedResults,
       },
     );
+  }
+
+  /// Test if we need to load more results.
+  /// Currently, the batch count is 4, and we should do the check when
+  /// the feed card index reaches `total items - 2`.
+  /// To avoid any duplication in calls towards the engine, we
+  /// simply store the "latest" `DocumentId` collection, then, upon request,
+  /// check if this collection is matching the "current" one in `state`.
+  ///
+  /// If they are equal, then a previous `requestNextFeedBatch` has already
+  /// been submitted, for the exact same result set that we have in state.
+  ///
+  /// If not equal, then it's OK to do `requestNextFeedBatch`.
+  void maybeLoadMore({required int cardIndex, required int totalResults}) {
+    if (totalResults < 4) return;
+
+    final totalUnseenResults = totalResults - cardIndex;
+
+    areSnapshotsEqual() {
+      final set = {...state.results.map((it) => it.documentId)};
+
+      return const SetEquality().equals(_resultsSnapshot, set);
+    }
+
+    if (totalUnseenResults <= 2 && !areSnapshotsEqual()) {
+      _resultsSnapshot = {...state.results.map((it) => it.documentId)};
+
+      requestNextFeedBatch();
+    }
   }
 
   /// Triggers the discovery engine to load more results.
