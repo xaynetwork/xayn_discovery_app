@@ -3,6 +3,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
+import 'dart:ui' as ui;
 import 'package:in_app_review/in_app_review.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
@@ -102,9 +103,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/manager/new_personal_area_manager.dart';
-import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -176,6 +176,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HiveExplicitDocumentFeedbackRepository,
   HiveAppSettingsRepository,
   InAppReview,
+  ui.Image,
   IncrementAppSessionUseCase,
   IntToAppThemeMapper,
   IsBookmarkedUseCase,
@@ -189,7 +190,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   LoggerHandler,
   MapToAppVersionMapper,
   MarkOnboardingTypeCompletedUseCase,
-  NewPersonalAreaNavActions,
   NeedToShowOnboardingUseCase,
   MoveBookmarkUseCase,
   OnboardingStatusToDbEntityMapMapper,
@@ -198,7 +198,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   PaymentFlowErrorToErrorMessageMapper,
   PaymentScreenNavActions,
   PaymentService,
-  PersonalAreaManager,
   PersonalAreaNavActions,
   PurchasableProductMapper,
   PurchaseEventMapper,
@@ -233,6 +232,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   UpdateSessionUseCase,
   UrlOpener,
   DeepLinkManager,
+  MarketingAnalyticsService,
 ])
 class Mocks {
   Mocks._();

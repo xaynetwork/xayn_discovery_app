@@ -30,7 +30,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   final SubscriptionStatus subscriptionStatus;
   final OnSubscriptionLinkCancelTapped onSubscriptionLinkCancelTapped;
 
-  const _SubscriptionDetails({
+  _SubscriptionDetails({
     Key? key,
     required this.subscriptionStatus,
     required this.onSubscriptionLinkCancelTapped,

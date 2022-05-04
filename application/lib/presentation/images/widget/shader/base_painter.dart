@@ -3,12 +3,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 abstract class BaseStaticPainter extends CustomPainter {
-  final ui.Image _image;
+  final ui.Image? _image;
   final List<Color> _gradientColors;
   final bool _hasGradient;
 
   BaseStaticPainter({
-    required ui.Image image,
+    ui.Image? image,
     Color? shadowColor,
   })  : _image = image,
         _hasGradient = shadowColor != null,
@@ -22,6 +22,7 @@ abstract class BaseStaticPainter extends CustomPainter {
   @override
   @protected
   void paint(ui.Canvas canvas, ui.Size size) {
+    final image = _image;
     final rect = ui.Rect.fromLTWH(
       .0,
       .0,
@@ -29,7 +30,7 @@ abstract class BaseStaticPainter extends CustomPainter {
       size.height.ceilToDouble(),
     );
 
-    paintMedia(canvas, _image, rect);
+    if (image != null) paintMedia(canvas, image, rect);
 
     if (_hasGradient) {
       canvas.drawRect(
@@ -55,7 +56,7 @@ abstract class BaseAnimationPainter extends BaseStaticPainter {
   final double _animationValue;
 
   BaseAnimationPainter({
-    required ui.Image image,
+    ui.Image? image,
     required double animationValue,
     Color? shadowColor,
   })  : _animationValue = animationValue,

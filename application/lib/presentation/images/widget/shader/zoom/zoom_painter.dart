@@ -8,7 +8,7 @@ class ZoomPainter extends BaseAnimationPainter {
   late final _paint = Paint();
 
   ZoomPainter({
-    required ui.Image image,
+    ui.Image? image,
     required double animationValue,
     Color? shadowColor,
   }) : super(

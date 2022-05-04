@@ -5,8 +5,8 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/purchase_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_events/purchase_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
@@ -25,7 +25,7 @@ void main() {
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockPurchaseEventMapper purchaseEventMapper;
 
-  final testPurchaseEvent = PurchaseEvent(
+  final testPurchaseEvent = PurchaseMarketingEvent(
     productIdentifier: 'id',
     price: 'price',
     currency: 'currency',

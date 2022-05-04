@@ -69,8 +69,10 @@ void main() {
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
 
     di.allowReassignment = true;
-    di.registerLazySingleton<SendAnalyticsUseCase>(
-        () => SendAnalyticsUseCase(MockAnalyticsService()));
+    di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
+          MockAnalyticsService(),
+          MockMarketingAnalyticsService(),
+        ));
     di.registerLazySingleton<UrlOpener>(() => urlOpener);
 
     when(listenAppThemeUseCase.transform(any)).thenAnswer(

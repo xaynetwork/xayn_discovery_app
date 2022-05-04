@@ -60,6 +60,7 @@ dependencies:
       url: git@github.com:Bestfastfire/super_rich_text.git
       ref: f9d3963421682e2e0dd99c1ab553b99e38766ea1
   system_info2: 2.0.3
+  quiver: 3.0.1+1
   url_launcher: 6.0.20
   uuid: 3.0.6
   version: 2.0.0
@@ -74,7 +75,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 656e562cf54eca1309bc067b24b03c0061ee4b14
+      ref: 2e20f1aeff35b77185eae8a0983e402cfd91eaaa
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -158,6 +159,24 @@ flutter:
     - packages/xayn_design/assets/lottie/mange_collection.json
     - packages/xayn_design/assets/lottie/splash_screen.json
     - packages/xayn_design/assets/lottie/splash_screen_dark.json
+
+    # lottie contextual illustrations
+    - packages/xayn_design/assets/lottie/contextual/create_collection.json
+    - packages/xayn_design/assets/lottie/contextual/delete_collection.json
+    - packages/xayn_design/assets/lottie/contextual/empty_collection_1.json
+    - packages/xayn_design/assets/lottie/contextual/empty_collection_2.json
+    - packages/xayn_design/assets/lottie/contextual/empty_search.json
+    - packages/xayn_design/assets/lottie/contextual/empty_sources.json
+    - packages/xayn_design/assets/lottie/contextual/error.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_1.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_2.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_3.json
+    - packages/xayn_design/assets/lottie/contextual/no_image_4.json
+    - packages/xayn_design/assets/lottie/contextual/payment_failed.json
+    - packages/xayn_design/assets/lottie/contextual/payment_pending.json
+    - packages/xayn_design/assets/lottie/contextual/premium.json
+    - packages/xayn_design/assets/lottie/contextual/source_filter.json
+    - packages/xayn_design/assets/lottie/contextual/subscription_active.json
 
     # graphics
     - packages/xayn_design/assets/graphics/forms_green.svg
