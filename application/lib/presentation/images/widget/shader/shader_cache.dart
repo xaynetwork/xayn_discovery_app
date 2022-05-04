@@ -27,7 +27,7 @@ abstract class ShaderCache {
 
   void flush(Uri uri);
 
-  void update(
+  ui.Image? update(
     Uri uri, {
     ui.Image? image,
     int? refCount,
@@ -103,7 +103,7 @@ class InMemoryShaderCache implements ShaderCache {
 
   @mustCallSuper
   @override
-  void update(
+  ui.Image? update(
     Uri uri, {
     ui.Image? image,
     int? refCount,
@@ -121,6 +121,8 @@ class InMemoryShaderCache implements ShaderCache {
     );
 
     _maybeFlushEntries();
+
+    return image;
   }
 
   ShaderCacheEntry _of(Uri uri) {
