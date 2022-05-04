@@ -25,6 +25,7 @@ import '../../../test_utils/utils.dart';
 void main() {
   late MockAppDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
+  late MockMarketingAnalyticsService marketingAnalyticsService;
   late MockCrudExplicitDocumentFeedbackUseCase
       crudExplicitDocumentFeedbackUseCase;
   final controller = StreamController<EngineEvent>.broadcast();
@@ -32,6 +33,7 @@ void main() {
   setUp(() async {
     engine = MockAppDiscoveryEngine();
     analyticsService = MockAnalyticsService();
+    marketingAnalyticsService = MockMarketingAnalyticsService();
     crudExplicitDocumentFeedbackUseCase =
         MockCrudExplicitDocumentFeedbackUseCase();
 
@@ -41,8 +43,10 @@ void main() {
         () => Future.value(EngineEventsUseCase(engine)));
     di.registerSingletonAsync<ChangeDocumentFeedbackUseCase>(
         () => Future.value(ChangeDocumentFeedbackUseCase(engine)));
-    di.registerLazySingleton<SendAnalyticsUseCase>(
-        () => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
+          analyticsService,
+          marketingAnalyticsService,
+        ));
     di.registerLazySingleton<CrudExplicitDocumentFeedbackUseCase>(
         () => crudExplicitDocumentFeedbackUseCase);
 

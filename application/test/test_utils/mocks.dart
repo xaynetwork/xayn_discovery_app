@@ -232,6 +232,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   UpdateSessionUseCase,
   UrlOpener,
   DeepLinkManager,
+  MarketingAnalyticsService,
 ])
 class Mocks {
   Mocks._();

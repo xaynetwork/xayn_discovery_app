@@ -45,7 +45,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     this._deepLinkManager,
   ) {
     _appsflyer.onDeepLinking(_onDeepLinking);
-    _appsflyer.setMinTimeBetweenSessions(5);
+    _appsflyer.setMinTimeBetweenSessions(60);
     _appsflyer.setPushNotification(true);
   }
 
@@ -135,13 +135,18 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
 @testEnvironment
 class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
   @override
-  void send(AnalyticsEvent event) {}
+  void send(AnalyticsEvent event) =>
+      logger.i('DEBUG: Marketing Analytics event has been fired:\n${{
+        'type': event.type,
+        'properties': event.properties,
+      }}');
 
   @override
-  void optOut(bool state) {}
+  void optOut(bool state) => logger.i('DEBUG: Marketing Analytics opt Out');
 
   @override
-  void setCurrentDeviceLanguage(String language) {}
+  void setCurrentDeviceLanguage(String language) =>
+      logger.i('DEBUG: Marketing Analytics language is set to $language');
 
   @override
   Future<String?> getUID() async => null;

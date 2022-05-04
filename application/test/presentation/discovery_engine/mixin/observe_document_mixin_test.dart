@@ -17,6 +17,7 @@ import '../../../test_utils/utils.dart';
 void main() {
   late MockAppDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
+  late MockMarketingAnalyticsService marketingAnalyticsService;
   final document = Document(
     documentId: DocumentId(),
     userReaction: UserReaction.neutral,
@@ -39,6 +40,7 @@ void main() {
   setUp(() async {
     engine = MockAppDiscoveryEngine();
     analyticsService = MockAnalyticsService();
+    marketingAnalyticsService = MockMarketingAnalyticsService();
 
     di.registerSingletonAsync<LogDocumentTimeUseCase>(
         () => Future.value(LogDocumentTimeUseCase(engine)));
@@ -46,8 +48,10 @@ void main() {
         DiscoveryCardObservationUseCase());
     di.registerSingleton<DiscoveryCardMeasuredObservationUseCase>(
         DiscoveryCardMeasuredObservationUseCase());
-    di.registerLazySingleton<SendAnalyticsUseCase>(
-        () => SendAnalyticsUseCase(analyticsService));
+    di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
+          analyticsService,
+          marketingAnalyticsService,
+        ));
     di.registerLazySingleton<ChangeDocumentFeedbackUseCase>(
         () => ChangeDocumentFeedbackUseCase(engine));
 

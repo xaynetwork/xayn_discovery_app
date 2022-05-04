@@ -109,7 +109,11 @@ void main() {
     () {
       di.allowReassignment = true;
       di.registerLazySingleton<SendAnalyticsUseCase>(
-          () => SendAnalyticsUseCase(MockAnalyticsService()));
+        () => SendAnalyticsUseCase(
+          MockAnalyticsService(),
+          MockMarketingAnalyticsService(),
+        ),
+      );
       urlOpener = MockUrlOpener();
       di.registerLazySingleton<UrlOpener>(() => urlOpener);
       overlayManager = MockOverlayManager();

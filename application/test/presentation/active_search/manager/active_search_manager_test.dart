@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -69,6 +70,7 @@ void main() {
           UpdateCardIndexUseCase(feedRepository),
           SendAnalyticsUseCase(
             AnalyticsServiceDebugMode(),
+            MarketingAnalyticsServiceDebugMode(),
           ),
           CrudExplicitDocumentFeedbackUseCase(
             HiveExplicitDocumentFeedbackRepository(
