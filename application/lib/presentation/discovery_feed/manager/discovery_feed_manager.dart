@@ -212,7 +212,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   /// Triggers the discovery engine to load more results.
   @override
-  void handleLoadMore() => requestNextFeedBatch();
+  void handleLoadMore() => maybeLoadMore(
+        cardIndex: state.cardIndex,
+        totalResults: state.results.length,
+      );
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
