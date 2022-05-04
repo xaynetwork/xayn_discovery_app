@@ -37,7 +37,7 @@ class _StaticShaderState extends BaseStaticShaderState<StaticShader> {
   Widget build(BuildContext context) {
     final srcImage = image;
 
-    if (!hasImage) return Container();
+    if (!hasDecodedImage) return Container();
 
     final paint = CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),

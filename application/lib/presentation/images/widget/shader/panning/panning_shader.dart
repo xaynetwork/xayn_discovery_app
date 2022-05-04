@@ -41,7 +41,7 @@ class _PanningShaderState extends BaseAnimationShaderState<PanningShader> {
   Widget build(BuildContext context) {
     final srcImage = image;
 
-    if (!hasImage) return Container();
+    if (!hasDecodedImage) return Container();
 
     final paint = CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),

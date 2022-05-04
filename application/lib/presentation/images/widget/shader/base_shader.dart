@@ -36,9 +36,10 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
   late final ShaderCache _cache = di.get();
   ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
+  bool _hasDecodedImage = false;
 
   ui.Image? get image => _cache.imageOf(widget.uri);
-  bool get hasImage => _cache.hasImageOf(widget.uri);
+  bool get hasDecodedImage => _hasDecodedImage;
 
   @override
   void initState() {
@@ -65,7 +66,10 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     super.didUpdateWidget(oldWidget);
   }
 
-  void didResolveImage() {}
+  @mustCallSuper
+  void didResolveImage() {
+    _hasDecodedImage = true;
+  }
 
   void _resolveImage() {
     if (_cache.hasImageOf(widget.uri)) {
@@ -88,19 +92,18 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
       final minWidth = widget.width ?? double.maxFinite;
 
       if (frameInfo.image.width < minWidth) {
-        return null;
+        logger.i(
+            'Image is too small: [${frameInfo.image.width} lower than $minWidth] ${widget.uri}');
+
+        return _cache.update(widget.uri, image: null);
       }
 
-      _cache.update(widget.uri, image: frameInfo.image);
-
-      return frameInfo.image;
+      return _cache.update(widget.uri, image: frameInfo.image);
     } catch (e) {
       logger.i('Unable to decode image at: ${widget.uri}');
 
-      _cache.update(widget.uri, image: null);
+      return _cache.update(widget.uri, image: null);
     }
-
-    return null;
   }
 }
 
@@ -183,6 +186,8 @@ abstract class BaseAnimationShaderState<T extends BaseAnimationShader>
   @mustCallSuper
   @override
   void didResolveImage() {
+    super.didResolveImage();
+
     final status = _cache.animationStatusOf(widget.uri);
     final curve = CurvedAnimation(
       parent: _controller,
