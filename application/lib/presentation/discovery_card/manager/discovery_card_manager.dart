@@ -121,6 +121,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
+  Uri? _lastUpdatedDocument;
 
   DiscoveryCardManager(
     this._loadHtmlUseCase,
@@ -145,9 +146,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     );
 
     // ideally, url is nullable, but we don't control this
-    if (document.resource.url == Uri.base) return;
+    if (document.resource.url == Uri.base ||
+        document.resource.url == _lastUpdatedDocument) return;
 
     /// Update the uri which contains the news article
+    _lastUpdatedDocument = document.resource.url;
     _updateUri(document.resource.url);
   }
 

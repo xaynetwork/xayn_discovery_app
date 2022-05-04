@@ -84,7 +84,4 @@ class DirectUriUseCase extends UseCase<Uri, CacheManagerEvent> {
       yield CacheManagerEvent.completed(param, bytes);
     }
   }
-
-  @override
-  Stream<Uri> transform(Stream<Uri> incoming) => incoming.distinct();
 }
