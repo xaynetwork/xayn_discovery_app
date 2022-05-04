@@ -131,7 +131,21 @@ class _DiscoveryFeedState
 
   @override
   void initState() {
+    cardViewController.addListener(_onCardViewController);
     manager.checkIfNeedToShowOnboarding();
+
     super.initState();
   }
+
+  @override
+  void dispose() {
+    cardViewController.removeListener(_onCardViewController);
+
+    super.dispose();
+  }
+
+  void _onCardViewController() => manager.maybeLoadMore(
+        cardIndex: cardViewController.index,
+        totalResults: manager.state.results.length,
+      );
 }
