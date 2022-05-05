@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -17,6 +18,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/utils/engine_error_messages.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
@@ -50,7 +52,7 @@ abstract class ActiveSearchNavActions {
 /// in a list format by widgets.
 @lazySingleton
 class ActiveSearchManager extends BaseDiscoveryManager
-    with SearchMixin<DiscoveryState>
+    with SearchMixin<DiscoveryState>, EngineErrorMessagesMixin
     implements ActiveSearchNavActions {
   ActiveSearchManager(
     this._activeSearchNavActions,
@@ -249,6 +251,30 @@ class ActiveSearchManager extends BaseDiscoveryManager
       );
     };
   }
+
+  @override
+  Future<DiscoveryState?> computeState() async => fold(
+        engineEvents,
+      ).foldAll(
+        (
+          engineEvent,
+          errorReport,
+        ) async {
+          if (engineEvent is NextFeedBatchRequestFailed ||
+              engineEvent is EngineExceptionRaised ||
+              engineEvent is RestoreSearchFailedEvent) {
+            final errorMessage = getEngineEventErrorMessage(
+              engineEvent!,
+            );
+            showOverlay(
+              OverlayData.bottomSheetGenericError(
+                errorCode: errorMessage,
+              ),
+            );
+          }
+          return super.computeState();
+        },
+      );
 
   @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
