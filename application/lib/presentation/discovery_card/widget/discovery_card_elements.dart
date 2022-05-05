@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
@@ -76,10 +77,11 @@ class DiscoveryCardElements extends StatelessWidget {
     );
     final titleWidgetStyle =
         useLargeTitle ? R.styles.xxlBoldStyle : R.styles.xlBoldStyle;
-    final titleWidget = Text(
+    final titleWidget = AutoSizeText(
       title,
       style: titleWidgetStyle.copyWith(color: Colors.white),
       textAlign: TextAlign.left,
+      minFontSize: titleWidgetStyle.fontSize! * 0.75,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
     );
@@ -110,7 +112,9 @@ class DiscoveryCardElements extends StatelessWidget {
         if (timeToRead.isNotEmpty) timeToReadWidget,
         SizedBox(
           width: mediaQuery.size.width * _kMaxTitleFraction,
-          child: titleWidget,
+          child: Row(
+            children: [Expanded(child: titleWidget)],
+          ),
         ),
       ],
     );
