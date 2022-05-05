@@ -6,7 +6,7 @@ class EngineErrorMessages {
   EngineErrorMessages._();
 
   static const String timeoutError = 'TimedOut';
-  static const String dnsError = 'dns error';
+  static const String connectError = 'ConnectError';
 
   /// Use the following when there is no match with anyone else error message
   static const String unknownError = 'Unknown';
@@ -18,12 +18,12 @@ mixin EngineErrorMessagesMixin {
   String getEngineEventErrorMessage(EngineEvent event) {
     final eventString = event.toString().toLowerCase();
     final timeoutError = EngineErrorMessages.timeoutError.toLowerCase();
-    final dnsError = EngineErrorMessages.dnsError.toLowerCase();
+    final connectError = EngineErrorMessages.connectError.toLowerCase();
     if (eventString.contains(timeoutError)) {
       return EngineErrorMessages.timeoutError;
     }
-    if (eventString.contains(dnsError)) {
-      return EngineErrorMessages.dnsError;
+    if (eventString.contains(connectError)) {
+      return EngineErrorMessages.connectError;
     }
     return EngineErrorMessages.unknownError;
   }
