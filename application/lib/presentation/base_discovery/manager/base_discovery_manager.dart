@@ -30,6 +30,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_d
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -290,6 +291,21 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
         final sets = await maybeReduceCardCount(results);
         final nextCardIndex = sets.nextCardIndex;
+
+        if (engineEvent != null) logger.i('[engineEvent]: $engineEvent');
+
+        if (errorReport.isNotEmpty) {
+          logger.e('Something went wrong in $runtimeType: ${{
+            'cardIndexConsumer': errorReport.of(cardIndexConsumer).toString(),
+            'crudExplicitDocumentFeedbackConsumer':
+                errorReport.of(crudExplicitDocumentFeedbackConsumer).toString(),
+            'engineEvents': errorReport.of(engineEvents).toString(),
+            'subscriptionStatusHandler':
+                errorReport.of(subscriptionStatusHandler).toString(),
+            'readerModeSettingsHandler':
+                errorReport.of(_readerModeSettingsHandler).toString(),
+          }}');
+        }
 
         if (nextCardIndex != null) _cardIndex = nextCardIndex;
 

@@ -19,6 +19,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin RequestFeedMixin<T extends DiscoveryState>
@@ -54,6 +55,8 @@ mixin RequestFeedMixin<T extends DiscoveryState>
 
   void _startConsuming() async {
     _didStartConsuming = true;
+
+    logger.i('[BEGIN RequestFeedMixin logging]');
 
     late final fetchCardIndexUseCase = di.get<FetchCardIndexUseCase>();
     final updateSessionUseCase = di.get<UpdateSessionUseCase>();
@@ -92,31 +95,41 @@ mixin RequestFeedMixin<T extends DiscoveryState>
     // in the previous app session.
     makeCleanedUpOldFeed(Stream<Session> stream) => stream
         .take(1)
+        .doOnData((_) => logger.i('- doRequestFeed'))
         // restore the feed from the previous app session
         .doRequestFeed()
+        .doOnData((_) => logger.i('- onRestore'))
         // convert all to DocumentId's
         .map(onRestore)
+        .doOnData((_) => logger.i('- onCloseOldDocuments'))
         // close all documents except the single one that the user had
         // up in a previous session
         .asyncMap(onCloseOldDocuments)
+        .doOnData((_) => logger.i('- release stream'))
         // release the [stream] for consumption
         .doOnData(_preambleCompleter.complete);
 
     // pulls in fresh/actual documents
     makeActualizeFeed(Stream<None> stream) => stream
+        .doOnData((_) => logger.i('- doResetFeedAndRequestNextBatch'))
         // we now have just 1 document, so fetch a next batch of fresh ones
         .doResetFeedAndRequestNextBatch()
+        .doOnData((_) => logger.i('- onResetParameters'))
         // increment the feed index, so that the old document is moved up
         .doOnData(onResetParameters(1));
 
     // rebuilds the feed when the market(s) change
     makeMarketChangedFeed(Stream<bool> stream) => stream
+        .doOnData((_) => logger.i('- onCloseExplicitFeedback'))
         // cleanup the old feed, from the previous market
         .asyncMap(onCloseExplicitFeedback)
+        .doOnData((_) => logger.i('- finalizeFeedMarketsChange'))
         // update the feed, it is now using the new market
         .finalizeFeedMarketsChange()
+        .doOnData((_) => logger.i('- onResetParameters'))
         // reset the feed to the start index
         .doOnData(onResetParameters())
+        .doOnData((_) => logger.i('- doResetFeedAndRequestNextBatch'))
         // finally load documents in the new market
         .doResetFeedAndRequestNextBatch();
 
