@@ -230,6 +230,7 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
           errorBuilder: (_) => Container(),
           noImageBuilder: (_) => Container(),
           loadingBuilder: (_, __) => const WidgetTestableProgressIndicator(),
+          shouldCheckDimen: false,
         ),
       );
 

@@ -19,6 +19,7 @@ abstract class BaseStaticShader extends StatefulWidget {
   final ImageErrorWidgetBuilder noImageBuilder;
   final Color? shadowColor;
   final Uri uri;
+  final bool shouldCheckDimen;
 
   const BaseStaticShader({
     Key? key,
@@ -28,6 +29,7 @@ abstract class BaseStaticShader extends StatefulWidget {
     required this.uri,
     this.width,
     this.height,
+    this.shouldCheckDimen = true,
   }) : super(key: key);
 }
 
@@ -91,7 +93,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
       final frameInfo = await codec.getNextFrame();
       final minWidth = widget.width ?? double.maxFinite;
 
-      if (frameInfo.image.width < minWidth) {
+      if (widget.shouldCheckDimen && frameInfo.image.width < minWidth) {
         logger.i(
             'Image is too small: [${frameInfo.image.width} lower than $minWidth] ${widget.uri}');
 
@@ -128,6 +130,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     Curve? curve = Curves.easeInOut,
     double? width,
     double? height,
+    bool shouldCheckDimen = true,
   })  : curve = curve ?? Curves.easeInOut,
         duration = duration ?? _kDefaultDuration,
         super(
@@ -138,6 +141,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
           bytes: bytes,
           width: width,
           height: height,
+          shouldCheckDimen: shouldCheckDimen,
         );
 }
 
