@@ -60,7 +60,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
       });
 
   Widget _buildLoading() => SizedBox(
-        height: R.dimen.unit52,
+        height: R.dimen.unit20,
         child: Center(
           child: CircularProgressIndicator(
             color: R.colors.icon,
