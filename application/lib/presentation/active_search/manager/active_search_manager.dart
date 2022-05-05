@@ -261,8 +261,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           errorReport,
         ) async {
           if (engineEvent is NextFeedBatchRequestFailed ||
-              engineEvent is EngineExceptionRaised ||
-              engineEvent is RestoreSearchFailedEvent) {
+              engineEvent is EngineExceptionRaised) {
             final errorMessage = getEngineEventErrorMessage(
               engineEvent!,
             );
