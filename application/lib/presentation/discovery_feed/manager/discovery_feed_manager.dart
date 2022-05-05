@@ -337,8 +337,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           errorReport,
         ) async {
           if (engineEvent is NextFeedBatchRequestFailed ||
-              engineEvent is EngineExceptionRaised ||
-              engineEvent is RestoreFeedFailed) {
+              engineEvent is EngineExceptionRaised) {
             final errorMessage = getEngineEventErrorMessage(
               engineEvent!,
             );
