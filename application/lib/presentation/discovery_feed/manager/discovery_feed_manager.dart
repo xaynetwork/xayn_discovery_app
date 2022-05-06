@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
@@ -15,11 +16,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -59,10 +63,14 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   /// If the count overflows, then n-cards will be removed from the beginning
   /// onwards, until maxCardCount is satisfied.
   final int _maxCardCount;
+  final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
+  final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
 
   DiscoveryFeedManager(
     this._fetchSessionUseCase,
     this._discoveryFeedNavActions,
+    this._needToShowOnboardingUseCase,
+    this._markOnboardingTypeCompletedUseCase,
     EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
@@ -200,6 +208,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   void resetParameters([int nextCardIndex = 0]) {
+    _isLoading = nextCardIndex == 0;
+
     resetCardIndex(nextCardIndex);
     // clears the current pending observation, if any...
     observeDocument();
@@ -321,5 +331,25 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
       _discoveryFeedNavActions.onTrialExpired();
     }
+  }
+
+  void checkIfNeedToShowOnboarding() async {
+    Future<bool> needShow(OnboardingType type) =>
+        _needToShowOnboardingUseCase.singleOutput(type);
+
+    if (await needShow(OnboardingType.homeVerticalSwipe)) {
+      _showOnboarding(OnboardingType.homeVerticalSwipe);
+    } else if (await needShow(OnboardingType.homeHorizontalSwipe)) {
+      _showOnboarding(OnboardingType.homeHorizontalSwipe);
+    } else if (await needShow(OnboardingType.homeBookmarksManage)) {
+      _showOnboarding(OnboardingType.homeBookmarksManage);
+    }
+  }
+
+  void _showOnboarding(OnboardingType type) {
+    final data = OverlayData.bottomSheetOnboarding(type, () {
+      _markOnboardingTypeCompletedUseCase.call(type);
+    });
+    showOverlay(data);
   }
 }

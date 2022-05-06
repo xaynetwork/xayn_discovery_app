@@ -4,10 +4,9 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_state.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 
@@ -19,17 +18,14 @@ class SourceFilterSettingsPage extends StatefulWidget {
       _SourceFilterSettingsPageState();
 }
 
-class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
-    with TooltipStateMixin, ErrorHandlingMixin {
+class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage> {
   late final SourceFilterSettingsManager _manager = di.get();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-            title: R.strings.feedSettingsScreenTabSources,
-          ),
+        appToolbarData: AppToolbarData.titleOnly(
+          title: R.strings.feedSettingsScreenTabSources,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
@@ -45,10 +41,9 @@ class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
       );
     }
 
-    return BlocConsumer<SourceFilterSettingsManager, SourceFilterSettingsState>(
+    return BlocBuilder<SourceFilterSettingsManager, SourceFilterSettingsState>(
       bloc: _manager,
       builder: (_, state) => buildReadyState(state),
-      listener: (_, state) => handleError(state.error, showTooltip),
     );
   }
 

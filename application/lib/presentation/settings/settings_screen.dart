@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/contact_info/contact_info_bottom_sheet.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -23,7 +22,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settin
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -45,12 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen>
   Linden get linden => UnterDenLinden.getLinden(context);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-            title: R.strings.settingsTitle,
-          ),
+        appToolbarData: AppToolbarData.titleOnly(
+          title: R.strings.settingsTitle,
         ),
         body: _buildBody(),
       );
@@ -134,7 +131,6 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildGeneralSection(bool isPaymentEnabled) =>
       SettingsGeneralInfoSection(
-        onContactPressed: _showContactInfo,
         onAboutPressed: () => _manager.openExternalUrl(
           url: Constants.aboutXaynUrl,
           currentView: CurrentView.settings,
@@ -208,21 +204,5 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       );
     }
-  }
-
-  _showContactInfo() {
-    showAppBottomSheet(
-      context,
-      builder: (buildContext) => ContactInfoBottomSheet(
-        onXaynSupportEmailTap: () => _manager.openExternalEmail(
-            Constants.xaynSupportEmail, CurrentView.settings),
-        onXaynPressEmailTap: () => _manager.openExternalEmail(
-            Constants.xaynPressEmail, CurrentView.settings),
-        onXaynUrlTap: () => _manager.openExternalUrl(
-          url: Constants.xaynUrl,
-          currentView: CurrentView.settings,
-        ),
-      ),
-    );
   }
 }

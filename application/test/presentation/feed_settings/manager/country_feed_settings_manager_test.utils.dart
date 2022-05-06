@@ -78,5 +78,4 @@ const stateReady = CountryFeedSettingsState.ready(
   maxSelectedCountryAmount: maxSelectedCountryAmount,
   selectedCountries: selectedList,
   unSelectedCountries: unSelectedList,
-  error: ErrorObject(),
 ) as CountryFeedSettingsStateReady;

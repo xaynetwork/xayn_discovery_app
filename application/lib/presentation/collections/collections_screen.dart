@@ -10,12 +10,12 @@ import 'package:xayn_discovery_app/presentation/collections/manager/collection_c
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/collections/manager/collections_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/collections/swipeable_collection_card.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_mixin.dart';
+import 'package:xayn_discovery_app/presentation/collections/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
@@ -33,12 +33,10 @@ class CollectionsScreen extends StatefulWidget {
 }
 
 class _CollectionsScreenState extends State<CollectionsScreen>
-    with
-        NavBarConfigMixin,
-        CollectionCardManagersMixin,
-        BottomSheetBodyMixin,
-        CardWidgetTransitionMixin {
+    with NavBarConfigMixin, BottomSheetBodyMixin, CardWidgetTransitionMixin {
   CollectionsScreenManager? _collectionsScreenManager;
+  late final CollectionCardManagersCache _collectionCardManagersCache =
+      di.get();
 
   @override
   void initState() {
@@ -68,14 +66,12 @@ class _CollectionsScreenState extends State<CollectionsScreen>
       );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.withTrailingIcon(
-            title: R.strings.collectionsScreenTitle,
-            iconPath: R.assets.icons.plus,
-            onPressed: () => _showAddCollectionBottomSheet(),
-          ),
+        appToolbarData: AppToolbarData.withTrailingIcon(
+          title: R.strings.collectionsScreenTitle,
+          iconPath: R.assets.icons.plus,
+          onPressed: () => _showAddCollectionBottomSheet(),
         ),
         body: _buildBody(),
       );
@@ -139,7 +135,7 @@ class _CollectionsScreenState extends State<CollectionsScreen>
 
   Widget _buildBaseCard(Collection collection) =>
       BlocBuilder<CollectionCardManager, CollectionCardState>(
-        bloc: managerOf(collection.id),
+        bloc: _collectionCardManagersCache.managerOf(collection.id),
         builder: (context, cardState) {
           return CardWidget(
             cardData: CardData.collectionsScreen(

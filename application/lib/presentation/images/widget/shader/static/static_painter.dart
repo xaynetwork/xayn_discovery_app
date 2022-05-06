@@ -7,7 +7,7 @@ class StaticPainter extends BaseStaticPainter {
   late final Paint _paint = Paint();
 
   StaticPainter({
-    required ui.Image image,
+    ui.Image? image,
     Color? shadowColor,
   }) : super(
           image: image,

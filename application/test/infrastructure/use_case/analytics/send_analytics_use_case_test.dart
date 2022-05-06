@@ -9,12 +9,14 @@ import '../../../test_utils/utils.dart';
 
 void main() {
   late MockAnalyticsService analyticsService;
+  late MockMarketingAnalyticsService marketingAnalyticsService;
   late SendAnalyticsUseCase useCase;
   final event = OpenScreenEvent(screenName: 'test');
 
   setUp(() {
     analyticsService = MockAnalyticsService();
-    useCase = SendAnalyticsUseCase(analyticsService);
+    marketingAnalyticsService = MockMarketingAnalyticsService();
+    useCase = SendAnalyticsUseCase(analyticsService, marketingAnalyticsService);
 
     when(analyticsService.send(any)).thenAnswer((_) async {});
   });

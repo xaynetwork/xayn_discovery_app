@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/chan
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -25,7 +24,7 @@ void main() {
     late MockCreateBookmarkFromDocumentUseCase
         createBookmarkFromDocumentUseCase;
     late MockGetBookmarkUseCase getBookmarkUseCase;
-    late MockGetAllCollectionsUseCase getAllCollectionsUseCase;
+    late MockCollectionsRepository collectionsRepository;
 
     late MoveToCollectionState populatedState;
     late MoveToCollectionManager moveDocumentToCollectionManager;
@@ -66,15 +65,11 @@ void main() {
     final documentMarkedPositive = createDocumentMarkedPositive();
 
     void _mockManagerInitMethodCalls() {
-      when(getAllCollectionsUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(
-          GetAllCollectionsUseCaseOut(
-            [
-              collection1,
-              collection2,
-            ],
-          ),
-        ),
+      when(collectionsRepository.getAll()).thenAnswer(
+        (_) => [
+          collection1,
+          collection2,
+        ],
       );
 
       when(listenCollectionsUseCase.transform(any)).thenAnswer(
@@ -113,8 +108,8 @@ void main() {
     }
 
     Future<MoveToCollectionManager> createManager() async =>
-        await MoveToCollectionManager.create(
-          getAllCollectionsUseCase,
+        MoveToCollectionManager.create(
+          collectionsRepository,
           listenCollectionsUseCase,
           moveBookmarkUseCase,
           removeBookmarkUseCase,
@@ -130,7 +125,7 @@ void main() {
       createBookmarkFromDocumentUseCase =
           MockCreateBookmarkFromDocumentUseCase();
       getBookmarkUseCase = MockGetBookmarkUseCase();
-      getAllCollectionsUseCase = MockGetAllCollectionsUseCase();
+      collectionsRepository = MockCollectionsRepository();
       changeDocumentFeedbackUseCase = MockChangeDocumentFeedbackUseCase();
       sendAnalyticsUseCase = MockSendAnalyticsUseCase();
 
@@ -153,10 +148,10 @@ void main() {
       ],
       verify: (manager) {
         verifyInOrder([
-          getAllCollectionsUseCase.singleOutput(none),
+          collectionsRepository.getAll(),
           listenCollectionsUseCase.transform(any),
         ]);
-        verifyNoMoreInteractions(getAllCollectionsUseCase);
+        verifyNoMoreInteractions(collectionsRepository);
         verifyNoMoreInteractions(listenCollectionsUseCase);
       },
     );

@@ -22,7 +22,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
-import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
@@ -30,6 +29,7 @@ import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -57,8 +57,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         TooltipStateMixin<W>,
         SubscriptionTrialBannerStateMixin<W>,
         OverlayMixin<W>,
-        OverlayStateMixin<W>,
-        ErrorHandlingMixin<W> {
+        OverlayStateMixin<W> {
   late final CardViewController _cardViewController = CardViewController();
   late final RatingDialogManager _ratingDialogManager = di.get();
   late final FeatureManager featureManager = di.get();
@@ -116,7 +115,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   ? readerModeBgColor.dark.color
                   : readerModeBgColor.light.color;
 
-          return Scaffold(
+          return AppScaffold(
             /// resizing the scaffold is set to false since the keyboard could be
             /// triggered when creating a collection from the bottom sheet and the
             /// feed should look the same in that process

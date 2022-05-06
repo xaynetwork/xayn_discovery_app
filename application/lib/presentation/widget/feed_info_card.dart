@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 class FeedEndOfResultsCard extends FeedInfoCard {
   FeedEndOfResultsCard({
@@ -13,6 +14,7 @@ class FeedEndOfResultsCard extends FeedInfoCard {
           description: R.strings.searchEndOfResultsDesc,
           width: width,
           height: height,
+          animationAsset: R.assets.lottie.contextual.emptySearch,
         );
 }
 
@@ -21,6 +23,7 @@ abstract class FeedInfoCard extends StatelessWidget {
   final String description;
   final double? width;
   final double? height;
+  final String? animationAsset;
 
   const FeedInfoCard({
     Key? key,
@@ -28,6 +31,7 @@ abstract class FeedInfoCard extends StatelessWidget {
     required this.description,
     this.width,
     this.height,
+    this.animationAsset,
   }) : super(key: key);
 
   @override
@@ -40,6 +44,7 @@ abstract class FeedInfoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
+            if (animationAsset != null) AnimationPlayer.asset(animationAsset!),
             Text(
               title,
               style: R.styles.lBoldStyle,
@@ -92,5 +97,6 @@ class FeedNoResultsCard extends FeedInfoCard {
           description: R.strings.searchNoResultsFoundDesc,
           width: width,
           height: height,
+          animationAsset: R.assets.lottie.contextual.emptySearch,
         );
 }

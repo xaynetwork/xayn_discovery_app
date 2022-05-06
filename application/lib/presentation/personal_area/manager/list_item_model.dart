@@ -16,4 +16,8 @@ class ListItemModel with _$ListItemModel {
     required UniqueId id,
     required DateTime trialEndDate,
   }) = _ListItemModelPayment;
+
+  const factory ListItemModel.contact({
+    required UniqueId id,
+  }) = _ListItemModelContact;
 }

@@ -67,7 +67,6 @@ class _DiscoveryFeedState
             document: document,
             provider: managers.discoveryCardManager.state.processedDocument
                 ?.getProvider(document.resource),
-            onError: showTooltip,
             feedType: FeedType.feed,
           ),
         );
@@ -134,5 +133,11 @@ class _DiscoveryFeedState
     }
 
     return _manager.state.isFullScreen ? buildReaderMode() : buildDefault();
+  }
+
+  @override
+  void initState() {
+    manager.checkIfNeedToShowOnboarding();
+    super.initState();
   }
 }

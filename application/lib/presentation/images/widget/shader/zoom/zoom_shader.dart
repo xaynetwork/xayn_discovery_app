@@ -39,15 +39,9 @@ class _ZoomShaderState extends BaseAnimationShaderState<ZoomShader> {
   Widget build(BuildContext context) {
     final srcImage = image;
 
-    if (srcImage == null) {
-      return SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: widget.noImageBuilder(context),
-      );
-    }
+    if (!hasDecodedImage) return Container();
 
-    return CustomPaint(
+    final paint = CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
       painter: ZoomPainter(
         image: srcImage,
@@ -55,5 +49,20 @@ class _ZoomShaderState extends BaseAnimationShaderState<ZoomShader> {
         shadowColor: widget.shadowColor,
       ),
     );
+
+    if (srcImage == null) {
+      return Stack(
+        children: [
+          SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: widget.noImageBuilder(context),
+          ),
+          paint,
+        ],
+      );
+    }
+
+    return paint;
   }
 }
