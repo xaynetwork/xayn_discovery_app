@@ -1,14 +1,10 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_design/xayn_design.dart' hide NavBarObserver;
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/navigation/observer/nav_bar_observer.dart';
-import 'package:xayn_discovery_app/presentation/widget/connection_snackbar/connection_snackbar.dart';
 
 const double kExtraBottomOffset = 18.0;
 
@@ -23,7 +19,6 @@ class AppRouter extends xayn.NavigatorDelegate {
     // so that it's in the middle of current and next card
     // even on devices without the bottom safe area.
     final bottomPadding = mQuery.padding.bottom;
-    final topPadding = mQuery.padding.top;
     final extraBottomPadding =
         bottomPadding > 0 ? bottomPadding : kExtraBottomOffset;
 
@@ -35,22 +30,15 @@ class AppRouter extends xayn.NavigatorDelegate {
         ? defaultPadding
         : defaultPadding.copyWith(bottom: R.dimen.unit2 + extraBottomPadding);
 
-    final ConnectivityObserver connectivityObserver = di.get();
     final stack = Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
-        _buildScaffold(connectivityObserver),
+        buildNavigator(
+          observers: [NavBarObserver()],
+        ),
         TooltipContextProvider(
           child: NavBar(
             padding: navbarPadding,
-          ),
-        ),
-        Positioned(
-          top: topPadding,
-          right: 0.0,
-          left: 0.0,
-          child: _buildSnackBarConnection(
-            connectivityObserver,
           ),
         ),
       ],
@@ -66,32 +54,4 @@ class AppRouter extends xayn.NavigatorDelegate {
       ),
     );
   }
-
-  Widget _buildScaffold(ConnectivityObserver connectivityObserver) => Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: StreamBuilder<Object>(
-          stream: connectivityObserver.onConnectivityChanged,
-          builder: (context, snapshot) =>
-              snapshot.data == ConnectivityResult.none
-                  ? _buildNavigatorWithPadding()
-                  : buildNavigator(
-                      observers: [NavBarObserver()],
-                    ),
-        ),
-      );
-
-  Widget _buildSnackBarConnection(ConnectivityObserver connectivityObserver) =>
-      StreamBuilder<Object>(
-        stream: connectivityObserver.onConnectivityChanged,
-        builder: (_, snapshot) => snapshot.data == ConnectivityResult.none
-            ? ConnectionSnackBar()
-            : Container(),
-      );
-
-  Widget _buildNavigatorWithPadding() => Padding(
-        padding: EdgeInsets.only(top: R.dimen.connectionErrorWidgetHeight),
-        child: buildNavigator(
-          observers: [NavBarObserver()],
-        ),
-      );
 }
