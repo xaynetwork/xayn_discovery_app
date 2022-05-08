@@ -14,6 +14,7 @@ void main() {
     description: '',
     price: price,
     currency: currency,
+    duration: 'month',
     status: PurchasableProductStatus.purchased,
   );
 

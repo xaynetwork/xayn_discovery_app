@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import '../../../test_utils/utils.dart';
@@ -69,7 +68,7 @@ void main() {
     when(setCollectionAndBookmarksChangesIdentityParam.call(none)).thenAnswer(
       (_) async => const [UseCaseResult.success(none)],
     );
-    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+    when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) async => subscriptionStatus);
     when(listenSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatus));

@@ -16,7 +16,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboa
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -78,7 +77,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
       consume(
     _listenSubscriptionStatusUseCase,
-    initialData: PurchasableIds.subscription,
+    initialData: none,
   );
   late SubscriptionStatus _subscriptionStatus;
   List<ListItemModel> _items = [];
@@ -100,10 +99,10 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
           .toList()
         ..add(_contactItem);
 
-      _subscriptionStatus = await _getSubscriptionStatusUseCase
-          .singleOutput(PurchasableIds.subscription);
+      _subscriptionStatus =
+          await _getSubscriptionStatusUseCase.singleOutput(none);
 
-      _maybeAddOrUpdateTrialBannerToItems();
+      _maybeUpdateTrialBannerToItems();
     });
   }
 
@@ -138,7 +137,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         }
         if (subscriptionStatus != null) {
           _subscriptionStatus = subscriptionStatus;
-          _maybeAddOrUpdateTrialBannerToItems();
+          _maybeUpdateTrialBannerToItems();
         }
 
         return PersonalAreaState.populated(
@@ -166,11 +165,10 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
     );
   }
 
-  void _maybeAddOrUpdateTrialBannerToItems() {
+  void _maybeUpdateTrialBannerToItems() {
     final trialEndDate = _subscriptionStatus.trialEndDate;
-    if (_featureManager.isPaymentEnabled &&
-        _subscriptionStatus.isFreeTrialActive &&
-        trialEndDate != null) {
+    if (!_featureManager.isPaymentEnabled || trialEndDate == null) return;
+    if (_subscriptionStatus.isFreeTrialActive) {
       _items.first.map(
         collection: (_) => _items.insert(
           0,
@@ -182,6 +180,12 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         payment: (data) => _items.first = data.copyWith(
           trialEndDate: trialEndDate,
         ),
+        contact: (data) => {},
+      );
+    } else {
+      _items.first.map(
+        payment: (_) => _items.removeAt(0),
+        collection: (item) => item,
         contact: (data) => {},
       );
     }

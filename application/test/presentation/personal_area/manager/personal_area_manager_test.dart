@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
@@ -96,7 +95,7 @@ void main() {
 
     when(dateTimeHandler.getDateTimeNow()).thenReturn(timeStamp);
     when(uniqueIdHandler.generateUniqueId()).thenReturn(paymentItemId);
-    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+    when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) async => subscriptionStatusInitial);
     when(listenSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatusInitial));
@@ -167,8 +166,7 @@ void main() {
     'WHEN manager is created and the free trial is active THEN emit state populated with trial banner and collections',
     build: () => create(),
     setUp: () {
-      when(getSubscriptionStatusUseCase
-              .singleOutput(PurchasableIds.subscription))
+      when(getSubscriptionStatusUseCase.singleOutput(any))
           .thenAnswer((_) async => subscriptionStatusFreeTrial);
       when(featureManager.isPaymentEnabled).thenReturn(true);
     },

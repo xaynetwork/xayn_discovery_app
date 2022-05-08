@@ -15,7 +15,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -85,7 +84,7 @@ void main() {
     when(getAppThemeUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appTheme));
 
-    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+    when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) => Future.value(subscriptionStatus));
 
     when(listenSubscriptionStatusUseCase.transaction(any))

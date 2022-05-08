@@ -20,7 +20,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
@@ -62,7 +61,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   late final UseCaseValueStream<SubscriptionStatus>
       _listenSubscriptionStatusHandler = consume(
     _listenSubscriptionStatusUseCase,
-    initialData: PurchasableIds.subscription,
+    initialData: none,
   );
   late final UseCaseSink<PurchasableProductId, PurchasableProductStatus>
       _purchaseSubscriptionHandler = pipe(_purchaseSubscriptionUseCase);
@@ -92,8 +91,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
   void _init() {
     scheduleComputeState(() async {
-      _subscriptionStatus = await _getSubscriptionStatusUseCase
-          .singleOutput(PurchasableIds.subscription);
+      _subscriptionStatus =
+          await _getSubscriptionStatusUseCase.singleOutput(none);
     });
   }
 
@@ -108,7 +107,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
 
     if (product == null || !product.canBePurchased) return;
     _paymentAction = PaymentAction.subscribe;
-    _purchaseSubscriptionHandler(PurchasableIds.subscription);
+    _purchaseSubscriptionHandler(product.id);
   }
 
   void enterRedeemCode() {

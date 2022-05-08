@@ -178,7 +178,7 @@ void main() async {
         isFullScreen: false,
         isInErrorState: false,
         didReachEnd: false,
-        subscriptionStatus: null,
+        subscriptionStatus: subscriptionStatusInitial,
       ),
     ],
     verify: (manager) {
@@ -292,7 +292,7 @@ void main() async {
           isInErrorState: false,
           shouldUpdateNavBar: false,
           didReachEnd: false,
-          subscriptionStatus: null,
+          subscriptionStatus: subscriptionStatusInitial,
           readerModeBackgroundColor: ReaderModeBackgroundColor(
             dark: ReaderModeBackgroundDarkColor.dark,
             light: ReaderModeBackgroundLightColor.white,
