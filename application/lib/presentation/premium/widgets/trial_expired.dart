@@ -129,7 +129,7 @@ class TrialExpired extends StatelessWidget {
     final isPurchasing =
         _product.status == PurchasableProductStatus.purchasePending;
 
-    final subscribeNowButton = AppGhostButton(
+    final subscribeNowButton = AppRaisedButton(
       child: SizedBox(
         height: R.dimen.unit3,
         child: Row(
@@ -147,7 +147,6 @@ class TrialExpired extends StatelessWidget {
         ),
       ),
       onPressed: _onSubscribe,
-      backgroundColor: R.colors.primaryAction,
     );
 
     return Row(
