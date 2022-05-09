@@ -25,6 +25,7 @@ Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
 BuildTypes = Config::BuildTypes
+IS_CI = is_ci
 
 # Common checks before running a lane
 before_all do |lane, options|
@@ -38,15 +39,15 @@ before_all do |lane, options|
   }
 
   # set default values
-  setIfNotSet.call(Options::CLEAN, is_ci)
+  setIfNotSet.call(Options::CLEAN, IS_CI)
   setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
   setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
   setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
   setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
-  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, is_ci)
+  setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, IS_CI)
   setIfNotSet.call(Options::COVERAGE, false)
   ## downloading the iOS adhoc profile
-  setIfNotSet.call(Options::DOWNLOAD_PROFILE, true)
+  setIfNotSet.call(Options::DOWNLOAD_PROFILE, IS_CI)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
   setIfNotSet.call(Options::TEST, lane == :check)
 
@@ -61,7 +62,7 @@ before_all do |lane, options|
   options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
   options[_Options::ENV].merge!(ENV.to_h)
-  if is_ci
+  if IS_CI
     UI.success "Env:\n#{JSON.pretty_generate(options[_Options::ENV])}"
   end
 end
@@ -142,7 +143,7 @@ desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
   maybe_pub_get(options)
-  if !is_ci
+  if !IS_CI
     create_commit_template(options)
   end
 
@@ -214,7 +215,7 @@ lane :check do |options|
   build_runner(options)
 
   flutter("analyze lib test")
-  if is_ci
+  if IS_CI
     flutter("format ./ --set-exit-if-changed")
   else
     flutter("format ./")
@@ -402,7 +403,7 @@ def downloadAssetsFromManifest(manifestPath, assetUrl, assetPath, justCreateEmpt
       File.open(path, "w") { } unless File.exist?(path)
       UI.success "Created #{path}"
     else
-      downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum)
+      downloadOnlyWhenNotMatchingSha2(assetUrl, suffix, assetPath, checksum, IS_CI)
     end
   }
 end
