@@ -305,4 +305,16 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
   @override
   void onBackNavPressed() => _discoveryCardNavActions.onBackNavPressed();
+
+  void onBookmarkLongPressed(
+    Document document, {
+    FeedType? feedType,
+  }) =>
+      showOverlay(
+        OverlayData.bottomSheetMoveDocumentToCollection(
+          document: document,
+          provider: state.processedDocument?.getProvider(document.resource),
+          feedType: feedType,
+        ),
+      );
 }

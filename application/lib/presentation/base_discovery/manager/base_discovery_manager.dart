@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
@@ -24,6 +25,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
@@ -56,7 +59,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         ObserveDocumentMixin<DiscoveryState>,
         ChangeUserReactionMixin<DiscoveryState>,
         ObserveSubscriptionWindowMixin<DiscoveryState>,
-        OverlayManagerMixin<DiscoveryState> {
+        OverlayManagerMixin<DiscoveryState>,
+        CheckValidDocumentMixin<DiscoveryState> {
   final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
@@ -132,6 +136,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Document? get currentObservedDocument => _observedDocument;
 
   int? get currentCardIndex => _cardIndex;
+
+  void maybeNavigateIntoCard(Document document) =>
+      checkIfDocumentNotProcessable(
+        document,
+        onValid: () => handleNavigateIntoCard(document),
+      );
 
   void handleNavigateIntoCard(Document document) {
     scheduleComputeState(() => _isFullScreen = true);
@@ -237,6 +247,19 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           ? _currentViewMode(observedDocument.documentId)
           : null,
       onObservation: _onObservation,
+    );
+  }
+
+  void onPaymentTrialBannerTap() {
+    onSubscriptionWindowOpened(
+      currentView: SubscriptionWindowCurrentView.feed,
+    );
+    showOverlay(
+      OverlayData.bottomSheetPayment(
+        onClosePressed: () => onSubscriptionWindowClosed(
+          currentView: SubscriptionWindowCurrentView.feed,
+        ),
+      ),
     );
   }
 
