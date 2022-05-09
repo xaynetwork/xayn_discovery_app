@@ -24,7 +24,7 @@ import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_a
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
@@ -80,23 +80,21 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.withTwoTrailingIcons(
-            title: R.strings.personalAreaTitle,
-            iconModels: [
-              AppToolbarIconModel(
-                iconPath: R.assets.icons.plus,
-                onPressed: _showAddCollectionBottomSheet,
-              ),
-              AppToolbarIconModel(
-                iconPath: R.assets.icons.gear,
-                onPressed: _manager.onSettingsNavPressed,
-                iconKey: Keys.personalAreaIconSettings,
-              ),
-            ],
-          ),
+        appToolbarData: AppToolbarData.withTwoTrailingIcons(
+          title: R.strings.personalAreaTitle,
+          iconModels: [
+            AppToolbarIconModel(
+              iconPath: R.assets.icons.plus,
+              onPressed: _showAddCollectionBottomSheet,
+            ),
+            AppToolbarIconModel(
+              iconPath: R.assets.icons.gear,
+              onPressed: _manager.onSettingsNavPressed,
+              iconKey: Keys.personalAreaIconSettings,
+            ),
+          ],
         ),
         body: _buildBody(),
       );
