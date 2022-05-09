@@ -278,8 +278,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
           collectionId: collection.id,
           showBarrierColor: showBarrierColor,
           onClose: onClose,
-          onMovePressed: (bookmarkIds) =>
-              showMoveBookmarksToCollectionBottomSheet(
+          onMovePressed: (bookmarkIds) => startMoveBookmarksFlow(
             bookmarkIds,
             collectionIdToRemove: collection.id,
             onClose: onClose,

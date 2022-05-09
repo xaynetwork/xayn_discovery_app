@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -177,24 +176,4 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     });
     showOverlay(data);
   }
-
-  onBookmarkOptionClick({
-    required UniqueId bookmarkId,
-    required VoidCallback onClose,
-  }) =>
-      showOverlay(
-        OverlayData.bottomSheetBookmarksOptions(
-          bookmarkId: bookmarkId,
-          onClose: onClose,
-          onMovePressed: () => showMoveBookmarkToCollectionBottomSheet(
-            bookmarkId,
-            onClose: onClose,
-          ),
-        ),
-      );
-
-  onMoveSwipe({
-    required UniqueId bookmarkId,
-  }) =>
-      showMoveBookmarkToCollectionBottomSheet(bookmarkId);
 }

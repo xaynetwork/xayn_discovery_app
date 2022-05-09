@@ -206,10 +206,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     showOverlay(
       OverlayData.tooltipBookmarked(
         document: document,
-        onTap: () => showMoveDocumentToCollectionBottomSheet(
+        onTap: () => onBookmarkLongPressed(
           document,
           feedType: feedType,
-          provider: state.processedDocument?.getProvider(document.resource),
         ),
       ),
       when: (oS, nS) =>
@@ -311,7 +310,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     Document document, {
     FeedType? feedType,
   }) =>
-      showMoveDocumentToCollectionBottomSheet(
+      startBookmarkDocumentFlow(
         document,
         feedType: feedType,
         provider: state.processedDocument?.getProvider(document.resource),

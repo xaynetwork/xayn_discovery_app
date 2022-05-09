@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
@@ -7,14 +8,21 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
-  void showMoveDocumentToCollectionBottomSheet(
+  /// Starts a flow for bookmarking/un-bookmarking a document or moving it
+  /// to a different collection
+  ///
+  /// Triggers bottom sheet with [OverlayData.bottomSheetMoveDocumentToCollection]
+  ///
+  /// Handles adding a collection flow and recalling [startBookmarkDocumentFlow]
+  /// with an initial collection id when a new collection is created
+  ///
+  void startBookmarkDocumentFlow(
     Document document, {
     DocumentProvider? provider,
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
   }) {
-    void onCollectionAdded(Collection collection) =>
-        showMoveDocumentToCollectionBottomSheet(
+    void onCollectionAdded(Collection collection) => startBookmarkDocumentFlow(
           document,
           provider: provider,
           feedType: feedType,
@@ -39,16 +47,24 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
     showOverlay(moveDocumentToCollectionSheet);
   }
 
-  void showMoveBookmarkToCollectionBottomSheet(
+  /// Starts a flow for moving a single bookmark
+  ///
+  /// Triggers bottom sheet with [OverlayData.bottomSheetCreateOrRenameCollection]
+  ///
+  /// Handles adding a collection flow and recalling [startMoveBookmarkFlow]
+  /// with an initial collection id when a new collection is created
+  ///
+  void startMoveBookmarkFlow(
     UniqueId bookmarkId, {
-    void Function()? onClose,
+    VoidCallback? onClose,
     UniqueId? initialSelectedCollectionId,
+    bool showBarrierColor = true,
   }) {
-    void onCollectionAdded(Collection collection) =>
-        showMoveBookmarkToCollectionBottomSheet(
+    void onCollectionAdded(Collection collection) => startMoveBookmarkFlow(
           bookmarkId,
           onClose: onClose,
           initialSelectedCollectionId: collection.id,
+          showBarrierColor: showBarrierColor,
         );
 
     void onAddCollectionPressed() => showOverlay(
@@ -64,20 +80,26 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
       onSystemPop: onClose,
       initialSelectedCollection: initialSelectedCollectionId,
       onAddCollectionPressed: onAddCollectionPressed,
-      showBarrierColor: onClose == null,
+      showBarrierColor: showBarrierColor,
     );
 
     showOverlay(moveBookmarkToCollectionSheet);
   }
 
-  void showMoveBookmarksToCollectionBottomSheet(
+  /// Starts a flow for moving multiple bookmarks while removing a collection
+  ///
+  /// Triggers bottom sheet with [OverlayData.bottomSheetMoveBookmarksToCollection]
+  ///
+  /// Handles adding a collection flow and recalling [startMoveBookmarksFlow]
+  /// with an initial collection id when a new collection is created
+  ///
+  void startMoveBookmarksFlow(
     List<UniqueId> bookmarkIds, {
     required UniqueId collectionIdToRemove,
-    void Function()? onClose,
+    VoidCallback? onClose,
     UniqueId? initialSelectedCollectionId,
   }) {
-    void onCollectionAdded(Collection collection) =>
-        showMoveBookmarksToCollectionBottomSheet(
+    void onCollectionAdded(Collection collection) => startMoveBookmarksFlow(
           bookmarkIds,
           collectionIdToRemove: collectionIdToRemove,
           onClose: onClose,
@@ -102,4 +124,26 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
 
     showOverlay(moveBookmarksToCollectionSheet);
   }
+
+  /// Starts a flow of opening an options menu for a bookmark
+  ///
+  /// Triggers bottom sheet with [OverlayData.bottomSheetBookmarksOptions]
+  ///
+  /// Handles moving a bookmark
+  ///
+  void startBookmarkOptionsFlow({
+    required UniqueId bookmarkId,
+    required VoidCallback onClose,
+  }) =>
+      showOverlay(
+        OverlayData.bottomSheetBookmarksOptions(
+          bookmarkId: bookmarkId,
+          onClose: onClose,
+          onMovePressed: () => startMoveBookmarkFlow(
+            bookmarkId,
+            onClose: onClose,
+            showBarrierColor: false,
+          ),
+        ),
+      );
 }
