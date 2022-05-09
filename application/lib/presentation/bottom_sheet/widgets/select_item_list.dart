@@ -14,6 +14,9 @@ class SelectItemList<T> extends StatelessWidget {
   final GetTitle<T> getTitle;
   final GetImage<T> getImage;
 
+  /// Scrollable physic is disabled, if [items.length] < than this value
+  final int minScrollableListSize;
+
   SelectItemList({
     Key? key,
     required this.items,
@@ -22,6 +25,7 @@ class SelectItemList<T> extends StatelessWidget {
     ItemBuilder<T>? builder,
     required this.getTitle,
     required this.getImage,
+    this.minScrollableListSize = 5,
   })  : assert(items.isNotEmpty, 'Items must have at least one item.'),
         preSelectedItems = preSelectedItems ?? {},
         builder = builder ??
@@ -32,6 +36,9 @@ class SelectItemList<T> extends StatelessWidget {
   Widget build(BuildContext context) => ListView.builder(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
+        physics: items.length < minScrollableListSize
+            ? const NeverScrollableScrollPhysics()
+            : null,
         itemCount: items.length,
         itemExtent: R.dimen.collectionItemBottomSheetHeight,
         itemBuilder: (_, index) {
