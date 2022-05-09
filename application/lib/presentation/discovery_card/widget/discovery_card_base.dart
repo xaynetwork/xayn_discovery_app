@@ -132,19 +132,19 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
       switch (deterministicRandom) {
         case 0:
-          background = R.colors.noImage3;
+          background = R.colors.noImageBackgroundGreen;
           assetName = R.assets.lottie.contextual.noImageA;
           break;
         case 1:
-          background = R.colors.noImage4;
+          background = R.colors.noImageBackgroundPink;
           assetName = R.assets.lottie.contextual.noImageB;
           break;
         case 2:
-          background = R.colors.noImage2;
+          background = R.colors.noImageBackgroundPurple;
           assetName = R.assets.lottie.contextual.noImageC;
           break;
         default:
-          background = R.colors.noImage1;
+          background = R.colors.noImageBackgroundOrange;
           assetName = R.assets.lottie.contextual.noImageD;
           break;
       }
