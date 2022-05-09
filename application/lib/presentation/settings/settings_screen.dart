@@ -22,7 +22,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settin
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -44,12 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen>
   Linden get linden => UnterDenLinden.getLinden(context);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-            title: R.strings.settingsTitle,
-          ),
+        appToolbarData: AppToolbarData.titleOnly(
+          title: R.strings.settingsTitle,
         ),
         body: _buildBody(),
       );

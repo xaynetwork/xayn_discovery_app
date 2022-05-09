@@ -29,6 +29,7 @@ import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -114,7 +115,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   ? readerModeBgColor.dark.color
                   : readerModeBgColor.light.color;
 
-          return Scaffold(
+          return AppScaffold(
             /// resizing the scaffold is set to false since the keyboard could be
             /// triggered when creating a collection from the bottom sheet and the
             /// feed should look the same in that process

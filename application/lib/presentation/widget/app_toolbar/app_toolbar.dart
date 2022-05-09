@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_additional_widget_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
 
@@ -8,9 +9,13 @@ import 'app_toolbar_trailing_button.dart';
 class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
   final AppToolbarData appToolbarData;
 
+  /// Widget to show above the toolbar
+  final AppToolbarAdditionalWidgetData? additionalWidgetData;
+
   const AppToolbar({
     Key? key,
     required this.appToolbarData,
+    this.additionalWidgetData,
   }) : super(key: key);
 
   @override
@@ -32,18 +37,29 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     return SafeArea(
-      child: Padding(
+      child: additionalWidgetData == null
+          ? _buildBaseToolbar(content)
+          : _buildToolbarWithAdditionalWidget(content),
+    );
+  }
+
+  Widget _buildToolbarWithAdditionalWidget(Widget content) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          additionalWidgetData!.widget,
+          _buildBaseToolbar(content),
+        ],
+      );
+
+  Widget _buildBaseToolbar(Widget content) => Padding(
         padding: EdgeInsets.symmetric(
           horizontal: R.dimen.unit3,
           vertical: R.dimen.unit4,
         ),
         child: content,
-      ),
-    );
-  }
+      );
 
   Widget _buildWithTextOnly(Text text) => SizedBox(
-        height: R.dimen.unit12,
         child: Container(
           alignment: AlignmentDirectional.centerStart,
           child: text,
@@ -100,7 +116,11 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
       );
 
   @override
-  Size get preferredSize => Size.fromHeight(R.dimen.unit12);
+  Size get preferredSize => Size.fromHeight(
+        additionalWidgetData == null
+            ? R.dimen.unit12
+            : R.dimen.unit12 * additionalWidgetData!.widgetHeight,
+      );
 }
 
 class TrailingIcon {
