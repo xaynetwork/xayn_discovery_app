@@ -84,7 +84,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       items: state.bookmarks,
       itemBuilder: (_, index, __, bookmark) {
         final card = CardWidgetTransitionWrapper(
-          onAnimationDone: () => _bookmarkManager.onBookmarkOptionClick(
+          onAnimationDone: () => _bookmarkManager.startBookmarkOptionsFlow(
             bookmarkId: bookmark.id,
             onClose: closeCardWidgetTransition,
           ),
@@ -112,12 +112,8 @@ class _BookmarksScreenState extends State<BookmarksScreen>
 
   Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) =>
       SwipeableBookmarkCard(
-        onMove: (UniqueId bookmarkId) {
-          _bookmarkManager.onMoveSwipe(bookmarkId: bookmarkId);
-        },
-        onDelete: (UniqueId bookmarkId) {
-          _bookmarkManager.removeBookmark(bookmarkId);
-        },
+        onMove: _bookmarkManager.startMoveBookmarkFlow,
+        onDelete: _bookmarkManager.removeBookmark,
         bookmarkId: bookmark.id,
         child: CardWidget(
           cardData: CardData.bookmark(
