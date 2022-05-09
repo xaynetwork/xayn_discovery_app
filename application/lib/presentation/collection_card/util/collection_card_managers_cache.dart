@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:quiver/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_manager.dart';
 
 @lazySingleton
 class CollectionCardManagersCache {
