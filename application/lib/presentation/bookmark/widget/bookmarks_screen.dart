@@ -70,7 +70,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimationPlayer.asset(
-                R.linden.assets.lottie.contextual.emptyCollectionB),
+                R.linden.assets.lottie.contextual.emptyCollection),
             Text(
               R.strings.bookmarkScreenNoArticles,
               style: R.styles.xlBoldStyle,
