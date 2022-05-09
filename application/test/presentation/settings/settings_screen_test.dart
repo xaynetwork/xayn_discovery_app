@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -45,6 +46,7 @@ void main() {
     streamController = StreamController<SettingsScreenState>();
     when(manager.stream).thenAnswer((_) => streamController.stream);
     when(manager.reportBug()).thenAnswer((_) async {});
+    when(manager.overlayManager).thenAnswer((_) => OverlayManager());
   });
 
   tearDown(() async {
@@ -54,7 +56,9 @@ void main() {
 
   Future<void> openScreen(WidgetTester tester) async {
     await tester.pumpLindenApp(
-      const SettingsScreen(),
+      const ApplicationTooltipProvider(
+        child: SettingsScreen(),
+      ),
       initialLinden: Linden(),
     );
     await tester.pumpAndSettle(R.animations.screenStateChangeDuration);
@@ -92,6 +96,7 @@ void main() {
       await tester.tap(btnFinder);
 
       verifyInOrder([
+        manager.overlayManager,
         manager.state,
         manager.state,
         manager.stream,
@@ -119,6 +124,7 @@ void main() {
       await tester.tap(btnFinder);
 
       verifyInOrder([
+        manager.overlayManager,
         manager.state,
         manager.state,
         manager.stream,
@@ -145,6 +151,7 @@ void main() {
       await tester.tap(btnFinder);
 
       verifyInOrder([
+        manager.overlayManager,
         manager.state,
         manager.state,
         manager.stream,
@@ -169,6 +176,7 @@ void main() {
       await tester.tap(btnFinder);
 
       verifyInOrder([
+        manager.overlayManager,
         manager.state,
         manager.state,
         manager.stream,
