@@ -3,7 +3,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_card_options/menu_option.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
@@ -13,23 +12,26 @@ class BookmarkOptionsBottomSheet extends BottomSheetBase {
   BookmarkOptionsBottomSheet({
     required UniqueId bookmarkId,
     required VoidCallback onSystemPop,
+    required VoidCallback onMovePressed,
     Key? key,
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
           body: _BookmarkOptions(
-            bookmarkId: bookmarkId,
-            onSystemPop: onSystemPop,
-          ),
+              bookmarkId: bookmarkId,
+              onSystemPop: onSystemPop,
+              onMovePressed: onMovePressed),
         );
 }
 
 class _BookmarkOptions extends StatefulWidget {
   final UniqueId bookmarkId;
   final VoidCallback? onSystemPop;
+  final VoidCallback onMovePressed;
 
   const _BookmarkOptions({
     required this.bookmarkId,
+    required this.onMovePressed,
     this.onSystemPop,
   });
 
@@ -49,7 +51,7 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
           text: R.strings.bottomSheetMoveSingleBookmark,
           onPressed: () {
             closeBottomSheet(context);
-            _showMoveBookmarkBottomSheet(context, widget.bookmarkId);
+            widget.onMovePressed();
           }),
       MenuOption(
         svgIconPath: R.assets.icons.trash,
@@ -86,20 +88,6 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
     return BottomSheetClickableOption(
       child: row,
       onTap: menuOption.onPressed,
-    );
-  }
-
-  void _showMoveBookmarkBottomSheet(
-    BuildContext context,
-    UniqueId bookmarkId,
-  ) {
-    showAppBottomSheet(
-      context,
-      showBarrierColor: false,
-      builder: (_) => MoveBookmarkToCollectionBottomSheet(
-        bookmarkId: bookmarkId,
-        onSystemPop: widget.onSystemPop,
-      ),
     );
   }
 }

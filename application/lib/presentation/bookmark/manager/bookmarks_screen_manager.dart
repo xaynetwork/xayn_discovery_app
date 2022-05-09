@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 
@@ -35,7 +36,8 @@ abstract class BookmarksScreenNavActions {
 class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     with
         UseCaseBlocHelper<BookmarksScreenState>,
-        OverlayManagerMixin<BookmarksScreenState>
+        OverlayManagerMixin<BookmarksScreenState>,
+        CollectionManagerFlowMixin<BookmarksScreenState>
     implements BookmarksScreenNavActions {
   final ListenBookmarksUseCase _listenBookmarksUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
@@ -184,15 +186,15 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
         OverlayData.bottomSheetBookmarksOptions(
           bookmarkId: bookmarkId,
           onClose: onClose,
+          onMovePressed: () => showMoveBookmarkToCollectionBottomSheet(
+            bookmarkId,
+            onClose: onClose,
+          ),
         ),
       );
 
   onMoveSwipe({
     required UniqueId bookmarkId,
   }) =>
-      showOverlay(
-        OverlayData.bottomSheetMoveBookmarkToCollection(
-          bookmarkId: bookmarkId,
-        ),
-      );
+      showMoveBookmarkToCollectionBottomSheet(bookmarkId);
 }
