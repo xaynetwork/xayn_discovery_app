@@ -128,6 +128,7 @@ class OverlayData {
     DocumentProvider? provider,
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
+    required VoidCallback onAddCollectionPressed,
   }) =>
       BottomSheetData<Document>(
         args: document,
@@ -136,6 +137,7 @@ class OverlayData {
           provider: provider,
           feedType: feedType,
           initialSelectedCollectionId: initialSelectedCollectionId,
+          onAddCollectionPressed: onAddCollectionPressed,
         ),
       );
 
@@ -192,6 +194,8 @@ class OverlayData {
   static BottomSheetData bottomSheetCollectionOptions({
     required Collection collection,
     required VoidCallback onClose,
+    required VoidCallback onDeletePressed,
+    required VoidCallback onRenamePressed,
   }) =>
       BottomSheetData<Collection>(
         showBarrierColor: false,
@@ -199,21 +203,30 @@ class OverlayData {
         builder: (_, collection) => CollectionOptionsBottomSheet(
           collection: collection!,
           onSystemPop: onClose,
+          onDeletePressed: onDeletePressed,
+          onRenamePressed: onRenamePressed,
         ),
       );
 
   static BottomSheetData bottomSheetDeleteCollectionConfirmation({
     required UniqueId collectionId,
+    required OnMoveBookmarksPressed onMovePressed,
+    VoidCallback? onClose,
+    bool showBarrierColor = true,
   }) =>
       BottomSheetData<UniqueId>(
+        showBarrierColor: showBarrierColor,
         builder: (_, __) => DeleteCollectionConfirmationBottomSheet(
           collectionId: collectionId,
+          onMovePressed: onMovePressed,
+          onSystemPop: onClose,
         ),
       );
 
   static BottomSheetData bottomSheetBookmarksOptions({
     required UniqueId bookmarkId,
     required VoidCallback onClose,
+    required VoidCallback onMovePressed,
   }) =>
       BottomSheetData<UniqueId>(
         args: bookmarkId,
@@ -221,6 +234,7 @@ class OverlayData {
         builder: (_, bookmarkId) => BookmarkOptionsBottomSheet(
           bookmarkId: bookmarkId!,
           onSystemPop: onClose,
+          onMovePressed: onMovePressed,
         ),
       );
 
@@ -229,6 +243,7 @@ class OverlayData {
     VoidCallback? onSystemPop,
     UniqueId? initialSelectedCollection,
     bool showBarrierColor = true,
+    required VoidCallback onAddCollectionPressed,
   }) =>
       BottomSheetData<UniqueId>(
         args: bookmarkId,
@@ -237,6 +252,7 @@ class OverlayData {
           bookmarkId: bookmarkId!,
           onSystemPop: onSystemPop,
           initialSelectedCollection: initialSelectedCollection,
+          onAddCollectionPressed: onAddCollectionPressed,
         ),
       );
 
@@ -259,6 +275,7 @@ class OverlayData {
     required UniqueId collectionIdToRemove,
     UniqueId? initialSelectedCollection,
     VoidCallback? onClose,
+    required VoidCallback onAddCollectionPressed,
   }) =>
       BottomSheetData(
         showBarrierColor: false,
@@ -267,6 +284,7 @@ class OverlayData {
           collectionIdToRemove: collectionIdToRemove,
           initialSelectedCollection: initialSelectedCollection,
           onSystemPop: onClose,
+          onAddCollectionPressed: onAddCollectionPressed,
         ),
       );
 
