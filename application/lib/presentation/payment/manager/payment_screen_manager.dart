@@ -21,9 +21,11 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subs
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 enum PaymentAction {
@@ -210,14 +212,36 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           openErrorScreen();
           return state;
         } else if (_subscriptionProduct != null) {
+          _maybeHandleError(paymentFlowError);
           return PaymentScreenState.ready(
             product: _subscriptionProduct!,
-            error: paymentFlowError,
           );
         }
       });
 
   void _logError(String prefix, Object error) => logger.e('$prefix: $error');
+
+  void _maybeHandleError(PaymentFlowError? error) {
+    if (error == null) return;
+    if (error == PaymentFlowError.itemAlreadyOwned) {
+      onDismiss();
+      return;
+    }
+
+    late BottomSheetData data;
+    if (error == PaymentFlowError.paymentFailed) {
+      data = OverlayData.bottomSheetPaymentFailedError();
+    } else if (error == PaymentFlowError.noActiveSubscriptionFound) {
+      data = OverlayData.bottomSheetNoActiveSubscriptionFoundError();
+    } else {
+      data = OverlayData.bottomSheetGenericError(
+        allowStacking: true,
+        errorCode: error.errorCode,
+      );
+    }
+
+    showOverlay(data);
+  }
 
   @visibleForTesting
   void sendPurchaseEventIfNeeded(PurchasableProduct? product) {
