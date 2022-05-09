@@ -5,7 +5,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/manager/move_bookmarks_to_collection_manager.dart';
@@ -26,6 +25,7 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
     required UniqueId collectionIdToRemove,
     UniqueId? initialSelectedCollection,
     VoidCallback? onSystemPop,
+    required VoidCallback onAddCollectionPressed,
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
@@ -34,6 +34,7 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
             collectionIdToRemove: collectionIdToRemove,
             initialSelectedCollection: initialSelectedCollection,
             onSystemPop: onSystemPop,
+            onAddCollectionPressed: onAddCollectionPressed,
           ),
         );
 }
@@ -43,6 +44,7 @@ class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId collectionIdToRemove;
   final UniqueId? initialSelectedCollection;
   final VoidCallback? onSystemPop;
+  final VoidCallback onAddCollectionPressed;
 
   const _MoveBookmarkToCollection({
     Key? key,
@@ -50,6 +52,7 @@ class _MoveBookmarkToCollection extends StatefulWidget {
     required this.collectionIdToRemove,
     this.initialSelectedCollection,
     this.onSystemPop,
+    required this.onAddCollectionPressed,
   }) : super(key: key);
 
   @override
@@ -143,30 +146,8 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   _showAddCollectionBottomSheet() {
     closeBottomSheet(context);
-    showAppBottomSheet(
-      context,
-      showBarrierColor: false,
-      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
-        onSystemPop: widget.onSystemPop,
-        onApplyPressed: (collection) => _onAddCollectionSheetClosed(
-          buildContext,
-          collection.id,
-        ),
-      ),
-    );
+    widget.onAddCollectionPressed();
   }
-
-  _onAddCollectionSheetClosed(BuildContext context, UniqueId newCollectionId) =>
-      showAppBottomSheet(
-        context,
-        showBarrierColor: false,
-        builder: (_) => MoveBookmarksToCollectionBottomSheet(
-          bookmarksIds: widget.bookmarksIds,
-          initialSelectedCollection: newCollectionId,
-          collectionIdToRemove: widget.collectionIdToRemove,
-          onSystemPop: widget.onSystemPop,
-        ),
-      );
 
   _onApplyPressed() async {
     widget.onSystemPop?.call();
