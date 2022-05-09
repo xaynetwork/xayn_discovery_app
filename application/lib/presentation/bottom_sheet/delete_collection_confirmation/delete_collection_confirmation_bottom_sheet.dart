@@ -17,7 +17,7 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player_child_bu
 import 'manager/delete_collection_confirmation_manager.dart';
 
 typedef _OnApplyPressed = Function(Collection)?;
-typedef OnMoveBookmarksPressed = Function(List<UniqueId>);
+typedef OnMoveBookmarksPressed = Function(List<UniqueId> bookmarkIds);
 
 class DeleteCollectionConfirmationBottomSheet extends BottomSheetBase {
   DeleteCollectionConfirmationBottomSheet({
