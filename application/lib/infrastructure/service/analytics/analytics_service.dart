@@ -68,21 +68,27 @@ class AmplitudeAnalyticsService
       );
 
   @override
-  Future<void> flush() => safeRun(() => _amplitude.uploadEvents());
+  Future<void> flush() => safeRun(
+        () => _amplitude.uploadEvents(),
+        'flush Analytics',
+      );
 
   @override
   Future<void> send(AnalyticsEvent event) async {
-    safeRun(() async {
-      await _amplitude.logEvent(
-        event.type,
-        eventProperties: event.properties,
-      );
+    safeRun(
+      () async {
+        await _amplitude.logEvent(
+          event.type,
+          eventProperties: event.properties,
+        );
 
-      logger.i('Analytics event has been fired:\n${{
-        'type': event.type,
-        'properties': event.properties,
-      }}');
-    });
+        logger.i('Analytics event has been fired:\n${{
+          'type': event.type,
+          'properties': event.properties,
+        }}');
+      },
+      'send Analytics',
+    );
   }
 
   /// uses setOnce to log info on the device's cores

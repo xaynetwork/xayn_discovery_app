@@ -34,9 +34,12 @@ void main() {
 
     var run = false;
     // ignore: invalid_use_of_protected_member
-    initializer.safeRun(() {
-      run = true;
-    });
+    initializer.safeRun(
+      () {
+        run = true;
+      },
+      '',
+    );
 
     expect(run, false);
     expect(initializer.isInitialized, false);
@@ -48,9 +51,12 @@ void main() {
 
     var run = false;
     // ignore: invalid_use_of_protected_member
-    initializer.safeRun(() {
-      run = true;
-    });
+    initializer.safeRun(
+      () {
+        run = true;
+      },
+      '',
+    );
 
     await Future.delayed(const Duration(milliseconds: 1));
 
@@ -65,9 +71,12 @@ void main() {
 
     var run = false;
     // ignore: invalid_use_of_protected_member
-    initializer.safeRun(() {
-      run = true;
-    });
+    initializer.safeRun(
+      () {
+        run = true;
+      },
+      '',
+    );
 
     await initializer.cancelInit();
     await Future.delayed(const Duration(milliseconds: 1));

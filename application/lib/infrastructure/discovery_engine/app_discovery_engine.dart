@@ -141,10 +141,13 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     if (feedMarkets != null) {
       _updateFeedMarketIdentityParam(feedMarkets);
     }
-    return safeRun(() => _engine.changeConfiguration(
-          feedMarkets: feedMarkets,
-          maxItemsPerFeedBatch: maxItemsPerFeedBatch,
-        ));
+    return safeRun(
+      () => _engine.changeConfiguration(
+        feedMarkets: feedMarkets,
+        maxItemsPerFeedBatch: maxItemsPerFeedBatch,
+      ),
+      'changeConfiguration',
+    );
   }
 
   @override
@@ -160,6 +163,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         documentId: documentId,
         userReaction: userReaction,
       ),
+      'changeUserReaction',
     );
 
     return engineEvent;
@@ -170,13 +174,17 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     _inputLog.add(
       '[closeFeedDocuments]\n<documentIds> \n${documentIds.join('\n')}',
     );
-    return safeRun(() => _engine.closeFeedDocuments(documentIds));
+    return safeRun(
+      () => _engine.closeFeedDocuments(documentIds),
+      'closeFeedDocuments',
+    );
   }
 
   @override
-  Stream<EngineEvent> get engineEvents =>
-      Stream.fromFuture(safeRun(() => _engine.engineEvents))
-          .asyncExpand((events) => events);
+  Stream<EngineEvent> get engineEvents => Stream.fromFuture(safeRun(
+        () => _engine.engineEvents,
+        'engineEvents',
+      )).asyncExpand((events) => events);
 
   @override
   Future<EngineEvent> logDocumentTime({
@@ -190,19 +198,26 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(
       () => _engine.logDocumentTime(
           documentId: documentId, mode: mode, seconds: seconds),
+      'logDocumentTime',
     );
   }
 
   @override
   Future<EngineEvent> restoreFeed() {
     _inputLog.add('[restoreFeed]');
-    return safeRun(() => _engine.restoreFeed());
+    return safeRun(
+      () => _engine.restoreFeed(),
+      'restoreFeed',
+    );
   }
 
   @override
   Future<EngineEvent> requestNextFeedBatch() {
     _inputLog.add('[requestNextFeedBatch]');
-    return safeRun(() => _engine.requestNextFeedBatch());
+    return safeRun(
+      () => _engine.requestNextFeedBatch(),
+      'requestNextFeedBatch',
+    );
   }
 
   @override
@@ -210,61 +225,91 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     _inputLog
       ..add('[dispose]')
       ..close();
-    return safeRun(() => _engine.dispose());
+    return safeRun(
+      () => _engine.dispose(),
+      'dispose',
+    );
   }
 
   @override
   Future<EngineEvent> send(ClientEvent event) {
     _inputLog.add('[send]\n<ClientEvent> $ClientEvent');
-    return safeRun(() => _engine.send(event));
+    return safeRun(
+      () => _engine.send(event),
+      'send',
+    );
   }
 
   @override
   Future<EngineEvent> closeSearch() {
     _inputLog.add('[closeSearch]');
-    return safeRun(() => _engine.closeSearch());
+    return safeRun(
+      () => _engine.closeSearch(),
+      'closeSearch',
+    );
   }
 
   @override
   Future<EngineEvent> requestNextSearchBatch() {
     _inputLog.add('[requestNextSearchBatch]');
-    return safeRun(() => _engine.requestNextSearchBatch());
+    return safeRun(
+      () => _engine.requestNextSearchBatch(),
+      'requestNextSearchBatch',
+    );
   }
 
   @override
   Future<EngineEvent> requestSearch(String queryTerm) {
     _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
-    return safeRun(() => _engine.requestSearch(queryTerm));
+    return safeRun(
+      () => _engine.requestSearch(queryTerm),
+      'requestSearch',
+    );
   }
 
   @override
   Future<EngineEvent> restoreSearch() {
     _inputLog.add('[restoreSearch]');
-    return safeRun(() => _engine.restoreSearch());
+    return safeRun(
+      () => _engine.restoreSearch(),
+      'restoreSearch',
+    );
   }
 
   @override
   Future<EngineEvent> addSourceToExcludedList(Source source) {
     _inputLog.add('[addSourceToExcludedList]');
-    return safeRun(() => _engine.addSourceToExcludedList(source));
+    return safeRun(
+      () => _engine.addSourceToExcludedList(source),
+      'addSourceToExcludedList',
+    );
   }
 
   @override
   Future<EngineEvent> getExcludedSourcesList() {
     _inputLog.add('[getExcludedSourcesList]');
-    return safeRun(() => _engine.getExcludedSourcesList());
+    return safeRun(
+      () => _engine.getExcludedSourcesList(),
+      'getExcludedSourcesList',
+    );
   }
 
   @override
   Future<EngineEvent> getSearchTerm() {
     _inputLog.add('[getSearchTerm]');
-    return safeRun(() => _engine.getSearchTerm());
+    return safeRun(
+      () => _engine.getSearchTerm(),
+      'getSearchTerm',
+    );
   }
 
   @override
   Future<EngineEvent> removeSourceFromExcludedList(Source source) {
     _inputLog.add('[removeSourceFromExcludedList]');
-    return safeRun(() => _engine.removeSourceFromExcludedList(source));
+    return safeRun(
+      () => _engine.removeSourceFromExcludedList(source),
+      'removeSourceFromExcludedList',
+    );
   }
 
   void _updateFeedMarketIdentityParam(FeedMarkets markets) {

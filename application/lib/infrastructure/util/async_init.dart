@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 /// A helper class to initialize something in [init] that must complete before any
 /// [safeRun] operation runs.
@@ -27,7 +28,8 @@ mixin AsyncInitMixin {
   /// Run an operation after the initialization in [init] is done.
   @protected
   @mustCallSuper
-  Future<T> safeRun<T>(FutureOr<T> Function() run) async {
+  Future<T> safeRun<T>(FutureOr<T> Function() run, String logName) async {
+    final stopwatch = Stopwatch()..start();
     final ongoingInit = _ongoingInit;
     if (ongoingInit != null &&
         !ongoingInit.isCompleted &&
@@ -42,7 +44,14 @@ mixin AsyncInitMixin {
       throw 'Operation was already canceled but safeRun has been called regardless. Be sure to never cancel any AsyncInitMixin when it is still used.';
     }
 
-    return run();
+    final f = run();
+    final result = f is Future ? await f : f;
+
+    stopwatch.stop();
+
+    logger.i('#engine# [$logName][${stopwatch.elapsedMilliseconds}ms]');
+
+    return result;
   }
 
   /// cancels the ongoing [init] call. Note that the spawned microtask of
