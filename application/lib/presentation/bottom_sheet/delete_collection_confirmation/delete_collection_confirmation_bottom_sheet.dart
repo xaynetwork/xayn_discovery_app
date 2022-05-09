@@ -7,10 +7,11 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/manager/delete_collection_confirmation_state.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/widget/move_bookmarks_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 import 'manager/delete_collection_confirmation_manager.dart';
@@ -53,10 +54,16 @@ class _DeleteCollection extends StatefulWidget {
 class _CreateCollectionState extends State<_DeleteCollection>
     with
         BottomSheetBodyMixin,
-        AnimationPlayerChildBuilderStateMixin<_DeleteCollection> {
+        AnimationPlayerChildBuilderStateMixin<_DeleteCollection>,
+        OverlayMixin<_DeleteCollection> {
   late final DeleteCollectionConfirmationManager
       _deleteCollectionConfirmationManager = di.get()
         ..enteringScreen(widget.collectionId);
+
+  @override
+  OverlayManager get overlayManager =>
+      _deleteCollectionConfirmationManager.overlayManager;
+
   @override
   final String illustrationAssetName =
       R.assets.lottie.contextual.deleteCollection;
@@ -87,7 +94,7 @@ class _CreateCollectionState extends State<_DeleteCollection>
               widget.onSystemPop?.call();
             },
             setup: state.bookmarksIds.isNotEmpty
-                ? _buildFooterSetupForCollectionWithItems(state.bookmarksIds)
+                ? _buildFooterSetupForCollectionWithItems()
                 : _buildFooterSetupForCollectionWithNoItems(),
           );
 
@@ -103,17 +110,12 @@ class _CreateCollectionState extends State<_DeleteCollection>
         },
       );
 
-  BottomSheetFooterSetup _buildFooterSetupForCollectionWithItems(
-    List<UniqueId> bookmarksToMove,
-  ) =>
+  BottomSheetFooterSetup _buildFooterSetupForCollectionWithItems() =>
       BottomSheetFooterSetup.column(
         buttonsData: [
           BottomSheetFooterButton(
             text: R.strings.bottomSheetMoveBookmarks,
-            onPressed: () => _onMoveBookmarksPressed(
-              collectionId: widget.collectionId,
-              bookmarksToMove: bookmarksToMove,
-            ),
+            onPressed: _onMoveBookmarksPressed,
           ),
           BottomSheetFooterButton(
             text: R.strings.bottomSheetDeleteAll,
@@ -142,19 +144,11 @@ class _CreateCollectionState extends State<_DeleteCollection>
     closeBottomSheet(context);
   }
 
-  void _onMoveBookmarksPressed({
-    required UniqueId collectionId,
-    required List<UniqueId> bookmarksToMove,
-  }) {
+  void _onMoveBookmarksPressed() {
     closeBottomSheet(context);
-    showAppBottomSheet(
-      context,
-      showBarrierColor: false,
-      builder: (buildContext) => MoveBookmarksToCollectionBottomSheet(
-        bookmarksIds: bookmarksToMove,
-        collectionIdToRemove: collectionId,
-        onSystemPop: widget.onSystemPop,
-      ),
+    _deleteCollectionConfirmationManager.onMoveBookmarksPressed(
+      collectionIdToRemove: widget.collectionId,
+      onClose: widget.onSystemPop,
     );
   }
 }
