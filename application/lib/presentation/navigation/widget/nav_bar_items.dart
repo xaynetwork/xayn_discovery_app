@@ -6,10 +6,11 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 
 NavBarItemBackButton buildNavBarItemBack({
   required VoidCallback onPressed,
+  Key key = Keys.navBarItemBackBtnBase,
 }) =>
     NavBarItemBackButton(
       onPressed: onPressed,
-      key: Keys.navBarItemBackBtn,
+      key: key,
     );
 
 NavBarItemIconButton buildNavBarItemArrowLeft({

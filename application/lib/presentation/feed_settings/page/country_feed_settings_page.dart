@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
+import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -23,8 +26,16 @@ class CountryFeedSettingsPage extends StatefulWidget {
 }
 
 class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
-    with OverlayMixin<CountryFeedSettingsPage> {
+    with NavBarConfigMixin, OverlayMixin<CountryFeedSettingsPage> {
   late final CountryFeedSettingsManager _manager = di.get();
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        buildNavBarItemBack(
+          onPressed: _manager.onBackNavPressed,
+          key: Keys.navBarItemBackBtnCountryFeed,
+        ),
+      );
 
   @override
   OverlayManager get overlayManager => _manager.overlayManager;
