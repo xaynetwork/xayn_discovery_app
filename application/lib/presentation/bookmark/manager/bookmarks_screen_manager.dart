@@ -82,10 +82,10 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   }
 
   void enteringScreen(UniqueId collectionId) {
-    _fechCollection(collectionId);
+    _fetchCollection(collectionId);
   }
 
-  void _fechCollection(UniqueId collectionId) {
+  void _fetchCollection(UniqueId collectionId) {
     _listenBookmarksHandler(
         ListenBookmarksUseCaseIn(collectionId: collectionId));
   }
@@ -179,13 +179,17 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   onBookmarkOptionClick({
     required UniqueId bookmarkId,
     required VoidCallback onClose,
-  }) =>
-      showOverlay(
+  }) {
+    print('OverlayData.bottomSheetBookmarksOptions');
+    print(hashCode);
+    print(overlayManager.hashCode);
+    showOverlay(
         OverlayData.bottomSheetBookmarksOptions(
           bookmarkId: bookmarkId,
           onClose: onClose,
         ),
       );
+  }
 
   onMoveSwipe({
     required UniqueId bookmarkId,

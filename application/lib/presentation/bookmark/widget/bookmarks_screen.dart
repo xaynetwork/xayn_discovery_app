@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_hooks_bloc/flutter_hooks_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
@@ -10,7 +9,6 @@ import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_scree
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookmark_card.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
@@ -18,16 +16,8 @@ import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
-import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/custom_animated_list.dart';
-
-/// First use our Di to create a Manager but keep it in memory
-T useDi<T extends Object>([Function(T obj)? initial]) => useMemoized<T>(() {
-      final obj = di.get<T>();
-      initial?.call(obj);
-      return obj;
-    });
 
 
 class BookmarksScreen extends HookWidget with NavBarConfigMixin {
@@ -35,22 +25,14 @@ class BookmarksScreen extends HookWidget with NavBarConfigMixin {
 
   BookmarksScreen({Key? key, required this.collectionId}) : super(key: key);
 
-  late final _bookmarkManager =
-      di.get<BookmarksScreenManager>(param1: collectionId);
-
-  /// FIXME need hook for overlay as well.
-  // @override
-  // OverlayManager get overlayManager => _bookmarkManager.overlayManager;
+  late final BookmarksScreenManager _bookmarkManager = di.get()
+    ..checkIfNeedToShowOnboarding()
+    ..enteringScreen(collectionId);
 
   @override
   Widget build(BuildContext context) {
-    final BookmarksScreenManager manager =
-        useDi((manager) {
-          manager.checkIfNeedToShowOnboarding();
-          manager.enteringScreen(collectionId);
-        });
-
-    final state = useBloc<BookmarksScreenManager, BookmarksScreenState>(bloc: manager);
+    useOverlay(_bookmarkManager.overlayManager);
+    final state = useBloc<BookmarksScreenManager, BookmarksScreenState>(bloc: _bookmarkManager);
 
     return Stack(
       children: [
