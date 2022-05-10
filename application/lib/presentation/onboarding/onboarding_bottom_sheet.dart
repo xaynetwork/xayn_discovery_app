@@ -32,7 +32,8 @@ class _OnboardingView extends HookWidget with BottomSheetBodyMixin {
   Widget build(BuildContext context) {
     // Hooks
     final animationController = useAnimationController();
-
+    // ignore: invalid_use_of_protected_member
+    animationController.clearStatusListeners();
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animationController.forward(from: 0);
