@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_hooks_bloc/flutter_hooks_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -20,48 +22,47 @@ import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_t
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget_transition/card_widget_transition_wrapper.dart';
 import 'package:xayn_discovery_app/presentation/widget/custom_animated_list.dart';
 
-class BookmarksScreen extends StatefulWidget {
+/// First use our Di to create a Manager but keep it in memory
+T useDi<T extends Object>([Function(T obj)? initial]) => useMemoized<T>(() {
+      final obj = di.get<T>();
+      initial?.call(obj);
+      return obj;
+    });
+
+
+class BookmarksScreen extends HookWidget with NavBarConfigMixin {
   final UniqueId collectionId;
 
-  const BookmarksScreen({Key? key, required this.collectionId})
-      : super(key: key);
+  BookmarksScreen({Key? key, required this.collectionId}) : super(key: key);
 
-  @override
-  State<BookmarksScreen> createState() => _BookmarksScreenState();
-}
-
-class _BookmarksScreenState extends State<BookmarksScreen>
-    with
-        NavBarConfigMixin,
-        OverlayMixin<BookmarksScreen>,
-        CardWidgetTransitionMixin {
   late final _bookmarkManager =
-      di.get<BookmarksScreenManager>(param1: widget.collectionId);
+      di.get<BookmarksScreenManager>(param1: collectionId);
 
-  @override
-  OverlayManager get overlayManager => _bookmarkManager.overlayManager;
-
-  @override
-  void initState() {
-    _bookmarkManager.checkIfNeedToShowOnboarding();
-    super.initState();
-  }
+  /// FIXME need hook for overlay as well.
+  // @override
+  // OverlayManager get overlayManager => _bookmarkManager.overlayManager;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
-      builder: (ctx, state) => Stack(
-        children: [
-          AppScaffold(
-            appToolbarData: AppToolbarData.titleOnly(
-                title:
-                    state.collectionName ?? R.strings.personalAreaCollections),
-            body: state.bookmarks.isEmpty ? Container() : _buildScreen(state),
-          ),
-          if (state.bookmarks.isEmpty) _buildEmptyScreen()
-        ],
-      ),
-      bloc: _bookmarkManager,
+    final BookmarksScreenManager manager =
+        useDi((manager) {
+          manager.checkIfNeedToShowOnboarding();
+          manager.enteringScreen(collectionId);
+        });
+
+    final state = useBloc<BookmarksScreenManager, BookmarksScreenState>(bloc: manager);
+
+    return Stack(
+      children: [
+        AppScaffold(
+          appToolbarData: AppToolbarData.titleOnly(
+              title: state.collectionName ?? R.strings.personalAreaCollections),
+          body: state.bookmarks.isEmpty
+              ? Container()
+              : _buildScreen(context, state),
+        ),
+        if (state.bookmarks.isEmpty) _buildEmptyScreen()
+      ],
     );
   }
 
@@ -79,15 +80,15 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         ),
       );
 
-  Widget _buildScreen(BookmarksScreenState state) {
+  Widget _buildScreen(BuildContext context, BookmarksScreenState state) {
     final list = CustomAnimatedList<Bookmark>(
       items: state.bookmarks,
       itemBuilder: (_, index, __, bookmark) {
         final card = CardWidgetTransitionWrapper(
           onAnimationDone: () => _bookmarkManager.onBookmarkOptionClick(
-            bookmarkId: bookmark.id,
-            onClose: closeCardWidgetTransition,
-          ),
+              bookmarkId: bookmark.id,
+              // onClose: closeCardWidgetTransition,
+              onClose: () => Navigator.pop(context)),
           onLongPress: _bookmarkManager.triggerHapticFeedbackMedium,
           child: _createBookmarkCard(context, bookmark),
         );
