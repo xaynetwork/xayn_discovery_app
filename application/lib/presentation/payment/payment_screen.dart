@@ -46,10 +46,11 @@ class _PaymentScreenState extends State<PaymentScreen>
       });
 
   Widget _buildLoading() => SizedBox(
-        height: R.dimen.unit52,
+        height: R.dimen.unit20,
         child: Center(
           child: CircularProgressIndicator(
-            color: R.colors.accent,
+            color: R.colors.icon,
+            strokeWidth: R.dimen.unit0_25,
           ),
         ),
       );
