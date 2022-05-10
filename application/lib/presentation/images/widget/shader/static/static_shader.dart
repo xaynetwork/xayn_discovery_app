@@ -27,7 +27,6 @@ class StaticShader extends BaseStaticShader {
           height: height,
           shadowColor: shadowColor,
           uri: uri,
-          shouldCheckDimen: shouldCheckDimen ?? true,
         );
 
   @override
