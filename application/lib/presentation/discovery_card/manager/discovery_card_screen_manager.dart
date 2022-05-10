@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reade
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -19,7 +20,8 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
     with
         UseCaseBlocHelper<DiscoveryCardScreenState>,
         OverlayManagerMixin<DiscoveryCardScreenState>,
-        ErrorHandlingManagerMixin<DiscoveryCardScreenState>
+        ErrorHandlingManagerMixin<DiscoveryCardScreenState>,
+        CheckValidDocumentMixin<DiscoveryCardScreenState>
     implements DiscoveryCardScreenManagerNavActions {
   DiscoveryCardScreenManager(
     @factoryParam UniqueId? documentId,
@@ -43,6 +45,11 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
         errorReport,
       ) {
         if (getDocument != null) {
+          checkIfDocumentNotProcessable(
+            getDocument,
+            isDismissible: false,
+            onClosePressed: onBackPressed,
+          );
           return DiscoveryCardScreenState.populated(document: getDocument);
         }
 
@@ -51,14 +58,11 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
           logger.e(
               'Could not retrieve document', error?.error, error?.stackTrace);
           openErrorScreen();
-          // return DiscoveryCardScreenState.error();
         }
       });
 
   @override
-  void onBackPressed() {
-    _navActions.onBackPressed();
-  }
+  void onBackPressed() => _navActions.onBackPressed();
 
   void onReaderModeMenuDisplayed({required bool isVisible}) =>
       _sendAnalyticsUseCase(

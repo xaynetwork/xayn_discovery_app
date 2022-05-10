@@ -7,12 +7,11 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
@@ -33,8 +32,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen>
-    with NavBarConfigMixin {
+    with NavBarConfigMixin, OverlayMixin<SettingsScreen> {
   late final SettingsScreenManager _manager = di.get();
+
+  @override
+  OverlayManager get overlayManager => _manager.overlayManager;
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
@@ -107,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   }) =>
       SubscriptionSection(
         subscriptionStatus: subscriptionStatus,
-        onPressed: () => _onSubscriptionSectionPressed(
+        onPressed: () => _manager.onSubscriptionSectionPressed(
           subscriptionStatus: subscriptionStatus,
         ),
       );
@@ -178,31 +180,4 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Widget _buildBottomSpace() => SizedBox(height: R.dimen.navBarHeight * 2);
-
-  void _onSubscriptionSectionPressed({
-    required SubscriptionStatus subscriptionStatus,
-  }) {
-    if (subscriptionStatus.isSubscriptionActive) {
-      showAppBottomSheet(
-        context,
-        builder: (_) => SubscriptionDetailsBottomSheet(
-          subscriptionStatus: subscriptionStatus,
-          onSubscriptionLinkCancelTapped: () =>
-              _manager.onSubscriptionLinkCancelTapped,
-        ),
-      );
-    } else if (subscriptionStatus.isFreeTrialActive) {
-      _manager.onSubscriptionWindowOpened(
-        currentView: SubscriptionWindowCurrentView.settings,
-      );
-      showAppBottomSheet(
-        context,
-        builder: (_) => PaymentBottomSheet(
-          onClosePressed: () => _manager.onSubscriptionWindowClosed(
-            currentView: SubscriptionWindowCurrentView.settings,
-          ),
-        ),
-      );
-    }
-  }
 }

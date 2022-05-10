@@ -6,9 +6,9 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collection_card_data_use_case.dart';
-import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_state.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import '../../../test_utils/utils.dart';

@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
@@ -24,12 +25,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -55,7 +59,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         ObserveDocumentMixin<DiscoveryState>,
         ChangeUserReactionMixin<DiscoveryState>,
         ObserveSubscriptionWindowMixin<DiscoveryState>,
-        OverlayManagerMixin<DiscoveryState> {
+        OverlayManagerMixin<DiscoveryState>,
+        CheckValidDocumentMixin<DiscoveryState> {
   final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
@@ -131,6 +136,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Document? get currentObservedDocument => _observedDocument;
 
   int? get currentCardIndex => _cardIndex;
+
+  void maybeNavigateIntoCard(Document document) =>
+      checkIfDocumentNotProcessable(
+        document,
+        onValid: () => handleNavigateIntoCard(document),
+      );
 
   void handleNavigateIntoCard(Document document) {
     scheduleComputeState(() => _isFullScreen = true);
@@ -239,6 +250,19 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     );
   }
 
+  void onPaymentTrialBannerTap() {
+    onSubscriptionWindowOpened(
+      currentView: SubscriptionWindowCurrentView.feed,
+    );
+    showOverlay(
+      OverlayData.bottomSheetPayment(
+        onClosePressed: () => onSubscriptionWindowClosed(
+          currentView: SubscriptionWindowCurrentView.feed,
+        ),
+      ),
+    );
+  }
+
   void resetCardIndex([int nextCardIndex = 0]) => _cardIndex = nextCardIndex;
 
   void resetObservedDocument() => _observedDocument = null;
@@ -290,6 +314,21 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
         final sets = await maybeReduceCardCount(results);
         final nextCardIndex = sets.nextCardIndex;
+
+        if (engineEvent != null) logger.i('[engineEvent]: $engineEvent');
+
+        if (errorReport.isNotEmpty) {
+          logger.e('Something went wrong in $runtimeType: ${{
+            'cardIndexConsumer': errorReport.of(cardIndexConsumer).toString(),
+            'crudExplicitDocumentFeedbackConsumer':
+                errorReport.of(crudExplicitDocumentFeedbackConsumer).toString(),
+            'engineEvents': errorReport.of(engineEvents).toString(),
+            'subscriptionStatusHandler':
+                errorReport.of(subscriptionStatusHandler).toString(),
+            'readerModeSettingsHandler':
+                errorReport.of(_readerModeSettingsHandler).toString(),
+          }}');
+        }
 
         if (nextCardIndex != null) _cardIndex = nextCardIndex;
 
