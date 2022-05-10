@@ -33,6 +33,8 @@ abstract class ShaderCache {
     int? refCount,
     ShaderAnimationStatus? animationStatus,
   });
+
+  void evictImage(Uri uri);
 }
 
 @LazySingleton(as: ShaderCache)
@@ -123,6 +125,19 @@ class InMemoryShaderCache implements ShaderCache {
     _maybeFlushEntries();
 
     return image;
+  }
+
+  @override
+  void evictImage(Uri uri) {
+    final entry = _of(uri);
+
+    _entries[uri] = entry.copyWith(
+      image: null,
+      refCount: entry.refCount,
+      animationStatus: entry.animationStatus,
+    );
+
+    _maybeFlushEntries();
   }
 
   ShaderCacheEntry _of(Uri uri) {
