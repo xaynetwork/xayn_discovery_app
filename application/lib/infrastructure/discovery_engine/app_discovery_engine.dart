@@ -316,4 +316,22 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
     _setIdentityParamUseCase.call(param);
   }
+
+  @override
+  Future<EngineEvent> getAvailableSourcesList(String fuzzySearchTerm) {
+    // TODO: implement getAvailableSourcesList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestTopic(String topic) {
+    // TODO: implement requestTopic
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestTrendingTopics() {
+    // TODO: implement requestTrendingTopics
+    throw UnimplementedError();
+  }
 }
