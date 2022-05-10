@@ -26,7 +26,6 @@ class ShaderFactory {
     double? width,
     double? height,
     bool? singleFrameOnly,
-    bool? shouldCheckDimen,
   }) fromType(ShaderType type, {bool transitionToIdle = false}) => ({
         Key? key,
         required Uint8List bytes,
@@ -36,7 +35,6 @@ class ShaderFactory {
         double? width,
         double? height,
         bool? singleFrameOnly,
-        bool? shouldCheckDimen,
       }) {
         switch (type) {
           case ShaderType.static:
@@ -48,7 +46,6 @@ class ShaderFactory {
               shadowColor: shadowColor,
               width: width,
               height: height,
-              shouldCheckDimen: shouldCheckDimen,
             );
           case ShaderType.pan:
             return PanningShader(
@@ -61,7 +58,6 @@ class ShaderFactory {
               width: width,
               height: height,
               transitionToIdle: transitionToIdle,
-              singleFrameOnly: singleFrameOnly,
             );
           case ShaderType.zoom:
             return ZoomShader(
@@ -74,7 +70,6 @@ class ShaderFactory {
               width: width,
               height: height,
               transitionToIdle: transitionToIdle,
-              singleFrameOnly: singleFrameOnly,
             );
         }
       };

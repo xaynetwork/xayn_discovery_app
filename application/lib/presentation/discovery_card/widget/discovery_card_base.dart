@@ -152,7 +152,10 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       return Container(
         alignment: Alignment.topCenter,
         color: background,
-        child: AnimationPlayer.assetUnrestrictedSize(assetName),
+        child: AnimationPlayer.assetUnrestrictedSize(
+          assetName,
+          playsFromStart: false,
+        ),
       );
     }
 
