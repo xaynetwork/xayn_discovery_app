@@ -20,6 +20,7 @@ dependencies:
   envify: 2.0.2
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
+  flutter_hooks: 0.18.3
   flutter_localized_countries:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
@@ -28,6 +29,7 @@ dependencies:
   freezed_annotation: 1.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
+
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
