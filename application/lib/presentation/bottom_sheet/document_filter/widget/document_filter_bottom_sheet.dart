@@ -27,21 +27,15 @@ class DocumentFilterBottomSheet extends BottomSheetBase {
         );
 }
 
-class _DocumentFilterList extends StatefulWidget {
+class _DocumentFilterList extends StatelessWidget with BottomSheetBodyMixin {
   final Document document;
 
-  const _DocumentFilterList({
+  _DocumentFilterList({
     Key? key,
     required this.document,
   }) : super(key: key);
 
-  @override
-  _DocumentFilterListState createState() => _DocumentFilterListState();
-}
-
-class _DocumentFilterListState extends State<_DocumentFilterList>
-    with BottomSheetBodyMixin {
-  late final DocumentFilterManager _manager = di.get(param1: widget.document);
+  late final DocumentFilterManager _manager = di.get(param1: document);
 
   @override
   Widget build(BuildContext context) {
