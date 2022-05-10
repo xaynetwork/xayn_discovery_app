@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
@@ -17,7 +18,7 @@ class OnboardingBottomSheet extends BottomSheetBase {
         );
 }
 
-class _OnboardingView extends StatefulWidget {
+class _OnboardingView extends HookWidget with BottomSheetBodyMixin {
   final OnboardingType type;
   final VoidCallback onDismiss;
 
@@ -28,42 +29,26 @@ class _OnboardingView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<_OnboardingView> createState() => _OnboardingViewState();
-}
+  Widget build(BuildContext context) {
+    // Hooks
+    final animationController = useAnimationController();
 
-class _OnboardingViewState extends State<_OnboardingView>
-    with BottomSheetBodyMixin, TickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-    _controller.addStatusListener((status) {
+    animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _controller.forward(from: 0);
+        animationController.forward(from: 0);
       }
     });
-  }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final text = _buildText();
     final children = <Widget>[
       SizedBox(height: R.dimen.unit),
-      _buildAnimation(),
+      _buildAnimation(animationController),
       SizedBox(height: R.dimen.unit2),
       _buildTitle(),
       if (text != null) SizedBox(height: R.dimen.unit2),
       if (text != null) text,
       SizedBox(height: R.dimen.unit2_5),
-      _buildCloseBtn(),
+      _buildCloseBtn(context),
     ];
     final column = Column(
       children: children,
@@ -72,13 +57,13 @@ class _OnboardingViewState extends State<_OnboardingView>
     return column;
   }
 
-  Widget _buildAnimation() {
+  Widget _buildAnimation(AnimationController controller) {
     final animation = Lottie.asset(
       _getAnimationPath(),
       repeat: true,
-      controller: _controller,
+      controller: controller,
       onLoaded: (composition) {
-        _controller
+        controller
           ..duration = composition.duration
           ..forward();
       },
@@ -90,13 +75,13 @@ class _OnboardingViewState extends State<_OnboardingView>
     );
   }
 
-  Widget _buildCloseBtn() => SizedBox(
+  Widget _buildCloseBtn(BuildContext context) => SizedBox(
         width: double.maxFinite,
         child: AppGhostButton.text(
           R.strings.general.btnClose,
           backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
           onPressed: () {
-            widget.onDismiss();
+            onDismiss();
             closeBottomSheet(context);
           },
         ),
@@ -104,7 +89,7 @@ class _OnboardingViewState extends State<_OnboardingView>
 
   Widget _buildTitle() {
     late final String text;
-    switch (widget.type) {
+    switch (type) {
       case OnboardingType.homeVerticalSwipe:
         text = R.strings.onboardingBottomDialog.homeSwipeVerticalTitle;
         break;
@@ -126,7 +111,7 @@ class _OnboardingViewState extends State<_OnboardingView>
 
   Widget? _buildText() {
     late final String text;
-    switch (widget.type) {
+    switch (type) {
       case OnboardingType.homeVerticalSwipe:
         text = R.strings.onboardingBottomDialog.homeSwipeVerticalMsg;
         break;
@@ -143,7 +128,7 @@ class _OnboardingViewState extends State<_OnboardingView>
   }
 
   String _getAnimationPath() {
-    switch (widget.type) {
+    switch (type) {
       case OnboardingType.homeVerticalSwipe:
         return R.assets.lottie.feedSwipeVertical;
       case OnboardingType.homeHorizontalSwipe:
