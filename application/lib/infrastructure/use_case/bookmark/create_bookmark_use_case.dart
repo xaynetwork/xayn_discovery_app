@@ -72,6 +72,7 @@ class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
       image: param.image,
       provider: param.provider,
       createdAt: dateTime.toUtc().toString(),
+      url: param.url,
     );
     _bookmarksRepository.save(bookmark);
     yield bookmark;
@@ -97,6 +98,7 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
       image: image,
       provider: param.provider ?? DocumentProvider(),
       collectionId: param.collectionId,
+      url: param.document.resource.url.toString(),
     );
     yield createBookmarkUseCaseIn;
   }
@@ -119,12 +121,14 @@ class CreateBookmarkUseCaseIn {
   final Uint8List? image;
   final DocumentProvider? provider;
   final UniqueId collectionId;
+  final String url;
 
   CreateBookmarkUseCaseIn({
     required this.id,
     required this.title,
     required this.image,
     required this.provider,
+    required this.url,
     this.collectionId = Collection.readLaterId,
   });
 }

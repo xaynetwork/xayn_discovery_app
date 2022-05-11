@@ -134,6 +134,7 @@ void _createBookmarks() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    url: 'https://url_test.com',
   );
   repository.save(bookmark);
 }

@@ -49,4 +49,5 @@ final fakeBookmark = Bookmark(
   provider: DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico'),
   createdAt: DateTime.now().toUtc().toString(),
+  url: 'https://url_test.com',
 );

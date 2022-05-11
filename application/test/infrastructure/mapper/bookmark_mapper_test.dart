@@ -20,6 +20,7 @@ void main() async {
     final image = Uint8List.fromList([1, 2, 3]);
     const favicon = 'https://www.foo.com/favicon.ico';
     const createdAt = '2021-12-05';
+    const url = 'https://url_test.com';
 
     group('fromMap method:', () {
       final map = {
@@ -30,6 +31,7 @@ void main() async {
         4: providerNameFromMap,
         5: favicon,
         6: createdAt,
+        7: url,
       };
 
       test(
@@ -45,6 +47,7 @@ void main() async {
         expect(bookmark.provider?.name, equals(providerNameFromMap));
         expect(bookmark.provider?.favicon, equals(favicon));
         expect(bookmark.createdAt, equals(createdAt));
+        expect(bookmark.url, equals(url));
       });
       test('WHEN id is null THEN throw a DbEntityMapperException ', () {
         final mapWithIdNull = Map.from(map);
@@ -120,6 +123,7 @@ void main() async {
         image: image,
         provider: DocumentProvider(name: providerNameToMap, favicon: favicon),
         createdAt: createdAt,
+        url: url,
       );
 
       test('given a Bookmark it returns a map with a proper structure', () {

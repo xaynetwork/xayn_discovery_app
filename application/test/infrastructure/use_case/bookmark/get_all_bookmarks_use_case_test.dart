@@ -23,6 +23,7 @@ void main() {
     name: 'Provider name',
     favicon: 'https://www.foo.com/favicon.ico',
   );
+  const url = 'https://url_test.com';
 
   final bookmark1 = Bookmark(
     id: UniqueId(),
@@ -31,6 +32,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    url: url,
   );
 
   final bookmark2 = Bookmark(
@@ -40,6 +42,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    url: url,
   );
 
   final bookmark3 = Bookmark(
@@ -49,6 +52,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    url: url,
   );
 
   setUp(() {

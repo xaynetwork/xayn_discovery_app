@@ -19,6 +19,7 @@ class Bookmark extends DbEntity with _$Bookmark {
     required Uint8List? image,
     required String title,
     required DocumentProvider? provider,
+    required String url,
 
     /// To store as UTC value
     required String createdAt,

@@ -17,6 +17,8 @@ void main() {
   late ListenIsBookmarkedUseCase listenIsBookmarkedUseCase;
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
+  const url = 'https://url_test.com';
+
   final bookmark1 = Bookmark(
     id: UniqueId(),
     collectionId: UniqueId(),
@@ -24,6 +26,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    url: url,
   );
 
   setUp(() {
@@ -46,7 +49,7 @@ void main() {
         when(bookmarksRepository.getById(bookmark1.id)).thenReturn(bookmark1);
       },
       build: () => listenIsBookmarkedUseCase,
-      input: [bookmark1.id],
+      input: [ListenIsBookmarkUseCaseIn(id: bookmark1.id, url: bookmark1.url)],
       verify: (_) {
         verifyInOrder([
           bookmarksRepository.getById(bookmark1.id),
@@ -71,7 +74,7 @@ void main() {
         when(bookmarksRepository.getById(bookmark1.id)).thenReturn(null);
       },
       build: () => listenIsBookmarkedUseCase,
-      input: [bookmark1.id],
+      input: [ListenIsBookmarkUseCaseIn(id: bookmark1.id, url: bookmark1.url)],
       verify: (_) {
         verifyInOrder([
           bookmarksRepository.getById(bookmark1.id),

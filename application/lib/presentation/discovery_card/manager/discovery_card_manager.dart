@@ -116,8 +116,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         .followedByConditionally(_gibberishDetectionUseCase,
             () => _featureManager.isGibberishEnabled),
   );
-  late final UseCaseSink<UniqueId, BookmarkStatus> _isBookmarkedHandler =
-      pipe(_listenIsBookmarkedUseCase);
+  late final UseCaseSink<ListenIsBookmarkUseCaseIn, BookmarkStatus>
+      _isBookmarkedHandler = pipe(_listenIsBookmarkedUseCase);
   late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn, AnalyticsEvent>
       _toggleBookmarkHandler = pipe(_toggleBookmarkUseCase).transform(
     (out) => out
@@ -158,7 +158,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
-    _isBookmarkedHandler(document.documentUniqueId);
+    _isBookmarkedHandler(
+      ListenIsBookmarkUseCaseIn(
+        id: document.documentUniqueId,
+        url: document.resource.url.toString(),
+      ),
+    );
     _crudExplicitDocumentFeedbackHandler(
       DbCrudIn.watch(
         document.documentId.uniqueId,
