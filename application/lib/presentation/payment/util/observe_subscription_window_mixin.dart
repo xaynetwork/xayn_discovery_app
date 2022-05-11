@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/subscription_window_observation_use_case.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
 
@@ -77,8 +76,8 @@ mixin ObserveSubscriptionWindowMixin<T> on UseCaseBlocHelper<T> {
   }) =>
       (SubscriptionWindowMeasuredObservation observation) async {
         final currentView = observation.currentView!;
-        final subscriptionStatus = await getSubscriptionStatusUseCase
-            .singleOutput(PurchasableIds.subscription);
+        final subscriptionStatus =
+            await getSubscriptionStatusUseCase.singleOutput(none);
         final daysToSubscribe = subscriptionStatus.trialEndDate
             ?.calculateDifferenceInDays(DateTime.now());
         final purchaseDate = subscriptionStatus.purchaseDate;

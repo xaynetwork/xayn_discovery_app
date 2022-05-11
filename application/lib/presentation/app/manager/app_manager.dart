@@ -20,7 +20,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_def
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 
@@ -85,14 +84,14 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);
       _listenSubscriptionStatusHandler = consume(
         _listenSubscriptionStatusUseCase,
-        initialData: PurchasableIds.subscription,
+        initialData: none,
       ).transform(
         (out) => out.doOnData(_setSubscriptionStatusAnalyticsEvent),
       );
 
       _setAnalyticsEvents();
-      final subscriptionStatus = await _getSubscriptionStatusUseCase
-          .singleOutput(PurchasableIds.subscription);
+      final subscriptionStatus =
+          await _getSubscriptionStatusUseCase.singleOutput(none);
       _setSubscriptionStatusAnalyticsEvent(subscriptionStatus);
 
       _initDone = true;

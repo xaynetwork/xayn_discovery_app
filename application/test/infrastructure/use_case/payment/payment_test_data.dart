@@ -1,9 +1,8 @@
 import 'package:purchases_flutter/object_wrappers.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/presentation/constants/entitlement_ids.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 
-const subscriptionId = PurchasableIds.subscription;
+const subscriptionId = 'subscriptionId';
 const entitlementId = EntitlementIds.unlimited;
 
 const product = Product(
@@ -13,6 +12,13 @@ const product = Product(
   0,
   'price',
   'currencyCode',
+);
+
+const package = Package(
+  'identifier',
+  PackageType.monthly,
+  product,
+  'offeringIdentifier',
 );
 
 PurchaserInfo createPurchaserInfo({bool withActiveSubscription = true}) {
@@ -54,5 +60,6 @@ const purchasableProduct = PurchasableProduct(
   description: 'd',
   price: 'p',
   currency: 'usd',
+  duration: 'month',
   status: PurchasableProductStatus.purchasable,
 );

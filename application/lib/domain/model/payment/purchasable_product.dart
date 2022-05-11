@@ -19,6 +19,7 @@ class PurchasableProduct extends Equatable {
   final String description;
   final String price;
   final String currency;
+  final String? duration;
   final PurchasableProductStatus status;
 
   const PurchasableProduct({
@@ -27,16 +28,18 @@ class PurchasableProduct extends Equatable {
     required this.description,
     required this.price,
     required this.currency,
+    required this.duration,
     required this.status,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         title,
         description,
         price,
         currency,
+        duration,
         status,
       ];
 
@@ -47,6 +50,7 @@ class PurchasableProduct extends Equatable {
         description: description,
         price: price,
         currency: currency,
+        duration: duration,
         status: status,
       );
 

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
@@ -28,7 +29,7 @@ void main() {
         (_) async => createPurchaserInfo(withActiveSubscription: true),
       );
       // ACT
-      final subscriptionStatus = await useCase.singleOutput(subscriptionId);
+      final subscriptionStatus = await useCase.singleOutput(none);
 
       // ASSERT
       expect(subscriptionStatus.isSubscriptionActive, isTrue);
@@ -50,7 +51,7 @@ void main() {
       );
 
       // ACT
-      final subscriptionStatus = await useCase.singleOutput(subscriptionId);
+      final subscriptionStatus = await useCase.singleOutput(none);
 
       // ASSERT
       expect(subscriptionStatus.isSubscriptionActive, isFalse);

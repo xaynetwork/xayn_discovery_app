@@ -9,6 +9,7 @@ const double _kHeight = 200.0;
 class AnimationPlayer extends StatefulWidget {
   final String asset;
   final bool isLooping;
+  final bool playsFromStart;
   final VoidCallback? onFinished;
   final double? width;
   final double? height;
@@ -17,6 +18,7 @@ class AnimationPlayer extends StatefulWidget {
     this.asset, {
     Key? key,
     this.isLooping = true,
+    this.playsFromStart = true,
     this.onFinished,
     this.width = _kWidth,
     this.height = _kHeight,
@@ -26,6 +28,7 @@ class AnimationPlayer extends StatefulWidget {
     this.asset, {
     Key? key,
     this.isLooping = true,
+    this.playsFromStart = true,
     this.onFinished,
   })  : width = null,
         height = null,
@@ -63,13 +66,20 @@ class _AnimationPlayerState extends State<AnimationPlayer>
       return Container();
     }
 
+    final millisecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
+
     return Lottie.asset(
       widget.asset,
       controller: _controller,
       width: widget.width,
       height: widget.height,
       onLoaded: (composition) {
+        final compositionTimeMs = composition.duration.inMilliseconds;
+        final offset =
+            (millisecondsSinceEpoch % compositionTimeMs) / compositionTimeMs;
+
         _controller!
+          ..value = widget.playsFromStart ? .0 : offset
           ..duration = composition.duration
           ..forward();
       },
