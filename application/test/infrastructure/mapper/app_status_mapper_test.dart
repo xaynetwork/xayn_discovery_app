@@ -52,12 +52,12 @@ void main() {
           .thenReturn(onboardingValue);
 
       final map = {
-        AppSettingsFields.numberOfSessions: numberOfSessions,
-        AppSettingsFields.appVersion: appVersionMap,
-        AppSettingsFields.firstAppLaunchDate: now,
-        AppSettingsFields.userId: userIdValue,
-        AppSettingsFields.lastSeenDate: lastSeen,
-        AppSettingsFields.onboardingStatus: onboardingMap,
+        AppStatusFields.numberOfSessions: numberOfSessions,
+        AppStatusFields.appVersion: appVersionMap,
+        AppStatusFields.firstAppLaunchDate: now,
+        AppStatusFields.userId: userIdValue,
+        AppStatusFields.lastSeenDate: lastSeen,
+        AppStatusFields.onboardingStatus: onboardingMap,
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -89,12 +89,12 @@ void main() {
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
-        AppSettingsFields.numberOfSessions: numberOfSessions,
-        AppSettingsFields.appVersion: appVersionMap,
-        AppSettingsFields.firstAppLaunchDate: now,
-        AppSettingsFields.userId: userIdValue,
-        AppSettingsFields.lastSeenDate: lastSeen,
-        AppSettingsFields.onboardingStatus: onboardingMap,
+        AppStatusFields.numberOfSessions: numberOfSessions,
+        AppStatusFields.appVersion: appVersionMap,
+        AppStatusFields.firstAppLaunchDate: now,
+        AppStatusFields.userId: userIdValue,
+        AppStatusFields.lastSeenDate: lastSeen,
+        AppStatusFields.onboardingStatus: onboardingMap,
       };
       expect(map, expectedMap);
     });
