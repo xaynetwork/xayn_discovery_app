@@ -227,8 +227,11 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
         child: Image.network(
           baseUri.resolve(src.url).toString(),
           errorBuilder: (_, __, ___) => Container(),
-          loadingBuilder: (_, __, ___) =>
-              const WidgetTestableProgressIndicator(),
+          loadingBuilder: (context, child, event) {
+            if (event == null) return child;
+
+            return const WidgetTestableProgressIndicator();
+          },
         ),
       );
 
