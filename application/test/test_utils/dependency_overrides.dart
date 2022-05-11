@@ -159,6 +159,24 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     _excludedSources.remove(source);
     return const EngineEvent.clientEventSucceeded();
   }
+
+  @override
+  Future<EngineEvent> getAvailableSourcesList(String fuzzySearchTerm) {
+    // TODO: implement getAvailableSourcesList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestTopic(String topic) {
+    // TODO: implement requestTopic
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestTrendingTopics() {
+    // TODO: implement requestTrendingTopics
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)

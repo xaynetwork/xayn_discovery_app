@@ -94,9 +94,8 @@ void main() {
       when(engine.restoreSearch()).thenAnswer(
         (_) async => RestoreSearchSucceeded(
           const ActiveSearch(
-            queryTerm: '',
-            pageSize: 0,
-            requestedPageNb: 0,
+            searchTerm: '',
+            searchBy: SearchBy.query,
           ),
           [fakeDocument],
         ),
@@ -119,9 +118,8 @@ void main() {
     build: () {
       final restoreEvent = RestoreSearchSucceeded(
         const ActiveSearch(
-          queryTerm: '',
-          pageSize: 0,
-          requestedPageNb: 0,
+          searchTerm: '',
+          searchBy: SearchBy.query,
         ),
         [fakeDocument],
       );
