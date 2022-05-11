@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -94,14 +93,10 @@ class _ActiveSearchState
             feedType: FeedType.search,
           );
 
-      void onBookmarkLongPressed() => showAppBottomSheet(
-            context,
-            builder: (_) => MoveDocumentToCollectionBottomSheet(
-              document: document,
-              provider: managers.discoveryCardManager.state.processedDocument
-                  ?.getProvider(document.resource),
-              feedType: FeedType.search,
-            ),
+      void onBookmarkLongPressed() =>
+          managers.discoveryCardManager.onBookmarkLongPressed(
+            document,
+            feedType: FeedType.search,
           );
 
       void onEditReaderModeSettingsPressed() => toggleOverlay(

@@ -17,6 +17,7 @@ class StaticShader extends BaseStaticShader {
     double? width,
     double? height,
     bool noImageBuilderIsShadowless = false,
+    bool? shouldCheckDimen,
   })  : _noImageBuilderIsShadowless = noImageBuilderIsShadowless,
         super(
           key: key,

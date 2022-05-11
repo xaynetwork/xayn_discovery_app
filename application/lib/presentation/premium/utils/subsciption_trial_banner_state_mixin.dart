@@ -12,9 +12,15 @@ mixin SubscriptionTrialBannerStateMixin<T extends StatefulWidget> on State<T> {
   }) =>
       InAppNotification.show(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: R.dimen.unit),
-          child: SubscriptionTrialBanner(
-            trialEndDate: trialEndDate,
+          padding: EdgeInsets.only(
+              top: R.dimen.unit2,
+              left: R.dimen.unit2_5,
+              right: R.dimen.unit2_5),
+          child: SizedBox(
+            height: 72,
+            child: SubscriptionTrialBanner(
+              trialEndDate: trialEndDate,
+            ),
           ),
         ),
         context: context,

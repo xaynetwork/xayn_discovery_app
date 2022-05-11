@@ -95,14 +95,18 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
         logger.i(
             'Image is too small: [${frameInfo.image.width} lower than $minWidth] ${widget.uri}');
 
-        return _cache.update(widget.uri, image: null);
+        _cache.evictImage(widget.uri);
+
+        return null;
       }
 
       return _cache.update(widget.uri, image: frameInfo.image);
     } catch (e) {
       logger.i('Unable to decode image at: ${widget.uri}');
 
-      return _cache.update(widget.uri, image: null);
+      _cache.evictImage(widget.uri);
+
+      return null;
     }
   }
 }
@@ -128,6 +132,7 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     Curve? curve = Curves.easeInOut,
     double? width,
     double? height,
+    bool shouldCheckDimen = true,
   })  : curve = curve ?? Curves.easeInOut,
         duration = duration ?? _kDefaultDuration,
         super(
