@@ -34,6 +34,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -70,6 +71,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       _crudExplicitDocumentFeedbackUseCase;
   final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final RatingDialogManager _ratingDialogManager;
 
   /// html reader mode elements:
   ///
@@ -137,6 +139,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
     this._crudDocumentFilterUseCase,
+    this._ratingDialogManager,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -213,6 +216,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           document,
           feedType: feedType,
         ),
+        onClosed: () {
+          _ratingDialogManager.completedBookmarking();
+        },
       ),
       when: (oS, nS) =>
           oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
@@ -313,6 +319,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     Document document, {
     FeedType? feedType,
   }) =>
+
+      /// TODO also trigger that when completing the bookmark bottom sheet flow
       startBookmarkDocumentFlow(
         document,
         feedType: feedType,
