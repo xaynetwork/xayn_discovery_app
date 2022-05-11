@@ -19,16 +19,16 @@ void main() {
     mapper = MockPurchasableProductMapper();
     useCase = GetSubscriptionDetailsUseCase(paymentService, mapper);
 
-    when(paymentService.getProducts([subscriptionId])).thenAnswer(
-      (_) async => [product],
+    when(paymentService.getPackages()).thenAnswer(
+      (_) async => [package],
     );
-    when(mapper.map(product)).thenReturn(purchasableProduct);
+    when(mapper.map(package)).thenReturn(purchasableProduct);
   });
 
   useCaseTest<GetSubscriptionDetailsUseCase, None, PurchasableProduct>(
     'WHEN paymentService can not find product THEN throw productNotFound error',
     setUp: () {
-      when(paymentService.getProducts([subscriptionId])).thenAnswer(
+      when(paymentService.getPackages()).thenAnswer(
         (_) async => [],
       );
     },
@@ -38,7 +38,7 @@ void main() {
       useCaseFailure(throwsA(PaymentFlowError.productNotFound)),
     ],
     verify: (_) {
-      verify(paymentService.getProducts([subscriptionId]));
+      verify(paymentService.getPackages());
       verifyNoMoreInteractions(paymentService);
       verifyZeroInteractions(mapper);
     },
@@ -53,8 +53,8 @@ void main() {
     ],
     verify: (_) {
       verifyInOrder([
-        paymentService.getProducts([subscriptionId]),
-        mapper.map(product),
+        paymentService.getPackages(),
+        mapper.map(package),
       ]);
       verifyNoMoreInteractions(mapper);
       verifyNoMoreInteractions(paymentService);
