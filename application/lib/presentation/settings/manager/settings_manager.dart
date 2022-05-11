@@ -22,7 +22,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
@@ -88,7 +87,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
       consume(
     _listenSubscriptionStatusUseCase,
-    initialData: PurchasableIds.subscription,
+    initialData: none,
   );
 
   void _init() async {
@@ -96,8 +95,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       // read values
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
-      _subscriptionStatus = await _getSubscriptionStatusUseCase
-          .singleOutput(PurchasableIds.subscription);
+      _subscriptionStatus =
+          await _getSubscriptionStatusUseCase.singleOutput(none);
 
       _initDone = true;
     });

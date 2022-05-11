@@ -1,13 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_events/purchase_event.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 
 import '../../../test_utils/utils.dart';
@@ -43,7 +41,7 @@ void main() {
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     purchaseEventMapper = MockPurchaseEventMapper();
 
-    when(getSubscriptionStatusUseCase.singleOutput(PurchasableIds.subscription))
+    when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) async => SubscriptionStatus.initial());
 
     when(sendMarketingAnalyticsUseCase.call(any)).thenAnswer(
@@ -81,6 +79,7 @@ void main() {
           description: 'description',
           price: 'price',
           currency: 'usd',
+          duration: 'month',
           status: status ?? PurchasableProductStatus.purchasable,
         );
     final purchasedProduct =
