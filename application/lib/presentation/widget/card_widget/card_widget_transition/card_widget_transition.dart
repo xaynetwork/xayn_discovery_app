@@ -16,7 +16,7 @@ class CardWidgetTransition extends StatelessWidget {
       /// Needed for adding an opaque background to the card
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: R.styles.roundBorder1_5,
+          borderRadius: R.styles.roundBorderCard,
           color: Colors.white,
         ),
         child: SizedBox(
