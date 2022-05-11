@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design.dart' as design;
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
@@ -25,10 +24,10 @@ mixin OverlayMixin<T extends StatefulWidget> on State<T> {
       for (var e in event) {
         e.map(
           tooltip: (tooltip) => _showTooltip(
-            tooltip.data,
+            tooltip,
           ),
           bottomSheet: (BottomSheetData<dynamic> bottomSheet) {
-            showAppBottomSheet(
+            design.showAppBottomSheet(
               context,
               builder: bottomSheet.build,
               allowStacking: bottomSheet.allowStacking,
@@ -50,7 +49,24 @@ mixin OverlayMixin<T extends StatefulWidget> on State<T> {
   }
 
   void _showTooltip(
-    design.TooltipData data,
-  ) =>
-      _tooltipController.show(data);
+    TooltipData data,
+  ) {
+    _tooltipController.show(data.data);
+
+    final onClosed = data.onClosed;
+    if (onClosed != null) {
+      _subscribeForTooltipClose(data, onClosed);
+    }
+  }
+
+  _subscribeForTooltipClose(TooltipData data, VoidCallback onClosed) {
+    void callback() {
+      if (_tooltipController.activeTooltipData != data.data) {
+        _tooltipController.removeListener(callback);
+        onClosed();
+      }
+    }
+
+    _tooltipController.addListener(callback);
+  }
 }
