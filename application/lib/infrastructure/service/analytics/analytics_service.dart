@@ -135,7 +135,7 @@ class AnalyticsServiceDebugMode implements AnalyticsService {
 
   @override
   Future<void> flush() async {
-    logger.i('DEBUG: Analytics flashed');
+    logger.i('DEBUG: Analytics flushed');
   }
 
   @override

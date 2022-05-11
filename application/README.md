@@ -125,9 +125,15 @@ An event is data sent to the analytics platforms when the user triggers an actio
 
 | Event                                                                                                       | Description                                                             | Properties                                                                                                                      |
 | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [subscriptionAction](./lib/infrastructure/service/analytics/events/subscription_action_event.dart)          | triggers when user taps on a button or link on the subscription window. | `enum` **action**: [subscribe, unsubscribe, cancel, restore, promoCode,]<br/>`Object?` **arguments**                            |
-| [af_purchase](./lib/infrastructure/service/analytics/events/purchase_event.dart)                            | triggers when user subscribes.                                          | `String` **af_price**: price<br/>`String` **af_currency**: currency<br/>`String` **af_content_id**: id of what is subscribed to |
-| [openSubscriptionWindow](./lib/infrastructure/service/analytics/events/open_subscription_window_event.dart) | triggers when subsciption window is open.                               | `enum` **currentView**: [personalArea, settings, feed,]<br/>`Object?` **arguments**                                             |
+| [subscriptionAction](./lib/infrastructure/service/analytics/events/subscription_action_event.dart)          | triggers when user taps on a button or link on the subscription window. | `enum` **
+action**: [subscribe, unsubscribe, cancel, restore, promoCode,]<br/>`Object?` **
+arguments**                            |
+| [af_purchase](lib/infrastructure/service/analytics/marketing_events/purchase_event.dart)                            | triggers when user subscribes.                                          | `String` **
+af_price**: price<br/>`String` **af_currency**: currency<br/>`String` **
+af_content_id**: id of what is subscribed to |
+| [openSubscriptionWindow](./lib/infrastructure/service/analytics/events/open_subscription_window_event.dart) | triggers when subsciption window is open.                               | `enum` **
+currentView**: [personalArea, settings, feed,]<br/>`Object?` **
+arguments**                                             |
 
 #### Generic
 

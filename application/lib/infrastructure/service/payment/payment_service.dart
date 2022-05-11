@@ -40,11 +40,10 @@ class PaymentService {
     } catch (e) {}
   }
 
-  Future<List<Product>> getProducts(
-    List<String> identifiers, {
-    PurchaseType type = PurchaseType.subs,
-  }) =>
-      Purchases.getProducts(identifiers, type: type);
+  Future<List<Package>> getPackages() async {
+    final offerings = await Purchases.getOfferings();
+    return offerings.current?.availablePackages ?? [];
+  }
 
   Future<PurchaserInfo> purchaseProduct(
     PurchasableProductId id, {

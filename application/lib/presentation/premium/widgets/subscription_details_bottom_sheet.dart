@@ -30,7 +30,7 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   final SubscriptionStatus subscriptionStatus;
   final OnSubscriptionLinkCancelTapped onSubscriptionLinkCancelTapped;
 
-  const _SubscriptionDetails({
+  _SubscriptionDetails({
     Key? key,
     required this.subscriptionStatus,
     required this.onSubscriptionLinkCancelTapped,
@@ -109,7 +109,8 @@ class _SubscriptionDetails extends StatelessWidget with BottomSheetBodyMixin {
   }
 
   Widget _buildDoneButton(BuildContext context) => AppGhostButton.text(
-        R.strings.doneButtonTitle,
+        R.strings.general.btnClose,
         onPressed: () => closeBottomSheet(context),
+        backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
       );
 }

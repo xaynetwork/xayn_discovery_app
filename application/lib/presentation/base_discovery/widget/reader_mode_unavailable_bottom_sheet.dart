@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 class ReaderModeUnavailableBottomSheet extends BottomSheetBase {
   final VoidCallback? onOpenViaBrowser;
@@ -20,17 +21,20 @@ class ReaderModeUnavailableBottomSheet extends BottomSheetBase {
         );
 }
 
-class _ReaderModeUnavailable extends StatelessWidget with BottomSheetBodyMixin {
+class _ReaderModeUnavailable extends StatelessWidget
+    with BottomSheetBodyMixin, AnimationPlayerChildBuilderMixin {
   final VoidCallback? onOpenViaBrowser;
   final VoidCallback? onClosePressed;
+  @override
+  final String illustrationAssetName = R.assets.lottie.contextual.error;
 
-  const _ReaderModeUnavailable({
+  _ReaderModeUnavailable({
     this.onOpenViaBrowser,
     this.onClosePressed,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildChild(BuildContext context) {
     final body = Text(R.strings.readerModeUnableToLoadDesc);
     final header = BottomSheetHeader(
       headerText: R.strings.readerModeUnableToLoadTitle,

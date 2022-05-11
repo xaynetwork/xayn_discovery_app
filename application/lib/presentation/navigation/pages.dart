@@ -4,14 +4,13 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
-import 'package:xayn_discovery_app/presentation/collections/collections_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source_filter_settings_page.dart';
-import 'package:xayn_discovery_app/presentation/new_personal_area/new_personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
+import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
 
@@ -32,7 +31,6 @@ class PageRegistry {
     settings,
     countryFeedSettings,
     sourceFeedSettings,
-    collections,
     payment,
   };
 
@@ -91,7 +89,7 @@ class PageRegistry {
   static final personalArea = xayn.PageData(
     name: "personalArea",
     //ignore: prefer_const_constructors
-    builder: (_, args) => NewPersonalAreaScreen(),
+    builder: (_, args) => PersonalAreaScreen(),
   );
   static final settings = xayn.PageData(
     name: "settings",
@@ -109,12 +107,6 @@ class PageRegistry {
     name: "countryFeedSettings",
     //ignore: prefer_const_constructors
     builder: (_, args) => CountryFeedSettingsPage(),
-  );
-
-  static final collections = xayn.PageData(
-    name: "collections",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => CollectionsScreen(),
   );
 
   static error(String? errorCode) => xayn.PageData(

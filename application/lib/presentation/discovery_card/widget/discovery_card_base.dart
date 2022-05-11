@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -14,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
@@ -108,17 +108,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         feedType: feedType,
       );
 
-  void Function() onBookmarkLongPressed(DiscoveryCardState state) {
+  void Function() onBookmarkLongPressed() {
     return () {
       discoveryCardManager.triggerHapticFeedbackMedium();
-      showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          provider:
-              state.processedDocument?.getProvider(widget.document.resource),
-          feedType: widget.feedType,
-        ),
+      discoveryCardManager.onBookmarkLongPressed(
+        widget.document,
+        feedType: widget.feedType,
       );
     };
   }
@@ -130,6 +125,40 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     buildBackgroundPane({required bool opaque}) =>
         Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
 
+    getDeterministicNoImage() {
+      final deterministicRandom = widget.document.resource.hashCode % 4;
+      late String assetName;
+      late Color background;
+
+      switch (deterministicRandom) {
+        case 0:
+          background = R.colors.noImageBackgroundGreen;
+          assetName = R.assets.lottie.contextual.noImageA;
+          break;
+        case 1:
+          background = R.colors.noImageBackgroundPink;
+          assetName = R.assets.lottie.contextual.noImageB;
+          break;
+        case 2:
+          background = R.colors.noImageBackgroundPurple;
+          assetName = R.assets.lottie.contextual.noImageC;
+          break;
+        default:
+          background = R.colors.noImageBackgroundOrange;
+          assetName = R.assets.lottie.contextual.noImageD;
+          break;
+      }
+
+      return Container(
+        alignment: Alignment.topCenter,
+        color: background,
+        child: AnimationPlayer.assetUnrestrictedSize(
+          assetName,
+          playsFromStart: false,
+        ),
+      );
+    }
+
     return CachedImage(
       imageManager: imageManager,
       shaderBuilder: widget.primaryCardShader,
@@ -140,7 +169,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
-      noImageBuilder: (_) => buildBackgroundPane(opaque: false),
+      noImageBuilder: (_) => getDeterministicNoImage(),
     );
   }
 

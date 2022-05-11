@@ -1,17 +1,33 @@
 import 'dart:ffi';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_design/xayn_design.dart' as design;
+import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
+import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/widget/reader_mode_unavailable_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/bookmark_options/bookmarks_options_menu.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/contact_info/contact_info_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/widget/document_filter_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/no_active_subscription_found_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_failed_error_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/widget/move_bookmarks_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/onboarding_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -85,34 +101,190 @@ class OverlayData {
 
   /// BottomSheets
   ///
-  static bottomSheetDocumentFilter(Document document) =>
+  static BottomSheetData bottomSheetDocumentFilter(Document document) =>
       BottomSheetData<Document>(
           args: document,
           builder: (context, document) =>
               DocumentFilterBottomSheet(document: document!));
 
-  static bottomSheetOnboarding(OnboardingType type, VoidCallback onDismiss) =>
+  static BottomSheetData bottomSheetOnboarding(
+          OnboardingType type, VoidCallback onDismiss) =>
       BottomSheetData<OnboardingType>(
           args: type,
           builder: (__, _) =>
               OnboardingBottomSheet(type: type, onDismiss: onDismiss));
 
-  static bottomSheetGenericError({bool allowStacking = false}) =>
+  static bottomSheetGenericError(
+          {String? errorCode, bool allowStacking = false}) =>
       BottomSheetData<Void>(
-          allowStacking: allowStacking,
-          builder: (context, _) => GenericErrorBottomSheet());
+        allowStacking: allowStacking,
+        builder: (context, _) => GenericErrorBottomSheet(
+          errorCode: errorCode,
+        ),
+      );
 
-  static bottomSheetMoveDocumentToCollection(
-          {required Document document,
-          DocumentProvider? provider,
-          FeedType? feedType}) =>
+  static BottomSheetData bottomSheetMoveDocumentToCollection({
+    required Document document,
+    DocumentProvider? provider,
+    FeedType? feedType,
+    UniqueId? initialSelectedCollectionId,
+  }) =>
       BottomSheetData<Document>(
-          args: document,
-          builder: (context, document) => MoveDocumentToCollectionBottomSheet(
-                document: document!,
-                provider: provider,
-                feedType: feedType,
-              ));
+        args: document,
+        builder: (context, document) => MoveDocumentToCollectionBottomSheet(
+          document: document!,
+          provider: provider,
+          feedType: feedType,
+          initialSelectedCollectionId: initialSelectedCollectionId,
+        ),
+      );
+
+  static BottomSheetData bottomSheetContactInfo({
+    required VoidCallback onXaynSupportEmailTap,
+    required VoidCallback onXaynPressEmailTap,
+    required VoidCallback onXaynUrlTap,
+  }) =>
+      BottomSheetData(
+        builder: (context, document) => ContactInfoBottomSheet(
+          onXaynPressEmailTap: onXaynPressEmailTap,
+          onXaynSupportEmailTap: onXaynSupportEmailTap,
+          onXaynUrlTap: onXaynUrlTap,
+        ),
+      );
+
+  static BottomSheetData bottomSheetSubscriptionDetails({
+    required SubscriptionStatus subscriptionStatus,
+    required VoidCallback onSubscriptionLinkCancelTapped,
+  }) =>
+      BottomSheetData<SubscriptionStatus>(
+        args: subscriptionStatus,
+        builder: (context, subscriptionStatus) =>
+            SubscriptionDetailsBottomSheet(
+          subscriptionStatus: subscriptionStatus!,
+          onSubscriptionLinkCancelTapped: onSubscriptionLinkCancelTapped,
+        ),
+      );
+
+  static BottomSheetData bottomSheetPayment({
+    required VoidCallback onClosePressed,
+  }) =>
+      BottomSheetData(
+        builder: (context, subscriptionStatus) => PaymentBottomSheet(
+          onClosePressed: onClosePressed,
+        ),
+      );
+
+  static BottomSheetData bottomSheetCreateOrRenameCollection({
+    Collection? collection,
+    VoidCallback? onSystemPop,
+    Function(Collection)? onApplyPressed,
+    bool showBarrierColor = true,
+  }) =>
+      BottomSheetData(
+        showBarrierColor: showBarrierColor,
+        builder: (_, __) => CreateOrRenameCollectionBottomSheet(
+          collection: collection,
+          onSystemPop: onSystemPop,
+          onApplyPressed: onApplyPressed,
+        ),
+      );
+
+  static BottomSheetData bottomSheetCollectionOptions({
+    required Collection collection,
+    required VoidCallback onClose,
+  }) =>
+      BottomSheetData<Collection>(
+        showBarrierColor: false,
+        args: collection,
+        builder: (_, collection) => CollectionOptionsBottomSheet(
+          collection: collection!,
+          onSystemPop: onClose,
+        ),
+      );
+
+  static BottomSheetData bottomSheetDeleteCollectionConfirmation({
+    required UniqueId collectionId,
+  }) =>
+      BottomSheetData<UniqueId>(
+        builder: (_, __) => DeleteCollectionConfirmationBottomSheet(
+          collectionId: collectionId,
+        ),
+      );
+
+  static BottomSheetData bottomSheetBookmarksOptions({
+    required UniqueId bookmarkId,
+    required VoidCallback onClose,
+  }) =>
+      BottomSheetData<UniqueId>(
+        args: bookmarkId,
+        showBarrierColor: false,
+        builder: (_, bookmarkId) => BookmarkOptionsBottomSheet(
+          bookmarkId: bookmarkId!,
+          onSystemPop: onClose,
+        ),
+      );
+
+  static BottomSheetData bottomSheetMoveBookmarkToCollection({
+    required UniqueId bookmarkId,
+    VoidCallback? onSystemPop,
+    UniqueId? initialSelectedCollection,
+    bool showBarrierColor = true,
+  }) =>
+      BottomSheetData<UniqueId>(
+        args: bookmarkId,
+        showBarrierColor: showBarrierColor,
+        builder: (_, bookmarkId) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: bookmarkId!,
+          onSystemPop: onSystemPop,
+          initialSelectedCollection: initialSelectedCollection,
+        ),
+      );
+
+  static BottomSheetData bottomSheetReaderModeUnavailableBottomSheet({
+    required VoidCallback? onOpenViaBrowser,
+    required VoidCallback? onClosePressed,
+    bool isDismissible = true,
+  }) =>
+      BottomSheetData(
+        allowStacking: false,
+        isDismissible: isDismissible,
+        builder: (_, __) => ReaderModeUnavailableBottomSheet(
+          onOpenViaBrowser: onOpenViaBrowser,
+          onClosePressed: onClosePressed,
+        ),
+      );
+
+  static BottomSheetData bottomSheetMoveBookmarksToCollection({
+    required List<UniqueId> bookmarksIds,
+    required UniqueId collectionIdToRemove,
+    UniqueId? initialSelectedCollection,
+    VoidCallback? onClose,
+  }) =>
+      BottomSheetData(
+        showBarrierColor: false,
+        builder: (_, __) => MoveBookmarksToCollectionBottomSheet(
+          bookmarksIds: bookmarksIds,
+          collectionIdToRemove: collectionIdToRemove,
+          initialSelectedCollection: initialSelectedCollection,
+          onSystemPop: onClose,
+        ),
+      );
+
+  static BottomSheetData bottomSheetPaymentFailedError({
+    bool allowStacking = true,
+  }) =>
+      BottomSheetData(
+        allowStacking: allowStacking,
+        builder: (_, __) => PaymentFailedErrorBottomSheet(),
+      );
+
+  static BottomSheetData bottomSheetNoActiveSubscriptionFoundError({
+    bool allowStacking = true,
+  }) =>
+      BottomSheetData(
+        allowStacking: allowStacking,
+        builder: (_, __) => NoActiveSubscriptionFoundErrorBottomSheet(),
+      );
 }
 
 @freezed
@@ -131,10 +303,14 @@ class BottomSheetData<T> extends Equatable implements OverlayData {
   final BottomSheetBuilder<T?> builder;
   final T? args;
   final bool allowStacking;
+  final bool isDismissible;
+  final bool showBarrierColor;
 
   const BottomSheetData({
     required this.builder,
     this.allowStacking = true,
+    this.isDismissible = true,
+    this.showBarrierColor = true,
     this.args,
   });
 

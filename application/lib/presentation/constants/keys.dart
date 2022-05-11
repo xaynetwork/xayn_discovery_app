@@ -5,8 +5,6 @@ class Keys {
 
   static const Key featureSelectionButton = Key('featureSelectionButton');
 
-  static const Key personalAreaCardCollections =
-      Key('personal_area_card_collections');
   static const Key personalAreaIconSettings =
       Key('personal_area_icon_settings');
 

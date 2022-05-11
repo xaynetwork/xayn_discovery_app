@@ -6,6 +6,8 @@ import 'package:xayn_discovery_app/presentation/images/widget/shader/base_shader
 import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
 
 class StaticShader extends BaseStaticShader {
+  final bool _noImageBuilderIsShadowless;
+
   const StaticShader({
     Key? key,
     required Uint8List bytes,
@@ -14,7 +16,10 @@ class StaticShader extends BaseStaticShader {
     Color? shadowColor,
     double? width,
     double? height,
-  }) : super(
+    bool noImageBuilderIsShadowless = false,
+    bool? shouldCheckDimen,
+  })  : _noImageBuilderIsShadowless = noImageBuilderIsShadowless,
+        super(
           key: key,
           bytes: bytes,
           noImageBuilder: noImageBuilder,
@@ -33,20 +38,29 @@ class _StaticShaderState extends BaseStaticShaderState<StaticShader> {
   Widget build(BuildContext context) {
     final srcImage = image;
 
-    if (srcImage == null) {
-      return SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: widget.noImageBuilder(context),
-      );
-    }
+    if (!hasDecodedImage) return Container();
 
-    return CustomPaint(
+    final paint = CustomPaint(
       size: Size(widget.width ?? .0, widget.height ?? .0),
       painter: StaticPainter(
         image: srcImage,
         shadowColor: widget.shadowColor,
       ),
     );
+
+    if (srcImage == null) {
+      return Stack(
+        children: [
+          SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: widget.noImageBuilder(context),
+          ),
+          if (!widget._noImageBuilderIsShadowless) paint,
+        ],
+      );
+    }
+
+    return paint;
   }
 }

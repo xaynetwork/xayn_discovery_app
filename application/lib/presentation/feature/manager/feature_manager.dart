@@ -21,7 +21,7 @@ extension on Feature {
       case Feature.discoveryEngineReportOverlay:
         return false;
       case Feature.payment:
-        return EnvironmentHelper.kIsDebug;
+        return EnvironmentHelper.kAppId == 'com.xayn.discovery';
       case Feature.ratingDialog:
         return EnvironmentHelper.kIsDebug ||
             EnvironmentHelper.kIsInternalFlavor;

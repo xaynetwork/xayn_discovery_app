@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/collections/manager/collection_card_state.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_manager.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
 

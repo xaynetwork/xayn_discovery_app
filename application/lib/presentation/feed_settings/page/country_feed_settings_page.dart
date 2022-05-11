@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
 typedef OnCountryPressed = Function(Country country);
@@ -36,12 +36,10 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-            title: R.strings.feedSettingsScreenTabCountries,
-          ),
+        appToolbarData: AppToolbarData.titleOnly(
+          title: R.strings.feedSettingsScreenTabCountries,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),

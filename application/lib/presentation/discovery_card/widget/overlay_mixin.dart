@@ -32,6 +32,8 @@ mixin OverlayMixin<T extends StatefulWidget> on State<T> {
               context,
               builder: bottomSheet.build,
               allowStacking: bottomSheet.allowStacking,
+              isDismissible: bottomSheet.isDismissible,
+              showBarrierColor: bottomSheet.showBarrierColor,
             );
           },
         );

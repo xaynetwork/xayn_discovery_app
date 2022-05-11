@@ -58,7 +58,6 @@ class ShaderFactory {
               width: width,
               height: height,
               transitionToIdle: transitionToIdle,
-              singleFrameOnly: singleFrameOnly,
             );
           case ShaderType.zoom:
             return ZoomShader(
@@ -71,7 +70,6 @@ class ShaderFactory {
               width: width,
               height: height,
               transitionToIdle: transitionToIdle,
-              singleFrameOnly: singleFrameOnly,
             );
         }
       };

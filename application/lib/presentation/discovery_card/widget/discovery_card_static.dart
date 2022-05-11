@@ -102,7 +102,7 @@ class _DiscoveryCardStaticState
             ),
           ),
           onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
-          onBookmarkLongPressed: onBookmarkLongPressed(state),
+          onBookmarkLongPressed: onBookmarkLongPressed(),
           bookmarkStatus: state.bookmarkStatus,
           fractionSize: .0,
           feedType: widget.feedType,

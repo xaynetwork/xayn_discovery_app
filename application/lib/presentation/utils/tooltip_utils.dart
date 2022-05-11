@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
-import 'package:xayn_discovery_app/presentation/collections/util/collection_errors_enum_mapper.dart';
+import 'package:xayn_discovery_app/presentation/collection_card/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class TooltipUtils {

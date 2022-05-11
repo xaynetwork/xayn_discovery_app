@@ -7,13 +7,12 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/swipeable_bookmark_card.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/bookmark_options/bookmarks_options_menu.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
+import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
@@ -32,7 +31,10 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen>
-    with NavBarConfigMixin, CardWidgetTransitionMixin, OverlayMixin {
+    with
+        NavBarConfigMixin,
+        OverlayMixin<BookmarksScreen>,
+        CardWidgetTransitionMixin {
   late final _bookmarkManager =
       di.get<BookmarksScreenManager>(param1: widget.collectionId);
 
@@ -48,26 +50,33 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookmarksScreenManager, BookmarksScreenState>(
-      builder: (ctx, state) => Scaffold(
-        appBar: AppToolbar(
-          appToolbarData: AppToolbarData.titleOnly(
-              title: state.collectionName ?? R.strings.personalAreaCollections),
-        ),
-        body:
-            state.bookmarks.isEmpty ? _buildEmptyScreen() : _buildScreen(state),
+      builder: (ctx, state) => Stack(
+        children: [
+          AppScaffold(
+            appToolbarData: AppToolbarData.titleOnly(
+                title:
+                    state.collectionName ?? R.strings.personalAreaCollections),
+            body: state.bookmarks.isEmpty ? Container() : _buildScreen(state),
+          ),
+          if (state.bookmarks.isEmpty) _buildEmptyScreen()
+        ],
       ),
       bloc: _bookmarkManager,
     );
   }
 
-  Widget _buildEmptyScreen() => Padding(
-        child: Center(
-          child: Text(
-            R.strings.bookmarkScreenNoArticles,
-            style: R.styles.xlBoldStyle,
-          ),
+  Widget _buildEmptyScreen() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimationPlayer.asset(
+                R.linden.assets.lottie.contextual.emptyCollection),
+            Text(
+              R.strings.bookmarkScreenNoArticles,
+              style: R.styles.xlBoldStyle,
+            ),
+          ],
         ),
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
       );
 
   Widget _buildScreen(BookmarksScreenState state) {
@@ -75,7 +84,10 @@ class _BookmarksScreenState extends State<BookmarksScreen>
       items: state.bookmarks,
       itemBuilder: (_, index, __, bookmark) {
         final card = CardWidgetTransitionWrapper(
-          onAnimationDone: () => _showBookmarkCardOptions(bookmark.id),
+          onAnimationDone: () => _bookmarkManager.onBookmarkOptionClick(
+            bookmarkId: bookmark.id,
+            onClose: closeCardWidgetTransition,
+          ),
           onLongPress: _bookmarkManager.triggerHapticFeedbackMedium,
           child: _createBookmarkCard(context, bookmark),
         );
@@ -101,7 +113,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) =>
       SwipeableBookmarkCard(
         onMove: (UniqueId bookmarkId) {
-          _showMoveBookmarkBottomSheet(context, bookmarkId);
+          _bookmarkManager.onMoveSwipe(bookmarkId: bookmarkId);
         },
         onDelete: (UniqueId bookmarkId) {
           _bookmarkManager.removeBookmark(bookmarkId);
@@ -124,31 +136,4 @@ class _BookmarksScreenState extends State<BookmarksScreen>
         ),
         onFling: () => _bookmarkManager.triggerHapticFeedbackMedium(),
       );
-
-  void _showMoveBookmarkBottomSheet(
-    BuildContext context,
-    UniqueId bookmarkId,
-  ) {
-    showAppBottomSheet(
-      context,
-      builder: (_) => MoveBookmarkToCollectionBottomSheet(
-        bookmarkId: bookmarkId,
-      ),
-    );
-  }
-
-  _showBookmarkCardOptions(
-    UniqueId bookmarkId,
-  ) {
-    showAppBottomSheet(
-      context,
-      showBarrierColor: false,
-      builder: (buildContext) => BookmarkOptionsBottomSheet(
-        bookmarkId: bookmarkId,
-
-        /// Close the route with the focused card
-        onSystemPop: closeCardWidgetTransition,
-      ),
-    );
-  }
 }
