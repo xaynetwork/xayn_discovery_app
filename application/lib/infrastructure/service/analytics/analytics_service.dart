@@ -1,7 +1,6 @@
-import 'package:amplitude_flutter/amplitude.dart';
-import 'package:amplitude_flutter/identify.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
@@ -9,12 +8,14 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String _kCoresEntry = 'cores';
 const String _kCoresSocketEntry = 'socket';
 const String _kCoresVendorEntry = 'vendor';
 const String _kCoresArchEntry = 'arch';
+const String _kMixpanelEuServerUrl = 'https://api-eu.mixpanel.com';
 
 abstract class AnalyticsService {
   Future<void> send(AnalyticsEvent event);
@@ -28,54 +29,54 @@ abstract class AnalyticsService {
 
 @LazySingleton(as: AnalyticsService)
 @releaseEnvironment
-class AmplitudeAnalyticsService
-    with AsyncInitMixin
-    implements AnalyticsService {
-  final Amplitude _amplitude;
+class MixpanelAnalyticsService with AsyncInitMixin implements AnalyticsService {
+  late final Mixpanel _mixpanel;
   final String _userId;
-  @visibleForTesting
-  final identify = Identify();
 
-  @visibleForTesting
-  AmplitudeAnalyticsService({
-    required Amplitude amplitude,
+  MixpanelAnalyticsService({
     required String userId,
     bool initialized = true,
-  })  : _amplitude = amplitude,
-        _userId = userId {
+  }) : _userId = userId {
     if (!initialized) {
       startInitializing();
     }
   }
 
+  @visibleForTesting
+  MixpanelAnalyticsService.test({
+    required Mixpanel mixpanel,
+    required String userId,
+  })  : _mixpanel = mixpanel,
+        _userId = userId;
+
   @override
   Future<void> init() async {
-    await _amplitude.enableCoppaControl();
-    await _amplitude.init(Env.amplitudeApiKey, userId: _userId);
-    await _amplitude.trackingSessionEvents(true);
-    await _amplitude.setUseDynamicConfig(true);
-    await _preamble();
+    _mixpanel = await Mixpanel.init(Env.mixpanelToken);
+    _mixpanel.setServerURL(_kMixpanelEuServerUrl);
+    _mixpanel.identify(_userId);
+    _mixpanel.setUseIpAddressForGeolocation(false);
+    _mixpanel.setLoggingEnabled(EnvironmentHelper.kIsInternalFlavor);
+    _preamble();
   }
 
   @factoryMethod
-  factory AmplitudeAnalyticsService.init(
+  factory MixpanelAnalyticsService.init(
     AppStatusRepository appStatusRepository,
   ) =>
-      AmplitudeAnalyticsService(
-        amplitude: Amplitude.getInstance(),
+      MixpanelAnalyticsService(
         userId: appStatusRepository.appStatus.userId.value,
         initialized: false,
       );
 
   @override
-  Future<void> flush() => safeRun(() => _amplitude.uploadEvents());
+  Future<void> flush() => safeRun(() => _mixpanel.flush());
 
   @override
   Future<void> send(AnalyticsEvent event) async {
-    safeRun(() async {
-      await _amplitude.logEvent(
+    await safeRun(() {
+      _mixpanel.track(
         event.type,
-        eventProperties: event.properties,
+        properties: event.properties,
       );
 
       logger.i('Analytics event has been fired:\n${{
@@ -86,10 +87,9 @@ class AmplitudeAnalyticsService
   }
 
   /// uses setOnce to log info on the device's cores
-  Future<void> _preamble() async {
-    identify.setOnce(
-      _kCoresEntry,
-      SysInfo.cores
+  void _preamble() {
+    final setOnceProperties = {
+      _kCoresEntry: SysInfo.cores
           .map(
             (it) => {
               _kCoresSocketEntry: it.socket,
@@ -98,29 +98,31 @@ class AmplitudeAnalyticsService
             },
           )
           .toList(growable: false),
-    );
+    };
 
-    await _amplitude.identify(identify);
+    _mixpanel.registerSuperPropertiesOnce(setOnceProperties);
   }
 
   @override
   Future<void> updateIdentityParam(IdentityParam param) async {
-    identify.set(param.key, param.value);
-    await _amplitude.identify(identify);
-    logger.i('Analytics identity param was changed: $param');
+    await safeRun(() {
+      _mixpanel.getPeople().set(param.key, param.value);
+      logger.i('Analytics identity param was changed: $param');
+    });
   }
 
   @override
   Future<void> updateIdentityParams(Set<IdentityParam> params) async {
-    for (final param in params) {
-      identify.set(param.key, param.value);
-    }
-    await _amplitude.identify(identify);
-    logger.i('Analytics identity params were changed: $params');
+    await safeRun(() {
+      for (final param in params) {
+        _mixpanel.getPeople().set(param.key, param.value);
+      }
+      logger.i('Analytics identity params were changed: $params');
+    });
   }
 }
 
-/// Amplitude is disabled in debug mode
+/// Analytics service is disabled in debug and test modes
 @LazySingleton(as: AnalyticsService)
 @debugEnvironment
 @testEnvironment
