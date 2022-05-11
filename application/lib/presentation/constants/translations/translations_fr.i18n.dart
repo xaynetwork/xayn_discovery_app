@@ -228,6 +228,7 @@ class TranslationsFr extends Translations {
   OnboardingBottomDialogTranslationsFr get onboardingBottomDialog =>
       OnboardingBottomDialogTranslationsFr(this);
   GeneralTranslationsFr get general => GeneralTranslationsFr(this);
+  String get subscriptionDurationMonth => """month""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -452,4 +453,5 @@ Map<String, String> get translationsFrMap => {
       """onboardingBottomDialog.bookmarksManageTitle""":
           """Long press or swipe to manage your bookmarks""",
       """general.btnClose""": """Close""",
+      """subscriptionDurationMonth""": """month""",
     };

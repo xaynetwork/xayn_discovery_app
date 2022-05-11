@@ -23,7 +23,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
@@ -120,7 +119,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   late final UseCaseValueStream<SubscriptionStatus> subscriptionStatusHandler =
       consume(
     getSubscriptionStatusUseCase,
-    initialData: PurchasableIds.subscription,
+    initialData: none,
   ).transform(
     (out) => out
         .skipWhile((_) => !featureManager.isPaymentEnabled)
