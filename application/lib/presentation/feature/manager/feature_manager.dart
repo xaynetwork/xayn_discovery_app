@@ -2,6 +2,8 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 import 'feature_manager_state.dart';
@@ -78,4 +80,11 @@ class FeatureManager extends Cubit<FeatureManagerState>
         feature,
         isDisabled(feature),
       );
+
+  void resetFirstAppStartupDate() {
+    final appStatusRepo = di.get<AppStatusRepository>();
+    final newStatus =
+        appStatusRepo.appStatus.copyWith(firstAppLaunchDate: DateTime.now());
+    appStatusRepo.save(newStatus);
+  }
 }
