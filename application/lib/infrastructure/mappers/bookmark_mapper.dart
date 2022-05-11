@@ -29,6 +29,8 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
     /// The [favicon] field is nullable
     final favicon = map[BookmarkMapperFields.providerThumbnail] as String?;
 
+    final url = map[BookmarkMapperFields.url] ?? '';
+
     final createdAt =
         map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
 
@@ -42,6 +44,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         favicon: favicon,
       ),
       createdAt: createdAt,
+      url: url,
     );
   }
 
@@ -54,6 +57,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         BookmarkMapperFields.providerName: entity.provider?.name,
         BookmarkMapperFields.providerThumbnail: entity.provider?.favicon,
         BookmarkMapperFields.createdAt: entity.createdAt,
+        BookmarkMapperFields.url: entity.url,
       };
 
   @override
@@ -74,4 +78,5 @@ abstract class BookmarkMapperFields {
   static const int providerName = 4;
   static const int providerThumbnail = 5;
   static const int createdAt = 6;
+  static const int url = 7;
 }

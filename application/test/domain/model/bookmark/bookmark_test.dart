@@ -14,6 +14,7 @@ void main() {
         name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
     const bookmarkTitle = 'Bookmark title';
     const createdAt = '2021-12-05';
+    const url = 'https://url_test.com';
     test(
       'WHEN an empty title is given THEN throw assert exception',
       () {
@@ -25,6 +26,7 @@ void main() {
             image: image,
             provider: provider,
             createdAt: createdAt,
+            url: url,
           ),
           throwsAssertionError,
         );
@@ -42,6 +44,7 @@ void main() {
             image: image,
             provider: null,
             createdAt: createdAt,
+            url: url,
           ),
           predicate((bookmark) => bookmark != null),
         );
@@ -59,6 +62,7 @@ void main() {
             image: image,
             provider: provider,
             createdAt: '',
+            url: url,
           ),
           throwsAssertionError,
         );

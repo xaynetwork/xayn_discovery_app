@@ -55,6 +55,7 @@ void main() {
           title: UniqueId().toString(),
           provider: null,
           createdAt: DateTime.now().toIso8601String(),
+          url: 'https://url_test.com',
         );
     when(collectionsRepository.getAll())
         .thenReturn(List.filled(collectionsCount, createCollection()));

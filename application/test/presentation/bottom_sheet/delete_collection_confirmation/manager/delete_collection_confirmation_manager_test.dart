@@ -23,6 +23,8 @@ void main() {
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late DeleteCollectionConfirmationManager deleteCollectionConfirmationManager;
 
+  const url = 'https://url_test.com';
+
   final collection = Collection(
     id: UniqueId(),
     name: 'Collection test',
@@ -37,6 +39,7 @@ void main() {
       provider: DocumentProvider(),
       image: Uint8List.fromList([1, 2, 3]),
       createdAt: DateTime.now().toString(),
+      url: url,
     ),
     Bookmark(
       collectionId: collection.id,
@@ -45,6 +48,7 @@ void main() {
       provider: DocumentProvider(),
       image: Uint8List.fromList([1, 2, 3]),
       createdAt: DateTime.now().toString(),
+      url: url,
     ),
   ];
 

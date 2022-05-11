@@ -24,6 +24,7 @@ void main() {
   );
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
+  const url = 'https://url_test.com';
 
   final bookmark = Bookmark(
     id: bookmarkIdToMove,
@@ -32,6 +33,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    url: url,
   );
 
   final collection = Collection(

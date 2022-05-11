@@ -24,6 +24,7 @@ void main() {
     name: 'Provider name',
     favicon: 'https://www.foo.com/favicon.ico',
   );
+  const url = 'https://url_test.com';
 
   final createdBookmark = Bookmark(
     id: bookmarkId,
@@ -32,6 +33,7 @@ void main() {
     image: image,
     provider: provider,
     createdAt: dateTime.toUtc().toString(),
+    url: url,
   );
 
   setUp(() {
@@ -57,6 +59,7 @@ void main() {
           title: title,
           image: image,
           provider: provider,
+          url: url,
         )
       ],
       verify: (_) {
