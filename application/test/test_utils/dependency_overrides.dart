@@ -165,6 +165,18 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     // TODO: implement requestTopic
     throw UnimplementedError();
   }
+
+  @override
+  Future<EngineEvent> getAvailableSourcesList(String fuzzySearchTerm) {
+    // TODO: implement getAvailableSourcesList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestTrendingTopics() {
+    // TODO: implement requestTrendingTopics
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)

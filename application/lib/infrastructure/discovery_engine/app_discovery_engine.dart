@@ -277,4 +277,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     // TODO: implement requestTopic
     throw UnimplementedError();
   }
+
+  @override
+  Future<EngineEvent> getAvailableSourcesList(String fuzzySearchTerm) {
+    // TODO: implement getAvailableSourcesList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestTrendingTopics() {
+    // TODO: implement requestTrendingTopics
+    throw UnimplementedError();
+  }
 }
