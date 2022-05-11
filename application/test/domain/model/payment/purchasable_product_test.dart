@@ -8,6 +8,7 @@ void main() {
   const description = 'productDescription';
   const price = 'productPrice';
   const currency = 'productCurrency';
+  const duration = 'month';
   const statusDefault = PurchasableProductStatus.purchasable;
   const product = PurchasableProduct(
     id: id,
@@ -15,6 +16,7 @@ void main() {
     description: description,
     price: price,
     currency: currency,
+    duration: duration,
     status: statusDefault,
   );
 
@@ -26,6 +28,7 @@ void main() {
       expect(product.description, equals(description));
       expect(product.price, equals(price));
       expect(product.currency, equals(currency));
+      expect(product.duration, equals(duration));
       expect(product.status, equals(statusDefault));
     },
   );
@@ -40,6 +43,7 @@ void main() {
         description,
         price,
         currency,
+        duration,
         statusDefault,
       ]);
     },
@@ -55,6 +59,7 @@ void main() {
         expect(product.description, equals(description));
         expect(product.price, equals(price));
         expect(product.currency, equals(currency));
+        expect(product.duration, equals(duration));
         expect(copied.status, equals(newStatus));
       }
     },
