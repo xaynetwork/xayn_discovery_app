@@ -119,7 +119,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<void> _saveInitialFeedMarket(
     SaveInitialFeedMarketUseCase useCase,
   ) async {
-    final deviceLocale = WidgetsBinding.instance!.window.locale;
+    final deviceLocale = WidgetsBinding.instance.window.locale;
     final input = SaveDefaultFeedMarketInput(
       deviceLocale,
       defaultFeedMarket,

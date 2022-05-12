@@ -10,6 +10,7 @@ const double _kSwipeOpenToPosition = 0.35;
 const double _kMinFlingVelocity = 250.0;
 
 enum SwipeOption { like, neutral, dislike }
+
 typedef OnSwipe = Function(SwipeOption swipeOption);
 
 class SwipeableDiscoveryCard extends StatelessWidget {
