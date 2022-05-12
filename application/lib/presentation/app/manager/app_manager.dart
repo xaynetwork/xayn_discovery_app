@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_session/save_app_
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_or_get_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_default_collection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
@@ -36,6 +37,7 @@ class PlatformBrightnessProvider {
 @lazySingleton
 class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   AppManager(
+    this._connectivityObserver,
     this._listenAppThemeUseCase,
     this._incrementAppSessionUseCase,
     this._createOrGetDefaultCollectionUseCase,
@@ -56,6 +58,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     _init();
   }
 
+  final ConnectivityObserver _connectivityObserver;
   final ListenAppThemeUseCase _listenAppThemeUseCase;
   final IncrementAppSessionUseCase _incrementAppSessionUseCase;
   final SetInitialIdentityParamsUseCase _setInitialIdentityParamsUseCase;
@@ -152,6 +155,13 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
 
   void onResume() {
     _isPaused = false;
+
+    // when resuming from background, the connectivity status may not change,
+    // e.g. we were on wifi and still are on wifi.
+    // but connection may be lost meanwhile, for whatever reason.
+    // so when the app resumes, we do a forced check, making the app ping an
+    // internet address, and thus updating actual connectivity.
+    _connectivityObserver.forceConnectivityCheck();
 
     /// Because of [onChangedPlatformBrightness] we need to reassign the platformBrightness onResume,
     /// otherwise we might miss a valid brightness update.
