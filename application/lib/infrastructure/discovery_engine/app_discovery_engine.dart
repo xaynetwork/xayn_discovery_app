@@ -267,6 +267,24 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
   }
 
+  @override
+  Future<EngineEvent> getAvailableSourcesList(String fuzzySearchTerm) {
+    _inputLog.add('[getAvailableSourcesList]');
+    return safeRun(() => _engine.getAvailableSourcesList(fuzzySearchTerm));
+  }
+
+  @override
+  Future<EngineEvent> requestTopic(String topic) {
+    _inputLog.add('[requestTopic]');
+    return safeRun(() => _engine.requestTopic(topic));
+  }
+
+  @override
+  Future<EngineEvent> requestTrendingTopics() {
+    _inputLog.add('[requestTrendingTopics]');
+    return safeRun(() => _engine.requestTrendingTopics());
+  }
+
   void _updateFeedMarketIdentityParam(FeedMarkets markets) {
     final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
     _setIdentityParamUseCase.call(param);
