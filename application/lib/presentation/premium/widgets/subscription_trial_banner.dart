@@ -23,14 +23,14 @@ class SubscriptionTrialBanner extends StatelessWidget {
     );
 
     return ClipRRect(
+      borderRadius: R.styles.roundBorderCard,
       child: Container(
-        child: stack,
         decoration: BoxDecoration(
           color: R.colors.settingsCardBackground,
           borderRadius: R.styles.roundBorderCard,
         ),
+        child: stack,
       ),
-      borderRadius: R.styles.roundBorderCard,
     );
   }
 
@@ -84,6 +84,8 @@ class SubscriptionTrialBanner extends StatelessWidget {
     );
 
     final row = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         icon,
         Expanded(
@@ -98,8 +100,6 @@ class SubscriptionTrialBanner extends StatelessWidget {
           ),
         ),
       ],
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
     );
 
     final padding = Padding(
@@ -113,8 +113,8 @@ class SubscriptionTrialBanner extends StatelessWidget {
     final embedInButton = onPressed != null;
     return embedInButton
         ? AppGhostButton(
-            child: padding,
             onPressed: onPressed,
+            child: padding,
           )
         : padding;
   }

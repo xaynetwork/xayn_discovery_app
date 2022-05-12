@@ -19,7 +19,7 @@ class CustomAnimatedList<T> extends StatefulWidget {
         super(key: key);
 
   @override
-  _CustomAnimatedListState<T> createState() => _CustomAnimatedListState();
+  State<CustomAnimatedList<T>> createState() => _CustomAnimatedListState();
 }
 
 class _CustomAnimatedListState<T> extends State<CustomAnimatedList<T>> {

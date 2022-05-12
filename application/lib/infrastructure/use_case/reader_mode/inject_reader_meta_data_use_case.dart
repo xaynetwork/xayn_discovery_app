@@ -4,25 +4,25 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
-const _Speed kDefaultSpeed = _Speed(cpm: 987, variance: 118);
-const Map<String, _Speed> kReadingSpeed = {
+const Speed kDefaultSpeed = Speed(cpm: 987, variance: 118);
+const Map<String, Speed> kReadingSpeed = {
   'en': kDefaultSpeed,
-  'ar': _Speed(cpm: 612, variance: 88),
-  'de': _Speed(cpm: 920, variance: 86),
-  'es': _Speed(cpm: 1025, variance: 127),
-  'fi': _Speed(cpm: 1078, variance: 121),
-  'fr': _Speed(cpm: 998, variance: 126),
-  'he': _Speed(cpm: 833, variance: 130),
-  'it': _Speed(cpm: 950, variance: 140),
-  'jw': _Speed(cpm: 357, variance: 56),
-  'nl': _Speed(cpm: 978, variance: 143),
-  'pl': _Speed(cpm: 916, variance: 126),
-  'pt': _Speed(cpm: 913, variance: 145),
-  'ru': _Speed(cpm: 986, variance: 175),
-  'sk': _Speed(cpm: 885, variance: 145),
-  'sv': _Speed(cpm: 917, variance: 156),
-  'tr': _Speed(cpm: 1054, variance: 156),
-  'zh': _Speed(cpm: 255, variance: 29),
+  'ar': Speed(cpm: 612, variance: 88),
+  'de': Speed(cpm: 920, variance: 86),
+  'es': Speed(cpm: 1025, variance: 127),
+  'fi': Speed(cpm: 1078, variance: 121),
+  'fr': Speed(cpm: 998, variance: 126),
+  'he': Speed(cpm: 833, variance: 130),
+  'it': Speed(cpm: 950, variance: 140),
+  'jw': Speed(cpm: 357, variance: 56),
+  'nl': Speed(cpm: 978, variance: 143),
+  'pl': Speed(cpm: 916, variance: 126),
+  'pt': Speed(cpm: 913, variance: 145),
+  'ru': Speed(cpm: 986, variance: 175),
+  'sk': Speed(cpm: 885, variance: 145),
+  'sv': Speed(cpm: 917, variance: 156),
+  'tr': Speed(cpm: 1054, variance: 156),
+  'zh': Speed(cpm: 255, variance: 29),
 };
 
 @singleton
@@ -76,11 +76,11 @@ class ReadingTimeInput {
 }
 
 @immutable
-class _Speed {
+class Speed {
   final int cpm, variance;
   final int charactersPerMinuteLow, charactersPerMinuteHigh;
 
-  const _Speed({
+  const Speed({
     required this.cpm,
     required this.variance,
   })  : charactersPerMinuteLow = cpm - variance,

@@ -15,8 +15,8 @@ class ShareAppSection extends StatelessWidget {
   Widget build(BuildContext context) => Center(
         child: SettingsSection.custom(
           title: R.strings.settingsSectionTitleSpreadTheWord,
-          child: _buildShareBtn(),
           crossAxisAlignment: CrossAxisAlignment.center,
+          child: _buildShareBtn(),
         ),
       );
 

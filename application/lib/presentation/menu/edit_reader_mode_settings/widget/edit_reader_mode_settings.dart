@@ -17,7 +17,7 @@ class EditReaderModeSettingsMenu extends StatefulWidget {
   final VoidCallback? onCloseMenu;
 
   @override
-  _EditReaderModeSettingsMenuState createState() =>
+  State<EditReaderModeSettingsMenu> createState() =>
       _EditReaderModeSettingsMenuState();
 }
 
@@ -81,13 +81,6 @@ class _EditReaderModeSettingsMenuState
           );
 
           return AppMenu(
-            children: [
-              editFontStyleRow,
-              editFontSizeRow,
-              R.isDarkMode
-                  ? editDarkBackgroundColorRow
-                  : editLightBackgroundColorRow,
-            ],
             bottom: MediaQuery.of(context).viewInsets.bottom +
                 R.dimen.bottomBarDockedHeight +
                 R.dimen.unit4_25,
@@ -97,6 +90,13 @@ class _EditReaderModeSettingsMenuState
             errorMessage: state.error != null
                 ? R.strings.readerModeSettingsErrorChangesNotApplied
                 : null,
+            children: [
+              editFontStyleRow,
+              editFontSizeRow,
+              R.isDarkMode
+                  ? editDarkBackgroundColorRow
+                  : editLightBackgroundColorRow,
+            ],
           );
         });
   }

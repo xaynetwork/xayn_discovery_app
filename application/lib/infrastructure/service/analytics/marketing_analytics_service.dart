@@ -81,7 +81,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   /// The logEvent method allows you to send in-app events to AppsFlyer analytics.
   @override
   void send(AnalyticsEvent event) {
-    logger.i('Marketing Analytics event has been fired: ' + event.type);
+    logger.i('Marketing Analytics event has been fired: ${event.type}');
     _appsflyer.logEvent(event.type, event.properties);
   }
 
@@ -120,11 +120,11 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   _onDeepLinking(dynamic res) {
     if (res is DeepLinkResult && res.status == Status.FOUND) {
       final deepLinkString = res.deepLink?.deepLinkValue;
-      final _deepLinkValue = DeepLinkValue.values.firstWhere(
+      final deepLinkValue = DeepLinkValue.values.firstWhere(
         (it) => it.name == deepLinkString,
         orElse: () => DeepLinkValue.none,
       );
-      _deepLinkManager.onDeepLink(_deepLinkValue);
+      _deepLinkManager.onDeepLink(deepLinkValue);
     }
   }
 }
