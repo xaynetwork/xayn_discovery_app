@@ -125,8 +125,8 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
     final sidePadding = R.dimen.unit3;
     final withPadding = Padding(
-      child: list,
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      child: list,
     );
     return withPadding;
   }

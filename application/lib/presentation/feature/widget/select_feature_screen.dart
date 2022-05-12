@@ -21,7 +21,7 @@ class SelectFeatureScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SelectFeatureScreenState createState() => _SelectFeatureScreenState();
+  State<SelectFeatureScreen> createState() => _SelectFeatureScreenState();
 }
 
 enum _OverrideState {

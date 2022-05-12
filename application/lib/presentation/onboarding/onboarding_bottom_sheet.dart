@@ -66,8 +66,8 @@ class _OnboardingViewState extends State<_OnboardingView>
       _buildCloseBtn(),
     ];
     final column = Column(
-      children: children,
       mainAxisSize: MainAxisSize.min,
+      children: children,
     );
     return column;
   }

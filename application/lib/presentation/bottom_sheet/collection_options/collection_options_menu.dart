@@ -86,8 +86,8 @@ class __CollectionOptionsState extends State<_CollectionOptions>
       ],
     );
     return BottomSheetClickableOption(
-      child: row,
       onTap: menuOption.onPressed,
+      child: row,
     );
   }
 }

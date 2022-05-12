@@ -20,7 +20,7 @@ class Strings {
   static Translations? _translation;
   static const Translations _defaultTranslation = Translations();
   static Future<CountryNames>? _countryNames;
-  static late final Future<CountryNames> _defaultCountryNames =
+  static final Future<CountryNames> _defaultCountryNames =
       AppLanguage.english.countryNames;
 
   static Translations get translation => _translation ?? _defaultTranslation;

@@ -221,7 +221,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
           _collections = collectionHandlerOut.collections;
         }
 
-        final _shouldClose = createBookmarkOut != null ||
+        final shouldClose = createBookmarkOut != null ||
             moveBookmarkOut != null ||
             removeBookmarkOut != null;
 
@@ -229,7 +229,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
           collections: _collections,
           selectedCollectionId: _selectedCollectionId,
           isBookmarked: _isBookmarked,
-          shouldClose: _shouldClose,
+          shouldClose: shouldClose,
         );
 
         return newState;

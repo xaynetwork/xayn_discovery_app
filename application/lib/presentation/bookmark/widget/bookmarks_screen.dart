@@ -101,8 +101,8 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     );
 
     return Padding(
-      child: list,
       padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+      child: list,
     );
   }
 
