@@ -4,8 +4,8 @@ publish_to: 'none'
 version: 0.0.1
 
 environment:
-  sdk: '>=2.16.1 <3.0.0'
-  flutter: '>=2.10.4'
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: '>=3.0.0'
 
 # Please list dependencies alphabetically!
 dependencies:
@@ -76,7 +76,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 04a1b0724756ae11b0715ce0efb99e10ea350309
+      ref: 12a03078de45b085be7410807f99afcf1f817383
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
