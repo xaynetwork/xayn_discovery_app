@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import '../../../test_utils/utils.dart';
 
 void main() {
+  late MockConnectivityObserver connectivityObserver;
   late MockListenAppThemeUseCase listenAppThemeUseCase;
   late MockIncrementAppSessionUseCase incrementAppSessionUseCase;
   late MockCreateOrGetDefaultCollectionUseCase
@@ -31,6 +33,7 @@ void main() {
   final subscriptionStatus = SubscriptionStatus.initial();
 
   setUp(() {
+    connectivityObserver = MockConnectivityObserver();
     mockDefaultCollection =
         Collection.readLater(name: 'mock default collection');
     listenAppThemeUseCase = MockListenAppThemeUseCase();
@@ -79,9 +82,16 @@ void main() {
     );
     when(platformBrightnessProvider.brightness)
         .thenAnswer((realInvocation) => Brightness.dark);
+    when(connectivityObserver.onConnectivityChanged)
+        .thenAnswer((realInvocation) => Stream.value(ConnectivityResult.wifi));
+    when(connectivityObserver.checkConnectivity())
+        .thenAnswer((realInvocation) => Future.value(ConnectivityResult.wifi));
+    when(connectivityObserver.forceConnectivityCheck())
+        .thenAnswer((realInvocation) => Future.value(ConnectivityResult.wifi));
   });
 
   AppManager create() => AppManager(
+        connectivityObserver,
         listenAppThemeUseCase,
         incrementAppSessionUseCase,
         createOrGetDefaultCollectionUseCase,
