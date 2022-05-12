@@ -27,7 +27,7 @@ import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
 @injectable
 class PlatformBrightnessProvider {
   Brightness get brightness =>
-      WidgetsBinding.instance!.window.platformBrightness;
+      WidgetsBinding.instance.window.platformBrightness;
 }
 
 /// Manages the state for the material app.
