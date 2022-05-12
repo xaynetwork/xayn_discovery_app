@@ -87,19 +87,17 @@ class MixpanelAnalyticsService with AsyncInitMixin implements AnalyticsService {
 
   /// uses setOnce to log info on the device's cores
   void _preamble() {
-    final setOnceProperties = {
-      _kCoresEntry: SysInfo.cores
-          .map(
-            (it) => {
-              _kCoresSocketEntry: it.socket,
-              _kCoresVendorEntry: it.vendor,
-              _kCoresArchEntry: it.architecture.name,
-            },
-          )
-          .toList(growable: false),
-    };
+    final deviceCoresProperties = SysInfo.cores
+        .map(
+          (it) => {
+            _kCoresSocketEntry: it.socket,
+            _kCoresVendorEntry: it.vendor,
+            _kCoresArchEntry: it.architecture.name,
+          },
+        )
+        .toList(growable: false);
 
-    _mixpanel.registerSuperPropertiesOnce(setOnceProperties);
+    _mixpanel.getPeople().setOnce(_kCoresEntry, deviceCoresProperties);
   }
 
   @override
