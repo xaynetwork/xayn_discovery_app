@@ -36,10 +36,9 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
   late final ShaderCache _cache = di.get();
   ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
-  bool _hasDecodedImage = false;
 
   ui.Image? get image => _cache.imageOf(widget.uri);
-  bool get hasDecodedImage => _hasDecodedImage;
+  bool get hasDecodedImage => _cache.isValidated(widget.uri);
 
   @override
   void initState() {
@@ -67,9 +66,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   }
 
   @mustCallSuper
-  void didResolveImage() {
-    _hasDecodedImage = true;
-  }
+  void didResolveImage() {}
 
   void _resolveImage() {
     if (_cache.hasImageOf(widget.uri)) {
@@ -84,7 +81,13 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   }
 
   Future<ui.Image?> _decodeBytes(Uint8List bytes) async {
-    if (_cache.hasImageOf(widget.uri)) return _cache.imageOf(widget.uri);
+    final hasImage = _cache.hasImageOf(widget.uri);
+
+    if (hasImage) {
+      return _cache.imageOf(widget.uri);
+    } else if (_cache.isValidated(widget.uri)) {
+      return null;
+    }
 
     try {
       final codec = await ui.instantiateImageCodec(bytes);
@@ -100,7 +103,11 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
         return null;
       }
 
-      return _cache.update(widget.uri, image: frameInfo.image);
+      return _cache.update(
+        widget.uri,
+        image: frameInfo.image,
+        isValidated: true,
+      );
     } catch (e) {
       logger.i('Unable to decode image at: ${widget.uri}');
 
