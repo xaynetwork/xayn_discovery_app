@@ -64,7 +64,7 @@ extension WidgetTesterCommonActions on WidgetTester {
 
   Future<void> navigateBack() async {
     await pumpAndSettle();
-    await tap(Keys.navBarItemBackBtnBase.finds());
+    await tap(Keys.navBarItemBackBtn.finds());
     await pumpAndSettle();
   }
 }

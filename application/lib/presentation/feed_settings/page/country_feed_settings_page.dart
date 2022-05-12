@@ -4,7 +4,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
-import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
@@ -25,6 +24,8 @@ class CountryFeedSettingsPage extends StatefulWidget {
       _CountryFeedSettingsPageState();
 }
 
+const _countryFeedNavBarConfigId = NavBarConfigId('countryFeedConfigId');
+
 class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
     with NavBarConfigMixin, OverlayMixin<CountryFeedSettingsPage> {
   late final CountryFeedSettingsManager _manager = di.get();
@@ -33,8 +34,8 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
         buildNavBarItemBack(
           onPressed: _manager.onBackNavPressed,
-          key: Keys.navBarItemBackBtnCountryFeed,
         ),
+        id: _countryFeedNavBarConfigId,
       );
 
   @override

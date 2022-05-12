@@ -34,11 +34,7 @@ class Keys {
   static const Key settingsCountriesOption = Key('settings_countries_option');
   static const Key settingsSourcesOption = Key('settings_sources_option');
 
-  static const Key navBarItemBackBtnBase = Key('nav_bar_item_back_btn');
-  static const Key navBarItemBackBtnCountryFeed =
-      Key('nav_bar_item_back_btn_country_feed');
-  static const Key navBarItemBackBtnSourceFilter =
-      Key('country_feed_nav_bar_item_back_btn_source_filter');
+  static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
   static const Key navBarItemHome = Key('nav_bar_item_home');
   static const Key navBarItemSearch = Key('nav_bar_item_search');
   static const Key navBarItemPersonalArea = Key('nav_bar_item_personal_area');

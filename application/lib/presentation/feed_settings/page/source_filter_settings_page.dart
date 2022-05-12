@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_state.dart';
@@ -20,6 +19,8 @@ class SourceFilterSettingsPage extends StatefulWidget {
       _SourceFilterSettingsPageState();
 }
 
+const _sourceFilterNavBarConfigId = NavBarConfigId('sourceFilterConfigId');
+
 class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
     with NavBarConfigMixin {
   late final SourceFilterSettingsManager _manager = di.get();
@@ -28,8 +29,8 @@ class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
         buildNavBarItemBack(
           onPressed: _manager.onBackNavPressed,
-          key: Keys.navBarItemBackBtnSourceFilter,
         ),
+        id: _sourceFilterNavBarConfigId,
       );
 
   @override
