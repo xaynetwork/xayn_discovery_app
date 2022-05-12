@@ -29,20 +29,12 @@ class _Observer extends WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        _appManager.onResume();
-        break;
-      case AppLifecycleState.paused:
-        _appManager.onPause();
-        break;
-      default:
-    }
-    super.didChangeAppLifecycleState(state);
+    _appManager.onChangeAppLifecycleState(state);
   }
 
   @override
   void didChangePlatformBrightness() {
+    print('didChangePlatformBrightness');
     super.didChangePlatformBrightness();
     _appManager.onChangedPlatformBrightness();
   }

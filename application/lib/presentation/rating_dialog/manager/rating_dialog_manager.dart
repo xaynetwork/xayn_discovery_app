@@ -71,9 +71,6 @@ class RatingDialogManager {
     if (!_featureManager.isRatingDialogEnabled) {
       return false;
     }
-    if (_ratingDialogShown) {
-      return false;
-    }
 
     final numberOfSessions = await _getAppSessionUseCase.singleOutput(none);
     if (numberOfSessions >= _appSessionThreshold && !_ratingDialogShown) {
@@ -105,7 +102,7 @@ class RatingDialogManager {
   /// goes to foreground again. This might be impossible to detect on iOS.
   ///
   /// [1]: After sharing an article: the rating pop-up is also shown after the share sheet was closed again
-  Future<bool> shareWithDocumentCompleted() {
+  Future<bool> shareDocumentCompleted() {
     return _showRatingDialogIfNeeded();
   }
 }

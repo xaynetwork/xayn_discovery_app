@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
+import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -72,6 +73,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final RatingDialogManager _ratingDialogManager;
+  final AppManager _appManager;
 
   /// html reader mode elements:
   ///
@@ -140,6 +142,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._hapticFeedbackMediumUseCase,
     this._crudDocumentFilterUseCase,
     this._ratingDialogManager,
+    this._appManager,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -190,7 +193,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required Document document,
     required FeedType? feedType,
   }) {
-    _shareUriUseCase.call(document.resource.url);
+    _shareUriUseCase.call(document.resource.url).then((value) {
+      _appManager.registerStateTransitionCallback(
+          AppTransitionConditions.returnToApp, () {
+        /// the app returned after being in background maybe show the rating dialog.
+        _ratingDialogManager.shareDocumentCompleted();
+      });
+    });
 
     _sendAnalyticsUseCase(DocumentSharedEvent(
       document: document,
