@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migrate_0_to_1.dart';
+import 'package:xayn_discovery_app/infrastructure/migrations/migrate_1_to_2.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_migration_info_repository.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -18,6 +19,7 @@ abstract class DbMigrations {
 /// Those migrations will be executed in sequence.
 final _migrations = <int, BaseDbMigration Function()>{
   0: () => Migration_0_To_1(),
+  1: () => Migration_1_To_2(),
 };
 
 typedef BoxOpener<T> = Box<T> Function(String name);
