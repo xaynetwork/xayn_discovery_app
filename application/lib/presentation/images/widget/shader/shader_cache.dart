@@ -21,6 +21,8 @@ abstract class ShaderCache {
 
   ui.Image? imageOf(Uri uri);
 
+  bool isValidated(Uri uri);
+
   ShaderAnimationStatus animationStatusOf(Uri uri);
 
   void register(Uri uri);
@@ -32,6 +34,7 @@ abstract class ShaderCache {
     ui.Image? image,
     int? refCount,
     ShaderAnimationStatus? animationStatus,
+    bool? isValidated,
   });
 
   void evictImage(Uri uri);
@@ -50,6 +53,9 @@ class InMemoryShaderCache implements ShaderCache {
 
   @override
   bool hasImageOf(Uri uri) => _of(uri).image != null;
+
+  @override
+  bool isValidated(Uri uri) => _of(uri).isValidated;
 
   @override
   ui.Image? imageOf(Uri uri) {
@@ -90,6 +96,7 @@ class InMemoryShaderCache implements ShaderCache {
       _entries[e.key] = ShaderCacheEntry(
         refCount: 0,
         animationStatus: e.value.animationStatus,
+        isValidated: false,
       );
     }
   }
@@ -110,6 +117,7 @@ class InMemoryShaderCache implements ShaderCache {
     ui.Image? image,
     int? refCount,
     ShaderAnimationStatus? animationStatus,
+    bool? isValidated,
   }) {
     final entry = _of(uri);
 
@@ -120,6 +128,7 @@ class InMemoryShaderCache implements ShaderCache {
       image: image ?? entry.image,
       refCount: refCount ?? entry.refCount,
       animationStatus: animationStatus ?? entry.animationStatus,
+      isValidated: isValidated ?? entry.isValidated,
     );
 
     _maybeFlushEntries();
@@ -135,6 +144,7 @@ class InMemoryShaderCache implements ShaderCache {
       image: null,
       refCount: entry.refCount,
       animationStatus: entry.animationStatus,
+      isValidated: true,
     );
 
     _maybeFlushEntries();
@@ -153,11 +163,13 @@ class ShaderCacheEntry with _$ShaderCacheEntry {
     ui.Image? image,
     required int refCount,
     required ShaderAnimationStatus animationStatus,
+    required bool isValidated,
   }) = _ShaderCacheEntry;
 
   factory ShaderCacheEntry.initial() => ShaderCacheEntry(
         refCount: 0,
         animationStatus: ShaderAnimationStatus.random(),
+        isValidated: false,
       );
 }
 
