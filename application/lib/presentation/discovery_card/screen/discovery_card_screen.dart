@@ -32,6 +32,9 @@ class DiscoveryCardScreen extends StatefulWidget {
   State<DiscoveryCardScreen> createState() => _DiscoveryCardScreenState();
 }
 
+const _discoveryCardNavBarConfigId =
+    NavBarConfigId('discoveryCardNavBarConfigId');
+
 class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
     with
         NavBarConfigMixin,
@@ -51,6 +54,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
   @override
   NavBarConfig get navBarConfig => _discoveryCardScreenManager.state.map(
         initial: (_) => NavBarConfig.backBtn(
+          _discoveryCardNavBarConfigId,
           buildNavBarItemBack(
               onPressed: _discoveryCardScreenManager.onBackPressed),
         ),

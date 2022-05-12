@@ -32,10 +32,10 @@ class _CountryFeedSettingsPageState extends State<CountryFeedSettingsPage>
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _countryFeedNavBarConfigId,
         buildNavBarItemBack(
           onPressed: _manager.onBackNavPressed,
         ),
-        id: _countryFeedNavBarConfigId,
       );
 
   @override

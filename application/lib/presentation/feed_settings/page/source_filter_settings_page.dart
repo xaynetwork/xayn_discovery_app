@@ -27,10 +27,10 @@ class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _sourceFilterNavBarConfigId,
         buildNavBarItemBack(
           onPressed: _manager.onBackNavPressed,
         ),
-        id: _sourceFilterNavBarConfigId,
       );
 
   @override

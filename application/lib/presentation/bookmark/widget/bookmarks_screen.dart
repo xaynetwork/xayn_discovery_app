@@ -30,6 +30,8 @@ class BookmarksScreen extends StatefulWidget {
   State<BookmarksScreen> createState() => _BookmarksScreenState();
 }
 
+const _bookmarksNavBarConfigId = NavBarConfigId('bookmarksNavBarConfigId');
+
 class _BookmarksScreenState extends State<BookmarksScreen>
     with
         NavBarConfigMixin,
@@ -106,9 +108,12 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   }
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig.backBtn(buildNavBarItemBack(
-        onPressed: _bookmarkManager.onBackNavPressed,
-      ));
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _bookmarksNavBarConfigId,
+        buildNavBarItemBack(
+          onPressed: _bookmarkManager.onBackNavPressed,
+        ),
+      );
 
   Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) =>
       SwipeableBookmarkCard(
