@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -91,7 +92,7 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
         ListenBookmarksUseCaseIn(collectionId: collectionId));
   }
 
-  void removeBookmark(UniqueId bookmarkId) async {
+  void onDeleteSwipe(UniqueId bookmarkId) async {
     _useCaseError = null;
     final useCaseOut = await _removeBookmarkUseCase.call(bookmarkId);
     useCaseOut.last.fold(
@@ -176,4 +177,15 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     });
     showOverlay(data);
   }
+
+  void onMoveSwipe(UniqueId bookmarkId) => startMoveBookmarkFlow(bookmarkId);
+
+  void onBookmarkLongPressed({
+    required UniqueId bookmarkId,
+    required VoidCallback onClose,
+  }) =>
+      startBookmarkOptionsFlow(
+        bookmarkId: bookmarkId,
+        onClose: onClose,
+      );
 }
