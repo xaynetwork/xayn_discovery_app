@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:http_client/http_client.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
@@ -238,4 +240,42 @@ class TestableDirectUriUseCase extends DirectUriUseCase {
           cacheManager: createFakeImageCacheManager(),
           connectivityObserver: TestConnectivityObserver(),
         );
+}
+
+@LazySingleton(as: PaymentService)
+class TestablePaymentServices implements PaymentService {
+  static const _info =
+      PurchaserInfo(EntitlementInfos({}, {}), {}, [], [], [], "", "", {}, "");
+
+  @override
+  Future<List<Package>> getPackages() async {
+    return [];
+  }
+
+  @override
+  Future<PurchaserInfo> getPurchaserInfo() async {
+    return _info;
+  }
+
+  @override
+  Future<void> presentCodeRedemptionSheet() async {
+    return;
+  }
+
+  @override
+  Future<PurchaserInfo> purchaseProduct(String id,
+      {UpgradeInfo? upgradeInfo, PurchaseType type = PurchaseType.subs}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<PurchaserInfo> get purchaserInfoStream => const Stream.empty();
+
+  @override
+  Future<PurchaserInfo> restore() async {
+    return _info;
+  }
+
+  @override
+  Future<String?> get subscriptionManagementURL async => null;
 }
