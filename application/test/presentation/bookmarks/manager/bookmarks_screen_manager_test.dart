@@ -146,7 +146,7 @@ void main() {
         ),
         build: () => create(),
         act: (manager) {
-          manager.removeBookmark(
+          manager.onDeleteSwipe(
             bookmarks.first.id,
           );
         },
@@ -184,7 +184,7 @@ void main() {
         },
         build: () => create(),
         act: (manager) {
-          manager.removeBookmark(
+          manager.onDeleteSwipe(
             bookmarks.first.id,
           );
         },

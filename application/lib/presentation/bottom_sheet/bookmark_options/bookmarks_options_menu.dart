@@ -59,7 +59,7 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
         onPressed: () {
           closeBottomSheet(context);
           widget.onSystemPop?.call();
-          _bookmarkManager.removeBookmark(widget.bookmarkId);
+          _bookmarkManager.onDeleteSwipe(widget.bookmarkId);
         },
       ),
     ];
