@@ -9,7 +9,7 @@ class ShareUriUseCase extends UseCase<Uri, Uri> {
   Stream<Uri> transaction(Uri param) async* {
     final url = param.toString();
     const ipadPosition = Rect.fromLTWH(0, 0, 100, 100);
-    Share.share(url, sharePositionOrigin: ipadPosition);
+    await Share.share(url, sharePositionOrigin: ipadPosition);
     yield param;
   }
 }

@@ -78,6 +78,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
 
   bool _initDone = false;
   bool _isPaused = false;
+  final Map<AppTransitionCondition, VoidCallback> _appTransitionCallbacks = {};
+  AppLifecycleState? _lastAppLifecycleState;
 
   void _init() async {
     scheduleComputeState(() async {
@@ -148,12 +150,12 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     scheduleComputeState(() {});
   }
 
-  void onPause() {
+  void _onPause() {
     _isPaused = true;
     scheduleComputeState(() {});
   }
 
-  void onResume() {
+  void _onResume() {
     _isPaused = false;
 
     // when resuming from background, the connectivity status may not change,
@@ -167,5 +169,49 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     /// otherwise we might miss a valid brightness update.
     _lastPlatformBrightness = _platformBrightnessProvider.brightness;
     scheduleComputeState(() {});
+  }
+
+  void onChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _onResume();
+        break;
+      case AppLifecycleState.paused:
+        _onPause();
+        break;
+      default:
+    }
+    _onNextLifecycleState(state);
+  }
+
+  void registerStateTransitionCallback(
+      AppTransitionCondition condition, VoidCallback onConditionFulfilled) {
+    _appTransitionCallbacks[condition] = onConditionFulfilled;
+  }
+
+  void _onNextLifecycleState(AppLifecycleState current) {
+    var last = _lastAppLifecycleState;
+    if (last != current) {
+      final entries = _appTransitionCallbacks.entries.toList();
+      for (var e in entries) {
+        if (e.key(last, current)) {
+          e.value();
+          _appTransitionCallbacks.remove(e.key);
+        }
+      }
+      _lastAppLifecycleState = current;
+    }
+  }
+}
+
+typedef AppTransitionCondition = bool Function(
+    AppLifecycleState? first, AppLifecycleState second);
+
+class AppTransitionConditions {
+  AppTransitionConditions._();
+  static bool returnToApp(first, second) {
+    return (first == AppLifecycleState.paused ||
+            first == AppLifecycleState.inactive) &&
+        second == AppLifecycleState.resumed;
   }
 }
