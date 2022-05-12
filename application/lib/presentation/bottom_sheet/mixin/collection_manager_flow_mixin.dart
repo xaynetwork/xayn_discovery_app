@@ -16,6 +16,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   /// Handles adding a collection flow and recalling [startBookmarkDocumentFlow]
   /// with an initial collection id when a new collection is created
   ///
+  @protected
   void startBookmarkDocumentFlow(
     Document document, {
     DocumentProvider? provider,
@@ -54,6 +55,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   /// Handles adding a collection flow and recalling [startMoveBookmarkFlow]
   /// with an initial collection id when a new collection is created
   ///
+  @protected
   void startMoveBookmarkFlow(
     UniqueId bookmarkId, {
     VoidCallback? onClose,
@@ -93,6 +95,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   /// Handles adding a collection flow and recalling [startMoveBookmarksFlow]
   /// with an initial collection id when a new collection is created
   ///
+  @protected
   void startMoveBookmarksFlow(
     List<UniqueId> bookmarkIds, {
     required UniqueId collectionIdToRemove,
@@ -131,6 +134,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   ///
   /// Handles moving a bookmark
   ///
+  @protected
   void startBookmarkOptionsFlow({
     required UniqueId bookmarkId,
     required VoidCallback onClose,
