@@ -42,10 +42,10 @@ class SwipeableBookmarkCard extends StatelessWidget {
         return options.first;
       },
       opensToPosition: _kSwipeOpenToPosition,
-      child: child,
       onOptionTap: (option) => onOptionsTap(option),
       optionBuilder: optionsBuilder,
       waitBeforeClosingDuration: Duration.zero,
+      child: child,
     );
     return SizedBox(
       height: CardWidgetData.cardHeight,

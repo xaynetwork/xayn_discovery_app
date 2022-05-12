@@ -37,9 +37,9 @@ class CountryItem extends StatelessWidget {
     );
     final container = Container(
       height: R.dimen.iconButtonSize,
-      child: row,
       decoration: decoration,
       padding: EdgeInsets.only(left: R.dimen.unit1_5),
+      child: row,
     );
     return Padding(
       padding: EdgeInsets.only(top: R.dimen.unit),
@@ -71,8 +71,8 @@ class CountryItem extends StatelessWidget {
       padding: EdgeInsets.only(left: R.dimen.unit1_5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
         mainAxisSize: MainAxisSize.min,
+        children: children,
       ),
     );
   }

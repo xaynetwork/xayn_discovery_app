@@ -5,6 +5,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 
 @injectable
 class CrudDocumentFilterUseCase extends DbEntityCrudUseCase<DocumentFilter> {
-  CrudDocumentFilterUseCase(HiveDocumentFilterRepository _repository)
-      : super(_repository);
+  CrudDocumentFilterUseCase(HiveDocumentFilterRepository repository)
+      : super(repository);
 }

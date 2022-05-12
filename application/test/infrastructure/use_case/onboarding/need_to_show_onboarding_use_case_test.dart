@@ -16,10 +16,10 @@ import '../../../test_utils/utils.dart';
 
 void main() {
   late NeedToShowOnboardingUseCase useCase;
-  late AppStatusRepository _appStatusRepository;
-  late CollectionsRepository _collectionsRepository;
-  late BookmarksRepository _bookmarksRepository;
-  AppStatus _appAppStatus = AppStatus.initial();
+  late AppStatusRepository appStatusRepository;
+  late CollectionsRepository collectionsRepository;
+  late BookmarksRepository bookmarksRepository;
+  AppStatus appAppStatus = AppStatus.initial();
 
   void updateAppStatus({
     bool homeVerticalSwipeDone = true,
@@ -28,7 +28,7 @@ void main() {
     bool collectionsManageDone = true,
     numberOfSessions = 0,
   }) {
-    _appAppStatus = _appAppStatus.copyWith(
+    appAppStatus = appAppStatus.copyWith(
         numberOfSessions: numberOfSessions,
         onboardingStatus: OnboardingStatus(
           homeVerticalSwipeDone: homeVerticalSwipeDone,
@@ -36,7 +36,7 @@ void main() {
           homeManageBookmarksDone: homeManageBookmarksDone,
           collectionsManageDone: collectionsManageDone,
         ));
-    when(_appStatusRepository.appStatus).thenReturn(_appAppStatus);
+    when(appStatusRepository.appStatus).thenReturn(appAppStatus);
   }
 
   void updateCollectionsAndBookmarksCount({
@@ -56,29 +56,29 @@ void main() {
           provider: null,
           createdAt: DateTime.now().toIso8601String(),
         );
-    when(_collectionsRepository.getAll())
+    when(collectionsRepository.getAll())
         .thenReturn(List.filled(collectionsCount, createCollection()));
-    when(_bookmarksRepository.getAll())
+    when(bookmarksRepository.getAll())
         .thenReturn(List.filled(bookmarksCount, createBookmark()));
   }
 
   setUp(() {
-    _appStatusRepository = MockAppStatusRepository();
-    _collectionsRepository = MockCollectionsRepository();
-    _bookmarksRepository = MockBookmarksRepository();
+    appStatusRepository = MockAppStatusRepository();
+    collectionsRepository = MockCollectionsRepository();
+    bookmarksRepository = MockBookmarksRepository();
 
     useCase = NeedToShowOnboardingUseCase(
-      _appStatusRepository,
-      _collectionsRepository,
-      _bookmarksRepository,
+      appStatusRepository,
+      collectionsRepository,
+      bookmarksRepository,
     );
   });
 
   group('OnboardingType.homeVerticalSwipe', () {
     const type = OnboardingType.homeVerticalSwipe;
     tearDown(() {
-      verifyZeroInteractions(_collectionsRepository);
-      verifyZeroInteractions(_bookmarksRepository);
+      verifyZeroInteractions(collectionsRepository);
+      verifyZeroInteractions(bookmarksRepository);
     });
 
     useCaseTest(
@@ -93,10 +93,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -112,10 +112,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -131,10 +131,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -150,18 +150,18 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
   });
   group('OnboardingType.homeHorizontalSwipe', () {
     const type = OnboardingType.homeHorizontalSwipe;
     tearDown(() {
-      verifyZeroInteractions(_collectionsRepository);
-      verifyZeroInteractions(_bookmarksRepository);
+      verifyZeroInteractions(collectionsRepository);
+      verifyZeroInteractions(bookmarksRepository);
     });
 
     useCaseTest(
@@ -176,10 +176,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -195,10 +195,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -214,10 +214,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -233,10 +233,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
 
@@ -252,10 +252,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
   });
@@ -274,10 +274,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
     useCaseTest(
@@ -292,10 +292,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
     useCaseTest(
@@ -311,10 +311,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _collectionsRepository.getAll(),
+          appStatusRepository.appStatus,
+          collectionsRepository.getAll(),
         ]);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
     useCaseTest(
@@ -333,9 +333,9 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _collectionsRepository.getAll(),
-          _bookmarksRepository.getAll(),
+          appStatusRepository.appStatus,
+          collectionsRepository.getAll(),
+          bookmarksRepository.getAll(),
         ]);
       },
     );
@@ -355,9 +355,9 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _collectionsRepository.getAll(),
-          _bookmarksRepository.getAll(),
+          appStatusRepository.appStatus,
+          collectionsRepository.getAll(),
+          bookmarksRepository.getAll(),
         ]);
       },
     );
@@ -377,10 +377,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
     useCaseTest(
@@ -396,10 +396,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _collectionsRepository.getAll(),
+          appStatusRepository.appStatus,
+          collectionsRepository.getAll(),
         ]);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
     useCaseTest(
@@ -415,10 +415,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _collectionsRepository.getAll(),
+          appStatusRepository.appStatus,
+          collectionsRepository.getAll(),
         ]);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
   });
@@ -437,10 +437,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
+          appStatusRepository.appStatus,
         ]);
-        verifyZeroInteractions(_collectionsRepository);
-        verifyZeroInteractions(_bookmarksRepository);
+        verifyZeroInteractions(collectionsRepository);
+        verifyZeroInteractions(bookmarksRepository);
       },
     );
     useCaseTest(
@@ -456,10 +456,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _bookmarksRepository.getAll(),
+          appStatusRepository.appStatus,
+          bookmarksRepository.getAll(),
         ]);
-        verifyZeroInteractions(_collectionsRepository);
+        verifyZeroInteractions(collectionsRepository);
       },
     );
     useCaseTest(
@@ -475,10 +475,10 @@ void main() {
       ],
       verify: (_) {
         verifyInOrder([
-          _appStatusRepository.appStatus,
-          _bookmarksRepository.getAll(),
+          appStatusRepository.appStatus,
+          bookmarksRepository.getAll(),
         ]);
-        verifyZeroInteractions(_collectionsRepository);
+        verifyZeroInteractions(collectionsRepository);
       },
     );
   });
