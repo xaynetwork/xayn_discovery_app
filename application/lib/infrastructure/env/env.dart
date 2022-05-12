@@ -35,6 +35,9 @@ abstract class Env {
       : (Platform.isIOS
           ? _EnvProd.revenueCatSdkKeyIos
           : _EnvProd.revenueCatSdkKeyAndroid);
+  static const String mixpanelServerUrl = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.mixpanelServerUrl
+      : _EnvProd.mixpanelServerUrl;
 }
 
 /// Standard Env config.
@@ -51,6 +54,7 @@ abstract class _EnvDev {
   static const String revenueCatSdkKeyIos = __EnvDev.revenueCatSdkKeyIos;
   static const String revenueCatSdkKeyAndroid =
       __EnvDev.revenueCatSdkKeyAndroid;
+  static const String mixpanelServerUrl = __EnvDev.mixpanelServerUrl;
 }
 
 /// Standard Env config.
@@ -67,4 +71,5 @@ abstract class _EnvProd {
   static const String revenueCatSdkKeyIos = __EnvProd.revenueCatSdkKeyIos;
   static const String revenueCatSdkKeyAndroid =
       __EnvProd.revenueCatSdkKeyAndroid;
+  static const String mixpanelServerUrl = __EnvProd.mixpanelServerUrl;
 }

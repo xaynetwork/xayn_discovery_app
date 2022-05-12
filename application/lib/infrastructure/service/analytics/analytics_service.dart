@@ -15,7 +15,6 @@ const String _kCoresEntry = 'cores';
 const String _kCoresSocketEntry = 'socket';
 const String _kCoresVendorEntry = 'vendor';
 const String _kCoresArchEntry = 'arch';
-const String _kMixpanelEuServerUrl = 'https://api-eu.mixpanel.com';
 
 abstract class AnalyticsService {
   Future<void> send(AnalyticsEvent event);
@@ -52,7 +51,7 @@ class MixpanelAnalyticsService with AsyncInitMixin implements AnalyticsService {
   @override
   Future<void> init() async {
     _mixpanel = await Mixpanel.init(Env.mixpanelToken);
-    _mixpanel.setServerURL(_kMixpanelEuServerUrl);
+    _mixpanel.setServerURL(Env.mixpanelServerUrl);
     _mixpanel.identify(_userId);
     _mixpanel.setUseIpAddressForGeolocation(false);
     _mixpanel.setLoggingEnabled(EnvironmentHelper.kIsInternalFlavor);
