@@ -25,7 +25,6 @@ typedef ShaderBuilder = BaseStaticShader Function({
   double? width,
   double? height,
   bool? singleFrameOnly,
-  bool? shouldCheckDimen,
 });
 
 class CachedImage extends StatefulWidget {
@@ -39,7 +38,6 @@ class CachedImage extends StatefulWidget {
   final ImageManager? imageManager;
   final ShaderBuilder shaderBuilder;
   final bool? singleFrameOnly;
-  final bool? shouldCheckDimen;
 
   CachedImage({
     Key? key,
@@ -52,7 +50,6 @@ class CachedImage extends StatefulWidget {
     this.height,
     this.imageManager,
     this.singleFrameOnly,
-    this.shouldCheckDimen = true,
     ShaderBuilder? shaderBuilder,
   })  : shaderBuilder =
             shaderBuilder ?? ShaderFactory.fromType(ShaderType.static),
@@ -129,6 +126,9 @@ class _CachedImageState extends State<CachedImage> {
           if (state.hasError) {
             return errorBuilder(context);
           } else if (state.progress < 1.0) {
+            /// We need to set the opacity to 1.0 otherwise
+            /// the loading widget would not be visible
+            opacity = 1.0;
             return loadingBuilder(context, state.progress);
           }
 
@@ -146,7 +146,6 @@ class _CachedImageState extends State<CachedImage> {
               noImageBuilder: noImageBuilder,
               shadowColor: widget.shadowColor,
               singleFrameOnly: widget.singleFrameOnly,
-              shouldCheckDimen: widget.shouldCheckDimen,
             );
           } else {
             // there is no image

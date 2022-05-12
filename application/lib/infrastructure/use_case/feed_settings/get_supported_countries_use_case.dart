@@ -5,8 +5,7 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_market_to_flag_path_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/language_code_to_language_name_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
-import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
-import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
+import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 
 typedef SupportedCountries = Iterable<Country>;
 
@@ -22,9 +21,7 @@ class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
 
   @override
   Stream<SupportedCountries> transaction(None param) async* {
-    // TODO get current app language from the settings
-    // right now we do not have language change, so English is hardcoded
-    final countryNames = await getCountryNames(AppLanguage.english);
+    final countryNames = await Strings.countryNames;
     final countries = supportedFeedMarkets.map((FeedMarket market) {
       final flag = _flagMapper.map(market);
       if (flag == null) throw FlagNotFindForMarketException(market);

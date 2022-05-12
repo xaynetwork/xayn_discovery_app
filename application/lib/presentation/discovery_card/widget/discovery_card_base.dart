@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
@@ -110,17 +108,12 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         feedType: feedType,
       );
 
-  void Function() onBookmarkLongPressed(DiscoveryCardState state) {
+  void Function() onBookmarkLongPressed() {
     return () {
       discoveryCardManager.triggerHapticFeedbackMedium();
-      showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          provider:
-              state.processedDocument?.getProvider(widget.document.resource),
-          feedType: widget.feedType,
-        ),
+      discoveryCardManager.onBookmarkLongPressed(
+        widget.document,
+        feedType: widget.feedType,
       );
     };
   }
@@ -139,26 +132,30 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
       switch (deterministicRandom) {
         case 0:
-          background = R.colors.noImage1;
+          background = R.colors.noImageBackgroundGreen;
           assetName = R.assets.lottie.contextual.noImageA;
           break;
         case 1:
-          background = R.colors.noImage2;
+          background = R.colors.noImageBackgroundPink;
           assetName = R.assets.lottie.contextual.noImageB;
           break;
         case 2:
-          background = R.colors.noImage3;
+          background = R.colors.noImageBackgroundPurple;
           assetName = R.assets.lottie.contextual.noImageC;
           break;
         default:
-          background = R.colors.noImage4;
+          background = R.colors.noImageBackgroundOrange;
           assetName = R.assets.lottie.contextual.noImageD;
           break;
       }
 
-      return ColoredBox(
+      return Container(
+        alignment: Alignment.topCenter,
         color: background,
-        child: AnimationPlayer.assetUnrestrictedSize(assetName),
+        child: AnimationPlayer.assetUnrestrictedSize(
+          assetName,
+          playsFromStart: false,
+        ),
       );
     }
 

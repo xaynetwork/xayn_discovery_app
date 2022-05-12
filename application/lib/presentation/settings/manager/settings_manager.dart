@@ -3,11 +3,13 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_theme_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -22,8 +24,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -42,7 +45,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     with
         UseCaseBlocHelper<SettingsScreenState>,
         OpenExternalUrlMixin<SettingsScreenState>,
-        ObserveSubscriptionWindowMixin<SettingsScreenState>
+        ObserveSubscriptionWindowMixin<SettingsScreenState>,
+        OverlayManagerMixin<SettingsScreenState>
     implements SettingsNavActions {
   final FeatureManager _featureManager;
   final GetAppVersionUseCase _getAppVersionUseCase;
@@ -88,7 +92,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
       consume(
     _listenSubscriptionStatusUseCase,
-    initialData: PurchasableIds.subscription,
+    initialData: none,
   );
 
   void _init() async {
@@ -96,8 +100,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       // read values
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
-      _subscriptionStatus = await _getSubscriptionStatusUseCase
-          .singleOutput(PurchasableIds.subscription);
+      _subscriptionStatus =
+          await _getSubscriptionStatusUseCase.singleOutput(none);
 
       _initDone = true;
     });
@@ -177,4 +181,28 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   void onSourcesOptionsPressed() =>
       _settingsNavActions.onSourcesOptionsPressed();
+
+  void onSubscriptionSectionPressed({
+    required SubscriptionStatus subscriptionStatus,
+  }) {
+    if (subscriptionStatus.isSubscriptionActive) {
+      showOverlay(
+        OverlayData.bottomSheetSubscriptionDetails(
+          subscriptionStatus: subscriptionStatus,
+          onSubscriptionLinkCancelTapped: onSubscriptionLinkCancelTapped,
+        ),
+      );
+    } else if (subscriptionStatus.isFreeTrialActive) {
+      onSubscriptionWindowOpened(
+        currentView: SubscriptionWindowCurrentView.settings,
+      );
+      showOverlay(
+        OverlayData.bottomSheetPayment(
+          onClosePressed: () => onSubscriptionWindowClosed(
+            currentView: SubscriptionWindowCurrentView.settings,
+          ),
+        ),
+      );
+    }
+  }
 }

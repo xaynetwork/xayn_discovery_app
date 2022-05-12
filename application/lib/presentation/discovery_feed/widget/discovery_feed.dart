@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -61,14 +60,9 @@ class _DiscoveryFeedState
 
       void onBookmarkLongPressed() {
         managers.discoveryCardManager.triggerHapticFeedbackMedium();
-        showAppBottomSheet(
-          context,
-          builder: (_) => MoveDocumentToCollectionBottomSheet(
-            document: document,
-            provider: managers.discoveryCardManager.state.processedDocument
-                ?.getProvider(document.resource),
-            feedType: FeedType.feed,
-          ),
+        managers.discoveryCardManager.onBookmarkLongPressed(
+          document,
+          feedType: FeedType.feed,
         );
       }
 

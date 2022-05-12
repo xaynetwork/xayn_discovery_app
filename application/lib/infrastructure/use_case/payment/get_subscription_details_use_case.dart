@@ -1,11 +1,9 @@
 import 'package:injectable/injectable.dart';
-import 'package:purchases_flutter/models/product_wrapper.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
-import 'package:xayn_discovery_app/presentation/constants/purchasable_ids.dart';
 
 @injectable
 class GetSubscriptionDetailsUseCase extends UseCase<None, PurchasableProduct> {
@@ -19,12 +17,11 @@ class GetSubscriptionDetailsUseCase extends UseCase<None, PurchasableProduct> {
 
   @override
   Stream<PurchasableProduct> transaction(None param) async* {
-    const id = PurchasableIds.subscription;
-    final List<Product> products = await _paymentService.getProducts([id]);
+    final packages = await _paymentService.getPackages();
 
-    if (products.isEmpty) {
+    if (packages.isEmpty) {
       throw PaymentFlowError.productNotFound;
     }
-    yield _mapper.map(products.first);
+    yield _mapper.map(packages.first);
   }
 }

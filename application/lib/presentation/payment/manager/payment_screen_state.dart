@@ -10,7 +10,6 @@ class PaymentScreenState with _$PaymentScreenState {
 
   const factory PaymentScreenState.ready({
     required PurchasableProduct product,
-    required PaymentFlowError? error,
   }) = PaymentScreenStateReady;
 
   const factory PaymentScreenState.error({

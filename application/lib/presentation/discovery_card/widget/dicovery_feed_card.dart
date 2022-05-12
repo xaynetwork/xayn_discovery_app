@@ -74,7 +74,7 @@ class _DiscoveryFeedCardState
         ),
       ),
       onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
-      onBookmarkLongPressed: onBookmarkLongPressed(state),
+      onBookmarkLongPressed: onBookmarkLongPressed(),
       bookmarkStatus: state.bookmarkStatus,
       feedType: widget.feedType,
     );
