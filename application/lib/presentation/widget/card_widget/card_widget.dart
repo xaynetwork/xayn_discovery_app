@@ -147,6 +147,7 @@ class CardWidget extends StatelessWidget {
     );
 
     return AppGhostButton(
+      semanticsLabel: cardData.semanticsLabel,
       contentPadding: EdgeInsets.zero,
       onPressed: cardData.onPressed,
       onLongPressed: onLongPressed,

@@ -51,3 +51,8 @@ class Keys {
   static Key generateCollectionsScreenCardKey(String collectionId) =>
       Key('collections_screen_card' + collectionId);
 }
+
+extension ValueKeyExtension on Key {
+  String get valueKey =>
+      this is ValueKey ? (this as ValueKey).value : toString();
+}
