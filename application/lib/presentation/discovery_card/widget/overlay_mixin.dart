@@ -15,6 +15,7 @@ mixin OverlayMixin<T extends StatefulWidget> on State<T> {
 
   late final design.TooltipController _tooltipController;
   late StreamSubscription<List<OverlayData>> _subscription;
+  VoidCallback? _lastCloseListeners;
 
   @override
   void initState() {
@@ -61,12 +62,20 @@ mixin OverlayMixin<T extends StatefulWidget> on State<T> {
 
   _subscribeForTooltipClose(TooltipData data, VoidCallback onClosed) {
     void callback() {
-      if (_tooltipController.activeTooltipData != data.data) {
+      if (_tooltipController.activeTooltipData == null) {
         _tooltipController.removeListener(callback);
+        _lastCloseListeners = null;
         onClosed();
+      } else if (_tooltipController.activeTooltipData != data.data) {
+        _tooltipController.removeListener(callback);
       }
     }
 
+    final lastCloseListener = _lastCloseListeners;
+    if (lastCloseListener != null) {
+      _tooltipController.removeListener(lastCloseListener);
+    }
+    _lastCloseListeners = callback;
     _tooltipController.addListener(callback);
   }
 }

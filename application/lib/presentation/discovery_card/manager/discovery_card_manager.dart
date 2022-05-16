@@ -218,15 +218,21 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     Document document, {
     FeedType? feedType,
   }) {
+    final didTap = Completer();
     showOverlay(
       OverlayData.tooltipBookmarked(
         document: document,
-        onTap: () => onBookmarkLongPressed(
-          document,
-          feedType: feedType,
-        ),
+        onTap: () {
+          didTap.complete();
+          onBookmarkLongPressed(
+            document,
+            feedType: feedType,
+          );
+        },
         onClosed: () {
-          _ratingDialogManager.completedBookmarking();
+          if (!didTap.isCompleted) {
+            _ratingDialogManager.completedBookmarking();
+          }
         },
       ),
       when: (oS, nS) =>
@@ -327,12 +333,21 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onBookmarkLongPressed(
     Document document, {
     FeedType? feedType,
-  }) =>
+  }) {
+    void callRatingWhenBookmarked() {
+      if (state.bookmarkStatus == BookmarkStatus.bookmarked) {
+        _ratingDialogManager.completedBookmarking();
+      }
+    }
 
-      /// TODO also trigger that when completing the bookmark bottom sheet flow
-      startBookmarkDocumentFlow(
-        document,
-        feedType: feedType,
-        provider: state.processedDocument?.getProvider(document.resource),
-      );
+    final previous = state.bookmarkStatus;
+    startBookmarkDocumentFlow(
+      document,
+      feedType: feedType,
+      provider: state.processedDocument?.getProvider(document.resource),
+      onFlowFinished: () {
+        if (previous != BookmarkStatus.bookmarked) callRatingWhenBookmarked();
+      },
+    );
+  }
 }

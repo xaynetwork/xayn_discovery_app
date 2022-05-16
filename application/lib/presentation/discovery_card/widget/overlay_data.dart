@@ -133,6 +133,7 @@ class OverlayData {
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
     required VoidCallback onAddCollectionPressed,
+    VoidCallback? onClose,
   }) =>
       BottomSheetData<Document>(
         args: document,
@@ -142,6 +143,7 @@ class OverlayData {
           feedType: feedType,
           initialSelectedCollectionId: initialSelectedCollectionId,
           onAddCollectionPressed: onAddCollectionPressed,
+          onClose: onClose,
         ),
       );
 
