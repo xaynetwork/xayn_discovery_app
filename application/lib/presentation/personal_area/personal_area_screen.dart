@@ -3,23 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/collection_options/collection_options_menu.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/contact_info/contact_info_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/manager/collection_card_state.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/swipeable_collection_card.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
@@ -46,7 +38,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         NavBarConfigMixin,
         TooltipStateMixin,
         BottomSheetBodyMixin,
-        OverlayMixin,
+        OverlayMixin<PersonalAreaScreen>,
         CardWidgetTransitionMixin {
   late final PersonalAreaManager _manager = di.get();
   late final CollectionCardManagersCache _collectionCardManagersCache =
@@ -88,7 +80,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           iconModels: [
             AppToolbarIconModel(
               iconPath: R.assets.icons.plus,
-              onPressed: _showAddCollectionBottomSheet,
+              onPressed: _manager.onAddCollectionPressed,
             ),
             AppToolbarIconModel(
               iconPath: R.assets.icons.gear,
@@ -146,7 +138,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         ? _buildBaseCard(collection)
         : card = CardWidgetTransitionWrapper(
             key: ValueKey(collection.id),
-            onAnimationDone: () => _showCollectionCardOptions(collection),
+            onAnimationDone: () => _manager.onCollectionLongPress(
+              collection,
+              closeCardWidgetTransition,
+            ),
             onLongPress: _manager.triggerHapticFeedbackMedium,
             child: _buildSwipeableCard(collection),
           );
@@ -190,57 +185,18 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   Widget _buildTrialBanner(DateTime trialEndDate) => Padding(
         padding: EdgeInsets.only(bottom: R.dimen.unit2),
         child: SubscriptionTrialBanner(
-            trialEndDate: trialEndDate,
-            onPressed: () {
-              _manager.onSubscriptionWindowOpened(
-                currentView: SubscriptionWindowCurrentView.personalArea,
-              );
-              showAppBottomSheet(
-                context,
-                builder: (_) => PaymentBottomSheet(
-                  onClosePressed: () => _manager.onSubscriptionWindowClosed(
-                    currentView: SubscriptionWindowCurrentView.personalArea,
-                  ),
-                ),
-              );
-            }),
+          trialEndDate: trialEndDate,
+          onPressed: _manager.onPaymentTrialBannerPressed,
+        ),
       );
-
-  _showAddCollectionBottomSheet() {
-    showAppBottomSheet(
-      context,
-      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(),
-    );
-  }
-
-  _showCollectionCardOptions(Collection collection) {
-    showAppBottomSheet(
-      context,
-      showBarrierColor: false,
-      builder: (buildContext) => CollectionOptionsBottomSheet(
-        collection: collection,
-
-        /// Close the route with the focused card
-        onSystemPop: closeCardWidgetTransition,
-      ),
-    );
-  }
 
   Map<SwipeOptionCollectionCard, VoidCallback> _onSwipeOptionsTap(
           Collection collection) =>
       {
-        SwipeOptionCollectionCard.edit: () => showAppBottomSheet(
-              context,
-              builder: (_) => CreateOrRenameCollectionBottomSheet(
-                collection: collection,
-              ),
-            ),
-        SwipeOptionCollectionCard.remove: () => showAppBottomSheet(
-              context,
-              builder: (_) => DeleteCollectionConfirmationBottomSheet(
-                collectionId: collection.id,
-              ),
-            ),
+        SwipeOptionCollectionCard.edit: () =>
+            _manager.onCollectionSwipeEdit(collection),
+        SwipeOptionCollectionCard.remove: () =>
+            _manager.onCollectionSwipeRemove(collection),
       };
 
   Widget _withBottomPadding(Widget child) {
@@ -255,25 +211,9 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
       action: SettingsTileActionIcon(
         key: Keys.settingsContactUs,
         svgIconPath: R.assets.icons.arrowRight,
-        onPressed: _showContactInfo,
+        onPressed: _manager.onContactPressed,
       ),
     ));
     return SettingsCard(data: data);
-  }
-
-  _showContactInfo() {
-    showAppBottomSheet(
-      context,
-      builder: (buildContext) => ContactInfoBottomSheet(
-        onXaynSupportEmailTap: () => _manager.openExternalEmail(
-            Constants.xaynSupportEmail, CurrentView.settings),
-        onXaynPressEmailTap: () => _manager.openExternalEmail(
-            Constants.xaynPressEmail, CurrentView.settings),
-        onXaynUrlTap: () => _manager.openExternalUrl(
-          url: Constants.xaynUrl,
-          currentView: CurrentView.settings,
-        ),
-      ),
-    );
   }
 }
