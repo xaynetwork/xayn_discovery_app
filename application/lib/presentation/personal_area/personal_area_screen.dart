@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_labels.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/model/app_toolbar_icon_model.dart';
@@ -168,6 +169,8 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
               color: R.colors.collectionsScreenCard,
               // Screenwidth - 2 * side paddings
               cardWidth: R.dimen.screenWidth - sidePaddings,
+              semanticsLabel:
+                  SemanticsLabels.generateCollectionItemLabel(collection.index),
             ),
           );
         },

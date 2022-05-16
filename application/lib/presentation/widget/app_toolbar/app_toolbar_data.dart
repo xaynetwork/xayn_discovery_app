@@ -15,6 +15,7 @@ class AppToolbarData with _$AppToolbarData {
     required String iconPath,
     VoidCallback? onPressed,
     Key? iconkey,
+    String? semanticsLabel,
   }) = _AppToolbarDataWithTrailingIcon;
 
   const factory AppToolbarData.withTwoTrailingIcons({
