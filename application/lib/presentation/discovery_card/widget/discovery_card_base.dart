@@ -122,8 +122,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   }
 
   Widget buildImage(Color shadowColor) {
-    final mediaQuery = MediaQuery.of(context);
-
     // allow opaque-when-loading, because the card will fade in on load completion.
     buildBackgroundPane({required bool opaque}) =>
         Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
@@ -133,7 +131,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       // position the animation at 1/3 from the top of the card
       // this is translated by taking the height divided by 3, and then
       // subtracting half of the animation's height
-      final topOffset = mediaQuery.size.height / 3 - _kNoImageSize / 2;
+      final topOffset = R.dimen.screenSize.height / 3 - _kNoImageSize / 2;
       late String assetName;
       late Color background;
 
@@ -178,8 +176,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       shaderBuilder: widget.primaryCardShader,
       singleFrameOnly: !widget.isPrimary,
       uri: Uri.parse(imageUrl),
-      width: mediaQuery.size.width.floor(),
-      height: mediaQuery.size.height.floor(),
+      width: R.dimen.screenSize.width.floor(),
+      height: R.dimen.screenSize.height.floor(),
       shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
