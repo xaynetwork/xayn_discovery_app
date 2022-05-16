@@ -5,7 +5,6 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
@@ -25,6 +24,7 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
     required UniqueId bookmarkId,
     UniqueId? initialSelectedCollection,
     VoidCallback? onSystemPop,
+    required VoidCallback onAddCollectionPressed,
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
@@ -32,6 +32,7 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
             bookmarkId: bookmarkId,
             initialSelectedCollection: initialSelectedCollection,
             onSystemPop: onSystemPop,
+            onAddCollectionPressed: onAddCollectionPressed,
           ),
         );
 }
@@ -40,11 +41,13 @@ class _MoveBookmarkToCollection extends StatefulWidget {
   final UniqueId bookmarkId;
   final UniqueId? initialSelectedCollection;
   final VoidCallback? onSystemPop;
+  final VoidCallback onAddCollectionPressed;
 
   const _MoveBookmarkToCollection({
     Key? key,
     required this.bookmarkId,
     this.initialSelectedCollection,
+    required this.onAddCollectionPressed,
     this.onSystemPop,
   }) : super(key: key);
 
@@ -148,27 +151,6 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
   _showAddCollectionBottomSheet() {
     closeBottomSheet(context);
-    showAppBottomSheet(
-      context,
-      showBarrierColor: widget.onSystemPop == null,
-      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
-        onApplyPressed: (collection) => _onAddCollectionSheetClosed(
-          buildContext,
-          collection.id,
-        ),
-        onSystemPop: widget.onSystemPop,
-      ),
-    );
+    widget.onAddCollectionPressed();
   }
-
-  _onAddCollectionSheetClosed(BuildContext context, UniqueId newCollectionId) =>
-      showAppBottomSheet(
-        context,
-        showBarrierColor: widget.onSystemPop == null,
-        builder: (_) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: widget.bookmarkId,
-          initialSelectedCollection: newCollectionId,
-          onSystemPop: widget.onSystemPop,
-        ),
-      );
 }
