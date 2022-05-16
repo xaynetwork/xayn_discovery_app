@@ -75,7 +75,7 @@ class CardWidget extends StatelessWidget {
             bloc: _shadowManager,
             builder: (_, state) => StaticShader(
               /// ignore the encoding of the title
-              uri: Uri.dataFromBytes(utf8.encode(title)),
+              uri: Uri.dataFromBytes(bytes),
               noImageBuilderIsShadowless: true,
               width: width,
               height: CardWidgetData.cardHeight,
