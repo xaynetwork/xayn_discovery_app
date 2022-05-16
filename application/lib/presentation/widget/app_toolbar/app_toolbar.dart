@@ -139,9 +139,9 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
   Widget _maybeWrapSemantics(Widget child, String? semanticsLabel) =>
       semanticsLabel != null
           ? Semantics(
-              child: child,
               label: semanticsLabel,
               button: true,
+              child: child,
             )
           : child;
 }

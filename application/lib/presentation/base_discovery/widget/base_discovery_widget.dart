@@ -276,6 +276,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               );
 
         return Semantics(
+            button: true,
             child: SwipeableDiscoveryCard(
               onSwipe: (option) => managers.discoveryCardManager.onFeedback(
                 document: document,
@@ -290,8 +291,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               isSwipingEnabled: isSwipingEnabled,
               onFling:
                   managers.discoveryCardManager.triggerHapticFeedbackMedium,
-            ),
-            button: true);
+            ));
       };
 
   ShaderType _getShaderType(NewsResource newsResource) {

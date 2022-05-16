@@ -17,6 +17,13 @@ linter:
     depend_on_referenced_packages: false
 
 analyzer:
-  exclude: [ '**.g.dart', '**.mocks.dart', '**.freezed.dart', '**.config.dart', '**all_imports_test.dart', '**translations*.i18n.dart']
+  exclude: [ '**.g.dart', '**.mocks.dart', '**.freezed.dart', '**.config.dart', '**all_imports_test.dart', '**translations*.i18n.dart' ]
   errors:
     invalid_use_of_visible_for_overriding_member: error
+    unused_element: error
+    unnecessary_non_null_assertion: error
+    sort_child_properties_last: error
+    library_private_types_in_public_api: error
+    prefer_interpolation_to_compose_strings: error
+    unnecessary_late: error
+    no_leading_underscores_for_local_identifiers: error
