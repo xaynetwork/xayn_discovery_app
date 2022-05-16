@@ -28,16 +28,12 @@ class _Observer extends WidgetsBindingObserver {
   _Observer(this._appManager, this.context);
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _appManager.onChangeAppLifecycleState(state);
-  }
+  void didChangeAppLifecycleState(AppLifecycleState state) =>
+      _appManager.onChangeAppLifecycleState(state);
 
   @override
-  void didChangePlatformBrightness() {
-    print('didChangePlatformBrightness');
-    super.didChangePlatformBrightness();
-    _appManager.onChangedPlatformBrightness();
-  }
+  void didChangePlatformBrightness() =>
+      _appManager.onChangedPlatformBrightness();
 }
 
 class _AppState extends State<App> {
