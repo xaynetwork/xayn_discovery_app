@@ -157,8 +157,8 @@ class _CachedImageState extends State<CachedImage> {
 
         final child = widget.semanticsLabel != null
             ? Semantics(
-                child: buildChild(),
                 image: true,
+                child: buildChild(),
               )
             : buildChild();
 
