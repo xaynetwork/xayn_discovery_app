@@ -10,6 +10,7 @@ const double _kSwipeOpenToPosition = 0.35;
 const double _kMinFlingVelocity = 250.0;
 
 enum SwipeOption { like, neutral, dislike }
+
 typedef OnSwipe = Function(SwipeOption swipeOption);
 
 class SwipeableDiscoveryCard extends StatelessWidget {
@@ -61,13 +62,13 @@ class SwipeableDiscoveryCard extends StatelessWidget {
               }
             : null,
         opensToPosition: _kSwipeOpenToPosition,
-        child: ClipRRect(
-          child: card,
-          borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-        ),
         onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
         optionBuilder: optionsBuilder,
         waitBeforeClosingDuration: Duration.zero,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(R.dimen.unit1_5),
+          child: card,
+        ),
       );
 
   void onOptionsTap(SwipeOption option) {

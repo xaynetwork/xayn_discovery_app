@@ -18,8 +18,8 @@ class BottomSheetClickableOption extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        child: child,
         height: R.dimen.unit6,
+        child: child,
       ),
     );
   }

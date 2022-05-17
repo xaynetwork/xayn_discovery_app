@@ -17,6 +17,7 @@ class CardWidgetTransitionWrapper extends StatefulWidget {
   final Widget child;
   final VoidCallback? onAnimationDone;
   final VoidCallback? onLongPress;
+
   const CardWidgetTransitionWrapper({
     required this.child,
     this.onAnimationDone,
@@ -27,7 +28,7 @@ class CardWidgetTransitionWrapper extends StatefulWidget {
         );
 
   @override
-  _CardWidgetTransitionWrapperState createState() =>
+  State<CardWidgetTransitionWrapper> createState() =>
       _CardWidgetTransitionWrapperState();
 }
 

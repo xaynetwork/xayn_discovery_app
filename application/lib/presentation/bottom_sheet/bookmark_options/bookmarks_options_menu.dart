@@ -86,8 +86,8 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
       ],
     );
     return BottomSheetClickableOption(
-      child: row,
       onTap: menuOption.onPressed,
+      child: row,
     );
   }
 }

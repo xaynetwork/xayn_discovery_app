@@ -9,5 +9,6 @@ class AppToolbarIconModel with _$AppToolbarIconModel {
     required String iconPath,
     required VoidCallback onPressed,
     Key? iconKey,
+    String? semanticsLabel,
   }) = _AppToolbarIconModel;
 }
