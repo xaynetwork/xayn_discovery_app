@@ -224,6 +224,17 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
         final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
             _kMinImageFractionSize * constraints.maxHeight);
+        // todo: magic number!
+        // there is a render issue with Flutter, so while we await a fix here:
+        // the card image is a combination of an image and a linear gradient.
+        // the Flutter bug is as following:
+        // when "rasterizing", sometimes the size of a widget is a double value,
+        // when this happens, Flutter will try to resolve to the nearest logical pixel value, which depends on the DPI as well.
+        // now for images, it seems to do ceil(), yet for things like gradient, it tends to floor()
+        // as a temp fix, we added an extra pixel to the size of the gradient.
+        // here, we add the extra pixel again, so that the image + gradient is fully scrolled-out when needed
+        // @See base_painter.dart, in the paint method, where the extra pixel is added
+        const renderArtefactSize = 1.0;
 
         return AppScrollbar(
           scrollController: _scrollController,
@@ -237,7 +248,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                     size.height * _kMinImageFractionSize + R.dimen.unit2,
               ),
               Positioned(
-                top: -outerScrollOffset,
+                top: -outerScrollOffset - renderArtefactSize,
                 left: 0,
                 right: 0,
                 child: Container(
