@@ -29,6 +29,7 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
         iconPath: data.iconPath,
         onPressed: data.onPressed,
         iconKey: data.iconkey,
+        semanticsLabel: data.semanticsLabel,
       ),
       withTwoTrailingIcons: (data) => _buildWithTwoTrailingIcons(
         iconModels: data.iconModels,
@@ -71,15 +72,19 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
     required String iconPath,
     VoidCallback? onPressed,
     Key? iconKey,
+    String? semanticsLabel,
   }) =>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           text,
-          AppToolbarTrailingIconButton(
-            iconKey: iconKey,
-            iconPath: iconPath,
-            onPressed: onPressed,
+          _maybeWrapSemantics(
+            AppToolbarTrailingIconButton(
+              iconKey: iconKey,
+              iconPath: iconPath,
+              onPressed: onPressed,
+            ),
+            semanticsLabel,
           ),
         ],
       );
@@ -98,22 +103,31 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildIconsRow({
     required List<AppToolbarIconModel> iconModels,
-  }) =>
-      Row(
-        children: [
+  }) {
+    final modelA = iconModels[0], modelB = iconModels[1];
+
+    return Row(
+      children: [
+        _maybeWrapSemantics(
           AppToolbarTrailingIconButton(
-            iconKey: iconModels.first.iconKey,
-            iconPath: iconModels.first.iconPath,
-            onPressed: iconModels.first.onPressed,
+            iconKey: modelA.iconKey,
+            iconPath: modelA.iconPath,
+            onPressed: modelA.onPressed,
           ),
-          SizedBox(width: R.dimen.unit2),
+          modelA.semanticsLabel,
+        ),
+        SizedBox(width: R.dimen.unit2),
+        _maybeWrapSemantics(
           AppToolbarTrailingIconButton(
-            iconKey: iconModels[1].iconKey,
-            iconPath: iconModels[1].iconPath,
-            onPressed: iconModels[1].onPressed,
+            iconKey: modelB.iconKey,
+            iconPath: modelB.iconPath,
+            onPressed: modelB.onPressed,
           ),
-        ],
-      );
+          modelB.semanticsLabel,
+        ),
+      ],
+    );
+  }
 
   @override
   Size get preferredSize => Size.fromHeight(
@@ -121,6 +135,15 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
             ? R.dimen.unit12
             : R.dimen.unit12 * additionalWidgetData!.widgetHeight,
       );
+
+  Widget _maybeWrapSemantics(Widget child, String? semanticsLabel) =>
+      semanticsLabel != null
+          ? Semantics(
+              label: semanticsLabel,
+              button: true,
+              child: child,
+            )
+          : child;
 }
 
 class TrailingIcon {

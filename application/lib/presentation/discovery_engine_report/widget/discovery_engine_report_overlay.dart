@@ -13,7 +13,7 @@ class DiscoveryEngineReportOverlay extends StatefulWidget {
   final Widget child;
 
   @override
-  _DiscoveryEngineReportOverlayState createState() =>
+  State<DiscoveryEngineReportOverlay> createState() =>
       _DiscoveryEngineReportOverlayState();
 }
 

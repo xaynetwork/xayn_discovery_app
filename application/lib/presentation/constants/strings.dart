@@ -20,6 +20,9 @@ class Strings {
   static Translations? _translation;
   static const Translations _defaultTranslation = Translations();
   static Future<CountryNames>? _countryNames;
+
+  ///TODO change to a real lazy initialization, here it is really needed because it loads a json file
+  // ignore: unnecessary_late
   static late final Future<CountryNames> _defaultCountryNames =
       AppLanguage.english.countryNames;
 

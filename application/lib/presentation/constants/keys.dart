@@ -47,7 +47,12 @@ class Keys {
 
   static const Key feedView = Key('feed_view');
 
-  static Key collectionItem(String value) => Key('collectionItem' + value);
+  static Key collectionItem(String value) => Key('collectionItem$value');
   static Key generateCollectionsScreenCardKey(String collectionId) =>
-      Key('collections_screen_card' + collectionId);
+      Key('collections_screen_card$collectionId');
+}
+
+extension ValueKeyExtension on Key {
+  String get valueKey =>
+      this is ValueKey ? (this as ValueKey).value : toString();
 }

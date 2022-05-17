@@ -15,6 +15,7 @@ class CardData with _$CardData {
     required String svgIconPath,
     required String svgBackgroundPath,
     required VoidCallback onPressed,
+    String? semanticsLabel,
   }) = _CardDataPersonalArea;
 
   const factory CardData.collectionsScreen({
@@ -26,6 +27,7 @@ class CardData with _$CardData {
     required double cardWidth,
     VoidCallback? onLongPressed,
     Uint8List? backgroundImage,
+    String? semanticsLabel,
   }) = _CardDataCollectionsScreen;
 
   const factory CardData.bookmark({
@@ -37,5 +39,6 @@ class CardData with _$CardData {
     VoidCallback? onLongPressed,
     DocumentProvider? provider,
     Uint8List? backgroundImage,
+    String? semanticsLabel,
   }) = _CardDataBookmark;
 }

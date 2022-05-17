@@ -16,14 +16,14 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player_child_bu
 
 import 'manager/delete_collection_confirmation_manager.dart';
 
-typedef _OnApplyPressed = Function(Collection)?;
+typedef OnApplyPressed = Function(Collection)?;
 typedef OnMoveBookmarksPressed = Function(List<UniqueId> bookmarkIds);
 
 class DeleteCollectionConfirmationBottomSheet extends BottomSheetBase {
   DeleteCollectionConfirmationBottomSheet({
     Key? key,
     required UniqueId collectionId,
-    _OnApplyPressed onApplyPressed,
+    OnApplyPressed onApplyPressed,
     VoidCallback? onSystemPop,
     required OnMoveBookmarksPressed onMovePressed,
   }) : super(
@@ -47,7 +47,7 @@ class _DeleteCollection extends StatefulWidget {
     required this.onMovePressed,
   }) : super(key: key);
 
-  final _OnApplyPressed onApplyPressed;
+  final OnApplyPressed onApplyPressed;
   final UniqueId collectionId;
   final VoidCallback? onSystemPop;
   final OnMoveBookmarksPressed onMovePressed;

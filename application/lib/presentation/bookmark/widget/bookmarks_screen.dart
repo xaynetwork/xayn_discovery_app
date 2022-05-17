@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_labels.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
@@ -29,6 +30,8 @@ class BookmarksScreen extends StatefulWidget {
   @override
   State<BookmarksScreen> createState() => _BookmarksScreenState();
 }
+
+const _bookmarksNavBarConfigId = NavBarConfigId('bookmarksNavBarConfigId');
 
 class _BookmarksScreenState extends State<BookmarksScreen>
     with
@@ -89,7 +92,7 @@ class _BookmarksScreenState extends State<BookmarksScreen>
             onClose: closeCardWidgetTransition,
           ),
           onLongPress: _bookmarkManager.triggerHapticFeedbackMedium,
-          child: _createBookmarkCard(context, bookmark),
+          child: _createBookmarkCard(context, bookmark, index),
         );
         return Padding(
           padding: EdgeInsets.only(bottom: R.dimen.unit2),
@@ -100,17 +103,21 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     );
 
     return Padding(
-      child: list,
       padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+      child: list,
     );
   }
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig.backBtn(buildNavBarItemBack(
-        onPressed: _bookmarkManager.onBackNavPressed,
-      ));
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _bookmarksNavBarConfigId,
+        buildNavBarItemBack(
+          onPressed: _bookmarkManager.onBackNavPressed,
+        ),
+      );
 
-  Widget _createBookmarkCard(BuildContext context, Bookmark bookmark) =>
+  Widget _createBookmarkCard(
+          BuildContext context, Bookmark bookmark, int bookmarkIndex) =>
       SwipeableBookmarkCard(
         onMove: _bookmarkManager.onMoveSwipe,
         onDelete: _bookmarkManager.onDeleteSwipe,
@@ -128,6 +135,9 @@ class _BookmarksScreenState extends State<BookmarksScreen>
             provider: bookmark.provider,
             // Screenwidth - 2 * side paddings
             cardWidth: MediaQuery.of(context).size.width - 2 * R.dimen.unit3,
+            semanticsLabel: SemanticsLabels.generateBookmarkItemLabel(
+              bookmarkIndex,
+            ),
           ),
         ),
         onFling: () => _bookmarkManager.triggerHapticFeedbackMedium(),

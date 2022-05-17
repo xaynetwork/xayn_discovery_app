@@ -28,8 +28,10 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
+
+const _settingsNavBarConfigId = NavBarConfigId('settingsNavBarConfigId');
 
 class _SettingsScreenState extends State<SettingsScreen>
     with NavBarConfigMixin, OverlayMixin<SettingsScreen> {
@@ -40,6 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _settingsNavBarConfigId,
         buildNavBarItemBack(onPressed: _manager.onBackNavPressed),
       );
 

@@ -11,6 +11,8 @@ abstract class ConnectivityObserver {
 
   Future<ConnectivityResult> checkConnectivity();
 
+  Future<ConnectivityResult> forceConnectivityCheck();
+
   Future<ConnectivityResult> isUp() =>
       onConnectivityChanged.firstWhere((it) => it != ConnectivityResult.none);
 }
@@ -38,6 +40,10 @@ class AppConnectivityObserver extends ConnectivityObserver {
   @override
   Future<ConnectivityResult> checkConnectivity() =>
       _connectivity.checkConnectivity();
+
+  @override
+  Future<ConnectivityResult> forceConnectivityCheck() async =>
+      _verifyConnectivity(await checkConnectivity());
 
   /// [ConnectivityResult] can sometimes be a false positive/negative
   /// Therefore, we do an IP ping to verify if the value is correct.
@@ -73,4 +79,7 @@ class TestConnectivityObserver extends ConnectivityObserver {
   @override
   Future<ConnectivityResult> checkConnectivity() =>
       Future.value(ConnectivityResult.wifi);
+
+  @override
+  Future<ConnectivityResult> forceConnectivityCheck() => checkConnectivity();
 }

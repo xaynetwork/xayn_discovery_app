@@ -27,14 +27,14 @@ class AppToolbarTrailingIconButton extends StatelessWidget {
     final btn = InkWell(
       key: iconKey,
       onTap: onPressed,
-      child: Center(child: icon),
       borderRadius: BorderRadius.circular(R.dimen.unit),
+      child: Center(child: icon),
     );
 
     return SizedBox(
-      child: btn,
       height: R.dimen.unit4,
       width: R.dimen.unit4,
+      child: btn,
     );
   }
 }

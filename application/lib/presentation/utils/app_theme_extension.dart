@@ -3,7 +3,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 
 extension AppThemeExtension on AppTheme {
   Brightness get brightness =>
-      computeBrightness(WidgetsBinding.instance!.window.platformBrightness);
+      computeBrightness(WidgetsBinding.instance.window.platformBrightness);
 
   Brightness computeBrightness(Brightness platformBrightness) {
     switch (this) {

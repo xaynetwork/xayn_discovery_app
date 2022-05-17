@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_fil
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../../../test_utils/fakes.dart';
+import '../../../test_utils/utils.dart';
 import '../../../test_utils/widget_test_utils.dart';
 
 main() {
@@ -38,13 +39,18 @@ main() {
 
     final applyDocumentFilterUseCase =
         ApplyDocumentFilterUseCase(repository, engine);
+    final sourceFilterSettingsNavActions = MockSourceFilterSettingsNavActions();
     history = FilterDeleteHistory();
     for (var e in historyValues) {
       history.add(e);
     }
 
     return SourceFilterSettingsManager(
-        documentFilterUseCase, history, applyDocumentFilterUseCase);
+      documentFilterUseCase,
+      history,
+      applyDocumentFilterUseCase,
+      sourceFilterSettingsNavActions,
+    );
   }
 
   blocTest<SourceFilterSettingsManager, SourceFilterSettingsState>(

@@ -130,6 +130,7 @@ class TrialExpired extends StatelessWidget {
         _product.status == PurchasableProductStatus.purchasePending;
 
     final subscribeNowButton = AppRaisedButton(
+      onPressed: _onSubscribe,
       child: SizedBox(
         height: R.dimen.unit3,
         child: Row(
@@ -146,7 +147,6 @@ class TrialExpired extends StatelessWidget {
           ],
         ),
       ),
-      onPressed: _onSubscribe,
     );
 
     return Row(
@@ -173,6 +173,7 @@ class TrialExpired extends StatelessWidget {
         _product.status == PurchasableProductStatus.restorePending;
 
     final restore = TextButton(
+      onPressed: _onRestore,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -189,12 +190,12 @@ class TrialExpired extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: _onRestore,
     );
 
     if (!Platform.isIOS) return Center(child: restore);
 
     final promoCode = TextButton(
+      onPressed: _onPromoCode,
       child: Text(
         R.strings.subscriptionPromoCode,
         style: R.styles.sBoldStyle.copyWith(
@@ -202,7 +203,6 @@ class TrialExpired extends StatelessWidget {
           color: R.colors.secondaryText,
         ),
       ),
-      onPressed: _onPromoCode,
     );
 
     return Row(
