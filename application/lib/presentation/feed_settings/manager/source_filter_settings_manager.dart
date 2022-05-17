@@ -23,17 +23,24 @@ class FilterDeleteHistory {
   bool contains(DocumentFilter filter) => _removedFilters.contains(filter);
 }
 
+abstract class SourceFilterSettingsNavActions {
+  void onBackNavPressed();
+}
+
 @injectable
 class SourceFilterSettingsManager extends Cubit<SourceFilterSettingsState>
-    with UseCaseBlocHelper {
+    with UseCaseBlocHelper
+    implements SourceFilterSettingsNavActions {
   final CrudDocumentFilterUseCase _documentFilterUseCase;
   final FilterDeleteHistory _filterDeleteHistory;
   final ApplyDocumentFilterUseCase _applyDocumentFilterUseCase;
+  final SourceFilterSettingsNavActions _sourceFilterSettingsNavActions;
 
   SourceFilterSettingsManager(
     this._documentFilterUseCase,
     this._filterDeleteHistory,
     this._applyDocumentFilterUseCase,
+    this._sourceFilterSettingsNavActions,
   ) : super(const SourceFilterSettingsState());
 
   late final _getAllAfterChanged = consume(_documentFilterUseCase,
@@ -78,4 +85,7 @@ class SourceFilterSettingsManager extends Cubit<SourceFilterSettingsState>
     return _applyDocumentFilterUseCase
         .singleOutput(const ApplyDocumentFilterIn.syncEngineWithDb());
   }
+
+  @override
+  void onBackNavPressed() => _sourceFilterSettingsNavActions.onBackNavPressed();
 }
