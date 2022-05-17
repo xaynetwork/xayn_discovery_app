@@ -15,19 +15,26 @@ import 'country_feed_settings_state.dart';
 
 const maxSelectedCountryAmount = 3;
 
+abstract class CountryFeedSettingsNavActions {
+  void onBackNavPressed();
+}
+
 @injectable
 class CountryFeedSettingsManager extends Cubit<CountryFeedSettingsState>
-    with UseCaseBlocHelper, OverlayManagerMixin<CountryFeedSettingsState> {
+    with UseCaseBlocHelper, OverlayManagerMixin<CountryFeedSettingsState>
+    implements CountryFeedSettingsNavActions {
   final GetSupportedCountriesUseCase _getSupportedCountriesUseCase;
   final GetSelectedCountriesUseCase _getSelectedCountriesUseCase;
   final SaveSelectedCountriesUseCase _saveSelectedFeedMarketsUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final CountryFeedSettingsNavActions _countryFeedSettingsNavActions;
 
   CountryFeedSettingsManager(
     this._getSupportedCountriesUseCase,
     this._getSelectedCountriesUseCase,
     this._saveSelectedFeedMarketsUseCase,
     this._sendAnalyticsUseCase,
+    this._countryFeedSettingsNavActions,
   ) : super(const CountryFeedSettingsState.initial());
 
   final _allCountries = <Country>{};
@@ -81,4 +88,7 @@ class CountryFeedSettingsManager extends Cubit<CountryFeedSettingsState>
       unSelectedCountries: unSelectedCountries,
     );
   }
+
+  @override
+  void onBackNavPressed() => _countryFeedSettingsNavActions.onBackNavPressed();
 }

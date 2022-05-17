@@ -17,6 +17,7 @@ void main() {
   late MockGetSelectedCountriesUseCase getSelectedCountriesUseCase;
   late MockSaveSelectedCountriesUseCase saveSelectedCountriesUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
+  late MockCountryFeedSettingsNavActions countryFeedSettingsNavActions;
   late CountryFeedSettingsManager manager;
   final allCountries = selectedList + unSelectedList;
 
@@ -25,12 +26,14 @@ void main() {
     getSelectedCountriesUseCase = MockGetSelectedCountriesUseCase();
     saveSelectedCountriesUseCase = MockSaveSelectedCountriesUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
+    countryFeedSettingsNavActions = MockCountryFeedSettingsNavActions();
 
     manager = CountryFeedSettingsManager(
       getSupportedCountriesUseCase,
       getSelectedCountriesUseCase,
       saveSelectedCountriesUseCase,
       sendAnalyticsUseCase,
+      countryFeedSettingsNavActions,
     );
 
     when(getSupportedCountriesUseCase.singleOutput(none))
