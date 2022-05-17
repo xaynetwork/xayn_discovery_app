@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 class DbMigrationInfo extends DbEntity {
   /// Increment this version for each change on the DB structure, new fields etc and
   /// write a migration
-  static const int dbVersion = 1;
+  static const int dbVersion = 2;
 
   final int version;
 

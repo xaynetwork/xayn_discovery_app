@@ -19,7 +19,6 @@ abstract class BaseStaticShader extends StatefulWidget {
   final ImageErrorWidgetBuilder noImageBuilder;
   final Color? shadowColor;
   final Uri uri;
-  final bool shouldCheckDimen;
 
   const BaseStaticShader({
     Key? key,
@@ -29,7 +28,6 @@ abstract class BaseStaticShader extends StatefulWidget {
     required this.uri,
     this.width,
     this.height,
-    this.shouldCheckDimen = true,
   }) : super(key: key);
 }
 
@@ -38,10 +36,9 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
     extends State<T> {
   late final ShaderCache _cache = di.get();
   ShaderAnimationDirection _currentDirection = ShaderAnimationDirection.forward;
-  bool _hasDecodedImage = false;
 
   ui.Image? get image => _cache.imageOf(widget.uri);
-  bool get hasDecodedImage => _hasDecodedImage;
+  bool get hasDecodedImage => _cache.isValidated(widget.uri);
 
   @override
   void initState() {
@@ -69,9 +66,7 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   }
 
   @mustCallSuper
-  void didResolveImage() {
-    _hasDecodedImage = true;
-  }
+  void didResolveImage() {}
 
   void _resolveImage() {
     if (_cache.hasImageOf(widget.uri)) {
@@ -86,25 +81,39 @@ abstract class BaseStaticShaderState<T extends BaseStaticShader>
   }
 
   Future<ui.Image?> _decodeBytes(Uint8List bytes) async {
-    if (_cache.hasImageOf(widget.uri)) return _cache.imageOf(widget.uri);
+    final hasImage = _cache.hasImageOf(widget.uri);
+
+    if (hasImage) {
+      return _cache.imageOf(widget.uri);
+    } else if (_cache.isValidated(widget.uri)) {
+      return null;
+    }
 
     try {
       final codec = await ui.instantiateImageCodec(bytes);
       final frameInfo = await codec.getNextFrame();
       final minWidth = widget.width ?? double.maxFinite;
 
-      if (widget.shouldCheckDimen && frameInfo.image.width < minWidth) {
+      if (frameInfo.image.width < minWidth) {
         logger.i(
             'Image is too small: [${frameInfo.image.width} lower than $minWidth] ${widget.uri}');
 
-        return _cache.update(widget.uri, image: null);
+        _cache.evictImage(widget.uri);
+
+        return null;
       }
 
-      return _cache.update(widget.uri, image: frameInfo.image);
+      return _cache.update(
+        widget.uri,
+        image: frameInfo.image,
+        isValidated: true,
+      );
     } catch (e) {
       logger.i('Unable to decode image at: ${widget.uri}');
 
-      return _cache.update(widget.uri, image: null);
+      _cache.evictImage(widget.uri);
+
+      return null;
     }
   }
 }
@@ -141,7 +150,6 @@ abstract class BaseAnimationShader extends BaseStaticShader {
           bytes: bytes,
           width: width,
           height: height,
-          shouldCheckDimen: shouldCheckDimen,
         );
 }
 

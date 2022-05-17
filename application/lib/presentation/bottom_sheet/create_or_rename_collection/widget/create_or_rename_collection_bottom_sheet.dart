@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
-typedef _OnApplyPressed = Function(Collection)?;
+typedef OnApplyPressed = Function(Collection)?;
 
 /// Used for creating a new collection or renaming an existing one
 /// When [collection] is:
@@ -23,7 +23,7 @@ class CreateOrRenameCollectionBottomSheet extends BottomSheetBase {
     Key? key,
     Collection? collection,
     VoidCallback? onSystemPop,
-    _OnApplyPressed onApplyPressed,
+    OnApplyPressed onApplyPressed,
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
@@ -43,7 +43,7 @@ class _CreateOrRenameCollection extends StatefulWidget {
     this.onSystemPop,
   }) : super(key: key);
 
-  final _OnApplyPressed onApplyPressed;
+  final OnApplyPressed onApplyPressed;
   final Collection? collection;
   final VoidCallback? onSystemPop;
 

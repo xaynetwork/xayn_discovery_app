@@ -16,14 +16,16 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player_child_bu
 
 import 'manager/delete_collection_confirmation_manager.dart';
 
-typedef _OnApplyPressed = Function(Collection)?;
+typedef OnApplyPressed = Function(Collection)?;
+typedef OnMoveBookmarksPressed = Function(List<UniqueId> bookmarkIds);
 
 class DeleteCollectionConfirmationBottomSheet extends BottomSheetBase {
   DeleteCollectionConfirmationBottomSheet({
     Key? key,
     required UniqueId collectionId,
-    _OnApplyPressed onApplyPressed,
+    OnApplyPressed onApplyPressed,
     VoidCallback? onSystemPop,
+    required OnMoveBookmarksPressed onMovePressed,
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
@@ -31,6 +33,7 @@ class DeleteCollectionConfirmationBottomSheet extends BottomSheetBase {
             onApplyPressed: onApplyPressed,
             collectionId: collectionId,
             onSystemPop: onSystemPop,
+            onMovePressed: onMovePressed,
           ),
         );
 }
@@ -41,11 +44,13 @@ class _DeleteCollection extends StatefulWidget {
     required this.collectionId,
     this.onApplyPressed,
     this.onSystemPop,
+    required this.onMovePressed,
   }) : super(key: key);
 
-  final _OnApplyPressed onApplyPressed;
+  final OnApplyPressed onApplyPressed;
   final UniqueId collectionId;
   final VoidCallback? onSystemPop;
+  final OnMoveBookmarksPressed onMovePressed;
 
   @override
   _CreateCollectionState createState() => _CreateCollectionState();
@@ -94,7 +99,7 @@ class _CreateCollectionState extends State<_DeleteCollection>
               widget.onSystemPop?.call();
             },
             setup: state.bookmarksIds.isNotEmpty
-                ? _buildFooterSetupForCollectionWithItems()
+                ? _buildFooterSetupForCollectionWithItems(state.bookmarksIds)
                 : _buildFooterSetupForCollectionWithNoItems(),
           );
 
@@ -110,12 +115,16 @@ class _CreateCollectionState extends State<_DeleteCollection>
         },
       );
 
-  BottomSheetFooterSetup _buildFooterSetupForCollectionWithItems() =>
+  BottomSheetFooterSetup _buildFooterSetupForCollectionWithItems(
+          List<UniqueId> bookmarkIds) =>
       BottomSheetFooterSetup.column(
         buttonsData: [
           BottomSheetFooterButton(
             text: R.strings.bottomSheetMoveBookmarks,
-            onPressed: _onMoveBookmarksPressed,
+            onPressed: () {
+              closeBottomSheet(context);
+              widget.onMovePressed(bookmarkIds);
+            },
           ),
           BottomSheetFooterButton(
             text: R.strings.bottomSheetDeleteAll,
@@ -142,13 +151,5 @@ class _CreateCollectionState extends State<_DeleteCollection>
     widget.onSystemPop?.call();
     _deleteCollectionConfirmationManager.deleteCollection();
     closeBottomSheet(context);
-  }
-
-  void _onMoveBookmarksPressed() {
-    closeBottomSheet(context);
-    _deleteCollectionConfirmationManager.onMoveBookmarksPressed(
-      collectionIdToRemove: widget.collectionId,
-      onClose: widget.onSystemPop,
-    );
   }
 }

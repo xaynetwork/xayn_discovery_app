@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -54,7 +55,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         ChangeUserReactionMixin<DiscoveryCardState>,
         OpenExternalUrlMixin<DiscoveryCardState>,
         OverlayManagerMixin<DiscoveryCardState>,
-        ErrorHandlingManagerMixin<DiscoveryCardState>
+        ErrorHandlingManagerMixin<DiscoveryCardState>,
+        CollectionManagerFlowMixin<DiscoveryCardState>
     implements DiscoveryCardNavActions {
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
@@ -121,6 +123,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       pipe(_crudExplicitDocumentFeedbackUseCase);
 
   bool _isLoading = false;
+  Uri? _lastUpdatedDocument;
 
   DiscoveryCardManager(
     this._loadHtmlUseCase,
@@ -145,9 +148,11 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     );
 
     // ideally, url is nullable, but we don't control this
-    if (document.resource.url == Uri.base) return;
+    if (document.resource.url == Uri.base ||
+        document.resource.url == _lastUpdatedDocument) return;
 
     /// Update the uri which contains the news article
+    _lastUpdatedDocument = document.resource.url;
     _updateUri(document.resource.url);
   }
 
@@ -203,14 +208,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   }) {
     showOverlay(
       OverlayData.tooltipBookmarked(
-          document: document,
-          onTap: () {
-            showOverlay(OverlayData.bottomSheetMoveDocumentToCollection(
-              document: document,
-              provider: state.processedDocument?.getProvider(document.resource),
-              feedType: feedType,
-            ));
-          }),
+        document: document,
+        onTap: () => onBookmarkLongPressed(
+          document,
+          feedType: feedType,
+        ),
+      ),
       when: (oS, nS) =>
           oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
           nS.bookmarkStatus == BookmarkStatus.bookmarked,
@@ -310,11 +313,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     Document document, {
     FeedType? feedType,
   }) =>
-      showOverlay(
-        OverlayData.bottomSheetMoveDocumentToCollection(
-          document: document,
-          provider: state.processedDocument?.getProvider(document.resource),
-          feedType: feedType,
-        ),
+      startBookmarkDocumentFlow(
+        document,
+        feedType: feedType,
+        provider: state.processedDocument?.getProvider(document.resource),
       );
 }

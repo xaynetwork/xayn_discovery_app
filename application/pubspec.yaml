@@ -4,8 +4,8 @@ publish_to: 'none'
 version: 0.0.1
 
 environment:
-  sdk: '>=2.16.1 <3.0.0'
-  flutter: '>=2.10.4'
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: '>=3.0.0'
 
 # Please list dependencies alphabetically!
 dependencies:
@@ -76,11 +76,11 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: a04141e358246718fe15cb20b9640f8327a74e52
+      ref: 6a150d8b14fdca9ed5947890ad094fc59c0f0a5e
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: c3035b34a26e62fcfada7ffc7ad34ae0c5ad1b2b
+      ref: 43422ce72790d046054e79608cbd842318ed4949
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -101,7 +101,7 @@ dev_dependencies:
   bloc_test: 8.5.0
   build_runner: 2.1.8
   envify_generator: 2.0.2
-  flutter_lints: 1.0.4
+  flutter_lints: 2.0.1
   flutter_test:
     sdk: flutter
   freezed: 1.1.1
@@ -136,6 +136,7 @@ flutter:
     # fastlane clean && fastlane build_runner  (which will run the update_assets lane and download the assets)
     - assets/ai/kpe_v0001/
     - assets/ai/smbert_v0001/
+    - assets/ai/sources_v0000/
 
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -10,7 +9,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_book
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/manager/delete_collection_confirmation_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 
 import '../../../utils/logger/logger.dart';
@@ -73,19 +71,6 @@ class DeleteCollectionConfirmationManager
     _sendAnalyticsUseCase(
       BottomSheetDismissedEvent(
           bottomSheetView: BottomSheetView.confirmDeletingCollection),
-    );
-  }
-
-  void onMoveBookmarksPressed({
-    required VoidCallback? onClose,
-    required UniqueId collectionIdToRemove,
-  }) {
-    showOverlay(
-      OverlayData.bottomSheetMoveBookmarksToCollection(
-        bookmarksIds: state.bookmarksIds,
-        collectionIdToRemove: collectionIdToRemove,
-        onClose: onClose,
-      ),
     );
   }
 

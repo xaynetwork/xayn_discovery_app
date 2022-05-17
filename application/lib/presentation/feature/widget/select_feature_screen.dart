@@ -21,7 +21,7 @@ class SelectFeatureScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SelectFeatureScreenState createState() => _SelectFeatureScreenState();
+  State<SelectFeatureScreen> createState() => _SelectFeatureScreenState();
 }
 
 enum _OverrideState {
@@ -118,6 +118,7 @@ class _FeaturesList extends StatelessWidget {
       home: Column(
         children: [
           Expanded(child: _buildFeaturesList(featureMap)),
+          resetFirstStartupButton(),
           continueButton(),
         ],
       ),
@@ -137,6 +138,12 @@ class _FeaturesList extends StatelessWidget {
         color: isEnabled ? Colors.green : Colors.grey,
         onPressed: () => featureManager.flipFlopFeature(feature),
         child: Text(feature.name),
+      );
+
+  Widget resetFirstStartupButton() => MaterialButton(
+        color: Colors.white,
+        onPressed: featureManager.resetFirstAppStartupDate,
+        child: const Text('Reset First Startup Time'),
       );
 
   Widget continueButton() => MaterialButton(

@@ -116,8 +116,8 @@ class DocumentFiltersList extends StatelessWidget {
       padding: EdgeInsets.only(bottom: R.dimen.navBarHeight * 2),
     );
     return Expanded(
-      child: listView,
       flex: 1,
+      child: listView,
     );
   }
 
@@ -179,11 +179,11 @@ class _Item<T> extends StatelessWidget {
         decoration: decoration,
         child: InkWell(
           onTap: () => onActionPressed(item),
+          radius: R.dimen.unit,
           child: Padding(
             padding: EdgeInsets.only(left: R.dimen.unit1_5),
             child: row,
           ),
-          radius: R.dimen.unit,
         ),
       ),
     );
@@ -218,8 +218,8 @@ class _Item<T> extends StatelessWidget {
       padding: EdgeInsets.only(left: R.dimen.unit1_5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
         mainAxisSize: MainAxisSize.min,
+        children: children,
       ),
     );
   }

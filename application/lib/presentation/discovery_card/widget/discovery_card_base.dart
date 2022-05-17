@@ -132,26 +132,30 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
 
       switch (deterministicRandom) {
         case 0:
-          background = R.colors.noImageBackgroundOrange;
+          background = R.colors.noImageBackgroundGreen;
           assetName = R.assets.lottie.contextual.noImageA;
           break;
         case 1:
-          background = R.colors.noImageBackgroundPurple;
+          background = R.colors.noImageBackgroundPink;
           assetName = R.assets.lottie.contextual.noImageB;
           break;
         case 2:
-          background = R.colors.noImageBackgroundGreen;
+          background = R.colors.noImageBackgroundPurple;
           assetName = R.assets.lottie.contextual.noImageC;
           break;
         default:
-          background = R.colors.noImageBackgroundPink;
+          background = R.colors.noImageBackgroundOrange;
           assetName = R.assets.lottie.contextual.noImageD;
           break;
       }
 
-      return ColoredBox(
+      return Container(
+        alignment: Alignment.topCenter,
         color: background,
-        child: AnimationPlayer.assetUnrestrictedSize(assetName),
+        child: AnimationPlayer.assetUnrestrictedSize(
+          assetName,
+          playsFromStart: false,
+        ),
       );
     }
 

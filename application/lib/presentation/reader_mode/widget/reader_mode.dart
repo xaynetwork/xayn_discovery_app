@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fwfh_chewie/fwfh_chewie.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
@@ -225,12 +225,14 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
           readability.BuildMetadata meta, readability.ImageSource src) =>
       ClipRRect(
         borderRadius: BorderRadius.circular(R.dimen.unit),
-        child: CachedImage(
-          uri: baseUri.resolve(src.url),
-          errorBuilder: (_) => Container(),
-          noImageBuilder: (_) => Container(),
-          loadingBuilder: (_, __) => const WidgetTestableProgressIndicator(),
-          shouldCheckDimen: false,
+        child: Image.network(
+          baseUri.resolve(src.url).toString(),
+          errorBuilder: (_, __, ___) => _buildImagePlaceHolder(),
+          loadingBuilder: (context, child, event) {
+            if (event == null) return child;
+
+            return const WidgetTestableProgressIndicator();
+          },
         ),
       );
 
@@ -265,4 +267,18 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
       width: width,
     );
   }
+
+  Widget _buildImagePlaceHolder() => LayoutBuilder(
+        builder: (context, constraints) => Container(
+          color: R.colors.imagePlaceholderBox,
+          child: Center(
+            child: SvgPicture.asset(
+              R.assets.icons.noImage,
+              height: constraints.maxHeight * 0.2,
+              width: constraints.maxWidth * 0.2,
+              color: R.colors.secondaryIcon,
+            ),
+          ),
+        ),
+      );
 }

@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
@@ -28,6 +27,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
     Key? key,
     required Document document,
     required DocumentProvider? provider,
+    required VoidCallback onAddCollectionPressed,
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
   }) : super(
@@ -37,6 +37,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
             provider: provider,
             initialSelectedCollectionId: initialSelectedCollectionId,
             feedType: feedType,
+            onAddCollectionPressed: onAddCollectionPressed,
           ),
         );
 }
@@ -46,11 +47,13 @@ class _MoveDocumentToCollection extends StatefulWidget {
   final DocumentProvider? provider;
   final UniqueId? initialSelectedCollectionId;
   final FeedType? feedType;
+  final VoidCallback onAddCollectionPressed;
 
   const _MoveDocumentToCollection({
     Key? key,
     required this.document,
     required this.provider,
+    required this.onAddCollectionPressed,
     this.feedType,
     this.initialSelectedCollectionId,
   }) : super(key: key);
@@ -151,26 +154,6 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
 
   void _showAddCollectionBottomSheet() {
     closeBottomSheet(context);
-    showAppBottomSheet(
-      context,
-      builder: (buildContext) => CreateOrRenameCollectionBottomSheet(
-        onApplyPressed: (collection) => _onAddCollectionSheetClosed(
-          buildContext,
-          collection.id,
-        ),
-      ),
-    );
+    widget.onAddCollectionPressed();
   }
-
-  void _onAddCollectionSheetClosed(
-          BuildContext context, UniqueId newCollectionId) =>
-      showAppBottomSheet(
-        context,
-        builder: (_) => MoveDocumentToCollectionBottomSheet(
-          document: widget.document,
-          provider: widget.provider,
-          initialSelectedCollectionId: newCollectionId,
-          feedType: widget.feedType,
-        ),
-      );
 }

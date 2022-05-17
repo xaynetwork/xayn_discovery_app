@@ -57,6 +57,8 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         uri: param,
       );
     } else {
+      var html = '';
+
       await connectivityObserver.isUp();
 
       final response = await client.sendWithRedirectGuard(
@@ -70,11 +72,7 @@ class LoadHtmlUseCase extends UseCase<Uri, Progress> {
         ),
       );
 
-      late final String html;
-
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        html = '';
-      } else {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         html = _extractResponseBody(await response.readAsBytes());
       }
 

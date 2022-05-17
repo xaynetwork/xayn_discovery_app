@@ -147,16 +147,17 @@ class CardWidget extends StatelessWidget {
     );
 
     return AppGhostButton(
+      semanticsLabel: cardData.semanticsLabel,
       contentPadding: EdgeInsets.zero,
       onPressed: cardData.onPressed,
       onLongPressed: onLongPressed,
-      child: item,
       borderRadius: getCardRadius(context),
       backgroundColor: cardData.map(
         personalArea: (v) => v.color,
         collectionsScreen: (v) => v.color,
         bookmark: (v) => R.colors.accent,
       ),
+      child: item,
     );
   }
 
@@ -203,7 +204,7 @@ class CardWidget extends StatelessWidget {
         numOfItems == 1 ? R.strings.article : R.strings.articles;
 
     final numOfItemsText = Text(
-      numOfItems.toString() + ' ' + articleText,
+      '$numOfItems $articleText',
       style: R.styles.mStyle.copyWith(color: R.colors.brightText),
     );
 

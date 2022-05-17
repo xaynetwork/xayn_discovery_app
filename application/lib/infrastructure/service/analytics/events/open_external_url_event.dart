@@ -26,4 +26,5 @@ enum CurrentView {
   reader,
   settings,
   bookmark,
+  personalArea,
 }

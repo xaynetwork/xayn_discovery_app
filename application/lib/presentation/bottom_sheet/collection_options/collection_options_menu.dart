@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/create_or_rename_collection/widget/create_or_rename_collection_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/delete_collection_confirmation_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_card_options/menu_option.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -11,6 +9,8 @@ class CollectionOptionsBottomSheet extends BottomSheetBase {
   CollectionOptionsBottomSheet({
     required Collection collection,
     required VoidCallback onSystemPop,
+    required VoidCallback onDeletePressed,
+    required VoidCallback onRenamePressed,
     Key? key,
   }) : super(
           key: key,
@@ -18,6 +18,8 @@ class CollectionOptionsBottomSheet extends BottomSheetBase {
           body: _CollectionOptions(
             collection: collection,
             onSystemPop: onSystemPop,
+            onDeletePressed: onDeletePressed,
+            onRenamePressed: onRenamePressed,
           ),
         );
 }
@@ -25,10 +27,16 @@ class CollectionOptionsBottomSheet extends BottomSheetBase {
 class _CollectionOptions extends StatefulWidget {
   final VoidCallback? onSystemPop;
   final Collection collection;
+  final VoidCallback onDeletePressed;
+  final VoidCallback onRenamePressed;
+
   const _CollectionOptions({
     this.onSystemPop,
     required this.collection,
+    required this.onDeletePressed,
+    required this.onRenamePressed,
   });
+
   @override
   __CollectionOptionsState createState() => __CollectionOptionsState();
 }
@@ -39,32 +47,19 @@ class __CollectionOptionsState extends State<_CollectionOptions>
   Widget build(BuildContext context) {
     final menuOptions = [
       MenuOption(
-          svgIconPath: R.assets.icons.edit,
-          text: R.strings.bottomSheetRename,
-          onPressed: () {
-            closeBottomSheet(context);
-            showAppBottomSheet(
-              context,
-              showBarrierColor: false,
-              builder: (context) => CreateOrRenameCollectionBottomSheet(
-                onSystemPop: widget.onSystemPop,
-                collection: widget.collection,
-              ),
-            );
-          }),
+        svgIconPath: R.assets.icons.edit,
+        text: R.strings.bottomSheetRename,
+        onPressed: () {
+          closeBottomSheet(context);
+          widget.onRenamePressed();
+        },
+      ),
       MenuOption(
         svgIconPath: R.assets.icons.trash,
         text: R.strings.bottomSheetDelete,
         onPressed: () {
           closeBottomSheet(context);
-          showAppBottomSheet(
-            context,
-            showBarrierColor: false,
-            builder: (context) => DeleteCollectionConfirmationBottomSheet(
-              collectionId: widget.collection.id,
-              onSystemPop: widget.onSystemPop,
-            ),
-          );
+          widget.onDeletePressed();
         },
       ),
     ];
@@ -91,8 +86,8 @@ class __CollectionOptionsState extends State<_CollectionOptions>
       ],
     );
     return BottomSheetClickableOption(
-      child: row,
       onTap: menuOption.onPressed,
+      child: row,
     );
   }
 }

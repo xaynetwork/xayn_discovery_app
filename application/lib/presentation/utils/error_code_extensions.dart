@@ -6,19 +6,19 @@ extension PaymentFlowErrorExtension on PaymentFlowError {
   String get errorCode {
     switch (this) {
       case PaymentFlowError.canceled:
-        return _paymentPrefix + '0';
+        return '${_paymentPrefix}0';
       case PaymentFlowError.unknown:
-        return _paymentPrefix + '1';
+        return '${_paymentPrefix}1';
       case PaymentFlowError.storeNotAvailable:
-        return _paymentPrefix + '2';
+        return '${_paymentPrefix}2';
       case PaymentFlowError.productNotFound:
-        return _paymentPrefix + '3';
+        return '${_paymentPrefix}3';
       case PaymentFlowError.itemAlreadyOwned:
-        return _paymentPrefix + '4';
+        return '${_paymentPrefix}4';
       case PaymentFlowError.paymentFailed:
-        return _paymentPrefix + '5';
+        return '${_paymentPrefix}5';
       case PaymentFlowError.noActiveSubscriptionFound:
-        return _paymentPrefix + '6';
+        return '${_paymentPrefix}6';
     }
   }
 }

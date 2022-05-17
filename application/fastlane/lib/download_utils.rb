@@ -32,7 +32,7 @@ def getChecksum256(filePath)
   end
 end
 
-def download(url, path)
+def download(url, path, isCi)
   FileUtils.mkdir_p File.dirname(path)
   total = nil
   io = URI.open(url,
@@ -42,7 +42,7 @@ def download(url, path)
                   end
                 },
                 :progress_proc => lambda { |s|
-                  if total
+                  if total && !isCi
                     progress = ((s.to_f * 100) / total.to_f).to_i
                     STDOUT.write "\r#{url} (#{s} / #{total} bytes) : #{progress}%  "
                   end
@@ -53,21 +53,21 @@ def download(url, path)
   end
 end
 
-def downloadOnlyWhenNewer(baseUri, suffix, pathToSave)
+def downloadOnlyWhenNewer(baseUri, suffix, pathToSave, isCi)
   path = "#{baseUri}/#{suffix}"
   fileToWrite = File.join(pathToSave, suffix)
   lastModifiedServer = getLastModifiedForUrl(baseUri, suffix)
   lastModifiedLocal = getLastModifiedForFile(fileToWrite)
   if lastModifiedLocal == nil || lastModifiedLocal < lastModifiedServer
     UI.success "Start downloading #{path} to #{fileToWrite}."
-    download(path, fileToWrite)
+    download(path, fileToWrite, isCi)
     UI.success "Finished."
   else
     UI.success "Skipped #{path} because #{fileToWrite} already exists."
   end
 end
 
-def downloadOnlyWhenNotMatchingSha2(baseUri, suffix, pathToSave, checksum)
+def downloadOnlyWhenNotMatchingSha2(baseUri, suffix, pathToSave, checksum, isCi)
   fileToWrite = File.join(pathToSave, suffix)
   checksumFile = getChecksum256(fileToWrite)
   url = "#{baseUri}/#{suffix}"
@@ -75,7 +75,7 @@ def downloadOnlyWhenNotMatchingSha2(baseUri, suffix, pathToSave, checksum)
     UI.success "File #{fileToWrite} from #{url} already exsists."
   else
     UI.success "File #{fileToWrite} (#{checksumFile}) != (#{checksum}) #{url}. Will download."
-    download(url, fileToWrite)
+    download(url, fileToWrite, isCi)
     checksumFile = getChecksum256(fileToWrite)
     raise "Downloaded checksum does not match checksum in manifest!" if checksumFile != checksum
   end

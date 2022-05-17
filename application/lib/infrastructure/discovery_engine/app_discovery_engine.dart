@@ -119,7 +119,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<void> _saveInitialFeedMarket(
     SaveInitialFeedMarketUseCase useCase,
   ) async {
-    final deviceLocale = WidgetsBinding.instance!.window.locale;
+    final deviceLocale = WidgetsBinding.instance.window.locale;
     final input = SaveDefaultFeedMarketInput(
       deviceLocale,
       defaultFeedMarket,
@@ -265,6 +265,24 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> removeSourceFromExcludedList(Source source) {
     _inputLog.add('[removeSourceFromExcludedList]');
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
+  }
+
+  @override
+  Future<EngineEvent> getAvailableSourcesList(String fuzzySearchTerm) {
+    _inputLog.add('[getAvailableSourcesList]');
+    return safeRun(() => _engine.getAvailableSourcesList(fuzzySearchTerm));
+  }
+
+  @override
+  Future<EngineEvent> requestTopic(String topic) {
+    _inputLog.add('[requestTopic]');
+    return safeRun(() => _engine.requestTopic(topic));
+  }
+
+  @override
+  Future<EngineEvent> requestTrendingTopics() {
+    _inputLog.add('[requestTrendingTopics]');
+    return safeRun(() => _engine.requestTrendingTopics());
   }
 
   void _updateFeedMarketIdentityParam(FeedMarkets markets) {

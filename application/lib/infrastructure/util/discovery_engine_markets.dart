@@ -5,7 +5,7 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 class SupportedCountryCodes {
   SupportedCountryCodes._();
 
-  static late final Set<String> allValues = {
+  static final Set<String> allValues = {
     austria,
     belgium,
     canada,
@@ -37,7 +37,7 @@ class SupportedCountryCodes {
 class SupportedLanguageCodes {
   SupportedLanguageCodes._();
 
-  static late final Set<String> allValues = {
+  static final Set<String> allValues = {
     dutch,
     english,
     french,
@@ -109,7 +109,7 @@ final FeedMarkets supportedFeedMarkets = <FeedMarket>{
 
 //region utils
 
-late final _listOfSupportedCountryCodes =
+final _listOfSupportedCountryCodes =
     supportedFeedMarkets.map((e) => e.countryCode).toList();
 
 bool _isCountryHasMultipleLanguages(String countryCode) =>
@@ -118,6 +118,8 @@ bool _isCountryHasMultipleLanguages(String countryCode) =>
         .length >
     1;
 
+///TODO change to a real lazy initialization if possible
+// ignore: unnecessary_late
 late final _multiLanguageCountryMap = Map.fromEntries(
   supportedFeedMarkets.map(
     (e) => MapEntry(
