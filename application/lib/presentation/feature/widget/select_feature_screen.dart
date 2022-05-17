@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
 
@@ -134,11 +135,26 @@ class _FeaturesList extends StatelessWidget {
         itemCount: Feature.values.length,
       );
 
-  Widget _buildItem(Feature feature, bool isEnabled) => MaterialButton(
-        color: isEnabled ? Colors.green : Colors.grey,
-        onPressed: () => featureManager.flipFlopFeature(feature),
-        child: Text(feature.name),
-      );
+  Widget _buildItem(Feature feature, bool isEnabled) {
+    final child = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          feature.name,
+          style: R.styles.textInputText.copyWith(fontWeight: FontWeight.bold),
+        ),
+        Text(
+          '(by ${feature.author}, default: ${feature.defaultValue})',
+          style: R.styles.textInputText,
+        ),
+      ],
+    );
+    return MaterialButton(
+      color: isEnabled ? Colors.green : Colors.grey,
+      onPressed: () => featureManager.flipFlopFeature(feature),
+      child: SizedBox(width: double.infinity, child: child),
+    );
+  }
 
   Widget resetFirstStartupButton() => MaterialButton(
         color: Colors.white,
