@@ -113,25 +113,25 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   Stream<String> get engineInputEventsLog => throw UnimplementedError();
 
   @override
-  Future<EngineEvent> closeSearch() {
+  Future<EngineEvent> closeActiveSearch() {
     // TODO: implement closeSearch
     throw UnimplementedError();
   }
 
   @override
-  Future<EngineEvent> requestNextSearchBatch() {
+  Future<EngineEvent> requestNextActiveSearchBatch() {
     // TODO: implement requestNextSearchBatch
     throw UnimplementedError();
   }
 
   @override
-  Future<EngineEvent> requestSearch(String queryTerm) {
+  Future<EngineEvent> requestQuerySearch(String queryTerm) {
     // TODO: implement requestSearch
     throw UnimplementedError();
   }
 
   @override
-  Future<EngineEvent> restoreSearch() {
+  Future<EngineEvent> restoreActiveSearch() {
     // TODO: implement restoreSearch
     throw UnimplementedError();
   }
@@ -149,7 +149,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> getSearchTerm() {
+  Future<EngineEvent> getActiveSearchTerm() {
     // TODO: implement getSearchTerm
     throw UnimplementedError();
   }
@@ -167,7 +167,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestTopic(String topic) {
+  Future<EngineEvent> requestTopicSearch(String topic) {
     // TODO: implement requestTopic
     throw UnimplementedError();
   }
@@ -175,6 +175,18 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   Future<EngineEvent> requestTrendingTopics() {
     // TODO: implement requestTrendingTopics
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> requestDeepSearch(String term, FeedMarket market) {
+    // TODO: implement requestDeepSearch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> resetAi() {
+    // TODO: implement resetAi
     throw UnimplementedError();
   }
 }
