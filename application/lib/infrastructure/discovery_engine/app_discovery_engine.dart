@@ -220,27 +220,27 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> closeSearch() {
+  Future<EngineEvent> closeActiveSearch() {
     _inputLog.add('[closeSearch]');
-    return safeRun(() => _engine.closeSearch());
+    return safeRun(() => _engine.closeActiveSearch());
   }
 
   @override
-  Future<EngineEvent> requestNextSearchBatch() {
+  Future<EngineEvent> requestNextActiveSearchBatch() {
     _inputLog.add('[requestNextSearchBatch]');
-    return safeRun(() => _engine.requestNextSearchBatch());
+    return safeRun(() => _engine.requestNextActiveSearchBatch());
   }
 
   @override
-  Future<EngineEvent> requestSearch(String queryTerm) {
+  Future<EngineEvent> requestQuerySearch(String queryTerm) {
     _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
-    return safeRun(() => _engine.requestSearch(queryTerm));
+    return safeRun(() => _engine.requestQuerySearch(queryTerm));
   }
 
   @override
-  Future<EngineEvent> restoreSearch() {
+  Future<EngineEvent> restoreActiveSearch() {
     _inputLog.add('[restoreSearch]');
-    return safeRun(() => _engine.restoreSearch());
+    return safeRun(() => _engine.restoreActiveSearch());
   }
 
   @override
@@ -256,9 +256,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> getSearchTerm() {
+  Future<EngineEvent> getActiveSearchTerm() {
     _inputLog.add('[getSearchTerm]');
-    return safeRun(() => _engine.getSearchTerm());
+    return safeRun(() => _engine.getActiveSearchTerm());
   }
 
   @override
@@ -274,9 +274,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestTopic(String topic) {
+  Future<EngineEvent> requestTopicSearch(String topic) {
     _inputLog.add('[requestTopic]');
-    return safeRun(() => _engine.requestTopic(topic));
+    return safeRun(() => _engine.requestTopicSearch(topic));
   }
 
   @override
@@ -288,5 +288,17 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   void _updateFeedMarketIdentityParam(FeedMarkets markets) {
     final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
     _setIdentityParamUseCase.call(param);
+  }
+
+  @override
+  Future<EngineEvent> requestDeepSearch(String term, FeedMarket market) {
+    // TODO: implement requestDeepSearch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> resetAi() {
+    // TODO: implement resetAi
+    throw UnimplementedError();
   }
 }
