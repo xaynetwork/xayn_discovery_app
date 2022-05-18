@@ -5,7 +5,6 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_rating_already_visible/save_app_rating_already_visible_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 /// Shows the rating dialog when any of the following conditions is met:
 ///
@@ -32,7 +31,6 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 class RatingDialogManager {
   RatingDialogManager(
     this._getAppSessionUseCase,
-    this._featureManager,
     this._setAppRatingAlreadyVisibleUseCase,
     this._appStatusRepository,
   ) : _inAppReview = InAppReview.instance;
@@ -41,7 +39,6 @@ class RatingDialogManager {
   RatingDialogManager.test(
     this._getAppSessionUseCase,
     this._inAppReview,
-    this._featureManager,
     this._setAppRatingAlreadyVisibleUseCase,
     this._appStatusRepository,
   );
@@ -50,7 +47,6 @@ class RatingDialogManager {
   final SetAppRatingAlreadyVisibleUseCase _setAppRatingAlreadyVisibleUseCase;
   final AppStatusRepository _appStatusRepository;
   final InAppReview _inAppReview;
-  final FeatureManager _featureManager;
 
   static const _appSessionThreshold = 3;
 
@@ -68,10 +64,6 @@ class RatingDialogManager {
   }
 
   Future<bool> _showRatingDialogIfNeeded() async {
-    if (!_featureManager.isRatingDialogEnabled) {
-      return false;
-    }
-
     final numberOfSessions = await _getAppSessionUseCase.singleOutput(none);
     if (numberOfSessions >= _appSessionThreshold && !_ratingDialogShown) {
       await _requestReview();

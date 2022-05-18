@@ -24,8 +24,7 @@ void main() {
     appStatusRepository.save(appStatusRepository.appStatus.copyWith(
         ratingDialogAlreadyVisible: ratingAlreadyVisible,
         numberOfSessions: numberOfSessions));
-    manager = RatingDialogManager.test(
-        di.get(), appReview, di.get(), di.get(), di.get());
+    manager = RatingDialogManager.test(di.get(), appReview, di.get(), di.get());
   }
 
   test("Initially we don't show the rating dialog", () async {
