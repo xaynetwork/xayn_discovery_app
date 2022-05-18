@@ -18,6 +18,9 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
 
+/// The exact height of the no-image animation
+const double _kNoImageSize = 400.0;
+
 /// The base class for the different feed cards.
 abstract class DiscoveryCardBase extends StatefulWidget {
   final bool isPrimary;
@@ -119,14 +122,16 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
   }
 
   Widget buildImage(Color shadowColor) {
-    final mediaQuery = MediaQuery.of(context);
-
     // allow opaque-when-loading, because the card will fade in on load completion.
     buildBackgroundPane({required bool opaque}) =>
         Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
 
     getDeterministicNoImage() {
       final deterministicRandom = widget.document.resource.hashCode % 4;
+      // position the animation at 1/3 from the top of the card
+      // this is translated by taking the height divided by 3, and then
+      // subtracting half of the animation's height
+      final topOffset = R.dimen.screenSize.height / 3 - _kNoImageSize / 2;
       late String assetName;
       late Color background;
 
@@ -152,9 +157,16 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       return Container(
         alignment: Alignment.topCenter,
         color: background,
-        child: AnimationPlayer.assetUnrestrictedSize(
-          assetName,
-          playsFromStart: false,
+        child: Padding(
+          padding: EdgeInsets.only(
+            // needs to be a double between [.0 and maxFinite]
+            // if < 0 then we just use zero
+            top: topOffset.clamp(.0, double.maxFinite),
+          ),
+          child: AnimationPlayer.assetUnrestrictedSize(
+            assetName,
+            playsFromStart: false,
+          ),
         ),
       );
     }
@@ -164,8 +176,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       shaderBuilder: widget.primaryCardShader,
       singleFrameOnly: !widget.isPrimary,
       uri: Uri.parse(imageUrl),
-      width: mediaQuery.size.width.floor(),
-      height: mediaQuery.size.height.floor(),
+      width: R.dimen.screenSize.width.floor(),
+      height: R.dimen.screenSize.height.floor(),
       shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),

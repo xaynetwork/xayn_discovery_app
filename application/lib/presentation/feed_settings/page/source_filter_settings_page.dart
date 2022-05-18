@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_state.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -18,8 +19,19 @@ class SourceFilterSettingsPage extends StatefulWidget {
       _SourceFilterSettingsPageState();
 }
 
-class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage> {
+const _sourceFilterNavBarConfigId = NavBarConfigId('sourceFilterConfigId');
+
+class _SourceFilterSettingsPageState extends State<SourceFilterSettingsPage>
+    with NavBarConfigMixin {
   late final SourceFilterSettingsManager _manager = di.get();
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _sourceFilterNavBarConfigId,
+        buildNavBarItemBack(
+          onPressed: _manager.onBackNavPressed,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) => AppScaffold(

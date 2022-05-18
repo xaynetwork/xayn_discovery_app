@@ -31,6 +31,8 @@ class BookmarksScreen extends StatefulWidget {
   State<BookmarksScreen> createState() => _BookmarksScreenState();
 }
 
+const _bookmarksNavBarConfigId = NavBarConfigId('bookmarksNavBarConfigId');
+
 class _BookmarksScreenState extends State<BookmarksScreen>
     with
         NavBarConfigMixin,
@@ -66,19 +68,24 @@ class _BookmarksScreenState extends State<BookmarksScreen>
     );
   }
 
-  Widget _buildEmptyScreen() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimationPlayer.asset(
-                R.linden.assets.lottie.contextual.emptyCollection),
-            Text(
-              R.strings.bookmarkScreenNoArticles,
-              style: R.styles.xlBoldStyle,
-            ),
-          ],
+  Widget _buildEmptyScreen() {
+    final body = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimationPlayer.asset(
+            R.linden.assets.lottie.contextual.emptyCollection),
+        Text(
+          R.strings.bookmarkScreenNoArticles,
+          style: R.styles.xlBoldStyle,
         ),
-      );
+      ],
+    );
+
+    return DefaultTextStyle(
+      style: R.styles.lStyle,
+      child: Center(child: body),
+    );
+  }
 
   Widget _buildScreen(BookmarksScreenState state) {
     final list = CustomAnimatedList<Bookmark>(
@@ -107,9 +114,12 @@ class _BookmarksScreenState extends State<BookmarksScreen>
   }
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig.backBtn(buildNavBarItemBack(
-        onPressed: _bookmarkManager.onBackNavPressed,
-      ));
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        _bookmarksNavBarConfigId,
+        buildNavBarItemBack(
+          onPressed: _bookmarkManager.onBackNavPressed,
+        ),
+      );
 
   Widget _createBookmarkCard(
           BuildContext context, Bookmark bookmark, int bookmarkIndex) =>
