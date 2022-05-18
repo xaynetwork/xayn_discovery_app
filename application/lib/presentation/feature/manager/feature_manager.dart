@@ -31,8 +31,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPaymentEnabled => isEnabled(Feature.payment);
 
-  bool get isRatingDialogEnabled => isEnabled(Feature.ratingDialog);
-
   bool get isTtsEnabled => isEnabled(Feature.tts);
 
   bool get showDiscoveryEngineReportOverlay =>
