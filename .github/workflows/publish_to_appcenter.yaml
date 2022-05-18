@@ -76,8 +76,21 @@ jobs:
           restore-keys: |
             ios-flutter-cache-
 
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
+
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
@@ -140,8 +153,21 @@ jobs:
           restore-keys: |
             ios-flutter-cache-
 
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
+
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
@@ -194,10 +220,23 @@ jobs:
           fetch-depth: 0
 
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+         path: |
+           ${{ env.PUB_CACHE }}
+           **/.packages
+           **/.flutter-plugins
+           **/.flutter-plugin-dependencies
+           **/.dart_tool/package_config.json
+         key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+         restore-keys: |
+           build-pubspec-
 
       - name: Fix fastlane permissions
         run: sudo chmod -R a+w /var/lib/gems/
@@ -245,10 +284,23 @@ jobs:
           fetch-depth: 0
 
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
 
       - name: Fix fastlane permissions
         run: sudo chmod -R a+w /var/lib/gems/
@@ -258,7 +310,7 @@ jobs:
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_BETA_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}git gui
           SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
