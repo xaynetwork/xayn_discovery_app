@@ -91,8 +91,8 @@ void main() {
       when(engine.engineEvents).thenAnswer((_) => const Stream.empty());
       when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
           .thenAnswer((_) async => false);
-      when(engine.restoreSearch()).thenAnswer(
-        (_) async => RestoreSearchSucceeded(
+      when(engine.restoreActiveSearch()).thenAnswer(
+        (_) async => RestoreActiveSearchSucceeded(
           const ActiveSearch(
             searchTerm: '',
             searchBy: SearchBy.query,
@@ -100,8 +100,8 @@ void main() {
           [fakeDocument],
         ),
       );
-      when(engine.getSearchTerm()).thenAnswer(
-          (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(engine.getActiveSearchTerm()).thenAnswer(
+          (_) async => const EngineEvent.activeSearchTermRequestSucceeded(''));
       when(featureManager.isPaymentEnabled).thenReturn(true);
       return buildManager();
     },
@@ -116,7 +116,7 @@ void main() {
   blocTest<ActiveSearchManager, DiscoveryState>(
     'GIVEN use case emits results THEN the state contains results',
     build: () {
-      final restoreEvent = RestoreSearchSucceeded(
+      final restoreEvent = RestoreActiveSearchSucceeded(
         const ActiveSearch(
           searchTerm: '',
           searchBy: SearchBy.query,
@@ -127,11 +127,11 @@ void main() {
       when(engine.engineEvents).thenAnswer((_) => Stream.value(restoreEvent));
       when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
           .thenAnswer((_) async => false);
-      when(engine.restoreSearch()).thenAnswer(
+      when(engine.restoreActiveSearch()).thenAnswer(
         (_) async => restoreEvent,
       );
-      when(engine.getSearchTerm()).thenAnswer(
-          (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(engine.getActiveSearchTerm()).thenAnswer(
+          (_) async => const EngineEvent.activeSearchTermRequestSucceeded(''));
       when(featureManager.isPaymentEnabled).thenReturn(false);
       return buildManager();
     },
@@ -145,7 +145,7 @@ void main() {
   blocTest<ActiveSearchManager, DiscoveryState>(
     'GIVEN use case throws an error THEN the error state is true',
     build: () {
-      when(engine.restoreSearch()).thenAnswer(
+      when(engine.restoreActiveSearch()).thenAnswer(
         (_) async =>
             const EngineExceptionRaised(EngineExceptionReason.genericError),
       );
@@ -156,8 +156,8 @@ void main() {
       );
       when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
           .thenAnswer((_) async => false);
-      when(engine.getSearchTerm()).thenAnswer(
-          (_) async => const EngineEvent.searchTermRequestSucceeded(''));
+      when(engine.getActiveSearchTerm()).thenAnswer(
+          (_) async => const EngineEvent.activeSearchTermRequestSucceeded(''));
       return buildManager();
     },
     verify: (bloc) {

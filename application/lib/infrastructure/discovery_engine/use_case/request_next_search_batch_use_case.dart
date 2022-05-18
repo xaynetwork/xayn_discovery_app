@@ -16,17 +16,17 @@ class RequestNextSearchBatchUseCase extends UseCase<None, EngineEvent> {
 
   @override
   Stream<EngineEvent> transaction(None param) async* {
-    final event = await _engine.requestNextSearchBatch();
+    final event = await _engine.requestNextActiveSearchBatch();
 
     yield event;
 
-    if (event is! NextSearchBatchRequestSucceeded) {
+    if (event is! NextActiveSearchBatchRequestSucceeded) {
       final status = await _connectivityObserver.checkConnectivity();
 
       if (status == ConnectivityResult.none) {
         await _connectivityObserver.isUp();
 
-        yield await _engine.requestNextSearchBatch();
+        yield await _engine.requestNextActiveSearchBatch();
       }
     }
   }
