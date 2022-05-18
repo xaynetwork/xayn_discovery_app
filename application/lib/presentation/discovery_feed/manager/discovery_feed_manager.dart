@@ -22,6 +22,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/utils/engine_error_messages.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
@@ -57,7 +58,8 @@ abstract class DiscoveryFeedNavActions {
 class DiscoveryFeedManager extends BaseDiscoveryManager
     with
         RequestFeedMixin<DiscoveryState>,
-        CloseFeedDocumentsMixin<DiscoveryState>
+        CloseFeedDocumentsMixin<DiscoveryState>,
+        EngineErrorMessagesMixin
     implements DiscoveryFeedNavActions {
   /// The max card count of the feed
   /// If the count overflows, then n-cards will be removed from the beginning
@@ -325,6 +327,29 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       );
     };
   }
+
+  @override
+  Future<DiscoveryState?> computeState() async => fold(
+        engineEvents,
+      ).foldAll(
+        (
+          engineEvent,
+          errorReport,
+        ) async {
+          if (engineEvent is NextFeedBatchRequestFailed ||
+              engineEvent is EngineExceptionRaised) {
+            final errorMessage = getEngineEventErrorMessage(
+              engineEvent!,
+            );
+            showOverlay(
+              OverlayData.bottomSheetGenericError(
+                errorCode: errorMessage,
+              ),
+            );
+          }
+          return super.computeState();
+        },
+      );
 
   @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
