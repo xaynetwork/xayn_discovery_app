@@ -220,27 +220,27 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> closeSearch() {
-    _inputLog.add('[closeSearch]');
-    return safeRun(() => _engine.closeSearch());
+  Future<EngineEvent> closeActiveSearch() {
+    _inputLog.add('[closeActiveSearch]');
+    return safeRun(() => _engine.closeActiveSearch());
   }
 
   @override
-  Future<EngineEvent> requestNextSearchBatch() {
-    _inputLog.add('[requestNextSearchBatch]');
-    return safeRun(() => _engine.requestNextSearchBatch());
+  Future<EngineEvent> requestNextActiveSearchBatch() {
+    _inputLog.add('[requestNextActiveSearchBatch]');
+    return safeRun(() => _engine.requestNextActiveSearchBatch());
   }
 
   @override
-  Future<EngineEvent> requestSearch(String queryTerm) {
-    _inputLog.add('[requestSearch]\n<queryTerm> $queryTerm');
-    return safeRun(() => _engine.requestSearch(queryTerm));
+  Future<EngineEvent> requestQuerySearch(String queryTerm) {
+    _inputLog.add('[requestQuerySearch]\n<queryTerm> $queryTerm');
+    return safeRun(() => _engine.requestQuerySearch(queryTerm));
   }
 
   @override
-  Future<EngineEvent> restoreSearch() {
-    _inputLog.add('[restoreSearch]');
-    return safeRun(() => _engine.restoreSearch());
+  Future<EngineEvent> restoreActiveSearch() {
+    _inputLog.add('[restoreActiveSearch]');
+    return safeRun(() => _engine.restoreActiveSearch());
   }
 
   @override
@@ -256,9 +256,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> getSearchTerm() {
-    _inputLog.add('[getSearchTerm]');
-    return safeRun(() => _engine.getSearchTerm());
+  Future<EngineEvent> getActiveSearchTerm() {
+    _inputLog.add('[getActiveSearchTerm]');
+    return safeRun(() => _engine.getActiveSearchTerm());
   }
 
   @override
@@ -274,9 +274,9 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestTopic(String topic) {
-    _inputLog.add('[requestTopic]');
-    return safeRun(() => _engine.requestTopic(topic));
+  Future<EngineEvent> requestTopicSearch(String topic) {
+    _inputLog.add('[requestTopicSearch]');
+    return safeRun(() => _engine.requestTopicSearch(topic));
   }
 
   @override
