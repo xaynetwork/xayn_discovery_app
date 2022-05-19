@@ -136,6 +136,12 @@ class _FeaturesList extends StatelessWidget {
       );
 
   Widget _buildItem(Feature feature, bool isEnabled) {
+    final dataBuffer = StringBuffer()
+      ..writeln(' - owner: ${feature.owner}')
+      ..write(' - default: ${feature.defaultValue}');
+    if (feature.description != null) {
+      dataBuffer.write('\n - desc: ${feature.description}');
+    }
     final child = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -144,15 +150,19 @@ class _FeaturesList extends StatelessWidget {
           style: R.styles.textInputText.copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
-          '(by ${feature.author}, default: ${feature.defaultValue})',
+          dataBuffer.toString(),
           style: R.styles.textInputText,
         ),
       ],
     );
-    return MaterialButton(
+    final btn = MaterialButton(
       color: isEnabled ? Colors.green : Colors.grey,
       onPressed: () => featureManager.flipFlopFeature(feature),
       child: SizedBox(width: double.infinity, child: child),
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: btn,
     );
   }
 

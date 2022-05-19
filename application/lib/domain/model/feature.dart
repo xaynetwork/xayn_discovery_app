@@ -8,14 +8,16 @@ enum Feature {
   discoveryEngineReportOverlay('Simon', false),
   ratingDialog('Simon',
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
-  tts('Frank', false);
+  tts('Frank', false, 'Enables text-to-speech function for articles');
 
-  final String author;
+  final String owner;
+  final String? description;
   final bool defaultValue;
 
   const Feature(
-    this.author,
+    this.owner,
     this.defaultValue,
+    [this.description,]
   );
 }
 
