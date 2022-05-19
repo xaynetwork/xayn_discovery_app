@@ -137,7 +137,7 @@ class _FeaturesList extends StatelessWidget {
 
   Widget _buildItem(Feature feature, bool isEnabled) {
     final dataBuffer = StringBuffer()
-      ..writeln(' - owner: ${feature.owner}')
+      ..writeln(' - owner: ${feature.owner.name}')
       ..write(' - default: ${feature.defaultValue}');
     if (feature.description != null) {
       dataBuffer.write('\n - desc: ${feature.description}');
