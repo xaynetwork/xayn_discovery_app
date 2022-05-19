@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -43,6 +44,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   late final PersonalAreaManager _manager = di.get();
   late final CollectionCardManagersCache _collectionCardManagersCache =
       di.get();
+  late final FeatureManager _featureManager = di.get();
 
   @override
   void initState() {
@@ -69,6 +71,10 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             isActive: true,
             onPressed: hideTooltip,
           ),
+
+          /// Should be removed together with [Feature.survey]
+          if (_featureManager.isPromptSurveyEnabled)
+            buildSurveyButton(onPressed: _manager.onSurveyPressed),
         ],
       );
 
