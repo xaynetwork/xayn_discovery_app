@@ -1,8 +1,10 @@
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/feed_analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 const String _kEventType = 'documentIndexChanged';
+const String _kParamCardType = 'cardType';
 const String _kParamNextDocument = 'nextDocument';
 const String _kParamDirection = 'direction';
 
@@ -14,14 +16,16 @@ enum Direction { start, up, down }
 /// - [feedType] indicates the current screen the event was triggered from.
 class DocumentIndexChangedEvent extends FeedAnalyticsEvent {
   DocumentIndexChangedEvent({
-    required Document next,
+    Document? next,
+    required CardType cardType,
     required Direction direction,
     required FeedType feedType,
   }) : super(
           _kEventType,
           feedType: feedType,
           properties: {
-            _kParamNextDocument: next.toJson(),
+            _kParamCardType: cardType.name,
+            if (next != null) _kParamNextDocument: next.toJson(),
             _kParamDirection: direction.name,
           },
         );

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
@@ -168,10 +169,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
-  void handleIndexChanged(int index) async {
+  void handleIndexChanged(int index, Card card) async {
     if (index >= state.results.length) return;
 
-    final nextDocument = state.results.elementAt(index);
+    final nextDocument = card.document;
     late final int nextCardIndex;
 
     switch (feedType) {
@@ -192,16 +193,22 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             : Direction.up
         : Direction.start;
 
-    observeDocument(
-      document: nextDocument,
-      mode: _currentViewMode(nextDocument.documentId),
-    );
+    if (nextDocument != null) {
+      observeDocument(
+        document: nextDocument,
+        mode: _currentViewMode(nextDocument.documentId),
+      );
 
-    sendAnalyticsUseCase(DocumentIndexChangedEvent(
-      next: nextDocument,
-      direction: direction,
-      feedType: feedType,
-    ));
+      sendAnalyticsUseCase(DocumentIndexChangedEvent(
+        cardType: card.type,
+        next: nextDocument,
+        direction: direction,
+        feedType: feedType,
+      ));
+    } else {
+      // todo: log custom card analytics
+      observeDocument();
+    }
 
     scheduleComputeState(() {
       _cardIndex = nextCardIndex;

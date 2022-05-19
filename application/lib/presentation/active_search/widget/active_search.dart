@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/custom_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
@@ -54,10 +55,14 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   late final ActiveSearchManager _manager = di.get();
+  late final CustomCardManager _customCardManager = di.get();
   late final CardManagersCache _cardManagersCache = di.get();
 
   @override
   ActiveSearchManager get manager => _manager;
+
+  @override
+  CustomCardManager get customCardManager => _customCardManager;
 
   @override
   NavBarConfig get navBarConfig {

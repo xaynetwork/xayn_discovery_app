@@ -4,6 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/base_discovery/manager/custom_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
@@ -20,9 +21,13 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
 class _DiscoveryFeedState
     extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed> {
   late final DiscoveryFeedManager _manager = di.get();
+  late final CustomCardManager _customCardManager = di.get();
 
   @override
   DiscoveryFeedManager get manager => _manager;
+
+  @override
+  CustomCardManager get customCardManager => _customCardManager;
 
   @override
   NavBarConfig get navBarConfig {

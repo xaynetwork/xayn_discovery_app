@@ -4,6 +4,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart'
+    as item_renderer;
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
@@ -168,7 +170,8 @@ void main() async {
       await manager.stream.firstWhere((it) => it.results.isNotEmpty);
     },
     act: (manager) async {
-      manager.handleIndexChanged(1);
+      manager.handleIndexChanged(
+          1, item_renderer.Card.document(manager.state.results.elementAt(1)));
     },
     expect: () => [
       DiscoveryState(
