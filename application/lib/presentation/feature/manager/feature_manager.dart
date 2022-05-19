@@ -4,34 +4,12 @@ import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 import 'feature_manager_state.dart';
 
 FeatureMap kInitialFeatureMap = {
   for (var v in Feature.values) v: v.defaultValue
 };
-
-extension on Feature {
-  bool get defaultValue {
-    switch (this) {
-      case Feature.readerModeSettings:
-        return true;
-      case Feature.featuresScreen:
-        return EnvironmentHelper.kIsDebug ||
-            EnvironmentHelper.kIsInternalFlavor;
-      case Feature.discoveryEngineReportOverlay:
-        return false;
-      case Feature.payment:
-        return EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId;
-      case Feature.ratingDialog:
-        return EnvironmentHelper.kIsDebug ||
-            EnvironmentHelper.kIsInternalFlavor;
-      case Feature.tts:
-        return false;
-    }
-  }
-}
 
 @lazySingleton
 class FeatureManager extends Cubit<FeatureManagerState>
