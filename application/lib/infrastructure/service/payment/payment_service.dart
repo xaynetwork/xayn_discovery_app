@@ -87,10 +87,15 @@ class PaymentService {
 
   Future<PurchaserInfo> restore() {
     if (_useMockData) {
+      _hasMockActiveSubscription = true;
       return Future.delayed(
         PaymentMockData.randomDuration,
-        () => PaymentMockData.createPurchaserInfo(
-            withActiveSubscription: _hasMockActiveSubscription),
+        () {
+          final purchaserInfo = PaymentMockData.createPurchaserInfo(
+              withActiveSubscription: _hasMockActiveSubscription);
+          _controller.sink.add(purchaserInfo);
+          return purchaserInfo;
+        },
       );
     }
     return Purchases.restoreTransactions();
