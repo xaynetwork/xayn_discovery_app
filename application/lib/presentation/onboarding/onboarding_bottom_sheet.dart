@@ -84,8 +84,8 @@ class _OnboardingViewState extends State<_OnboardingView>
       },
     );
     return SizedBox(
-      width: R.dimen.unit29,
-      height: R.dimen.unit29,
+      width: R.dimen.bottomSheetAnimationSize,
+      height: R.dimen.bottomSheetAnimationSize,
       child: animation,
     );
   }
