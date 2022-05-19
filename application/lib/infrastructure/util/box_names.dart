@@ -10,11 +10,12 @@ enum BoxNames {
   feedTypeMarkets,
   explicitDocumentFeedback,
   readerModeSettings,
+  userInteractions,
   migrationInfo,
 }
 
 extension BoxNamesExtension on BoxNames {
   static List<BoxNames> get valuesWithoutMigrationInfo => BoxNames.values
-      .takeWhile((value) => value != BoxNames.migrationInfo)
+      .where((value) => value != BoxNames.migrationInfo)
       .toList();
 }
