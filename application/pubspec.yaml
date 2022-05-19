@@ -76,7 +76,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 12d56f2f882490a94482d81ad0c1d78221d2cd9e
+      ref: 13add57444eb2e4d5b8d97f79b3d68691b7843fd
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -161,6 +161,7 @@ flutter:
     - packages/xayn_design/assets/lottie/mange_collection.json
     - packages/xayn_design/assets/lottie/splash_screen.json
     - packages/xayn_design/assets/lottie/splash_screen_dark.json
+    - packages/xayn_design/assets/lottie/survey.json
 
     # lottie contextual illustrations
     - packages/xayn_design/assets/lottie/contextual/create_collection.json
