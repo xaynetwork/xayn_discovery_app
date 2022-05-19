@@ -28,7 +28,7 @@ class PaymentService {
 
   /// Mock data is used for non-release builds in order to test payment screens.
   bool get _useMockData =>
-      EnvironmentHelper.kAppId != EnvironmentHelper.releaseAppId;
+      EnvironmentHelper.kAppId != EnvironmentHelper.kReleaseAppId;
 
   /// Allow to test the purchase flow for non-release builds.
   bool _hasMockActiveSubscription = false;
