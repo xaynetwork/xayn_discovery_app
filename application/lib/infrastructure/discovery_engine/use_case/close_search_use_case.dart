@@ -10,6 +10,6 @@ class CloseSearchUseCase extends UseCase<None, EngineEvent> {
 
   @override
   Stream<EngineEvent> transaction(None param) async* {
-    yield await _engine.closeSearch();
+    yield await _engine.closeActiveSearch();
   }
 }

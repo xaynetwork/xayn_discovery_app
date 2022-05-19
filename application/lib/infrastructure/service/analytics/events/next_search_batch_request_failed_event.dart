@@ -5,7 +5,7 @@ const String _kEventType = 'nextSearchBatchRequestFailed';
 
 class NextSearchBatchRequestFailedEvent extends AnalyticsEvent {
   NextSearchBatchRequestFailedEvent({
-    required NextSearchBatchRequestFailed event,
+    required NextActiveSearchBatchRequestFailed event,
   }) : super(
           _kEventType,
           properties: event.toJson(),

@@ -118,9 +118,7 @@ bool _isCountryHasMultipleLanguages(String countryCode) =>
         .length >
     1;
 
-///TODO change to a real lazy initialization if possible
-// ignore: unnecessary_late
-late final _multiLanguageCountryMap = Map.fromEntries(
+final _multiLanguageCountryMap = Map.fromEntries(
   supportedFeedMarkets.map(
     (e) => MapEntry(
       e.countryCode,

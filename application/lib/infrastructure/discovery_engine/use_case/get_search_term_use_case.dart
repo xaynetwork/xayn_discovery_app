@@ -10,6 +10,6 @@ class GetSearchTermUseCase extends UseCase<None, EngineEvent> {
 
   @override
   Stream<EngineEvent> transaction(None param) async* {
-    yield await _engine.getSearchTerm();
+    yield await _engine.getActiveSearchTerm();
   }
 }

@@ -75,7 +75,7 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
     _lastUsedSearchTerm = await _restoreLastUsedSearchTerm();
 
     onResetParameters(_) => resetParameters();
-    onRestore(EngineEvent it) => it is RestoreSearchSucceeded
+    onRestore(EngineEvent it) => it is RestoreActiveSearchSucceeded
         ? {...it.items.map((it) => it.documentId)}
         : const <DocumentId>{};
     onError(Object e, StackTrace? s) =>
@@ -106,7 +106,7 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
     final getSearchTermUseCase = di.get<GetSearchTermUseCase>();
     final result = await getSearchTermUseCase.singleOutput(none);
 
-    return result is SearchTermRequestSucceeded
+    return result is ActiveSearchTermRequestSucceeded
         ? result.searchTerm
         : _lastUsedSearchTerm;
   }

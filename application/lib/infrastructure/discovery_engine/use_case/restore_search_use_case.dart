@@ -10,6 +10,6 @@ class RestoreSearchUseCase extends UseCase<None, EngineEvent> {
 
   @override
   Stream<EngineEvent> transaction(None param) async* {
-    yield await _engine.restoreSearch();
+    yield await _engine.restoreActiveSearch();
   }
 }

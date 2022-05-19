@@ -8,13 +8,18 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_feedback_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+
+const Duration _kExplicitLikeTimeSpentDuration = Duration(minutes: 1);
 
 mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
+  late final LogDocumentTimeUseCase _logDocumentTimeUseCase = di.get();
   UseCaseSink<DocumentFeedbackChange, EngineEvent>? _useCaseSink;
 
   @override
@@ -58,6 +63,18 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
             userReaction: userReaction,
           ),
         );
+
+        if (isExplicit && userReaction == UserReaction.positive) {
+          // To make explicit likes have more "weight", we also tell the engine
+          // that a _lot_ of time was spent with the same Document.
+          _logDocumentTimeUseCase(
+            LogData(
+              documentId: document.documentId,
+              mode: DocumentViewMode.reader,
+              duration: _kExplicitLikeTimeSpentDuration,
+            ),
+          );
+        }
 
         sendAnalyticsUseCase(
           DocumentFeedbackChangedEvent(
