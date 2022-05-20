@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 part 'discovery_state.freezed.dart';
 
@@ -15,7 +15,7 @@ class DiscoveryState with _$DiscoveryState {
   const DiscoveryState._();
 
   const factory DiscoveryState({
-    @Default(<Document>{}) Set<Document> results,
+    @Default(<Card>{}) Set<Card> cards,
     required int cardIndex,
     required bool isComplete,
     @Default(false) bool isFullScreen,
@@ -41,7 +41,7 @@ class DiscoveryState with _$DiscoveryState {
       didReachEnd == other.didReachEnd &&
       isInErrorState == other.isInErrorState &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
-      _setEquality.equals(results, other.results) &&
+      _setEquality.equals(cards, other.cards) &&
       subscriptionStatus == other.subscriptionStatus &&
       readerModeBackgroundColor == other.readerModeBackgroundColor;
 }

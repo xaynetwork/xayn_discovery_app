@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engin
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_search_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_search_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -64,6 +65,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
+    CustomCardInjectionUseCase customCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
   ) : super(
@@ -77,6 +79,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
+          customCardInjectionUseCase,
           featureManager,
           cardManagersCache,
         );
@@ -262,14 +265,14 @@ class ActiveSearchManager extends BaseDiscoveryManager
         ) async {
           if (engineEvent is NextFeedBatchRequestFailed ||
               engineEvent is EngineExceptionRaised) {
-            final errorMessage = getEngineEventErrorMessage(
+            /*final errorMessage = getEngineEventErrorMessage(
               engineEvent!,
             );
             showOverlay(
               OverlayData.bottomSheetGenericError(
                 errorCode: errorMessage,
               ),
-            );
+            );*/
           }
           return super.computeState();
         },

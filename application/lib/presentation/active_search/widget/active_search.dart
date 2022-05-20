@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/custom_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
@@ -55,14 +54,10 @@ class ActiveSearch extends BaseDiscoveryWidget<ActiveSearchManager> {
 class _ActiveSearchState
     extends BaseDiscoveryFeedState<ActiveSearchManager, ActiveSearch> {
   late final ActiveSearchManager _manager = di.get();
-  late final CustomCardManager _customCardManager = di.get();
   late final CardManagersCache _cardManagersCache = di.get();
 
   @override
   ActiveSearchManager get manager => _manager;
-
-  @override
-  CustomCardManager get customCardManager => _customCardManager;
 
   @override
   NavBarConfig get navBarConfig {
@@ -74,7 +69,7 @@ class _ActiveSearchState
               _manager.onHomeNavPressed();
             }),
             buildNavBarItemSearchActive(
-              autofocus: _manager.state.results.isEmpty,
+              autofocus: _manager.state.cards.isEmpty,
               hint: _manager.lastUsedSearchTerm,
               onSearchPressed: _manager.handleSearchTerm,
             ),
@@ -88,8 +83,8 @@ class _ActiveSearchState
           showAboveKeyboard: true,
         );
     NavBarConfig buildReaderMode() {
-      final document =
-          _manager.state.results.elementAt(_manager.state.cardIndex);
+      final card = _manager.state.cards.elementAt(_manager.state.cardIndex);
+      final document = card.requireDocument;
       final managers = _cardManagersCache.managersOf(document);
 
       void onBookmarkPressed() =>

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
@@ -84,8 +85,13 @@ mixin RequestFeedMixin<T extends DiscoveryState>
       return none;
     }
 
-    onCloseExplicitFeedback([_]) =>
-        _closeExplicitFeedback({...state.results.map((it) => it.documentId)});
+    onCloseExplicitFeedback([_]) => _closeExplicitFeedback(
+          {
+            ...state.cards
+                .where((it) => it.type == CardType.document)
+                .map((it) => it.requireDocument.documentId)
+          },
+        );
 
     onError(Object e, StackTrace? s) =>
         this.onError(e, s ?? StackTrace.current);

@@ -10,8 +10,6 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/custom_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/base_discovery/manager/custom_card_manager_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -74,7 +72,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   bool _trialBannerShown = false;
 
   T get manager;
-  CustomCardManager get customCardManager;
 
   CardViewController get cardViewController => _cardViewController;
 
@@ -97,8 +94,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         listener: (context, state) {
           ///TODO: Uncomment once TY-2592 is fixed
           // if (state.isInErrorState) showErrorBottomSheet();
-
-          customCardManager.updateListing(state.results);
           _showTrialBannerIfNeeded(state.subscriptionStatus);
         },
         builder: (context, state) {
@@ -108,11 +103,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
           // - etc...
           final topPadding = MediaQuery.of(context).viewPadding.top;
 
-          final feed = BlocBuilder<CustomCardManager, CustomCardManagerState>(
-            bloc: customCardManager,
-            builder: (context, customCardsState) =>
-                _buildFeedView(state, customCardsState),
-          );
+          final feed = _buildFeedView(state);
 
           final readerModeBgColor = state.readerModeBackgroundColor;
           final bgColor = readerModeBgColor == null
@@ -158,15 +149,12 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     super.initState();
   }
 
-  Widget _buildFeedView(
-    DiscoveryState state,
-    CustomCardManagerState customCardManagerState,
-  ) {
+  Widget _buildFeedView(DiscoveryState state) {
     return LayoutBuilder(builder: (context, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-      final results = customCardManagerState.cards;
-      final totalResults = results.length;
+      final cards = state.cards;
+      final totalResults = cards.length;
       final isMissingNoItemsBuilders =
           totalResults == 0 && widget.noItemsBuilder == null;
 
@@ -178,24 +166,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       if (state.cardIndex < totalResults &&
           _cardViewController.index != state.cardIndex) {
-        // since custom cards are added in a post-phase,
-        // we may need to count all custom cards, prior to the engine index,
-        // and just add that total to the engine count.
-        // e.g. manager returns 4 Documents,
-        // then, customCardManager inject a custom card in the middle,
-        // so then if the engine index is 3, it will become 4 instead,
-        // making up for the uncounted custom card at position 2.
-        final customCardsBeforeIndex = results
-            .take(state.cardIndex)
-            .where((it) => it.type != item_renderer.CardType.document)
-            .length;
-        final normalizedCardIndex = state.cardIndex + customCardsBeforeIndex;
-
-        _cardViewController.index = normalizedCardIndex;
+        _cardViewController.index = state.cardIndex;
       }
 
       onIndexChanged(int index) {
-        manager.handleIndexChanged(index, results.elementAt(index));
+        manager.handleIndexChanged(index);
         _ratingDialogManager.handleIndexChanged(index);
         ttsData = TtsData.disabled();
       }
@@ -204,19 +179,19 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         key: Keys.feedView,
         cardViewController: _cardViewController,
         itemBuilder: _itemBuilder(
-          results: results,
+          results: cards,
           isPrimary: true,
           isSwipingEnabled: !state.isFullScreen,
           isFullScreen: state.isFullScreen,
         ),
         secondaryItemBuilder: _itemBuilder(
-          results: results,
+          results: cards,
           isPrimary: false,
           isSwipingEnabled: true,
           isFullScreen: false,
         ),
         boxBorderBuilder: _boxBorderBuilder(
-          results: results,
+          results: cards,
           isFullScreen: state.isFullScreen,
         ),
         itemCount: totalResults,
@@ -225,7 +200,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         isFullScreen: state.isFullScreen,
         fullScreenOffsetFraction: _dragDistance / DiscoveryCard.dragThreshold,
         notchSize: notchSize,
-        cardIdentifierBuilder: _createUniqueCardIdentity(results),
+        cardIdentifierBuilder: _createUniqueCardIdentity(cards),
         noItemsBuilder: widget.noItemsBuilder,
         finalItemBuilder: state.didReachEnd
             ? widget.finalItemBuilder

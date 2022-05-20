@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -34,6 +35,7 @@ void main() {
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
+  late MockCustomCardInjectionUseCase customCardInjectionUseCase;
   late MockFeatureManager featureManager;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
@@ -43,6 +45,7 @@ void main() {
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
+    customCardInjectionUseCase = MockCustomCardInjectionUseCase();
     featureManager = MockFeatureManager();
 
     di
@@ -62,6 +65,12 @@ void main() {
     when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
+    when(customCardInjectionUseCase.transaction(any))
+        .thenAnswer((realInvocation) {
+      final Set<Document> documents = realInvocation.positionalArguments.first;
+
+      return Stream.value(documents.map(Card.document).toSet());
+    });
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -80,6 +89,7 @@ void main() {
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
+          customCardInjectionUseCase,
           featureManager,
           CardManagersCache(),
         );
@@ -138,7 +148,7 @@ void main() {
     verify: (bloc) {
       expect(bloc.state.isComplete, isTrue);
       expect(bloc.state.isInErrorState, isFalse);
-      expect(bloc.state.results, isNotEmpty);
+      expect(bloc.state.cards, isNotEmpty);
     },
   );
 

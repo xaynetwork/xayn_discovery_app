@@ -146,7 +146,7 @@ void main() async {
       when(fetchSessionUseCase.singleOutput(none))
           .thenAnswer((_) async => Session.start());
       // wait for requestFeed to complete
-      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+      await manager.stream.firstWhere((it) => it.cards.isNotEmpty);
     },
     verify: (manager) {
       verifyInOrder([
@@ -167,15 +167,15 @@ void main() async {
       when(fetchSessionUseCase.singleOutput(none))
           .thenAnswer((_) async => Session.withFeedRequested());
       // wait for requestFeed to complete
-      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+      await manager.stream.firstWhere((it) => it.cards.isNotEmpty);
     },
-    act: (manager) async {
-      manager.handleIndexChanged(
-          1, item_renderer.Card.document(manager.state.results.elementAt(1)));
-    },
+    act: (manager) async => manager.handleIndexChanged(1),
     expect: () => [
       DiscoveryState(
-        results: {fakeDocumentA, fakeDocumentB},
+        cards: {
+          item_renderer.Card.document(fakeDocumentA),
+          item_renderer.Card.document(fakeDocumentB),
+        },
         cardIndex: 1,
         isComplete: true,
         isFullScreen: false,
@@ -215,7 +215,7 @@ void main() async {
       });
 
       // wait for requestFeed to complete
-      await manager.stream.firstWhere((it) => it.results.isNotEmpty);
+      await manager.stream.firstWhere((it) => it.cards.isNotEmpty);
     },
     act: (manager) async {
       manager.closeFeedDocuments({fakeDocumentA.documentId});
@@ -288,7 +288,10 @@ void main() async {
       expect(
         manager.state,
         DiscoveryState(
-          results: {fakeDocumentA, fakeDocumentB},
+          cards: {
+            item_renderer.Card.document(fakeDocumentA),
+            item_renderer.Card.document(fakeDocumentB),
+          },
           cardIndex: 0,
           isComplete: false,
           isFullScreen: true,
