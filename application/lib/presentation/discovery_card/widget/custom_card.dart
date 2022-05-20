@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
@@ -28,28 +29,39 @@ class CustomCard extends StatelessWidget {
       Text(
         R.strings.takeSurveyTitle,
         textAlign: TextAlign.center,
-        style: R.styles.lBoldStyle,
+        style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
       ),
       SizedBox(height: R.dimen.unit2),
       Text(
         R.strings.takeSurveySubtitle,
         textAlign: TextAlign.center,
+        style: R.styles.mStyle.copyWith(color: R.colors.brightText),
       ),
       SizedBox(height: R.dimen.unit2_5),
       _buildTakeSurveyBtn(),
     ];
 
-    return Container(
-      color: R.colors.swipeBackgroundNeutral,
-      padding: EdgeInsets.symmetric(
-        horizontal: R.dimen.unit4,
-        vertical: R.dimen.unit6,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
-      ),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: CustomPaint(
+            painter: StaticPainter(
+              shadowColor: R.colors.shadow,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: R.dimen.unit4,
+            vertical: R.dimen.unit6,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          ),
+        ),
+      ],
     );
   }
 
