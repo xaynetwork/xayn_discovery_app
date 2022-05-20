@@ -98,14 +98,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.cardManagersCache,
   ) : super(DiscoveryState.initial());
 
-  late final engineEventMapper = foldEngineEvent(this);
   late final UseCaseValueStream<Set<Card>> cardStream = consume(
     engineEventsUseCase,
     initialData: none,
   ).transform(
     (out) => out
         .doOnData(onEngineEvent)
-        .map(engineEventMapper)
+        .map((it) => foldEngineEvent(this)(it))
         .followedBy(customCardInjectionUseCase),
   );
   late final UseCaseValueStream<int> cardIndexConsumer =

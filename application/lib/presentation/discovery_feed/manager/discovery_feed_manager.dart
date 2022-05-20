@@ -132,7 +132,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     var cardIndex = currentCardIndex!;
     final flaggedForDisposal = cards.take(cards.length - _maxCardCount).toSet();
 
-    nextCards = nextCards..removeAll(flaggedForDisposal);
+    nextCards.removeAll(flaggedForDisposal);
     cardIndex =
         nextCards.map((it) => it.document).toList().indexOf(observedDocument);
 
