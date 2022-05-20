@@ -99,11 +99,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   ) : super(DiscoveryState.initial());
 
   late final engineEventMapper = foldEngineEvent(this);
-  late final UseCaseValueStream<Set<Card>> engineEvents = consume(
+  late final UseCaseValueStream<Set<Card>> cardStream = consume(
     engineEventsUseCase,
     initialData: none,
   ).transform(
-    (out) => out.map(engineEventMapper).followedBy(customCardInjectionUseCase),
+    (out) => out
+        .doOnData(onEngineEvent)
+        .map(engineEventMapper)
+        .followedBy(customCardInjectionUseCase),
   );
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: feedType)
@@ -142,6 +145,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Document? get currentObservedDocument => _observedDocument;
 
   int? get currentCardIndex => _cardIndex;
+
+  void onEngineEvent(EngineEvent event);
 
   void maybeNavigateIntoCard(Document document) =>
       checkIfDocumentNotProcessable(
@@ -306,7 +311,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Future<DiscoveryState?> computeState() async => fold5(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
-        engineEvents,
+        cardStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
       ).foldAll((
@@ -321,9 +326,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final requireCards = cards ?? const {};
-        final isInErrorState =
-            errorReport.isNotEmpty /* || engineEvent is EngineExceptionRaised*/;
+        final requireCards = cards ?? state.cards;
         final sets = await maybeReduceCardCount(requireCards);
         final nextCardIndex = sets.nextCardIndex;
 
@@ -332,7 +335,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             'cardIndexConsumer': errorReport.of(cardIndexConsumer).toString(),
             'crudExplicitDocumentFeedbackConsumer':
                 errorReport.of(crudExplicitDocumentFeedbackConsumer).toString(),
-            'engineEvents': errorReport.of(engineEvents).toString(),
+            'engineEvents': errorReport.of(cardStream).toString(),
             'subscriptionStatusHandler':
                 errorReport.of(subscriptionStatusHandler).toString(),
             'readerModeSettingsHandler':
@@ -350,7 +353,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         final nextState = DiscoveryState(
           cards: sets.cards,
           isComplete: !isLoading,
-          isInErrorState: isInErrorState,
           isFullScreen: _isFullScreen,
           didReachEnd: didReachEnd,
           cardIndex: _cardIndex!,

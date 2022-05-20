@@ -65,6 +65,8 @@ void main() {
     when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
+    when(customCardInjectionUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(customCardInjectionUseCase.transaction(any))
         .thenAnswer((realInvocation) {
       final Set<Document> documents = realInvocation.positionalArguments.first;
@@ -147,31 +149,7 @@ void main() {
     },
     verify: (bloc) {
       expect(bloc.state.isComplete, isTrue);
-      expect(bloc.state.isInErrorState, isFalse);
       expect(bloc.state.cards, isNotEmpty);
-    },
-  );
-
-  blocTest<ActiveSearchManager, DiscoveryState>(
-    'GIVEN use case throws an error THEN the error state is true',
-    build: () {
-      when(engine.restoreActiveSearch()).thenAnswer(
-        (_) async =>
-            const EngineExceptionRaised(EngineExceptionReason.genericError),
-      );
-      when(engine.engineEvents).thenAnswer(
-        (_) => Stream.value(
-          const EngineExceptionRaised(EngineExceptionReason.genericError),
-        ),
-      );
-      when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
-          .thenAnswer((_) async => false);
-      when(engine.getActiveSearchTerm()).thenAnswer(
-          (_) async => const EngineEvent.activeSearchTermRequestSucceeded(''));
-      return buildManager();
-    },
-    verify: (bloc) {
-      expect(bloc.state.isInErrorState, isTrue);
     },
   );
 }

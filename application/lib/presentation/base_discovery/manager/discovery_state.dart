@@ -19,7 +19,6 @@ class DiscoveryState with _$DiscoveryState {
     required int cardIndex,
     required bool isComplete,
     @Default(false) bool isFullScreen,
-    required bool isInErrorState,
     ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
     @Default(false) bool shouldUpdateNavBar,
     required bool didReachEnd,
@@ -30,7 +29,6 @@ class DiscoveryState with _$DiscoveryState {
   factory DiscoveryState.initial() => const DiscoveryState(
         cardIndex: 0,
         isComplete: false,
-        isInErrorState: false,
         didReachEnd: false,
       );
 
@@ -39,7 +37,6 @@ class DiscoveryState with _$DiscoveryState {
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
       didReachEnd == other.didReachEnd &&
-      isInErrorState == other.isInErrorState &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(cards, other.cards) &&
       subscriptionStatus == other.subscriptionStatus &&

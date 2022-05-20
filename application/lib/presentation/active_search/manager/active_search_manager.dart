@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -256,32 +255,22 @@ class ActiveSearchManager extends BaseDiscoveryManager
   }
 
   @override
-  Future<DiscoveryState?> computeState() async => fold(
-        engineEvents,
-      ).foldAll(
-        (
-          engineEvent,
-          errorReport,
-        ) async {
-          if (engineEvent is NextFeedBatchRequestFailed ||
-              engineEvent is EngineExceptionRaised) {
-            /*final errorMessage = getEngineEventErrorMessage(
-              engineEvent!,
-            );
-            showOverlay(
-              OverlayData.bottomSheetGenericError(
-                errorCode: errorMessage,
-              ),
-            );*/
-          }
-          return super.computeState();
-        },
-      );
-
-  @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
     if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
       _activeSearchNavActions.onTrialExpired();
+    }
+  }
+
+  @override
+  void onEngineEvent(EngineEvent event) {
+    if (event is NextFeedBatchRequestFailed || event is EngineExceptionRaised) {
+      final errorMessage = getEngineEventErrorMessage(event);
+
+      showOverlay(
+        OverlayData.bottomSheetGenericError(
+          errorCode: errorMessage,
+        ),
+      );
     }
   }
 }

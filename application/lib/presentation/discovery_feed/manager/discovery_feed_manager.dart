@@ -334,29 +334,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   }
 
   @override
-  Future<DiscoveryState?> computeState() async => fold(
-        engineEvents,
-      ).foldAll(
-        (
-          engineEvent,
-          errorReport,
-        ) async {
-          /*if (engineEvent is NextFeedBatchRequestFailed ||
-              engineEvent is EngineExceptionRaised) {
-            final errorMessage = getEngineEventErrorMessage(
-              engineEvent!,
-            );
-            showOverlay(
-              OverlayData.bottomSheetGenericError(
-                errorCode: errorMessage,
-              ),
-            );
-          }*/
-          return super.computeState();
-        },
-      );
-
-  @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
     if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
       _discoveryFeedNavActions.onTrialExpired();
@@ -381,5 +358,18 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       _markOnboardingTypeCompletedUseCase.call(type);
     });
     showOverlay(data);
+  }
+
+  @override
+  void onEngineEvent(EngineEvent event) {
+    if (event is NextFeedBatchRequestFailed || event is EngineExceptionRaised) {
+      final errorMessage = getEngineEventErrorMessage(event);
+
+      showOverlay(
+        OverlayData.bottomSheetGenericError(
+          errorCode: errorMessage,
+        ),
+      );
+    }
   }
 }
