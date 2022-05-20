@@ -221,6 +221,10 @@ class Translations {
       OnboardingBottomDialogTranslations(this);
   GeneralTranslations get general => GeneralTranslations(this);
   String get subscriptionDurationMonth => """month""";
+  String get takeSurveyTitle => """Wanna help us improve the app?""";
+  String get takeSurveySubtitle =>
+      """We would love to hear it and make it better for you.""";
+  String get takeSurveyCTA => """Take me to the survey""";
 }
 
 class PaymentFlowErrorTranslations {

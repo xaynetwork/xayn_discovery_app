@@ -10,11 +10,13 @@ class CustomCardInjectionUseCase extends UseCase<Set<Document>, Set<Card>> {
     // todo This use case should act upon the logic, which triggers whenever
     // we should show the survey.
     // When the trigger occurs, simply follow the code below:
-    const shouldShowSurvey = 1 == 2; // make this dynamic!
     final transformed = param.map(Card.document).toSet();
 
-    if (shouldShowSurvey) {
-      yield {const Card.other(CardType.survey), ...transformed};
+    if (transformed.length >= 2) {
+      final customCardInjectedList = transformed.toList()
+        ..insert(2, const Card.other(CardType.survey));
+
+      yield customCardInjectedList.toSet();
     } else {
       yield transformed;
     }
