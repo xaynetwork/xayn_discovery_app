@@ -31,9 +31,8 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
   void observeDocument({
     Document? document,
     DocumentViewMode? mode,
-    OnObservation? onObservation,
   }) {
-    _useCaseSink ??= _getUseCaseSink(onObservation);
+    _useCaseSink ??= _getUseCaseSink();
 
     _useCaseSink!(
       DiscoveryCardObservation(
@@ -50,16 +49,26 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
     super.onCancel();
   }
 
-  UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink(
-      OnObservation? onObservation) {
+  UseCaseSink<DiscoveryCardObservation, EngineEvent> _getUseCaseSink() {
     final useCase = di.get<LogDocumentTimeUseCase>();
     final discoveryCardObservationUseCase =
         di.get<DiscoveryCardObservationUseCase>();
     final discoveryCardMeasuredObservationUseCase =
         di.get<DiscoveryCardMeasuredObservationUseCase>();
     final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
-    final changeDocumentFeedbackUseCase =
-        di.get<ChangeDocumentFeedbackUseCase>();
+
+    observeAndTrack(DiscoveryCardMeasuredObservation observation) {
+      final document = observation.document!;
+
+      sendAnalyticsUseCase(
+        DocumentTimeSpentEvent(
+            document: document,
+            duration: observation.duration,
+            viewMode: observation.viewType!),
+      );
+
+      onObservation(observation);
+    }
 
     return pipe(discoveryCardObservationUseCase).transform(
       (out) => out
@@ -75,13 +84,7 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
               it.viewType != null &&
               it.duration.inSeconds > 0 &&
               isDocumentCurrentlyDisplayed(it.document!))
-          .doOnData(
-            _onObservation(
-              sendAnalyticsUseCase: sendAnalyticsUseCase,
-              changeDocumentFeedbackUseCase: changeDocumentFeedbackUseCase,
-              onObservation: onObservation,
-            ),
-          )
+          .doOnData(observeAndTrack)
           .map((it) => LogData(
                 documentId: it.document!.documentId,
                 mode: it.viewType!,
@@ -95,21 +98,6 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
   @mustCallSuper
   bool isDocumentCurrentlyDisplayed(Document document);
 
-  void Function(DiscoveryCardMeasuredObservation) _onObservation({
-    required SendAnalyticsUseCase sendAnalyticsUseCase,
-    required ChangeDocumentFeedbackUseCase changeDocumentFeedbackUseCase,
-    OnObservation? onObservation,
-  }) =>
-      (DiscoveryCardMeasuredObservation observation) {
-        final document = observation.document!;
-
-        sendAnalyticsUseCase(
-          DocumentTimeSpentEvent(
-              document: document,
-              duration: observation.duration,
-              viewMode: observation.viewType!),
-        );
-
-        onObservation?.call(observation);
-      };
+  @mustCallSuper
+  void onObservation(DiscoveryCardMeasuredObservation observation) {}
 }
