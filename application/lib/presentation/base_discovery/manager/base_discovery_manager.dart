@@ -195,7 +195,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     observeDocument(
       document: nextDocument,
       mode: _currentViewMode(nextDocument.documentId),
-      onObservation: _onObservation,
     );
 
     sendAnalyticsUseCase(DocumentIndexChangedEvent(
@@ -223,7 +222,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       observeDocument(
         document: document,
         mode: mode,
-        onObservation: _onObservation,
       );
     }
   }
@@ -245,7 +243,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       mode: isAppInForeground
           ? _currentViewMode(observedDocument.documentId)
           : null,
-      onObservation: _onObservation,
     );
   }
 
@@ -364,7 +361,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
 
   /// secondary observation action, check if we should implicitly like the [Document]
-  void _onObservation(DiscoveryCardMeasuredObservation observation) {
+  @override
+  void onObservation(DiscoveryCardMeasuredObservation observation) {
+    super.onObservation(observation);
+
     final document = observation.document!;
     final isCardOpened = observation.viewType != DocumentViewMode.story;
     final isObservedLongEnough = observation.duration.inSeconds >=
