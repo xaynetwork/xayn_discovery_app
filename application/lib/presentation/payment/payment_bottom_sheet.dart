@@ -5,6 +5,8 @@ import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
@@ -21,11 +23,21 @@ class PaymentBottomSheet extends BottomSheetBase {
         );
 }
 
-class _Payment extends StatelessWidget with BottomSheetBodyMixin {
-  late final manager = di.get<PaymentScreenManager>();
+class _Payment extends StatefulWidget {
   final VoidCallback onClosePressed;
 
-  _Payment(this.onClosePressed);
+  const _Payment(this.onClosePressed);
+
+  @override
+  State<_Payment> createState() => _PaymentState();
+}
+
+class _PaymentState extends State<_Payment>
+    with BottomSheetBodyMixin, OverlayMixin<_Payment> {
+  late final manager = di.get<PaymentScreenManager>();
+
+  @override
+  OverlayManager get overlayManager => manager.overlayManager;
 
   @override
   Widget build(BuildContext context) =>
@@ -54,7 +66,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
       state.whenOrNull(ready: (product) {
         if (product.status.isPurchased || product.status.isRestored) {
           closeBottomSheet(context);
-          onClosePressed();
+          widget.onClosePressed();
         }
         return null;
       });
@@ -81,7 +93,7 @@ class _Payment extends StatelessWidget with BottomSheetBodyMixin {
         onCancel: () {
           manager.cancel();
           closeBottomSheet(context);
-          onClosePressed();
+          widget.onClosePressed();
         },
         padding: EdgeInsets.zero,
       );
