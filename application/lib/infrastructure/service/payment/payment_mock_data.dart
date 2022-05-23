@@ -12,7 +12,7 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 class PaymentMockData {
   PaymentMockData._();
 
-  static Duration get randomDuration => EnvironmentHelper.kIsInTest
+  static Duration get requestSimulationDuration => EnvironmentHelper.kIsInTest
       ? const Duration()
       : Duration(seconds: Random().nextInt(3));
 
