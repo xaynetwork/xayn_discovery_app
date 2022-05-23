@@ -26,6 +26,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_re
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -74,6 +76,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final RatingDialogManager _ratingDialogManager;
   final AppManager _appManager;
+  final SaveUserInteractionUseCase _saveUserInteractionUseCase;
 
   /// html reader mode elements:
   ///
@@ -143,6 +146,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._crudDocumentFilterUseCase,
     this._ratingDialogManager,
     this._appManager,
+    this._saveUserInteractionUseCase,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -180,6 +184,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
       );
     }
+
+    _saveUserInteractionUseCase
+        .singleOutput(UserInteractionsEvents.likeOrDislikedArticle);
 
     changeUserReaction(
       document: document,

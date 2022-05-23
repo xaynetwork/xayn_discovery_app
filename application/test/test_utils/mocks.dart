@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
+import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
@@ -233,6 +234,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   UniqueIdHandler,
   UpdateSessionUseCase,
   UrlOpener,
+  UserInteractionsRepository,
   DeepLinkManager,
   MarketingAnalyticsService,
   CountryFeedSettingsNavActions,
