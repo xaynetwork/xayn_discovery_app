@@ -16,6 +16,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/utils/engine_error_messages.dart';
@@ -66,6 +68,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
+    SaveUserInteractionUseCase saveUserInteractionUseCase,
   ) : super(
           FeedType.search,
           engineEventsUseCase,
@@ -79,6 +82,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           listenReaderModeSettingsUseCase,
           featureManager,
           cardManagersCache,
+          saveUserInteractionUseCase,
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;
@@ -104,6 +108,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
         _isLoading = true;
         _didReachEnd = false;
         resetCardIndex();
+
+        saveUserInteractionUseCase
+            .singleOutput(UserInteractionsEvents.searchExecuted);
 
         search(searchTerm);
       });

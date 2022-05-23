@@ -20,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboa
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/utils/engine_error_messages.dart';
@@ -83,6 +84,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
+    SaveUserInteractionUseCase saveUserInteractionUseCase,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
@@ -97,6 +99,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           listenReaderModeSettingsUseCase,
           featureManager,
           cardManagersCache,
+          saveUserInteractionUseCase,
         );
 
   late final FetchSessionUseCase _fetchSessionUseCase;
