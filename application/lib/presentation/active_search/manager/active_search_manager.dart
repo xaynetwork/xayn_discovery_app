@@ -27,15 +27,15 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 typedef OnSearchRequestSucceeded = Set<Document> Function(
-    SearchRequestSucceeded event);
+    ActiveSearchRequestSucceeded event);
 typedef OnRestoreSearchSucceeded = Set<Document> Function(
-    RestoreSearchSucceeded event);
+    RestoreActiveSearchSucceeded event);
 typedef OnNextSearchBatchRequestSucceeded = Set<Document> Function(
-    NextSearchBatchRequestSucceeded event);
+    NextActiveSearchBatchRequestSucceeded event);
 typedef OnNextSearchBatchRequestFailed = Set<Document> Function(
-    NextSearchBatchRequestFailed event);
+    NextActiveSearchBatchRequestFailed event);
 typedef OnRestoreSearchFailed = Set<Document> Function(
-    RestoreSearchFailed event);
+    RestoreActiveSearchFailed event);
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -171,15 +171,15 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
             lastEvent = event;
 
-            if (event is SearchRequestSucceeded) {
+            if (event is ActiveSearchRequestSucceeded) {
               self._isLoading = false;
               self._didReachEnd =
                   event.items.length < AppDiscoveryEngine.searchPageSize;
               lastResults = searchRequestSucceeded(event);
-            } else if (event is RestoreSearchSucceeded) {
+            } else if (event is RestoreActiveSearchSucceeded) {
               self._isLoading = false;
               lastResults = restoreSearchSucceeded(event);
-            } else if (event is NextSearchBatchRequestSucceeded) {
+            } else if (event is NextActiveSearchBatchRequestSucceeded) {
               self._isLoading = false;
               self._didReachEnd = event.items.isEmpty;
               lastResults = nextSearchBatchRequestSucceeded(event);
@@ -187,10 +187,10 @@ class ActiveSearchManager extends BaseDiscoveryManager
               lastResults = documentsUpdated(event);
             } else if (event is EngineExceptionRaised) {
               lastResults = engineExceptionRaised(event);
-            } else if (event is NextSearchBatchRequestFailed) {
+            } else if (event is NextActiveSearchBatchRequestFailed) {
               self._didReachEnd = false;
               lastResults = nextSearchBatchRequestFailed(event);
-            } else if (event is RestoreSearchFailed) {
+            } else if (event is RestoreActiveSearchFailed) {
               self._isLoading = false;
               lastResults = restoreSearchFailed(event);
             } else {
