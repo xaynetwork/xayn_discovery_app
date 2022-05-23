@@ -137,6 +137,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
     WidgetsBinding.instance.removeObserver(this);
 
+    // on dispose, no longer observe any documents
+    // this Function's argument is nullable Document, by not passing anything,
+    // it stops the observer buffer.
+    manager.observeDocument();
+
     super.dispose();
   }
 
