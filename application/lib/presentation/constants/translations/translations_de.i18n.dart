@@ -227,6 +227,10 @@ class TranslationsDe extends Translations {
       OnboardingBottomDialogTranslationsDe(this);
   GeneralTranslationsDe get general => GeneralTranslationsDe(this);
   String get subscriptionDurationMonth => """month""";
+  String get takeSurveyTitle => """Wanna help us improve the app?""";
+  String get takeSurveySubtitle =>
+      """We would love to hear it and make it better for you.""";
+  String get takeSurveyCTA => """Take me to the survey""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -450,4 +454,8 @@ Map<String, String> get translationsDeMap => {
           """Long press or swipe to manage your bookmarks""",
       """general.btnClose""": """Close""",
       """subscriptionDurationMonth""": """month""",
+      """takeSurveyTitle""": """Wanna help us improve the app?""",
+      """takeSurveySubtitle""":
+          """We would love to hear it and make it better for you.""",
+      """takeSurveyCTA""": """Take me to the survey""",
     };

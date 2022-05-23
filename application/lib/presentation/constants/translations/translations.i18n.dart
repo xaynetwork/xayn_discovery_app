@@ -440,4 +440,8 @@ Map<String, String> get translationsMap => {
           """Long press or swipe to manage your bookmarks""",
       """general.btnClose""": """Close""",
       """subscriptionDurationMonth""": """month""",
+      """takeSurveyTitle""": """Wanna help us improve the app?""",
+      """takeSurveySubtitle""":
+          """We would love to hear it and make it better for you.""",
+      """takeSurveyCTA""": """Take me to the survey""",
     };

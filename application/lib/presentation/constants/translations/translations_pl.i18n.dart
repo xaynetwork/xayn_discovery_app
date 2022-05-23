@@ -224,6 +224,10 @@ class TranslationsPl extends Translations {
       OnboardingBottomDialogTranslationsPl(this);
   GeneralTranslationsPl get general => GeneralTranslationsPl(this);
   String get subscriptionDurationMonth => """miesiąc""";
+  String get takeSurveyTitle => """Wanna help us improve the app?""";
+  String get takeSurveySubtitle =>
+      """We would love to hear it and make it better for you.""";
+  String get takeSurveyCTA => """Take me to the survey""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -446,4 +450,8 @@ Map<String, String> get translationsPlMap => {
           """Long press or swipe to manage your bookmarks""",
       """general.btnClose""": """Close""",
       """subscriptionDurationMonth""": """miesiąc""",
+      """takeSurveyTitle""": """Wanna help us improve the app?""",
+      """takeSurveySubtitle""":
+          """We would love to hear it and make it better for you.""",
+      """takeSurveyCTA""": """Take me to the survey""",
     };

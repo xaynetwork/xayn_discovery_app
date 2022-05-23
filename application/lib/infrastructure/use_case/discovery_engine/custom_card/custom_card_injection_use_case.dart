@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @injectable
@@ -11,6 +12,9 @@ class CustomCardInjectionUseCase extends UseCase<Set<Document>, Set<Card>> {
   /// is not static, older cards are removed as you keep swiping down,
   /// thus a logical index is not kept.
   Document? nextDocumentSibling;
+  final FeatureManager featureManager;
+
+  CustomCardInjectionUseCase(this.featureManager);
 
   @override
   Stream<Set<Card>> transaction(Set<Document> param) async* {
@@ -19,7 +23,9 @@ class CustomCardInjectionUseCase extends UseCase<Set<Document>, Set<Card>> {
     // When the trigger occurs, simply follow the code below:
 
     // --- fake trigger code start
-    if (nextDocumentSibling == null && param.length > 2) {
+    if (featureManager.isCustomInlineCardEnabled &&
+        nextDocumentSibling == null &&
+        param.length > 2) {
       nextDocumentSibling = param.elementAt(2);
     }
     // --- fake trigger code end
