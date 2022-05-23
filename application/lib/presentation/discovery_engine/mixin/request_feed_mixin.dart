@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/upda
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -37,6 +38,15 @@ mixin RequestFeedMixin<T extends DiscoveryState>
   }
 
   void resetParameters([int nextCardIndex = 0]);
+
+  /// This method is implemented in [ObserveDocumentMixin.observeDocument].
+  /// We need the abstract version here as well, so that it can be called from
+  /// this mixin too.
+  void observeDocument({
+    Document? document,
+    DocumentViewMode? mode,
+    OnObservation? onObservation,
+  });
 
   @override
   Stream<T> get stream {
@@ -120,6 +130,8 @@ mixin RequestFeedMixin<T extends DiscoveryState>
 
     // rebuilds the feed when the market(s) change
     makeMarketChangedFeed(Stream<bool> stream) => stream
+        .doOnData((_) => logger.i('- stop document observation'))
+        .doOnData((_) => observeDocument())
         .doOnData((_) => logger.i('- onCloseExplicitFeedback'))
         // cleanup the old feed, from the previous market
         .asyncMap(onCloseExplicitFeedback)
