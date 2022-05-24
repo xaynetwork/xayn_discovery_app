@@ -45,7 +45,6 @@ mixin RequestFeedMixin<T extends DiscoveryState>
   void observeDocument({
     Document? document,
     DocumentViewMode? mode,
-    OnObservation? onObservation,
   });
 
   @override
