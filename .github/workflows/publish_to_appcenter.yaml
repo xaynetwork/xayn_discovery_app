@@ -203,7 +203,7 @@ jobs:
         run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
-        timeout-minutes: 20
+        timeout-minutes: 25
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
@@ -254,7 +254,7 @@ jobs:
         run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
-        timeout-minutes: 20
+        timeout-minutes: 25
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_BETA_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}
