@@ -140,7 +140,7 @@ module Config
     Flavors::BETA => {
       Platforms::IOS => {
         Keys::ID => "com.xayn.discovery",
-        Keys::NAME => "Xayn News (Beta)",
+        Keys::NAME => "Xayn News",
         # Discoveru is correct!! :P
         Keys::APPCENTER_TARGET => "Discoveru-App-iOS-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_IOS_BETA_TOKEN",
@@ -148,7 +148,7 @@ module Config
       },
       Platforms::ANDROID => {
         Keys::ID => "com.xayn.discovery",
-        Keys::NAME => "Xayn News (Beta)",
+        Keys::NAME => "Xayn News",
         Keys::APPCENTER_TARGET => "Discovery-App-Android-beta",
         Keys::APPCENTER_TOKEN => "APPCENTER_ANDROID_BETA_TOKEN",
         Keys::BUILD_NUMBER_OFFSET => betaBuildNumberOffset,
