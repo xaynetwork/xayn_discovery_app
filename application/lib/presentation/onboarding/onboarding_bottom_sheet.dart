@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 class OnboardingBottomSheet extends BottomSheetBase {
   OnboardingBottomSheet({
@@ -33,25 +33,6 @@ class _OnboardingView extends StatefulWidget {
 
 class _OnboardingViewState extends State<_OnboardingView>
     with BottomSheetBodyMixin, TickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _controller.forward(from: 0);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final text = _buildText();
@@ -72,23 +53,11 @@ class _OnboardingViewState extends State<_OnboardingView>
     return column;
   }
 
-  Widget _buildAnimation() {
-    final animation = Lottie.asset(
-      _getAnimationPath(),
-      repeat: true,
-      controller: _controller,
-      onLoaded: (composition) {
-        _controller
-          ..duration = composition.duration
-          ..forward();
-      },
-    );
-    return SizedBox(
-      width: R.dimen.bottomSheetAnimationSize,
-      height: R.dimen.bottomSheetAnimationSize,
-      child: animation,
-    );
-  }
+  Widget _buildAnimation() => AnimationPlayer.asset(
+        _getAnimationPath(),
+        width: R.dimen.bottomSheetAnimationSize,
+        height: R.dimen.bottomSheetAnimationSize,
+      );
 
   Widget _buildCloseBtn() => SizedBox(
         width: double.maxFinite,
