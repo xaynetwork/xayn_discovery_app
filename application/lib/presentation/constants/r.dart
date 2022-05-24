@@ -8,9 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/translations/translati
 class R {
   const R._();
 
-  ///TODO change to a real lazy initialization
-  // ignore: unnecessary_late
-  static late Linden _linden = Linden();
+  static Linden _linden = Linden();
 
   static Linden get linden => _linden;
 

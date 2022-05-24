@@ -5,7 +5,7 @@ const String _kEventType = 'restoreSearchFailed';
 
 class RestoreSearchFailedEvent extends AnalyticsEvent {
   RestoreSearchFailedEvent({
-    required RestoreSearchFailed event,
+    required RestoreActiveSearchFailed event,
   }) : super(
           _kEventType,
           properties: event.toJson(),
