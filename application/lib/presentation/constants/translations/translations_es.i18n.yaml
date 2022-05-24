@@ -85,7 +85,7 @@ trialBannerEndsIn: Tu prueba finaizará en %s días
 trialBannerEndsTomorrow: Tu prueba finalizará mañana
 trialBannerEndsToday: Tu prueba termina hoy
 trialBannerExpired: Tu prueba terminó
-subscriptionHeader: Consigue contenido ilimitado únicamente por
+subscriptionHeader: Consigue Xayn ilimitado por solo
 subscriptionPricingError: Incapaz de recuperar los precios
 subscriptionPerk1: Flujo personalizado
 subscriptionPerk2: Sin anuncios
@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Transacción de pago fallida
-  noActiveSubscriptionFound: No pudimos encontrar ninguna subscripción activa para esta cuenta.
+  noActiveSubscriptionFound: No se encontró ninguna suscripción activa para esta cuenta
 bottomSheetDeleteCollectionWithNoItemsBody: Estás seguro de que quieres borrar esta colección?
 bottomSheetMoveSingleBookmark: Moverse a otra colección
 readerModeSettingsErrorChangesNotApplied: Los cambios no pudieron ser aplicado
@@ -147,19 +147,23 @@ settingsSectionHomeFeed: Configuración del feed
 paymentPromoCodeAndroidBottomSheetTitle: Tienes un código promocional?
 paymentPromoCodeAndroidBottomSheetBody: Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.
 paymentFailedBottomSheetTitle: Pago fallido
-paymentFailedBottomSheetBody: La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.
+paymentFailedBottomSheetBody: La Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.
 readerModeUnableToLoadTitle: No pudimos cargar el contenido
 readerModeUnableToLoadDesc: Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.
 readerModeUnableToLoadCTA: Abrir en el navegador
 noInternetConnection: No hay conexión de internet
-invalidSearch: Please enter a valid search term
+invalidSearch: Ingrese un término de búsqueda válido
 onboardingBottomDialog:
-  homeSwipeVerticalTitle: Swipe upwards to see the next article
-  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
-  homeSwipeSideTitle: Swipe sideways to like or dislike
-  homeManageBookmarksTitle: Long press the save button to manage it
-  collectionManageTitle: Long press or swipe to manage your collections
-  bookmarksManageTitle: Long press or swipe to manage your bookmarks
+  homeSwipeVerticalTitle: Desliza hacia arriba para ver el siguiente artículo
+  homeSwipeVerticalMsg: Nuestro feed mejora cada vez más con cada me gusta y disgusto
+  homeSwipeSideTitle: Desliza hacia los lados para aprobar o desaprobar?
+  homeManageBookmarksTitle: Mantenga presionado 'guardar' una vez para administrarlos
+  collectionManageTitle: Mantén presionado o desliza para administrar tus colecciones
+  bookmarksManageTitle: Mantén presionado para administrar tus marcadores
+  cancelButton: ¡Entiendo!
 general:
-  btnClose: Close
-subscriptionDurationMonth: month
+  btnClose: Concluir
+subscriptionDurationMonth: Mes
+takeSurveyTitle: ¿Tienes un minuto?
+takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
+takeSurveyCTA: Llévame a la encuesta
