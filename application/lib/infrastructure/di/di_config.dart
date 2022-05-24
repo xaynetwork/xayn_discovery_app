@@ -7,8 +7,11 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_r
 import 'package:xayn_discovery_app/infrastructure/repository/hive_document_filter_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/fake_payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/revenue_cat_payment_service.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -32,6 +35,9 @@ const Environment debugEnvironment = Environment(debugEnvironmentName);
 
 const Environment testEnvironment = Environment(Environment.test);
 
+bool get _isProdPayment =>
+    EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId;
+
 /// Boilerplate setup for DI.
 @InjectableInit(
   initializerName: r'$initGetIt', // default
@@ -51,6 +57,9 @@ Future<void> configureDependencies({
       () => di.get<HiveDocumentFilterRepository>());
   di.registerLazySingleton<AppSettingsRepository>(
       () => di.get<HiveAppSettingsRepository>());
+  di.registerLazySingleton<PaymentService>(() => _isProdPayment
+      ? di.get<RevenueCatPaymentService>()
+      : di.get<FakePaymentService>());
 }
 
 void initServices() {

@@ -3,7 +3,8 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 enum Feature {
   featuresScreen(Owner.Michael,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
-  payment(Owner.Peter, EnvironmentHelper.kAppId == 'com.xayn.discovery'),
+  payment(
+      Owner.Peter, EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId),
   readerModeSettings(Owner.Michael, true),
   discoveryEngineReportOverlay(Owner.Simon, false),
   tts(Owner.Frank, false, 'Enables text-to-speech function for articles');
