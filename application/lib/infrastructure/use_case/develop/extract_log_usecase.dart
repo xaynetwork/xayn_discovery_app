@@ -21,7 +21,7 @@ class ExtractLogUseCase extends UseCase<None, ExtractLogUseCaseResult> {
     try {
       final directory = await _fileHandler.getAppDirectory();
       final file = _fileHandler.createFileObject(
-        fileName: kLogFileName,
+        fileName: 'tracing_engine.log',
         path: directory.path,
       );
       final exists = await _fileHandler.exists(file);
