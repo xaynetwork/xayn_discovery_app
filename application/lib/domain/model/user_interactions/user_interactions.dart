@@ -17,6 +17,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
     required int numberOfArticlesLikedOrDisliked,
     required int numberOfSourcesExcluded,
     required int numberOfCountriesChanged,
+    required int numberOfSearches,
   }) = _UserInteractions;
 
   factory UserInteractions({
@@ -26,6 +27,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
     required int numberOfArticlesLikedOrDisliked,
     required int numberOfSourcesExcluded,
     required int numberOfCountriesChanged,
+    required int numberOfSearches,
   }) =>
       UserInteractions._(
         id: UserInteractions.globalId,
@@ -35,6 +37,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
         numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
         numberOfSourcesExcluded: numberOfSourcesExcluded,
         numberOfCountriesChanged: numberOfCountriesChanged,
+        numberOfSearches: numberOfSearches,
       );
 
   factory UserInteractions.initial() => UserInteractions._(
@@ -45,6 +48,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
         numberOfArticlesLikedOrDisliked: 0,
         numberOfSourcesExcluded: 0,
         numberOfCountriesChanged: 0,
+        numberOfSearches: 0,
       );
 
   static const UniqueId globalId =
