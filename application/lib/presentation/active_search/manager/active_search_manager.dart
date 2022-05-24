@@ -84,6 +84,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
   final ActiveSearchNavActions _activeSearchNavActions;
   bool _isLoading = true;
   bool _didReachEnd = false;
+  EngineEvent? _lastErrorEvent;
 
   @override
   bool get isLoading => _isLoading;
@@ -265,11 +266,16 @@ class ActiveSearchManager extends BaseDiscoveryManager
             final errorMessage = getEngineEventErrorMessage(
               engineEvent!,
             );
-            showOverlay(
-              OverlayData.bottomSheetGenericError(
-                errorCode: errorMessage,
-              ),
-            );
+            if (engineEvent != _lastErrorEvent) {
+              showOverlay(
+                OverlayData.bottomSheetGenericError(
+                  errorCode: errorMessage,
+                ),
+              );
+              _lastErrorEvent = engineEvent;
+            }
+
+            _isLoading = false;
           }
           return super.computeState();
         },
