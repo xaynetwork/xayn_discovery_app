@@ -11,7 +11,7 @@ Confucius 1037 BC
 
 1. [Creating PR](#creating-prs)
 1. [Branch naming](#branch-naming)
-1. [Commit messages](#avoid-submitting-useless-commit-messages)
+1. [Commit messages](#commit-messages)
 1. [Merging](#merging-in-github)
 1. [Reviewing](#reviewing)
 1. [Emoji for review](#emoji-for-review)
