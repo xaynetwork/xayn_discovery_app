@@ -1,154 +1,100 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 
 import '../../../test_utils/utils.dart';
+import '../../../test_utils/widget_test_utils.dart';
 
 void main() {
-  late MockGetAppVersionUseCase mockGetAppVersionUseCase;
-  late MockGetStoredAppVersionUseCase mockGetStoredAppVersionUseCase;
-  late MockSaveCurrentAppVersion mockSaveCurrentAppVersion;
-  late MockGetAppSessionUseCase mockGetAppSessionUseCase;
-  late MockInAppReview mockInAppReview;
-  late MockFeatureManager mockFeatureManager;
-
   late RatingDialogManager manager;
-
+  late MockInAppReview appReview;
+  late AppStatusRepository appStatusRepository;
   setUp(() async {
-    mockGetAppVersionUseCase = MockGetAppVersionUseCase();
-    mockGetStoredAppVersionUseCase = MockGetStoredAppVersionUseCase();
-    mockSaveCurrentAppVersion = MockSaveCurrentAppVersion();
-    mockGetAppSessionUseCase = MockGetAppSessionUseCase();
-    mockInAppReview = MockInAppReview();
-    mockFeatureManager = MockFeatureManager();
-    when(mockFeatureManager.isRatingDialogEnabled).thenReturn(true);
+    await setupWidgetTest();
+    appReview = MockInAppReview();
+    when(appReview.isAvailable())
+        .thenAnswer((realInvocation) => Future.value(true));
+  });
+
+  void _createManager(
+      {bool ratingAlreadyVisible = false, int numberOfSessions = 1}) {
+    appStatusRepository = di.get();
+    appStatusRepository.save(appStatusRepository.appStatus.copyWith(
+        ratingDialogAlreadyVisible: ratingAlreadyVisible,
+        numberOfSessions: numberOfSessions));
+    manager = RatingDialogManager.test(di.get(), appReview, di.get(), di.get());
+  }
+
+  test("Initially we don't show the rating dialog", () async {
+    _createManager();
+
+    expect(await manager.completedBookmarking(), false);
+    verifyNever(appReview.requestReview());
   });
 
   test(
-      'GIVEN 3rd session and 8 card interactions THEN should show rating dialog',
+      "After the third session we will show the RatingDialog when completing bookmark flow",
       () async {
-    when(mockGetAppVersionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(AppVersion.initial()));
-    when(mockGetStoredAppVersionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(AppVersion.initial()));
-    when(mockGetAppSessionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(3));
-    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+    _createManager(numberOfSessions: 3);
 
-    manager = RatingDialogManager.test(
-      {1, 2, 3, 4, 5, 6, 7, 8},
-      mockGetAppVersionUseCase,
-      mockGetStoredAppVersionUseCase,
-      mockSaveCurrentAppVersion,
-      mockGetAppSessionUseCase,
-      mockInAppReview,
-      mockFeatureManager,
-    );
-
-    expect(await manager.showRatingDialogIfNeeded(), isTrue);
+    expect(await manager.completedBookmarking(), true);
+    verify(appReview.requestReview());
   });
 
   test(
-      'GIVEN 1st session and 8 card interactions THEN should not show rating dialog',
+      "After the third session we will show the RatingDialog completing share to a friend",
       () async {
-    when(mockGetAppSessionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(1));
-    when(mockGetAppVersionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(AppVersion.initial()));
-    when(mockGetStoredAppVersionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(AppVersion.initial()));
-    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+    _createManager(numberOfSessions: 3);
 
-    manager = RatingDialogManager.test(
-      {1, 2, 3, 4, 5, 6, 7, 8},
-      mockGetAppVersionUseCase,
-      mockGetStoredAppVersionUseCase,
-      mockSaveCurrentAppVersion,
-      mockGetAppSessionUseCase,
-      mockInAppReview,
-      mockFeatureManager,
-    );
-
-    expect(await manager.showRatingDialogIfNeeded(), isFalse);
-  });
-
-  test('GIVEN version update THEN should show rating dialog', () async {
-    when(mockGetAppSessionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(1));
-    when(mockGetAppVersionUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(const AppVersion(version: '0.0.2', build: '1')));
-    when(mockGetStoredAppVersionUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
-    when(mockSaveCurrentAppVersion.call(any))
-        .thenAnswer((_) => Future.value([]));
-    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
-
-    manager = RatingDialogManager.test(
-      {},
-      mockGetAppVersionUseCase,
-      mockGetStoredAppVersionUseCase,
-      mockSaveCurrentAppVersion,
-      mockGetAppSessionUseCase,
-      mockInAppReview,
-      mockFeatureManager,
-    );
-
-    expect(await manager.showRatingDialogIfNeeded(), isTrue);
+    expect(await manager.shareWithFriendsCompleted(), true);
+    verify(appReview.requestReview());
   });
 
   test(
-      'GIVEN showRatingDialogIfNeeded is called multiple times THEN the get app version use case is called once',
+      "After the third session we will show the RatingDialog completing share a Document",
       () async {
-    when(mockGetAppSessionUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(1));
-    when(mockGetAppVersionUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
-    when(mockGetStoredAppVersionUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
-    when(mockSaveCurrentAppVersion.call(any))
-        .thenAnswer((_) => Future.value([]));
-    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+    _createManager(numberOfSessions: 3);
 
-    manager = RatingDialogManager.test(
-      {},
-      mockGetAppVersionUseCase,
-      mockGetStoredAppVersionUseCase,
-      mockSaveCurrentAppVersion,
-      mockGetAppSessionUseCase,
-      mockInAppReview,
-      mockFeatureManager,
-    );
-
-    expect(await manager.showRatingDialogIfNeeded(), isFalse);
-    expect(await manager.showRatingDialogIfNeeded(), isFalse);
-    verify(mockGetAppVersionUseCase.singleOutput(any));
-    verifyNoMoreInteractions(mockGetAppVersionUseCase);
+    expect(await manager.shareWithFriendsCompleted(), true);
+    verify(appReview.requestReview());
   });
 
   test(
-      'GIVEN showRatingDialogIfNeeded is called multiple times and _viewedCardIndices is less than threshold THEN the get app session usecase is not called',
+      "After the any number larger than 3 session we will show the RatingDialog completing any action",
       () async {
-    when(mockGetAppVersionUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
-    when(mockGetStoredAppVersionUseCase.singleOutput(none)).thenAnswer(
-        (_) => Future.value(const AppVersion(version: '0.0.1', build: '1')));
-    when(mockSaveCurrentAppVersion.call(any))
-        .thenAnswer((_) => Future.value([]));
-    when(mockInAppReview.isAvailable()).thenAnswer((_) => Future.value(false));
+    _createManager(numberOfSessions: 5);
 
-    manager = RatingDialogManager.test(
-      {},
-      mockGetAppVersionUseCase,
-      mockGetStoredAppVersionUseCase,
-      mockSaveCurrentAppVersion,
-      mockGetAppSessionUseCase,
-      mockInAppReview,
-      mockFeatureManager,
-    );
+    expect(await manager.shareWithFriendsCompleted(), true);
+    verify(appReview.requestReview());
+  });
 
-    expect(await manager.showRatingDialogIfNeeded(), isFalse);
-    verifyNoMoreInteractions(mockGetAppSessionUseCase);
+  test(
+      "After the any number below than 3 sessions we will NOT show the RatingDialog",
+      () async {
+    _createManager(numberOfSessions: 2);
+
+    expect(await manager.completedBookmarking(), false);
+    verifyNever(appReview.requestReview());
+  });
+
+  test("After showing the dialog once, we never show it again.", () async {
+    _createManager(numberOfSessions: 3);
+    expect(await manager.completedBookmarking(), true);
+    verify(appReview.requestReview());
+    reset(appReview);
+
+    expect(await manager.completedBookmarking(), false);
+    verifyNever(appReview.requestReview());
+    expect(appStatusRepository.appStatus.ratingDialogAlreadyVisible, true);
+  });
+
+  test("When the rating dialog was visible before, never show it again.",
+      () async {
+    _createManager(numberOfSessions: 3, ratingAlreadyVisible: true);
+
+    expect(await manager.shareWithFriendsCompleted(), false);
+    verifyNever(appReview.requestReview());
   });
 }

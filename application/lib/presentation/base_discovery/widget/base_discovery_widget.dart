@@ -21,7 +21,6 @@ import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/d
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
-import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
@@ -54,7 +53,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         OverlayMixin<W>,
         OverlayStateMixin<W> {
   late final CardViewController _cardViewController = CardViewController();
-  late final RatingDialogManager _ratingDialogManager = di.get();
   late final FeatureManager featureManager = di.get();
   late final CardManagersCache cardManagersCache = di.get();
 
@@ -137,6 +135,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
     WidgetsBinding.instance.removeObserver(this);
 
+    // on dispose, no longer observe any documents
+    // this Function's argument is nullable Document, by not passing anything,
+    // it stops the observer buffer.
+    manager.observeDocument();
+
     super.dispose();
   }
 
@@ -169,7 +172,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
       onIndexChanged(int index) {
         manager.handleIndexChanged(index);
-        _ratingDialogManager.handleIndexChanged(index);
         ttsData = TtsData.disabled();
       }
 

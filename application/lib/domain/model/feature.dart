@@ -7,8 +7,6 @@ enum Feature {
       Owner.Peter, EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId),
   readerModeSettings(Owner.Michael, true),
   discoveryEngineReportOverlay(Owner.Simon, false),
-  ratingDialog(Owner.Simon,
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
   tts(Owner.Frank, false, 'Enables text-to-speech function for articles');
 
   final Owner owner;

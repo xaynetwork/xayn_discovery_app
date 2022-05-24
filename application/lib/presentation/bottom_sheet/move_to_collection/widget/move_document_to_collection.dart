@@ -30,6 +30,7 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
     required VoidCallback onAddCollectionPressed,
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
+    VoidCallback? onClose,
   }) : super(
           key: key,
           body: _MoveDocumentToCollection(
@@ -38,7 +39,9 @@ class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
             initialSelectedCollectionId: initialSelectedCollectionId,
             feedType: feedType,
             onAddCollectionPressed: onAddCollectionPressed,
+            onClose: onClose,
           ),
+          onSystemPop: onClose,
         );
 }
 
@@ -48,6 +51,7 @@ class _MoveDocumentToCollection extends StatefulWidget {
   final UniqueId? initialSelectedCollectionId;
   final FeedType? feedType;
   final VoidCallback onAddCollectionPressed;
+  final VoidCallback? onClose;
 
   const _MoveDocumentToCollection({
     Key? key,
@@ -56,6 +60,7 @@ class _MoveDocumentToCollection extends StatefulWidget {
     required this.onAddCollectionPressed,
     this.feedType,
     this.initialSelectedCollectionId,
+    this.onClose,
   }) : super(key: key);
 
   @override
@@ -155,5 +160,11 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   void _showAddCollectionBottomSheet() {
     closeBottomSheet(context);
     widget.onAddCollectionPressed();
+  }
+
+  @override
+  void closeBottomSheet(BuildContext context) {
+    super.closeBottomSheet(context);
+    widget.onClose?.call();
   }
 }
