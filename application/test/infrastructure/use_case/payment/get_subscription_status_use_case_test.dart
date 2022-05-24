@@ -3,10 +3,10 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/payment_mock_data.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 
 import '../../../test_utils/utils.dart';
-import 'payment_test_data.dart';
 
 void main() {
   late MockPaymentService paymentService;
@@ -26,7 +26,8 @@ void main() {
     'GIVEN purchaseInfo with active subscription THEN yield false',
     () async {
       when(paymentService.getPurchaserInfo()).thenAnswer(
-        (_) async => createPurchaserInfo(withActiveSubscription: true),
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: true),
       );
       // ACT
       final subscriptionStatus = await useCase.singleOutput(none);
@@ -47,7 +48,8 @@ void main() {
     () async {
       // ARRANGE
       when(paymentService.getPurchaserInfo()).thenAnswer(
-        (_) async => createPurchaserInfo(withActiveSubscription: false),
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
       );
 
       // ACT

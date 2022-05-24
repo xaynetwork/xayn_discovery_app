@@ -6,10 +6,10 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/payment_mock_data.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
 
 import '../../../test_utils/utils.dart';
-import 'payment_test_data.dart';
 
 void main() {
   late MockPaymentService paymentService;
@@ -26,7 +26,8 @@ void main() {
     () async {
       // ARRANGE
       when(paymentService.restore()).thenAnswer(
-        (_) async => createPurchaserInfo(withActiveSubscription: true),
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: true),
       );
 
       // ACT
@@ -51,7 +52,8 @@ void main() {
     () async {
       // ARRANGE
       when(paymentService.restore()).thenAnswer(
-        (_) async => createPurchaserInfo(withActiveSubscription: false),
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
       );
 
       // ACT
