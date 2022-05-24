@@ -34,7 +34,7 @@ class _State extends State<_SurveyRequestView>
       SizedBox(height: R.dimen.unit),
       _buildAnimation(),
       SizedBox(height: R.dimen.unit2),
-      BottomSheetHeader(headerText: R.strings.takeSurveySubtitle),
+      BottomSheetHeader(headerText: R.strings.takeSurveyTitle),
       SizedBox(height: R.dimen.unit2),
       _buildText(),
       SizedBox(height: R.dimen.unit2_5),
@@ -57,7 +57,7 @@ class _State extends State<_SurveyRequestView>
   Widget _buildTakeSurveyBtn() => SizedBox(
         width: double.maxFinite,
         child: AppRaisedButton.text(
-          text: R.strings.takeSurveyTitle,
+          text: R.strings.takeSurveyCTA,
           onPressed: () {
             widget.onTakeSurveyPressed();
             closeBottomSheet(context);
