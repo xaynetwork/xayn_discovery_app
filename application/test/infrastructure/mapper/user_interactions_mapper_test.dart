@@ -11,6 +11,7 @@ void main() {
   const int numberOfArticlesLikedOrDisliked = 1;
   const int numberOfSourcesExcluded = 3;
   const int numberOfCountriesChanged = 2;
+  const int numberOfSearches = 1;
 
   setUp(() async {
     mapper = UserInteractionsMapper();
@@ -33,6 +34,7 @@ void main() {
               numberOfSourcesExcluded,
           UserInteractionsFields.numberOfCountriesChanged:
               numberOfCountriesChanged,
+          UserInteractionsFields.numberOfSearches: numberOfSearches,
         };
 
         final userInteractions = mapper.fromMap(map);
@@ -46,6 +48,7 @@ void main() {
             numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
             numberOfSourcesExcluded: numberOfSourcesExcluded,
             numberOfCountriesChanged: numberOfCountriesChanged,
+            numberOfSearches: numberOfSearches,
           ),
         );
       });
@@ -60,6 +63,7 @@ void main() {
             UserInteractionsFields.numberOfArticlesLikedOrDisliked: null,
             UserInteractionsFields.numberOfSourcesExcluded: null,
             UserInteractionsFields.numberOfCountriesChanged: null,
+            UserInteractionsFields.numberOfSearches: null,
           };
 
           final userInteractions = mapper.fromMap(map);
@@ -73,6 +77,7 @@ void main() {
               numberOfArticlesLikedOrDisliked: 0,
               numberOfSourcesExcluded: 0,
               numberOfCountriesChanged: 0,
+              numberOfSearches: 0,
             ),
           );
         },
@@ -93,6 +98,7 @@ void main() {
             numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
             numberOfSourcesExcluded: numberOfSourcesExcluded,
             numberOfCountriesChanged: numberOfCountriesChanged,
+            numberOfSearches: numberOfSearches,
           );
 
           final map = mapper.toMap(userInteractions);

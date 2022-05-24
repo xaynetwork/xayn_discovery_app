@@ -18,6 +18,8 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
         map[UserInteractionsFields.numberOfSourcesExcluded] as int?;
     final numberOfCountriesChanged =
         map[UserInteractionsFields.numberOfCountriesChanged] as int?;
+    final numberOfSearches =
+        map[UserInteractionsFields.numberOfSearches] as int?;
 
     return UserInteractions(
       numberOfScrolls: numberOfScrolls ?? 0,
@@ -26,6 +28,7 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
       numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked ?? 0,
       numberOfSourcesExcluded: numberOfSourcesExcluded ?? 0,
       numberOfCountriesChanged: numberOfCountriesChanged ?? 0,
+      numberOfSearches: numberOfSearches ?? 0,
     );
   }
 
@@ -54,4 +57,5 @@ abstract class UserInteractionsFields {
   static const int numberOfArticlesLikedOrDisliked = 3;
   static const int numberOfSourcesExcluded = 4;
   static const int numberOfCountriesChanged = 5;
+  static const int numberOfSearches = 6;
 }
