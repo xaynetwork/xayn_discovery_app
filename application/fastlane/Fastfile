@@ -82,6 +82,7 @@ private_lane :flutter_build do |options|
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
+  shaders = platform == Platforms::IOS ? "--bundle-sksl-path flutter_01.sksl.json" : ""
 
   defines = {
     "GIT_TAG" => options[Options::VERSION_NAME],
@@ -93,11 +94,10 @@ private_lane :flutter_build do |options|
   if platform == Platforms::IOS
     defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::PROVISIONING_PROFILE_NAME]
     defines["USER_CERTIFICATE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::CERTIFICATE_NAME]
-    defines["--bundle-sksl-path"] = "flutter_01.sksl.json"
   end
   dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
 
-  flutter("build #{target} #{type} #{codesign} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]} #{dartDefines}")
+  flutter("build #{target} #{type} #{codesign} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]} #{dartDefines} #{shaders}")
 end
 
 desc "Prepare internal key.properties"
