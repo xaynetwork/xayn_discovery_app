@@ -271,6 +271,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
           errorCode: errorMessage,
         ),
       );
+
+      _isLoading = false;
     }
   }
 }
