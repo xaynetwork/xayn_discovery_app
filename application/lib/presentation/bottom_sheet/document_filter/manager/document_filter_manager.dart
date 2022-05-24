@@ -74,6 +74,7 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
   Future onApplyChangesPressed() {
     _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.excludedSource);
+
     return _applyDocumentFilterUseCase.singleOutput(
       ApplyDocumentFilterIn.applyChangesToDbAndEngine(
         changes: _pendingChanges,

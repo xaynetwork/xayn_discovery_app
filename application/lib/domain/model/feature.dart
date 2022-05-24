@@ -7,7 +7,11 @@ enum Feature {
       Owner.Peter, EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId),
   readerModeSettings(Owner.Michael, true),
   discoveryEngineReportOverlay(Owner.Simon, false),
-  tts(Owner.Frank, false, 'Enables text-to-speech function for articles');
+  ratingDialog(Owner.Simon,
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
+  tts(Owner.Frank, false, 'Enables text-to-speech function for articles'),
+  promptSurvey(Owner.Carmine, false,
+      'When enabled, collects the user interactions in order to prompt the survey card');
 
   final Owner owner;
   final String? description;

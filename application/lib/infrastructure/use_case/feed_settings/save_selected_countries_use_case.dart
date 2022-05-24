@@ -31,6 +31,7 @@ class SaveSelectedCountriesUseCase extends UseCase<Set<Country>, None> {
     final updatedSettings =
         settings.copyWith(feedMarkets: localMarkets.toSet());
     _repository.save(updatedSettings);
+
     _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.changedCountry);
 
