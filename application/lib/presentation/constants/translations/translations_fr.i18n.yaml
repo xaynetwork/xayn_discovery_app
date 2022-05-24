@@ -85,14 +85,14 @@ trialBannerEndsIn: Votre période d'essai se termine dans %s jours
 trialBannerEndsTomorrow: Votre période d'essai se termine demain
 trialBannerEndsToday: Votre période d'essai se termine demain
 trialBannerExpired: Votre essai se termine aujourd'hui
-subscriptionHeader: Obtenez un contenu illimité à juste
+subscriptionHeader: Obtenez Xayn illimité pour juste
 subscriptionPricingError: Impossible de récupérer les détails des prix
 subscriptionPerk1: Flux personnalisé
 subscriptionPerk2: Pas de pub
 subscriptionPerk3: Pas de suivi
 subscriptionPerk4: Neutre en carbone
 subscriptionPerk5: Neutre en carbone
-subscriptionSubscribeNow: Annuler à tout moment
+subscriptionSubscribeNow: Abonnez vous
 subscriptionRestore: Restaurer l'abonnement
 subscriptionPromoCode: J'ai un code promo
 subscriptionDisclaimer: En appuyant sur "S'abonner maintenant", vous serez redirigé vers l'App Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.
@@ -147,19 +147,23 @@ settingsSectionHomeFeed: Configuration du flux
 paymentPromoCodeAndroidBottomSheetTitle: Avez vous un code de réduction?
 paymentPromoCodeAndroidBottomSheetBody: Pour saisir le code promotionnel, sélectionnez "Utiliser le code" comme méthode de paiement.
 paymentFailedBottomSheetTitle: Paiement échoué
-paymentFailedBottomSheetBody: The app store couldn’t process your payment. Please try again later.
+paymentFailedBottomSheetBody: Le magasin n'a pas pu traiter votre paiement. Veuillez réessayer plus tard.
 readerModeUnableToLoadTitle: Impossible de charger ce contenu
-readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
+readerModeUnableToLoadDesc: Cet article n'a pas été mis à disposition pour être lu dans notre application. Veuillez continuer à lire dans le navigateur.
 readerModeUnableToLoadCTA: Ouvrir dans le navigateur
 noInternetConnection: Pas de connexion Internet
-invalidSearch: Please enter a valid search term
+invalidSearch: Veuillez entrer un terme de recherche valide
 onboardingBottomDialog:
-  homeSwipeVerticalTitle: Swipe upwards to see the next article
-  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
-  homeSwipeSideTitle: Swipe sideways to like or dislike
-  homeManageBookmarksTitle: Long press the save button to manage it
-  collectionManageTitle: Long press or swipe to manage your collections
-  bookmarksManageTitle: Long press or swipe to manage your bookmarks
+  homeSwipeVerticalTitle: Balayez vers le haut pour voir l'article suivant
+  homeSwipeVerticalMsg: Notre flux s'améliore avec chaque goût et aversion
+  homeSwipeSideTitle: Swipe sur le côté pour aimer/ne pas aimer
+  homeManageBookmarksTitle: Appuyez longuement sur 'Enregistrer' pour le gérer
+  collectionManageTitle: Appuyez longuement ou  pour gérer vos collections
+  bookmarksManageTitle: Appuyez longuement pour gérer vos signets
+  cancelButton: J'ai compris!
 general:
-  btnClose: Close
-subscriptionDurationMonth: month
+  btnClose: Fermer
+subscriptionDurationMonth: Mois
+takeSurveyTitle: Avez-vous une minute ?
+takeSurveySubtitle: Comment pouvons-nous encore améliorer Xayn ?
+takeSurveyCTA: Emmenez-moi à l'enquête

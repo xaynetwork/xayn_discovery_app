@@ -148,8 +148,7 @@ class TranslationsPl extends Translations {
       """Twój okres próbny kończy się jutro""";
   String get trialBannerEndsToday => """Twój okres próbny kończy się dzisiaj""";
   String get trialBannerExpired => """Twój okres próbny wygasł""";
-  String get subscriptionHeader =>
-      """Uzyskaj nieograniczoną zawartość za jedyne""";
+  String get subscriptionHeader => """Uzyskaj Xayn bez ograniczeń za jedyne""";
   String get subscriptionPricingError => """Nie można pobrać szczegółów cen""";
   String get subscriptionPerk1 => """Spersonalizowany strumień""";
   String get subscriptionPerk2 => """Bez reklam""";
@@ -219,11 +218,15 @@ class TranslationsPl extends Translations {
       """Ten artykuł nie został udostępniony do czytania w naszej aplikacji. Aby go przeczytać, przejdź do niego za pomocą przeglądarki.""";
   String get readerModeUnableToLoadCTA => """Otwórz w przeglądarce""";
   String get noInternetConnection => """Brak połączenia z internetem""";
-  String get invalidSearch => """Please enter a valid search term""";
+  String get invalidSearch => """Wprowadź prawidłowe wyszukiwane hasło""";
   OnboardingBottomDialogTranslationsPl get onboardingBottomDialog =>
       OnboardingBottomDialogTranslationsPl(this);
   GeneralTranslationsPl get general => GeneralTranslationsPl(this);
   String get subscriptionDurationMonth => """miesiąc""";
+  String get takeSurveyTitle => """Masz minutkę?""";
+  String get takeSurveySubtitle =>
+      """Jak możemy jeszcze bardziej ulepszyć Xayn?""";
+  String get takeSurveyCTA => """Zabierz mnie do ankiety""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -235,7 +238,7 @@ class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
   String get itemAlreadyOwned => """Zostałeś już zasubskrybowany""";
   String get transactionFailed => """Transakcja płatnicza nie powiodła się""";
   String get noActiveSubscriptionFound =>
-      """Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta.""";
+      """Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta""";
 }
 
 class OnboardingBottomDialogTranslationsPl
@@ -243,22 +246,23 @@ class OnboardingBottomDialogTranslationsPl
   final TranslationsPl _parent;
   const OnboardingBottomDialogTranslationsPl(this._parent) : super(_parent);
   String get homeSwipeVerticalTitle =>
-      """Swipe upwards to see the next article""";
+      """Przesuń w górę, aby zobaczyć następny artykuł""";
   String get homeSwipeVerticalMsg =>
-      """Our continuous feed gets better and better every time you like and dislike the content here.""";
-  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+      """Nasz kanał staje się coraz lepszy z każdym polubieniem lub nie lubieniem""";
+  String get homeSwipeSideTitle => """Przesuń w bok, aby polubić lub nie""";
   String get homeManageBookmarksTitle =>
-      """Long press the save button to manage it""";
+      """Długie naciśnięcie „zapisz” raz, aby nimi zarządzać""";
   String get collectionManageTitle =>
-      """Long press or swipe to manage your collections""";
+      """Przytrzymaj lub przeciągnij, aby zarządzać swoimi kolekcjami""";
   String get bookmarksManageTitle =>
-      """Long press or swipe to manage your bookmarks""";
+      """Naciśnij i przytrzymaj, aby zarządzać zakładkami""";
+  String get cancelButton => """Rozumiem!""";
 }
 
 class GeneralTranslationsPl extends GeneralTranslations {
   final TranslationsPl _parent;
   const GeneralTranslationsPl(this._parent) : super(_parent);
-  String get btnClose => """Close""";
+  String get btnClose => """Zakończyć""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -354,8 +358,7 @@ Map<String, String> get translationsPlMap => {
       """trialBannerEndsTomorrow""": """Twój okres próbny kończy się jutro""",
       """trialBannerEndsToday""": """Twój okres próbny kończy się dzisiaj""",
       """trialBannerExpired""": """Twój okres próbny wygasł""",
-      """subscriptionHeader""":
-          """Uzyskaj nieograniczoną zawartość za jedyne""",
+      """subscriptionHeader""": """Uzyskaj Xayn bez ograniczeń za jedyne""",
       """subscriptionPricingError""": """Nie można pobrać szczegółów cen""",
       """subscriptionPerk1""": """Spersonalizowany strumień""",
       """subscriptionPerk2""": """Bez reklam""",
@@ -387,7 +390,7 @@ Map<String, String> get translationsPlMap => {
       """paymentFlowError.transactionFailed""":
           """Transakcja płatnicza nie powiodła się""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta.""",
+          """Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Czy na pewno chcesz usunąć tę kolekcję?""",
       """bottomSheetMoveSingleBookmark""": """Przejdź do innej kolekcji""",
@@ -431,19 +434,24 @@ Map<String, String> get translationsPlMap => {
           """Ten artykuł nie został udostępniony do czytania w naszej aplikacji. Aby go przeczytać, przejdź do niego za pomocą przeglądarki.""",
       """readerModeUnableToLoadCTA""": """Otwórz w przeglądarce""",
       """noInternetConnection""": """Brak połączenia z internetem""",
-      """invalidSearch""": """Please enter a valid search term""",
+      """invalidSearch""": """Wprowadź prawidłowe wyszukiwane hasło""",
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
-          """Swipe upwards to see the next article""",
+          """Przesuń w górę, aby zobaczyć następny artykuł""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+          """Nasz kanał staje się coraz lepszy z każdym polubieniem lub nie lubieniem""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
-          """Swipe sideways to like or dislike""",
+          """Przesuń w bok, aby polubić lub nie""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":
-          """Long press the save button to manage it""",
+          """Długie naciśnięcie „zapisz” raz, aby nimi zarządzać""",
       """onboardingBottomDialog.collectionManageTitle""":
-          """Long press or swipe to manage your collections""",
+          """Przytrzymaj lub przeciągnij, aby zarządzać swoimi kolekcjami""",
       """onboardingBottomDialog.bookmarksManageTitle""":
-          """Long press or swipe to manage your bookmarks""",
-      """general.btnClose""": """Close""",
+          """Naciśnij i przytrzymaj, aby zarządzać zakładkami""",
+      """onboardingBottomDialog.cancelButton""": """Rozumiem!""",
+      """general.btnClose""": """Zakończyć""",
       """subscriptionDurationMonth""": """miesiąc""",
+      """takeSurveyTitle""": """Masz minutkę?""",
+      """takeSurveySubtitle""":
+          """Jak możemy jeszcze bardziej ulepszyć Xayn?""",
+      """takeSurveyCTA""": """Zabierz mnie do ankiety""",
     };
