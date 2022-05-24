@@ -39,8 +39,10 @@ class CreateBookmarkFromDocumentUseCase
     final createBookmarkParam = await _mapper.singleOutput(param);
     final bookmark = await _createBookmark.singleOutput(createBookmarkParam);
     _documentRepository.save(DocumentWrapper(param.document));
+
     _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.bookmarkedArticle);
+
     yield bookmark;
   }
 

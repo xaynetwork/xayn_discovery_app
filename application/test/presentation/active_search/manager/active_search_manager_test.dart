@@ -87,6 +87,7 @@ void main() {
           CardManagersCache(),
           SaveUserInteractionUseCase(
             userInteractionsRepository,
+            featureManager,
           ),
         );
   });

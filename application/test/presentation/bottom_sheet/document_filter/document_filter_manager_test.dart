@@ -24,13 +24,17 @@ main() {
   late HiveDocumentFilterRepository repository;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockUserInteractionsRepository userInteractionsRepository;
+  late MockFeatureManager featureManager;
   setUp(() async {
     await setupWidgetTest();
     repository = di.get();
     final documentFilterUseCase = CrudDocumentFilterUseCase(repository);
     userInteractionsRepository = MockUserInteractionsRepository();
-    saveUserInteractionUseCase =
-        SaveUserInteractionUseCase(userInteractionsRepository);
+    featureManager = MockFeatureManager();
+    saveUserInteractionUseCase = SaveUserInteractionUseCase(
+      userInteractionsRepository,
+      featureManager,
+    );
     engine = di.get<DiscoveryEngine>();
     final applyDocumentFilterUseCase =
         ApplyDocumentFilterUseCase(repository, engine);
@@ -40,6 +44,7 @@ main() {
       saveUserInteractionUseCase,
       fakeDocument,
     );
+    when(featureManager.isPromptSurveyEnabled).thenReturn(true);
   });
 
   blocTest<DocumentFilterManager, DocumentFilterState>(

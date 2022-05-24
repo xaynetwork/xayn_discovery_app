@@ -14,6 +14,7 @@ void main() {
   late MockFeedSettingsRepository repository;
   late MockUserInteractionsRepository userInteractionsRepository;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
+  late MockFeatureManager featureManager;
 
   const uaMarket = FeedMarket(countryCode: 'UA', languageCode: 'uk');
   const usMarket = FeedMarket(countryCode: 'US', languageCode: 'en');
@@ -36,8 +37,11 @@ void main() {
   setUp(() {
     repository = MockFeedSettingsRepository();
     userInteractionsRepository = MockUserInteractionsRepository();
-    saveUserInteractionUseCase =
-        SaveUserInteractionUseCase(userInteractionsRepository);
+    featureManager = MockFeatureManager();
+    saveUserInteractionUseCase = SaveUserInteractionUseCase(
+      userInteractionsRepository,
+      featureManager,
+    );
     useCase = SaveSelectedCountriesUseCase(
       repository,
       saveUserInteractionUseCase,
@@ -47,6 +51,7 @@ void main() {
     when(userInteractionsRepository.userInteractions).thenReturn(
       UserInteractions.initial(),
     );
+    when(featureManager.isPromptSurveyEnabled).thenReturn(true);
   });
 
   test(
