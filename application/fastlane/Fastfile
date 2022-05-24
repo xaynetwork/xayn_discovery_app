@@ -93,6 +93,7 @@ private_lane :flutter_build do |options|
   if platform == Platforms::IOS
     defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::PROVISIONING_PROFILE_NAME]
     defines["USER_CERTIFICATE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::CERTIFICATE_NAME]
+    defines["--bundle-sksl-path"] = "flutter_01.sksl.json"
   end
   dartDefines = defines.map { |k, v| " --dart-define=#{k}=\"#{v}\"" }.reduce("", :+)
 
