@@ -234,7 +234,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         // as a temp fix, we added an extra pixel to the size of the gradient.
         // here, we add the extra pixel again, so that the image + gradient is fully scrolled-out when needed
         // @See base_painter.dart, in the paint method, where the extra pixel is added
-        const renderArtefactSize = 1.0;
+        const renderArtefactSize = 2.0;
 
         return AppScrollbar(
           scrollController: _scrollController,
