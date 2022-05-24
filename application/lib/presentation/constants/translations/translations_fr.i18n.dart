@@ -151,7 +151,7 @@ class TranslationsFr extends Translations {
   String get trialBannerEndsToday =>
       """Votre période d'essai se termine demain""";
   String get trialBannerExpired => """Votre essai se termine aujourd'hui""";
-  String get subscriptionHeader => """Obtenez un contenu illimité à juste""";
+  String get subscriptionHeader => """Obtenez Xayn illimité pour juste""";
   String get subscriptionPricingError =>
       """Impossible de récupérer les détails des prix""";
   String get subscriptionPerk1 => """Flux personnalisé""";
@@ -159,7 +159,7 @@ class TranslationsFr extends Translations {
   String get subscriptionPerk3 => """Pas de suivi""";
   String get subscriptionPerk4 => """Neutre en carbone""";
   String get subscriptionPerk5 => """Neutre en carbone""";
-  String get subscriptionSubscribeNow => """Annuler à tout moment""";
+  String get subscriptionSubscribeNow => """Abonnez vous""";
   String get subscriptionRestore => """Restaurer l'abonnement""";
   String get subscriptionPromoCode => """J'ai un code promo""";
   String get subscriptionDisclaimer =>
@@ -217,18 +217,23 @@ class TranslationsFr extends Translations {
       """Pour saisir le code promotionnel, sélectionnez "Utiliser le code" comme méthode de paiement.""";
   String get paymentFailedBottomSheetTitle => """Paiement échoué""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later.""";
+      """Le magasin n'a pas pu traiter votre paiement. Veuillez réessayer plus tard.""";
   String get readerModeUnableToLoadTitle =>
       """Impossible de charger ce contenu""";
   String get readerModeUnableToLoadDesc =>
-      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
+      """Cet article n'a pas été mis à disposition pour être lu dans notre application. Veuillez continuer à lire dans le navigateur.""";
   String get readerModeUnableToLoadCTA => """Ouvrir dans le navigateur""";
   String get noInternetConnection => """Pas de connexion Internet""";
-  String get invalidSearch => """Please enter a valid search term""";
+  String get invalidSearch =>
+      """Veuillez entrer un terme de recherche valide""";
   OnboardingBottomDialogTranslationsFr get onboardingBottomDialog =>
       OnboardingBottomDialogTranslationsFr(this);
   GeneralTranslationsFr get general => GeneralTranslationsFr(this);
-  String get subscriptionDurationMonth => """month""";
+  String get subscriptionDurationMonth => """Mois""";
+  String get takeSurveyTitle => """Avez-vous une minute ?""";
+  String get takeSurveySubtitle =>
+      """Comment pouvons-nous encore améliorer Xayn ?""";
+  String get takeSurveyCTA => """Emmenez-moi à l'enquête""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -248,22 +253,24 @@ class OnboardingBottomDialogTranslationsFr
   final TranslationsFr _parent;
   const OnboardingBottomDialogTranslationsFr(this._parent) : super(_parent);
   String get homeSwipeVerticalTitle =>
-      """Swipe upwards to see the next article""";
+      """Balayez vers le haut pour voir l'article suivant""";
   String get homeSwipeVerticalMsg =>
-      """Our continuous feed gets better and better every time you like and dislike the content here.""";
-  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+      """Notre flux s'améliore avec chaque goût et aversion""";
+  String get homeSwipeSideTitle =>
+      """Swipe sur le côté pour aimer/ne pas aimer""";
   String get homeManageBookmarksTitle =>
-      """Long press the save button to manage it""";
+      """Appuyez longuement sur 'Enregistrer' pour le gérer""";
   String get collectionManageTitle =>
-      """Long press or swipe to manage your collections""";
+      """Appuyez longuement ou  pour gérer vos collections""";
   String get bookmarksManageTitle =>
-      """Long press or swipe to manage your bookmarks""";
+      """Appuyez longuement pour gérer vos signets""";
+  String get cancelButton => """J'ai compris!""";
 }
 
 class GeneralTranslationsFr extends GeneralTranslations {
   final TranslationsFr _parent;
   const GeneralTranslationsFr(this._parent) : super(_parent);
-  String get btnClose => """Close""";
+  String get btnClose => """Fermer""";
 }
 
 Map<String, String> get translationsFrMap => {
@@ -361,7 +368,7 @@ Map<String, String> get translationsFrMap => {
           """Votre période d'essai se termine demain""",
       """trialBannerEndsToday""": """Votre période d'essai se termine demain""",
       """trialBannerExpired""": """Votre essai se termine aujourd'hui""",
-      """subscriptionHeader""": """Obtenez un contenu illimité à juste""",
+      """subscriptionHeader""": """Obtenez Xayn illimité pour juste""",
       """subscriptionPricingError""":
           """Impossible de récupérer les détails des prix""",
       """subscriptionPerk1""": """Flux personnalisé""",
@@ -369,7 +376,7 @@ Map<String, String> get translationsFrMap => {
       """subscriptionPerk3""": """Pas de suivi""",
       """subscriptionPerk4""": """Neutre en carbone""",
       """subscriptionPerk5""": """Neutre en carbone""",
-      """subscriptionSubscribeNow""": """Annuler à tout moment""",
+      """subscriptionSubscribeNow""": """Abonnez vous""",
       """subscriptionRestore""": """Restaurer l'abonnement""",
       """subscriptionPromoCode""": """J'ai un code promo""",
       """subscriptionDisclaimer""":
@@ -433,25 +440,30 @@ Map<String, String> get translationsFrMap => {
           """Pour saisir le code promotionnel, sélectionnez "Utiliser le code" comme méthode de paiement.""",
       """paymentFailedBottomSheetTitle""": """Paiement échoué""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later.""",
+          """Le magasin n'a pas pu traiter votre paiement. Veuillez réessayer plus tard.""",
       """readerModeUnableToLoadTitle""": """Impossible de charger ce contenu""",
       """readerModeUnableToLoadDesc""":
-          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
+          """Cet article n'a pas été mis à disposition pour être lu dans notre application. Veuillez continuer à lire dans le navigateur.""",
       """readerModeUnableToLoadCTA""": """Ouvrir dans le navigateur""",
       """noInternetConnection""": """Pas de connexion Internet""",
-      """invalidSearch""": """Please enter a valid search term""",
+      """invalidSearch""": """Veuillez entrer un terme de recherche valide""",
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
-          """Swipe upwards to see the next article""",
+          """Balayez vers le haut pour voir l'article suivant""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+          """Notre flux s'améliore avec chaque goût et aversion""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
-          """Swipe sideways to like or dislike""",
+          """Swipe sur le côté pour aimer/ne pas aimer""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":
-          """Long press the save button to manage it""",
+          """Appuyez longuement sur 'Enregistrer' pour le gérer""",
       """onboardingBottomDialog.collectionManageTitle""":
-          """Long press or swipe to manage your collections""",
+          """Appuyez longuement ou  pour gérer vos collections""",
       """onboardingBottomDialog.bookmarksManageTitle""":
-          """Long press or swipe to manage your bookmarks""",
-      """general.btnClose""": """Close""",
-      """subscriptionDurationMonth""": """month""",
+          """Appuyez longuement pour gérer vos signets""",
+      """onboardingBottomDialog.cancelButton""": """J'ai compris!""",
+      """general.btnClose""": """Fermer""",
+      """subscriptionDurationMonth""": """Mois""",
+      """takeSurveyTitle""": """Avez-vous une minute ?""",
+      """takeSurveySubtitle""":
+          """Comment pouvons-nous encore améliorer Xayn ?""",
+      """takeSurveyCTA""": """Emmenez-moi à l'enquête""",
     };

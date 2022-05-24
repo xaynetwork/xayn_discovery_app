@@ -42,7 +42,16 @@ module Fastlane
               http.request(request)
             end
 
-            download_url = JSON.parse(response.body)["result"]["url"]
+            if response.code != '200'
+              UI.user_error!("Error can not fetch /v2/projects/export:\n#{response.body}")
+            end
+
+            json = JSON.parse(response.body)
+            if json['response']['status'] == 'fail'
+              UI.user_error!("Error after fetching /v2/projects/export:\n#{json}")
+            end
+
+            download_url = json["result"]["url"]
 
             uri = URI.parse(download_url)
             response = Net::HTTP.get_response(uri)
