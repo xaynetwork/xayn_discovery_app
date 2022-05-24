@@ -23,12 +23,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
+import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 
@@ -63,6 +65,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetSubscriptionManagementUrlUseCase
       _getSubscriptionManagementUrlUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final AppManager _appManager;
+  final RatingDialogManager _ratingDialogManager;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -79,6 +83,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._listenSubscriptionStatusUseCase,
     this._getSubscriptionManagementUrlUseCase,
     this._sendAnalyticsUseCase,
+    this._appManager,
+    this._ratingDialogManager,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -123,7 +129,12 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   }
 
   void shareApp() {
-    _shareUriUseCase.call(Uri.parse(Constants.downloadUrl));
+    _shareUriUseCase.call(Uri.parse(Constants.downloadUrl)).then((value) =>
+        _appManager.registerStateTransitionCallback(
+            AppTransitionConditions.returnToApp, () {
+          /// the app returned after being in background maybe show the rating dialog.
+          _ratingDialogManager.shareDocumentCompleted();
+        }));
     _sendAnalyticsUseCase(AppSharedEvent());
   }
 

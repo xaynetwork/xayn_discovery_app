@@ -147,7 +147,7 @@ class Translations {
   String get trialBannerEndsTomorrow => """Your trial ends tomorrow""";
   String get trialBannerEndsToday => """Your trial ends today""";
   String get trialBannerExpired => """Your trial expired""";
-  String get subscriptionHeader => """Get unlimited content for just""";
+  String get subscriptionHeader => """Get Xayn unlimited for just""";
   String get subscriptionPricingError =>
       """Unable to retrieve pricing details""";
   String get subscriptionPerk1 => """Personalised stream""";
@@ -184,7 +184,7 @@ class Translations {
   String get sourceHandlingTooltipLabel =>
       """What do you want to see less of?""";
   String get sourceHandlingTooltipHighlightedWord => """What""";
-  String get enableTextToSpeech => """Enable text -to-speech""";
+  String get enableTextToSpeech => """Enable text-to-speech""";
   String get settingsSectionTitleOptions => """Options""";
   String get personalAreaContact => """Contact""";
   String get settingsContactUs => """Contact""";
@@ -210,7 +210,7 @@ class Translations {
       """To enter the promo code, select “Redeem code” as payments method.""";
   String get paymentFailedBottomSheetTitle => """Payment failed""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later.""";
+      """The store couldn’t process your payment. Please try again later.""";
   String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
   String get readerModeUnableToLoadDesc =>
       """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
@@ -221,6 +221,10 @@ class Translations {
       OnboardingBottomDialogTranslations(this);
   GeneralTranslations get general => GeneralTranslations(this);
   String get subscriptionDurationMonth => """month""";
+  String get takeSurveyTitle => """Got a minute?""";
+  String get takeSurveySubtitle =>
+      """We'd love your opinion on how to make the app better""";
+  String get takeSurveyCTA => """Take me to the survey""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -232,7 +236,7 @@ class PaymentFlowErrorTranslations {
   String get itemAlreadyOwned => """You have already been subscribed""";
   String get transactionFailed => """Payment transaction failed""";
   String get noActiveSubscriptionFound =>
-      """We couldn't find an active subscription for this account.""";
+      """We couldn't find an active subscription for this account""";
 }
 
 class OnboardingBottomDialogTranslations {
@@ -241,7 +245,7 @@ class OnboardingBottomDialogTranslations {
   String get homeSwipeVerticalTitle =>
       """Swipe upwards to see the next article""";
   String get homeSwipeVerticalMsg =>
-      """Our continuous feed gets better and better every time you like and dislike the content here.""";
+      """Our feed gets better and better with every like and dislike""";
   String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
   String get homeManageBookmarksTitle =>
       """Long press the save button to manage it""";
@@ -249,6 +253,7 @@ class OnboardingBottomDialogTranslations {
       """Long press or swipe to manage your collections""";
   String get bookmarksManageTitle =>
       """Long press or swipe to manage your bookmarks""";
+  String get cancelButton => """Got it!""";
 }
 
 class GeneralTranslations {
@@ -349,7 +354,7 @@ Map<String, String> get translationsMap => {
       """trialBannerEndsTomorrow""": """Your trial ends tomorrow""",
       """trialBannerEndsToday""": """Your trial ends today""",
       """trialBannerExpired""": """Your trial expired""",
-      """subscriptionHeader""": """Get unlimited content for just""",
+      """subscriptionHeader""": """Get Xayn unlimited for just""",
       """subscriptionPricingError""": """Unable to retrieve pricing details""",
       """subscriptionPerk1""": """Personalised stream""",
       """subscriptionPerk2""": """No ads""",
@@ -379,7 +384,7 @@ Map<String, String> get translationsMap => {
       """paymentFlowError.transactionFailed""":
           """Payment transaction failed""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """We couldn't find an active subscription for this account.""",
+          """We couldn't find an active subscription for this account""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Do you really want to delete this collection?""",
       """bottomSheetMoveSingleBookmark""": """Move to another collection""",
@@ -390,7 +395,7 @@ Map<String, String> get translationsMap => {
       """errorClose""": """Close""",
       """sourceHandlingTooltipLabel""": """What do you want to see less of?""",
       """sourceHandlingTooltipHighlightedWord""": """What""",
-      """enableTextToSpeech""": """Enable text -to-speech""",
+      """enableTextToSpeech""": """Enable text-to-speech""",
       """settingsSectionTitleOptions""": """Options""",
       """personalAreaContact""": """Contact""",
       """settingsContactUs""": """Contact""",
@@ -415,7 +420,7 @@ Map<String, String> get translationsMap => {
           """To enter the promo code, select “Redeem code” as payments method.""",
       """paymentFailedBottomSheetTitle""": """Payment failed""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later.""",
+          """The store couldn’t process your payment. Please try again later.""",
       """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
       """readerModeUnableToLoadDesc""":
           """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
@@ -425,7 +430,7 @@ Map<String, String> get translationsMap => {
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
           """Swipe upwards to see the next article""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+          """Our feed gets better and better with every like and dislike""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
           """Swipe sideways to like or dislike""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":
@@ -434,6 +439,11 @@ Map<String, String> get translationsMap => {
           """Long press or swipe to manage your collections""",
       """onboardingBottomDialog.bookmarksManageTitle""":
           """Long press or swipe to manage your bookmarks""",
+      """onboardingBottomDialog.cancelButton""": """Got it!""",
       """general.btnClose""": """Close""",
       """subscriptionDurationMonth""": """month""",
+      """takeSurveyTitle""": """Got a minute?""",
+      """takeSurveySubtitle""":
+          """We'd love your opinion on how to make the app better""",
+      """takeSurveyCTA""": """Take me to the survey""",
     };

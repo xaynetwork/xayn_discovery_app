@@ -69,6 +69,7 @@ void main() {
           userId: const UniqueId.fromTrustedString(userIdValue),
           lastSeenDate: lastSeen,
           onboardingStatus: const OnboardingStatus.initial(),
+          ratingDialogAlreadyVisible: false,
         ),
       );
     });
@@ -86,6 +87,7 @@ void main() {
         userId: const UniqueId.fromTrustedString(userIdValue),
         lastSeenDate: lastSeen,
         onboardingStatus: onboardingValue,
+        ratingDialogAlreadyVisible: false,
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
@@ -95,6 +97,7 @@ void main() {
         AppStatusFields.userId: userIdValue,
         AppStatusFields.lastSeenDate: lastSeen,
         AppStatusFields.onboardingStatus: onboardingMap,
+        AppStatusFields.ratingDialogAlreadyVisible: false,
       };
       expect(map, expectedMap);
     });

@@ -85,7 +85,7 @@ trialBannerEndsIn: Uw proefperiode eindigt over %s dagen
 trialBannerEndsTomorrow: Je proef eindigt morgen.
 trialBannerEndsToday: Uw proef eindigt vandaag
 trialBannerExpired: Uw proef is verlopen
-subscriptionHeader: Krijg onbeperkte inhoud voor slechts
+subscriptionHeader: Krijg Xayn onbeperkt voor slechts
 subscriptionPricingError: Kan prijsinformatie niet ophalen
 subscriptionPerk1: Gepersonaliseerde stroom
 subscriptionPerk2: Geen advertenties
@@ -95,7 +95,7 @@ subscriptionPerk5: Annuleren op elk moment
 subscriptionSubscribeNow: Nu abonneren
 subscriptionRestore: Herstel abonnement
 subscriptionPromoCode: Ik heb een promo code
-subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
+subscriptionDisclaimer: Door "Abonneer nu" te selecteren, word je doorgestuurd naar de App Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.
 settingsSubscribedToHeader: U bent geabonneerd op
 doneButtonTitle: Gedaan
 subscriptionRenewsMonthlyText: 'Het abonnement wordt maandelijks verlengd op: %s'
@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Betalingstransactie mislukt
-  noActiveSubscriptionFound: We couldn't find an active subscription for this account.
+  noActiveSubscriptionFound: We konden geen actief abonnement vinden voor dit account
 bottomSheetDeleteCollectionWithNoItemsBody: Wil je deze collectie echt verwijderen?
 bottomSheetMoveSingleBookmark: Verplaats naar een andere collectie
 readerModeSettingsErrorChangesNotApplied: Wijzigingen konden niet worden toegepast
@@ -126,40 +126,44 @@ errorGenericHeaderSomethingWentWrong: Er is iets misgegaan.
 errorGenericBodyPleaseTryAgainLater: Probeer het later nog eens.
 errorClose: Sluiten
 sourceHandlingTooltipLabel: Waar wil je minder van zien?
-sourceHandlingTooltipHighlightedWord: What
-enableTextToSpeech: Enable text -to-speech
-settingsSectionTitleOptions: Options
+sourceHandlingTooltipHighlightedWord: Wat
+enableTextToSpeech: Tekst-naar-spraak inschakelen
+settingsSectionTitleOptions: Opties
 personalAreaContact: Contact
 settingsContactUs: Contact
 contactSectionWeb: 'Web:'
-contactSectionSupportEmail: 'Support eMail:'
-contactSectionForPublishers: 'For Publishers:'
-contactSectionPhone: 'Phone:'
-searchNoResultsFound: No results
-searchEndOfResults: That's all!
-searchNoResultsFoundDesc: We couldn’t find any stories for your search. Try different or more general keywords.
-searchEndOfResultsDesc: Didn’t see what you're looking for? Try different or more general keywords.
-feedSettingsScreenSourceFilterExplanation: Sources that you disliked will not be shown in your Discovery Feed anymore.
-feedSettingsScreenTabCountries: Countries
-feedSettingsScreenTabSources: Sources
-feedSettingsScreenSubtitleDislikedSources: Disliked Sources
-settingsSectionHomeFeed: Feed setup
-paymentPromoCodeAndroidBottomSheetTitle: Got a promo code?
-paymentPromoCodeAndroidBottomSheetBody: To enter the promo code, select “Redeem code” as payments method.
-paymentFailedBottomSheetTitle: Payment failed
-paymentFailedBottomSheetBody: The app store couldn’t process your payment. Please try again later.
-readerModeUnableToLoadTitle: We couldn’t load this content
-readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
-readerModeUnableToLoadCTA: Open in Browser
-noInternetConnection: No internet connection
-invalidSearch: Please enter a valid search term
+contactSectionSupportEmail: 'Ondersteuning e-mail:'
+contactSectionForPublishers: 'Voor uitgevers:'
+contactSectionPhone: 'Telefoon:'
+searchNoResultsFound: Geen resultaten
+searchEndOfResults: Dat is alles!
+searchNoResultsFoundDesc: We konden geen verhalen vinden voor je zoekopdracht. Probeer andere of meer algemene zoekwoorden.
+searchEndOfResultsDesc: Niet gezien wat u zoekt? Probeer andere of meer algemene zoekwoorden.
+feedSettingsScreenSourceFilterExplanation: Bronnen die u niet leuk vond, worden niet meer weergegeven in uw Discovery-feed.
+feedSettingsScreenTabCountries: Landen
+feedSettingsScreenTabSources: Bronnen
+feedSettingsScreenSubtitleDislikedSources: Verborgen Bronnen
+settingsSectionHomeFeed: Voerinstellingen
+paymentPromoCodeAndroidBottomSheetTitle: Heeft u een promotiecode?
+paymentPromoCodeAndroidBottomSheetBody: Om de promotiecode in te voeren, selecteert u "Code inwisselen" als betaalmethode.
+paymentFailedBottomSheetTitle: Betaling mislukt
+paymentFailedBottomSheetBody: De winkel kan uw betaling niet verwerken. Probeer het later opnieuw.
+readerModeUnableToLoadTitle: We kunnen deze inhoud niet laden
+readerModeUnableToLoadDesc: Dit artikel is niet beschikbaar gesteld om te lezen in onze app. Lees verder in de browser.
+readerModeUnableToLoadCTA: Open in de browser
+noInternetConnection: Geen internet verbinding
+invalidSearch: Voer een geldige zoekterm in
 onboardingBottomDialog:
-  homeSwipeVerticalTitle: Swipe upwards to see the next article
-  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
-  homeSwipeSideTitle: Swipe sideways to like or dislike
-  homeManageBookmarksTitle: Long press the save button to manage it
-  collectionManageTitle: Long press or swipe to manage your collections
-  bookmarksManageTitle: Long press or swipe to manage your bookmarks
+  homeSwipeVerticalTitle: Veeg omhoog om het volgende artikel te zien
+  homeSwipeVerticalMsg: Onze feed wordt met elke like en dislike beter en beter
+  homeSwipeSideTitle: Swipe horizontaal om iets leuk of niet leuk te vinden
+  homeManageBookmarksTitle: Druk eenmaal lang op 'opslaan' om ze te beheren
+  collectionManageTitle: Lang indrukken om uw collecties te beheren
+  bookmarksManageTitle: Lang indrukken om uw bladwijzers te beheren
+  cancelButton: Ik snap het!
 general:
-  btnClose: Close
-subscriptionDurationMonth: month
+  btnClose: Concluderen
+subscriptionDurationMonth: Maand
+takeSurveyTitle: Heb je even?
+takeSurveySubtitle: Hoe kunnen we Xayn nog beter maken?
+takeSurveyCTA: Breng me naar de enquête
