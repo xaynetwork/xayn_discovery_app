@@ -291,14 +291,14 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestDeepSearch(String term, FeedMarket market) {
-    // TODO: implement requestDeepSearch
-    throw UnimplementedError();
+  Future<EngineEvent> requestDeepSearch(DocumentId id) {
+    _inputLog.add('[requestDeepSearch]');
+    return safeRun(() => _engine.requestDeepSearch(id));
   }
 
   @override
   Future<EngineEvent> resetAi() {
-    // TODO: implement resetAi
-    throw UnimplementedError();
+    _inputLog.add('[resetAi]');
+    return safeRun(() => _engine.resetAi());
   }
 }

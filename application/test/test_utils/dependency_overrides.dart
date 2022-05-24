@@ -179,7 +179,7 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> requestDeepSearch(String term, FeedMarket market) {
+  Future<EngineEvent> requestDeepSearch(DocumentId id) {
     // TODO: implement requestDeepSearch
     throw UnimplementedError();
   }
