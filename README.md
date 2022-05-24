@@ -3,16 +3,16 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 
 <p align="center">
-    <img src="./docs/xayn_logo.svg" width="200">
+    <img src="./.github/art/xayn_logo.svg" width="200">
 </p>
 <br/>
 <p align="center">
-    <a href="https://apps.apple.com/us/app/id1605873072"> <img src="./docs/app_store_badge.svg" alt="Get it on App Store" width="180"/> </a>  
-    <a href="https://play.google.com/store/apps/details?id=com.xayn.discovery" target="_blank"> <img src="./docs/play_store_badge.png" alt="Get it on Google Play" width="180"/></a>
+    <a href="https://apps.apple.com/us/app/id1605873072"> <img src="./.github/art/app_store_badge.svg" alt="Get it on App Store" width="180"/> </a>  
+    <a href="https://play.google.com/store/apps/details?id=com.xayn.discovery" target="_blank"> <img src="./.github/art/play_store_badge.png" alt="Get it on Google Play" width="180"/></a>
 </p>
 <br/>
 
-<img align="right" src="./docs/app_screenshot.png" width="200"> 
+<img align="right" src="./.github/art/app_screenshot.png" width="200"> 
 
 [Xayn Discovery](https://beta.xayn.com/) is your news assistant that discovers an endless stream of
 news, articles and other content for you. Ad-free, loaded with privacy features and highly
