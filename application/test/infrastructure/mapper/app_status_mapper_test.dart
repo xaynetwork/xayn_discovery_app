@@ -58,6 +58,7 @@ void main() {
         AppStatusFields.userId: userIdValue,
         AppStatusFields.lastSeenDate: lastSeen,
         AppStatusFields.onboardingStatus: onboardingMap,
+        AppStatusFields.isBetaUser: false,
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -70,6 +71,7 @@ void main() {
           lastSeenDate: lastSeen,
           onboardingStatus: const OnboardingStatus.initial(),
           ratingDialogAlreadyVisible: false,
+          isBetaUser: false,
         ),
       );
     });
@@ -88,6 +90,7 @@ void main() {
         lastSeenDate: lastSeen,
         onboardingStatus: onboardingValue,
         ratingDialogAlreadyVisible: false,
+        isBetaUser: true,
       );
       final map = mapper.toMap(appStatus);
       final expectedMap = {
@@ -98,6 +101,7 @@ void main() {
         AppStatusFields.lastSeenDate: lastSeen,
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.ratingDialogAlreadyVisible: false,
+        AppStatusFields.isBetaUser: true,
       };
       expect(map, expectedMap);
     });

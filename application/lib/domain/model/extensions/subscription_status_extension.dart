@@ -3,6 +3,10 @@ import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 
 extension SubscriptionStatusExtension on SubscriptionStatus {
   SubscriptionType get subscriptionType {
+    if (isBetaUser) {
+      return SubscriptionType.subscribed;
+    }
+
     final now = DateTime.now();
     if (expirationDate?.isAfter(now) ?? false) {
       return SubscriptionType.subscribed;

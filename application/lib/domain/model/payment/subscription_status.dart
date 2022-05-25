@@ -9,6 +9,7 @@ class SubscriptionStatus with _$SubscriptionStatus {
     required DateTime? expirationDate,
     required DateTime? trialEndDate,
     required DateTime? purchaseDate,
+    required bool isBetaUser,
   }) = _SubscriptionStatus;
 
   factory SubscriptionStatus.initial() => const SubscriptionStatus(
@@ -16,5 +17,6 @@ class SubscriptionStatus with _$SubscriptionStatus {
         expirationDate: null,
         trialEndDate: null,
         purchaseDate: null,
+        isBetaUser: false,
       );
 }
