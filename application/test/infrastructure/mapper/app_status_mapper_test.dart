@@ -29,6 +29,7 @@ void main() {
     0: 'hi there',
   };
   final appVersionValue = AppVersion.initial();
+  const numberOfSurveysShown = 0;
 
   setUp(() async {
     mockMapToAppVersionMapper = MockMapToAppVersionMapper();
@@ -59,6 +60,7 @@ void main() {
         AppStatusFields.lastSeenDate: lastSeen,
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.isBetaUser: false,
+        AppStatusFields.numberOfSurveysShown: numberOfSurveysShown,
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -72,6 +74,7 @@ void main() {
           onboardingStatus: const OnboardingStatus.initial(),
           ratingDialogAlreadyVisible: false,
           isBetaUser: false,
+          numberOfSurveysShown: numberOfSurveysShown,
         ),
       );
     });
@@ -91,7 +94,9 @@ void main() {
         onboardingStatus: onboardingValue,
         ratingDialogAlreadyVisible: false,
         isBetaUser: true,
+        numberOfSurveysShown: numberOfSurveysShown,
       );
+
       final map = mapper.toMap(appStatus);
       final expectedMap = {
         AppStatusFields.numberOfSessions: numberOfSessions,
@@ -102,6 +107,7 @@ void main() {
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.ratingDialogAlreadyVisible: false,
         AppStatusFields.isBetaUser: true,
+        AppStatusFields.numberOfSurveysShown: numberOfSurveysShown,
       };
       expect(map, expectedMap);
     });
