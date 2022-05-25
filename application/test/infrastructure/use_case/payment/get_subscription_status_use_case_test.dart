@@ -65,4 +65,30 @@ void main() {
       verifyNoMoreInteractions(paymentService);
     },
   );
+
+  test(
+    'GIVEN purchaseInfo without active subscription and is beta user THEN yield true',
+    () async {
+      // ARRANGE
+      when(paymentService.getPurchaserInfo()).thenAnswer(
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
+      );
+
+      when(repository.appStatus)
+          .thenAnswer((_) => AppStatus.initial().copyWith(isBetaUser: true));
+
+      // ACT
+      final subscriptionStatus = await useCase.singleOutput(none);
+
+      // ASSERT
+      expect(subscriptionStatus.isSubscriptionActive, isTrue);
+      expect(subscriptionStatus.isFreeTrialActive, isFalse);
+      expect(subscriptionStatus.willRenew, isFalse);
+      expect(subscriptionStatus.expirationDate, isNull);
+      expect(subscriptionStatus.trialEndDate, isNotNull);
+      verify(paymentService.getPurchaserInfo());
+      verifyNoMoreInteractions(paymentService);
+    },
+  );
 }
