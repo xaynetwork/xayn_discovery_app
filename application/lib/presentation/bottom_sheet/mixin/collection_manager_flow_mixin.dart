@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
@@ -22,19 +24,26 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
     DocumentProvider? provider,
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
+    VoidCallback? onFlowFinished,
   }) {
+    final ignoreFlowFinished = Completer();
+
     void onCollectionAdded(Collection collection) => startBookmarkDocumentFlow(
           document,
           provider: provider,
           feedType: feedType,
           initialSelectedCollectionId: collection.id,
+          onFlowFinished: onFlowFinished,
         );
 
-    void onAddCollectionPressed() => showOverlay(
-          OverlayData.bottomSheetCreateOrRenameCollection(
-            onApplyPressed: onCollectionAdded,
-          ),
-        );
+    void onAddCollectionPressed() {
+      ignoreFlowFinished.complete();
+      showOverlay(
+        OverlayData.bottomSheetCreateOrRenameCollection(
+          onApplyPressed: onCollectionAdded,
+        ),
+      );
+    }
 
     final moveDocumentToCollectionSheet =
         OverlayData.bottomSheetMoveDocumentToCollection(
@@ -43,6 +52,11 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
       feedType: feedType,
       initialSelectedCollectionId: initialSelectedCollectionId,
       onAddCollectionPressed: onAddCollectionPressed,
+      onClose: () {
+        if (!ignoreFlowFinished.isCompleted) {
+          onFlowFinished?.call();
+        }
+      },
     );
 
     showOverlay(moveDocumentToCollectionSheet);

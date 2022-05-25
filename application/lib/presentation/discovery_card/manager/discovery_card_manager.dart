@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
+import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -34,6 +35,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -70,6 +72,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       _crudExplicitDocumentFeedbackUseCase;
   final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
+  final RatingDialogManager _ratingDialogManager;
+  final AppManager _appManager;
 
   /// html reader mode elements:
   ///
@@ -137,6 +141,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
     this._crudDocumentFilterUseCase,
+    this._ratingDialogManager,
+    this._appManager,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -187,7 +193,13 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required Document document,
     required FeedType? feedType,
   }) {
-    _shareUriUseCase.call(document.resource.url);
+    _shareUriUseCase.call(document.resource.url).then((value) {
+      _appManager.registerStateTransitionCallback(
+          AppTransitionConditions.returnToApp, () {
+        /// the app returned after being in background maybe show the rating dialog.
+        _ratingDialogManager.shareDocumentCompleted();
+      });
+    });
 
     _sendAnalyticsUseCase(DocumentSharedEvent(
       document: document,
@@ -206,13 +218,22 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     Document document, {
     FeedType? feedType,
   }) {
+    final didTap = Completer();
     showOverlay(
       OverlayData.tooltipBookmarked(
         document: document,
-        onTap: () => onBookmarkLongPressed(
-          document,
-          feedType: feedType,
-        ),
+        onTap: () {
+          didTap.complete();
+          onBookmarkLongPressed(
+            document,
+            feedType: feedType,
+          );
+        },
+        onClosed: () {
+          if (!didTap.isCompleted) {
+            _ratingDialogManager.completedBookmarking();
+          }
+        },
       ),
       when: (oS, nS) =>
           oS?.bookmarkStatus != BookmarkStatus.bookmarked &&
@@ -312,10 +333,21 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onBookmarkLongPressed(
     Document document, {
     FeedType? feedType,
-  }) =>
-      startBookmarkDocumentFlow(
-        document,
-        feedType: feedType,
-        provider: state.processedDocument?.getProvider(document.resource),
-      );
+  }) {
+    void callRatingWhenBookmarked() {
+      if (state.bookmarkStatus == BookmarkStatus.bookmarked) {
+        _ratingDialogManager.completedBookmarking();
+      }
+    }
+
+    final previous = state.bookmarkStatus;
+    startBookmarkDocumentFlow(
+      document,
+      feedType: feedType,
+      provider: state.processedDocument?.getProvider(document.resource),
+      onFlowFinished: () {
+        if (previous != BookmarkStatus.bookmarked) callRatingWhenBookmarked();
+      },
+    );
+  }
 }

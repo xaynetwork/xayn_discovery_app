@@ -1,149 +1,103 @@
+import 'dart:ui';
+
 import 'package:bloc_test/bloc_test.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/app_settings.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/app_theme.dart';
+import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../test_utils/widget_test_utils.dart';
+
+class FakeBrightnessProvider implements PlatformBrightnessProvider {
+  @override
+  Brightness brightness = Brightness.light;
+}
 
 void main() {
-  late MockConnectivityObserver connectivityObserver;
-  late MockListenAppThemeUseCase listenAppThemeUseCase;
-  late MockIncrementAppSessionUseCase incrementAppSessionUseCase;
-  late MockCreateOrGetDefaultCollectionUseCase
-      createOrGetDefaultCollectionUseCase;
-  late MockAppSettingsRepository appSettingsRepository;
-  late MockRenameDefaultCollectionUseCase renameDefaultCollectionUseCase;
-  late MockSetInitialIdentityParamsUseCase setInitialIdentityParamsUseCase;
-  late MockSetIdentityParamUseCase setIdentityParamUseCase;
-  late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
-  late MockListenSubscriptionStatusUseCase listenSubscriptionStatusUseCase;
-  late MockSetCollectionAndBookmarksChangesIdentityParam
-      setCollectionAndBookmarksChangesIdentityParam;
-  late MockPlatformBrightnessProvider platformBrightnessProvider;
+  late AppManager manager;
+  late FakeBrightnessProvider brightnessProvider;
+  late AppSettingsRepository appSettingsRepository;
 
-  late Collection mockDefaultCollection;
-  final subscriptionStatus = SubscriptionStatus.initial();
-
-  setUp(() {
-    connectivityObserver = MockConnectivityObserver();
-    mockDefaultCollection =
-        Collection.readLater(name: 'mock default collection');
-    listenAppThemeUseCase = MockListenAppThemeUseCase();
-    incrementAppSessionUseCase = MockIncrementAppSessionUseCase();
-    createOrGetDefaultCollectionUseCase =
-        MockCreateOrGetDefaultCollectionUseCase();
-    renameDefaultCollectionUseCase = MockRenameDefaultCollectionUseCase();
-    setInitialIdentityParamsUseCase = MockSetInitialIdentityParamsUseCase();
-    setIdentityParamUseCase = MockSetIdentityParamUseCase();
-    getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
-    listenSubscriptionStatusUseCase = MockListenSubscriptionStatusUseCase();
-    setCollectionAndBookmarksChangesIdentityParam =
-        MockSetCollectionAndBookmarksChangesIdentityParam();
-    appSettingsRepository = MockAppSettingsRepository();
-    platformBrightnessProvider = MockPlatformBrightnessProvider();
-
-    when(appSettingsRepository.settings).thenReturn(AppSettings.initial());
-
-    when(incrementAppSessionUseCase.call(none)).thenAnswer(
-      (_) async => const [
-        UseCaseResult.success(none),
-      ],
-    );
-    when(listenAppThemeUseCase.transform(any)).thenAnswer(
-      (_) => const Stream.empty(),
-    );
-    when(createOrGetDefaultCollectionUseCase.call(any)).thenAnswer(
-      (_) async => [
-        UseCaseResult.success(mockDefaultCollection),
-      ],
-    );
-    when(setInitialIdentityParamsUseCase.call(none)).thenAnswer(
-      (_) async => const [UseCaseResult.success(none)],
-    );
-    when(setCollectionAndBookmarksChangesIdentityParam.call(none)).thenAnswer(
-      (_) async => const [UseCaseResult.success(none)],
-    );
-    when(getSubscriptionStatusUseCase.singleOutput(any))
-        .thenAnswer((_) async => subscriptionStatus);
-    when(listenSubscriptionStatusUseCase.transaction(any))
-        .thenAnswer((_) => Stream.value(subscriptionStatus));
-    when(listenSubscriptionStatusUseCase.transform(any))
-        .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(setIdentityParamUseCase.call(any)).thenAnswer(
-      (_) async => const [UseCaseResult.success(none)],
-    );
-    when(platformBrightnessProvider.brightness)
-        .thenAnswer((realInvocation) => Brightness.dark);
-    when(connectivityObserver.onConnectivityChanged)
-        .thenAnswer((realInvocation) => Stream.value(ConnectivityResult.wifi));
-    when(connectivityObserver.checkConnectivity())
-        .thenAnswer((realInvocation) => Future.value(ConnectivityResult.wifi));
-    when(connectivityObserver.forceConnectivityCheck())
-        .thenAnswer((realInvocation) => Future.value(ConnectivityResult.wifi));
+  setUp(() async {
+    await setupWidgetTest();
   });
 
-  AppManager create() => AppManager(
-        connectivityObserver,
-        listenAppThemeUseCase,
-        incrementAppSessionUseCase,
-        createOrGetDefaultCollectionUseCase,
-        renameDefaultCollectionUseCase,
-        setInitialIdentityParamsUseCase,
-        setIdentityParamUseCase,
-        getSubscriptionStatusUseCase,
-        listenSubscriptionStatusUseCase,
-        setCollectionAndBookmarksChangesIdentityParam,
-        appSettingsRepository,
-        platformBrightnessProvider,
-      );
+  AppManager _createManager({AppTheme theme = AppTheme.system}) {
+    brightnessProvider = FakeBrightnessProvider();
+    appSettingsRepository = di.get();
+    appSettingsRepository
+        .save(appSettingsRepository.settings.copyWith(appTheme: theme));
 
-  blocTest<AppManager, AppState>(
-    'GIVEN manager WHEN it is created THEN verify appTheme received',
-    build: create,
-    expect: () => const [
-      AppState(
-        brightness: Brightness.dark,
-        isAppPaused: false,
-      )
+    manager = AppManager(
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      di.get(),
+      appSettingsRepository,
+      brightnessProvider,
+    );
+
+    return manager;
+  }
+
+  test("When the app theme is system, deliver the system brightness", () async {
+    _createManager();
+
+    expect(manager.state.brightness, Brightness.light);
+  });
+
+  blocTest(
+    "When the app theme is system, and we switch the brightness, deliver the system brightness",
+    build: () => _createManager(),
+    act: (m) {
+      brightnessProvider.brightness = Brightness.dark;
+      manager.onChangedPlatformBrightness();
+    },
+    skip: 1,
+    expect: () => [
+      const AppState(brightness: Brightness.dark, isAppPaused: false),
     ],
-    verify: (manager) {
-      verifyInOrder([
-        appSettingsRepository.settings,
-        incrementAppSessionUseCase.call(none),
-        createOrGetDefaultCollectionUseCase
-            .call(R.strings.defaultCollectionNameReadLater),
-        setInitialIdentityParamsUseCase.call(none),
-        setIdentityParamUseCase.call(any),
-        setIdentityParamUseCase.call(any),
-      ]);
-      verifyNoMoreInteractions(appSettingsRepository);
-      verifyNoMoreInteractions(createOrGetDefaultCollectionUseCase);
-      verifyNoMoreInteractions(setInitialIdentityParamsUseCase);
-      verifyNoMoreInteractions(setIdentityParamUseCase);
-      verifyNoMoreInteractions(incrementAppSessionUseCase);
-    },
   );
 
-  blocTest<AppManager, AppState>(
-    'WHEN maybeUpdateDefaultCollectionName is called THEN call the useCase',
-    build: create,
-    act: (manager) => manager.maybeUpdateDefaultCollectionName(),
-    verify: (manager) {
-      verify(
-        renameDefaultCollectionUseCase.call(
-          R.strings.defaultCollectionNameReadLater,
-        ),
-      ).called(1);
+  test(
+      "When registering a lifecycle callback, call-back when condition is fulfilled",
+      () async {
+    _createManager();
 
-      verifyNoMoreInteractions(renameDefaultCollectionUseCase);
-    },
-  );
+    int callbackExecuted = 0;
+    manager.registerStateTransitionCallback(
+        AppTransitionConditions.returnToApp, () => callbackExecuted++);
+
+    manager.onChangeAppLifecycleState(AppLifecycleState.inactive);
+    manager.onChangeAppLifecycleState(AppLifecycleState.resumed);
+
+    expect(callbackExecuted, 1);
+  });
+
+  test(
+      "When registering a lifecycle callback, call-back only once when condition is fulfilled",
+      () async {
+    _createManager();
+
+    int callbackExecuted = 0;
+    manager.registerStateTransitionCallback(
+        AppTransitionConditions.returnToApp, () => callbackExecuted++);
+
+    manager.onChangeAppLifecycleState(AppLifecycleState.inactive);
+    manager.onChangeAppLifecycleState(AppLifecycleState.resumed);
+    callbackExecuted = 0;
+
+    manager.onChangeAppLifecycleState(AppLifecycleState.inactive);
+    manager.onChangeAppLifecycleState(AppLifecycleState.resumed);
+
+    expect(callbackExecuted, 0);
+  });
 }

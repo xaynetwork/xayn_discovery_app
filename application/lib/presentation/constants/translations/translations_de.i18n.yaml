@@ -85,7 +85,7 @@ trialBannerEndsIn: Deine Testversion ended in %s Tagen
 trialBannerEndsTomorrow: Deine Testversion ended morgen
 trialBannerEndsToday: Deine Testversion ended heute
 trialBannerExpired: Deine Testversion ist vorbei
-subscriptionHeader: Hol Dir unbegrenzte Inhalte für
+subscriptionHeader: Hol Dir Xayn unbegrenzt für nur
 subscriptionPricingError: Preisinfos können nicht abgerufen werden
 subscriptionPerk1: Personalisierter Stream
 subscriptionPerk2: Ohne Werbung
@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Zahlungsvorgang fehlgeschlagen
-  noActiveSubscriptionFound: Kein aktives Abo gefunden
+  noActiveSubscriptionFound: Kein aktives Abo für dieses Konto gefunden
 bottomSheetDeleteCollectionWithNoItemsBody: Willst Du diese Sammlung wirklich löschen?
 bottomSheetMoveSingleBookmark: In eine andere Collection verschieben
 readerModeSettingsErrorChangesNotApplied: Die Änderungen konnten nicht gespeichert werden
@@ -147,22 +147,31 @@ settingsSectionHomeFeed: Feedeinstellungen
 paymentPromoCodeAndroidBottomSheetTitle: Du hast einen Aktionscode?
 paymentPromoCodeAndroidBottomSheetBody: Um den Aktionscode einzugeben, wähle einfach „Code einlösen“ als Zahlungsmethode aus.
 paymentFailedBottomSheetTitle: Bezahlung fehlgeschlagen
-paymentFailedBottomSheetBody: The app store couldn’t process your payment. Please try again later.
+paymentFailedBottomSheetBody: Der Store konnte die Zahlung leider nicht verarbeiten. Bitte versuche es später erneut.
 readerModeUnableToLoadTitle: Dieser Inhalt konnte nicht geladen werden
-readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
+readerModeUnableToLoadDesc: Dieser Artikel wurde nicht zum Lesen in unserer App bereitgestellt. Zum lesen bitte im Browser fortfahren.
 readerModeUnableToLoadCTA: Im Browser öffnen
 noInternetConnection: Keine Internetverbindung
-invalidSearch: Please enter a valid search term
+invalidSearch: Bitte gib einen gültigen Suchbegriff ein
 onboardingBottomDialog:
-  homeSwipeVerticalTitle: Swipe upwards to see the next article
-  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
-  homeSwipeSideTitle: Swipe sideways to like or dislike
-  homeManageBookmarksTitle: Long press the save button to manage it
-  collectionManageTitle: Long press or swipe to manage your collections
-  bookmarksManageTitle: Long press or swipe to manage your bookmarks
+  homeSwipeVerticalTitle: Einfach hoch wischen für den nächsten Artikel
+  homeSwipeVerticalMsg: Unser Feed wird mit jedem Like und Dislike immer besser
+  homeSwipeSideTitle: Durch seitwärts wischen kannst du liken oder disliken
+  homeManageBookmarksTitle: Einmal lange auf 'speichern' drücken, um sie zu verwalten
+  collectionManageTitle: Lange drücken oder wischen, um Deine Collections zu verwalten
+  bookmarksManageTitle: Lange drücken oder wischen, um Deine Lesezeichen zu verwalten
+  cancelButton: Verstanden!
 general:
+<<<<<<< HEAD
   btnClose: Close
 subscriptionDurationMonth: month
 takeSurveyTitle: Wanna help us improve the app?
 takeSurveySubtitle: We would love to hear it and make it better for you.
 takeSurveyCTA: Take me to the survey
+=======
+  btnClose: Schließen
+subscriptionDurationMonth: Monat
+takeSurveyTitle: Hast Du mal 'ne Minute?
+takeSurveySubtitle: Wie können wir Xayn noch besser machen?
+takeSurveyCTA: Bring mich zur Umfrage
+>>>>>>> main

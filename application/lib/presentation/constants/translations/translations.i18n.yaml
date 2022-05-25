@@ -85,7 +85,7 @@ trialBannerEndsIn: Your trial ends in %s days
 trialBannerEndsTomorrow: Your trial ends tomorrow
 trialBannerEndsToday: Your trial ends today
 trialBannerExpired: Your trial expired
-subscriptionHeader: Get unlimited content for just
+subscriptionHeader: Get Xayn unlimited for just
 subscriptionPricingError: Unable to retrieve pricing details
 subscriptionPerk1: Personalised stream
 subscriptionPerk2: No ads
@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Payment transaction failed
-  noActiveSubscriptionFound: We couldn't find an active subscription for this account.
+  noActiveSubscriptionFound: We couldn't find an active subscription for this account
 bottomSheetDeleteCollectionWithNoItemsBody: Do you really want to delete this collection?
 bottomSheetMoveSingleBookmark: Move to another collection
 readerModeSettingsErrorChangesNotApplied: Changes couldn't be applied
@@ -128,7 +128,7 @@ errorClose: Close
 sourceHandlingTooltipLabel: What do you want to see less of?
 # Needs to be same like the "What" word in  sourceHandlingTooltipLabel
 sourceHandlingTooltipHighlightedWord: What
-enableTextToSpeech: Enable text -to-speech
+enableTextToSpeech: Enable text-to-speech
 settingsSectionTitleOptions: Options
 personalAreaContact: Contact
 settingsContactUs: Contact
@@ -155,7 +155,7 @@ settingsSectionHomeFeed: Feed setup
 paymentPromoCodeAndroidBottomSheetTitle: Got a promo code?
 paymentPromoCodeAndroidBottomSheetBody: To enter the promo code, select “Redeem code” as payments method.
 paymentFailedBottomSheetTitle: Payment failed
-paymentFailedBottomSheetBody: The app store couldn’t process your payment. Please try again later.
+paymentFailedBottomSheetBody: The store couldn’t process your payment. Please try again later.
 readerModeUnableToLoadTitle: We couldn’t load this content
 readerModeUnableToLoadDesc: This article was not made available to be read on our app. To read it, please continue to it using your browser.
 readerModeUnableToLoadCTA: Open in Browser
@@ -163,14 +163,20 @@ noInternetConnection: No internet connection
 invalidSearch: Please enter a valid search term
 onboardingBottomDialog:
   homeSwipeVerticalTitle: Swipe upwards to see the next article
-  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
+  homeSwipeVerticalMsg: Our feed gets better and better with every like and dislike
   homeSwipeSideTitle: Swipe sideways to like or dislike
   homeManageBookmarksTitle: Long press the save button to manage it
   collectionManageTitle: Long press or swipe to manage your collections
   bookmarksManageTitle: Long press or swipe to manage your bookmarks
+  cancelButton: Got it!
 general:
   btnClose: Close
 subscriptionDurationMonth: month
+<<<<<<< HEAD
 takeSurveyTitle: Wanna help us improve the app?
 takeSurveySubtitle: We would love to hear it and make it better for you.
+=======
+takeSurveyTitle: Got a minute?
+takeSurveySubtitle: We'd love your opinion on how to make the app better
+>>>>>>> main
 takeSurveyCTA: Take me to the survey

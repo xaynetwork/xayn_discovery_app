@@ -149,7 +149,7 @@ class TranslationsDe extends Translations {
   String get trialBannerEndsTomorrow => """Deine Testversion ended morgen""";
   String get trialBannerEndsToday => """Deine Testversion ended heute""";
   String get trialBannerExpired => """Deine Testversion ist vorbei""";
-  String get subscriptionHeader => """Hol Dir unbegrenzte Inhalte für""";
+  String get subscriptionHeader => """Hol Dir Xayn unbegrenzt für nur""";
   String get subscriptionPricingError =>
       """Preisinfos können nicht abgerufen werden""";
   String get subscriptionPerk1 => """Personalisierter Stream""";
@@ -215,22 +215,22 @@ class TranslationsDe extends Translations {
       """Um den Aktionscode einzugeben, wähle einfach „Code einlösen“ als Zahlungsmethode aus.""";
   String get paymentFailedBottomSheetTitle => """Bezahlung fehlgeschlagen""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later.""";
+      """Der Store konnte die Zahlung leider nicht verarbeiten. Bitte versuche es später erneut.""";
   String get readerModeUnableToLoadTitle =>
       """Dieser Inhalt konnte nicht geladen werden""";
   String get readerModeUnableToLoadDesc =>
-      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
+      """Dieser Artikel wurde nicht zum Lesen in unserer App bereitgestellt. Zum lesen bitte im Browser fortfahren.""";
   String get readerModeUnableToLoadCTA => """Im Browser öffnen""";
   String get noInternetConnection => """Keine Internetverbindung""";
-  String get invalidSearch => """Please enter a valid search term""";
+  String get invalidSearch => """Bitte gib einen gültigen Suchbegriff ein""";
   OnboardingBottomDialogTranslationsDe get onboardingBottomDialog =>
       OnboardingBottomDialogTranslationsDe(this);
   GeneralTranslationsDe get general => GeneralTranslationsDe(this);
-  String get subscriptionDurationMonth => """month""";
-  String get takeSurveyTitle => """Wanna help us improve the app?""";
+  String get subscriptionDurationMonth => """Monat""";
+  String get takeSurveyTitle => """Hast Du mal 'ne Minute?""";
   String get takeSurveySubtitle =>
-      """We would love to hear it and make it better for you.""";
-  String get takeSurveyCTA => """Take me to the survey""";
+      """Wie können wir Xayn noch besser machen?""";
+  String get takeSurveyCTA => """Bring mich zur Umfrage""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -241,7 +241,8 @@ class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
   String get productNotFound => """Produkt nicht gefunden :(""";
   String get itemAlreadyOwned => """Du bist bereits abonniert""";
   String get transactionFailed => """Zahlungsvorgang fehlgeschlagen""";
-  String get noActiveSubscriptionFound => """Kein aktives Abo gefunden""";
+  String get noActiveSubscriptionFound =>
+      """Kein aktives Abo für dieses Konto gefunden""";
 }
 
 class OnboardingBottomDialogTranslationsDe
@@ -249,22 +250,24 @@ class OnboardingBottomDialogTranslationsDe
   final TranslationsDe _parent;
   const OnboardingBottomDialogTranslationsDe(this._parent) : super(_parent);
   String get homeSwipeVerticalTitle =>
-      """Swipe upwards to see the next article""";
+      """Einfach hoch wischen für den nächsten Artikel""";
   String get homeSwipeVerticalMsg =>
-      """Our continuous feed gets better and better every time you like and dislike the content here.""";
-  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+      """Unser Feed wird mit jedem Like und Dislike immer besser""";
+  String get homeSwipeSideTitle =>
+      """Durch seitwärts wischen kannst du liken oder disliken""";
   String get homeManageBookmarksTitle =>
-      """Long press the save button to manage it""";
+      """Einmal lange auf 'speichern' drücken, um sie zu verwalten""";
   String get collectionManageTitle =>
-      """Long press or swipe to manage your collections""";
+      """Lange drücken oder wischen, um Deine Collections zu verwalten""";
   String get bookmarksManageTitle =>
-      """Long press or swipe to manage your bookmarks""";
+      """Lange drücken oder wischen, um Deine Lesezeichen zu verwalten""";
+  String get cancelButton => """Verstanden!""";
 }
 
 class GeneralTranslationsDe extends GeneralTranslations {
   final TranslationsDe _parent;
   const GeneralTranslationsDe(this._parent) : super(_parent);
-  String get btnClose => """Close""";
+  String get btnClose => """Schließen""";
 }
 
 Map<String, String> get translationsDeMap => {
@@ -362,7 +365,7 @@ Map<String, String> get translationsDeMap => {
       """trialBannerEndsTomorrow""": """Deine Testversion ended morgen""",
       """trialBannerEndsToday""": """Deine Testversion ended heute""",
       """trialBannerExpired""": """Deine Testversion ist vorbei""",
-      """subscriptionHeader""": """Hol Dir unbegrenzte Inhalte für""",
+      """subscriptionHeader""": """Hol Dir Xayn unbegrenzt für nur""",
       """subscriptionPricingError""":
           """Preisinfos können nicht abgerufen werden""",
       """subscriptionPerk1""": """Personalisierter Stream""",
@@ -392,7 +395,7 @@ Map<String, String> get translationsDeMap => {
       """paymentFlowError.transactionFailed""":
           """Zahlungsvorgang fehlgeschlagen""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """Kein aktives Abo gefunden""",
+          """Kein aktives Abo für dieses Konto gefunden""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Willst Du diese Sammlung wirklich löschen?""",
       """bottomSheetMoveSingleBookmark""":
@@ -432,30 +435,30 @@ Map<String, String> get translationsDeMap => {
           """Um den Aktionscode einzugeben, wähle einfach „Code einlösen“ als Zahlungsmethode aus.""",
       """paymentFailedBottomSheetTitle""": """Bezahlung fehlgeschlagen""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later.""",
+          """Der Store konnte die Zahlung leider nicht verarbeiten. Bitte versuche es später erneut.""",
       """readerModeUnableToLoadTitle""":
           """Dieser Inhalt konnte nicht geladen werden""",
       """readerModeUnableToLoadDesc""":
-          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
+          """Dieser Artikel wurde nicht zum Lesen in unserer App bereitgestellt. Zum lesen bitte im Browser fortfahren.""",
       """readerModeUnableToLoadCTA""": """Im Browser öffnen""",
       """noInternetConnection""": """Keine Internetverbindung""",
-      """invalidSearch""": """Please enter a valid search term""",
+      """invalidSearch""": """Bitte gib einen gültigen Suchbegriff ein""",
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
-          """Swipe upwards to see the next article""",
+          """Einfach hoch wischen für den nächsten Artikel""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+          """Unser Feed wird mit jedem Like und Dislike immer besser""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
-          """Swipe sideways to like or dislike""",
+          """Durch seitwärts wischen kannst du liken oder disliken""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":
-          """Long press the save button to manage it""",
+          """Einmal lange auf 'speichern' drücken, um sie zu verwalten""",
       """onboardingBottomDialog.collectionManageTitle""":
-          """Long press or swipe to manage your collections""",
+          """Lange drücken oder wischen, um Deine Collections zu verwalten""",
       """onboardingBottomDialog.bookmarksManageTitle""":
-          """Long press or swipe to manage your bookmarks""",
-      """general.btnClose""": """Close""",
-      """subscriptionDurationMonth""": """month""",
-      """takeSurveyTitle""": """Wanna help us improve the app?""",
-      """takeSurveySubtitle""":
-          """We would love to hear it and make it better for you.""",
-      """takeSurveyCTA""": """Take me to the survey""",
+          """Lange drücken oder wischen, um Deine Lesezeichen zu verwalten""",
+      """onboardingBottomDialog.cancelButton""": """Verstanden!""",
+      """general.btnClose""": """Schließen""",
+      """subscriptionDurationMonth""": """Monat""",
+      """takeSurveyTitle""": """Hast Du mal 'ne Minute?""",
+      """takeSurveySubtitle""": """Wie können wir Xayn noch besser machen?""",
+      """takeSurveyCTA""": """Bring mich zur Umfrage""",
     };

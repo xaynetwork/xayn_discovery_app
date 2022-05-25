@@ -8,6 +8,11 @@ class EnvironmentHelper {
   static const String _flavor =
       String.fromEnvironment('USER_FLAVOR', defaultValue: "internal");
 
+  /// The release app ID. When running in the release mode, [kAppId] will be the same as [kReleaseAppId].
+  ///
+  /// @see [kAppId]
+  static const kReleaseAppId = 'com.xayn.discovery';
+
   /// Be aware this is the app id that is passed to the build during publish
   /// thus the USER_APP_ID value is not set during development and we are falling
   /// back to a fixed appId.

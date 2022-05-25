@@ -149,7 +149,7 @@ class TranslationsNl extends Translations {
   String get trialBannerEndsTomorrow => """Je proef eindigt morgen.""";
   String get trialBannerEndsToday => """Uw proef eindigt vandaag""";
   String get trialBannerExpired => """Uw proef is verlopen""";
-  String get subscriptionHeader => """Krijg onbeperkte inhoud voor slechts""";
+  String get subscriptionHeader => """Krijg Xayn onbeperkt voor slechts""";
   String get subscriptionPricingError => """Kan prijsinformatie niet ophalen""";
   String get subscriptionPerk1 => """Gepersonaliseerde stroom""";
   String get subscriptionPerk2 => """Geen advertenties""";
@@ -160,7 +160,7 @@ class TranslationsNl extends Translations {
   String get subscriptionRestore => """Herstel abonnement""";
   String get subscriptionPromoCode => """Ik heb een promo code""";
   String get subscriptionDisclaimer =>
-      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
+      """Door "Abonneer nu" te selecteren, word je doorgestuurd naar de App Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.""";
   String get settingsSubscribedToHeader => """U bent geabonneerd op""";
   String get doneButtonTitle => """Gedaan""";
   String get subscriptionRenewsMonthlyText =>
@@ -184,48 +184,49 @@ class TranslationsNl extends Translations {
       """Probeer het later nog eens.""";
   String get errorClose => """Sluiten""";
   String get sourceHandlingTooltipLabel => """Waar wil je minder van zien?""";
-  String get sourceHandlingTooltipHighlightedWord => """What""";
-  String get enableTextToSpeech => """Enable text -to-speech""";
-  String get settingsSectionTitleOptions => """Options""";
+  String get sourceHandlingTooltipHighlightedWord => """Wat""";
+  String get enableTextToSpeech => """Tekst-naar-spraak inschakelen""";
+  String get settingsSectionTitleOptions => """Opties""";
   String get personalAreaContact => """Contact""";
   String get settingsContactUs => """Contact""";
   String get contactSectionWeb => """Web:""";
-  String get contactSectionSupportEmail => """Support eMail:""";
-  String get contactSectionForPublishers => """For Publishers:""";
-  String get contactSectionPhone => """Phone:""";
-  String get searchNoResultsFound => """No results""";
-  String get searchEndOfResults => """That's all!""";
+  String get contactSectionSupportEmail => """Ondersteuning e-mail:""";
+  String get contactSectionForPublishers => """Voor uitgevers:""";
+  String get contactSectionPhone => """Telefoon:""";
+  String get searchNoResultsFound => """Geen resultaten""";
+  String get searchEndOfResults => """Dat is alles!""";
   String get searchNoResultsFoundDesc =>
-      """We couldn’t find any stories for your search. Try different or more general keywords.""";
+      """We konden geen verhalen vinden voor je zoekopdracht. Probeer andere of meer algemene zoekwoorden.""";
   String get searchEndOfResultsDesc =>
-      """Didn’t see what you're looking for? Try different or more general keywords.""";
+      """Niet gezien wat u zoekt? Probeer andere of meer algemene zoekwoorden.""";
   String get feedSettingsScreenSourceFilterExplanation =>
-      """Sources that you disliked will not be shown in your Discovery Feed anymore.""";
-  String get feedSettingsScreenTabCountries => """Countries""";
-  String get feedSettingsScreenTabSources => """Sources""";
+      """Bronnen die u niet leuk vond, worden niet meer weergegeven in uw Discovery-feed.""";
+  String get feedSettingsScreenTabCountries => """Landen""";
+  String get feedSettingsScreenTabSources => """Bronnen""";
   String get feedSettingsScreenSubtitleDislikedSources =>
-      """Disliked Sources""";
-  String get settingsSectionHomeFeed => """Feed setup""";
-  String get paymentPromoCodeAndroidBottomSheetTitle => """Got a promo code?""";
+      """Verborgen Bronnen""";
+  String get settingsSectionHomeFeed => """Voerinstellingen""";
+  String get paymentPromoCodeAndroidBottomSheetTitle =>
+      """Heeft u een promotiecode?""";
   String get paymentPromoCodeAndroidBottomSheetBody =>
-      """To enter the promo code, select “Redeem code” as payments method.""";
-  String get paymentFailedBottomSheetTitle => """Payment failed""";
+      """Om de promotiecode in te voeren, selecteert u "Code inwisselen" als betaalmethode.""";
+  String get paymentFailedBottomSheetTitle => """Betaling mislukt""";
   String get paymentFailedBottomSheetBody =>
-      """The app store couldn’t process your payment. Please try again later.""";
-  String get readerModeUnableToLoadTitle => """We couldn’t load this content""";
+      """De winkel kan uw betaling niet verwerken. Probeer het later opnieuw.""";
+  String get readerModeUnableToLoadTitle =>
+      """We kunnen deze inhoud niet laden""";
   String get readerModeUnableToLoadDesc =>
-      """This article was not made available to be read on our app. To read it, please continue to it using your browser.""";
-  String get readerModeUnableToLoadCTA => """Open in Browser""";
-  String get noInternetConnection => """No internet connection""";
-  String get invalidSearch => """Please enter a valid search term""";
+      """Dit artikel is niet beschikbaar gesteld om te lezen in onze app. Lees verder in de browser.""";
+  String get readerModeUnableToLoadCTA => """Open in de browser""";
+  String get noInternetConnection => """Geen internet verbinding""";
+  String get invalidSearch => """Voer een geldige zoekterm in""";
   OnboardingBottomDialogTranslationsNl get onboardingBottomDialog =>
       OnboardingBottomDialogTranslationsNl(this);
   GeneralTranslationsNl get general => GeneralTranslationsNl(this);
-  String get subscriptionDurationMonth => """month""";
-  String get takeSurveyTitle => """Wanna help us improve the app?""";
-  String get takeSurveySubtitle =>
-      """We would love to hear it and make it better for you.""";
-  String get takeSurveyCTA => """Take me to the survey""";
+  String get subscriptionDurationMonth => """Maand""";
+  String get takeSurveyTitle => """Heb je even?""";
+  String get takeSurveySubtitle => """Hoe kunnen we Xayn nog beter maken?""";
+  String get takeSurveyCTA => """Breng me naar de enquête""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -238,7 +239,7 @@ class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
   String get itemAlreadyOwned => """U bent reeds ingeschreven""";
   String get transactionFailed => """Betalingstransactie mislukt""";
   String get noActiveSubscriptionFound =>
-      """We couldn't find an active subscription for this account.""";
+      """We konden geen actief abonnement vinden voor dit account""";
 }
 
 class OnboardingBottomDialogTranslationsNl
@@ -246,22 +247,24 @@ class OnboardingBottomDialogTranslationsNl
   final TranslationsNl _parent;
   const OnboardingBottomDialogTranslationsNl(this._parent) : super(_parent);
   String get homeSwipeVerticalTitle =>
-      """Swipe upwards to see the next article""";
+      """Veeg omhoog om het volgende artikel te zien""";
   String get homeSwipeVerticalMsg =>
-      """Our continuous feed gets better and better every time you like and dislike the content here.""";
-  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+      """Onze feed wordt met elke like en dislike beter en beter""";
+  String get homeSwipeSideTitle =>
+      """Swipe horizontaal om iets leuk of niet leuk te vinden""";
   String get homeManageBookmarksTitle =>
-      """Long press the save button to manage it""";
+      """Druk eenmaal lang op 'opslaan' om ze te beheren""";
   String get collectionManageTitle =>
-      """Long press or swipe to manage your collections""";
+      """Lang indrukken om uw collecties te beheren""";
   String get bookmarksManageTitle =>
-      """Long press or swipe to manage your bookmarks""";
+      """Lang indrukken om uw bladwijzers te beheren""";
+  String get cancelButton => """Ik snap het!""";
 }
 
 class GeneralTranslationsNl extends GeneralTranslations {
   final TranslationsNl _parent;
   const GeneralTranslationsNl(this._parent) : super(_parent);
-  String get btnClose => """Close""";
+  String get btnClose => """Concluderen""";
 }
 
 Map<String, String> get translationsNlMap => {
@@ -357,7 +360,7 @@ Map<String, String> get translationsNlMap => {
       """trialBannerEndsTomorrow""": """Je proef eindigt morgen.""",
       """trialBannerEndsToday""": """Uw proef eindigt vandaag""",
       """trialBannerExpired""": """Uw proef is verlopen""",
-      """subscriptionHeader""": """Krijg onbeperkte inhoud voor slechts""",
+      """subscriptionHeader""": """Krijg Xayn onbeperkt voor slechts""",
       """subscriptionPricingError""": """Kan prijsinformatie niet ophalen""",
       """subscriptionPerk1""": """Gepersonaliseerde stroom""",
       """subscriptionPerk2""": """Geen advertenties""",
@@ -368,7 +371,7 @@ Map<String, String> get translationsNlMap => {
       """subscriptionRestore""": """Herstel abonnement""",
       """subscriptionPromoCode""": """Ik heb een promo code""",
       """subscriptionDisclaimer""":
-          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
+          """Door "Abonneer nu" te selecteren, word je doorgestuurd naar de App Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.""",
       """settingsSubscribedToHeader""": """U bent geabonneerd op""",
       """doneButtonTitle""": """Gedaan""",
       """subscriptionRenewsMonthlyText""":
@@ -386,7 +389,7 @@ Map<String, String> get translationsNlMap => {
       """paymentFlowError.transactionFailed""":
           """Betalingstransactie mislukt""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """We couldn't find an active subscription for this account.""",
+          """We konden geen actief abonnement vinden voor dit account""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Wil je deze collectie echt verwijderen?""",
       """bottomSheetMoveSingleBookmark""":
@@ -398,55 +401,56 @@ Map<String, String> get translationsNlMap => {
           """Probeer het later nog eens.""",
       """errorClose""": """Sluiten""",
       """sourceHandlingTooltipLabel""": """Waar wil je minder van zien?""",
-      """sourceHandlingTooltipHighlightedWord""": """What""",
-      """enableTextToSpeech""": """Enable text -to-speech""",
-      """settingsSectionTitleOptions""": """Options""",
+      """sourceHandlingTooltipHighlightedWord""": """Wat""",
+      """enableTextToSpeech""": """Tekst-naar-spraak inschakelen""",
+      """settingsSectionTitleOptions""": """Opties""",
       """personalAreaContact""": """Contact""",
       """settingsContactUs""": """Contact""",
       """contactSectionWeb""": """Web:""",
-      """contactSectionSupportEmail""": """Support eMail:""",
-      """contactSectionForPublishers""": """For Publishers:""",
-      """contactSectionPhone""": """Phone:""",
-      """searchNoResultsFound""": """No results""",
-      """searchEndOfResults""": """That's all!""",
+      """contactSectionSupportEmail""": """Ondersteuning e-mail:""",
+      """contactSectionForPublishers""": """Voor uitgevers:""",
+      """contactSectionPhone""": """Telefoon:""",
+      """searchNoResultsFound""": """Geen resultaten""",
+      """searchEndOfResults""": """Dat is alles!""",
       """searchNoResultsFoundDesc""":
-          """We couldn’t find any stories for your search. Try different or more general keywords.""",
+          """We konden geen verhalen vinden voor je zoekopdracht. Probeer andere of meer algemene zoekwoorden.""",
       """searchEndOfResultsDesc""":
-          """Didn’t see what you're looking for? Try different or more general keywords.""",
+          """Niet gezien wat u zoekt? Probeer andere of meer algemene zoekwoorden.""",
       """feedSettingsScreenSourceFilterExplanation""":
-          """Sources that you disliked will not be shown in your Discovery Feed anymore.""",
-      """feedSettingsScreenTabCountries""": """Countries""",
-      """feedSettingsScreenTabSources""": """Sources""",
-      """feedSettingsScreenSubtitleDislikedSources""": """Disliked Sources""",
-      """settingsSectionHomeFeed""": """Feed setup""",
-      """paymentPromoCodeAndroidBottomSheetTitle""": """Got a promo code?""",
+          """Bronnen die u niet leuk vond, worden niet meer weergegeven in uw Discovery-feed.""",
+      """feedSettingsScreenTabCountries""": """Landen""",
+      """feedSettingsScreenTabSources""": """Bronnen""",
+      """feedSettingsScreenSubtitleDislikedSources""": """Verborgen Bronnen""",
+      """settingsSectionHomeFeed""": """Voerinstellingen""",
+      """paymentPromoCodeAndroidBottomSheetTitle""":
+          """Heeft u een promotiecode?""",
       """paymentPromoCodeAndroidBottomSheetBody""":
-          """To enter the promo code, select “Redeem code” as payments method.""",
-      """paymentFailedBottomSheetTitle""": """Payment failed""",
+          """Om de promotiecode in te voeren, selecteert u "Code inwisselen" als betaalmethode.""",
+      """paymentFailedBottomSheetTitle""": """Betaling mislukt""",
       """paymentFailedBottomSheetBody""":
-          """The app store couldn’t process your payment. Please try again later.""",
-      """readerModeUnableToLoadTitle""": """We couldn’t load this content""",
+          """De winkel kan uw betaling niet verwerken. Probeer het later opnieuw.""",
+      """readerModeUnableToLoadTitle""": """We kunnen deze inhoud niet laden""",
       """readerModeUnableToLoadDesc""":
-          """This article was not made available to be read on our app. To read it, please continue to it using your browser.""",
-      """readerModeUnableToLoadCTA""": """Open in Browser""",
-      """noInternetConnection""": """No internet connection""",
-      """invalidSearch""": """Please enter a valid search term""",
+          """Dit artikel is niet beschikbaar gesteld om te lezen in onze app. Lees verder in de browser.""",
+      """readerModeUnableToLoadCTA""": """Open in de browser""",
+      """noInternetConnection""": """Geen internet verbinding""",
+      """invalidSearch""": """Voer een geldige zoekterm in""",
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
-          """Swipe upwards to see the next article""",
+          """Veeg omhoog om het volgende artikel te zien""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+          """Onze feed wordt met elke like en dislike beter en beter""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
-          """Swipe sideways to like or dislike""",
+          """Swipe horizontaal om iets leuk of niet leuk te vinden""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":
-          """Long press the save button to manage it""",
+          """Druk eenmaal lang op 'opslaan' om ze te beheren""",
       """onboardingBottomDialog.collectionManageTitle""":
-          """Long press or swipe to manage your collections""",
+          """Lang indrukken om uw collecties te beheren""",
       """onboardingBottomDialog.bookmarksManageTitle""":
-          """Long press or swipe to manage your bookmarks""",
-      """general.btnClose""": """Close""",
-      """subscriptionDurationMonth""": """month""",
-      """takeSurveyTitle""": """Wanna help us improve the app?""",
-      """takeSurveySubtitle""":
-          """We would love to hear it and make it better for you.""",
-      """takeSurveyCTA""": """Take me to the survey""",
+          """Lang indrukken om uw bladwijzers te beheren""",
+      """onboardingBottomDialog.cancelButton""": """Ik snap het!""",
+      """general.btnClose""": """Concluderen""",
+      """subscriptionDurationMonth""": """Maand""",
+      """takeSurveyTitle""": """Heb je even?""",
+      """takeSurveySubtitle""": """Hoe kunnen we Xayn nog beter maken?""",
+      """takeSurveyCTA""": """Breng me naar de enquête""",
     };

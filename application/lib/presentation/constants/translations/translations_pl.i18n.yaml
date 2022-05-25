@@ -85,7 +85,7 @@ trialBannerEndsIn: Twój okres próbny kończy się za %s dni
 trialBannerEndsTomorrow: Twój okres próbny kończy się jutro
 trialBannerEndsToday: Twój okres próbny kończy się dzisiaj
 trialBannerExpired: Twój okres próbny wygasł
-subscriptionHeader: Uzyskaj nieograniczoną zawartość za jedyne
+subscriptionHeader: Uzyskaj Xayn bez ograniczeń za jedyne
 subscriptionPricingError: Nie można pobrać szczegółów cen
 subscriptionPerk1: Spersonalizowany strumień
 subscriptionPerk2: Bez reklam
@@ -118,7 +118,7 @@ paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when some issue happened during the payment transaction
   transactionFailed: Transakcja płatnicza nie powiodła się
-  noActiveSubscriptionFound: Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta.
+  noActiveSubscriptionFound: Nie mogliśmy znaleźć aktywnej subskrypcji dla tego konta
 bottomSheetDeleteCollectionWithNoItemsBody: Czy na pewno chcesz usunąć tę kolekcję?
 bottomSheetMoveSingleBookmark: Przejdź do innej kolekcji
 readerModeSettingsErrorChangesNotApplied: Nie udało się zastosować zmian
@@ -152,17 +152,24 @@ readerModeUnableToLoadTitle: Nie udało się załadować tej treści
 readerModeUnableToLoadDesc: Ten artykuł nie został udostępniony do czytania w naszej aplikacji. Aby go przeczytać, przejdź do niego za pomocą przeglądarki.
 readerModeUnableToLoadCTA: Otwórz w przeglądarce
 noInternetConnection: Brak połączenia z internetem
-invalidSearch: Please enter a valid search term
+invalidSearch: Wprowadź prawidłowe wyszukiwane hasło
 onboardingBottomDialog:
-  homeSwipeVerticalTitle: Swipe upwards to see the next article
-  homeSwipeVerticalMsg: Our continuous feed gets better and better every time you like and dislike the content here.
-  homeSwipeSideTitle: Swipe sideways to like or dislike
-  homeManageBookmarksTitle: Long press the save button to manage it
-  collectionManageTitle: Long press or swipe to manage your collections
-  bookmarksManageTitle: Long press or swipe to manage your bookmarks
+  homeSwipeVerticalTitle: Przesuń w górę, aby zobaczyć następny artykuł
+  homeSwipeVerticalMsg: Nasz kanał staje się coraz lepszy z każdym polubieniem lub nie lubieniem
+  homeSwipeSideTitle: Przesuń w bok, aby polubić lub nie
+  homeManageBookmarksTitle: Długie naciśnięcie „zapisz” raz, aby nimi zarządzać
+  collectionManageTitle: Przytrzymaj lub przeciągnij, aby zarządzać swoimi kolekcjami
+  bookmarksManageTitle: Naciśnij i przytrzymaj, aby zarządzać zakładkami
+  cancelButton: Rozumiem!
 general:
-  btnClose: Close
+  btnClose: Zakończyć
 subscriptionDurationMonth: miesiąc
+<<<<<<< HEAD
 takeSurveyTitle: Wanna help us improve the app?
 takeSurveySubtitle: We would love to hear it and make it better for you.
 takeSurveyCTA: Take me to the survey
+=======
+takeSurveyTitle: Masz minutkę?
+takeSurveySubtitle: Jak możemy jeszcze bardziej ulepszyć Xayn?
+takeSurveyCTA: Zabierz mnie do ankiety
+>>>>>>> main

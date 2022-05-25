@@ -44,18 +44,22 @@ class OverlayData {
   static tooltipBookmarked({
     required Document document,
     required VoidCallback onTap,
+    required VoidCallback? onClosed,
   }) {
     var defaultCollectionName = R.strings.defaultCollectionNameReadLater
         .truncate(maxDisplayableCollectionName);
     final label =
         R.strings.bookmarkSnackBarSavedTo.format(defaultCollectionName);
-    return _wrapTooltip(design.TooltipData.customized(
-      highlightText: defaultCollectionName,
-      key: 'bookmarkedToDefault',
-      label: label,
-      onTap: onTap,
-      icon: R.assets.icons.edit,
-    ));
+    return _wrapTooltip(
+      design.TooltipData.customized(
+        highlightText: defaultCollectionName,
+        key: 'bookmarkedToDefault',
+        label: label,
+        onTap: onTap,
+        icon: R.assets.icons.edit,
+      ),
+      onClosed: onClosed,
+    );
   }
 
   static tooltipDocumentFilter({
@@ -96,8 +100,8 @@ class OverlayData {
   static tooltipTextError(String text) =>
       _wrapTooltip(design.TooltipData.textual(key: text, label: text));
 
-  static _wrapTooltip(design.TooltipData data) =>
-      _TooltipOverlayData.tooltip(data: data);
+  static _wrapTooltip(design.TooltipData data, {VoidCallback? onClosed}) =>
+      _TooltipOverlayData.tooltip(data: data, onClosed: onClosed);
 
   /// BottomSheets
   ///
@@ -129,6 +133,7 @@ class OverlayData {
     FeedType? feedType,
     UniqueId? initialSelectedCollectionId,
     required VoidCallback onAddCollectionPressed,
+    VoidCallback? onClose,
   }) =>
       BottomSheetData<Document>(
         args: document,
@@ -138,6 +143,7 @@ class OverlayData {
           feedType: feedType,
           initialSelectedCollectionId: initialSelectedCollectionId,
           onAddCollectionPressed: onAddCollectionPressed,
+          onClose: onClose,
         ),
       );
 
@@ -311,6 +317,7 @@ class _TooltipOverlayData extends OverlayData with _$_TooltipOverlayData {
     required design.TooltipData data,
     // ignore: unused_element
     @Default(design.TooltipStyle.normal) design.TooltipStyle style,
+    VoidCallback? onClosed,
   }) = TooltipData;
 }
 

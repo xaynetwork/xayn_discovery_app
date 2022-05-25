@@ -93,7 +93,7 @@ class _OnboardingViewState extends State<_OnboardingView>
   Widget _buildCloseBtn() => SizedBox(
         width: double.maxFinite,
         child: AppGhostButton.text(
-          R.strings.general.btnClose,
+          R.strings.onboardingBottomDialog.cancelButton,
           backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
           onPressed: () {
             widget.onDismiss();

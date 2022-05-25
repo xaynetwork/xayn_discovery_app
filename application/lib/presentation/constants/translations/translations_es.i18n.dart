@@ -150,8 +150,7 @@ class TranslationsEs extends Translations {
   String get trialBannerEndsTomorrow => """Tu prueba finalizará mañana""";
   String get trialBannerEndsToday => """Tu prueba termina hoy""";
   String get trialBannerExpired => """Tu prueba terminó""";
-  String get subscriptionHeader =>
-      """Consigue contenido ilimitado únicamente por""";
+  String get subscriptionHeader => """Consigue Xayn ilimitado por solo""";
   String get subscriptionPricingError => """Incapaz de recuperar los precios""";
   String get subscriptionPerk1 => """Flujo personalizado""";
   String get subscriptionPerk2 => """Sin anuncios""";
@@ -214,22 +213,22 @@ class TranslationsEs extends Translations {
       """Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.""";
   String get paymentFailedBottomSheetTitle => """Pago fallido""";
   String get paymentFailedBottomSheetBody =>
-      """La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""";
+      """La Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""";
   String get readerModeUnableToLoadTitle =>
       """No pudimos cargar el contenido""";
   String get readerModeUnableToLoadDesc =>
       """Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.""";
   String get readerModeUnableToLoadCTA => """Abrir en el navegador""";
   String get noInternetConnection => """No hay conexión de internet""";
-  String get invalidSearch => """Please enter a valid search term""";
+  String get invalidSearch => """Ingrese un término de búsqueda válido""";
   OnboardingBottomDialogTranslationsEs get onboardingBottomDialog =>
       OnboardingBottomDialogTranslationsEs(this);
   GeneralTranslationsEs get general => GeneralTranslationsEs(this);
-  String get subscriptionDurationMonth => """month""";
-  String get takeSurveyTitle => """Wanna help us improve the app?""";
+  String get subscriptionDurationMonth => """Mes""";
+  String get takeSurveyTitle => """¿Tienes un minuto?""";
   String get takeSurveySubtitle =>
-      """We would love to hear it and make it better for you.""";
-  String get takeSurveyCTA => """Take me to the survey""";
+      """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""";
+  String get takeSurveyCTA => """Llévame a la encuesta""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -242,7 +241,7 @@ class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
   String get itemAlreadyOwned => """Tu ya te subscribiste""";
   String get transactionFailed => """Transacción de pago fallida""";
   String get noActiveSubscriptionFound =>
-      """No pudimos encontrar ninguna subscripción activa para esta cuenta.""";
+      """No se encontró ninguna suscripción activa para esta cuenta""";
 }
 
 class OnboardingBottomDialogTranslationsEs
@@ -250,22 +249,24 @@ class OnboardingBottomDialogTranslationsEs
   final TranslationsEs _parent;
   const OnboardingBottomDialogTranslationsEs(this._parent) : super(_parent);
   String get homeSwipeVerticalTitle =>
-      """Swipe upwards to see the next article""";
+      """Desliza hacia arriba para ver el siguiente artículo""";
   String get homeSwipeVerticalMsg =>
-      """Our continuous feed gets better and better every time you like and dislike the content here.""";
-  String get homeSwipeSideTitle => """Swipe sideways to like or dislike""";
+      """Nuestro feed mejora cada vez más con cada me gusta y disgusto""";
+  String get homeSwipeSideTitle =>
+      """Desliza hacia los lados para aprobar o desaprobar?""";
   String get homeManageBookmarksTitle =>
-      """Long press the save button to manage it""";
+      """Mantenga presionado 'guardar' una vez para administrarlos""";
   String get collectionManageTitle =>
-      """Long press or swipe to manage your collections""";
+      """Mantén presionado o desliza para administrar tus colecciones""";
   String get bookmarksManageTitle =>
-      """Long press or swipe to manage your bookmarks""";
+      """Mantén presionado para administrar tus marcadores""";
+  String get cancelButton => """¡Entiendo!""";
 }
 
 class GeneralTranslationsEs extends GeneralTranslations {
   final TranslationsEs _parent;
   const GeneralTranslationsEs(this._parent) : super(_parent);
-  String get btnClose => """Close""";
+  String get btnClose => """Concluir""";
 }
 
 Map<String, String> get translationsEsMap => {
@@ -363,8 +364,7 @@ Map<String, String> get translationsEsMap => {
       """trialBannerEndsTomorrow""": """Tu prueba finalizará mañana""",
       """trialBannerEndsToday""": """Tu prueba termina hoy""",
       """trialBannerExpired""": """Tu prueba terminó""",
-      """subscriptionHeader""":
-          """Consigue contenido ilimitado únicamente por""",
+      """subscriptionHeader""": """Consigue Xayn ilimitado por solo""",
       """subscriptionPricingError""": """Incapaz de recuperar los precios""",
       """subscriptionPerk1""": """Flujo personalizado""",
       """subscriptionPerk2""": """Sin anuncios""",
@@ -394,7 +394,7 @@ Map<String, String> get translationsEsMap => {
       """paymentFlowError.transactionFailed""":
           """Transacción de pago fallida""",
       """paymentFlowError.noActiveSubscriptionFound""":
-          """No pudimos encontrar ninguna subscripción activa para esta cuenta.""",
+          """No se encontró ninguna suscripción activa para esta cuenta""",
       """bottomSheetDeleteCollectionWithNoItemsBody""":
           """Estás seguro de que quieres borrar esta colección?""",
       """bottomSheetMoveSingleBookmark""": """Moverse a otra colección""",
@@ -433,29 +433,30 @@ Map<String, String> get translationsEsMap => {
           """Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.""",
       """paymentFailedBottomSheetTitle""": """Pago fallido""",
       """paymentFailedBottomSheetBody""":
-          """La App Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""",
+          """La Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.""",
       """readerModeUnableToLoadTitle""": """No pudimos cargar el contenido""",
       """readerModeUnableToLoadDesc""":
           """Este artículo no fue hecho disponible para nuestra app. Para leerlo, por favor continua usándolo en el navegador.""",
       """readerModeUnableToLoadCTA""": """Abrir en el navegador""",
       """noInternetConnection""": """No hay conexión de internet""",
-      """invalidSearch""": """Please enter a valid search term""",
+      """invalidSearch""": """Ingrese un término de búsqueda válido""",
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
-          """Swipe upwards to see the next article""",
+          """Desliza hacia arriba para ver el siguiente artículo""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Our continuous feed gets better and better every time you like and dislike the content here.""",
+          """Nuestro feed mejora cada vez más con cada me gusta y disgusto""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
-          """Swipe sideways to like or dislike""",
+          """Desliza hacia los lados para aprobar o desaprobar?""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":
-          """Long press the save button to manage it""",
+          """Mantenga presionado 'guardar' una vez para administrarlos""",
       """onboardingBottomDialog.collectionManageTitle""":
-          """Long press or swipe to manage your collections""",
+          """Mantén presionado o desliza para administrar tus colecciones""",
       """onboardingBottomDialog.bookmarksManageTitle""":
-          """Long press or swipe to manage your bookmarks""",
-      """general.btnClose""": """Close""",
-      """subscriptionDurationMonth""": """month""",
-      """takeSurveyTitle""": """Wanna help us improve the app?""",
+          """Mantén presionado para administrar tus marcadores""",
+      """onboardingBottomDialog.cancelButton""": """¡Entiendo!""",
+      """general.btnClose""": """Concluir""",
+      """subscriptionDurationMonth""": """Mes""",
+      """takeSurveyTitle""": """¿Tienes un minuto?""",
       """takeSurveySubtitle""":
-          """We would love to hear it and make it better for you.""",
-      """takeSurveyCTA""": """Take me to the survey""",
+          """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""",
+      """takeSurveyCTA""": """Llévame a la encuesta""",
     };

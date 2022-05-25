@@ -5,10 +5,10 @@ import 'package:purchases_flutter/object_wrappers.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/infrastructure/service/payment/payment_mock_data.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 
 import '../../../test_utils/utils.dart';
-import 'payment_test_data.dart';
 
 void main() {
   late MockPaymentService paymentService;
@@ -24,12 +24,14 @@ void main() {
     'GIVEN PurchaserInfo that contains product id THEN yield PurchasableProductStatus.purchased',
     () async {
       // ARRANGE
-      when(paymentService.purchaseProduct(subscriptionId)).thenAnswer(
-        (_) async => createPurchaserInfo(withActiveSubscription: true),
+      when(paymentService.purchaseProduct(PaymentMockData.productId))
+          .thenAnswer(
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: true),
       );
 
       // ACT
-      final output = await useCase.call(subscriptionId);
+      final output = await useCase.call(PaymentMockData.productId);
 
       // ASSERT
       expect(
@@ -39,7 +41,7 @@ void main() {
           useCaseSuccess(PurchasableProductStatus.purchased),
         ]),
       );
-      verify(paymentService.purchaseProduct(subscriptionId));
+      verify(paymentService.purchaseProduct(PaymentMockData.productId));
       verifyNoMoreInteractions(paymentService);
       verifyZeroInteractions(mapper);
     },
@@ -49,12 +51,14 @@ void main() {
     'GIVEN PurchaserInfo that DOES NOT contains product id THEN throw PaymentFlowError.paymentFailed',
     () async {
       // ARRANGE
-      when(paymentService.purchaseProduct(subscriptionId)).thenAnswer(
-        (_) async => createPurchaserInfo(withActiveSubscription: false),
+      when(paymentService.purchaseProduct(PaymentMockData.productId))
+          .thenAnswer(
+        (_) async =>
+            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
       );
 
       // ACT
-      final output = await useCase.call(subscriptionId);
+      final output = await useCase.call(PaymentMockData.productId);
 
       // ASSERT
       expect(
@@ -64,7 +68,7 @@ void main() {
           useCaseFailure(throwsA(PaymentFlowError.paymentFailed)),
         ]),
       );
-      verify(paymentService.purchaseProduct(subscriptionId));
+      verify(paymentService.purchaseProduct(PaymentMockData.productId));
       verifyNoMoreInteractions(paymentService);
       verifyZeroInteractions(mapper);
     },
@@ -74,11 +78,11 @@ void main() {
     'GIVEN PlatformException with canceled code WHEN purchaseProduct called THEN yield yield PurchasableProductStatus.canceled',
     () async {
       // ARRANGE
-      when(paymentService.purchaseProduct(subscriptionId))
+      when(paymentService.purchaseProduct(PaymentMockData.productId))
           .thenThrow(PlatformException(code: '1'));
 
       // ACT
-      final output = await useCase.call(subscriptionId);
+      final output = await useCase.call(PaymentMockData.productId);
 
       // ASSERT
       expect(
@@ -88,7 +92,7 @@ void main() {
           useCaseSuccess(PurchasableProductStatus.canceled),
         ]),
       );
-      verify(paymentService.purchaseProduct(subscriptionId));
+      verify(paymentService.purchaseProduct(PaymentMockData.productId));
       verifyNoMoreInteractions(paymentService);
       verifyZeroInteractions(mapper);
     },
@@ -102,12 +106,12 @@ void main() {
       'GIVEN PlatformException with $error (code$errorCode) WHEN purchaseProduct called THEN use mapper and throw',
       () async {
         // ARRANGE
-        when(paymentService.purchaseProduct(subscriptionId))
+        when(paymentService.purchaseProduct(PaymentMockData.productId))
             .thenThrow(PlatformException(code: '$errorCode'));
         when(mapper.map(error)).thenReturn(PaymentFlowError.unknown);
 
         // ACT
-        final output = await useCase.call(subscriptionId);
+        final output = await useCase.call(PaymentMockData.productId);
 
         // ASSERT
         expect(
@@ -118,7 +122,7 @@ void main() {
           ]),
         );
         verifyInOrder([
-          paymentService.purchaseProduct(subscriptionId),
+          paymentService.purchaseProduct(PaymentMockData.productId),
           mapper.map(error),
         ]);
         verifyNoMoreInteractions(paymentService);
