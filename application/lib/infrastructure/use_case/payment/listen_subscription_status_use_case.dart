@@ -29,6 +29,7 @@ class ListenSubscriptionStatusUseCase
         expirationDate: expirationDate,
         trialEndDate: _repository.appStatus.trialEndDate,
         purchaseDate: purchaseDate,
+        isBetaUser: _repository.appStatus.isBetaUser,
       );
     });
   }

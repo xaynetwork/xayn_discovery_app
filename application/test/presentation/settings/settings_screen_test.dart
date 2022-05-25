@@ -21,6 +21,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 
 import '../../test_utils/utils.dart';
 import '../../test_utils/widget_test_utils.dart';
@@ -84,6 +85,53 @@ void main() {
         find.byType(SingleChildScrollView),
         const Offset(-250, 0), // delta to move
       );
+    },
+  );
+
+  testWidgets(
+    'WHEN create SettingsScreen AND beta user THEN subscription sections is not visible',
+    (final WidgetTester tester) async {
+      final state = SettingsScreenState.ready(
+        theme: AppTheme.system,
+        appVersion: const AppVersion(
+          version: '1.2.3',
+          build: '321',
+        ),
+        isPaymentEnabled: false,
+        subscriptionStatus: SubscriptionStatus.initial().copyWith(
+          isBetaUser: true,
+        ),
+      ) as SettingsScreenStateReady;
+
+      when(manager.state).thenReturn(state);
+
+      await openScreen(tester);
+
+      expect(find.byType(SubscriptionSection), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'WHEN create SettingsScreen AND not beta user AND payments enabled AND free trial active THEN subscription sections is visible',
+    (final WidgetTester tester) async {
+      final state = SettingsScreenState.ready(
+        theme: AppTheme.system,
+        appVersion: const AppVersion(
+          version: '1.2.3',
+          build: '321',
+        ),
+        isPaymentEnabled: true,
+        subscriptionStatus: SubscriptionStatus.initial().copyWith(
+          trialEndDate: DateTime.now().add(const Duration(days: 1)),
+          isBetaUser: false,
+        ),
+      ) as SettingsScreenStateReady;
+
+      when(manager.state).thenReturn(state);
+
+      await openScreen(tester);
+
+      expect(find.byType(SubscriptionSection), findsOneWidget);
     },
   );
 

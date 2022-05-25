@@ -17,6 +17,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required UniqueId userId,
     required OnboardingStatus onboardingStatus,
     required bool ratingDialogAlreadyVisible,
+    required bool isBetaUser,
   }) = _AppStatus;
 
   factory AppStatus({
@@ -27,16 +28,19 @@ class AppStatus extends DbEntity with _$AppStatus {
     required UniqueId userId,
     required OnboardingStatus onboardingStatus,
     required bool ratingDialogAlreadyVisible,
+    required bool isBetaUser,
   }) =>
       AppStatus._(
-          numberOfSessions: numberOfSessions,
-          lastSeenDate: lastSeenDate,
-          lastKnownAppVersion: lastKnownAppVersion,
-          firstAppLaunchDate: firstAppLaunchDate,
-          id: AppStatus.globalId,
-          userId: userId,
-          onboardingStatus: onboardingStatus,
-          ratingDialogAlreadyVisible: ratingDialogAlreadyVisible);
+        numberOfSessions: numberOfSessions,
+        lastSeenDate: lastSeenDate,
+        lastKnownAppVersion: lastKnownAppVersion,
+        firstAppLaunchDate: firstAppLaunchDate,
+        id: AppStatus.globalId,
+        userId: userId,
+        onboardingStatus: onboardingStatus,
+        ratingDialogAlreadyVisible: ratingDialogAlreadyVisible,
+        isBetaUser: isBetaUser,
+      );
 
   factory AppStatus.initial() => AppStatus._(
         numberOfSessions: 0,
@@ -47,6 +51,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         userId: UniqueId(),
         onboardingStatus: const OnboardingStatus.initial(),
         ratingDialogAlreadyVisible: false,
+        isBetaUser: false,
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');

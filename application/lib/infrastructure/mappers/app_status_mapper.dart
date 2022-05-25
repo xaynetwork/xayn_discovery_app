@@ -35,6 +35,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         _mapToOnboardingStatusMapper.map(map[AppStatusFields.onboardingStatus]);
     final ratingDialogAlreadyVisible =
         map[AppStatusFields.ratingDialogAlreadyVisible] as bool?;
+    final isBetaUser = map[AppStatusFields.isBetaUser] as bool?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
@@ -44,6 +45,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
       userId: UniqueId.fromTrustedString(userId ?? const Uuid().v4()),
       onboardingStatus: onboardingStatus,
       ratingDialogAlreadyVisible: ratingDialogAlreadyVisible ?? false,
+      isBetaUser: isBetaUser ?? false,
     );
   }
 
@@ -59,6 +61,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
             _onboardingStatusToMapMapper.map(entity.onboardingStatus),
         AppStatusFields.ratingDialogAlreadyVisible:
             entity.ratingDialogAlreadyVisible,
+        AppStatusFields.isBetaUser: entity.isBetaUser,
       };
 }
 
@@ -72,4 +75,5 @@ abstract class AppStatusFields {
   static const int lastSeenDate = 4;
   static const int onboardingStatus = 5;
   static const int ratingDialogAlreadyVisible = 6;
+  static const int isBetaUser = 7;
 }
