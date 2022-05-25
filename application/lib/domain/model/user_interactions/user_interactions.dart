@@ -54,3 +54,14 @@ class UserInteractions extends DbEntity with _$UserInteractions {
   static const UniqueId globalId =
       UniqueId.fromTrustedString('user_interactions_condition_id');
 }
+
+extension UserInteractionsExtension on UserInteractions {
+  int get totalNumberOfInteractions =>
+      numberOfScrolls +
+      numberOfArticlesRead +
+      numberOfArticlesBookmarked +
+      numberOfArticlesLikedOrDisliked +
+      numberOfSourcesExcluded +
+      numberOfCountriesChanged +
+      numberOfSearches;
+}
