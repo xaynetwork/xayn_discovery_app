@@ -37,6 +37,7 @@ void main() {
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
+  late MockAppStatusRepository appStatusRepository;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -47,6 +48,7 @@ void main() {
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
+    appStatusRepository = MockAppStatusRepository();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -88,6 +90,7 @@ void main() {
           SaveUserInteractionUseCase(
             userInteractionsRepository,
             featureManager,
+            appStatusRepository,
           ),
         );
   });

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
@@ -15,6 +16,7 @@ void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockFeatureManager featureManager;
+  late MockAppStatusRepository appStatusRepository;
 
   const uaMarket = FeedMarket(countryCode: 'UA', languageCode: 'uk');
   const usMarket = FeedMarket(countryCode: 'US', languageCode: 'en');
@@ -38,9 +40,11 @@ void main() {
     repository = MockFeedSettingsRepository();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
+    appStatusRepository = MockAppStatusRepository();
     saveUserInteractionUseCase = SaveUserInteractionUseCase(
       userInteractionsRepository,
       featureManager,
+      appStatusRepository,
     );
     useCase = SaveSelectedCountriesUseCase(
       repository,
@@ -51,6 +55,7 @@ void main() {
     when(userInteractionsRepository.userInteractions).thenReturn(
       UserInteractions.initial(),
     );
+    when(appStatusRepository.appStatus).thenReturn(AppStatus.initial());
     when(featureManager.isPromptSurveyEnabled).thenReturn(true);
   });
 
