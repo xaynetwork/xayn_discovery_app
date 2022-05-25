@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -9,16 +10,20 @@ import '../../../domain/model/user_interactions/user_interactions.dart';
 @injectable
 class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
   final UserInteractionsRepository _userInteractionsRepository;
-  final FeatureManager featureManager;
+  final FeatureManager _featureManager;
+  final AppStatusRepository _appStatusRepository;
 
   SaveUserInteractionUseCase(
     this._userInteractionsRepository,
-    this.featureManager,
+    this._featureManager,
+    this._appStatusRepository,
   );
 
   @override
   Stream<None> transaction(UserInteractionsEvents param) async* {
-    if (featureManager.isPromptSurveyEnabled) {
+    final numberOfSurveysShown =
+        _appStatusRepository.appStatus.numberOfSurveysShown;
+    if (_featureManager.isPromptSurveyEnabled && numberOfSurveysShown == 0) {
       switch (param) {
         case UserInteractionsEvents.cardScrolled:
           _onScrollingEvent();

@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -25,15 +26,18 @@ main() {
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockFeatureManager featureManager;
+  late MockAppStatusRepository appStatusRepository;
   setUp(() async {
     await setupWidgetTest();
     repository = di.get();
     final documentFilterUseCase = CrudDocumentFilterUseCase(repository);
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
+    appStatusRepository = MockAppStatusRepository();
     saveUserInteractionUseCase = SaveUserInteractionUseCase(
       userInteractionsRepository,
       featureManager,
+      appStatusRepository,
     );
     engine = di.get<DiscoveryEngine>();
     final applyDocumentFilterUseCase =
@@ -44,6 +48,8 @@ main() {
       saveUserInteractionUseCase,
       fakeDocument,
     );
+
+    when(appStatusRepository.appStatus).thenReturn(AppStatus.initial());
     when(featureManager.isPromptSurveyEnabled).thenReturn(true);
   });
 

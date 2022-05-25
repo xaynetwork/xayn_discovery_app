@@ -39,6 +39,7 @@ void main() {
   late MockCustomCardInjectionUseCase customCardInjectionUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
+  late MockAppStatusRepository appStatusRepository;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -50,6 +51,7 @@ void main() {
     customCardInjectionUseCase = MockCustomCardInjectionUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
+    appStatusRepository = MockAppStatusRepository();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -100,6 +102,7 @@ void main() {
           SaveUserInteractionUseCase(
             userInteractionsRepository,
             featureManager,
+            appStatusRepository,
           ),
         );
   });
