@@ -172,11 +172,6 @@ onboardingBottomDialog:
 general:
   btnClose: Close
 subscriptionDurationMonth: month
-<<<<<<< HEAD
-takeSurveyTitle: Wanna help us improve the app?
-takeSurveySubtitle: We would love to hear it and make it better for you.
-=======
 takeSurveyTitle: Got a minute?
 takeSurveySubtitle: We'd love your opinion on how to make the app better
->>>>>>> main
 takeSurveyCTA: Take me to the survey

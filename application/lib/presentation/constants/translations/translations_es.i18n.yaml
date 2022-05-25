@@ -162,16 +162,8 @@ onboardingBottomDialog:
   bookmarksManageTitle: Mantén presionado para administrar tus marcadores
   cancelButton: ¡Entiendo!
 general:
-<<<<<<< HEAD
-  btnClose: Close
-subscriptionDurationMonth: month
-takeSurveyTitle: Wanna help us improve the app?
-takeSurveySubtitle: We would love to hear it and make it better for you.
-takeSurveyCTA: Take me to the survey
-=======
   btnClose: Concluir
 subscriptionDurationMonth: Mes
 takeSurveyTitle: ¿Tienes un minuto?
 takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
 takeSurveyCTA: Llévame a la encuesta
->>>>>>> main

@@ -164,12 +164,6 @@ onboardingBottomDialog:
 general:
   btnClose: Zakończyć
 subscriptionDurationMonth: miesiąc
-<<<<<<< HEAD
-takeSurveyTitle: Wanna help us improve the app?
-takeSurveySubtitle: We would love to hear it and make it better for you.
-takeSurveyCTA: Take me to the survey
-=======
 takeSurveyTitle: Masz minutkę?
 takeSurveySubtitle: Jak możemy jeszcze bardziej ulepszyć Xayn?
 takeSurveyCTA: Zabierz mnie do ankiety
->>>>>>> main

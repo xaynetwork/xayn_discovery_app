@@ -162,16 +162,8 @@ onboardingBottomDialog:
   bookmarksManageTitle: Lang indrukken om uw bladwijzers te beheren
   cancelButton: Ik snap het!
 general:
-<<<<<<< HEAD
-  btnClose: Close
-subscriptionDurationMonth: month
-takeSurveyTitle: Wanna help us improve the app?
-takeSurveySubtitle: We would love to hear it and make it better for you.
-takeSurveyCTA: Take me to the survey
-=======
   btnClose: Concluderen
 subscriptionDurationMonth: Maand
 takeSurveyTitle: Heb je even?
 takeSurveySubtitle: Hoe kunnen we Xayn nog beter maken?
 takeSurveyCTA: Breng me naar de enquête
->>>>>>> main
