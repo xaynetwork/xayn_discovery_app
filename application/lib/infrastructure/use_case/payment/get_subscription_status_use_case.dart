@@ -30,6 +30,7 @@ class GetSubscriptionStatusUseCase extends UseCase<None, SubscriptionStatus> {
       expirationDate: expirationDate,
       trialEndDate: _repository.appStatus.trialEndDate,
       purchaseDate: purchaseDate,
+      isBetaUser: _repository.appStatus.isBetaUser,
     );
   }
 }

@@ -38,6 +38,7 @@ void main() {
     trialEndDate: DateTime(timeStamp.year, timeStamp.month, timeStamp.day + 7),
     willRenew: false,
     purchaseDate: null,
+    isBetaUser: false,
   );
 
   late UrlOpener urlOpener;

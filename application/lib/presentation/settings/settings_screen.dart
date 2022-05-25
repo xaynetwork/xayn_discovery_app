@@ -82,8 +82,9 @@ class _SettingsScreenState extends State<SettingsScreen>
     final buildSubscriptionSection =
         state.subscriptionStatus.isSubscriptionActive ||
             state.subscriptionStatus.isFreeTrialActive;
+    final isBetaUser = state.subscriptionStatus.isBetaUser;
     final children = [
-      if (state.isPaymentEnabled && buildSubscriptionSection)
+      if (state.isPaymentEnabled && buildSubscriptionSection && !isBetaUser)
         _buildSubscriptionSection(
           subscriptionStatus: state.subscriptionStatus,
         ),
