@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart'
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
@@ -22,6 +23,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboa
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -88,6 +90,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
+    ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase,
+    AppStatusRepository appStatusRepository,
   )   : _maxCardCount = _kMaxCardCount,
         super(
           FeedType.feed,
@@ -104,6 +108,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
+          listenSurveyConditionsStatusUseCase,
+          appStatusRepository,
         );
 
   late final FetchSessionUseCase _fetchSessionUseCase;

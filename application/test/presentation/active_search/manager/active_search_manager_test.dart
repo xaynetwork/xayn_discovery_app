@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
+import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -19,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -40,6 +42,8 @@ void main() {
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockAppStatusRepository appStatusRepository;
+  late MockListenSurveyConditionsStatusUseCase
+      mockListenSurveyConditionsStatusUseCase;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -52,6 +56,8 @@ void main() {
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     appStatusRepository = MockAppStatusRepository();
+    mockListenSurveyConditionsStatusUseCase =
+        MockListenSurveyConditionsStatusUseCase();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -78,6 +84,12 @@ void main() {
 
       return Stream.value(documents.map(Card.document).toSet());
     });
+    when(mockListenSurveyConditionsStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(mockListenSurveyConditionsStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(SurveyConditionsStatus.notReached));
+    when(appStatusRepository.appStatus).thenReturn(AppStatus.initial());
+    when(featureManager.isPromptSurveyEnabled).thenReturn(false);
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -104,6 +116,8 @@ void main() {
             featureManager,
             appStatusRepository,
           ),
+          mockListenSurveyConditionsStatusUseCase,
+          appStatusRepository,
         );
   });
 

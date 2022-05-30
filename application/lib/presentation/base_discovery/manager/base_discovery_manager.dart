@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
@@ -24,6 +25,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -78,6 +80,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
   final SaveUserInteractionUseCase saveUserInteractionUseCase;
+  final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
+  final AppStatusRepository appStatusRepository;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
@@ -100,6 +104,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
+    this.listenSurveyConditionsStatusUseCase,
+    this.appStatusRepository,
   ) : super(DiscoveryState.initial());
 
   late final UseCaseValueStream<Set<Card>> cardStream = consume(
@@ -139,11 +145,19 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         .doOnData(handleShowPaywallIfNeeded),
   );
 
+  late final UseCaseValueStream<SurveyConditionsStatus>
+      surveyConditionsStatusHandler = consume(
+    listenSurveyConditionsStatusUseCase,
+    initialData: none,
+  );
+
   /// requires to be implemented by concrete classes or mixins
   bool get isLoading;
 
   /// requires to be implemented by concrete classes or mixins
   bool get didReachEnd;
+
+  bool hasSurveyBottomSheetBeenShown = false;
 
   Document? get currentObservedDocument => _observedDocument;
 
@@ -316,18 +330,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold5(
+  Future<DiscoveryState?> computeState() async => fold6(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         cardStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
+        surveyConditionsStatusHandler,
       ).foldAll((
         cardIndex,
         explicitDocumentFeedback,
         cards,
         subscriptionStatus,
         readerModeSettings,
+        surveyConditionsStatus,
         errorReport,
       ) async {
         _cardIndex ??= cardIndex;
@@ -381,6 +397,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             .where((it) => it.type == CardType.document)
             .where((it) => !uriList.contains(it.requireDocument.resource.url))
             .map((it) => it.requireDocument));
+
+        final surveyBannerData = appStatusRepository.appStatus.surveyBannerData;
+
+        if (featureManager.isPromptSurveyEnabled &&
+            !hasSurveyBottomSheetBeenShown &&
+            surveyBannerData.numberOfTimesShown == 0 &&
+            surveyConditionsStatus == SurveyConditionsStatus.reached) {
+          hasSurveyBottomSheetBeenShown = true;
+          showOverlay(
+            OverlayData.bottomSheetSurvey(onTakeSurveyPressed: () {
+              showOverlay(OverlayData.tooltipTextError('thank you 🙏'));
+            }),
+          );
+        }
 
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
