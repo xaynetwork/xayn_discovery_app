@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
@@ -45,11 +46,10 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
         errorReport,
       ) {
         if (getDocument != null) {
-          checkIfDocumentNotProcessable(
-            getDocument,
-            isDismissible: false,
-            onClosePressed: onBackPressed,
-          );
+          checkIfDocumentNotProcessable(getDocument,
+              isDismissible: false,
+              onClosePressed: onBackPressed,
+              currentView: CurrentView.bookmark);
           return DiscoveryCardScreenState.populated(document: getDocument);
         }
 

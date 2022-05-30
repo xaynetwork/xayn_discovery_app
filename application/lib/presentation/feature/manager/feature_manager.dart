@@ -30,6 +30,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get isReaderModeSettingsEnabled => isEnabled(Feature.readerModeSettings);
 
   bool get isPaymentEnabled => isEnabled(Feature.payment);
+  bool get isGibberishEnabled => isEnabled(Feature.gibberish);
 
   bool get isTtsEnabled => isEnabled(Feature.tts);
 
