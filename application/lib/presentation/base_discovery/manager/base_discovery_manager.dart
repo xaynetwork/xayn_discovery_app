@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -78,6 +79,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
   final SaveUserInteractionUseCase saveUserInteractionUseCase;
+  final CurrentView currentView;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
@@ -100,6 +102,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
+    this.currentView,
   ) : super(DiscoveryState.initial());
 
   late final UseCaseValueStream<Set<Card>> cardStream = consume(
@@ -155,6 +158,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       checkIfDocumentNotProcessable(
         document,
         onValid: () => handleNavigateIntoCard(document),
+        currentView: currentView,
       );
 
   void handleNavigateIntoCard(Document document) {
