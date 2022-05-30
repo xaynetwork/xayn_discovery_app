@@ -12,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engi
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
@@ -104,6 +105,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
+          CurrentView.story,
         );
 
   late final FetchSessionUseCase _fetchSessionUseCase;

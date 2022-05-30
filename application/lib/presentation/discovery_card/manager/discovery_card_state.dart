@@ -17,6 +17,7 @@ class DiscoveryCardState with _$DiscoveryCardState {
     @Default(BookmarkStatus.unknown) BookmarkStatus bookmarkStatus,
     ProcessedDocument? processedDocument,
     @Default(UserReaction.neutral) UserReaction explicitDocumentUserReaction,
+    @Default(true) bool textIsReadable,
   }) = _DiscoveryCardState;
 
   // ignore: prefer_const_constructors

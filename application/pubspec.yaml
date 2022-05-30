@@ -25,9 +25,20 @@ dependencies:
       url: https://github.com/xaynetwork/flutter-localized-countries
       ref: 1.0.0
   flutter_tts: 3.3.3
+  # language detection
+  franc:
+    git:
+      url: https://github.com/svonidze/francd
+      ref: 170e633af9a7b8b31769eb232f99e105e1359692
   freezed_annotation: 1.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
+  # gibberish detection
+  gibberish:
+    path: ../../gibberisch
+#    git:
+#      url: https://github.com/xaynetwork/gibberish
+#      ref: 61d4cc60a36d983a0a81099e1d1b86fa7ed1348c
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
@@ -37,6 +48,7 @@ dependencies:
       url: https://github.com/nohli/flutter_home_indicator.git
       ref: migrate-to-android-v2-embedding
   http: 0.13.4
+  html: 0.15.0
   html_unescape: 2.0.0
   hydrated_bloc: 7.1.0
   in_app_notification: 1.1.0
