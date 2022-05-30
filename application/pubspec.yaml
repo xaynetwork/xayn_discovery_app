@@ -35,10 +35,9 @@ dependencies:
   get_it: 7.2.0
   # gibberish detection
   gibberish:
-    path: ../../gibberisch
-#    git:
-#      url: https://github.com/xaynetwork/gibberish
-#      ref: 61d4cc60a36d983a0a81099e1d1b86fa7ed1348c
+    git:
+      url: https://github.com/xaynetwork/gibberish
+      ref: e62841661b93c58b4791b691927ddff04e991dd9
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
