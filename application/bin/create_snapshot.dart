@@ -80,7 +80,7 @@ void main(List<String> args) async {
   _createBookmarks();
   _createDocuments();
   _createDocumentFilters();
-  _createAppStatus();
+  _createAppStatus(version);
   _createFeed();
   _createFeedSettings();
   _createFeedTypeMarkets();
@@ -167,7 +167,7 @@ void _createDocumentFilters() {
   repository.save(documentFilter);
 }
 
-void _createAppStatus() {
+void _createAppStatus(int version) {
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
     AppVersionToMapMapper(),
@@ -175,7 +175,9 @@ void _createAppStatus() {
     DbEntityMapToOnboardingStatusMapper(),
   );
   final repository = HiveAppStatusRepository(mapper);
-  final appStatus = AppStatus.initial();
+  final appStatus = AppStatus.initial().copyWith(
+    numberOfSessions: version,
+  );
   repository.save(appStatus);
 }
 
