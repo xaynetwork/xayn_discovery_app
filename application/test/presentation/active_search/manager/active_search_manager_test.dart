@@ -18,6 +18,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
@@ -35,6 +36,7 @@ void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   late MockFeatureManager featureManager;
+  late MockUserInteractionsRepository userInteractionsRepository;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -43,6 +45,7 @@ void main() {
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
+    userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
 
     di
@@ -82,6 +85,10 @@ void main() {
           listenReaderModeSettingsUseCase,
           featureManager,
           CardManagersCache(),
+          SaveUserInteractionUseCase(
+            userInteractionsRepository,
+            featureManager,
+          ),
         );
   });
 

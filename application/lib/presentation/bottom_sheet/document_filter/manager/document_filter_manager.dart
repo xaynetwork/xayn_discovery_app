@@ -6,6 +6,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/apply_document_filter_in.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/apply_document_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/document_filter/manager/document_filter_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -15,10 +17,12 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
   final CrudDocumentFilterUseCase _documentFilterUseCase;
   final ApplyDocumentFilterUseCase _applyDocumentFilterUseCase;
   final Document _document;
+  final SaveUserInteractionUseCase _saveUserInteractionUseCase;
 
   DocumentFilterManager(
     this._documentFilterUseCase,
     this._applyDocumentFilterUseCase,
+    this._saveUserInteractionUseCase,
 
     /// must be passed with di.get(param1 : document)
     @factoryParam this._document,
@@ -68,8 +72,13 @@ class DocumentFilterManager extends Cubit<DocumentFilterState>
 
   // Future is only passed for tests
   Future onApplyChangesPressed() {
+    _saveUserInteractionUseCase
+        .singleOutput(UserInteractionsEvents.excludedSource);
+
     return _applyDocumentFilterUseCase.singleOutput(
-        ApplyDocumentFilterIn.applyChangesToDbAndEngine(
-            changes: _pendingChanges));
+      ApplyDocumentFilterIn.applyChangesToDbAndEngine(
+        changes: _pendingChanges,
+      ),
+    );
   }
 }

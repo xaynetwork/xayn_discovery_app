@@ -3,13 +3,18 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 
 import '../../../test_utils/utils.dart';
 
 void main() {
   late SaveSelectedCountriesUseCase useCase;
   late MockFeedSettingsRepository repository;
+  late MockUserInteractionsRepository userInteractionsRepository;
+  late SaveUserInteractionUseCase saveUserInteractionUseCase;
+  late MockFeatureManager featureManager;
 
   const uaMarket = FeedMarket(countryCode: 'UA', languageCode: 'uk');
   const usMarket = FeedMarket(countryCode: 'US', languageCode: 'en');
@@ -31,9 +36,22 @@ void main() {
 
   setUp(() {
     repository = MockFeedSettingsRepository();
-    useCase = SaveSelectedCountriesUseCase(repository);
+    userInteractionsRepository = MockUserInteractionsRepository();
+    featureManager = MockFeatureManager();
+    saveUserInteractionUseCase = SaveUserInteractionUseCase(
+      userInteractionsRepository,
+      featureManager,
+    );
+    useCase = SaveSelectedCountriesUseCase(
+      repository,
+      saveUserInteractionUseCase,
+    );
 
     when(repository.settings).thenReturn(FeedSettings.initial());
+    when(userInteractionsRepository.userInteractions).thenReturn(
+      UserInteractions.initial(),
+    );
+    when(featureManager.isPromptSurveyEnabled).thenReturn(true);
   });
 
   test(
