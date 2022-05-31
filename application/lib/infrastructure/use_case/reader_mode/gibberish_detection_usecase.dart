@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 
 @injectable
 class GibberishDetectionUseCase
@@ -46,7 +47,9 @@ class GibberishDetectionUseCase
       return;
     }
 
-    final language = detectedLanguage.toGibberishLanguage;
+    final metaLanguage = param.processHtmlResult.lang;
+    final language = detectedLanguage.toGibberishLanguage ??
+        metaLanguage?.toGibberishLanguage;
     // We detected that this is part of a language that we don't support in the app,
     // so we don't really know if it is gibberish
     if (language == null) {
@@ -56,7 +59,8 @@ class GibberishDetectionUseCase
         isGibberish: null,
         detectedLanguage: detectedLanguage,
       );
-      logger.i('Text is $detectedLanguage, but we don\'t support that');
+      logger.i(
+          'Text is $detectedLanguage (meta data: $metaLanguage), but we don\'t support that');
       return;
     }
 
@@ -70,13 +74,25 @@ class GibberishDetectionUseCase
       detectedLanguage: detectedLanguage,
     );
     watch.stop();
-    logger.i('Text is $detectedLanguage (${watch.elapsed}) : $gibberish');
+    logger.i(
+        'Text is $detectedLanguage (time: ${watch.elapsed}, meta lang: $metaLanguage) : $gibberish\n\n${contents.truncate(1000)}');
   }
 }
 
+final localeLanguage = RegExp('[a-zA-Z]{2}[-_][a-zA-Z]{2}');
+final twoLetterLanguage = RegExp('[a-zA-Z]{2}');
+final localeSplit = RegExp('[-_]');
+
 extension on String {
   Language? get toGibberishLanguage {
-    switch (this) {
+    String? lang = this;
+    if (localeLanguage.hasMatch(this)) {
+      lang = split(localeSplit)[0].toLowerCase().toThreeLetterLang;
+    } else if (twoLetterLanguage.hasMatch(lang)) {
+      lang = toLowerCase().toThreeLetterLang;
+    }
+
+    switch (lang) {
       case 'eng':
         return Language.english;
       case 'deu':
@@ -89,6 +105,25 @@ extension on String {
         return Language.polish;
       case 'fra':
         return Language.french;
+      default:
+        return null;
+    }
+  }
+
+  String? get toThreeLetterLang {
+    switch (this) {
+      case 'en':
+        return 'eng';
+      case 'de':
+        return 'deu';
+      case 'es':
+        return 'esp';
+      case 'nl':
+        return 'nld';
+      case 'pl':
+        return 'pol';
+      case 'fr':
+        return 'fra';
       default:
         return null;
     }
