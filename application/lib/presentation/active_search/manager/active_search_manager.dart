@@ -52,6 +52,8 @@ abstract class ActiveSearchNavActions {
   void onPersonalAreaNavPressed();
 
   void onTrialExpired();
+
+  void onDeepSearchPressed(DocumentId documentId);
 }
 
 /// Manages the state for the active search screen.
@@ -161,6 +163,15 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
     requestNextSearchBatch();
   }
+
+  @override
+  void onLoadMorePressed() {
+    // do nothing
+  }
+
+  @override
+  void onDeepSearchPressed(DocumentId documentId) =>
+      _activeSearchNavActions.onDeepSearchPressed(documentId);
 
   /// A higher-order Function, which tracks the last event passed in,
   /// and ultimately runs the inner fold Function when the incoming event

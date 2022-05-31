@@ -31,6 +31,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_trusted_sources_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_excluded_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_trusted_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
@@ -166,6 +167,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateOrGetDefaultCollectionUseCase,
   CrudExplicitDocumentFeedbackUseCase,
   SurveyCardInjectionUseCase,
+  CrudFeedSettingsUseCase,
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DbEntityMapToOnboardingStatusMapper,

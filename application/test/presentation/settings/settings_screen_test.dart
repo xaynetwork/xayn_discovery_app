@@ -7,6 +7,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_design/xayn_design_test.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -30,6 +31,7 @@ void main() {
   late StreamController<SettingsScreenState> streamController;
   final stateReady = SettingsScreenState.ready(
     theme: AppTheme.system,
+    feedMode: FeedMode.stream,
     appVersion: const AppVersion(
       version: '1.2.3',
       build: '321',
@@ -94,6 +96,7 @@ void main() {
     (final WidgetTester tester) async {
       final state = SettingsScreenState.ready(
         theme: AppTheme.system,
+        feedMode: FeedMode.stream,
         appVersion: const AppVersion(
           version: '1.2.3',
           build: '321',
@@ -118,6 +121,7 @@ void main() {
     (final WidgetTester tester) async {
       final state = SettingsScreenState.ready(
         theme: AppTheme.system,
+        feedMode: FeedMode.stream,
         appVersion: const AppVersion(
           version: '1.2.3',
           build: '321',

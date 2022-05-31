@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -18,17 +19,25 @@ class FeedSettingsMapper extends BaseDbEntityMapper<FeedSettings> {
   FeedSettings? fromMap(Map? map) {
     if (map == null) return null;
 
+    final feedMode = _mapDir(map);
     final feedMarkets = _mapMarkets(map);
     if (feedMarkets.isEmpty) return null;
 
-    return FeedSettings(feedMarkets: feedMarkets);
+    return FeedSettings(feedMarkets: feedMarkets, feedMode: feedMode);
   }
 
   @override
   DbEntityMap toMap(FeedSettings entity) => {
+        FeedSettingsFields.feedMode: entity.feedMode.raw,
         FeedSettingsFields.feedMarkets:
             entity.feedMarkets.map(_feedMarketToMapMapper.map).toList(),
       };
+
+  FeedMode _mapDir(Map map) {
+    final feedModeRaw =
+        map[FeedSettingsFields.feedMode] as int? ?? FeedMode.stream.raw;
+    return FeedMode.fromRaw(feedModeRaw);
+  }
 
   Set<InternalFeedMarket> _mapMarkets(Map map) {
     final feedMarketsRaw = map[FeedSettingsFields.feedMarkets] as List? ?? [];
@@ -49,4 +58,5 @@ abstract class FeedSettingsFields {
   FeedSettingsFields._();
 
   static const int feedMarkets = 0;
+  static const int feedMode = 1;
 }

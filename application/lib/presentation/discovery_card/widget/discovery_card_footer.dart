@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
-import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
 
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
@@ -14,20 +14,18 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onSharePressed,
     required this.onLikePressed,
     required this.onDislikePressed,
-    required this.onBookmarkPressed,
-    required this.onBookmarkLongPressed,
-    required this.bookmarkStatus,
+    required this.onDeepSearchPressed,
     required this.document,
+    required this.feedType,
     required this.explicitDocumentUserReaction,
   }) : super(key: key);
 
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
-  final VoidCallback onBookmarkPressed;
-  final VoidCallback onBookmarkLongPressed;
-  final BookmarkStatus bookmarkStatus;
+  final VoidCallback onDeepSearchPressed;
   final Document document;
+  final FeedType? feedType;
   final UserReaction explicitDocumentUserReaction;
 
   @override
@@ -42,12 +40,9 @@ class DiscoveryCardFooter extends StatelessWidget {
       '${Keys.navBarItemLike.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
     );
 
-    final bookmarkButton = AppGhostButton.icon(
-      bookmarkStatus == BookmarkStatus.bookmarked
-          ? R.assets.icons.bookmarkActive
-          : R.assets.icons.bookmark,
-      onPressed: onBookmarkPressed,
-      onLongPressed: onBookmarkLongPressed,
+    final deepSearchButton = AppGhostButton.icon(
+      R.assets.icons.binoculars,
+      onPressed: onDeepSearchPressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(
       '${Keys.navBarItemBookmark.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
@@ -71,10 +66,10 @@ class DiscoveryCardFooter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        likeButton,
-        bookmarkButton,
+        if (feedType != FeedType.deepSearch) likeButton,
+        if (feedType != FeedType.deepSearch) deepSearchButton,
         shareButton,
-        dislikeButton,
+        if (feedType != FeedType.deepSearch) dislikeButton,
       ],
     );
   }
