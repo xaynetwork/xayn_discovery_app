@@ -175,6 +175,9 @@ void _createAppStatus(int version) {
     DbEntityMapToOnboardingStatusMapper(),
   );
   final repository = HiveAppStatusRepository(mapper);
+
+  // Use app version to increase numberOfSessions. The numberOfSessions field is used in
+  // migration 2 to 3 tests to check if the user was a beta app user before.
   final appStatus = AppStatus.initial().copyWith(
     numberOfSessions: version,
   );
