@@ -23,7 +23,6 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
@@ -38,6 +37,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
@@ -146,7 +146,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   CrudExplicitDocumentFeedbackUseCase,
-  CrudFeedSettingsUseCase,
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DbEntityMapToOnboardingStatusMapper,
@@ -179,6 +178,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HapticFeedbackMediumUseCase,
   HiveExplicitDocumentFeedbackRepository,
   HiveAppSettingsRepository,
+  HiveFeedSettingsRepository,
   InAppReview,
   ui.Image,
   IncrementAppSessionUseCase,

@@ -7,9 +7,10 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
@@ -26,12 +27,12 @@ import '../../../test_utils/utils.dart';
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
-  const feedMode = FeedMode.stream;
+  final feedSettings = FeedSettings.initial();
   final subscriptionStatus = SubscriptionStatus.initial();
   const subscriptionManagementURL = 'https://example.com';
   final stateReady = SettingsScreenState.ready(
     theme: appTheme,
-    feedMode: feedMode,
+    feedMode: feedSettings.feedMode,
     appVersion: appVersion,
     isPaymentEnabled: false,
     subscriptionStatus: subscriptionStatus,
@@ -54,7 +55,8 @@ void main() {
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
-  late MockCrudFeedSettingsUseCase crudFeedSettingsUseCase;
+  late CrudFeedSettingsUseCase crudFeedSettingsUseCase;
+  late MockHiveFeedSettingsRepository hiveFeedSettingsRepository;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -74,7 +76,9 @@ void main() {
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
-    crudFeedSettingsUseCase = MockCrudFeedSettingsUseCase();
+    hiveFeedSettingsRepository = MockHiveFeedSettingsRepository();
+    crudFeedSettingsUseCase =
+        CrudFeedSettingsUseCase(hiveFeedSettingsRepository);
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
@@ -86,6 +90,10 @@ void main() {
     when(listenAppThemeUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
+
+    when(hiveFeedSettingsRepository.getById(FeedSettings.globalId))
+        .thenAnswer((_) => feedSettings);
+    when(hiveFeedSettingsRepository.save(any)).thenAnswer((_) => feedSettings);
 
     when(getAppVersionUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(appVersion));
