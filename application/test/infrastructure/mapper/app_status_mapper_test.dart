@@ -3,6 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
+import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 
@@ -15,8 +16,10 @@ void main() {
   late MockAppVersionToMapMapper mockAppVersionToMapMapper;
   late MockOnboardingStatusToDbEntityMapMapper mockOnboardingToMapMapper;
   late MockDbEntityMapToOnboardingStatusMapper mockMapToOnboardingMapper;
-
-  final now = DateTime.now();
+  late MockSurveyBannerDataMapper mockSurveyBannerDataMapper;
+  late MockDbEntityMapToSurveyBannerDataMapper
+      mockDbEntityMapToSurveyBannerDataMapper;
+  late final now = DateTime.now();
   late final lastSeen = now.subtract(const Duration(minutes: 1));
 
   const numberOfSessions = 10;
@@ -29,19 +32,30 @@ void main() {
     0: 'hi there',
   };
   final appVersionValue = AppVersion.initial();
-  const numberOfSurveysShown = 0;
+
+  const surveyBannerDataMap = {
+    0: 0,
+    1: false,
+  };
+
+  const surveyBannerDataValue = SurveyBannerData.initial();
 
   setUp(() async {
     mockMapToAppVersionMapper = MockMapToAppVersionMapper();
     mockAppVersionToMapMapper = MockAppVersionToMapMapper();
     mockOnboardingToMapMapper = MockOnboardingStatusToDbEntityMapMapper();
     mockMapToOnboardingMapper = MockDbEntityMapToOnboardingStatusMapper();
+    mockSurveyBannerDataMapper = MockSurveyBannerDataMapper();
+    mockDbEntityMapToSurveyBannerDataMapper =
+        MockDbEntityMapToSurveyBannerDataMapper();
 
     mapper = AppStatusMapper(
       mockMapToAppVersionMapper,
       mockAppVersionToMapMapper,
       mockOnboardingToMapMapper,
       mockMapToOnboardingMapper,
+      mockSurveyBannerDataMapper,
+      mockDbEntityMapToSurveyBannerDataMapper,
     );
   });
 
@@ -51,6 +65,8 @@ void main() {
           .thenReturn(appVersionValue);
       when(mockMapToOnboardingMapper.map(onboardingMap))
           .thenReturn(onboardingValue);
+      when(mockDbEntityMapToSurveyBannerDataMapper.map(surveyBannerDataMap))
+          .thenReturn(surveyBannerDataValue);
 
       final map = {
         AppStatusFields.numberOfSessions: numberOfSessions,
@@ -60,7 +76,7 @@ void main() {
         AppStatusFields.lastSeenDate: lastSeen,
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.isBetaUser: false,
-        AppStatusFields.numberOfSurveysShown: numberOfSurveysShown,
+        AppStatusFields.surveyBannerData: surveyBannerDataMap,
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -74,7 +90,7 @@ void main() {
           onboardingStatus: const OnboardingStatus.initial(),
           ratingDialogAlreadyVisible: false,
           isBetaUser: false,
-          numberOfSurveysShown: numberOfSurveysShown,
+          surveyBannerData: surveyBannerDataValue,
         ),
       );
     });
@@ -84,6 +100,8 @@ void main() {
           .thenReturn(appVersionMap);
       when(mockOnboardingToMapMapper.map(onboardingValue))
           .thenReturn(onboardingMap);
+      when(mockSurveyBannerDataMapper.map(surveyBannerDataValue))
+          .thenReturn(surveyBannerDataMap);
 
       final appStatus = AppStatus(
         numberOfSessions: numberOfSessions,
@@ -94,7 +112,7 @@ void main() {
         onboardingStatus: onboardingValue,
         ratingDialogAlreadyVisible: false,
         isBetaUser: true,
-        numberOfSurveysShown: numberOfSurveysShown,
+        surveyBannerData: surveyBannerDataValue,
       );
 
       final map = mapper.toMap(appStatus);
@@ -107,7 +125,7 @@ void main() {
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.ratingDialogAlreadyVisible: false,
         AppStatusFields.isBetaUser: true,
-        AppStatusFields.numberOfSurveysShown: numberOfSurveysShown,
+        AppStatusFields.surveyBannerData: surveyBannerDataMap,
       };
       expect(map, expectedMap);
     });
