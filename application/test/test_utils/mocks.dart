@@ -31,6 +31,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_trusted_sources_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_excluded_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_trusted_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
@@ -46,6 +47,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_m
 import 'package:xayn_discovery_app/infrastructure/mappers/survey_banner_data_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
@@ -166,6 +168,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateOrGetDefaultCollectionUseCase,
   CrudExplicitDocumentFeedbackUseCase,
   SurveyCardInjectionUseCase,
+  CrudFeedSettingsUseCase,
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DbEntityMapToOnboardingStatusMapper,
@@ -205,6 +208,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HapticFeedbackMediumUseCase,
   HiveExplicitDocumentFeedbackRepository,
   HiveAppSettingsRepository,
+  HiveFeedSettingsRepository,
   InAppReview,
   ui.Image,
   IncrementAppSessionUseCase,

@@ -20,6 +20,10 @@ class FetchCardIndexUseCase extends UseCase<FeedType, int> {
       case FeedType.search:
         yield feed.cardIndexSearch;
         break;
+      case FeedType.deepSearch:
+        throw StateError(
+          'card index for deep search screen is not stored and shouldn\'t be accessed',
+        );
     }
   }
 }

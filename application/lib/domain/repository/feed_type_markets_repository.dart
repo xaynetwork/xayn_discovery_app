@@ -4,4 +4,5 @@ abstract class FeedTypeMarketsRepository {
   void save(FeedTypeMarkets feedTypeMarkets);
   FeedTypeMarkets get feed;
   FeedTypeMarkets get search;
+  FeedTypeMarkets get deepSearch;
 }

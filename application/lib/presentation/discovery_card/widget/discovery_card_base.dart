@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
+typedef OnDeepSearch = void Function(DocumentId);
 
 /// The exact height of the no-image animation
 const double _kNoImageSize = 400.0;
@@ -27,6 +28,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
   final Document document;
   final FeedType? feedType;
   final OnTtsData? onTtsData;
+  final OnDeepSearch? onDeepSearch;
   final ShaderBuilder primaryCardShader;
 
   DiscoveryCardBase({
@@ -35,6 +37,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
     required this.document,
     required this.feedType,
     this.onTtsData,
+    this.onDeepSearch,
     ShaderBuilder? primaryCardShader,
   })  : primaryCardShader =
             primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
