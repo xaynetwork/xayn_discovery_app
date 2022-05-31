@@ -11,8 +11,11 @@ class IncrementSurveyShownUseCase extends UseCase<None, None> {
   @override
   Stream<None> transaction(param) async* {
     final appStatus = _repository.appStatus;
-    final updatedAppStatus = appStatus.copyWith(
-        numberOfSurveysShown: appStatus.numberOfSurveysShown + 1);
+    final surveyBannerData = appStatus.surveyBannerData;
+    final updatedSurveyBannerData = surveyBannerData.copyWith(
+        numberOfTimesShown: surveyBannerData.numberOfTimesShown + 1);
+    final updatedAppStatus =
+        appStatus.copyWith(surveyBannerData: updatedSurveyBannerData);
     _repository.save(updatedAppStatus);
     yield none;
   }
