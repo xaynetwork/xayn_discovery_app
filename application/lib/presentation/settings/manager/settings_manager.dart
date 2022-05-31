@@ -4,7 +4,10 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_theme_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
@@ -17,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_the
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/save_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_version_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -67,6 +71,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final AppManager _appManager;
   final RatingDialogManager _ratingDialogManager;
+  final CrudFeedSettingsUseCase _crudFeedSettingsUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -85,16 +90,23 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._sendAnalyticsUseCase,
     this._appManager,
     this._ratingDialogManager,
+    this._crudFeedSettingsUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
 
   bool _initDone = false;
   late AppTheme _theme;
+  late FeedSettings? _feedSettings;
   late final AppVersion _appVersion;
   late SubscriptionStatus _subscriptionStatus;
   late final UseCaseValueStream<AppTheme> _appThemeHandler =
       consume(_listenAppThemeUseCase, initialData: none);
+  late final _listenFeedSettingsHandler = consume(
+    _crudFeedSettingsUseCase,
+    initialData: DbCrudIn.watch(FeedSettings.globalId),
+  );
+
   late final UseCaseValueStream<SubscriptionStatus> _subscriptionStatusHandler =
       consume(
     _listenSubscriptionStatusUseCase,
@@ -106,6 +118,12 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       // read values
       _appVersion = await _getAppVersionUseCase.singleOutput(none);
       _theme = await _getAppThemeUseCase.singleOutput(none);
+
+      final getSettingsOut = await _crudFeedSettingsUseCase
+          .singleOutput(DbCrudIn.get(FeedSettings.globalId));
+      _feedSettings =
+          getSettingsOut.mapOrNull<FeedSettings?>(single: (s) => s.value);
+
       _subscriptionStatus =
           await _getSubscriptionStatusUseCase.singleOutput(none);
 
@@ -116,6 +134,12 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void saveTheme(AppTheme theme) {
     _saveAppThemeUseCase(theme);
     _sendAnalyticsUseCase(AppThemeChangedEvent(theme: theme));
+  }
+
+  void saveFeedMode(FeedMode mode) async {
+    if (_feedSettings == null) return;
+    final settings = _feedSettings!.copyWith(feedMode: mode);
+    _crudFeedSettingsUseCase(DbCrudIn.store(settings));
   }
 
   Future<void> extractLogs() => _extractLogUseCase.call(none);
@@ -162,17 +186,22 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     if (!_initDone) return null;
     SettingsScreenState buildReady() => SettingsScreenState.ready(
           theme: _theme,
+          feedMode: _feedSettings?.feedMode ?? FeedMode.stream,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
           subscriptionStatus: _subscriptionStatus,
         );
-    return fold2(
+    return fold3(
       _appThemeHandler,
       _subscriptionStatusHandler,
-    ).foldAll((appTheme, subscriptionStatus, _) async {
+      _listenFeedSettingsHandler,
+    ).foldAll((appTheme, subscriptionStatus, feedSettingsOut, _) async {
       if (appTheme != null) {
         _theme = appTheme;
       }
+
+      _feedSettings =
+          feedSettingsOut?.mapOrNull<FeedSettings?>(single: (s) => s.value);
 
       if (subscriptionStatus != null) {
         _subscriptionStatus = subscriptionStatus;

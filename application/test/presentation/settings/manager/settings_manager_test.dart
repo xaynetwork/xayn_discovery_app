@@ -7,6 +7,7 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -25,10 +26,12 @@ import '../../../test_utils/utils.dart';
 void main() {
   const appVersion = AppVersion(version: '1.2.3', build: '321');
   const appTheme = AppTheme.dark;
+  const feedMode = FeedMode.stream;
   final subscriptionStatus = SubscriptionStatus.initial();
   const subscriptionManagementURL = 'https://example.com';
   final stateReady = SettingsScreenState.ready(
     theme: appTheme,
+    feedMode: feedMode,
     appVersion: appVersion,
     isPaymentEnabled: false,
     subscriptionStatus: subscriptionStatus,
@@ -51,6 +54,7 @@ void main() {
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
+  late MockCrudFeedSettingsUseCase crudFeedSettingsUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -70,6 +74,7 @@ void main() {
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
+    crudFeedSettingsUseCase = MockCrudFeedSettingsUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
@@ -122,6 +127,7 @@ void main() {
         sendAnalyticsUseCase,
         appManager,
         ratingDialogManager,
+        crudFeedSettingsUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
