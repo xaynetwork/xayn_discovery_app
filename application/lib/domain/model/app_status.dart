@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
+import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'app_status.freezed.dart';
@@ -18,7 +19,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required OnboardingStatus onboardingStatus,
     required bool ratingDialogAlreadyVisible,
     required bool isBetaUser,
-    required int numberOfSurveysShown,
+    required SurveyBannerData surveyBannerData,
   }) = _AppStatus;
 
   factory AppStatus({
@@ -30,7 +31,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required OnboardingStatus onboardingStatus,
     required bool ratingDialogAlreadyVisible,
     required bool isBetaUser,
-    required int numberOfSurveysShown,
+    required SurveyBannerData surveyBannerData,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
@@ -42,7 +43,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         onboardingStatus: onboardingStatus,
         ratingDialogAlreadyVisible: ratingDialogAlreadyVisible,
         isBetaUser: isBetaUser,
-        numberOfSurveysShown: numberOfSurveysShown,
+        surveyBannerData: surveyBannerData,
       );
 
   factory AppStatus.initial() => AppStatus._(
@@ -55,7 +56,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         onboardingStatus: const OnboardingStatus.initial(),
         ratingDialogAlreadyVisible: false,
         isBetaUser: false,
-        numberOfSurveysShown: 0,
+        surveyBannerData: const SurveyBannerData.initial(),
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');

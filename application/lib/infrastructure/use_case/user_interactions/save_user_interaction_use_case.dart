@@ -21,9 +21,9 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
 
   @override
   Stream<None> transaction(UserInteractionsEvents param) async* {
-    final numberOfSurveysShown =
-        _appStatusRepository.appStatus.numberOfSurveysShown;
-    if (_featureManager.isPromptSurveyEnabled && numberOfSurveysShown == 0) {
+    final surveyBannerData = _appStatusRepository.appStatus.surveyBannerData;
+    if (_featureManager.isPromptSurveyEnabled &&
+        surveyBannerData.numberOfTimesShown == 0) {
       switch (param) {
         case UserInteractionsEvents.cardScrolled:
           _onScrollingEvent();
