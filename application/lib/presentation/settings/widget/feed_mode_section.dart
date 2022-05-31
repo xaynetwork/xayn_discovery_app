@@ -17,7 +17,7 @@ class SettingsFeedModeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SettingsSection.custom(
-        title: R.strings.settingsSectionTitleAppTheme,
+        title: "Feed Mode",
         child: SettingsSelectable.icons(
           items: FeedMode.values.map(_getItem).toList(),
         ),
