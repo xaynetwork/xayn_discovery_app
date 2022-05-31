@@ -9,7 +9,7 @@ Some references from this doc:
 
 ## The workflow itself 😀
 
-<img src="./../.github/art/task_dev_workflow.png" alt="Task development workflow"/>
+<img src="./../docs/art/task_dev_workflow.png" alt="Task development workflow"/>
 
 --------
 
