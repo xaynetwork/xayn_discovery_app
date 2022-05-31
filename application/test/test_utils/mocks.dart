@@ -23,6 +23,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
@@ -145,6 +146,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   CrudExplicitDocumentFeedbackUseCase,
+  CrudFeedSettingsUseCase,
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DbEntityMapToOnboardingStatusMapper,
