@@ -1,1 +1,1 @@
-enum FeedType { feed, search }
+enum FeedType { feed, search, deepSearch }

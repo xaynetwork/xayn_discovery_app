@@ -10,6 +10,8 @@ part 'feed_type_markets.freezed.dart';
 class FeedTypeMarkets extends DbEntity with _$FeedTypeMarkets {
   static UniqueId feedId = const UniqueId.fromTrustedString('feed_id');
   static UniqueId searchId = const UniqueId.fromTrustedString('search_id');
+  static UniqueId deepSearchId =
+      const UniqueId.fromTrustedString('deep_search_id');
 
   factory FeedTypeMarkets({
     required UniqueId id,
@@ -28,6 +30,13 @@ class FeedTypeMarkets extends DbEntity with _$FeedTypeMarkets {
       FeedTypeMarkets(
         id: searchId,
         feedType: FeedType.search,
+        feedMarkets: feedMarkets,
+      );
+
+  factory FeedTypeMarkets.forDeepSearch(Set<InternalFeedMarket> feedMarkets) =>
+      FeedTypeMarkets(
+        id: deepSearchId,
+        feedType: FeedType.deepSearch,
         feedMarkets: feedMarkets,
       );
 }

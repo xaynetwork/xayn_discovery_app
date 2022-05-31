@@ -4,6 +4,7 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/feed_mode_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
@@ -94,6 +96,9 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
       ),
+      _buildFeedModeSection(
+        feedMode: state.feedMode,
+      ),
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
@@ -135,6 +140,14 @@ class _SettingsScreenState extends State<SettingsScreen>
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
+      );
+
+  Widget _buildFeedModeSection({
+    required FeedMode feedMode,
+  }) =>
+      SettingsFeedModeSection(
+        mode: feedMode,
+        onSelected: _manager.saveFeedMode,
       );
 
   Widget _buildAppThemeSection({

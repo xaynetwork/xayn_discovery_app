@@ -3,11 +3,14 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_mode.dart';
+import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_exception_raised_event.dart';
@@ -16,6 +19,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -38,7 +42,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-const int _kMaxCardCount = 10;
+const int _kMaxCardCount = 20;
 
 typedef OnRestoreFeedSucceeded = Set<Document> Function(
     RestoreFeedSucceeded event);
@@ -56,6 +60,8 @@ abstract class DiscoveryFeedNavActions {
   void onPersonalAreaNavPressed();
 
   void onTrialExpired();
+
+  void onDeepSearchPressed(DocumentId documentId);
 }
 
 /// Manages the state for the main, or home discovery feed screen.
@@ -76,12 +82,14 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   final int _maxCardCount;
   final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
   final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
+  final CrudFeedSettingsUseCase _crudFeedSettingsUseCase;
 
   DiscoveryFeedManager(
     this._fetchSessionUseCase,
     this._discoveryFeedNavActions,
     this._needToShowOnboardingUseCase,
     this._markOnboardingTypeCompletedUseCase,
+    this._crudFeedSettingsUseCase,
     EngineEventsUseCase engineEventsUseCase,
     FetchCardIndexUseCase fetchCardIndexUseCase,
     UpdateCardIndexUseCase updateCardIndexUseCase,
@@ -121,8 +129,15 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   late final FetchSessionUseCase _fetchSessionUseCase;
   final DiscoveryFeedNavActions _discoveryFeedNavActions;
+  late final _listenFeedSettingsHandler = consume(
+    _crudFeedSettingsUseCase,
+    initialData: DbCrudIn.watch(FeedSettings.globalId),
+  );
 
   bool _isLoading = true;
+
+  FeedMode _feedMode = FeedMode.stream;
+  bool get isCarouselEnabled => _feedMode == FeedMode.carousel;
 
   @override
   bool get isLoading => _isLoading;
@@ -204,7 +219,30 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   /// Triggers the discovery engine to load more results.
   @override
-  void handleLoadMore() => requestNextFeedBatch();
+  void handleLoadMore() async {
+    if (_feedMode == FeedMode.stream) {
+      requestNextFeedBatch();
+    }
+  }
+
+  @override
+  void onLoadMorePressed() {
+    if (isLoading) return;
+
+    scheduleComputeState(() => _isLoading = true);
+
+    final documentIds =
+        state.cards.map((it) => it.document!.documentId).toSet();
+    closeFeedDocuments(documentIds);
+    resetParameters();
+    requestNextFeedBatch();
+  }
+
+  @override
+  void onDeepSearchPressed(DocumentId documentId) {
+    handleActivityStatus(false);
+    _discoveryFeedNavActions.onDeepSearchPressed(documentId);
+  }
 
   void onHomeNavPressed() {
     // TODO probably go to the top of the feed
@@ -362,6 +400,20 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       );
     };
   }
+
+  @override
+  Future<DiscoveryState?> computeState() async => fold(
+        _listenFeedSettingsHandler,
+      ).foldAll(
+        (feedSettingsOut, _) async {
+          _feedMode = feedSettingsOut?.maybeMap(
+                single: (s) => s.value?.feedMode ?? FeedMode.stream,
+                orElse: () => FeedMode.stream,
+              ) ??
+              FeedMode.stream;
+          return super.computeState();
+        },
+      );
 
   @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {

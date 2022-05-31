@@ -21,6 +21,9 @@ class GetFeedTypeMarketsUseCase extends UseCase<FeedType, FeedTypeMarkets> {
       case FeedType.search:
         yield _repository.search;
         break;
+      case FeedType.deepSearch:
+        yield _repository.deepSearch;
+        break;
     }
   }
 }

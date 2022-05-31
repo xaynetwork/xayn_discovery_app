@@ -35,8 +35,9 @@ class FeedTypeMarketsMapper extends BaseDbEntityMapper<FeedTypeMarkets> {
       case 1:
         feedType = FeedType.search;
         break;
-      default:
-        throwMapperException();
+      case 2:
+        feedType = FeedType.deepSearch;
+        break;
     }
 
     return FeedTypeMarkets(
@@ -56,6 +57,9 @@ class FeedTypeMarketsMapper extends BaseDbEntityMapper<FeedTypeMarkets> {
         break;
       case FeedType.search:
         feedTypeValue = 1;
+        break;
+      case FeedType.deepSearch:
+        feedTypeValue = 2;
         break;
     }
     return {

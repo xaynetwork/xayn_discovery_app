@@ -289,8 +289,6 @@ void main() {
           changeDocumentFeedbackUseCase.transform(any),
           sendAnalyticsUseCase.call(any),
           createBookmarkFromDocumentUseCase.transaction(any),
-          sendAnalyticsUseCase.call(any),
-          changeDocumentFeedbackUseCase.transaction(any),
         ]);
         verifyNoMoreInteractions(removeBookmarkUseCase);
         verifyNoMoreInteractions(moveBookmarkUseCase);

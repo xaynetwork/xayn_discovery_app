@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
+import 'package:xayn_discovery_app/presentation/deep_search/widget/deep_search.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
@@ -14,6 +15,8 @@ import 'package:xayn_discovery_app/presentation/payment/paywall_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart'
+    show DocumentId;
 
 /// IMPORTANT NOTE: do not use `const` keyword with the ScreenWidgets
 /// Reason: the `const` word prevent screen from the reloading
@@ -69,6 +72,23 @@ class PageRegistry {
       key: searchKey,
     ),
   );
+
+  /// Using a global key prevents rebuilding the [DeepSearch]
+  /// when device orientation changes. This also fixes an issue
+  /// with playing videos in full screen mode.
+  static final deepSearchKey = GlobalKey();
+  static deepSearch({
+    required DocumentId documentId,
+  }) =>
+      xayn.PageData<DeepSearchScreen, DocumentId>(
+        name: "deepSearch",
+        arguments: documentId,
+        //ignore: prefer_const_constructors
+        builder: (_, args) => DeepSearchScreen(
+          key: searchKey,
+          documentId: args!,
+        ),
+      );
 
   static cardDetails({
     required UniqueId documentId,

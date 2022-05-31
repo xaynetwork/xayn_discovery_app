@@ -47,4 +47,13 @@ class HiveFeedTypeMarketsRepository extends HiveRepository<FeedTypeMarkets>
         feedType: FeedType.search,
         feedMarkets: const {},
       );
+
+  @override
+  FeedTypeMarkets get deepSearch =>
+      getById(FeedTypeMarkets.deepSearchId) ??
+      FeedTypeMarkets(
+        id: FeedTypeMarkets.deepSearchId,
+        feedType: FeedType.deepSearch,
+        feedMarkets: const {},
+      );
 }
