@@ -48,8 +48,8 @@ class _DiscoveryFeedState
           ],
         );
     NavBarConfig buildReaderMode() {
-      final document =
-          _manager.state.results.elementAt(_manager.state.cardIndex);
+      final card = _manager.state.cards.elementAt(_manager.state.cardIndex);
+      final document = card.requireDocument;
       final managers = cardManagersCache.managersOf(document);
 
       void onBookmarkPressed() =>

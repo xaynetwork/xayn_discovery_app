@@ -69,7 +69,7 @@ class _ActiveSearchState
               _manager.onHomeNavPressed();
             }),
             buildNavBarItemSearchActive(
-              autofocus: _manager.state.results.isEmpty,
+              autofocus: _manager.state.cards.isEmpty,
               hint: _manager.lastUsedSearchTerm,
               onSearchPressed: _manager.handleSearchTerm,
             ),
@@ -83,8 +83,8 @@ class _ActiveSearchState
           showAboveKeyboard: true,
         );
     NavBarConfig buildReaderMode() {
-      final document =
-          _manager.state.results.elementAt(_manager.state.cardIndex);
+      final card = _manager.state.cards.elementAt(_manager.state.cardIndex);
+      final document = card.requireDocument;
       final managers = _cardManagersCache.managersOf(document);
 
       void onBookmarkPressed() =>

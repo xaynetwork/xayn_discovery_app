@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -11,6 +10,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engin
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_search_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_search_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -66,6 +66,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
+    CustomCardInjectionUseCase customCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -80,6 +81,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
+          customCardInjectionUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
@@ -88,7 +90,6 @@ class ActiveSearchManager extends BaseDiscoveryManager
   final ActiveSearchNavActions _activeSearchNavActions;
   bool _isLoading = true;
   bool _didReachEnd = false;
-  EngineEvent? _lastErrorEvent;
 
   @override
   bool get isLoading => _isLoading;
@@ -261,37 +262,24 @@ class ActiveSearchManager extends BaseDiscoveryManager
   }
 
   @override
-  Future<DiscoveryState?> computeState() async => fold(
-        engineEvents,
-      ).foldAll(
-        (
-          engineEvent,
-          errorReport,
-        ) async {
-          if (engineEvent is NextFeedBatchRequestFailed ||
-              engineEvent is EngineExceptionRaised) {
-            final errorMessage = getEngineEventErrorMessage(
-              engineEvent!,
-            );
-            if (engineEvent != _lastErrorEvent) {
-              showOverlay(
-                OverlayData.bottomSheetGenericError(
-                  errorCode: errorMessage,
-                ),
-              );
-              _lastErrorEvent = engineEvent;
-            }
-
-            _isLoading = false;
-          }
-          return super.computeState();
-        },
-      );
-
-  @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
     if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
       _activeSearchNavActions.onTrialExpired();
+    }
+  }
+
+  @override
+  void onEngineEvent(EngineEvent event) {
+    if (event is NextFeedBatchRequestFailed || event is EngineExceptionRaised) {
+      final errorMessage = getEngineEventErrorMessage(event);
+
+      showOverlay(
+        OverlayData.bottomSheetGenericError(
+          errorCode: errorMessage,
+        ),
+      );
+
+      _isLoading = false;
     }
   }
 }

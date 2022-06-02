@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engin
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_feed_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -82,6 +84,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
+    CustomCardInjectionUseCase customCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -97,6 +100,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
+          customCardInjectionUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
@@ -116,24 +120,24 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   Future<Session> getSession() => _fetchSessionUseCase.singleOutput(none);
 
   @override
-  Future<ResultSets> maybeReduceCardCount(Set<Document> results) async {
-    final stateDiffResult = await super.maybeReduceCardCount(results);
+  Future<ResultSets> maybeReduceCardCount(Set<Card> cards) async {
+    final stateDiffResult = await super.maybeReduceCardCount(cards);
     final observedDocument = currentObservedDocument;
 
-    if (observedDocument == null || results.length <= _maxCardCount) {
+    if (observedDocument == null || cards.length <= _maxCardCount) {
       return ResultSets(
-        results: results,
-        removedResults: stateDiffResult.removedResults,
+        cards: cards,
+        removedCards: stateDiffResult.removedCards,
       );
     }
 
-    var nextResults = results.toSet();
+    var nextCards = cards.toSet();
     var cardIndex = currentCardIndex!;
-    final flaggedForDisposal =
-        results.take(results.length - _maxCardCount).toSet();
+    final flaggedForDisposal = cards.take(cards.length - _maxCardCount).toSet();
 
-    nextResults = nextResults..removeAll(flaggedForDisposal);
-    cardIndex = nextResults.toList().indexOf(observedDocument);
+    nextCards.removeAll(flaggedForDisposal);
+    cardIndex =
+        nextCards.map((it) => it.document).toList().indexOf(observedDocument);
 
     // The number 2 was chosen because we always animate transitions when
     // moving between cards.
@@ -149,8 +153,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       // Only remove documents when scrolled far enough, so that the impact
       // is seamless to the user.
       return ResultSets(
-        results: results,
-        removedResults: stateDiffResult.removedResults,
+        cards: cards,
+        removedCards: stateDiffResult.removedCards,
       );
     }
 
@@ -159,7 +163,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // then we need a specific CloseDocumentEngineEvent.
     // Currently, we just get a generic [ClientEventSucceeded] event only.
     final documentIdsToClose = flaggedForDisposal
-        .map((it) => it.documentId)
+        .where((it) => it.type == CardType.document)
+        .map((it) => it.requireDocument.documentId)
         .toList()
       ..removeWhere(closedDocuments.contains);
 
@@ -170,16 +175,16 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     // adjust the cardIndex to counter the removals
     cardIndex = await updateCardIndexUseCase.singleOutput(
       FeedTypeAndIndex.feed(
-        cardIndex: cardIndex.clamp(0, nextResults.length - 1),
+        cardIndex: cardIndex.clamp(0, nextCards.length - 1),
       ),
     );
 
     return ResultSets(
       nextCardIndex: cardIndex,
-      results: nextResults,
-      removedResults: {
+      cards: nextCards,
+      removedCards: {
         ...flaggedForDisposal,
-        ...stateDiffResult.removedResults,
+        ...stateDiffResult.removedCards,
       },
     );
   }
@@ -332,29 +337,6 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   }
 
   @override
-  Future<DiscoveryState?> computeState() async => fold(
-        engineEvents,
-      ).foldAll(
-        (
-          engineEvent,
-          errorReport,
-        ) async {
-          if (engineEvent is NextFeedBatchRequestFailed ||
-              engineEvent is EngineExceptionRaised) {
-            final errorMessage = getEngineEventErrorMessage(
-              engineEvent!,
-            );
-            showOverlay(
-              OverlayData.bottomSheetGenericError(
-                errorCode: errorMessage,
-              ),
-            );
-          }
-          return super.computeState();
-        },
-      );
-
-  @override
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus) {
     if (subscriptionStatus.subscriptionType == SubscriptionType.notSubscribed) {
       _discoveryFeedNavActions.onTrialExpired();
@@ -379,5 +361,18 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
       _markOnboardingTypeCompletedUseCase.call(type);
     });
     showOverlay(data);
+  }
+
+  @override
+  void onEngineEvent(EngineEvent event) {
+    if (event is NextFeedBatchRequestFailed || event is EngineExceptionRaised) {
+      final errorMessage = getEngineEventErrorMessage(event);
+
+      showOverlay(
+        OverlayData.bottomSheetGenericError(
+          errorCode: errorMessage,
+        ),
+      );
+    }
   }
 }
