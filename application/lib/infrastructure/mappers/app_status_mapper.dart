@@ -4,8 +4,8 @@ import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/survey_banner_data_mapper.dart';
 
 @singleton
 class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
@@ -13,16 +13,16 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
   final AppVersionToMapMapper _appVersionToMapMapper;
   final OnboardingStatusToDbEntityMapMapper _onboardingStatusToMapMapper;
   final DbEntityMapToOnboardingStatusMapper _mapToOnboardingStatusMapper;
-  final SurveyBannerDataMapper _surveyBannerDataMapper;
-  final DbEntityMapToSurveyBannerDataMapper _mapToSurveyBannerDataMapper;
+  final CTAMapToDbEntityMapper _ctaMapToDbEntityMapper;
+  final DbEntityMapToCTAMapper _mapToCTAMapper;
 
   const AppStatusMapper(
     this._mapToAppVersionMapper,
     this._appVersionToMapMapper,
     this._onboardingStatusToMapMapper,
     this._mapToOnboardingStatusMapper,
-    this._surveyBannerDataMapper,
-    this._mapToSurveyBannerDataMapper,
+    this._ctaMapToDbEntityMapper,
+    this._mapToCTAMapper,
   );
 
   @override
@@ -41,8 +41,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
     final ratingDialogAlreadyVisible =
         map[AppStatusFields.ratingDialogAlreadyVisible] as bool?;
     final isBetaUser = map[AppStatusFields.isBetaUser] as bool?;
-    final surveyBannerData =
-        _mapToSurveyBannerDataMapper.map(map[AppStatusFields.surveyBannerData]);
+    final cta = _mapToCTAMapper.map(map[AppStatusFields.cta]);
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
@@ -53,7 +52,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
       onboardingStatus: onboardingStatus,
       ratingDialogAlreadyVisible: ratingDialogAlreadyVisible ?? false,
       isBetaUser: isBetaUser ?? false,
-      surveyBannerData: surveyBannerData,
+      cta: cta,
     );
   }
 
@@ -70,8 +69,7 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         AppStatusFields.ratingDialogAlreadyVisible:
             entity.ratingDialogAlreadyVisible,
         AppStatusFields.isBetaUser: entity.isBetaUser,
-        AppStatusFields.surveyBannerData:
-            _surveyBannerDataMapper.map(entity.surveyBannerData),
+        AppStatusFields.cta: _ctaMapToDbEntityMapper.map(entity.cta),
       };
 }
 
@@ -86,5 +84,5 @@ abstract class AppStatusFields {
   static const int onboardingStatus = 5;
   static const int ratingDialogAlreadyVisible = 6;
   static const int isBetaUser = 7;
-  static const int surveyBannerData = 8;
+  static const int cta = 8;
 }

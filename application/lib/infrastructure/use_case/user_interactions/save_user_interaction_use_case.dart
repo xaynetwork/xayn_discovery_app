@@ -21,7 +21,8 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
 
   @override
   Stream<None> transaction(UserInteractionsEvents param) async* {
-    final surveyBannerData = _appStatusRepository.appStatus.surveyBannerData;
+    final surveyBannerData =
+        _appStatusRepository.appStatus.cta.surveyBannerData;
     if (_featureManager.isPromptSurveyEnabled &&
         surveyBannerData.numberOfTimesShown == 0) {
       switch (param) {
