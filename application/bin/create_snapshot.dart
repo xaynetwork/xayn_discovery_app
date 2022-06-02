@@ -170,17 +170,16 @@ void _createDocumentFilters() {
 }
 
 void _createAppStatus(int version) {
-  const surveyBannerDataMapper = SurveyBannerDataMapper();
-  const dbEntityMapToSurveyBannerDataMapper =
-      DbEntityMapToSurveyBannerDataMapper();
+  const surveyBannerMapper = SurveyBannerMapper();
+  const dbEntityMapToSurveyBannerMapper = DbEntityMapToSurveyBannerMapper();
 
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
     AppVersionToMapMapper(),
     OnboardingStatusToDbEntityMapMapper(),
     DbEntityMapToOnboardingStatusMapper(),
-    CTAMapToDbEntityMapper(surveyBannerDataMapper),
-    DbEntityMapToCTAMapper(dbEntityMapToSurveyBannerDataMapper),
+    CTAMapToDbEntityMapper(surveyBannerMapper),
+    DbEntityMapToCTAMapper(dbEntityMapToSurveyBannerMapper),
   );
   final repository = HiveAppStatusRepository(mapper);
 

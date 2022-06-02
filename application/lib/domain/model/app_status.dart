@@ -3,7 +3,6 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'app_status.freezed.dart';

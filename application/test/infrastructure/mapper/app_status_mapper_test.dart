@@ -4,7 +4,7 @@ import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
+import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
@@ -18,9 +18,8 @@ void main() {
   late MockAppVersionToMapMapper mockAppVersionToMapMapper;
   late MockOnboardingStatusToDbEntityMapMapper mockOnboardingToMapMapper;
   late MockDbEntityMapToOnboardingStatusMapper mockMapToOnboardingMapper;
-  late MockSurveyBannerDataMapper mockSurveyBannerDataMapper;
-  late MockDbEntityMapToSurveyBannerDataMapper
-      mockDbEntityMapToSurveyBannerDataMapper;
+  late MockSurveyBannerMapper mockSurveyBannerMapper;
+  late MockDbEntityMapToSurveyBannerMapper mockDbEntityMapToSurveyBannerMapper;
   late CTAMapToDbEntityMapper ctaMapToDbEntityMapper;
   late DbEntityMapToCTAMapper dbEntityMapToCTAMapper;
   late final now = DateTime.now();
@@ -37,17 +36,17 @@ void main() {
   };
   final appVersionValue = AppVersion.initial();
 
-  const surveyBannerDataMap = {
+  const surveyBannerMap = {
     0: 0,
     1: false,
   };
 
-  const surveyBannerDataValue = SurveyBannerData.initial();
+  const surveyBannerValue = SurveyBanner.initial();
 
-  const ctaValue = CTA(surveyBannerData: surveyBannerDataValue);
+  const ctaValue = CTA(surveyBanner: surveyBannerValue);
 
   const ctaMap = {
-    0: surveyBannerDataMap,
+    0: surveyBannerMap,
   };
 
   setUp(() async {
@@ -55,16 +54,15 @@ void main() {
     mockAppVersionToMapMapper = MockAppVersionToMapMapper();
     mockOnboardingToMapMapper = MockOnboardingStatusToDbEntityMapMapper();
     mockMapToOnboardingMapper = MockDbEntityMapToOnboardingStatusMapper();
-    mockSurveyBannerDataMapper = MockSurveyBannerDataMapper();
-    mockDbEntityMapToSurveyBannerDataMapper =
-        MockDbEntityMapToSurveyBannerDataMapper();
+    mockSurveyBannerMapper = MockSurveyBannerMapper();
+    mockDbEntityMapToSurveyBannerMapper = MockDbEntityMapToSurveyBannerMapper();
 
     ctaMapToDbEntityMapper = CTAMapToDbEntityMapper(
-      mockSurveyBannerDataMapper,
+      mockSurveyBannerMapper,
     );
 
     dbEntityMapToCTAMapper =
-        DbEntityMapToCTAMapper(mockDbEntityMapToSurveyBannerDataMapper);
+        DbEntityMapToCTAMapper(mockDbEntityMapToSurveyBannerMapper);
 
     mapper = AppStatusMapper(
       mockMapToAppVersionMapper,
@@ -82,8 +80,8 @@ void main() {
           .thenReturn(appVersionValue);
       when(mockMapToOnboardingMapper.map(onboardingMap))
           .thenReturn(onboardingValue);
-      when(mockDbEntityMapToSurveyBannerDataMapper.map(surveyBannerDataMap))
-          .thenReturn(surveyBannerDataValue);
+      when(mockDbEntityMapToSurveyBannerMapper.map(surveyBannerMap))
+          .thenReturn(surveyBannerValue);
 
       final map = {
         AppStatusFields.numberOfSessions: numberOfSessions,
@@ -117,8 +115,8 @@ void main() {
           .thenReturn(appVersionMap);
       when(mockOnboardingToMapMapper.map(onboardingValue))
           .thenReturn(onboardingMap);
-      when(mockSurveyBannerDataMapper.map(surveyBannerDataValue))
-          .thenReturn(surveyBannerDataMap);
+      when(mockSurveyBannerMapper.map(surveyBannerValue))
+          .thenReturn(surveyBannerMap);
 
       final appStatus = AppStatus(
         numberOfSessions: numberOfSessions,

@@ -2,30 +2,30 @@ import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @immutable
-class SurveyBannerData extends Equatable {
+class SurveyBanner extends Equatable {
   final int numberOfTimesShown;
   final bool hasSurveyBannerBeenClicked;
 
-  const SurveyBannerData({
+  const SurveyBanner({
     required this.numberOfTimesShown,
     required this.hasSurveyBannerBeenClicked,
   });
 
-  const SurveyBannerData.initial()
+  const SurveyBanner.initial()
       : numberOfTimesShown = 0,
         hasSurveyBannerBeenClicked = false;
 
-  SurveyBannerData copyWith({
+  SurveyBanner copyWith({
     int? numberOfTimesShown,
     bool? hasSurveyBannerBeenClicked,
   }) =>
-      SurveyBannerData(
+      SurveyBanner(
         numberOfTimesShown: numberOfTimesShown ?? this.numberOfTimesShown,
         hasSurveyBannerBeenClicked:
             hasSurveyBannerBeenClicked ?? this.hasSurveyBannerBeenClicked,
       );
 
-  SurveyBannerData clicked() => SurveyBannerData(
+  SurveyBanner clicked() => SurveyBanner(
         numberOfTimesShown: numberOfTimesShown,
         hasSurveyBannerBeenClicked: true,
       );

@@ -1,24 +1,24 @@
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
+import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
 
 @immutable
 class CTA extends Equatable {
-  final SurveyBannerData surveyBannerData;
+  final SurveyBanner surveyBanner;
 
-  const CTA({required this.surveyBannerData});
+  const CTA({required this.surveyBanner});
 
-  const CTA.initial() : surveyBannerData = const SurveyBannerData.initial();
+  const CTA.initial() : surveyBanner = const SurveyBanner.initial();
 
   CTA copyWith({
-    SurveyBannerData? surveyBannerData,
+    SurveyBanner? surveyBanner,
   }) =>
       CTA(
-        surveyBannerData: surveyBannerData ?? this.surveyBannerData,
+        surveyBanner: surveyBanner ?? this.surveyBanner,
       );
 
   @override
   List<Object?> get props => [
-        surveyBannerData,
+        surveyBanner,
       ];
 }
