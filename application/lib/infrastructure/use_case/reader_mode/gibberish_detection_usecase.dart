@@ -83,7 +83,7 @@ class GibberishDetectionUseCase
     );
     watch.stop();
     logger.i(
-        'Text is $detectedLanguage (time: ${watch.elapsed}, meta lang: $metaLanguage) : $gibberishCandidate\n\n${contents.truncate(1000)}');
+        'Text is $detectedLanguage (time: ${watch.elapsed}, meta lang: $metaLanguage) : $gibberishCandidate\n\n${gibberishCandidate.isGibberish ? contents : contents.truncate(1000)}');
   }
 }
 
