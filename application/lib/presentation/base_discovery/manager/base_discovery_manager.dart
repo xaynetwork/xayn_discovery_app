@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
@@ -17,6 +18,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -71,6 +73,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
+  final CustomCardInjectionUseCase customCardInjectionUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -93,14 +96,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.hapticFeedbackMediumUseCase,
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
+    this.customCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
   ) : super(DiscoveryState.initial());
 
-  late final UseCaseValueStream<EngineEvent> engineEvents = consume(
+  late final UseCaseValueStream<Set<Card>> cardStream = consume(
     engineEventsUseCase,
     initialData: none,
+  ).transform(
+    (out) => out
+        .doOnData(onEngineEvent)
+        .map((it) => foldEngineEvent(this)(it))
+        .followedBy(customCardInjectionUseCase),
   );
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: feedType)
@@ -140,6 +149,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   int? get currentCardIndex => _cardIndex;
 
+  void onEngineEvent(EngineEvent event);
+
   void maybeNavigateIntoCard(Document document) =>
       checkIfDocumentNotProcessable(
         document,
@@ -173,9 +184,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) async {
-    if (index >= state.results.length) return;
+    if (index >= state.cards.length) return;
 
-    final nextDocument = state.results.elementAt(index);
+    final nextCard = state.cards.elementAt(index);
+    final document = nextCard.document;
     late final int nextCardIndex;
 
     switch (feedType) {
@@ -200,20 +212,27 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       saveUserInteractionUseCase
           .singleOutput(UserInteractionsEvents.cardScrolled);
     }
-    observeDocument(
-      document: nextDocument,
-      mode: _currentViewMode(nextDocument.documentId),
-    );
 
-    sendAnalyticsUseCase(DocumentIndexChangedEvent(
-      next: nextDocument,
-      direction: direction,
-      feedType: feedType,
-    ));
+    if (document != null) {
+      observeDocument(
+        document: document,
+        mode: _currentViewMode(document.documentId),
+      );
+
+      sendAnalyticsUseCase(DocumentIndexChangedEvent(
+        cardType: nextCard.type,
+        next: document,
+        direction: direction,
+        feedType: feedType,
+      ));
+    } else {
+      // todo: log custom card analytics
+      observeDocument();
+    }
 
     scheduleComputeState(() {
       _cardIndex = nextCardIndex;
-      _observedDocument = nextDocument;
+      _observedDocument = document;
     });
   }
 
@@ -272,16 +291,18 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   void resetObservedDocument() => _observedDocument = null;
 
   @override
-  bool isDocumentCurrentlyDisplayed(Document document) =>
-      state.results.map((it) => it.documentId).contains(document.documentId);
+  bool isDocumentCurrentlyDisplayed(Document document) => state.cards
+      .where((it) => it.type == CardType.document)
+      .map((it) => it.requireDocument)
+      .map((it) => it.documentId)
+      .contains(document.documentId);
 
   /// override this method, if your view needs to dispose older items, as
   /// the total results grow in size
   @mustCallSuper
-  Future<ResultSets> maybeReduceCardCount(Set<Document> results) async =>
-      ResultSets(
-        results: results,
-        removedResults: state.results.toSet()..removeWhere(results.contains),
+  Future<ResultSets> maybeReduceCardCount(Set<Card> cards) async => ResultSets(
+        cards: cards,
+        removedCards: state.cards.toSet()..removeWhere(cards.contains),
       );
 
   void triggerHapticFeedbackMedium() => hapticFeedbackMediumUseCase.call(none);
@@ -298,13 +319,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   Future<DiscoveryState?> computeState() async => fold5(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
-        engineEvents,
+        cardStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
       ).foldAll((
         cardIndex,
         explicitDocumentFeedback,
-        engineEvent,
+        cards,
         subscriptionStatus,
         readerModeSettings,
         errorReport,
@@ -313,20 +334,16 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final results = foldEngineEvent(this)(engineEvent);
-        final isInErrorState =
-            errorReport.isNotEmpty || engineEvent is EngineExceptionRaised;
-        final sets = await maybeReduceCardCount(results);
+        final requireCards = cards ?? state.cards;
+        final sets = await maybeReduceCardCount(requireCards);
         final nextCardIndex = sets.nextCardIndex;
-
-        if (engineEvent != null) logger.i('[engineEvent]: $engineEvent');
 
         if (errorReport.isNotEmpty) {
           logger.e('Something went wrong in $runtimeType: ${{
             'cardIndexConsumer': errorReport.of(cardIndexConsumer).toString(),
             'crudExplicitDocumentFeedbackConsumer':
                 errorReport.of(crudExplicitDocumentFeedbackConsumer).toString(),
-            'engineEvents': errorReport.of(engineEvents).toString(),
+            'engineEvents': errorReport.of(cardStream).toString(),
             'subscriptionStatusHandler':
                 errorReport.of(subscriptionStatusHandler).toString(),
             'readerModeSettingsHandler':
@@ -342,9 +359,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         final hasExplicitDocumentFeedbackChanged =
             state.latestExplicitDocumentFeedback != feedback;
         final nextState = DiscoveryState(
-          results: sets.results,
+          cards: sets.cards,
           isComplete: !isLoading,
-          isInErrorState: isInErrorState,
           isFullScreen: _isFullScreen,
           didReachEnd: didReachEnd,
           cardIndex: _cardIndex!,
@@ -356,10 +372,15 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
               _isFullScreen ? readerModeSettings?.backgroundColor : null,
         );
 
-        final uriList = sets.results.map((it) => it.resource.url).toSet();
+        final uriList = sets.cards
+            .where((it) => it.type == CardType.document)
+            .map((it) => it.requireDocument.resource.url)
+            .toSet();
 
-        cardManagersCache.removeObsoleteCardManagers(sets.removedResults
-            .where((it) => !uriList.contains(it.resource.url)));
+        cardManagersCache.removeObsoleteCardManagers(sets.removedCards
+            .where((it) => it.type == CardType.document)
+            .where((it) => !uriList.contains(it.requireDocument.resource.url))
+            .map((it) => it.requireDocument));
 
         // guard against same-state emission
         if (!nextState.equals(state)) return nextState;
@@ -394,12 +415,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
 class ResultSets {
   final int? nextCardIndex;
-  final Set<Document> results;
-  final Set<Document> removedResults;
+  final Set<Card> cards;
+  final Set<Card> removedCards;
 
   const ResultSets({
-    required this.results,
+    required this.cards,
     this.nextCardIndex,
-    this.removedResults = const <Document>{},
+    this.removedCards = const <Card>{},
   });
 }
