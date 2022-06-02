@@ -16,6 +16,7 @@ dependencies:
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   connectivity_plus: 2.2.1
+  country_code: 1.0.0
   equatable: 2.0.3
   envify: 2.0.2
   flutter_bloc: 7.3.3
@@ -37,7 +38,7 @@ dependencies:
   gibberish:
     git:
       url: https://github.com/xaynetwork/gibberish
-      ref: e62841661b93c58b4791b691927ddff04e991dd9
+      ref: 940a1907597a908d67ad1735da4f6e4fe97258c2
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
