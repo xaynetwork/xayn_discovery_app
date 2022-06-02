@@ -25,6 +25,11 @@ class SurveyBannerData extends Equatable {
             hasSurveyBannerBeenClicked ?? this.hasSurveyBannerBeenClicked,
       );
 
+  SurveyBannerData clicked() => SurveyBannerData(
+        numberOfTimesShown: numberOfTimesShown,
+        hasSurveyBannerBeenClicked: true,
+      );
+
   @override
   List<Object?> get props => [
         numberOfTimesShown,
