@@ -1,3 +1,4 @@
+import 'package:country_code/country_code.dart';
 import 'package:franc/franc.dart';
 import 'package:gibberish/gibberish.dart';
 import 'package:gibberish/language.dart';
@@ -11,7 +12,14 @@ import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 @injectable
 class GibberishDetectionUseCase
     extends UseCase<ProcessedDocument, ProcessedDocument> {
-  late final Franc franc = Franc();
+  final Franc franc;
+
+  GibberishDetectionUseCase._(this.franc);
+
+  factory GibberishDetectionUseCase.testing(Franc franc) =>
+      GibberishDetectionUseCase._(franc);
+
+  factory GibberishDetectionUseCase() => GibberishDetectionUseCase._(Franc());
 
   @override
   Stream<ProcessedDocument> transaction(ProcessedDocument param) async* {
@@ -66,30 +74,30 @@ class GibberishDetectionUseCase
 
     // Default case, we are supporting the document language and the detection
     // can do its job
-    final gibberish = analyze(language, contents);
+    final gibberishCandidate = analyze(language, contents);
     yield ProcessedDocument(
       processHtmlResult: param.processHtmlResult,
       timeToRead: param.timeToRead,
-      isGibberish: gibberish.isGibberish,
+      isGibberish: gibberishCandidate.isGibberish,
       detectedLanguage: detectedLanguage,
     );
     watch.stop();
     logger.i(
-        'Text is $detectedLanguage (time: ${watch.elapsed}, meta lang: $metaLanguage) : $gibberish\n\n${contents.truncate(1000)}');
+        'Text is $detectedLanguage (time: ${watch.elapsed}, meta lang: $metaLanguage) : $gibberishCandidate\n\n${contents.truncate(1000)}');
   }
 }
 
-final localeLanguage = RegExp('[a-zA-Z]{2}[-_][a-zA-Z]{2}');
-final twoLetterLanguage = RegExp('[a-zA-Z]{2}');
+final localeLanguage = RegExp(r'^[a-zA-Z]{2}[-_][a-zA-Z]{2}$');
+final twoLetterLanguage = RegExp(r'^[a-zA-Z]{2}$');
 final localeSplit = RegExp('[-_]');
 
 extension on String {
   Language? get toGibberishLanguage {
-    String? lang = this;
-    if (localeLanguage.hasMatch(this)) {
-      lang = split(localeSplit)[0].toLowerCase().toThreeLetterLang;
+    String? lang = trim();
+    if (localeLanguage.hasMatch(lang)) {
+      lang = split(localeSplit)[0].toThreeLetterLang;
     } else if (twoLetterLanguage.hasMatch(lang)) {
-      lang = toLowerCase().toThreeLetterLang;
+      lang = toThreeLetterLang;
     }
 
     switch (lang) {
@@ -110,22 +118,6 @@ extension on String {
     }
   }
 
-  String? get toThreeLetterLang {
-    switch (this) {
-      case 'en':
-        return 'eng';
-      case 'de':
-        return 'deu';
-      case 'es':
-        return 'esp';
-      case 'nl':
-        return 'nld';
-      case 'pl':
-        return 'pol';
-      case 'fr':
-        return 'fra';
-      default:
-        return null;
-    }
-  }
+  String? get toThreeLetterLang =>
+      CountryCode.tryParse(toUpperCase())?.alpha3.toLowerCase();
 }
