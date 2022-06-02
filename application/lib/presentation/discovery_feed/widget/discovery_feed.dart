@@ -11,7 +11,37 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
-  const DiscoveryFeed({Key? key}) : super(key: key);
+  DiscoveryFeed({Key? key})
+      : super(
+          key: key,
+          // in `DiscoveryFeedManager` the `didReachEnd` getter is set always
+          // to false so the `loadingItemBuilder` will be used to build
+          // the widget under documents list
+          loadingItemBuilder: (
+            BuildContext context,
+            double? width,
+            double? height,
+          ) {
+            final state =
+                context.findAncestorStateOfType<_DiscoveryFeedState>();
+
+            // return button only if carousel mode is enabled
+            if (state?.manager.isCarouselEnabled ?? false) {
+              return SizedBox(
+                width: width,
+                height: height,
+                child: Center(
+                  child: AppRaisedButton.text(
+                    // TODO: add it to translations
+                    text: "Reload documents",
+                    onPressed: () => state?._manager.onLoadMorePressed(),
+                  ),
+                ),
+              );
+            }
+            return Container();
+          },
+        );
 
   @override
   State<StatefulWidget> createState() => _DiscoveryFeedState();

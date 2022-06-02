@@ -147,6 +147,11 @@ class ActiveSearchManager extends BaseDiscoveryManager
     requestNextSearchBatch();
   }
 
+  @override
+  void onLoadMorePressed() {
+    // do nothing
+  }
+
   /// A higher-order Function, which tracks the last event passed in,
   /// and ultimately runs the inner fold Function when the incoming event
   /// no longer matches lastEvent.
