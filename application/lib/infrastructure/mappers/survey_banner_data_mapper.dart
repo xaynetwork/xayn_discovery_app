@@ -1,43 +1,43 @@
 import 'package:injectable/injectable.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
+import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
 
 @singleton
-class SurveyBannerDataMapper extends Mapper<SurveyBannerData, DbEntityMap> {
-  const SurveyBannerDataMapper();
+class SurveyBannerMapper extends Mapper<SurveyBanner, DbEntityMap> {
+  const SurveyBannerMapper();
 
   @override
-  DbEntityMap map(SurveyBannerData input) => {
-        SurveyBannerDataFields.numberOfTimesShown: input.numberOfTimesShown,
-        SurveyBannerDataFields.hasSurveyBannerBeenClicked:
+  DbEntityMap map(SurveyBanner input) => {
+        SurveyBannerFields.numberOfTimesShown: input.numberOfTimesShown,
+        SurveyBannerFields.hasSurveyBannerBeenClicked:
             input.hasSurveyBannerBeenClicked,
       };
 }
 
 @singleton
-class DbEntityMapToSurveyBannerDataMapper
-    extends Mapper<DbEntityMap?, SurveyBannerData> {
-  const DbEntityMapToSurveyBannerDataMapper();
+class DbEntityMapToSurveyBannerMapper
+    extends Mapper<DbEntityMap?, SurveyBanner> {
+  const DbEntityMapToSurveyBannerMapper();
 
   @override
-  SurveyBannerData map(Map? input) {
-    if (input == null) return const SurveyBannerData.initial();
+  SurveyBanner map(Map? input) {
+    if (input == null) return const SurveyBanner.initial();
 
     final numberOfTimesShown =
-        input[SurveyBannerDataFields.numberOfTimesShown] ?? 0;
+        input[SurveyBannerFields.numberOfTimesShown] ?? 0;
     final hasSurveyBannerBeenClicked =
-        input[SurveyBannerDataFields.hasSurveyBannerBeenClicked] ?? false;
+        input[SurveyBannerFields.hasSurveyBannerBeenClicked] ?? false;
 
-    return SurveyBannerData(
+    return SurveyBanner(
       numberOfTimesShown: numberOfTimesShown,
       hasSurveyBannerBeenClicked: hasSurveyBannerBeenClicked,
     );
   }
 }
 
-abstract class SurveyBannerDataFields {
-  SurveyBannerDataFields._();
+abstract class SurveyBannerFields {
+  SurveyBannerFields._();
 
   static const numberOfTimesShown = 0;
   static const hasSurveyBannerBeenClicked = 1;
