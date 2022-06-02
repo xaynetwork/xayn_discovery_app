@@ -24,6 +24,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
@@ -75,6 +77,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
+  final SaveUserInteractionUseCase saveUserInteractionUseCase;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
@@ -96,6 +99,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.customCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
+    this.saveUserInteractionUseCase,
   ) : super(DiscoveryState.initial());
 
   late final UseCaseValueStream<Set<Card>> cardStream = consume(
@@ -203,6 +207,11 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
             ? Direction.down
             : Direction.up
         : Direction.start;
+
+    if (direction == Direction.down) {
+      saveUserInteractionUseCase
+          .singleOutput(UserInteractionsEvents.cardScrolled);
+    }
 
     if (document != null) {
       observeDocument(
@@ -391,6 +400,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         _kThresholdDurationSecondsImplicitLike;
 
     if (isCardOpened && isObservedLongEnough) {
+      saveUserInteractionUseCase
+          .singleOutput(UserInteractionsEvents.readArticle);
+
       changeUserReaction(
         document: document,
         userReaction: UserReaction.positive,
