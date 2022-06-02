@@ -27,6 +27,7 @@ import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart'
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/collection_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/document_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
@@ -169,13 +170,17 @@ void _createDocumentFilters() {
 }
 
 void _createAppStatus(int version) {
+  const surveyBannerDataMapper = SurveyBannerDataMapper();
+  const dbEntityMapToSurveyBannerDataMapper =
+      DbEntityMapToSurveyBannerDataMapper();
+
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
     AppVersionToMapMapper(),
     OnboardingStatusToDbEntityMapMapper(),
     DbEntityMapToOnboardingStatusMapper(),
-    SurveyBannerDataMapper(),
-    DbEntityMapToSurveyBannerDataMapper(),
+    CTAMapToDbEntityMapper(surveyBannerDataMapper),
+    DbEntityMapToCTAMapper(dbEntityMapToSurveyBannerDataMapper),
   );
   final repository = HiveAppStatusRepository(mapper);
 

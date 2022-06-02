@@ -2,10 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
+import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
 import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner_data.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
 
 import '../../test_utils/utils.dart';
 
@@ -19,6 +21,8 @@ void main() {
   late MockSurveyBannerDataMapper mockSurveyBannerDataMapper;
   late MockDbEntityMapToSurveyBannerDataMapper
       mockDbEntityMapToSurveyBannerDataMapper;
+  late CTAMapToDbEntityMapper ctaMapToDbEntityMapper;
+  late DbEntityMapToCTAMapper dbEntityMapToCTAMapper;
   late final now = DateTime.now();
   late final lastSeen = now.subtract(const Duration(minutes: 1));
 
@@ -40,6 +44,12 @@ void main() {
 
   const surveyBannerDataValue = SurveyBannerData.initial();
 
+  const ctaValue = CTA(surveyBannerData: surveyBannerDataValue);
+
+  const ctaMap = {
+    0: surveyBannerDataMap,
+  };
+
   setUp(() async {
     mockMapToAppVersionMapper = MockMapToAppVersionMapper();
     mockAppVersionToMapMapper = MockAppVersionToMapMapper();
@@ -49,13 +59,20 @@ void main() {
     mockDbEntityMapToSurveyBannerDataMapper =
         MockDbEntityMapToSurveyBannerDataMapper();
 
+    ctaMapToDbEntityMapper = CTAMapToDbEntityMapper(
+      mockSurveyBannerDataMapper,
+    );
+
+    dbEntityMapToCTAMapper =
+        DbEntityMapToCTAMapper(mockDbEntityMapToSurveyBannerDataMapper);
+
     mapper = AppStatusMapper(
       mockMapToAppVersionMapper,
       mockAppVersionToMapMapper,
       mockOnboardingToMapMapper,
       mockMapToOnboardingMapper,
-      mockSurveyBannerDataMapper,
-      mockDbEntityMapToSurveyBannerDataMapper,
+      ctaMapToDbEntityMapper,
+      dbEntityMapToCTAMapper,
     );
   });
 
@@ -76,7 +93,7 @@ void main() {
         AppStatusFields.lastSeenDate: lastSeen,
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.isBetaUser: false,
-        AppStatusFields.surveyBannerData: surveyBannerDataMap,
+        AppStatusFields.cta: ctaMap,
       };
       final appStatus = mapper.fromMap(map);
       expect(
@@ -90,7 +107,7 @@ void main() {
           onboardingStatus: const OnboardingStatus.initial(),
           ratingDialogAlreadyVisible: false,
           isBetaUser: false,
-          surveyBannerData: surveyBannerDataValue,
+          cta: ctaValue,
         ),
       );
     });
@@ -112,7 +129,7 @@ void main() {
         onboardingStatus: onboardingValue,
         ratingDialogAlreadyVisible: false,
         isBetaUser: true,
-        surveyBannerData: surveyBannerDataValue,
+        cta: ctaValue,
       );
 
       final map = mapper.toMap(appStatus);
@@ -125,7 +142,7 @@ void main() {
         AppStatusFields.onboardingStatus: onboardingMap,
         AppStatusFields.ratingDialogAlreadyVisible: false,
         AppStatusFields.isBetaUser: true,
-        AppStatusFields.surveyBannerData: surveyBannerDataMap,
+        AppStatusFields.cta: ctaMap,
       };
       expect(map, expectedMap);
     });
