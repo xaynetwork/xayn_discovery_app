@@ -36,7 +36,10 @@ void main() {
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
-  late MockCustomCardInjectionUseCase customCardInjectionUseCase;
+  late MockListenSurveyConditionsStatusUseCase
+      listenSurveyConditionsStatusUseCase;
+  late MockIncrementSurveyShownUseCase incrementSurveyShownUseCase;
+  late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockAppStatusRepository appStatusRepository;
@@ -48,7 +51,10 @@ void main() {
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
-    customCardInjectionUseCase = MockCustomCardInjectionUseCase();
+    listenSurveyConditionsStatusUseCase =
+        MockListenSurveyConditionsStatusUseCase();
+    incrementSurveyShownUseCase = MockIncrementSurveyShownUseCase();
+    surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     appStatusRepository = MockAppStatusRepository();
@@ -70,9 +76,9 @@ void main() {
     when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
-    when(customCardInjectionUseCase.transform(any))
+    when(surveyCardInjectionUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(customCardInjectionUseCase.transaction(any))
+    when(surveyCardInjectionUseCase.transaction(any))
         .thenAnswer((realInvocation) {
       final Set<Document> documents = realInvocation.positionalArguments.first;
 
@@ -96,7 +102,9 @@ void main() {
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
-          customCardInjectionUseCase,
+          listenSurveyConditionsStatusUseCase,
+          incrementSurveyShownUseCase,
+          surveyCardInjectionUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(

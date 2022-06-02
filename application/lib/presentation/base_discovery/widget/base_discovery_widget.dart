@@ -14,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/survey_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
@@ -285,8 +285,9 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                             ttsData.enabled ? TtsData.disabled() : it),
                         feedType: manager.feedType,
                       )
-                    : CustomCard(
+                    : SurveyCard(
                         cardType: card.type,
+                        onPressed: () => manager.handleSurveyTapped,
                         primaryCardShader:
                             ShaderFactory.fromType(ShaderType.static),
                       ),
