@@ -2,6 +2,8 @@ import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart'
+    as item_renderer;
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -12,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
@@ -89,7 +92,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         listener: (context, state) {
           ///TODO: Uncomment once TY-2592 is fixed
           // if (state.isInErrorState) showErrorBottomSheet();
-
           _showTrialBannerIfNeeded(state.subscriptionStatus);
         },
         builder: (context, state) {
@@ -154,8 +156,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     return LayoutBuilder(builder: (context, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-      final results = state.results;
-      final totalResults = results.length;
+      final cards = state.cards;
+      final totalResults = cards.length;
       final isMissingNoItemsBuilders =
           totalResults == 0 && widget.noItemsBuilder == null;
 
@@ -179,19 +181,19 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         key: Keys.feedView,
         cardViewController: _cardViewController,
         itemBuilder: _itemBuilder(
-          results: results,
+          results: cards,
           isPrimary: true,
           isSwipingEnabled: !state.isFullScreen,
           isFullScreen: state.isFullScreen,
         ),
         secondaryItemBuilder: _itemBuilder(
-          results: results,
+          results: cards,
           isPrimary: false,
           isSwipingEnabled: true,
           isFullScreen: false,
         ),
         boxBorderBuilder: _boxBorderBuilder(
-          results: results,
+          results: cards,
           isFullScreen: state.isFullScreen,
         ),
         itemCount: totalResults,
@@ -200,7 +202,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         isFullScreen: state.isFullScreen,
         fullScreenOffsetFraction: _dragDistance / DiscoveryCard.dragThreshold,
         notchSize: notchSize,
-        cardIdentifierBuilder: _createUniqueCardIdentity(results),
+        cardIdentifierBuilder: _createUniqueCardIdentity(cards),
         noItemsBuilder: widget.noItemsBuilder,
         finalItemBuilder: state.didReachEnd
             ? widget.finalItemBuilder
@@ -212,44 +214,51 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   Widget _buildLoadingIndicator(double notchSize) =>
       ShimmeringFeedView(notchSize: notchSize);
 
-  String Function(int) _createUniqueCardIdentity(Set<Document> results) =>
+  String Function(int) _createUniqueCardIdentity(
+          Set<item_renderer.Card> results) =>
       (int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
-        final document = results.elementAt(normalizedIndex);
+        final card = results.elementAt(normalizedIndex);
 
-        return document.documentId.toString();
+        return card.document?.documentId.toString() ??
+            'custom_card_${card.hashCode}';
       };
 
   Widget Function(BuildContext, int) _itemBuilder({
-    required Set<Document> results,
+    required Set<item_renderer.Card> results,
     required bool isPrimary,
     required bool isSwipingEnabled,
     required bool isFullScreen,
   }) =>
       (BuildContext context, int index) {
         final normalizedIndex = index.clamp(0, results.length - 1);
-        final document = results.elementAt(normalizedIndex);
-        final managers = cardManagersCache.managersOf(document);
+        final card = results.elementAt(normalizedIndex);
+        final document = card.document;
+        final managers = card.type == item_renderer.CardType.document
+            ? cardManagersCache.managersOf(card.requireDocument)
+            : null;
 
         onTapPrimary() async {
           hideTooltip();
-          manager.maybeNavigateIntoCard(document);
+
+          if (document != null) manager.maybeNavigateIntoCard(document);
         }
 
         onTapSecondary() => _cardViewController.jump(JumpDirection.down);
 
-        if (isPrimary) {
+        if (isPrimary && document != null) {
           manager.handleViewType(
             document,
             isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
           );
         }
 
-        final shaderType = _getShaderType(document.resource);
-        final card = isFullScreen
+        final shaderType =
+            document != null ? _getShaderType(document.resource) : null;
+        final cardWidget = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
-                document: document,
+                document: document!,
                 onDiscard: () {
                   manager.triggerHapticFeedbackMedium();
                   return manager.handleNavigateOutOfCard(document);
@@ -261,39 +270,48 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                     () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
                 feedType: manager.feedType,
                 primaryCardShader: ShaderFactory.fromType(
-                  shaderType,
+                  shaderType!,
                   transitionToIdle: true,
                 ),
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
-                child: DiscoveryFeedCard(
-                  isPrimary: isPrimary,
-                  document: document,
-                  primaryCardShader: ShaderFactory.fromType(shaderType),
-                  onTtsData: (it) => setState(() =>
-                      ttsData = ttsData.enabled ? TtsData.disabled() : it),
-                  feedType: manager.feedType,
-                ),
+                child: document != null
+                    ? DiscoveryFeedCard(
+                        isPrimary: isPrimary,
+                        document: document,
+                        primaryCardShader: ShaderFactory.fromType(shaderType!),
+                        onTtsData: (it) => setState(() => ttsData =
+                            ttsData.enabled ? TtsData.disabled() : it),
+                        feedType: manager.feedType,
+                      )
+                    : CustomCard(
+                        cardType: card.type,
+                        primaryCardShader:
+                            ShaderFactory.fromType(ShaderType.static),
+                      ),
               );
 
         return Semantics(
             button: true,
-            child: SwipeableDiscoveryCard(
-              onSwipe: (option) => managers.discoveryCardManager.onFeedback(
-                document: document,
-                userReaction: option.toUserReaction(),
-                feedType: manager.feedType,
-              ),
-              isPrimary: isPrimary,
-              document: document,
-              explicitDocumentUserReaction: managers
-                  .discoveryCardManager.state.explicitDocumentUserReaction,
-              card: card,
-              isSwipingEnabled: isSwipingEnabled,
-              onFling:
-                  managers.discoveryCardManager.triggerHapticFeedbackMedium,
-            ));
+            child: document != null
+                ? SwipeableDiscoveryCard(
+                    onSwipe: (option) =>
+                        managers!.discoveryCardManager.onFeedback(
+                      document: document,
+                      userReaction: option.toUserReaction(),
+                      feedType: manager.feedType,
+                    ),
+                    isPrimary: isPrimary,
+                    document: document,
+                    explicitDocumentUserReaction: managers!.discoveryCardManager
+                        .state.explicitDocumentUserReaction,
+                    card: cardWidget,
+                    isSwipingEnabled: isSwipingEnabled,
+                    onFling: managers
+                        .discoveryCardManager.triggerHapticFeedbackMedium,
+                  )
+                : cardWidget);
       };
 
   ShaderType _getShaderType(NewsResource newsResource) {
@@ -313,16 +331,22 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   }
 
   BoxBorder? Function(int) _boxBorderBuilder({
-    required Set<Document> results,
+    required Set<item_renderer.Card> results,
     required bool isFullScreen,
   }) =>
       (int index) {
         if (isFullScreen) return null;
 
         final normalizedIndex = index.clamp(0, results.length - 1);
-        final document = results.elementAt(normalizedIndex);
-        final managers = cardManagersCache.managersOf(document);
-        final state = managers.discoveryCardManager.state;
+        final card = results.elementAt(normalizedIndex);
+        final document = card.document;
+        final managers =
+            document != null ? cardManagersCache.managersOf(document) : null;
+        final state = managers?.discoveryCardManager.state;
+
+        if (state == null) {
+          return null;
+        }
 
         switch (state.explicitDocumentUserReaction) {
           case UserReaction.neutral:

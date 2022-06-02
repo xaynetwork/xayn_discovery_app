@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -35,6 +36,7 @@ void main() {
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
+  late MockCustomCardInjectionUseCase customCardInjectionUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockAppStatusRepository appStatusRepository;
@@ -46,6 +48,7 @@ void main() {
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
+    customCardInjectionUseCase = MockCustomCardInjectionUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     appStatusRepository = MockAppStatusRepository();
@@ -67,6 +70,14 @@ void main() {
     when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
+    when(customCardInjectionUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(customCardInjectionUseCase.transaction(any))
+        .thenAnswer((realInvocation) {
+      final Set<Document> documents = realInvocation.positionalArguments.first;
+
+      return Stream.value(documents.map(Card.document).toSet());
+    });
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -85,6 +96,7 @@ void main() {
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
+          customCardInjectionUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(
@@ -147,31 +159,7 @@ void main() {
     },
     verify: (bloc) {
       expect(bloc.state.isComplete, isTrue);
-      expect(bloc.state.isInErrorState, isFalse);
-      expect(bloc.state.results, isNotEmpty);
-    },
-  );
-
-  blocTest<ActiveSearchManager, DiscoveryState>(
-    'GIVEN use case throws an error THEN the error state is true',
-    build: () {
-      when(engine.restoreActiveSearch()).thenAnswer(
-        (_) async =>
-            const EngineExceptionRaised(EngineExceptionReason.genericError),
-      );
-      when(engine.engineEvents).thenAnswer(
-        (_) => Stream.value(
-          const EngineExceptionRaised(EngineExceptionReason.genericError),
-        ),
-      );
-      when(areMarketsOutdatedUseCase.singleOutput(FeedType.search))
-          .thenAnswer((_) async => false);
-      when(engine.getActiveSearchTerm()).thenAnswer(
-          (_) async => const EngineEvent.activeSearchTermRequestSucceeded(''));
-      return buildManager();
-    },
-    verify: (bloc) {
-      expect(bloc.state.isInErrorState, isTrue);
+      expect(bloc.state.cards, isNotEmpty);
     },
   );
 }

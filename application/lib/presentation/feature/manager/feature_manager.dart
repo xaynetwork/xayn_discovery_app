@@ -33,6 +33,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isTtsEnabled => isEnabled(Feature.tts);
 
+  bool get isCustomInlineCardEnabled => isEnabled(Feature.inlineCustomCard);
+
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
 
   bool get showDiscoveryEngineReportOverlay =>
