@@ -6,24 +6,23 @@ import 'package:xayn_discovery_app/infrastructure/mappers/survey_banner_data_map
 
 @singleton
 class CTAMapToDbEntityMapper extends Mapper<CTA, DbEntityMap> {
-  final SurveyBannerDataMapper _surveyBannerDataMapper;
+  final SurveyBannerMapper _surveyBannerMapper;
 
   const CTAMapToDbEntityMapper(
-    this._surveyBannerDataMapper,
+    this._surveyBannerMapper,
   );
 
   @override
   DbEntityMap map(CTA input) => {
-        CTAFields.surveyBannerData:
-            _surveyBannerDataMapper.map(input.surveyBannerData),
+        CTAFields.surveyBanner: _surveyBannerMapper.map(input.surveyBanner),
       };
 }
 
 @singleton
 class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
-  final DbEntityMapToSurveyBannerDataMapper _mapToSurveyBannerDataMapper;
+  final DbEntityMapToSurveyBannerMapper _mapToSurveyBannerMapper;
   const DbEntityMapToCTAMapper(
-    this._mapToSurveyBannerDataMapper,
+    this._mapToSurveyBannerMapper,
   );
 
   @override
@@ -31,8 +30,7 @@ class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
     if (input == null) return const CTA.initial();
 
     return CTA(
-      surveyBannerData:
-          _mapToSurveyBannerDataMapper.map(input[CTAFields.surveyBannerData]),
+      surveyBanner: _mapToSurveyBannerMapper.map(input[CTAFields.surveyBanner]),
     );
   }
 }
@@ -40,5 +38,5 @@ class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
 abstract class CTAFields {
   CTAFields._();
 
-  static const surveyBannerData = 0;
+  static const surveyBanner = 0;
 }
