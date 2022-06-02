@@ -168,6 +168,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   void handleLoadMore();
 
+  void onLoadMorePressed();
+
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus);
 
   /// Trigger this handler whenever the primary card changes.
