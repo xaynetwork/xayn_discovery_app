@@ -1,11 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-@injectable
-class CustomCardInjectionUseCase extends UseCase<Set<Document>, Set<Card>> {
+@lazySingleton
+class SurveyCardInjectionUseCase
+    extends UseCase<SurveyCardInjectionData, Set<Card>> {
   /// The [Document] which is a reference point in rebuilds, if not null,
   /// then we show the custom card always before this document.
   /// Note that we need to use a document as reference, because an index
@@ -14,24 +17,23 @@ class CustomCardInjectionUseCase extends UseCase<Set<Document>, Set<Card>> {
   Document? nextDocumentSibling;
   final FeatureManager featureManager;
 
-  CustomCardInjectionUseCase(this.featureManager);
+  SurveyCardInjectionUseCase(this.featureManager);
 
   @override
-  Stream<Set<Card>> transaction(Set<Document> param) async* {
-    // todo This use case should act upon the logic, which triggers whenever
-    // we should show the survey.
-    // When the trigger occurs, simply follow the code below:
-
-    // --- fake trigger code start
-    if (featureManager.isCustomInlineCardEnabled &&
-        nextDocumentSibling == null &&
-        param.length > 2) {
-      nextDocumentSibling = param.elementAt(2);
+  Stream<Set<Card>> transaction(SurveyCardInjectionData param) async* {
+    if (shouldMarkInjectionPoint(param)) {
+      nextDocumentSibling = param.documents.last;
     }
-    // --- fake trigger code end
 
-    yield _toCards(param).toSet();
+    yield _toCards(param.documents).toSet();
   }
+
+  @visibleForTesting
+  bool shouldMarkInjectionPoint(SurveyCardInjectionData data) =>
+      featureManager.isCustomInlineCardEnabled &&
+      nextDocumentSibling == null &&
+      data.status == SurveyConditionsStatus.reached &&
+      data.documents.isNotEmpty;
 
   Iterable<Card> _toCards(Set<Document> documents) sync* {
     for (final document in documents) {
@@ -42,4 +44,13 @@ class CustomCardInjectionUseCase extends UseCase<Set<Document>, Set<Card>> {
       yield Card.document(document);
     }
   }
+}
+
+@immutable
+class SurveyCardInjectionData {
+  final Set<Document> documents;
+  final SurveyConditionsStatus status;
+
+  const SurveyCardInjectionData(
+      {required this.documents, required this.status});
 }
