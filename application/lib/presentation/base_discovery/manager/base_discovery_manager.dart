@@ -25,7 +25,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey/increment_survey_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
@@ -77,7 +78,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
-  final IncrementSurveyShownUseCase incrementSurveyShownUseCase;
+  final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
+  final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final SurveyCardInjectionUseCase customCardInjectionUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
@@ -103,7 +105,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
     this.listenSurveyConditionsStatusUseCase,
-    this.incrementSurveyShownUseCase,
+    this.handleSurveyBannerClickedUseCase,
+    this.handleSurveyBannerShownUseCase,
     this.customCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
@@ -191,8 +194,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   }
 
   void handleSurveyTapped() {
-    // todo: call the use case to register the tap
-    logger.i('TAPPED ON SURVEY');
+    handleSurveyBannerClickedUseCase(none);
   }
 
   void handleLoadMore();
@@ -244,7 +246,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         feedType: feedType,
       ));
     } else {
-      incrementSurveyShownUseCase(none);
+      handleSurveyBannerShownUseCase(none);
       observeDocument();
     }
 
@@ -357,9 +359,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         final cards = documents != null
             ? await customCardInjectionUseCase.singleOutput(
                 SurveyCardInjectionData(
-                  documents: documents,
-                  status: surveyConditionStatus ??
-                      SurveyConditionsStatus.notReached,
+                  currentDocuments: state.cards
+                      .where((it) => it.document != null)
+                      .map((it) => it.document)
+                      .cast<Document>()
+                      .toSet(),
+                  nextDocuments: documents,
+                  status: surveyConditionStatus,
                 ),
               )
             : state.cards;

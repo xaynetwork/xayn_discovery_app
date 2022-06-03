@@ -17,7 +17,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey/increment_survey_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
@@ -70,7 +71,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
     ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase,
-    IncrementSurveyShownUseCase incrementSurveyShownUseCase,
+    HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
+    HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
     SurveyCardInjectionUseCase customCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
@@ -87,7 +89,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
           listenSurveyConditionsStatusUseCase,
-          incrementSurveyShownUseCase,
+          handleSurveyBannerClickedUseCase,
+          handleSurveyBannerShownUseCase,
           customCardInjectionUseCase,
           featureManager,
           cardManagersCache,
