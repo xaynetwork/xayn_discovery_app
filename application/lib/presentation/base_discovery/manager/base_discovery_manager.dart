@@ -80,7 +80,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
-  final SurveyCardInjectionUseCase customCardInjectionUseCase;
+  final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -107,7 +107,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.listenSurveyConditionsStatusUseCase,
     this.handleSurveyBannerClickedUseCase,
     this.handleSurveyBannerShownUseCase,
-    this.customCardInjectionUseCase,
+    this.surveyCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
@@ -356,19 +356,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final cards = documents != null
-            ? await customCardInjectionUseCase.singleOutput(
-                SurveyCardInjectionData(
-                  currentDocuments: state.cards
-                      .where((it) => it.document != null)
-                      .map((it) => it.document)
-                      .cast<Document>()
-                      .toSet(),
-                  nextDocuments: documents,
-                  status: surveyConditionStatus,
-                ),
-              )
-            : state.cards;
+        final cards = await surveyCardInjectionUseCase.singleOutput(
+          SurveyCardInjectionData(
+            currentCards: state.cards,
+            nextDocuments: documents,
+            status: surveyConditionStatus,
+          ),
+        );
         final sets = await maybeReduceCardCount(cards);
         final nextCardIndex = sets.nextCardIndex;
 
