@@ -125,6 +125,15 @@ void main() async {
 
       return Stream.value(documents.map(item_renderer.Card.document).toSet());
     });
+    when(surveyCardInjectionUseCase.singleOutput(any)).thenAnswer(
+        (realInvocation) async => surveyCardInjectionUseCase
+            .toCards((realInvocation.positionalArguments.first
+                    as SurveyCardInjectionData)
+                .nextDocuments)
+            .toSet());
+    when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
+        (realInvocation.positionalArguments.first as Set<Document>)
+            .map(item_renderer.Card.document));
 
     di.reset();
 

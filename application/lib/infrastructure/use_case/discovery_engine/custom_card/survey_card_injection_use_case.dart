@@ -22,10 +22,10 @@ class SurveyCardInjectionUseCase
   @override
   Stream<Set<Card>> transaction(SurveyCardInjectionData param) async* {
     if (shouldMarkInjectionPoint(param)) {
-      nextDocumentSibling = param.documents.last;
+      nextDocumentSibling = param.nextDocuments.last;
     }
 
-    yield _toCards(param.documents).toSet();
+    yield toCards(param.nextDocuments).toSet();
   }
 
   @visibleForTesting
@@ -33,9 +33,11 @@ class SurveyCardInjectionUseCase
       featureManager.isCustomInlineCardEnabled &&
       nextDocumentSibling == null &&
       data.status == SurveyConditionsStatus.reached &&
-      data.documents.isNotEmpty;
+      data.nextDocuments.length > data.currentDocuments.length &&
+      data.nextDocuments.length > 2;
 
-  Iterable<Card> _toCards(Set<Document> documents) sync* {
+  @visibleForTesting
+  Iterable<Card> toCards(Set<Document> documents) sync* {
     for (final document in documents) {
       if (document == nextDocumentSibling) {
         yield const Card.other(CardType.survey);
@@ -48,9 +50,13 @@ class SurveyCardInjectionUseCase
 
 @immutable
 class SurveyCardInjectionData {
-  final Set<Document> documents;
+  final Set<Document> currentDocuments;
+  final Set<Document> nextDocuments;
   final SurveyConditionsStatus status;
 
-  const SurveyCardInjectionData(
-      {required this.documents, required this.status});
+  const SurveyCardInjectionData({
+    required this.currentDocuments,
+    required this.nextDocuments,
+    SurveyConditionsStatus? status,
+  }) : status = status ?? SurveyConditionsStatus.notReached;
 }

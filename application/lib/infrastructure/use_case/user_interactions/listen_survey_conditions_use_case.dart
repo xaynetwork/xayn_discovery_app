@@ -22,19 +22,19 @@ class ListenSurveyConditionsStatusUseCase
   );
 
   @override
-  Stream<SurveyConditionsStatus> transaction(None param) =>
-      userInteractionsRepository.watch().map(
-        (_) {
-          final numberOfSessions =
-              appStatusRepository.appStatus.numberOfSessions;
-          final userInteractions = userInteractionsRepository.userInteractions;
+  Stream<SurveyConditionsStatus> transaction(None param) async* {
+    yield* userInteractionsRepository.watch().map(
+      (_) {
+        final numberOfSessions = appStatusRepository.appStatus.numberOfSessions;
+        final userInteractions = userInteractionsRepository.userInteractions;
 
-          return performSurveyConditionsStatusCheck(
-            numberOfSessions: numberOfSessions,
-            userInteractions: userInteractions,
-          );
-        },
-      );
+        return performSurveyConditionsStatusCheck(
+          numberOfSessions: numberOfSessions,
+          userInteractions: userInteractions,
+        );
+      },
+    );
+  }
 
   @visibleForTesting
   SurveyConditionsStatus performSurveyConditionsStatusCheck({
