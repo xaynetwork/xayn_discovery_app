@@ -265,6 +265,7 @@ lane :publish do |options|
   appcenter_buildfile = output[/.*Built (.*\.(?:aab|ipa|apk))/, 1]
 
   if platform == Platforms::IOS
+    secrets_unpack(options)
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -338,6 +339,21 @@ lane :increment_nightly_tag do |options|
   minor = numbers[1].to_i + 1
   newTag = "#{numbers[0]}.#{minor}.0"
   shell("git tag #{newTag}")
+end
+
+desc "Packs the secrets of ios/profile and exports them to the clipboard"
+lane :secrets_pack do |options|
+    Dir.chdir("../ios") do
+      sh('tar -cz profiles/ | base64 | pbcopy')
+    end
+end
+
+desc "Unpacks the profile based on the $PROFILES env var"
+private_lane :secrets_unpack do |options|
+    UI.user_error!("No PROFILES provided!") unless ENV.key?("PROFILES")
+    Dir.chdir("../ios/") do
+      sh('echo $PROFILES | base64 -d | tar -xzv -C .')
+    end
 end
 
 def clean_folder(folder)
