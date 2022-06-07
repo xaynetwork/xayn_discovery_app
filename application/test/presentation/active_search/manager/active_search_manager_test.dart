@@ -101,7 +101,7 @@ void main() {
                 .nextDocuments)
             .toSet());
     when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
-        (realInvocation.positionalArguments.first as Set<Document>)
+        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
             .map(Card.document));
 
     buildManager = () => ActiveSearchManager(
