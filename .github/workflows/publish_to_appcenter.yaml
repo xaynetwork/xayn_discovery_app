@@ -325,7 +325,7 @@ jobs:
           PROFILES: ${{ secrets.PROFILES }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build_type:release flavor:beta android_output:appbundle store:true
+          fastlane publish platform:android build_type:release flavor:beta store:true
           echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
           echo "SLACK_STATUS=success" >> $GITHUB_ENV
 
