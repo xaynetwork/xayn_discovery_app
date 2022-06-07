@@ -6,6 +6,7 @@ class PocTranslations {
   String get feedModeSectionTitle => "Feed Mode";
   String get feedModeStream => "Stream";
   String get feedModeCarousel => "Carousel";
+  String get loadMoreButtonLabel => "Fetch more";
 }
 
 class PocTranslationsDe extends PocTranslations {
@@ -16,6 +17,8 @@ class PocTranslationsDe extends PocTranslations {
   String get feedModeStream => "Stream auf Deutsch";
   @override
   String get feedModeCarousel => "Carousel auf Deutsch";
+  @override
+  String get loadMoreButtonLabel => "Fetch more auf Deutsch";
 }
 
 extension AppLanguageExtension on AppLanguage {

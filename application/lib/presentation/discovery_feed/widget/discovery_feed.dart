@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -32,8 +33,7 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
                 height: height,
                 child: Center(
                   child: AppRaisedButton.text(
-                    // TODO: add it to translations
-                    text: "Reload documents",
+                    text: R.pocStrings.loadMoreButtonLabel,
                     onPressed: () => state?._manager.onLoadMorePressed(),
                   ),
                 ),
