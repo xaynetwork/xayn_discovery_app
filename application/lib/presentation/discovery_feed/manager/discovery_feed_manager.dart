@@ -36,7 +36,7 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
-const int _kMaxCardCount = 10;
+const int _kMaxCardCount = 20;
 
 typedef OnRestoreFeedSucceeded = Set<Document> Function(
     RestoreFeedSucceeded event);
@@ -207,7 +207,13 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
   @override
   void onLoadMorePressed() {
-    // TODO clean the old feed and request next feed batch
+    if (isLoading) return;
+
+    scheduleComputeState(() => _isLoading = true);
+
+    final documentIds = state.results.map((it) => it.documentId).toSet();
+    closeFeedDocuments(documentIds);
+    resetParameters();
     requestNextFeedBatch();
   }
 
