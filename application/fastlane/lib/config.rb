@@ -171,7 +171,7 @@ module Config
       Keys::KEY_ALIAS => "release_internal",
     },
     Flavors::BETA => {
-      Keys::KEY_ALIAS => "release_beta",
+      Keys::KEY_ALIAS => "NOT REQUIRED BECAUSE FOR APP BUNDLES",
     },
   }
 
