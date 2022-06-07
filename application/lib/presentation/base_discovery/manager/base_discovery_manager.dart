@@ -193,9 +193,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     ));
   }
 
-  void handleSurveyTapped() {
-    handleSurveyBannerClickedUseCase(none);
-  }
+  void handleSurveyTapped() => handleSurveyBannerClickedUseCase(none);
 
   void handleLoadMore();
 
