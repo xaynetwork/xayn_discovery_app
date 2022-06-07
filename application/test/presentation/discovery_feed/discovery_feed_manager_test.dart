@@ -132,7 +132,7 @@ void main() async {
                 .nextDocuments)
             .toSet());
     when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
-        (realInvocation.positionalArguments.first as Set<Document>)
+        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
             .map(item_renderer.Card.document));
 
     di.reset();
