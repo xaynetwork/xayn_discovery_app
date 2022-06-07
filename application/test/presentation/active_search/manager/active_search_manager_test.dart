@@ -46,7 +46,8 @@ void main() {
   late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
-  late MockAppStatusRepository appStatusRepository;
+  late MockIsSurveyBannerFeatureActiveUseCase
+      isSurveyBannerFeatureActiveUseCase;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -62,7 +63,8 @@ void main() {
     surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
-    appStatusRepository = MockAppStatusRepository();
+    isSurveyBannerFeatureActiveUseCase =
+        MockIsSurveyBannerFeatureActiveUseCase();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -129,8 +131,7 @@ void main() {
           CardManagersCache(),
           SaveUserInteractionUseCase(
             userInteractionsRepository,
-            featureManager,
-            appStatusRepository,
+            isSurveyBannerFeatureActiveUseCase,
           ),
         );
   });
