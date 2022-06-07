@@ -34,7 +34,8 @@ class FeedSettingsMapper extends BaseDbEntityMapper<FeedSettings> {
       };
 
   FeedMode _mapDir(Map map) {
-    final feedModeRaw = map[FeedSettingsFields.feedMode] as int? ?? 0;
+    final feedModeRaw =
+        map[FeedSettingsFields.feedMode] as int? ?? FeedMode.stream.raw;
     return FeedMode.fromRaw(feedModeRaw);
   }
 
