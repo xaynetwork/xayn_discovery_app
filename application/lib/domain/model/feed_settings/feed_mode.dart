@@ -8,7 +8,9 @@ enum FeedMode {
   const FeedMode(this._raw);
 
   factory FeedMode.fromRaw(int rawValue) {
-    assert(rawValue < 2, "FeedMode raw value should be less than 2");
+    assert(FeedMode.stream.raw <= rawValue);
+    assert(rawValue <= FeedMode.carousel.raw);
+
     return rawValue == FeedMode.carousel.raw
         ? FeedMode.carousel
         : FeedMode.stream;
