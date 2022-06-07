@@ -287,7 +287,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                       )
                     : SurveyCard(
                         cardType: card.type,
-                        onPressed: () => manager.handleSurveyTapped,
+                        onPressed: manager.handleSurveyTapped,
                         primaryCardShader:
                             ShaderFactory.fromType(ShaderType.static),
                       ),
