@@ -17,7 +17,7 @@ class SettingsFeedModeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SettingsSection.custom(
-        title: "Feed Mode",
+        title: R.pocStrings.feedModeSectionTitle,
         child: SettingsSelectable.icons(
           items: FeedMode.values.map(_getItem).toList(),
         ),
@@ -41,7 +41,12 @@ class SettingsFeedModeSection extends StatelessWidget {
   }
 
   String _getTitle(FeedMode mode) {
-    return mode.description;
+    switch (mode) {
+      case FeedMode.stream:
+        return R.pocStrings.feedModeStream;
+      case FeedMode.carousel:
+        return R.pocStrings.feedModeCarousel;
+    }
   }
 
   String _getIcon(FeedMode mode) {
