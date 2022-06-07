@@ -11,11 +11,11 @@ class PocTranslations {
 class PocTranslationsDe extends PocTranslations {
   const PocTranslationsDe();
   @override
-  String get feedModeSectionTitle => "Feed Mode";
+  String get feedModeSectionTitle => "Feed Mode auf Deutsch";
   @override
-  String get feedModeStream => "Stream";
+  String get feedModeStream => "Stream auf Deutsch";
   @override
-  String get feedModeCarousel => "Carousel";
+  String get feedModeCarousel => "Carousel auf Deutsch";
 }
 
 extension AppLanguageExtension on AppLanguage {
