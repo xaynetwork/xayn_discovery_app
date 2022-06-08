@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  airship_flutter: 5.5.0
   amplitude_flutter: 3.8.1
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
