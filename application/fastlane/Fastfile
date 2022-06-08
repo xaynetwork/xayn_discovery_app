@@ -68,6 +68,11 @@ before_all do |lane, options|
   if IS_CI
     UI.success "Env:\n#{JSON.pretty_generate(options[_Options::ENV])}"
   end
+
+  if !IS_CI
+    create_commit_template(options)
+    install_pre_commit(options)
+  end
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
@@ -128,6 +133,15 @@ private_lane :create_commit_template do |options|
   UI.success "Commit-message template set 💪"
 end
 
+desc "Install the gitleaks .pre-commit"
+private_lane :install_pre_commit do |options|
+  begin
+    shell("pre-commit install")
+  rescue
+    UI.user_error!("Faild to run pre-commit install - Did you forget installing it? (i.e. brew install pre-commit)")
+  end
+end
+
 ####
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
@@ -153,10 +167,6 @@ desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
   maybe_pub_get(options)
-  if !IS_CI
-    create_commit_template(options)
-  end
-
   update_assets(options)
 
   mode = options[Options::WATCH] ? "watch" : "build"
