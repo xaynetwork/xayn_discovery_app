@@ -153,7 +153,7 @@ class TranslationsNl extends Translations {
   String get subscriptionPricingError => """Kan prijsinformatie niet ophalen""";
   String get subscriptionPerk1 => """Gepersonaliseerde stroom""";
   String get subscriptionPerk2 => """Geen advertenties""";
-  String get subscriptionPerk3 => """Geen tracering""";
+  String get subscriptionPerk3 => """Geen gepersonaliseerde tracking""";
   String get subscriptionPerk4 => """Koolstofneutraal""";
   String get subscriptionPerk5 => """Annuleren op elk moment""";
   String get subscriptionSubscribeNow => """Nu abonneren""";
@@ -227,6 +227,9 @@ class TranslationsNl extends Translations {
   String get takeSurveyTitle => """Heb je even?""";
   String get takeSurveySubtitle => """Hoe kunnen we Xayn nog beter maken?""";
   String get takeSurveyCTA => """Breng me naar de enquête""";
+  String get langNameItalian => """Italian""";
+  String get langNameTurkish => """Turkish""";
+  String get langNameRussian => """Russian""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -364,7 +367,7 @@ Map<String, String> get translationsNlMap => {
       """subscriptionPricingError""": """Kan prijsinformatie niet ophalen""",
       """subscriptionPerk1""": """Gepersonaliseerde stroom""",
       """subscriptionPerk2""": """Geen advertenties""",
-      """subscriptionPerk3""": """Geen tracering""",
+      """subscriptionPerk3""": """Geen gepersonaliseerde tracking""",
       """subscriptionPerk4""": """Koolstofneutraal""",
       """subscriptionPerk5""": """Annuleren op elk moment""",
       """subscriptionSubscribeNow""": """Nu abonneren""",
@@ -453,4 +456,7 @@ Map<String, String> get translationsNlMap => {
       """takeSurveyTitle""": """Heb je even?""",
       """takeSurveySubtitle""": """Hoe kunnen we Xayn nog beter maken?""",
       """takeSurveyCTA""": """Breng me naar de enquête""",
+      """langNameItalian""": """Italian""",
+      """langNameTurkish""": """Turkish""",
+      """langNameRussian""": """Russian""",
     };

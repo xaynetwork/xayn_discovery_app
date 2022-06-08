@@ -22,12 +22,12 @@ settingsHaveFoundBug: 'Encontráste una falla?'
 settingsShareBtn: 'Comparte con Amigos'
 settingsVersion: 'Versión:'
 settingsBuild: 'Build:'
-minAgo: 'hace %s minunto'
-momentsAgo: 'hace %s momentos'
-hourAgo: 'hace %s hora'
-hoursAgo: 'hace %s horas'
-dayAgo: 'hace %s día'
-daysAgo: 'hace %s días'
+minAgo: 'minunto'
+momentsAgo: 'momentos'
+hourAgo: 'hora'
+hoursAgo: 'horas'
+dayAgo: 'día'
+daysAgo: 'días'
 readingTimeUnitSingular: 'minuto'
 readingTimeUnitPlural: 'minutos'
 readingTimeSuffix: 'leer'
@@ -89,7 +89,7 @@ subscriptionHeader: Consigue Xayn ilimitado por solo
 subscriptionPricingError: Incapaz de recuperar los precios
 subscriptionPerk1: Flujo personalizado
 subscriptionPerk2: Sin anuncios
-subscriptionPerk3: Sin seguimiento
+subscriptionPerk3: Sin rastreo personalizado
 subscriptionPerk4: Carbono neutral
 subscriptionPerk5: Cancelación en cualquier momento
 subscriptionSubscribeNow: Subscribete Ahora
@@ -167,3 +167,6 @@ subscriptionDurationMonth: Mes
 takeSurveyTitle: ¿Tienes un minuto?
 takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
 takeSurveyCTA: Llévame a la encuesta
+langNameItalian: Italian
+langNameTurkish: Turkish
+langNameRussian: Russian
