@@ -23,9 +23,9 @@ enum SupportedMarkets {
   mexico('es', 'MX'),
   argentina('es', 'AR'),
   // Not yet supported because of missing assets
-  // colombia('es', 'CO'),
-  // peru('es', 'PE'),
-  // ukraine('uk', 'UA'),
+  colombia('es', 'CO'),
+  peru('es', 'PE'),
+  ukraine('uk', 'UA'),
   russia('ru', 'RU');
 
   final String languageCode;
@@ -75,12 +75,12 @@ enum SupportedMarkets {
         return R.assets.illustrations.flagMexico;
       case SupportedMarkets.argentina:
         return R.assets.illustrations.flagArgentina;
-      // case SupportedMarkets.colombia:
-      //   return R.assets.illustrations.flagColombia;
-      // case SupportedMarkets.peru:
-      //   return R.assets.illustrations.flagPeru;
-      // case SupportedMarkets.ukraine:
-      //   return R.assets.illustrations.flaUkraine;
+      case SupportedMarkets.colombia:
+        return R.assets.illustrations.flagColombia;
+      case SupportedMarkets.peru:
+        return R.assets.illustrations.flagPeru;
+      case SupportedMarkets.ukraine:
+        return R.assets.illustrations.flagUkraine;
       case SupportedMarkets.russia:
         return R.assets.illustrations.flagRussia;
     }
@@ -95,6 +95,8 @@ enum SupportedMarkets {
       case SupportedMarkets.austria:
       case SupportedMarkets.germany:
         return R.strings.langNameGerman;
+      case SupportedMarkets.peru:
+      case SupportedMarkets.colombia:
       case SupportedMarkets.argentina:
       case SupportedMarkets.mexico:
       case SupportedMarkets.spain:
@@ -115,6 +117,8 @@ enum SupportedMarkets {
         return R.strings.langNameTurkish;
       case SupportedMarkets.russia:
         return R.strings.langNameRussian;
+      case SupportedMarkets.ukraine:
+        return R.strings.langNameU;
     }
   }
 }
