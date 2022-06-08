@@ -25,7 +25,7 @@ void main() {
     languageCode: 'en',
     countryCode: 'DE',
   );
-  final FeedMarket defaultMarket = supportedFeedMarkets.first;
+  final FeedMarket defaultMarket = defaultFeedMarket;
 
   setUp(() {
     repository = MockFeedSettingsRepository();
