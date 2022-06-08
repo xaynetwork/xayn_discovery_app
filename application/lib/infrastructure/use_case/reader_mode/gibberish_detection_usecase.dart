@@ -34,12 +34,12 @@ class GibberishDetectionUseCase
         timeToRead: param.timeToRead,
         isGibberish: true,
       );
-      logger.i('Text is too short, its gibberish');
+      logger.i('❌ Text is too short, its gibberish');
       return;
     }
 
     contents = parse(contents)
-        .querySelectorAll('p')
+        .querySelectorAll('*')
         .map((e) => e.text)
         .reduce((value, element) => element + value);
     final languages = await franc.detectLanguages(contents);
@@ -51,7 +51,7 @@ class GibberishDetectionUseCase
         timeToRead: param.timeToRead,
         isGibberish: true,
       );
-      logger.i('Text is undetectable');
+      logger.i('❌ Text is undetectable');
       return;
     }
 
