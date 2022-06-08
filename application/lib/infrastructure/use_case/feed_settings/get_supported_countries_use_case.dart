@@ -25,7 +25,9 @@ class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
         langCode: market.languageCode,
         language: language,
       );
-    });
+    }).toList();
+
+    countries.sort((a, b) => a.name.compareTo(b.name));
 
     yield countries;
   }
