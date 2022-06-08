@@ -231,6 +231,9 @@ class TranslationsDe extends Translations {
   String get takeSurveySubtitle =>
       """Wie können wir Xayn noch besser machen?""";
   String get takeSurveyCTA => """Bring mich zur Umfrage""";
+  String get langNameItalian => """Italian""";
+  String get langNameTurkish => """Turkish""";
+  String get langNameRussian => """Russian""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -461,4 +464,7 @@ Map<String, String> get translationsDeMap => {
       """takeSurveyTitle""": """Hast Du mal 'ne Minute?""",
       """takeSurveySubtitle""": """Wie können wir Xayn noch besser machen?""",
       """takeSurveyCTA""": """Bring mich zur Umfrage""",
+      """langNameItalian""": """Italian""",
+      """langNameTurkish""": """Turkish""",
+      """langNameRussian""": """Russian""",
     };
