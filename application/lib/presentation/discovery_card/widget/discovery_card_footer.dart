@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
-
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
-import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DiscoveryCardFooter extends StatelessWidget {
   const DiscoveryCardFooter({
@@ -39,7 +38,10 @@ class DiscoveryCardFooter extends StatelessWidget {
           : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
       iconColor: R.colors.brightIcon,
-    ).withSemanticsLabel(Keys.navBarItemLike.valueKey);
+    ).withSemanticsLabel(
+      Keys.navBarItemLike.valueKey,
+      selected: explicitDocumentUserReaction.isRelevant,
+    );
 
     final bookmarkButton = AppGhostButton.icon(
       bookmarkStatus == BookmarkStatus.bookmarked
