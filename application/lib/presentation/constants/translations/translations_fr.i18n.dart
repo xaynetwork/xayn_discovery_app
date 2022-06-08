@@ -163,7 +163,7 @@ class TranslationsFr extends Translations {
   String get subscriptionRestore => """Restaurer l'abonnement""";
   String get subscriptionPromoCode => """J'ai un code promo""";
   String get subscriptionDisclaimer =>
-      """En appuyant sur "S'abonner maintenant", vous serez redirigé vers l'App Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.""";
+      """En appuyant sur "S'abonner maintenant", vous serez redirigé vers le Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.""";
   String get settingsSubscribedToHeader => """Vous êtes abonné à""";
   String get doneButtonTitle => """Fini""";
   String get subscriptionRenewsMonthlyText =>
@@ -380,7 +380,7 @@ Map<String, String> get translationsFrMap => {
       """subscriptionRestore""": """Restaurer l'abonnement""",
       """subscriptionPromoCode""": """J'ai un code promo""",
       """subscriptionDisclaimer""":
-          """En appuyant sur "S'abonner maintenant", vous serez redirigé vers l'App Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.""",
+          """En appuyant sur "S'abonner maintenant", vous serez redirigé vers le Store où vous pourrez acheter un abonnement à l'assistant Xayn News. Chaque abonnement est soumis à nos __Conditions générales__. Vous confirmez avoir lu notre __Politique de confidentialité__.""",
       """settingsSubscribedToHeader""": """Vous êtes abonné à""",
       """doneButtonTitle""": """Fini""",
       """subscriptionRenewsMonthlyText""":

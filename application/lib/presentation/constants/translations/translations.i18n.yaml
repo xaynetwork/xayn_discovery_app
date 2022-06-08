@@ -89,13 +89,13 @@ subscriptionHeader: Get Xayn unlimited for just
 subscriptionPricingError: Unable to retrieve pricing details
 subscriptionPerk1: Personalised stream
 subscriptionPerk2: No ads
-subscriptionPerk3: No tracking
+subscriptionPerk3: No personalised tracking
 subscriptionPerk4: Carbon neutral
 subscriptionPerk5: Cancel any time
 subscriptionSubscribeNow: Subscribe Now
 subscriptionRestore: Restore subscription
 subscriptionPromoCode: I have a promo code
-subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
+subscriptionDisclaimer: By tapping “Subscribe Now” you will be redirected to the Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.
 settingsSubscribedToHeader: You are subscribed to
 doneButtonTitle: Done
 subscriptionRenewsMonthlyText: 'The subscription renews monthly on: %s'
