@@ -230,6 +230,7 @@ class TranslationsNl extends Translations {
   String get langNameItalian => """Italian""";
   String get langNameTurkish => """Turkish""";
   String get langNameRussian => """Russian""";
+  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -459,4 +460,5 @@ Map<String, String> get translationsNlMap => {
       """langNameItalian""": """Italian""",
       """langNameTurkish""": """Turkish""",
       """langNameRussian""": """Russian""",
+      """langNameUkrainian""": """Ukrainian""",
     };

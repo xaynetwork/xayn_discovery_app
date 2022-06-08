@@ -118,7 +118,7 @@ enum SupportedMarkets {
       case SupportedMarkets.russia:
         return R.strings.langNameRussian;
       case SupportedMarkets.ukraine:
-        return R.strings.langNameU;
+        return R.strings.langNameUkrainian;
     }
   }
 }

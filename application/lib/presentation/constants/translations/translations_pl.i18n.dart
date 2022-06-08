@@ -152,7 +152,7 @@ class TranslationsPl extends Translations {
   String get subscriptionPricingError => """Nie można pobrać szczegółów cen""";
   String get subscriptionPerk1 => """Spersonalizowany strumień""";
   String get subscriptionPerk2 => """Bez reklam""";
-  String get subscriptionPerk3 => """Bez śledzenia""";
+  String get subscriptionPerk3 => """Brak spersonalizowanego śledzenia""";
   String get subscriptionPerk4 =>
       """Neutralny pod względem emisji dwutlenku węgla""";
   String get subscriptionPerk5 => """Anuluj w dowolnym momencie""";
@@ -230,6 +230,7 @@ class TranslationsPl extends Translations {
   String get langNameItalian => """Italian""";
   String get langNameTurkish => """Turkish""";
   String get langNameRussian => """Russian""";
+  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -365,7 +366,7 @@ Map<String, String> get translationsPlMap => {
       """subscriptionPricingError""": """Nie można pobrać szczegółów cen""",
       """subscriptionPerk1""": """Spersonalizowany strumień""",
       """subscriptionPerk2""": """Bez reklam""",
-      """subscriptionPerk3""": """Bez śledzenia""",
+      """subscriptionPerk3""": """Brak spersonalizowanego śledzenia""",
       """subscriptionPerk4""":
           """Neutralny pod względem emisji dwutlenku węgla""",
       """subscriptionPerk5""": """Anuluj w dowolnym momencie""",
@@ -460,4 +461,5 @@ Map<String, String> get translationsPlMap => {
       """langNameItalian""": """Italian""",
       """langNameTurkish""": """Turkish""",
       """langNameRussian""": """Russian""",
+      """langNameUkrainian""": """Ukrainian""",
     };

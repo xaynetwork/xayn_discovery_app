@@ -89,7 +89,7 @@ subscriptionHeader: Uzyskaj Xayn bez ograniczeń za jedyne
 subscriptionPricingError: Nie można pobrać szczegółów cen
 subscriptionPerk1: Spersonalizowany strumień
 subscriptionPerk2: Bez reklam
-subscriptionPerk3: Bez śledzenia
+subscriptionPerk3: Brak spersonalizowanego śledzenia
 subscriptionPerk4: Neutralny pod względem emisji dwutlenku węgla
 subscriptionPerk5: Anuluj w dowolnym momencie
 subscriptionSubscribeNow: Zapisz się teraz
@@ -170,3 +170,4 @@ takeSurveyCTA: Zabierz mnie do ankiety
 langNameItalian: Italian
 langNameTurkish: Turkish
 langNameRussian: Russian
+langNameUkrainian: Ukrainian
