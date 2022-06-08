@@ -89,7 +89,7 @@ subscriptionHeader: Obtenez Xayn illimité pour juste
 subscriptionPricingError: Impossible de récupérer les détails des prix
 subscriptionPerk1: Flux personnalisé
 subscriptionPerk2: Pas de pub
-subscriptionPerk3: Pas de suivi
+subscriptionPerk3: Pas de traqueurs personnalisés
 subscriptionPerk4: Neutre en carbone
 subscriptionPerk5: Neutre en carbone
 subscriptionSubscribeNow: Abonnez vous
@@ -167,3 +167,6 @@ subscriptionDurationMonth: Mois
 takeSurveyTitle: Avez-vous une minute ?
 takeSurveySubtitle: Comment pouvons-nous encore améliorer Xayn ?
 takeSurveyCTA: Emmenez-moi à l'enquête
+langNameItalian: Italian
+langNameTurkish: Turkish
+langNameRussian: Russian

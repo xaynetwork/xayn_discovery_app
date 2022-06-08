@@ -89,7 +89,7 @@ subscriptionHeader: Krijg Xayn onbeperkt voor slechts
 subscriptionPricingError: Kan prijsinformatie niet ophalen
 subscriptionPerk1: Gepersonaliseerde stroom
 subscriptionPerk2: Geen advertenties
-subscriptionPerk3: Geen tracering
+subscriptionPerk3: Geen gepersonaliseerde tracking
 subscriptionPerk4: Koolstofneutraal
 subscriptionPerk5: Annuleren op elk moment
 subscriptionSubscribeNow: Nu abonneren
@@ -167,3 +167,6 @@ subscriptionDurationMonth: Maand
 takeSurveyTitle: Heb je even?
 takeSurveySubtitle: Hoe kunnen we Xayn nog beter maken?
 takeSurveyCTA: Breng me naar de enquête
+langNameItalian: Italian
+langNameTurkish: Turkish
+langNameRussian: Russian

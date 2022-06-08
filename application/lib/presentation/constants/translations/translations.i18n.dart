@@ -225,6 +225,9 @@ class Translations {
   String get takeSurveySubtitle =>
       """We'd love your opinion on how to make the app better""";
   String get takeSurveyCTA => """Take me to the survey""";
+  String get langNameItalian => """Italian""";
+  String get langNameTurkish => """Turkish""";
+  String get langNameRussian => """Russian""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -446,4 +449,7 @@ Map<String, String> get translationsMap => {
       """takeSurveySubtitle""":
           """We'd love your opinion on how to make the app better""",
       """takeSurveyCTA""": """Take me to the survey""",
+      """langNameItalian""": """Italian""",
+      """langNameTurkish""": """Turkish""",
+      """langNameRussian""": """Russian""",
     };
