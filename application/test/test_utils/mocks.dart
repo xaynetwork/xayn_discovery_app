@@ -98,7 +98,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/is_survey_banner_feature_active_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
@@ -192,7 +192,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   IncrementAppSessionUseCase,
   IntToAppThemeMapper,
   IsBookmarkedUseCase,
-  IsSurveyBannerFeatureActiveUseCase,
+  CanDisplaySurveyBannerUseCase,
   ListenAppThemeUseCase,
   ListenBookmarksUseCase,
   ListenCollectionCardDataUseCase,
