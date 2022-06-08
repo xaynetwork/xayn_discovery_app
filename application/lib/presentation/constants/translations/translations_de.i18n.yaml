@@ -16,8 +16,8 @@ settingsScrollDirectionHorizontal: 'Horizontal'
 settingsAboutXayn: 'Über Xayn'
 settingsCarbonNeutral: "Wir sind CO2 neutral!"
 settingsImprint: 'Impressum'
-settingsPrivacyPolicy: 'Privacy Policy'
-settingsTermsAndConditions: 'Terms & Conditions'
+settingsPrivacyPolicy: 'Datenschutzrichtlinie'
+settingsTermsAndConditions: 'AGB'
 settingsHaveFoundBug: 'Einen Bug gefunden?'
 settingsShareBtn: 'Teile die App mit Freunden'
 settingsVersion: 'Version:'
@@ -89,13 +89,13 @@ subscriptionHeader: Hol Dir Xayn unbegrenzt für nur
 subscriptionPricingError: Preisinfos können nicht abgerufen werden
 subscriptionPerk1: Personalisierter Stream
 subscriptionPerk2: Ohne Werbung
-subscriptionPerk3: Ohne Tracking
-subscriptionPerk4: Carbonneutral
+subscriptionPerk3: Ohne personalisiertem Tracking
+subscriptionPerk4: CO2-neutral
 subscriptionPerk5: Jederzeit kündbar
 subscriptionSubscribeNow: Jetzt abonnieren
 subscriptionRestore: Abo wiederherstellen
 subscriptionPromoCode: Ich habe einen Promo-code
-subscriptionDisclaimer: Indem Du auf „Jetzt abonnieren“ tippst, wirst zum App Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.
+subscriptionDisclaimer: Indem Du auf „Jetzt abonnieren“ tippst, wirst zum Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.
 settingsSubscribedToHeader: Du hast
 doneButtonTitle: Fertig
 subscriptionRenewsMonthlyText: 'Dein Abo erneuert sich am: %s'

@@ -160,7 +160,7 @@ class TranslationsNl extends Translations {
   String get subscriptionRestore => """Herstel abonnement""";
   String get subscriptionPromoCode => """Ik heb een promo code""";
   String get subscriptionDisclaimer =>
-      """Door "Abonneer nu" te selecteren, word je doorgestuurd naar de App Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.""";
+      """Door "Abonneer nu" te selecteren, word je doorgestuurd naar de Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.""";
   String get settingsSubscribedToHeader => """U bent geabonneerd op""";
   String get doneButtonTitle => """Gedaan""";
   String get subscriptionRenewsMonthlyText =>
@@ -371,7 +371,7 @@ Map<String, String> get translationsNlMap => {
       """subscriptionRestore""": """Herstel abonnement""",
       """subscriptionPromoCode""": """Ik heb een promo code""",
       """subscriptionDisclaimer""":
-          """Door "Abonneer nu" te selecteren, word je doorgestuurd naar de App Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.""",
+          """Door "Abonneer nu" te selecteren, word je doorgestuurd naar de Store waar je een abonnement op de Xayn News Assistant kan aankopen. Elk abonnement is onderworpen aan onze __Algemene voorwaarden__. U bevestigt het __Privacybeleid__ te hebben gelezen.""",
       """settingsSubscribedToHeader""": """U bent geabonneerd op""",
       """doneButtonTitle""": """Gedaan""",
       """subscriptionRenewsMonthlyText""":
