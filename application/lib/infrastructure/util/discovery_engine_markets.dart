@@ -1,132 +1,93 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 /// If you change this file,
 /// please also update [FeedMarketToFlagAssetPathMapper]
-class SupportedCountryCodes {
-  SupportedCountryCodes._();
+enum SupportedMarkets {
+  austria('de', 'AT'),
+  belgiumFr('fr', 'BE', multiLingual: true),
+  belgiumNl('nl', 'BE', multiLingual: true),
+  canada('en', 'CA'),
+  switzerland('de', 'CH'),
+  germany('de', 'DE'),
+  spain('es', 'ES'),
+  uk('en', 'GB'),
+  ireland('en', 'IE'),
+  netherlands('nl', 'NL'),
+  poland('pl', 'PL'),
+  usa('en', 'US');
 
-  static final Set<String> allValues = {
-    austria,
-    belgium,
-    canada,
-    switzerland,
-    germany,
-    spain,
-    uk,
-    ireland,
-    netherlands,
-    poland,
-    usa,
-  };
+  final String languageCode;
+  final String countryCode;
+  final bool multiLingual;
 
-  static const String austria = 'AT';
-  static const String belgium = 'BE';
-  static const String canada = 'CA';
-  static const String switzerland = 'CH';
-  static const String germany = 'DE';
-  static const String spain = 'ES';
-  static const String uk = 'GB';
-  static const String ireland = 'IE';
-  static const String netherlands = 'NL';
-  static const String poland = 'PL';
-  static const String usa = 'US';
+  const SupportedMarkets(this.languageCode, this.countryCode,
+      {this.multiLingual = false});
+
+  FeedMarket get toFeedMarket =>
+      FeedMarket(countryCode: countryCode, languageCode: languageCode);
+
+  // Use a function instead of hardcoding the string, because R.assets.illustrations is not a const
+  String get flag {
+    switch (this) {
+      case SupportedMarkets.austria:
+        return R.assets.illustrations.flagAustria;
+      case SupportedMarkets.belgiumFr:
+        return R.assets.illustrations.flagBelgium;
+      case SupportedMarkets.belgiumNl:
+        return R.assets.illustrations.flagBelgium;
+      case SupportedMarkets.canada:
+        return R.assets.illustrations.flagCanada;
+      case SupportedMarkets.switzerland:
+        return R.assets.illustrations.flagSwitzerland;
+      case SupportedMarkets.germany:
+        return R.assets.illustrations.flagGermany;
+      case SupportedMarkets.spain:
+        return R.assets.illustrations.flagSpain;
+      case SupportedMarkets.uk:
+        return R.assets.illustrations.flagUK;
+      case SupportedMarkets.ireland:
+        return R.assets.illustrations.flagIreland;
+      case SupportedMarkets.netherlands:
+        return R.assets.illustrations.flagNetherlands;
+      case SupportedMarkets.poland:
+        return R.assets.illustrations.flagPoland;
+      case SupportedMarkets.usa:
+        return R.assets.illustrations.flagUSA;
+    }
+  }
+
+  String get languageName {
+    switch (this) {
+      case SupportedMarkets.belgiumFr:
+        return R.strings.langNameFrench;
+      case SupportedMarkets.switzerland:
+      case SupportedMarkets.austria:
+      case SupportedMarkets.germany:
+        return R.strings.langNameGerman;
+      case SupportedMarkets.spain:
+        return R.strings.langNameSpanish;
+      case SupportedMarkets.belgiumNl:
+      case SupportedMarkets.netherlands:
+        return R.strings.langNameDutch;
+      case SupportedMarkets.poland:
+        return R.strings.langNamePolish;
+      case SupportedMarkets.canada:
+      case SupportedMarkets.uk:
+      case SupportedMarkets.ireland:
+      case SupportedMarkets.usa:
+        return R.strings.langNameEnglish;
+    }
+  }
 }
 
-/// If you change this file,
-/// please also update [LanguageCodeToLanguageNameMapper]
-class SupportedLanguageCodes {
-  SupportedLanguageCodes._();
+final defaultFeedMarket = SupportedMarkets.usa.toFeedMarket;
 
-  static final Set<String> allValues = {
-    dutch,
-    english,
-    french,
-    german,
-    polish,
-    spanish
-  };
-
-  static const String dutch = 'nl';
-  static const String english = 'en';
-  static const String french = 'fr';
-  static const String german = 'de';
-  static const String polish = 'pl';
-  static const String spanish = 'es';
-}
-
-const defaultFeedMarket = FeedMarket(
-  countryCode: SupportedCountryCodes.usa,
-  languageCode: SupportedLanguageCodes.english,
-);
-
-final FeedMarkets supportedFeedMarkets = <FeedMarket>{
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.austria,
-    languageCode: SupportedLanguageCodes.german,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.belgium,
-    languageCode: SupportedLanguageCodes.french,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.belgium,
-    languageCode: SupportedLanguageCodes.dutch,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.canada,
-    languageCode: SupportedLanguageCodes.english,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.switzerland,
-    languageCode: SupportedLanguageCodes.german,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.germany,
-    languageCode: SupportedLanguageCodes.german,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.spain,
-    languageCode: SupportedLanguageCodes.spanish,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.uk,
-    languageCode: SupportedLanguageCodes.english,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.ireland,
-    languageCode: SupportedLanguageCodes.english,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.netherlands,
-    languageCode: SupportedLanguageCodes.dutch,
-  ),
-  const FeedMarket(
-    countryCode: SupportedCountryCodes.poland,
-    languageCode: SupportedLanguageCodes.polish,
-  ),
-  defaultFeedMarket,
-};
-
-//region utils
-
-final _listOfSupportedCountryCodes =
-    supportedFeedMarkets.map((e) => e.countryCode).toList();
-
-bool _isCountryHasMultipleLanguages(String countryCode) =>
-    _listOfSupportedCountryCodes
-        .where((element) => countryCode == element)
-        .length >
-    1;
-
-final _multiLanguageCountryMap = Map.fromEntries(
-  supportedFeedMarkets.map(
-    (e) => MapEntry(
-      e.countryCode,
-      _isCountryHasMultipleLanguages(e.countryCode),
-    ),
-  ),
-);
+final supportedFeedMarkets =
+    SupportedMarkets.values.map((e) => e.toFeedMarket).toSet();
 
 bool isCountryMultilingual(String? countryCode) =>
-    countryCode != null && _multiLanguageCountryMap[countryCode] == true;
-//endregion utils
+    SupportedMarkets.values.firstWhereOrNull((element) =>
+        element.countryCode == countryCode && element.multiLingual) !=
+    null;
