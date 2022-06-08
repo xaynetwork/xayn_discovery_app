@@ -9,12 +9,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 @injectable
-class IsSurveyBannerFeatureActiveUseCase extends UseCase<None, bool> {
+class CanDisplaySurveyBannerUseCase extends UseCase<None, bool> {
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final AppStatusRepository _appStatusRepository;
   final FeatureManager _featureManager;
 
-  IsSurveyBannerFeatureActiveUseCase(
+  CanDisplaySurveyBannerUseCase(
     this._getSubscriptionStatusUseCase,
     this._appStatusRepository,
     this._featureManager,
@@ -59,10 +59,12 @@ class IsSurveyBannerFeatureActiveUseCase extends UseCase<None, bool> {
     if (hasSurveyBannerBeenClicked) return false;
 
     // if they did not click on the CTA the first time, we show it to them a second time 2 sessions after they saw it the first time
-    final newSessionNumberThreshold =
+    final isSessionDeltaTresholdReached =
         currentSessionNumber - lastSessionNumberWhenSurveyShown >= 2;
 
-    if (!hasSurveyBannerBeenClicked && !newSessionNumberThreshold) return false;
+    if (!hasSurveyBannerBeenClicked && !isSessionDeltaTresholdReached) {
+      return false;
+    }
 
     return true;
   }

@@ -26,19 +26,17 @@ main() {
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockFeatureManager featureManager;
-  late MockIsSurveyBannerFeatureActiveUseCase
-      isSurveyBannerFeatureActiveUseCase;
+  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
   setUp(() async {
     await setupWidgetTest();
     repository = di.get();
     final documentFilterUseCase = CrudDocumentFilterUseCase(repository);
     userInteractionsRepository = MockUserInteractionsRepository();
-    isSurveyBannerFeatureActiveUseCase =
-        MockIsSurveyBannerFeatureActiveUseCase();
+    canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
     featureManager = MockFeatureManager();
     saveUserInteractionUseCase = SaveUserInteractionUseCase(
       userInteractionsRepository,
-      isSurveyBannerFeatureActiveUseCase,
+      canDisplaySurveyBannerUseCase,
     );
     engine = di.get<DiscoveryEngine>();
     final applyDocumentFilterUseCase =
@@ -50,7 +48,7 @@ main() {
       fakeDocument,
     );
 
-    when(isSurveyBannerFeatureActiveUseCase.singleOutput(none))
+    when(canDisplaySurveyBannerUseCase.singleOutput(none))
         .thenAnswer((_) async => Future.value(true));
     when(featureManager.isPromptSurveyEnabled).thenReturn(true);
   });

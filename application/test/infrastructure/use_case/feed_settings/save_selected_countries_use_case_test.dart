@@ -16,8 +16,7 @@ void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockFeatureManager featureManager;
-  late MockIsSurveyBannerFeatureActiveUseCase
-      isSurveyBannerFeatureActiveUseCase;
+  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
 
   const uaMarket = FeedMarket(countryCode: 'UA', languageCode: 'uk');
   const usMarket = FeedMarket(countryCode: 'US', languageCode: 'en');
@@ -41,11 +40,10 @@ void main() {
     repository = MockFeedSettingsRepository();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
-    isSurveyBannerFeatureActiveUseCase =
-        MockIsSurveyBannerFeatureActiveUseCase();
+    canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
     saveUserInteractionUseCase = SaveUserInteractionUseCase(
       userInteractionsRepository,
-      isSurveyBannerFeatureActiveUseCase,
+      canDisplaySurveyBannerUseCase,
     );
     useCase = SaveSelectedCountriesUseCase(
       repository,
@@ -57,7 +55,7 @@ void main() {
       UserInteractions.initial(),
     );
     when(featureManager.isPromptSurveyEnabled).thenReturn(true);
-    when(isSurveyBannerFeatureActiveUseCase.singleOutput(none))
+    when(canDisplaySurveyBannerUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(true));
   });
 
