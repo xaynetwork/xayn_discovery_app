@@ -222,19 +222,32 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
 
   @override
   Widget? buildImageWidget(
-          readability.BuildMetadata meta, readability.ImageSource src) =>
-      ClipRRect(
-        borderRadius: BorderRadius.circular(R.dimen.unit),
-        child: Image.network(
-          baseUri.resolve(src.url).toString(),
-          errorBuilder: (_, __, ___) => _buildImagePlaceHolder(),
-          loadingBuilder: (context, child, event) {
-            if (event == null) return child;
+      readability.BuildMetadata meta, readability.ImageSource src) {
+    final uri = baseUri.resolve(src.url);
+    late Image image;
 
-            return const WidgetTestableProgressIndicator();
-          },
-        ),
+    if (uri.scheme == 'data') {
+      final imgBytes = UriData.fromUri(uri).contentAsBytes();
+
+      image = Image.memory(imgBytes,
+          errorBuilder: (_, __, ___) => _buildImagePlaceHolder());
+    } else {
+      image = Image.network(
+        baseUri.resolve(src.url).toString(),
+        errorBuilder: (_, __, ___) => _buildImagePlaceHolder(),
+        loadingBuilder: (context, child, event) {
+          if (event == null) return child;
+
+          return const WidgetTestableProgressIndicator();
+        },
       );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(R.dimen.unit),
+      child: image,
+    );
+  }
 
   @override
   Widget? buildVideoPlayer(
@@ -269,16 +282,22 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   }
 
   Widget _buildImagePlaceHolder() => LayoutBuilder(
-        builder: (context, constraints) => Container(
-          color: R.colors.imagePlaceholderBox,
-          child: Center(
-            child: SvgPicture.asset(
-              R.assets.icons.noImage,
-              height: constraints.maxHeight * 0.2,
-              width: constraints.maxWidth * 0.2,
-              color: R.colors.secondaryIcon,
+        builder: (context, constraints) {
+          // avoid infinite width or height, by constraining to the screen size
+          final size = constraints.constrain(
+              Size(R.dimen.screenSize.width, R.dimen.screenSize.height));
+
+          return Container(
+            color: R.colors.imagePlaceholderBox,
+            child: Center(
+              child: SvgPicture.asset(
+                R.assets.icons.noImage,
+                height: size.width * 0.2,
+                width: size.height * 0.2,
+                color: R.colors.secondaryIcon,
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 }
