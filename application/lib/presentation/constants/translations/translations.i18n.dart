@@ -152,14 +152,14 @@ class Translations {
       """Unable to retrieve pricing details""";
   String get subscriptionPerk1 => """Personalised stream""";
   String get subscriptionPerk2 => """No ads""";
-  String get subscriptionPerk3 => """No tracking""";
+  String get subscriptionPerk3 => """No personalised tracking""";
   String get subscriptionPerk4 => """Carbon neutral""";
   String get subscriptionPerk5 => """Cancel any time""";
   String get subscriptionSubscribeNow => """Subscribe Now""";
   String get subscriptionRestore => """Restore subscription""";
   String get subscriptionPromoCode => """I have a promo code""";
   String get subscriptionDisclaimer =>
-      """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
+      """By tapping “Subscribe Now” you will be redirected to the Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""";
   String get settingsSubscribedToHeader => """You are subscribed to""";
   String get doneButtonTitle => """Done""";
   String get subscriptionRenewsMonthlyText =>
@@ -358,14 +358,14 @@ Map<String, String> get translationsMap => {
       """subscriptionPricingError""": """Unable to retrieve pricing details""",
       """subscriptionPerk1""": """Personalised stream""",
       """subscriptionPerk2""": """No ads""",
-      """subscriptionPerk3""": """No tracking""",
+      """subscriptionPerk3""": """No personalised tracking""",
       """subscriptionPerk4""": """Carbon neutral""",
       """subscriptionPerk5""": """Cancel any time""",
       """subscriptionSubscribeNow""": """Subscribe Now""",
       """subscriptionRestore""": """Restore subscription""",
       """subscriptionPromoCode""": """I have a promo code""",
       """subscriptionDisclaimer""":
-          """By tapping “Subscribe Now” you will be redirected to the App Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
+          """By tapping “Subscribe Now” you will be redirected to the Store where you can purchase a subscription of the Xayn News Assistant. Every subscription is subject to our __Terms & Conditions__. You confirm to have read our __Privacy Policy__.""",
       """settingsSubscribedToHeader""": """You are subscribed to""",
       """doneButtonTitle""": """Done""",
       """subscriptionRenewsMonthlyText""":
