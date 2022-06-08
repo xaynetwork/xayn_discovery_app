@@ -228,6 +228,7 @@ class Translations {
   String get langNameItalian => """Italian""";
   String get langNameTurkish => """Turkish""";
   String get langNameRussian => """Russian""";
+  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -452,4 +453,5 @@ Map<String, String> get translationsMap => {
       """langNameItalian""": """Italian""",
       """langNameTurkish""": """Turkish""",
       """langNameRussian""": """Russian""",
+      """langNameUkrainian""": """Ukrainian""",
     };

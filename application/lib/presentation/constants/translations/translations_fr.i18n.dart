@@ -234,9 +234,10 @@ class TranslationsFr extends Translations {
   String get takeSurveySubtitle =>
       """Comment pouvons-nous encore améliorer Xayn ?""";
   String get takeSurveyCTA => """Emmenez-moi à l'enquête""";
-  String get langNameItalian => """Italian""";
+  String get langNameItalian => """Francais""";
   String get langNameTurkish => """Turkish""";
   String get langNameRussian => """Russian""";
+  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -469,7 +470,8 @@ Map<String, String> get translationsFrMap => {
       """takeSurveySubtitle""":
           """Comment pouvons-nous encore améliorer Xayn ?""",
       """takeSurveyCTA""": """Emmenez-moi à l'enquête""",
-      """langNameItalian""": """Italian""",
+      """langNameItalian""": """Francais""",
       """langNameTurkish""": """Turkish""",
       """langNameRussian""": """Russian""",
+      """langNameUkrainian""": """Ukrainian""",
     };
