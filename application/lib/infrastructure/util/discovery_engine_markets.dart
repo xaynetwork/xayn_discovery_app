@@ -16,7 +16,17 @@ enum SupportedMarkets {
   ireland('en', 'IE'),
   netherlands('nl', 'NL'),
   poland('pl', 'PL'),
-  usa('en', 'US');
+  usa('en', 'US'),
+  italy('it', 'IT'),
+  turkey('tr', 'TR'),
+  france('fr', 'FR'),
+  mexico('es', 'MX'),
+  argentina('es', 'AR'),
+  // Not yet supported because of missing assets
+  // colombia('es', 'CO'),
+  // peru('es', 'PE'),
+  // ukraine('uk', 'UA'),
+  russia('ru', 'RU');
 
   final String languageCode;
   final String countryCode;
@@ -55,17 +65,38 @@ enum SupportedMarkets {
         return R.assets.illustrations.flagPoland;
       case SupportedMarkets.usa:
         return R.assets.illustrations.flagUSA;
+      case SupportedMarkets.italy:
+        return R.assets.illustrations.flagItaly;
+      case SupportedMarkets.turkey:
+        return R.assets.illustrations.flagTurkey;
+      case SupportedMarkets.france:
+        return R.assets.illustrations.flagFrance;
+      case SupportedMarkets.mexico:
+        return R.assets.illustrations.flagMexico;
+      case SupportedMarkets.argentina:
+        return R.assets.illustrations.flagArgentina;
+      // case SupportedMarkets.colombia:
+      //   return R.assets.illustrations.flagColombia;
+      // case SupportedMarkets.peru:
+      //   return R.assets.illustrations.flagPeru;
+      // case SupportedMarkets.ukraine:
+      //   return R.assets.illustrations.flaUkraine;
+      case SupportedMarkets.russia:
+        return R.assets.illustrations.flagRussia;
     }
   }
 
   String get languageName {
     switch (this) {
+      case SupportedMarkets.france:
       case SupportedMarkets.belgiumFr:
         return R.strings.langNameFrench;
       case SupportedMarkets.switzerland:
       case SupportedMarkets.austria:
       case SupportedMarkets.germany:
         return R.strings.langNameGerman;
+      case SupportedMarkets.argentina:
+      case SupportedMarkets.mexico:
       case SupportedMarkets.spain:
         return R.strings.langNameSpanish;
       case SupportedMarkets.belgiumNl:
@@ -78,6 +109,12 @@ enum SupportedMarkets {
       case SupportedMarkets.ireland:
       case SupportedMarkets.usa:
         return R.strings.langNameEnglish;
+      case SupportedMarkets.italy:
+        return R.strings.langNameItalian;
+      case SupportedMarkets.turkey:
+        return R.strings.langNameTurkish;
+      case SupportedMarkets.russia:
+        return R.strings.langNameRussian;
     }
   }
 }
