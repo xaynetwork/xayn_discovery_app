@@ -37,9 +37,16 @@ def process_event(event: Mapping[str, Any]) -> Dict:
     output = {}
     output["event"] = event["event_type"]
     output["properties"] = event["event_properties"]
-
     output["properties"]["$insert_id"] = event["$insert_id"]
     output["properties"]["distinct_id"] = event.get("user_id",  event["amplitude_id"])	        
+    output["properties"]["$user_id"] = event.get("user_id",  event["amplitude_id"])	        
+    output["properties"]["$manufacturer"] = event["device_manufacturer"]
+    output["properties"]["$model"] = event["device_model"]
+    output["properties"]["$os"] = event["platform"]
+    output["properties"]["$carrier"] = event["device_carrier"]
+    output["properties"]["$os_version"] = event["os_version"]
+    output["properties"]["$app_version_string"] = event["version_name"]
+    output["properties"]["$device_id"] = event["device_id"]
     
     try:
         event_time = datetime.datetime.strptime(event["event_time"], '%Y-%m-%d %H:%M:%S.%f')
