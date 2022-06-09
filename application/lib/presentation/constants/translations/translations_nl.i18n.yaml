@@ -50,7 +50,6 @@ langNameFrench: Frans
 langNameDutch: Nederlands
 langNameEnglish: Engels
 langNameGerman: Duits
-langNamePolish: Pools
 langNameSpanish: Spaans
 bottomSheetApply: Toepassen
 bottomSheetCreate: Aanmaken
@@ -100,8 +99,8 @@ settingsSubscribedToHeader: U bent geabonneerd op
 doneButtonTitle: Gedaan
 subscriptionRenewsMonthlyText: 'Het abonnement wordt maandelijks verlengd op: %s'
 promoCodeValidUntilText: 'Uw promocode is geldig tot: %s'
-subscriptionPlatformInfoApple: Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.
-subscriptionPlatformInfoGoogle: Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.
+subscriptionPlatformInfoApple: U kunt uw abonnementen beheren in de __Apple App Store__.
+subscriptionPlatformInfoGoogle: U kunt uw abonnementen beheren in de __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation
@@ -167,7 +166,3 @@ subscriptionDurationMonth: Maand
 takeSurveyTitle: Heb je even?
 takeSurveySubtitle: Hoe kunnen we Xayn nog beter maken?
 takeSurveyCTA: Breng me naar de enquête
-langNameItalian: Italian
-langNameTurkish: Turkish
-langNameRussian: Russian
-langNameUkrainian: Ukrainian
