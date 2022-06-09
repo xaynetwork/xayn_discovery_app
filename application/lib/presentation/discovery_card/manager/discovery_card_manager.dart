@@ -22,12 +22,13 @@ import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_u
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/gibberish_detection_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
-import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
+import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -37,6 +38,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
@@ -65,6 +67,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final LoadHtmlUseCase _loadHtmlUseCase;
   final ReadabilityUseCase _readabilityUseCase;
   final InjectReaderMetaDataUseCase _injectReaderMetaDataUseCase;
+  final GibberishDetectionUseCase _gibberishDetectionUseCase;
   final ShareUriUseCase _shareUriUseCase;
   final ListenIsBookmarkedUseCase _listenIsBookmarkedUseCase;
   final DiscoveryCardNavActions _discoveryCardNavActions;
@@ -77,6 +80,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final RatingDialogManager _ratingDialogManager;
   final AppManager _appManager;
   final SaveUserInteractionUseCase _saveUserInteractionUseCase;
+  final FeatureManager _featureManager;
 
   /// html reader mode elements:
   ///
@@ -108,7 +112,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
             pluralUnit: R.strings.readingTimeUnitPlural,
           ),
         )
-        .followedBy(_injectReaderMetaDataUseCase),
+        .followedBy(_injectReaderMetaDataUseCase)
+        .followedByConditionally(_gibberishDetectionUseCase,
+            () => _featureManager.isGibberishEnabled),
   );
   late final UseCaseSink<UniqueId, BookmarkStatus> _isBookmarkedHandler =
       pipe(_listenIsBookmarkedUseCase);
@@ -147,6 +153,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._ratingDialogManager,
     this._appManager,
     this._saveUserInteractionUseCase,
+    this._gibberishDetectionUseCase,
+    this._featureManager,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -331,6 +339,15 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           );
         }
 
+        final document = nextState.processedDocument;
+        if (document != null) {
+          nextState = nextState.copyWith(
+            textIsReadable: document.detectedLanguage != null &&
+                    document.isGibberish == null ||
+                document.isGibberish == false,
+          );
+        }
+
         return nextState;
       });
 
@@ -356,5 +373,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         if (previous != BookmarkStatus.bookmarked) callRatingWhenBookmarked();
       },
     );
+  }
+}
+
+extension<In> on Stream<In> {
+  Stream<In> followedByConditionally(
+      UseCase<In, In> useCase, bool Function() condition) {
+    return condition() ? followedBy(useCase) : this;
   }
 }

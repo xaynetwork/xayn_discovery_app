@@ -16,6 +16,7 @@ dependencies:
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   connectivity_plus: 2.2.1
+  country_code: 1.0.0
   equatable: 2.0.3
   envify: 2.0.2
   flutter_bloc: 7.3.3
@@ -25,9 +26,19 @@ dependencies:
       url: https://github.com/xaynetwork/flutter-localized-countries
       ref: 1.0.0
   flutter_tts: 3.3.3
+  # language detection
+  franc:
+    git:
+      url: https://github.com/svonidze/francd
+      ref: 170e633af9a7b8b31769eb232f99e105e1359692
   freezed_annotation: 1.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
+  # gibberish detection
+  gibberish:
+    git:
+      url: https://github.com/xaynetwork/gibberish
+      ref: 940a1907597a908d67ad1735da4f6e4fe97258c2
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
@@ -37,9 +48,10 @@ dependencies:
       url: https://github.com/nohli/flutter_home_indicator.git
       ref: migrate-to-android-v2-embedding
   http: 0.13.4
+  html: 0.15.0
   html_unescape: 2.0.0
   hydrated_bloc: 7.1.0
-  in_app_notification: 1.1.0
+  in_app_notification: 1.1.1
   in_app_review: 2.0.4
   i18n: 4.0.0-alpha.0
   injectable: 1.5.3

@@ -12,10 +12,14 @@ import 'package:xayn_readability/xayn_readability.dart';
 class ProcessedDocument {
   final ProcessHtmlResult processHtmlResult;
   final String timeToRead;
+  final String? detectedLanguage;
+  final bool? isGibberish;
 
   const ProcessedDocument({
     required this.processHtmlResult,
     required this.timeToRead,
+    this.detectedLanguage,
+    this.isGibberish,
   });
 
   DocumentProvider getProvider(NewsResource resource) {

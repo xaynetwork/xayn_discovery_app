@@ -9,12 +9,14 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
   late final CardManagersCache _cardManagersCache = di.get();
+  // late final FeatureManager _featureManager = di.get();
 
   void checkIfDocumentNotProcessable(
     Document document, {
     bool isDismissible = true,
     VoidCallback? onValid,
     VoidCallback? onClosePressed,
+    required CurrentView currentView,
   }) async {
     final discoveryCardManager =
         _cardManagersCache.managersOf(document).discoveryCardManager;
@@ -27,13 +29,18 @@ mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
     if (processedDocument != null) {
       final html = processedDocument.processHtmlResult.contents ?? '';
       final isInvalidHtml = html.trim().isEmpty;
+      // TODO after some intensive testing period we should enable gibberish detection to block content,
+      // but for now it is better to use the red globe as an indicator
+      // final isGibberish = (_featureManager.isGibberishEnabled &&
+      //     !discoveryCardManager.state.textIsReadable);
+      // if (isInvalidHtml || isGibberish) {
       if (isInvalidHtml) {
         showOverlay(
           OverlayData.bottomSheetReaderModeUnavailableBottomSheet(
             isDismissible: isDismissible,
             onOpenViaBrowser: () => discoveryCardManager.openExternalUrl(
               url: document.resource.url.toString(),
-              currentView: CurrentView.bookmark,
+              currentView: currentView,
             ),
             onClosePressed: onClosePressed,
           ),

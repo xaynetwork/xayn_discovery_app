@@ -18,7 +18,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
@@ -45,7 +45,7 @@ void main() async {
   late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
   late MockMarkOnboardingTypeCompletedUseCase
       markOnboardingTypeCompletedUseCase;
-  late MockCustomCardInjectionUseCase customCardInjectionUseCase;
+  late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
@@ -82,7 +82,7 @@ void main() async {
     fetchSessionUseCase = MockFetchSessionUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
-    customCardInjectionUseCase = MockCustomCardInjectionUseCase();
+    surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
     markOnboardingTypeCompletedUseCase =
         MockMarkOnboardingTypeCompletedUseCase();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
@@ -117,14 +117,23 @@ void main() async {
               fakeDocumentC,
               fakeDocumentD,
             ]));
-    when(customCardInjectionUseCase.transform(any))
+    when(surveyCardInjectionUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(customCardInjectionUseCase.transaction(any))
+    when(surveyCardInjectionUseCase.transaction(any))
         .thenAnswer((realInvocation) {
       final Set<Document> documents = realInvocation.positionalArguments.first;
 
       return Stream.value(documents.map(item_renderer.Card.document).toSet());
     });
+    when(surveyCardInjectionUseCase.singleOutput(any)).thenAnswer(
+        (realInvocation) async => surveyCardInjectionUseCase
+            .toCards((realInvocation.positionalArguments.first
+                    as SurveyCardInjectionData)
+                .nextDocuments)
+            .toSet());
+    when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
+        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
+            .map(item_renderer.Card.document));
 
     di.reset();
 
@@ -140,8 +149,8 @@ void main() async {
         needToShowOnboardingUseCase);
     di.registerSingleton<MarkOnboardingTypeCompletedUseCase>(
         markOnboardingTypeCompletedUseCase);
-    di.registerSingleton<CustomCardInjectionUseCase>(
-        customCardInjectionUseCase);
+    di.registerSingleton<SurveyCardInjectionUseCase>(
+        surveyCardInjectionUseCase);
 
     manager = di.get<DiscoveryFeedManager>();
   });

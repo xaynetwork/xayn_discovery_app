@@ -161,7 +161,7 @@ class TranslationsEs extends Translations {
   String get subscriptionRestore => """Reiniciar Subscripción""";
   String get subscriptionPromoCode => """Tengo un código promocional""";
   String get subscriptionDisclaimer =>
-      """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros __Términos y Condiciones__. Tú confirmas que has leído nuestra __Política de Privacidad__.""";
+      """Al presionar "Subscribir Ahora" vas a ser redireccionado al Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros __Términos y Condiciones__. Tú confirmas que has leído nuestra __Política de Privacidad__.""";
   String get settingsSubscribedToHeader => """Tu estás subscrito a""";
   String get doneButtonTitle => """Hecho""";
   String get subscriptionRenewsMonthlyText =>
@@ -251,7 +251,7 @@ class OnboardingBottomDialogTranslationsEs
   String get homeSwipeVerticalTitle =>
       """Desliza hacia arriba para ver el siguiente artículo""";
   String get homeSwipeVerticalMsg =>
-      """Nuestro feed mejora cada vez más con cada me gusta y disgusto""";
+      """Nuestro feed mejora cada vez más con cada me gusta y no es para mi""";
   String get homeSwipeSideTitle =>
       """Desliza hacia los lados para aprobar o desaprobar?""";
   String get homeManageBookmarksTitle =>
@@ -375,7 +375,7 @@ Map<String, String> get translationsEsMap => {
       """subscriptionRestore""": """Reiniciar Subscripción""",
       """subscriptionPromoCode""": """Tengo un código promocional""",
       """subscriptionDisclaimer""":
-          """Al presionar "Subscribir Ahora" vas a ser redireccionado al App Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros __Términos y Condiciones__. Tú confirmas que has leído nuestra __Política de Privacidad__.""",
+          """Al presionar "Subscribir Ahora" vas a ser redireccionado al Store dónde puedes comprar la subscripción al asistente Xayn de noticias. Cada subscripción es sujeta a nuestros __Términos y Condiciones__. Tú confirmas que has leído nuestra __Política de Privacidad__.""",
       """settingsSubscribedToHeader""": """Tu estás subscrito a""",
       """doneButtonTitle""": """Hecho""",
       """subscriptionRenewsMonthlyText""":
@@ -443,7 +443,7 @@ Map<String, String> get translationsEsMap => {
       """onboardingBottomDialog.homeSwipeVerticalTitle""":
           """Desliza hacia arriba para ver el siguiente artículo""",
       """onboardingBottomDialog.homeSwipeVerticalMsg""":
-          """Nuestro feed mejora cada vez más con cada me gusta y disgusto""",
+          """Nuestro feed mejora cada vez más con cada me gusta y no es para mi""",
       """onboardingBottomDialog.homeSwipeSideTitle""":
           """Desliza hacia los lados para aprobar o desaprobar?""",
       """onboardingBottomDialog.homeManageBookmarksTitle""":

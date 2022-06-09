@@ -5,16 +5,17 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
-class CustomCard extends StatelessWidget {
+class SurveyCard extends StatelessWidget {
   final CardType cardType;
   final ShaderBuilder primaryCardShader;
+  final VoidCallback onPressed;
 
-  CustomCard({
+  SurveyCard({
     Key? key,
     required this.cardType,
+    required this.onPressed,
     ShaderBuilder? primaryCardShader,
   })  : primaryCardShader =
             primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
@@ -72,7 +73,7 @@ class CustomCard extends StatelessWidget {
         width: double.maxFinite,
         child: AppRaisedButton.text(
           text: R.strings.takeSurveyCTA,
-          onPressed: () => logger.i('open survey!'),
+          onPressed: onPressed,
         ),
       );
 }

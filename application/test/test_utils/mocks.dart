@@ -76,7 +76,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_def
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
@@ -95,6 +95,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_style_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
@@ -147,7 +150,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CreateDefaultCollectionUseCase,
   CreateOrGetDefaultCollectionUseCase,
   CrudExplicitDocumentFeedbackUseCase,
-  CustomCardInjectionUseCase,
+  SurveyCardInjectionUseCase,
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DbEntityMapToOnboardingStatusMapper,
@@ -178,6 +181,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetSubscriptionManagementUrlUseCase,
   GetSubscriptionStatusUseCase,
   GetSupportedCountriesUseCase,
+  HandleSurveyBannerClickedUseCase,
+  HandleSurveyBannerShownUseCase,
   HapticFeedbackMediumUseCase,
   HiveExplicitDocumentFeedbackRepository,
   HiveAppSettingsRepository,
@@ -192,6 +197,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   ListenCollectionsUseCase,
   ListenReaderModeSettingsUseCase,
   ListenSubscriptionStatusUseCase,
+  ListenSurveyConditionsStatusUseCase,
   Logger,
   LoggerHandler,
   MapToAppVersionMapper,

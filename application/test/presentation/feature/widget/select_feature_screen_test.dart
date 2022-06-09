@@ -24,6 +24,7 @@ void main() {
       await tester.initToFeatureSelectionPage();
       when(manager.showFeaturesScreen).thenReturn(false);
       when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
+      when(manager.isGibberishEnabled).thenReturn(false);
       when(manager.isTtsEnabled).thenReturn(false);
       when(manager.isCustomInlineCardEnabled).thenReturn(false);
 

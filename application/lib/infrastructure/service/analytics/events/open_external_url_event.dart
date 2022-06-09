@@ -23,6 +23,7 @@ class OpenExternalUrlEvent extends FeedAnalyticsEvent {
 
 enum CurrentView {
   story,
+  search,
   reader,
   settings,
   bookmark,
