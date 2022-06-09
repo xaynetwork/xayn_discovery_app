@@ -16,7 +16,7 @@ class GetSupportedCountriesUseCase extends UseCase<None, SupportedCountries> {
     final countries = SupportedMarkets.values.map((SupportedMarkets market) {
       final countryName = countryNames[market.countryCode]!;
 
-      final language = market.multiLingual ? market.languageName : null;
+      final language = market.languageName;
 
       return Country(
         name: countryName,
