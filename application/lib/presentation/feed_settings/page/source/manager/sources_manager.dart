@@ -27,12 +27,14 @@ typedef OnTrustSourceSucceeded = SourcesState Function(
     TrustSourceSucceeded event);
 typedef OnNonMatchedEngineEvent = SourcesState Function();
 
+enum Scope { excludedSources, trustedSources }
+
 @injectable
 class SourcesManager extends Cubit<SourcesState>
     with UseCaseBlocHelper<SourcesState>, SourcesManagementMixin<SourcesState> {
   final EngineEventsUseCase engineEventsUseCase;
-  final List<SourcesManagementOperation> _operations =
-      <SourcesManagementOperation>[];
+  final Set<SourcesManagementOperation> _operations =
+      <SourcesManagementOperation>{};
   late final FoldEngineEvent foldEngineEvent = _foldEngineEvent();
   late final UseCaseValueStream<SourcesState> nextStateValueStream = consume(
     engineEventsUseCase,
@@ -57,6 +59,38 @@ class SourcesManager extends Cubit<SourcesState>
     _operations.clear();
 
     return super.close();
+  }
+
+  bool canAddSourceToExcludedList(Source source) =>
+      !state.excludedSources.contains(source);
+
+  bool canAddSourceToTrustedList(Source source) =>
+      !state.trustedSources.contains(source);
+
+  bool isPendingRemoval({required Source source, required Scope scope}) {
+    switch (scope) {
+      case Scope.excludedSources:
+        return state.pendingOperations.any((it) =>
+            it.task == SourcesManagementTask.removeFromExcludedSources &&
+            it.source == source);
+      case Scope.trustedSources:
+        return state.pendingOperations.any((it) =>
+            it.task == SourcesManagementTask.removeFromTrustedSources &&
+            it.source == source);
+    }
+  }
+
+  bool isPendingAddition({required Source source, required Scope scope}) {
+    switch (scope) {
+      case Scope.excludedSources:
+        return state.pendingOperations.any((it) =>
+            it.task == SourcesManagementTask.addToExcludedSources &&
+            it.source == source);
+      case Scope.trustedSources:
+        return state.pendingOperations.any((it) =>
+            it.task == SourcesManagementTask.addToTrustedSources &&
+            it.source == source);
+    }
   }
 
   @override
@@ -114,19 +148,20 @@ class SourcesManager extends Cubit<SourcesState>
   Future<SourcesState?> computeState() async =>
       fold(nextStateValueStream).foldAll(
         (nextState, errorReport) async => nextState?.copyWith(
-          excludedSources: {
+          pendingOperations: _operations.toSet(),
+          jointExcludedSources: {
             ...nextState.excludedSources,
-            ..._operationsAsEntries({
-              SourcesManagementTask.addToExcludedSources,
-              SourcesManagementTask.removeFromExcludedSources,
-            })
+            ..._operations
+                .where((it) =>
+                    it.task == SourcesManagementTask.addToExcludedSources)
+                .map((it) => it.source)
           },
-          trustedSources: {
+          jointTrustedSources: {
             ...nextState.trustedSources,
-            ..._operationsAsEntries({
-              SourcesManagementTask.addToTrustedSources,
-              SourcesManagementTask.removeFromTrustedSources,
-            })
+            ..._operations
+                .where((it) =>
+                    it.task == SourcesManagementTask.addToTrustedSources)
+                .map((it) => it.source)
           },
         ),
       );
@@ -163,52 +198,31 @@ class SourcesManager extends Cubit<SourcesState>
     return (SourcesState state) => foldEngineEvent(
           getAvailableSourcesListSucceeded: (event) =>
               state.copyWith(availableSources: event.availableSources.toSet()),
-          excludedSourcesListRequestSucceeded: (event) => state.copyWith(
-              excludedSources:
-                  event.excludedSources.map(SourceEntry.normal).toSet()),
-          trustedSourcesListRequestSucceeded: (event) => state.copyWith(
-              trustedSources:
-                  event.trustedSources.map(SourceEntry.normal).toSet()),
+          excludedSourcesListRequestSucceeded: (event) =>
+              state.copyWith(excludedSources: event.excludedSources),
+          trustedSourcesListRequestSucceeded: (event) =>
+              state.copyWith(trustedSources: event.trustedSources),
           excludeSourceSucceeded: (event) => state.copyWith(
             excludedSources: {
               ...state.excludedSources,
-              SourceEntry.normal(event.source),
+              event.source,
             },
           ),
           trustSourceSucceeded: (event) => state.copyWith(
             trustedSources: {
               ...state.trustedSources,
-              SourceEntry.normal(event.source),
+              event.source,
             },
           ),
           orElse: () => state,
         );
   }
 
-  Iterable<SourceEntry> _operationsAsEntries(
-          Set<SourcesManagementTask> forTasks) =>
-      _operations
-          .where((it) => forTasks.contains(it.task))
-          .map((it) => it.asSourceEntry);
-
   /// Adds a new [SourcesManagementOperation], and ensures previous operations
   /// on the same [operation.source] are first removed.
   void _addOperation(SourcesManagementOperation operation) => _operations
     ..removeWhere((it) => it.source == operation.source)
     ..add(operation);
-}
-
-extension _SourcesManagementOperationExtension on SourcesManagementOperation {
-  SourceEntry get asSourceEntry {
-    switch (task) {
-      case SourcesManagementTask.removeFromExcludedSources:
-      case SourcesManagementTask.removeFromTrustedSources:
-        return SourceEntry.pendingRemoval(source);
-      case SourcesManagementTask.addToExcludedSources:
-      case SourcesManagementTask.addToTrustedSources:
-        return SourceEntry.pendingAddition(source);
-    }
-  }
 }
 
 /// Dummy classes - delete when the engine exposes these itself
