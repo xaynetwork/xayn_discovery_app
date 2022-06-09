@@ -109,7 +109,6 @@ class TranslationsEs extends Translations {
   String get langNameDutch => """Holandés""";
   String get langNameEnglish => """Inglés""";
   String get langNameGerman => """Alemán""";
-  String get langNamePolish => """Polaco""";
   String get langNameSpanish => """Español""";
   String get bottomSheetApply => """Aplicar""";
   String get bottomSheetCreate => """Crear""";
@@ -169,9 +168,9 @@ class TranslationsEs extends Translations {
   String get promoCodeValidUntilText =>
       """Tu código promocional es valido hasta: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.""";
+      """Tu puedes manejar tu subscripción en el __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.""";
+      """Tu puedes manejar tu subscripción en el __Google Play Store__.""";
   PaymentFlowErrorTranslationsEs get paymentFlowError =>
       PaymentFlowErrorTranslationsEs(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -229,10 +228,6 @@ class TranslationsEs extends Translations {
   String get takeSurveySubtitle =>
       """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""";
   String get takeSurveyCTA => """Llévame a la encuesta""";
-  String get langNameItalian => """Italian""";
-  String get langNameTurkish => """Turkish""";
-  String get langNameRussian => """Russian""";
-  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -328,7 +323,6 @@ Map<String, String> get translationsEsMap => {
       """langNameDutch""": """Holandés""",
       """langNameEnglish""": """Inglés""",
       """langNameGerman""": """Alemán""",
-      """langNamePolish""": """Polaco""",
       """langNameSpanish""": """Español""",
       """bottomSheetApply""": """Aplicar""",
       """bottomSheetCreate""": """Crear""",
@@ -387,9 +381,9 @@ Map<String, String> get translationsEsMap => {
       """promoCodeValidUntilText""":
           """Tu código promocional es valido hasta: %s""",
       """subscriptionPlatformInfoApple""":
-          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.""",
+          """Tu puedes manejar tu subscripción en el __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.""",
+          """Tu puedes manejar tu subscripción en el __Google Play Store__.""",
       """paymentFlowError.unknown""": """Error desconocido ocurrió""",
       """paymentFlowError.storeNotAvailable""":
           """La tienda no está disponible en este momento""",
@@ -463,8 +457,4 @@ Map<String, String> get translationsEsMap => {
       """takeSurveySubtitle""":
           """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""",
       """takeSurveyCTA""": """Llévame a la encuesta""",
-      """langNameItalian""": """Italian""",
-      """langNameTurkish""": """Turkish""",
-      """langNameRussian""": """Russian""",
-      """langNameUkrainian""": """Ukrainian""",
     };

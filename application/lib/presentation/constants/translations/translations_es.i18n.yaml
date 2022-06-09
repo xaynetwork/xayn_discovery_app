@@ -50,7 +50,6 @@ langNameFrench: Francés
 langNameDutch: Holandés
 langNameEnglish: Inglés
 langNameGerman: Alemán
-langNamePolish: Polaco
 langNameSpanish: Español
 bottomSheetApply: Aplicar
 bottomSheetCreate: Crear
@@ -100,8 +99,8 @@ settingsSubscribedToHeader: Tu estás subscrito a
 doneButtonTitle: Hecho
 subscriptionRenewsMonthlyText: 'La subscripción se renueva mensualmente en: %s'
 promoCodeValidUntilText: 'Tu código promocional es valido hasta: %s'
-subscriptionPlatformInfoApple: Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.
-subscriptionPlatformInfoGoogle: Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.
+subscriptionPlatformInfoApple: Tu puedes manejar tu subscripción en el __Apple App Store__.
+subscriptionPlatformInfoGoogle: Tu puedes manejar tu subscripción en el __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation
@@ -167,7 +166,3 @@ subscriptionDurationMonth: Mes
 takeSurveyTitle: ¿Tienes un minuto?
 takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
 takeSurveyCTA: Llévame a la encuesta
-langNameItalian: Italian
-langNameTurkish: Turkish
-langNameRussian: Russian
-langNameUkrainian: Ukrainian
