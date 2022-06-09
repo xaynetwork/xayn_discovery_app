@@ -24,7 +24,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_faile
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/widget/move_bookmarks_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/survey/survey_request_bottom_sheet_dialog.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/onboarding/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
@@ -118,15 +117,6 @@ class OverlayData {
           args: type,
           builder: (__, _) =>
               OnboardingBottomSheet(type: type, onDismiss: onDismiss));
-
-  static BottomSheetData bottomSheetSurvey({
-    required VoidCallback onTakeSurveyPressed,
-  }) =>
-      BottomSheetData(
-          args: const [],
-          builder: (__, _) => SurveyRequestBottomSheet(
-                onTakeSurveyPressed: onTakeSurveyPressed,
-              ));
 
   static bottomSheetGenericError(
           {String? errorCode, bool allowStacking = false}) =>
