@@ -1,3 +1,4 @@
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/feed_analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -12,14 +13,12 @@ const String _kParamToDefaultCollection = 'toDefaultCollection';
 /// - [isBookmarked] is true when bookmarked, false when not.
 /// - [feedType] indicates the current screen the event was triggered from.
 class DocumentBookmarkedEvent extends FeedAnalyticsEvent {
-  final Document? previous;
   final bool isBookmarked;
   final Document document;
   final bool toDefaultCollection;
   final FeedType? feedType;
 
   DocumentBookmarkedEvent({
-    this.previous,
     required this.isBookmarked,
     required this.document,
     required this.toDefaultCollection,
@@ -28,7 +27,7 @@ class DocumentBookmarkedEvent extends FeedAnalyticsEvent {
           _kEventType,
           feedType: feedType,
           properties: {
-            _kParamDocument: document.toJson(),
+            _kParamDocument: document.toAnalyticsJson(),
             _kParamIsBookmarked: isBookmarked,
             _kParamToDefaultCollection: toDefaultCollection,
           },
