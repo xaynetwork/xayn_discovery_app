@@ -109,7 +109,6 @@ class TranslationsNl extends Translations {
   String get langNameDutch => """Nederlands""";
   String get langNameEnglish => """Engels""";
   String get langNameGerman => """Duits""";
-  String get langNamePolish => """Pools""";
   String get langNameSpanish => """Spaans""";
   String get bottomSheetApply => """Toepassen""";
   String get bottomSheetCreate => """Aanmaken""";
@@ -167,9 +166,9 @@ class TranslationsNl extends Translations {
       """Het abonnement wordt maandelijks verlengd op: %s""";
   String get promoCodeValidUntilText => """Uw promocode is geldig tot: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.""";
+      """U kunt uw abonnementen beheren in de __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.""";
+      """U kunt uw abonnementen beheren in de __Google Play Store__.""";
   PaymentFlowErrorTranslationsNl get paymentFlowError =>
       PaymentFlowErrorTranslationsNl(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -227,10 +226,6 @@ class TranslationsNl extends Translations {
   String get takeSurveyTitle => """Heb je even?""";
   String get takeSurveySubtitle => """Hoe kunnen we Xayn nog beter maken?""";
   String get takeSurveyCTA => """Breng me naar de enquête""";
-  String get langNameItalian => """Italian""";
-  String get langNameTurkish => """Turkish""";
-  String get langNameRussian => """Russian""";
-  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -324,7 +319,6 @@ Map<String, String> get translationsNlMap => {
       """langNameDutch""": """Nederlands""",
       """langNameEnglish""": """Engels""",
       """langNameGerman""": """Duits""",
-      """langNamePolish""": """Pools""",
       """langNameSpanish""": """Spaans""",
       """bottomSheetApply""": """Toepassen""",
       """bottomSheetCreate""": """Aanmaken""",
@@ -382,9 +376,9 @@ Map<String, String> get translationsNlMap => {
           """Het abonnement wordt maandelijks verlengd op: %s""",
       """promoCodeValidUntilText""": """Uw promocode is geldig tot: %s""",
       """subscriptionPlatformInfoApple""":
-          """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.""",
+          """U kunt uw abonnementen beheren in de __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.""",
+          """U kunt uw abonnementen beheren in de __Google Play Store__.""",
       """paymentFlowError.unknown""": """Onbekende fout opgetreden""",
       """paymentFlowError.storeNotAvailable""":
           """De winkel is op dit moment niet beschikbaar""",
@@ -457,8 +451,4 @@ Map<String, String> get translationsNlMap => {
       """takeSurveyTitle""": """Heb je even?""",
       """takeSurveySubtitle""": """Hoe kunnen we Xayn nog beter maken?""",
       """takeSurveyCTA""": """Breng me naar de enquête""",
-      """langNameItalian""": """Italian""",
-      """langNameTurkish""": """Turkish""",
-      """langNameRussian""": """Russian""",
-      """langNameUkrainian""": """Ukrainian""",
     };

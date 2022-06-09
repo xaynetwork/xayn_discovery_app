@@ -107,7 +107,6 @@ class TranslationsFr extends Translations {
   String get langNameDutch => """Néerlandais""";
   String get langNameEnglish => """Anglais""";
   String get langNameGerman => """Allemand""";
-  String get langNamePolish => """Polonais""";
   String get langNameSpanish => """Espagnol""";
   String get bottomSheetApply => """Appliquer""";
   String get bottomSheetCreate => """Créer""";
@@ -171,9 +170,9 @@ class TranslationsFr extends Translations {
   String get promoCodeValidUntilText =>
       """Votre code promotionnel est valable jusqu'au : %s""";
   String get subscriptionPlatformInfoApple =>
-      """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement. Vous pouvez gérer vos abonnements dans __Apple App Store__.""";
+      """Vous pouvez gérer vos abonnements dans __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement ! Vous pouvez gérer vos abonnements dans __Google Play Store__.""";
+      """Vous pouvez gérer vos abonnements dans __Google Play Store__.""";
   PaymentFlowErrorTranslationsFr get paymentFlowError =>
       PaymentFlowErrorTranslationsFr(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -234,10 +233,6 @@ class TranslationsFr extends Translations {
   String get takeSurveySubtitle =>
       """Comment pouvons-nous encore améliorer Xayn ?""";
   String get takeSurveyCTA => """Emmenez-moi à l'enquête""";
-  String get langNameItalian => """Francais""";
-  String get langNameTurkish => """Turkish""";
-  String get langNameRussian => """Russian""";
-  String get langNameUkrainian => """Ukrainian""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -330,7 +325,6 @@ Map<String, String> get translationsFrMap => {
       """langNameDutch""": """Néerlandais""",
       """langNameEnglish""": """Anglais""",
       """langNameGerman""": """Allemand""",
-      """langNamePolish""": """Polonais""",
       """langNameSpanish""": """Espagnol""",
       """bottomSheetApply""": """Appliquer""",
       """bottomSheetCreate""": """Créer""",
@@ -392,9 +386,9 @@ Map<String, String> get translationsFrMap => {
       """promoCodeValidUntilText""":
           """Votre code promotionnel est valable jusqu'au : %s""",
       """subscriptionPlatformInfoApple""":
-          """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement. Vous pouvez gérer vos abonnements dans __Apple App Store__.""",
+          """Vous pouvez gérer vos abonnements dans __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement ! Vous pouvez gérer vos abonnements dans __Google Play Store__.""",
+          """Vous pouvez gérer vos abonnements dans __Google Play Store__.""",
       """paymentFlowError.unknown""": """Une erreur inconnue s'est produite""",
       """paymentFlowError.storeNotAvailable""":
           """Le magasin n'est pas disponible pour le moment""",
@@ -470,8 +464,4 @@ Map<String, String> get translationsFrMap => {
       """takeSurveySubtitle""":
           """Comment pouvons-nous encore améliorer Xayn ?""",
       """takeSurveyCTA""": """Emmenez-moi à l'enquête""",
-      """langNameItalian""": """Francais""",
-      """langNameTurkish""": """Turkish""",
-      """langNameRussian""": """Russian""",
-      """langNameUkrainian""": """Ukrainian""",
     };
