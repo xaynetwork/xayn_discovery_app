@@ -20,9 +20,17 @@ import 'package:xayn_discovery_app/domain/repository/feed_type_markets_repositor
 import 'package:xayn_discovery_app/domain/repository/reader_mode_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/add_source_to_excluded_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/add_source_to_trusted_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_available_sources_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_excluded_sources_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_trusted_sources_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_excluded_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_trusted_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
@@ -121,6 +129,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// Please, keep those alphabetically sorted.
 /// It is easier to support end expand
 @GenerateMocks([
+  AddSourceToExcludedListUseCase,
+  AddSourceToTrustedListUseCase,
   Amplitude,
   ActiveSearchNavActions,
   AnalyticsService,
@@ -160,6 +170,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   Document,
   DocumentRepository,
   EditReaderModeSettingsManager,
+  EngineEventsUseCase,
   ExtractLogUseCase,
   FeatureManager,
   FeedMarketToDbEntityMapMapper,
@@ -175,13 +186,16 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetAppSessionUseCase,
   GetAppThemeUseCase,
   GetAppVersionUseCase,
+  GetAvailableSourcesListUseCase,
   GetBookmarkUseCase,
+  GetExcludedSourcesListUseCase,
   GetSelectedCountriesUseCase,
   GetStoredAppVersionUseCase,
   GetSubscriptionDetailsUseCase,
   GetSubscriptionManagementUrlUseCase,
   GetSubscriptionStatusUseCase,
   GetSupportedCountriesUseCase,
+  GetTrustedSourcesListUseCase,
   HandleSurveyBannerClickedUseCase,
   HandleSurveyBannerShownUseCase,
   HapticFeedbackMediumUseCase,
@@ -224,6 +238,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RemoveBookmarkUseCase,
   RemoveBookmarksUseCase,
   RemoveCollectionUseCase,
+  RemoveSourceFromExcludedListUseCase,
+  RemoveSourceFromTrustedListUseCase,
   RenameCollectionUseCase,
   RenameDefaultCollectionUseCase,
   RequestCodeRedemptionSheetUseCase,
