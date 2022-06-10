@@ -249,10 +249,23 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.addSourceToExcludedList(source));
   }
 
+  @Deprecated('remove after engine update')
+  Future<EngineEvent> addSourceToTrustedList(Source source) {
+    _inputLog.add('[addSourceToTrustedList]');
+    return safeRun(() => _engine.send(ClientEvent.trustedSourceAdded(source)));
+  }
+
   @override
   Future<EngineEvent> getExcludedSourcesList() {
     _inputLog.add('[getExcludedSourcesList]');
     return safeRun(() => _engine.getExcludedSourcesList());
+  }
+
+  @Deprecated('remove after engine update')
+  Future<EngineEvent> getTrustedSourcesList() {
+    _inputLog.add('[getTrustedSourcesList]');
+    return safeRun(
+        () => _engine.send(const ClientEvent.trustedSourcesListRequested()));
   }
 
   @override
@@ -265,6 +278,13 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> removeSourceFromExcludedList(Source source) {
     _inputLog.add('[removeSourceFromExcludedList]');
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
+  }
+
+  @Deprecated('remove after engine update')
+  Future<EngineEvent> removeSourceFromTrustedList(Source source) {
+    _inputLog.add('[removeSourceFromTrustedList]');
+    return safeRun(
+        () => _engine.send(ClientEvent.trustedSourceRemoved(source)));
   }
 
   @override
@@ -285,11 +305,6 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.requestTrendingTopics());
   }
 
-  void _updateFeedMarketIdentityParam(FeedMarkets markets) {
-    final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
-    _setIdentityParamUseCase.call(param);
-  }
-
   @override
   Future<EngineEvent> requestDeepSearch(DocumentId id) {
     _inputLog.add('[requestDeepSearch]');
@@ -300,5 +315,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   Future<EngineEvent> resetAi() {
     _inputLog.add('[resetAi]');
     return safeRun(() => _engine.resetAi());
+  }
+
+  void _updateFeedMarketIdentityParam(FeedMarkets markets) {
+    final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
+    _setIdentityParamUseCase.call(param);
   }
 }
