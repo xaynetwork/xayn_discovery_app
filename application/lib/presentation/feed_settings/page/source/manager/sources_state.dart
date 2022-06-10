@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 // ignore: implementation_imports
 import 'package:xayn_discovery_engine/src/domain/models/source.dart';
 
@@ -19,8 +18,6 @@ class SourcesState with _$SourcesState {
     @Default(<AvailableSource>{}) Set<AvailableSource> availableSources,
     @Default(<Source>{}) Set<Source> excludedSources,
     @Default(<Source>{}) Set<Source> trustedSources,
-    @Default(<SourcesManagementOperation>{})
-        Set<SourcesManagementOperation> pendingOperations,
     @Default(<Source>{}) Set<Source> jointExcludedSources,
     @Default(<Source>{}) Set<Source> jointTrustedSources,
   }) = _SourcesState;
