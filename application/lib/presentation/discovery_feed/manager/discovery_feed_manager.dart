@@ -15,7 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
@@ -23,6 +23,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboa
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -85,7 +88,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
-    CustomCardInjectionUseCase customCardInjectionUseCase,
+    ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase,
+    HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
+    HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
+    SurveyCardInjectionUseCase customCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -101,6 +107,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
+          listenSurveyConditionsStatusUseCase,
+          handleSurveyBannerClickedUseCase,
+          handleSurveyBannerShownUseCase,
           customCardInjectionUseCase,
           featureManager,
           cardManagersCache,

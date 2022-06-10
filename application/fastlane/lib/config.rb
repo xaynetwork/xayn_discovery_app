@@ -6,6 +6,8 @@ module Config
     APPCENTER_TARGET = "appcenter_target"
     APPCENTER_TOKEN = "appcenter_token"
     KEY_ALIAS = "key_alias"
+    # appbundle or apk
+    ANDROID_OUTPUT = "android_output"
     PROVISIONING_PROFILE_PATH = "provisioning_profile_path"
     PROVISIONING_PROFILE_NAME = "provisioning_profile_name"
     CERTIFICATE_NAME = "certificate_name"
@@ -168,10 +170,11 @@ module Config
 
   ANDROID_BUILD_CONFIG = {
     Flavors::INTERNAL => {
+      Keys::ANDROID_OUTPUT => AndroidOutputs::APK,
       Keys::KEY_ALIAS => "release_internal",
     },
     Flavors::BETA => {
-      Keys::KEY_ALIAS => "release_beta",
+      Keys::ANDROID_OUTPUT => AndroidOutputs::APP_BUNDLE,
     },
   }
 

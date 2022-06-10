@@ -19,12 +19,15 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/custom_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -74,7 +77,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
-  final CustomCardInjectionUseCase customCardInjectionUseCase;
+  final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
+  final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
+  final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
+  final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -98,21 +104,27 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.hapticFeedbackMediumUseCase,
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
-    this.customCardInjectionUseCase,
+    this.listenSurveyConditionsStatusUseCase,
+    this.handleSurveyBannerClickedUseCase,
+    this.handleSurveyBannerShownUseCase,
+    this.surveyCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
     this.currentView,
   ) : super(DiscoveryState.initial());
 
-  late final UseCaseValueStream<Set<Card>> cardStream = consume(
+  late final UseCaseValueStream<SurveyConditionsStatus>
+      surveyConditionStatusStream = consume(
+    listenSurveyConditionsStatusUseCase,
+    initialData: none,
+  );
+
+  late final UseCaseValueStream<Set<Document>> cardStream = consume(
     engineEventsUseCase,
     initialData: none,
   ).transform(
-    (out) => out
-        .doOnData(onEngineEvent)
-        .map((it) => foldEngineEvent(this)(it))
-        .followedBy(customCardInjectionUseCase),
+    (out) => out.doOnData(onEngineEvent).map((it) => foldEngineEvent(this)(it)),
   );
   late final UseCaseValueStream<int> cardIndexConsumer =
       consume(fetchCardIndexUseCase, initialData: feedType)
@@ -181,6 +193,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     ));
   }
 
+  void handleSurveyTapped() => handleSurveyBannerClickedUseCase(none);
+
   void handleLoadMore();
 
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus);
@@ -230,7 +244,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         feedType: feedType,
       ));
     } else {
-      // todo: log custom card analytics
+      handleSurveyBannerShownUseCase(none);
       observeDocument();
     }
 
@@ -320,16 +334,18 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold5(
+  Future<DiscoveryState?> computeState() async => fold6(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         cardStream,
+        surveyConditionStatusStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
       ).foldAll((
         cardIndex,
         explicitDocumentFeedback,
-        cards,
+        documents,
+        surveyConditionStatus,
         subscriptionStatus,
         readerModeSettings,
         errorReport,
@@ -338,8 +354,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final requireCards = cards ?? state.cards;
-        final sets = await maybeReduceCardCount(requireCards);
+        final cards = await surveyCardInjectionUseCase.singleOutput(
+          SurveyCardInjectionData(
+            currentCards: state.cards,
+            nextDocuments: documents,
+            status: surveyConditionStatus,
+          ),
+        );
+        final sets = await maybeReduceCardCount(cards);
         final nextCardIndex = sets.nextCardIndex;
 
         if (errorReport.isNotEmpty) {

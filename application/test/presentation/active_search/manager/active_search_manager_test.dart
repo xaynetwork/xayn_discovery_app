@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -16,9 +17,11 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_repositor
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -36,7 +39,11 @@ void main() {
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
-  late MockCustomCardInjectionUseCase customCardInjectionUseCase;
+  late MockListenSurveyConditionsStatusUseCase
+      listenSurveyConditionsStatusUseCase;
+  late MockHandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
+  late MockHandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
+  late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockAppStatusRepository appStatusRepository;
@@ -48,7 +55,11 @@ void main() {
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
-    customCardInjectionUseCase = MockCustomCardInjectionUseCase();
+    listenSurveyConditionsStatusUseCase =
+        MockListenSurveyConditionsStatusUseCase();
+    handleSurveyBannerClickedUseCase = MockHandleSurveyBannerClickedUseCase();
+    handleSurveyBannerShownUseCase = MockHandleSurveyBannerShownUseCase();
+    surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     appStatusRepository = MockAppStatusRepository();
@@ -70,14 +81,28 @@ void main() {
     when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
-    when(customCardInjectionUseCase.transform(any))
+    when(surveyCardInjectionUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(customCardInjectionUseCase.transaction(any))
+    when(surveyCardInjectionUseCase.transaction(any))
         .thenAnswer((realInvocation) {
       final Set<Document> documents = realInvocation.positionalArguments.first;
 
       return Stream.value(documents.map(Card.document).toSet());
     });
+    when(listenSurveyConditionsStatusUseCase.transaction(any)).thenAnswer(
+        (realInvocation) => Stream.value(SurveyConditionsStatus.notReached));
+    when(listenSurveyConditionsStatusUseCase.transform(any)).thenAnswer(
+        (realInvocation) =>
+            realInvocation.positionalArguments.first as Stream<None>);
+    when(surveyCardInjectionUseCase.singleOutput(any)).thenAnswer(
+        (realInvocation) async => surveyCardInjectionUseCase
+            .toCards((realInvocation.positionalArguments.first
+                    as SurveyCardInjectionData)
+                .nextDocuments)
+            .toSet());
+    when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
+        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
+            .map(Card.document));
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -96,7 +121,10 @@ void main() {
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
-          customCardInjectionUseCase,
+          listenSurveyConditionsStatusUseCase,
+          handleSurveyBannerClickedUseCase,
+          handleSurveyBannerShownUseCase,
+          surveyCardInjectionUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(

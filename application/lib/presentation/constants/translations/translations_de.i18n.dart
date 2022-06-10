@@ -71,8 +71,8 @@ class TranslationsDe extends Translations {
   String get settingsAboutXayn => """Über Xayn""";
   String get settingsCarbonNeutral => """Wir sind CO2 neutral!""";
   String get settingsImprint => """Impressum""";
-  String get settingsPrivacyPolicy => """Privacy Policy""";
-  String get settingsTermsAndConditions => """Terms & Conditions""";
+  String get settingsPrivacyPolicy => """Datenschutzrichtlinie""";
+  String get settingsTermsAndConditions => """AGB""";
   String get settingsHaveFoundBug => """Einen Bug gefunden?""";
   String get settingsShareBtn => """Teile die App mit Freunden""";
   String get settingsVersion => """Version:""";
@@ -154,14 +154,14 @@ class TranslationsDe extends Translations {
       """Preisinfos können nicht abgerufen werden""";
   String get subscriptionPerk1 => """Personalisierter Stream""";
   String get subscriptionPerk2 => """Ohne Werbung""";
-  String get subscriptionPerk3 => """Ohne Tracking""";
-  String get subscriptionPerk4 => """Carbonneutral""";
+  String get subscriptionPerk3 => """Ohne personalisiertem Tracking""";
+  String get subscriptionPerk4 => """CO2-neutral""";
   String get subscriptionPerk5 => """Jederzeit kündbar""";
   String get subscriptionSubscribeNow => """Jetzt abonnieren""";
   String get subscriptionRestore => """Abo wiederherstellen""";
   String get subscriptionPromoCode => """Ich habe einen Promo-code""";
   String get subscriptionDisclaimer =>
-      """Indem Du auf „Jetzt abonnieren“ tippst, wirst zum App Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.""";
+      """Indem Du auf „Jetzt abonnieren“ tippst, wirst zum Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.""";
   String get settingsSubscribedToHeader => """Du hast""";
   String get doneButtonTitle => """Fertig""";
   String get subscriptionRenewsMonthlyText =>
@@ -287,8 +287,8 @@ Map<String, String> get translationsDeMap => {
       """settingsAboutXayn""": """Über Xayn""",
       """settingsCarbonNeutral""": """Wir sind CO2 neutral!""",
       """settingsImprint""": """Impressum""",
-      """settingsPrivacyPolicy""": """Privacy Policy""",
-      """settingsTermsAndConditions""": """Terms & Conditions""",
+      """settingsPrivacyPolicy""": """Datenschutzrichtlinie""",
+      """settingsTermsAndConditions""": """AGB""",
       """settingsHaveFoundBug""": """Einen Bug gefunden?""",
       """settingsShareBtn""": """Teile die App mit Freunden""",
       """settingsVersion""": """Version:""",
@@ -370,14 +370,14 @@ Map<String, String> get translationsDeMap => {
           """Preisinfos können nicht abgerufen werden""",
       """subscriptionPerk1""": """Personalisierter Stream""",
       """subscriptionPerk2""": """Ohne Werbung""",
-      """subscriptionPerk3""": """Ohne Tracking""",
-      """subscriptionPerk4""": """Carbonneutral""",
+      """subscriptionPerk3""": """Ohne personalisiertem Tracking""",
+      """subscriptionPerk4""": """CO2-neutral""",
       """subscriptionPerk5""": """Jederzeit kündbar""",
       """subscriptionSubscribeNow""": """Jetzt abonnieren""",
       """subscriptionRestore""": """Abo wiederherstellen""",
       """subscriptionPromoCode""": """Ich habe einen Promo-code""",
       """subscriptionDisclaimer""":
-          """Indem Du auf „Jetzt abonnieren“ tippst, wirst zum App Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.""",
+          """Indem Du auf „Jetzt abonnieren“ tippst, wirst zum Store weitergeleitet, wo Du ein Abo für Xayn erwerben kannst. Jedes Abonnement unterliegt unseren __Allgemeinen Geschäftsbedingungen__. Bestätige bitte, unsere __Datenschutzerklärung__ gelesen zu haben.""",
       """settingsSubscribedToHeader""": """Du hast""",
       """doneButtonTitle""": """Fertig""",
       """subscriptionRenewsMonthlyText""": """Dein Abo erneuert sich am: %s""",
