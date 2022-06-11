@@ -18,6 +18,8 @@ abstract class SourcesPendingOperations {
 
   bool removeOperation(SourcesManagementOperation operation);
 
+  void removeOperationsBySource(Source source);
+
   Iterable<Source> sourcesByTask(SourcesManagementTask task);
 }
 
@@ -63,6 +65,10 @@ class InMemorySourcesPendingOperations implements SourcesPendingOperations {
   @override
   bool removeOperation(SourcesManagementOperation operation) =>
       _operations.remove(operation);
+
+  @override
+  void removeOperationsBySource(Source source) =>
+      _operations.removeWhere((it) => it.source == source);
 
   @override
   Iterable<Source> sourcesByTask(SourcesManagementTask task) =>
