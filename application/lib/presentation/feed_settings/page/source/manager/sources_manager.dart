@@ -107,6 +107,28 @@ class SourcesManager extends Cubit<SourcesState>
       scheduleComputeState(() => sourcesPendingOperations.addOperation(
           SourcesManagementOperation.addToTrustedSources(source)));
 
+  /// Call this method to undo any operations related to [source].
+  /// Once [applyChanges] is triggered, operations are persisted, and then
+  /// calling this method will no longer have effect.
+  void removePendingSourceOperation(Source source) {
+    // assert that the source is actually a pending operation
+    assert([
+      sourcesPendingOperations.containsAddToExcludedSources(source),
+      sourcesPendingOperations.containsAddToTrustedSources(source),
+      sourcesPendingOperations.containsRemoveFromExcludedSources(source),
+      sourcesPendingOperations.containsRemoveFromTrustedSources(source),
+    ].any((it) => it));
+
+    print('TEST: ${[
+      sourcesPendingOperations.containsAddToExcludedSources(source),
+      sourcesPendingOperations.containsAddToTrustedSources(source),
+      sourcesPendingOperations.containsRemoveFromExcludedSources(source),
+      sourcesPendingOperations.containsRemoveFromTrustedSources(source),
+    ].any((it) => it)}');
+
+    sourcesPendingOperations.removeOperationsBySource(source);
+  }
+
   /// This method will persist any pending [SourcesManagementOperation] with
   /// the engine.
   /// When completed, the pending operations are flushed, and the [state] will
