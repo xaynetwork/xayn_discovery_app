@@ -4,6 +4,35 @@ import 'package:xayn_discovery_engine/src/api/events/engine_events.dart';
 import 'package:xayn_discovery_engine/src/domain/models/source.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
+/// Dummy classes - delete when the engine exposes these itself
+@Deprecated('remove after engine update')
+class RemoveExcludedSourceSucceeded extends TempEngineEvent {
+  final Source source;
+
+  RemoveExcludedSourceSucceeded(this.source);
+}
+
+@Deprecated('remove after engine update')
+class RemoveTrustedSourceSucceeded extends TempEngineEvent {
+  final Source source;
+
+  RemoveTrustedSourceSucceeded(this.source);
+}
+
+@Deprecated('remove after engine update')
+class AddExcludedSourceSucceeded extends TempEngineEvent {
+  final Source source;
+
+  AddExcludedSourceSucceeded(this.source);
+}
+
+@Deprecated('remove after engine update')
+class AddTrustedSourceSucceeded extends TempEngineEvent {
+  final Source source;
+
+  AddTrustedSourceSucceeded(this.source);
+}
+
 class TempEngineEvent implements EngineEvent {
   @override
   TResult map<TResult extends Object?>(

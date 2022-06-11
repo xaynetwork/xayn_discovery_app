@@ -110,24 +110,8 @@ class SourcesManager extends Cubit<SourcesState>
   /// Call this method to undo any operations related to [source].
   /// Once [applyChanges] is triggered, operations are persisted, and then
   /// calling this method will no longer have effect.
-  void removePendingSourceOperation(Source source) {
-    // assert that the source is actually a pending operation
-    assert([
-      sourcesPendingOperations.containsAddToExcludedSources(source),
-      sourcesPendingOperations.containsAddToTrustedSources(source),
-      sourcesPendingOperations.containsRemoveFromExcludedSources(source),
-      sourcesPendingOperations.containsRemoveFromTrustedSources(source),
-    ].any((it) => it));
-
-    print('TEST: ${[
-      sourcesPendingOperations.containsAddToExcludedSources(source),
-      sourcesPendingOperations.containsAddToTrustedSources(source),
-      sourcesPendingOperations.containsRemoveFromExcludedSources(source),
-      sourcesPendingOperations.containsRemoveFromTrustedSources(source),
-    ].any((it) => it)}');
-
-    sourcesPendingOperations.removeOperationsBySource(source);
-  }
+  void removePendingSourceOperation(Source source) =>
+      sourcesPendingOperations.removeOperationsBySource(source);
 
   /// This method will persist any pending [SourcesManagementOperation] with
   /// the engine.
@@ -239,33 +223,4 @@ class SourcesManager extends Cubit<SourcesState>
           orElse: () => state,
         );
   }
-}
-
-/// Dummy classes - delete when the engine exposes these itself
-@Deprecated('remove after engine update')
-class RemoveExcludedSourceSucceeded extends TempEngineEvent {
-  final Source source;
-
-  RemoveExcludedSourceSucceeded(this.source);
-}
-
-@Deprecated('remove after engine update')
-class RemoveTrustedSourceSucceeded extends TempEngineEvent {
-  final Source source;
-
-  RemoveTrustedSourceSucceeded(this.source);
-}
-
-@Deprecated('remove after engine update')
-class AddExcludedSourceSucceeded extends TempEngineEvent {
-  final Source source;
-
-  AddExcludedSourceSucceeded(this.source);
-}
-
-@Deprecated('remove after engine update')
-class AddTrustedSourceSucceeded extends TempEngineEvent {
-  final Source source;
-
-  AddTrustedSourceSucceeded(this.source);
 }
