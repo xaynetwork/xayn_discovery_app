@@ -351,4 +351,106 @@ void main() {
           false);
     },
   );
+
+  blocTest<SourcesManager, SourcesState>(
+    'WHEN adding a pending excluded source and then undoing it THEN expect the state to reflect this ',
+    build: () => manager,
+    act: (manager) {
+      manager.init();
+      manager.addSourceToExcludedList(newSource);
+      manager.removePendingSourceOperation(newSource);
+    },
+    verify: (manager) {
+      expect(
+          manager.state,
+          SourcesState(
+            excludedSources: defaultExcludedSources,
+            trustedSources: defaultTrustedSources,
+            jointExcludedSources: defaultExcludedSources,
+            jointTrustedSources: defaultTrustedSources,
+          ));
+
+      expect(
+          manager.isPendingAddition(
+              source: newSource, scope: Scope.excludedSources),
+          false);
+    },
+  );
+
+  blocTest<SourcesManager, SourcesState>(
+    'WHEN adding a pending trusted source and then undoing it THEN expect the state to reflect this ',
+    build: () => manager,
+    act: (manager) {
+      manager.init();
+      manager.addSourceToTrustedList(newSource);
+      manager.removePendingSourceOperation(newSource);
+    },
+    verify: (manager) {
+      expect(
+          manager.state,
+          SourcesState(
+            excludedSources: defaultExcludedSources,
+            trustedSources: defaultTrustedSources,
+            jointExcludedSources: defaultExcludedSources,
+            jointTrustedSources: defaultTrustedSources,
+          ));
+
+      expect(
+          manager.isPendingAddition(
+              source: newSource, scope: Scope.excludedSources),
+          false);
+    },
+  );
+
+  blocTest<SourcesManager, SourcesState>(
+    'WHEN adding a pending excluded source and then undoing it AFTER applyChanges THEN expect nothing changes ',
+    build: () => manager,
+    act: (manager) {
+      manager.init();
+      manager.addSourceToExcludedList(newSource);
+      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.removePendingSourceOperation(newSource);
+    },
+    verify: (manager) {
+      expect(
+          manager.state,
+          SourcesState(
+            excludedSources: {...defaultExcludedSources, newSource},
+            trustedSources: defaultTrustedSources,
+            jointExcludedSources: {...defaultExcludedSources, newSource},
+            jointTrustedSources: defaultTrustedSources,
+          ));
+
+      expect(
+          manager.isPendingAddition(
+              source: newSource, scope: Scope.excludedSources),
+          false);
+    },
+  );
+
+  blocTest<SourcesManager, SourcesState>(
+    'WHEN adding a pending trusted source and then undoing it AFTER applyChanges THEN expect nothing changes ',
+    build: () => manager,
+    act: (manager) {
+      manager.init();
+      manager.addSourceToTrustedList(newSource);
+      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.removePendingSourceOperation(newSource);
+    },
+    verify: (manager) {
+      expect(
+          manager.state,
+          SourcesState(
+            excludedSources: defaultExcludedSources,
+            trustedSources: {...defaultTrustedSources, newSource},
+            jointExcludedSources: defaultExcludedSources,
+            jointTrustedSources: {...defaultTrustedSources, newSource},
+          ));
+
+      expect(
+          manager.isPendingAddition(
+              source: newSource, scope: Scope.excludedSources),
+          false);
+    },
+  );
 }
