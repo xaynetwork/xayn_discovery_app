@@ -39,8 +39,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       onPressed: onLikePressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(
-      Keys.navBarItemLike.valueKey,
-      selected: explicitDocumentUserReaction.isRelevant,
+      '${Keys.navBarItemLike.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
     );
 
     final bookmarkButton = AppGhostButton.icon(
