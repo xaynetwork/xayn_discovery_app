@@ -10,6 +10,7 @@ import '../../../domain/model/user_interactions/user_interactions.dart';
 class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
   final UserInteractionsRepository _userInteractionsRepository;
   final CanDisplaySurveyBannerUseCase _canDisplaySurveyBannerUseCase;
+  late UserInteractions _userInteractions;
 
   SaveUserInteractionUseCase(
     this._userInteractionsRepository,
@@ -21,6 +22,7 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
     final canDisplaySurveyBanner =
         await _canDisplaySurveyBannerUseCase.singleOutput(none);
     if (canDisplaySurveyBanner) {
+      _userInteractions = _userInteractionsRepository.userInteractions;
       switch (param) {
         case UserInteractionsEvents.cardScrolled:
           _onScrollingEvent();
@@ -50,33 +52,32 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
   }
 
   void _onScrollingEvent() {
-    final updatedNumberOfScrolls =
-        _getCurrentUserInteractions.numberOfScrolls + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
-        numberOfScrolls: updatedNumberOfScrolls);
+    final updatedNumberOfScrolls = _userInteractions.numberOfScrolls + 1;
+    final updatedUserInteractions =
+        _userInteractions.copyWith(numberOfScrolls: updatedNumberOfScrolls);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 
   void _onReadArticleEvent() {
     final updatedNumberOfArticlesRead =
-        _getCurrentUserInteractions.numberOfArticlesRead + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
+        _userInteractions.numberOfArticlesRead + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
         numberOfArticlesRead: updatedNumberOfArticlesRead);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 
   void _onBookmarkedArticleEvent() {
     final updatedNumberOfArticlesBookmarked =
-        _getCurrentUserInteractions.numberOfArticlesBookmarked + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
+        _userInteractions.numberOfArticlesBookmarked + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
         numberOfArticlesBookmarked: updatedNumberOfArticlesBookmarked);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 
   void _onLikeOrDislikedArticleEvent() {
     final updatedNumberOfArticlesLikedOrDisliked =
-        _getCurrentUserInteractions.numberOfArticlesLikedOrDisliked + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
+        _userInteractions.numberOfArticlesLikedOrDisliked + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
         numberOfArticlesLikedOrDisliked:
             updatedNumberOfArticlesLikedOrDisliked);
     _userInteractionsRepository.save(updatedUserInteractions);
@@ -84,28 +85,24 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
 
   void _onExcludedSource() {
     final updatedNumberOfSourcesExcluded =
-        _getCurrentUserInteractions.numberOfSourcesExcluded + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
+        _userInteractions.numberOfSourcesExcluded + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
         numberOfSourcesExcluded: updatedNumberOfSourcesExcluded);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 
   void _onChangedCountryEvent() {
     final updatedNumberOfCountriesChanged =
-        _getCurrentUserInteractions.numberOfCountriesChanged + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
+        _userInteractions.numberOfCountriesChanged + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
         numberOfCountriesChanged: updatedNumberOfCountriesChanged);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 
   void _onSearchExecutedEvent() {
-    final updatedNumberOfSearches =
-        _getCurrentUserInteractions.numberOfSearches + 1;
-    final updatedUserInteractions = _getCurrentUserInteractions.copyWith(
-        numberOfSearches: updatedNumberOfSearches);
+    final updatedNumberOfSearches = _userInteractions.numberOfSearches + 1;
+    final updatedUserInteractions =
+        _userInteractions.copyWith(numberOfSearches: updatedNumberOfSearches);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
-
-  UserInteractions get _getCurrentUserInteractions =>
-      _userInteractionsRepository.userInteractions;
 }
