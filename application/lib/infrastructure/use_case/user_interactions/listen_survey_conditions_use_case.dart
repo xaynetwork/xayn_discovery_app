@@ -44,7 +44,6 @@ class ListenSurveyConditionsStatusUseCase
     // The conditions are listed in the description of the following task
     // https://xainag.atlassian.net/browse/TB-3809
     if (numberOfSessions >= _kNumOfSessionsThreshold) {
-      final userInteractions = userInteractionsRepository.userInteractions;
       final numberOfScrolls = userInteractions.numberOfScrolls;
       final numberOfInteractions = userInteractions.totalNumberOfInteractions;
 
