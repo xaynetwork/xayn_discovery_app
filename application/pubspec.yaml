@@ -34,11 +34,10 @@ dependencies:
   freezed_annotation: 1.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
-  # gibberish detection
   gibberish:
     git:
       url: https://github.com/xaynetwork/gibberish
-      ref: 940a1907597a908d67ad1735da4f6e4fe97258c2
+      ref: 14f604df399fc9b8c2d2f3ca86768ff8f58a8c79
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
