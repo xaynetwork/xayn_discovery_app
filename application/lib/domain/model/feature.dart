@@ -5,7 +5,6 @@ enum Feature {
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
   payment(
       Owner.Peter, EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId),
-  readerModeSettings(Owner.Michael, true),
   discoveryEngineReportOverlay(Owner.Simon, false),
   ratingDialog(Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
