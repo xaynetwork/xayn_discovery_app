@@ -35,7 +35,7 @@ NavBarItemIconButton buildNavBarItemLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemLike,
-      semanticsLabel: Keys.navBarItemLike.valueKey,
+      semanticsLabel: '${Keys.navBarItemLike.valueKey} = $isLiked',
     );
 
 NavBarItemIconButton buildNavBarItemDisLike({
@@ -49,7 +49,7 @@ NavBarItemIconButton buildNavBarItemDisLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemDisLike,
-      semanticsLabel: Keys.navBarItemDisLike.valueKey,
+      semanticsLabel: '${Keys.navBarItemDisLike.valueKey} = $isDisLiked',
     );
 
 NavBarItemIconButton buildNavBarItemShare({
@@ -155,7 +155,7 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onPressed: onPressed,
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
-      semanticsLabel: Keys.navBarItemBookmark.valueKey,
+      semanticsLabel: '${Keys.navBarItemBookmark.valueKey} = ${BookmarkStatus.bookmarked}',
     );
 
 const configIdSearch = NavBarConfigId('active_search');
