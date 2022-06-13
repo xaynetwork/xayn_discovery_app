@@ -274,13 +274,14 @@ lane :publish do |options|
 
   if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
+    secrets_unpack_android(options)
   end
   output = build_with_flutter(options)
   appcenter_buildfile = output[/.*Built (.*\.(?:aab|ipa|apk))/, 1]
   UI.success "Build file: #{appcenter_buildfile}"
 
   if platform == Platforms::IOS
-    secrets_unpack(options)
+    secrets_unpack_ios(options)
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -357,17 +358,30 @@ lane :increment_nightly_tag do |options|
 end
 
 desc "Packs the secrets of ios/profile and exports them to the clipboard"
-lane :secrets_pack do |options|
+lane :secrets_profiles_pack do |options|
   Dir.chdir("../ios") do
     sh("tar -cz profiles/ | base64 | pbcopy")
   end
 end
 
+desc "Packs the secrets of android release keystore and exports them to the clipboard"
+lane :secrets_jks_pack do |options|
+    sh("cat ../android/releases.jks | base64 | pbcopy")
+end
+
 desc "Unpacks the profile based on the $PROFILES env var"
-private_lane :secrets_unpack do |options|
+private_lane :secrets_unpack_ios do |options|
   UI.user_error!("No PROFILES provided!") unless ENV.key?("PROFILES")
   Dir.chdir("../ios/") do
     sh("echo $PROFILES | base64 -d | tar -xzv -C .")
+  end
+end
+
+desc "Unpacks the release keystore"
+private_lane :secrets_unpack_android do |options|
+  UI.user_error!("No ANDROID_RELEASE_KEYSTORE provided!") unless ENV.key?("ANDROID_RELEASE_KEYSTORE")
+  Dir.chdir("../android/") do
+      sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
   end
 end
 
