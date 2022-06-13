@@ -230,32 +230,32 @@ class OverlayData {
       );
 
   static BottomSheetData bottomSheetBookmarksOptions({
-    required UniqueId bookmarkId,
+    required String bookmarkUrl,
     required VoidCallback onClose,
     required VoidCallback onMovePressed,
   }) =>
-      BottomSheetData<UniqueId>(
-        args: bookmarkId,
+      BottomSheetData<String>(
+        args: bookmarkUrl,
         showBarrierColor: false,
-        builder: (_, bookmarkId) => BookmarkOptionsBottomSheet(
-          bookmarkId: bookmarkId!,
+        builder: (_, bookmarkUrl) => BookmarkOptionsBottomSheet(
+          bookmarkUrl: bookmarkUrl!,
           onSystemPop: onClose,
           onMovePressed: onMovePressed,
         ),
       );
 
   static BottomSheetData bottomSheetMoveBookmarkToCollection({
-    required UniqueId bookmarkId,
+    required String bookmarkUrl,
     VoidCallback? onSystemPop,
     UniqueId? initialSelectedCollection,
     bool showBarrierColor = true,
     required VoidCallback onAddCollectionPressed,
   }) =>
-      BottomSheetData<UniqueId>(
-        args: bookmarkId,
+      BottomSheetData<String>(
+        args: bookmarkUrl,
         showBarrierColor: showBarrierColor,
-        builder: (_, bookmarkId) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: bookmarkId!,
+        builder: (_, bookmarkUrl) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkUrl: bookmarkUrl!,
           onSystemPop: onSystemPop,
           initialSelectedCollection: initialSelectedCollection,
           onAddCollectionPressed: onAddCollectionPressed,
@@ -277,7 +277,7 @@ class OverlayData {
       );
 
   static BottomSheetData bottomSheetMoveBookmarksToCollection({
-    required List<UniqueId> bookmarksIds,
+    required List<String> bookmarksUrls,
     required UniqueId collectionIdToRemove,
     UniqueId? initialSelectedCollection,
     VoidCallback? onClose,
@@ -286,7 +286,7 @@ class OverlayData {
       BottomSheetData(
         showBarrierColor: false,
         builder: (_, __) => MoveBookmarksToCollectionBottomSheet(
-          bookmarksIds: bookmarksIds,
+          bookmarksUrls: bookmarksUrls,
           collectionIdToRemove: collectionIdToRemove,
           initialSelectedCollection: initialSelectedCollection,
           onSystemPop: onClose,

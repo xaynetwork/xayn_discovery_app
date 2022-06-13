@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
@@ -28,6 +27,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/load_html
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/readability_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
+import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -161,7 +161,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     _isBookmarkedHandler(
       ListenIsBookmarkUseCaseIn(
         id: document.documentUniqueId,
-        url: document.resource.url.toString(),
+        url: document.resource.url.removeQueryParameters.toString(),
       ),
     );
     _crudExplicitDocumentFeedbackHandler(

@@ -21,7 +21,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarksToCollectionBottomSheet({
     Key? key,
-    required List<UniqueId> bookmarksIds,
+    required List<String> bookmarksUrls,
     required UniqueId collectionIdToRemove,
     UniqueId? initialSelectedCollection,
     VoidCallback? onSystemPop,
@@ -30,7 +30,7 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
           key: key,
           onSystemPop: onSystemPop,
           body: _MoveBookmarkToCollection(
-            bookmarksIds: bookmarksIds,
+            bookmarksUrls: bookmarksUrls,
             collectionIdToRemove: collectionIdToRemove,
             initialSelectedCollection: initialSelectedCollection,
             onSystemPop: onSystemPop,
@@ -40,7 +40,7 @@ class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
-  final List<UniqueId> bookmarksIds;
+  final List<String> bookmarksUrls;
   final UniqueId collectionIdToRemove;
   final UniqueId? initialSelectedCollection;
   final VoidCallback? onSystemPop;
@@ -48,7 +48,7 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 
   const _MoveBookmarkToCollection({
     Key? key,
-    required this.bookmarksIds,
+    required this.bookmarksUrls,
     required this.collectionIdToRemove,
     this.initialSelectedCollection,
     this.onSystemPop,
@@ -152,7 +152,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   _onApplyPressed() async {
     widget.onSystemPop?.call();
     await _moveBookmarksToCollectionManager.onApplyPressed(
-      bookmarksIds: widget.bookmarksIds,
+      bookmarksUrls: widget.bookmarksUrls,
       collectionIdToRemove: widget.collectionIdToRemove,
     );
     if (mounted) closeBottomSheet(context);

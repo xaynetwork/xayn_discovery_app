@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -25,7 +24,6 @@ class ListenIsBookmarkedUseCase
     // changes & deletes are from now on watched
     yield* _bookmarksRepository
         .watch()
-        .where((event) => event.id == param.id)
         .map((_) => _bookmarksRepository.getByUrl(param.url))
         .distinct()
         .map((event) => event != null

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 
 @injectable
@@ -17,9 +16,9 @@ class RemoveBookmarksUseCase
   Stream<RemoveBookmarksUseCaseOut> transaction(
       RemoveBookmarksUseCaseIn param) async* {
     List<Bookmark> removedBookmarks = [];
-    for (var bookmarkId in param.bookmarksIds) {
+    for (var bookmarkUrl in param.bookmarksUrls) {
       final removedBookmark = await _removeBookmarkUseCase.singleOutput(
-        bookmarkId,
+        bookmarkUrl,
       );
       removedBookmarks.add(removedBookmark);
     }
@@ -28,12 +27,12 @@ class RemoveBookmarksUseCase
 }
 
 class RemoveBookmarksUseCaseIn extends Equatable {
-  final List<UniqueId> bookmarksIds;
+  final List<String> bookmarksUrls;
 
-  const RemoveBookmarksUseCaseIn({required this.bookmarksIds});
+  const RemoveBookmarksUseCaseIn({required this.bookmarksUrls});
 
   @override
-  List<Object> get props => [bookmarksIds];
+  List<Object> get props => [bookmarksUrls];
 }
 
 class RemoveBookmarksUseCaseOut extends Equatable {

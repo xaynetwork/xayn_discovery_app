@@ -135,7 +135,7 @@ void main() {
         'WHEN removeBookmark method has been called THEN call the usecase ',
         setUp: () => when(
           removeBookmarkUseCase.call(
-            bookmarks.first.id,
+            bookmarks.first.url,
           ),
         ).thenAnswer(
           (_) => Future.value(
@@ -149,13 +149,13 @@ void main() {
         build: () => create(),
         act: (manager) {
           manager.onDeleteSwipe(
-            bookmarks.first.id,
+            bookmarks.first.url,
           );
         },
         verify: (manager) {
           verifyInOrder([
             removeBookmarkUseCase.call(
-              bookmarks.first.id,
+              bookmarks.first.url,
             ),
           ]);
 
@@ -171,7 +171,7 @@ void main() {
           )).thenReturn(R.strings.errorMsgBookmarkDoesntExist);
           when(
             removeBookmarkUseCase.call(
-              bookmarks.first.id,
+              bookmarks.first.url,
             ),
           ).thenAnswer(
             (_) => Future.value(
@@ -187,13 +187,13 @@ void main() {
         build: () => create(),
         act: (manager) {
           manager.onDeleteSwipe(
-            bookmarks.first.id,
+            bookmarks.first.url,
           );
         },
         verify: (manager) {
           verifyInOrder([
             removeBookmarkUseCase.call(
-              bookmarks.first.id,
+              bookmarks.first.url,
             ),
           ]);
 

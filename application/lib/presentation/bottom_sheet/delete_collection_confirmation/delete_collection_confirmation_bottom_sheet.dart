@@ -17,7 +17,7 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player_child_bu
 import 'manager/delete_collection_confirmation_manager.dart';
 
 typedef OnApplyPressed = Function(Collection)?;
-typedef OnMoveBookmarksPressed = Function(List<UniqueId> bookmarkIds);
+typedef OnMoveBookmarksPressed = Function(List<String> bookmarkUrls);
 
 class DeleteCollectionConfirmationBottomSheet extends BottomSheetBase {
   DeleteCollectionConfirmationBottomSheet({
@@ -86,7 +86,7 @@ class _CreateCollectionState extends State<_DeleteCollection>
             ),
           );
 
-          final body = state.bookmarksIds.isNotEmpty
+          final body = state.bookmarksUrls.isNotEmpty
               ? Text(R.strings.bottomSheetDeleteCollectionWithBookmarksBody)
               : Text(
                   R.strings.bottomSheetDeleteCollectionWithNoItemsBody,
@@ -98,8 +98,8 @@ class _CreateCollectionState extends State<_DeleteCollection>
               closeBottomSheet(context);
               widget.onSystemPop?.call();
             },
-            setup: state.bookmarksIds.isNotEmpty
-                ? _buildFooterSetupForCollectionWithItems(state.bookmarksIds)
+            setup: state.bookmarksUrls.isNotEmpty
+                ? _buildFooterSetupForCollectionWithItems(state.bookmarksUrls)
                 : _buildFooterSetupForCollectionWithNoItems(),
           );
 
@@ -116,14 +116,14 @@ class _CreateCollectionState extends State<_DeleteCollection>
       );
 
   BottomSheetFooterSetup _buildFooterSetupForCollectionWithItems(
-          List<UniqueId> bookmarkIds) =>
+          List<String> bookmarkUrls) =>
       BottomSheetFooterSetup.column(
         buttonsData: [
           BottomSheetFooterButton(
             text: R.strings.bottomSheetMoveBookmarks,
             onPressed: () {
               closeBottomSheet(context);
-              widget.onMovePressed(bookmarkIds);
+              widget.onMovePressed(bookmarkUrls);
             },
           ),
           BottomSheetFooterButton(

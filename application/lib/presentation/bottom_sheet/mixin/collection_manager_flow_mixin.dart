@@ -71,13 +71,13 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   ///
   @protected
   void startMoveBookmarkFlow(
-    UniqueId bookmarkId, {
+    String bookmarkUrl, {
     VoidCallback? onClose,
     UniqueId? initialSelectedCollectionId,
     bool showBarrierColor = true,
   }) {
     void onCollectionAdded(Collection collection) => startMoveBookmarkFlow(
-          bookmarkId,
+          bookmarkUrl,
           onClose: onClose,
           initialSelectedCollectionId: collection.id,
           showBarrierColor: showBarrierColor,
@@ -92,7 +92,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
 
     final moveBookmarkToCollectionSheet =
         OverlayData.bottomSheetMoveBookmarkToCollection(
-      bookmarkId: bookmarkId,
+      bookmarkUrl: bookmarkUrl,
       onSystemPop: onClose,
       initialSelectedCollection: initialSelectedCollectionId,
       onAddCollectionPressed: onAddCollectionPressed,
@@ -111,13 +111,13 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   ///
   @protected
   void startMoveBookmarksFlow(
-    List<UniqueId> bookmarkIds, {
+    List<String> bookmarkUrls, {
     required UniqueId collectionIdToRemove,
     VoidCallback? onClose,
     UniqueId? initialSelectedCollectionId,
   }) {
     void onCollectionAdded(Collection collection) => startMoveBookmarksFlow(
-          bookmarkIds,
+          bookmarkUrls,
           collectionIdToRemove: collectionIdToRemove,
           onClose: onClose,
           initialSelectedCollectionId: collection.id,
@@ -132,7 +132,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
 
     final moveBookmarksToCollectionSheet =
         OverlayData.bottomSheetMoveBookmarksToCollection(
-      bookmarksIds: bookmarkIds,
+      bookmarksUrls: bookmarkUrls,
       collectionIdToRemove: collectionIdToRemove,
       onClose: onClose,
       initialSelectedCollection: initialSelectedCollectionId,
@@ -150,15 +150,15 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   ///
   @protected
   void startBookmarkOptionsFlow({
-    required UniqueId bookmarkId,
+    required String bookmarkUrl,
     required VoidCallback onClose,
   }) =>
       showOverlay(
         OverlayData.bottomSheetBookmarksOptions(
-          bookmarkId: bookmarkId,
+          bookmarkUrl: bookmarkUrl,
           onClose: onClose,
           onMovePressed: () => startMoveBookmarkFlow(
-            bookmarkId,
+            bookmarkUrl,
             onClose: onClose,
             showBarrierColor: false,
           ),

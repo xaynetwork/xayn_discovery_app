@@ -52,7 +52,7 @@ void main() {
     ),
   ];
 
-  final bookmarksIds = bookmarks.map((e) => e.id).toList();
+  final bookmarksUrls = bookmarks.map((e) => e.url).toList();
 
   setUp(
     () {
@@ -126,8 +126,8 @@ void main() {
       ]);
       verifyNoMoreInteractions(getAllBookmarksUseCase);
       expect(
-        deleteCollectionConfirmationManager.state.bookmarksIds,
-        bookmarksIds,
+        deleteCollectionConfirmationManager.state.bookmarksUrls,
+        bookmarksUrls,
       );
     },
   );

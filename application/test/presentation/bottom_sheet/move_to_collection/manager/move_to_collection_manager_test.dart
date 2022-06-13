@@ -160,12 +160,12 @@ void main() {
       'WHEN update Initial Selected Collection method is called AND bookmark is found THEN update isBookmarked state',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
-        when(getBookmarkUseCase.singleOutput(bookmark.id)).thenAnswer(
+        when(getBookmarkUseCase.singleOutput(bookmark.url)).thenAnswer(
           (_) => Future.value(bookmark),
         );
       },
       act: (manager) {
-        manager.updateInitialSelectedCollection(bookmarkId: bookmark.id);
+        manager.updateInitialSelectedCollection(bookmarkUrl: bookmark.url);
       },
       expect: () => [
         populatedState,
@@ -176,7 +176,7 @@ void main() {
       ],
       verify: (manager) {
         verifyInOrder([
-          getBookmarkUseCase.singleOutput(bookmark.id),
+          getBookmarkUseCase.singleOutput(bookmark.url),
         ]);
         verifyNoMoreInteractions(getBookmarkUseCase);
       },
@@ -186,17 +186,17 @@ void main() {
       'WHEN update Initial Selected Collection method is called AND no bookmark found THEN do not update isBookmarked state',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
-        when(getBookmarkUseCase.singleOutput(bookmark.id)).thenAnswer(
+        when(getBookmarkUseCase.singleOutput(bookmark.url)).thenAnswer(
           (_) => throw BookmarkUseCaseError.tryingToGetNotExistingBookmark,
         );
       },
       act: (manager) {
-        manager.updateInitialSelectedCollection(bookmarkId: bookmark.id);
+        manager.updateInitialSelectedCollection(bookmarkUrl: bookmark.url);
       },
       expect: () => [populatedState],
       verify: (manager) {
         verifyInOrder([
-          getBookmarkUseCase.singleOutput(bookmark.id),
+          getBookmarkUseCase.singleOutput(bookmark.url),
         ]);
         verifyNoMoreInteractions(getBookmarkUseCase);
       },
@@ -206,13 +206,13 @@ void main() {
       'WHEN update Initial Selected Collection method is called with initialSelectedCollectionId AND no bookmark found THEN update collection state with false isBookmarked',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
-        when(getBookmarkUseCase.singleOutput(bookmark.id)).thenAnswer(
+        when(getBookmarkUseCase.singleOutput(bookmark.url)).thenAnswer(
           (_) => throw BookmarkUseCaseError.tryingToGetNotExistingBookmark,
         );
       },
       act: (manager) {
         manager.updateInitialSelectedCollection(
-          bookmarkId: bookmark.id,
+          bookmarkUrl: bookmark.url,
           initialSelectedCollectionId: collection2.id,
         );
       },
@@ -225,7 +225,7 @@ void main() {
       ],
       verify: (manager) {
         verifyInOrder([
-          getBookmarkUseCase.singleOutput(bookmark.id),
+          getBookmarkUseCase.singleOutput(bookmark.url),
         ]);
         verifyNoMoreInteractions(getBookmarkUseCase);
       },
@@ -235,13 +235,13 @@ void main() {
       'WHEN update Initial Selected Collection method is called with initialSelectedCollectionId AND bookmark is found THEN update collection state with true isBookmarked',
       build: () => moveDocumentToCollectionManager,
       setUp: () {
-        when(getBookmarkUseCase.singleOutput(bookmark.id)).thenAnswer(
+        when(getBookmarkUseCase.singleOutput(bookmark.url)).thenAnswer(
           (_) => Future.value(bookmark),
         );
       },
       act: (manager) {
         manager.updateInitialSelectedCollection(
-          bookmarkId: bookmark.id,
+          bookmarkUrl: bookmark.url,
           initialSelectedCollectionId: collection2.id,
         );
       },
@@ -254,7 +254,7 @@ void main() {
       ],
       verify: (manager) {
         verifyInOrder([
-          getBookmarkUseCase.singleOutput(bookmark.id),
+          getBookmarkUseCase.singleOutput(bookmark.url),
         ]);
         verifyNoMoreInteractions(getBookmarkUseCase);
       },
