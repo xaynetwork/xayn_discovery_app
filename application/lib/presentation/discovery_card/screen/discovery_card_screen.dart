@@ -11,7 +11,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
@@ -42,7 +41,6 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         OverlayStateMixin<DiscoveryCardScreen> {
   late final DiscoveryCardScreenManager _discoveryCardScreenManager =
       di.get(param1: widget.documentId);
-  late final FeatureManager featureManager = di.get();
   late final CardManagersCache _cardManagersCache = di.get();
 
   TtsData ttsData = TtsData.disabled();
@@ -92,10 +90,9 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
           ),
         ),
 
-        if (featureManager.isReaderModeSettingsEnabled)
-          buildNavBarItemEditFont(
-            onPressed: onEditReaderModeSettingsPressed,
-          ),
+        buildNavBarItemEditFont(
+          onPressed: onEditReaderModeSettingsPressed,
+        ),
       ],
       isWidthExpanded: false,
     );

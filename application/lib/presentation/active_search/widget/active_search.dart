@@ -135,10 +135,9 @@ class _ActiveSearchState
                     document: document,
                     feedType: FeedType.search,
                   )),
-          if (featureManager.isReaderModeSettingsEnabled)
-            buildNavBarItemEditFont(
-              onPressed: onEditReaderModeSettingsPressed,
-            ),
+          buildNavBarItemEditFont(
+            onPressed: onEditReaderModeSettingsPressed,
+          ),
           buildNavBarItemDisLike(
             isDisLiked: managers.discoveryCardManager.state
                 .explicitDocumentUserReaction.isIrrelevant,
