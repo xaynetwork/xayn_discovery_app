@@ -155,7 +155,7 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onPressed: onPressed,
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
-      semanticsLabel: '${Keys.navBarItemLike.valueKey} = ${ bookmarkStatus == BookmarkStatus.bookmarked}',
+      semanticsLabel: '${Keys.navBarItemBookmark.valueKey} = ${ bookmarkStatus == BookmarkStatus.bookmarked}',
     );
 
 const configIdSearch = NavBarConfigId('active_search');
