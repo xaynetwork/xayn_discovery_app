@@ -257,7 +257,7 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
-          PROFILES: ${{ secrets.PROFILES }}
+          ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -322,7 +322,7 @@ jobs:
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
-          PROFILES: ${{ secrets.PROFILES }}
+          ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta store:true
