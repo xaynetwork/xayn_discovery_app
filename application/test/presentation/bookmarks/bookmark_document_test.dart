@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/document/get_document_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 
 import '../../test_utils/fakes.dart';
 import '../../test_utils/widget_test_utils.dart';
@@ -48,8 +48,8 @@ void main() {
       () async {
     final original = await createBookmark.singleOutput(
         CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument));
-    final secondCall =
-        await getBookmarkUseCase.singleOutput(fakeDocument.documentId.uniqueId);
+    final secondCall = await getBookmarkUseCase.singleOutput(
+        fakeDocument.resource.url.removeQueryParameters.toString());
 
     expect(original, secondCall);
   });
@@ -58,7 +58,7 @@ void main() {
       () async {
     final bookmark = await createBookmark.singleOutput(
         CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument));
-    await removeBookmarkUseCase.singleOutput(bookmark.id);
+    await removeBookmarkUseCase.singleOutput(bookmark.url);
 
     expect(() async => await getDocumentUseCase.singleOutput(bookmark.id),
         throwsA(BookmarkUseCaseError.tryingToGetNotExistingBookmark));

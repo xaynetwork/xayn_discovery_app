@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
+import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
@@ -98,7 +99,7 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
       image: image,
       provider: param.provider ?? DocumentProvider(),
       collectionId: param.collectionId,
-      url: param.document.resource.url.toString(),
+      url: param.document.resource.url.removeQueryParameters.toString(),
     );
     yield createBookmarkUseCaseIn;
   }

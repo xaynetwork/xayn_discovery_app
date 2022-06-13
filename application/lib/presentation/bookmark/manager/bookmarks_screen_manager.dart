@@ -92,9 +92,9 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
         ListenBookmarksUseCaseIn(collectionId: collectionId));
   }
 
-  void onDeleteSwipe(UniqueId bookmarkId) async {
+  void onDeleteSwipe(String bookmarkUrl) async {
     _useCaseError = null;
-    final useCaseOut = await _removeBookmarkUseCase.call(bookmarkId);
+    final useCaseOut = await _removeBookmarkUseCase.call(bookmarkUrl);
     useCaseOut.last.fold(
       defaultOnError: _defaultOnError,
       matchOnError: {
@@ -178,14 +178,14 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     showOverlay(data);
   }
 
-  void onMoveSwipe(UniqueId bookmarkId) => startMoveBookmarkFlow(bookmarkId);
+  void onMoveSwipe(String bookmarkUrl) => startMoveBookmarkFlow(bookmarkUrl);
 
   void onBookmarkLongPressed({
-    required UniqueId bookmarkId,
+    required String bookmarkUrl,
     required VoidCallback onClose,
   }) =>
       startBookmarkOptionsFlow(
-        bookmarkId: bookmarkId,
+        bookmarkUrl: bookmarkUrl,
         onClose: onClose,
       );
 }

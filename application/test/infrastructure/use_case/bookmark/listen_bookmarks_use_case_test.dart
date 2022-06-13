@@ -18,7 +18,7 @@ void main() {
   final collectionId = UniqueId();
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
-  final url = 'https://url_test.com';
+  const url = 'https://url_test.com';
 
   final bookmark1 = Bookmark(
     id: UniqueId(),

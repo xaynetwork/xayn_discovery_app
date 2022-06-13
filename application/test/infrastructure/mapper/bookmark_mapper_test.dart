@@ -137,6 +137,7 @@ void main() async {
             4: providerNameToMap,
             5: favicon,
             6: createdAt,
+            7: url,
           }),
         );
       });

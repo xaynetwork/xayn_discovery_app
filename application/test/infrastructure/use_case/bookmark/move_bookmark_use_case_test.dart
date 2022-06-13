@@ -16,10 +16,10 @@ void main() {
   late MockBookmarksRepository bookmarksRepository;
   late MockCollectionsRepository collectionsRepository;
   late MoveBookmarkUseCase moveBookmarkUseCase;
-  final bookmarkIdToMove = UniqueId();
+  const bookamarkUrlToMove = 'https://url_bookmark_to_move.com';
   final collectionIdWhereToMoveBookmark = UniqueId();
   final input = MoveBookmarkUseCaseIn(
-    bookmarkId: bookmarkIdToMove,
+    bookmarkUrl: bookamarkUrlToMove,
     collectionId: collectionIdWhereToMoveBookmark,
   );
   final provider = DocumentProvider(
@@ -27,7 +27,7 @@ void main() {
   const url = 'https://url_test.com';
 
   final bookmark = Bookmark(
-    id: bookmarkIdToMove,
+    id: UniqueId(),
     collectionId: UniqueId(),
     title: 'Bookmark1 title',
     image: Uint8List.fromList([1, 2, 3]),
@@ -58,13 +58,13 @@ void main() {
     () {
       useCaseTest(
         'WHEN the bookmark to move doesn\'t exist THEN throw error',
-        setUp: () => when(bookmarksRepository.getById(any)).thenReturn(null),
+        setUp: () => when(bookmarksRepository.getByUrl(any)).thenReturn(null),
         build: () => moveBookmarkUseCase,
         input: [input],
         verify: (_) {
           verifyInOrder(
             [
-              bookmarksRepository.getById(any),
+              bookmarksRepository.getByUrl(any),
             ],
           );
           verifyNoMoreInteractions(bookmarksRepository);
@@ -80,7 +80,7 @@ void main() {
       useCaseTest(
         'WHEN the collection where to move the bookmark to doesn\'t exist THEN throw error',
         setUp: () {
-          when(bookmarksRepository.getById(any)).thenReturn(bookmark);
+          when(bookmarksRepository.getByUrl(any)).thenReturn(bookmark);
           when(collectionsRepository.getById(any)).thenReturn(null);
         },
         build: () => moveBookmarkUseCase,
@@ -88,7 +88,7 @@ void main() {
         verify: (_) {
           verifyInOrder(
             [
-              bookmarksRepository.getById(any),
+              bookmarksRepository.getByUrl(any),
               collectionsRepository.getById(any),
             ],
           );
@@ -105,7 +105,7 @@ void main() {
       useCaseTest(
           'WHEN bookmark id to move and new collection id are given THEN move the bookmark',
           setUp: () {
-            when(bookmarksRepository.getById(any)).thenReturn(bookmark);
+            when(bookmarksRepository.getByUrl(any)).thenReturn(bookmark);
             when(collectionsRepository.getById(any)).thenReturn(collection);
           },
           build: () => moveBookmarkUseCase,
@@ -113,7 +113,7 @@ void main() {
           verify: (_) {
             verifyInOrder(
               [
-                bookmarksRepository.getById(any),
+                bookmarksRepository.getByUrl(any),
                 collectionsRepository.getById(any),
                 bookmarksRepository.save(updatedBookmark),
               ],

@@ -21,7 +21,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarkToCollectionBottomSheet({
     Key? key,
-    required UniqueId bookmarkId,
+    required String bookmarkUrl,
     UniqueId? initialSelectedCollection,
     VoidCallback? onSystemPop,
     required VoidCallback onAddCollectionPressed,
@@ -29,7 +29,7 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
           key: key,
           onSystemPop: onSystemPop,
           body: _MoveBookmarkToCollection(
-            bookmarkId: bookmarkId,
+            bookmarkUrl: bookmarkUrl,
             initialSelectedCollection: initialSelectedCollection,
             onSystemPop: onSystemPop,
             onAddCollectionPressed: onAddCollectionPressed,
@@ -38,14 +38,14 @@ class MoveBookmarkToCollectionBottomSheet extends BottomSheetBase {
 }
 
 class _MoveBookmarkToCollection extends StatefulWidget {
-  final UniqueId bookmarkId;
+  final String bookmarkUrl;
   final UniqueId? initialSelectedCollection;
   final VoidCallback? onSystemPop;
   final VoidCallback onAddCollectionPressed;
 
   const _MoveBookmarkToCollection({
     Key? key,
-    required this.bookmarkId,
+    required this.bookmarkUrl,
     this.initialSelectedCollection,
     required this.onAddCollectionPressed,
     this.onSystemPop,
@@ -70,7 +70,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
   @override
   void initState() {
     _moveBookmarkToCollectionManager.updateInitialSelectedCollection(
-      bookmarkId: widget.bookmarkId,
+      bookmarkUrl: widget.bookmarkUrl,
       initialSelectedCollectionId: widget.initialSelectedCollection,
     );
     super.initState();
@@ -131,7 +131,7 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
           text: R.strings.bottomSheetApply,
           onPressed: () {
             _moveBookmarkToCollectionManager.onApplyToBookmarkPressed(
-              bookmarkId: widget.bookmarkId,
+              bookmarkUrl: widget.bookmarkUrl,
             );
           },
         ),

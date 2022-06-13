@@ -46,13 +46,13 @@ void main() {
             ),
           ),
         );
-        when(bookmarksRepository.getById(bookmark1.id)).thenReturn(bookmark1);
+        when(bookmarksRepository.getByUrl(bookmark1.url)).thenReturn(bookmark1);
       },
       build: () => listenIsBookmarkedUseCase,
       input: [ListenIsBookmarkUseCaseIn(id: bookmark1.id, url: bookmark1.url)],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getById(bookmark1.id),
+          bookmarksRepository.getByUrl(bookmark1.url),
           bookmarksRepository.watch(),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
@@ -71,13 +71,13 @@ void main() {
             ),
           ),
         );
-        when(bookmarksRepository.getById(bookmark1.id)).thenReturn(null);
+        when(bookmarksRepository.getByUrl(bookmark1.url)).thenReturn(null);
       },
       build: () => listenIsBookmarkedUseCase,
       input: [ListenIsBookmarkUseCaseIn(id: bookmark1.id, url: bookmark1.url)],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getById(bookmark1.id),
+          bookmarksRepository.getByUrl(bookmark1.url),
           bookmarksRepository.watch(),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);

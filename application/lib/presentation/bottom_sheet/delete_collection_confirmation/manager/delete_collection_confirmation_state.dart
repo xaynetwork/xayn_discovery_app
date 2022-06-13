@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 part 'delete_collection_confirmation_state.freezed.dart';
 
@@ -10,8 +9,8 @@ class DeleteCollectionConfirmationState
   const DeleteCollectionConfirmationState._();
 
   const factory DeleteCollectionConfirmationState({
-    /// List of bookmarksIds
-    required List<UniqueId> bookmarksIds,
+    /// List of bookmarksUrls
+    required List<String> bookmarksUrls,
 
     /// Error Message
     String? errorMsg,
@@ -19,13 +18,13 @@ class DeleteCollectionConfirmationState
 
   factory DeleteCollectionConfirmationState.initial() =>
       const DeleteCollectionConfirmationState(
-        bookmarksIds: [],
+        bookmarksUrls: [],
       );
 
   factory DeleteCollectionConfirmationState.populated({
-    required List<UniqueId> bookmarksIds,
+    required List<String> bookmarksUrls,
   }) =>
       DeleteCollectionConfirmationState(
-        bookmarksIds: bookmarksIds,
+        bookmarksUrls: bookmarksUrls,
       );
 }
