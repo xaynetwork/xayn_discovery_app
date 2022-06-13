@@ -16,7 +16,11 @@ class HandleSurveyBannerClickedUseCase extends UseCase<None, None> {
     final surveyBanner = cta.surveyBanner;
 
     /// Update the status of the data
-    final updatedCta = cta.copyWith(surveyBanner: surveyBanner.clicked());
+    final updatedCta = cta.copyWith(
+      surveyBanner: surveyBanner.clicked(
+        sessionNumber: appStatus.numberOfSessions,
+      ),
+    );
     final updatedAppStatus = appStatus.copyWith(cta: updatedCta);
     appStatusRepository.save(updatedAppStatus);
 
