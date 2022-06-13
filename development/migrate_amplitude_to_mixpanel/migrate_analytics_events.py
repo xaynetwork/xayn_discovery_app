@@ -6,21 +6,18 @@
 # $ pip install -r requirements.txt
 
 # Then, Run the following on the terminal:
-# $ python3 migrate_analytics.py --start="20220401T05" --end="20220409T20" 
+# $ python3 migrate_analytics_events.py --start="20220401T05" --end="20220409T20" 
 # - Don't forget to replace --start and --end values with the desired duration
 # - If you are running this for production, add --env="prod"
 
 import argparse
+import gzip
 import logging
 import requests
 import zipfile
 from io import BytesIO
-from typing import Dict
-from time import sleep
-import json
-import gzip
 from typing import Any, Mapping, Dict
-from time import sleep
+
 try:
     import json
 except ImportError:
@@ -150,11 +147,11 @@ def main():
     else:
         raise Exception("--env should either be 'dev' or 'prod'")
     
-    mixpanel_token = os.environ.get('MIXPANEL_TOKEN')
+    mixpanel_service_token = os.environ.get('MIXPANEL_SERVICE_TOKEN')
 
     zips = request_zips_from_amplitude(amplitude_key, amplitude_secret, args.start, args.end)
     processed_events = process_amplitude_data(zips)
-    send_all_events_to_mixpanel(mixpanel_project_id, mixpanel_token, processed_events)
+    send_all_events_to_mixpanel(mixpanel_project_id, mixpanel_service_token, processed_events)
 
 if __name__ == "__main__":
     main()
