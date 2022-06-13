@@ -41,8 +41,11 @@ before_all do |lane, options|
   # set default values
   setIfNotSet.call(Options::CLEAN, IS_CI)
   setIfNotSet.call(Options::PLATFORM, Platforms::ANDROID)
-  setIfNotSet.call(Options::ANDROID_OUTPUT, AndroidOutputs::APK)
   setIfNotSet.call(Options::FLAVOR, Flavors::INTERNAL)
+  flavor = options[Options::FLAVOR]
+  if options[Options::PLATFORM] == Platforms::ANDROID
+    setIfNotSet.call(Options::ANDROID_OUTPUT, Config::ANDROID_BUILD_CONFIG[flavor][Keys::ANDROID_OUTPUT])
+  end
   setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
   setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, IS_CI)
   setIfNotSet.call(Options::COVERAGE, false)
@@ -52,7 +55,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::TEST, lane == :check)
 
   version_name = gitVersionName()
-  flavor = options[Options::FLAVOR]
+
   platform = options[Options::PLATFORM]
   offset = Config::FLAVOR_MATRIX[flavor][platform][Keys::BUILD_NUMBER_OFFSET]
   build_number = gitVersionNumber().to_i + offset
@@ -64,6 +67,11 @@ before_all do |lane, options|
   options[_Options::ENV].merge!(ENV.to_h)
   if IS_CI
     UI.success "Env:\n#{JSON.pretty_generate(options[_Options::ENV])}"
+  end
+
+  if !IS_CI
+    create_commit_template(options)
+    install_pre_commit(options)
   end
 end
 
@@ -103,7 +111,7 @@ private_lane :build_with_flutter do |options|
     dartDefines += shaders
   end
 
-  flutter(args: %W(build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]}) + dartDefines,  capture_stdout: true)
+  flutter(args: %W(build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]}) + dartDefines, capture_stdout: true)
 end
 
 desc "Prepare internal key.properties"
@@ -123,6 +131,15 @@ desc "Set a commit message template"
 private_lane :create_commit_template do |options|
   sh "git config commit.template development/commit-msg-template"
   UI.success "Commit-message template set 💪"
+end
+
+desc "Install the gitleaks .pre-commit"
+private_lane :install_pre_commit do |options|
+  begin
+    shell("pre-commit install")
+  rescue
+    UI.user_error!("Faild to run pre-commit install - Did you forget installing it? (i.e. brew install pre-commit)")
+  end
 end
 
 ####
@@ -150,10 +167,6 @@ desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
   maybe_pub_get(options)
-  if !IS_CI
-    create_commit_template(options)
-  end
-
   update_assets(options)
 
   mode = options[Options::WATCH] ? "watch" : "build"
@@ -257,14 +270,17 @@ lane :publish do |options|
   config = Config::FLAVOR_MATRIX[flavor][platform]
   appcenter_target = config[Keys::APPCENTER_TARGET]
   appcenter_token = config[Keys::APPCENTER_TOKEN]
+  output = options[Options::ANDROID_OUTPUT]
 
   if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
   end
   output = build_with_flutter(options)
   appcenter_buildfile = output[/.*Built (.*\.(?:aab|ipa|apk))/, 1]
+  UI.success "Build file: #{appcenter_buildfile}"
 
   if platform == Platforms::IOS
+    secrets_unpack(options)
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -338,6 +354,21 @@ lane :increment_nightly_tag do |options|
   minor = numbers[1].to_i + 1
   newTag = "#{numbers[0]}.#{minor}.0"
   shell("git tag #{newTag}")
+end
+
+desc "Packs the secrets of ios/profile and exports them to the clipboard"
+lane :secrets_pack do |options|
+  Dir.chdir("../ios") do
+    sh("tar -cz profiles/ | base64 | pbcopy")
+  end
+end
+
+desc "Unpacks the profile based on the $PROFILES env var"
+private_lane :secrets_unpack do |options|
+  UI.user_error!("No PROFILES provided!") unless ENV.key?("PROFILES")
+  Dir.chdir("../ios/") do
+    sh("echo $PROFILES | base64 -d | tar -xzv -C .")
+  end
 end
 
 def clean_folder(folder)
