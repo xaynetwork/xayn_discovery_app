@@ -175,6 +175,7 @@ module Config
     },
     Flavors::BETA => {
       Keys::ANDROID_OUTPUT => AndroidOutputs::APP_BUNDLE,
+      Keys::KEY_ALIAS => "release_beta",
     },
   }
 
