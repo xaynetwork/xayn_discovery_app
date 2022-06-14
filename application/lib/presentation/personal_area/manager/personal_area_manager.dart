@@ -6,7 +6,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
-import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -236,13 +235,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
 
   void onAddCollectionPressed() => showOverlay(
         OverlayData.bottomSheetCreateOrRenameCollection(),
-      );
-
-  /// Should be removed together with [Feature.survey]
-  void onSurveyPressed() => showOverlay(
-        OverlayData.bottomSheetSurvey(onTakeSurveyPressed: () {
-          showOverlay(OverlayData.tooltipTextError('thank you 🙏'));
-        }),
       );
 
   void onContactPressed() {
