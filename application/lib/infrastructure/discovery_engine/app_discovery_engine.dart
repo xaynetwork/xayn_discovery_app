@@ -99,6 +99,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       maxItemsPerSearchBatch: _kSearchPageSize,
       feedMarkets: feedMarkets,
       manifest: manifest,
+      headlinesProviderPath: '/gnews/v2/latest-headlines',
+      newsProviderPath: '/gnews/v2/search-news',
     );
 
     _updateFeedMarketIdentityParam(feedMarkets);

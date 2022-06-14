@@ -50,7 +50,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       onLongPressed: onBookmarkLongPressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(
-    '${Keys.navBarItemBookmark.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
+      '${Keys.navBarItemBookmark.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
     );
 
     final shareButton = AppGhostButton.icon(
@@ -66,7 +66,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       onPressed: onDislikePressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(
-    '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isRelevant}');
+        '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isRelevant}');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
