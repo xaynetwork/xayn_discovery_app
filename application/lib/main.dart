@@ -43,6 +43,7 @@ Future<void> setup() async {
     environment:
         EnvironmentHelper.kIsDebug ? debugEnvironment : releaseEnvironment,
   );
+
   HomeIndicator.hide();
   initServices();
   if (kReleaseMode) {

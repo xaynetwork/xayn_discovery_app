@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart
 import 'package:xayn_discovery_app/infrastructure/migrations/migrate_0_to_1.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migrate_1_to_2.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migrate_2_to_3.dart';
+import 'package:xayn_discovery_app/infrastructure/migrations/migrate_3_to_4.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_migration_info_repository.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -22,6 +23,7 @@ final _migrations = <int, BaseDbMigration Function()>{
   0: () => Migration_0_To_1(),
   1: () => Migration_1_To_2(),
   2: () => Migration_2_To_3(),
+  3: () => Migration_3_To_4(),
 };
 
 typedef BoxOpener<T> = Box<T> Function(String name);
