@@ -12,6 +12,8 @@ class SurveyBannerMapper extends Mapper<SurveyBanner, DbEntityMap> {
         SurveyBannerFields.numberOfTimesShown: input.numberOfTimesShown,
         SurveyBannerFields.hasSurveyBannerBeenClicked:
             input.hasSurveyBannerBeenClicked,
+        SurveyBannerFields.lastSessionNumberWhenShown:
+            input.lastSessionNumberWhenShown,
       };
 }
 
@@ -28,10 +30,13 @@ class DbEntityMapToSurveyBannerMapper
         input[SurveyBannerFields.numberOfTimesShown] ?? 0;
     final hasSurveyBannerBeenClicked =
         input[SurveyBannerFields.hasSurveyBannerBeenClicked] ?? false;
+    final lastSessionNumberWhenShown =
+        input[SurveyBannerFields.lastSessionNumberWhenShown] ?? 0;
 
     return SurveyBanner(
       numberOfTimesShown: numberOfTimesShown,
       hasSurveyBannerBeenClicked: hasSurveyBannerBeenClicked,
+      lastSessionNumberWhenShown: lastSessionNumberWhenShown,
     );
   }
 }
@@ -41,4 +46,5 @@ abstract class SurveyBannerFields {
 
   static const numberOfTimesShown = 0;
   static const hasSurveyBannerBeenClicked = 1;
+  static const lastSessionNumberWhenShown = 2;
 }

@@ -1,29 +1,26 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 import '../../../domain/model/user_interactions/user_interactions.dart';
 
 @injectable
 class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
   final UserInteractionsRepository _userInteractionsRepository;
-  final FeatureManager _featureManager;
-  final AppStatusRepository _appStatusRepository;
+  final CanDisplaySurveyBannerUseCase _canDisplaySurveyBannerUseCase;
 
   SaveUserInteractionUseCase(
     this._userInteractionsRepository,
-    this._featureManager,
-    this._appStatusRepository,
+    this._canDisplaySurveyBannerUseCase,
   );
 
   @override
   Stream<None> transaction(UserInteractionsEvents param) async* {
-    final surveyBanner = _appStatusRepository.appStatus.cta.surveyBanner;
-    if (_featureManager.isPromptSurveyEnabled &&
-        surveyBanner.numberOfTimesShown == 0) {
+    final canDisplaySurveyBanner =
+        await _canDisplaySurveyBannerUseCase.singleOutput(none);
+    if (canDisplaySurveyBanner) {
       switch (param) {
         case UserInteractionsEvents.cardScrolled:
           _onScrollingEvent();
