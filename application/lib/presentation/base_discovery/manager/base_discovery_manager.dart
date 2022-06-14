@@ -420,7 +420,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   void onObservation(DiscoveryCardMeasuredObservation observation) {
     super.onObservation(observation);
 
-    final document = observation.document!;
+    var document = observation.document!;
     final isCardOpened = observation.viewType != DocumentViewMode.story;
     final isObservedLongEnough = observation.duration.inSeconds >=
         _kThresholdDurationSecondsImplicitLike;
@@ -428,6 +428,14 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     if (isCardOpened && isObservedLongEnough) {
       saveUserInteractionUseCase
           .singleOutput(UserInteractionsEvents.readArticle);
+
+      // lookup the same document in state, as it may have been updated with a new user reaction
+      document = state.cards
+          .where((it) => it.document != null)
+          .map((it) => it.document)
+          .cast<Document>()
+          .firstWhere((it) => it.documentId == document.documentId,
+              orElse: () => document);
 
       changeUserReaction(
         document: document,
