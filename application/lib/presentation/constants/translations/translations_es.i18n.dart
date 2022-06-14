@@ -77,12 +77,12 @@ class TranslationsEs extends Translations {
   String get settingsShareBtn => """Comparte con Amigos""";
   String get settingsVersion => """Versión:""";
   String get settingsBuild => """Build:""";
-  String get minAgo => """hace %s minunto""";
-  String get momentsAgo => """hace %s momentos""";
-  String get hourAgo => """hace %s hora""";
-  String get hoursAgo => """hace %s horas""";
-  String get dayAgo => """hace %s día""";
-  String get daysAgo => """hace %s días""";
+  String get minAgo => """minunto""";
+  String get momentsAgo => """momentos""";
+  String get hourAgo => """hora""";
+  String get hoursAgo => """horas""";
+  String get dayAgo => """día""";
+  String get daysAgo => """días""";
   String get readingTimeUnitSingular => """minuto""";
   String get readingTimeUnitPlural => """minutos""";
   String get readingTimeSuffix => """leer""";
@@ -109,7 +109,6 @@ class TranslationsEs extends Translations {
   String get langNameDutch => """Holandés""";
   String get langNameEnglish => """Inglés""";
   String get langNameGerman => """Alemán""";
-  String get langNamePolish => """Polaco""";
   String get langNameSpanish => """Español""";
   String get bottomSheetApply => """Aplicar""";
   String get bottomSheetCreate => """Crear""";
@@ -154,7 +153,7 @@ class TranslationsEs extends Translations {
   String get subscriptionPricingError => """Incapaz de recuperar los precios""";
   String get subscriptionPerk1 => """Flujo personalizado""";
   String get subscriptionPerk2 => """Sin anuncios""";
-  String get subscriptionPerk3 => """Sin seguimiento""";
+  String get subscriptionPerk3 => """Sin rastreo personalizado""";
   String get subscriptionPerk4 => """Carbono neutral""";
   String get subscriptionPerk5 => """Cancelación en cualquier momento""";
   String get subscriptionSubscribeNow => """Subscribete Ahora""";
@@ -169,9 +168,9 @@ class TranslationsEs extends Translations {
   String get promoCodeValidUntilText =>
       """Tu código promocional es valido hasta: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.""";
+      """Tu puedes manejar tu subscripción en el __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.""";
+      """Tu puedes manejar tu subscripción en el __Google Play Store__.""";
   PaymentFlowErrorTranslationsEs get paymentFlowError =>
       PaymentFlowErrorTranslationsEs(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -293,12 +292,12 @@ Map<String, String> get translationsEsMap => {
       """settingsShareBtn""": """Comparte con Amigos""",
       """settingsVersion""": """Versión:""",
       """settingsBuild""": """Build:""",
-      """minAgo""": """hace %s minunto""",
-      """momentsAgo""": """hace %s momentos""",
-      """hourAgo""": """hace %s hora""",
-      """hoursAgo""": """hace %s horas""",
-      """dayAgo""": """hace %s día""",
-      """daysAgo""": """hace %s días""",
+      """minAgo""": """minunto""",
+      """momentsAgo""": """momentos""",
+      """hourAgo""": """hora""",
+      """hoursAgo""": """horas""",
+      """dayAgo""": """día""",
+      """daysAgo""": """días""",
       """readingTimeUnitSingular""": """minuto""",
       """readingTimeUnitPlural""": """minutos""",
       """readingTimeSuffix""": """leer""",
@@ -324,7 +323,6 @@ Map<String, String> get translationsEsMap => {
       """langNameDutch""": """Holandés""",
       """langNameEnglish""": """Inglés""",
       """langNameGerman""": """Alemán""",
-      """langNamePolish""": """Polaco""",
       """langNameSpanish""": """Español""",
       """bottomSheetApply""": """Aplicar""",
       """bottomSheetCreate""": """Crear""",
@@ -368,7 +366,7 @@ Map<String, String> get translationsEsMap => {
       """subscriptionPricingError""": """Incapaz de recuperar los precios""",
       """subscriptionPerk1""": """Flujo personalizado""",
       """subscriptionPerk2""": """Sin anuncios""",
-      """subscriptionPerk3""": """Sin seguimiento""",
+      """subscriptionPerk3""": """Sin rastreo personalizado""",
       """subscriptionPerk4""": """Carbono neutral""",
       """subscriptionPerk5""": """Cancelación en cualquier momento""",
       """subscriptionSubscribeNow""": """Subscribete Ahora""",
@@ -383,9 +381,9 @@ Map<String, String> get translationsEsMap => {
       """promoCodeValidUntilText""":
           """Tu código promocional es valido hasta: %s""",
       """subscriptionPlatformInfoApple""":
-          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.""",
+          """Tu puedes manejar tu subscripción en el __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.""",
+          """Tu puedes manejar tu subscripción en el __Google Play Store__.""",
       """paymentFlowError.unknown""": """Error desconocido ocurrió""",
       """paymentFlowError.storeNotAvailable""":
           """La tienda no está disponible en este momento""",

@@ -107,7 +107,6 @@ class Translations {
   String get langNameDutch => """Dutch""";
   String get langNameEnglish => """English""";
   String get langNameGerman => """German""";
-  String get langNamePolish => """Polish""";
   String get langNameSpanish => """Spanish""";
   String get bottomSheetApply => """Apply""";
   String get bottomSheetCreate => """Create""";
@@ -167,9 +166,9 @@ class Translations {
   String get promoCodeValidUntilText =>
       """Your promo code is valid until: %s""";
   String get subscriptionPlatformInfoApple =>
-      """As beta user, we give you premium for free! You can manage your subscriptions in the __Apple App Store__.""";
+      """You can manage your subscriptions in the __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """As beta user, we give you premium for free! You can manage your subscriptions in the __Google Play Store__.""";
+      """You can manage your subscriptions in the __Google Play Store__.""";
   PaymentFlowErrorTranslations get paymentFlowError =>
       PaymentFlowErrorTranslations(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -316,7 +315,6 @@ Map<String, String> get translationsMap => {
       """langNameDutch""": """Dutch""",
       """langNameEnglish""": """English""",
       """langNameGerman""": """German""",
-      """langNamePolish""": """Polish""",
       """langNameSpanish""": """Spanish""",
       """bottomSheetApply""": """Apply""",
       """bottomSheetCreate""": """Create""",
@@ -372,9 +370,9 @@ Map<String, String> get translationsMap => {
           """The subscription renews monthly on: %s""",
       """promoCodeValidUntilText""": """Your promo code is valid until: %s""",
       """subscriptionPlatformInfoApple""":
-          """As beta user, we give you premium for free! You can manage your subscriptions in the __Apple App Store__.""",
+          """You can manage your subscriptions in the __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """As beta user, we give you premium for free! You can manage your subscriptions in the __Google Play Store__.""",
+          """You can manage your subscriptions in the __Google Play Store__.""",
       """paymentFlowError.unknown""": """Unknown error occurred""",
       """paymentFlowError.storeNotAvailable""":
           """The store is not available right now""",

@@ -50,7 +50,6 @@ langNameFrench: Frans
 langNameDutch: Nederlands
 langNameEnglish: Engels
 langNameGerman: Duits
-langNamePolish: Pools
 langNameSpanish: Spaans
 bottomSheetApply: Toepassen
 bottomSheetCreate: Aanmaken
@@ -89,7 +88,7 @@ subscriptionHeader: Krijg Xayn onbeperkt voor slechts
 subscriptionPricingError: Kan prijsinformatie niet ophalen
 subscriptionPerk1: Gepersonaliseerde stroom
 subscriptionPerk2: Geen advertenties
-subscriptionPerk3: Geen tracering
+subscriptionPerk3: Geen gepersonaliseerde tracking
 subscriptionPerk4: Koolstofneutraal
 subscriptionPerk5: Annuleren op elk moment
 subscriptionSubscribeNow: Nu abonneren
@@ -100,8 +99,8 @@ settingsSubscribedToHeader: U bent geabonneerd op
 doneButtonTitle: Gedaan
 subscriptionRenewsMonthlyText: 'Het abonnement wordt maandelijks verlengd op: %s'
 promoCodeValidUntilText: 'Uw promocode is geldig tot: %s'
-subscriptionPlatformInfoApple: Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.
-subscriptionPlatformInfoGoogle: Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.
+subscriptionPlatformInfoApple: U kunt uw abonnementen beheren in de __Apple App Store__.
+subscriptionPlatformInfoGoogle: U kunt uw abonnementen beheren in de __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation

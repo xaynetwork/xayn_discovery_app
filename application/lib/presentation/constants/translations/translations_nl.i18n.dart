@@ -109,7 +109,6 @@ class TranslationsNl extends Translations {
   String get langNameDutch => """Nederlands""";
   String get langNameEnglish => """Engels""";
   String get langNameGerman => """Duits""";
-  String get langNamePolish => """Pools""";
   String get langNameSpanish => """Spaans""";
   String get bottomSheetApply => """Toepassen""";
   String get bottomSheetCreate => """Aanmaken""";
@@ -153,7 +152,7 @@ class TranslationsNl extends Translations {
   String get subscriptionPricingError => """Kan prijsinformatie niet ophalen""";
   String get subscriptionPerk1 => """Gepersonaliseerde stroom""";
   String get subscriptionPerk2 => """Geen advertenties""";
-  String get subscriptionPerk3 => """Geen tracering""";
+  String get subscriptionPerk3 => """Geen gepersonaliseerde tracking""";
   String get subscriptionPerk4 => """Koolstofneutraal""";
   String get subscriptionPerk5 => """Annuleren op elk moment""";
   String get subscriptionSubscribeNow => """Nu abonneren""";
@@ -167,9 +166,9 @@ class TranslationsNl extends Translations {
       """Het abonnement wordt maandelijks verlengd op: %s""";
   String get promoCodeValidUntilText => """Uw promocode is geldig tot: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.""";
+      """U kunt uw abonnementen beheren in de __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.""";
+      """U kunt uw abonnementen beheren in de __Google Play Store__.""";
   PaymentFlowErrorTranslationsNl get paymentFlowError =>
       PaymentFlowErrorTranslationsNl(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -320,7 +319,6 @@ Map<String, String> get translationsNlMap => {
       """langNameDutch""": """Nederlands""",
       """langNameEnglish""": """Engels""",
       """langNameGerman""": """Duits""",
-      """langNamePolish""": """Pools""",
       """langNameSpanish""": """Spaans""",
       """bottomSheetApply""": """Toepassen""",
       """bottomSheetCreate""": """Aanmaken""",
@@ -364,7 +362,7 @@ Map<String, String> get translationsNlMap => {
       """subscriptionPricingError""": """Kan prijsinformatie niet ophalen""",
       """subscriptionPerk1""": """Gepersonaliseerde stroom""",
       """subscriptionPerk2""": """Geen advertenties""",
-      """subscriptionPerk3""": """Geen tracering""",
+      """subscriptionPerk3""": """Geen gepersonaliseerde tracking""",
       """subscriptionPerk4""": """Koolstofneutraal""",
       """subscriptionPerk5""": """Annuleren op elk moment""",
       """subscriptionSubscribeNow""": """Nu abonneren""",
@@ -378,9 +376,9 @@ Map<String, String> get translationsNlMap => {
           """Het abonnement wordt maandelijks verlengd op: %s""",
       """promoCodeValidUntilText""": """Uw promocode is geldig tot: %s""",
       """subscriptionPlatformInfoApple""":
-          """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Apple App Store__.""",
+          """U kunt uw abonnementen beheren in de __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Als bètagebruiker geven we je gratis premium! U kunt uw abonnementen beheren in de __Google Play Store__.""",
+          """U kunt uw abonnementen beheren in de __Google Play Store__.""",
       """paymentFlowError.unknown""": """Onbekende fout opgetreden""",
       """paymentFlowError.storeNotAvailable""":
           """De winkel is op dit moment niet beschikbaar""",

@@ -50,7 +50,6 @@ langNameFrench: Français
 langNameDutch: Néerlandais
 langNameEnglish: Anglais
 langNameGerman: Allemand
-langNamePolish: Polonais
 langNameSpanish: Espagnol
 bottomSheetApply: Appliquer
 bottomSheetCreate: Créer
@@ -89,7 +88,7 @@ subscriptionHeader: Obtenez Xayn illimité pour juste
 subscriptionPricingError: Impossible de récupérer les détails des prix
 subscriptionPerk1: Flux personnalisé
 subscriptionPerk2: Pas de pub
-subscriptionPerk3: Pas de suivi
+subscriptionPerk3: Pas de traqueurs personnalisés
 subscriptionPerk4: Neutre en carbone
 subscriptionPerk5: Neutre en carbone
 subscriptionSubscribeNow: Abonnez vous
@@ -100,8 +99,8 @@ settingsSubscribedToHeader: Vous êtes abonné à
 doneButtonTitle: Fini
 subscriptionRenewsMonthlyText: 'L''abonnement se renouvelle mensuellement le : %s'
 promoCodeValidUntilText: 'Votre code promotionnel est valable jusqu''au : %s'
-subscriptionPlatformInfoApple: En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement. Vous pouvez gérer vos abonnements dans __Apple App Store__.
-subscriptionPlatformInfoGoogle: En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement ! Vous pouvez gérer vos abonnements dans __Google Play Store__.
+subscriptionPlatformInfoApple: Vous pouvez gérer vos abonnements dans __Apple App Store__.
+subscriptionPlatformInfoGoogle: Vous pouvez gérer vos abonnements dans __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation

@@ -88,7 +88,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 13add57444eb2e4d5b8d97f79b3d68691b7843fd
+      ref: 3539e911a5831eaeae4c716054703f4a93ea4029
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -156,15 +156,25 @@ flutter:
 
     # illustrations
     - packages/xayn_design/assets/illustrations/flag_austria.svg
+    - packages/xayn_design/assets/illustrations/flag_argentina.svg
     - packages/xayn_design/assets/illustrations/flag_belgium.svg
     - packages/xayn_design/assets/illustrations/flag_canada.svg
+    - packages/xayn_design/assets/illustrations/flag_colombia.svg
+    - packages/xayn_design/assets/illustrations/flag_france.svg
     - packages/xayn_design/assets/illustrations/flag_germany.svg
     - packages/xayn_design/assets/illustrations/flag_ireland.svg
+    - packages/xayn_design/assets/illustrations/flag_italy.svg
+    - packages/xayn_design/assets/illustrations/flag_mexico.svg
     - packages/xayn_design/assets/illustrations/flag_netherlands.svg
+    - packages/xayn_design/assets/illustrations/flag_peru.svg
     - packages/xayn_design/assets/illustrations/flag_poland.svg
+    - packages/xayn_design/assets/illustrations/flag_russia.svg
     - packages/xayn_design/assets/illustrations/flag_switzerland.svg
     - packages/xayn_design/assets/illustrations/flag_uk.svg
     - packages/xayn_design/assets/illustrations/flag_usa.svg
+    - packages/xayn_design/assets/illustrations/flag_turkey.svg
+    - packages/xayn_design/assets/illustrations/flag_ukraine.svg
+    - packages/xayn_design/assets/illustrations/enable_camera.svg
 
     # lottie
     - packages/xayn_design/assets/lottie/bookmark_click.json

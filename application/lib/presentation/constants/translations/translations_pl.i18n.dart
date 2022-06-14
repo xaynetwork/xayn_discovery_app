@@ -108,7 +108,6 @@ class TranslationsPl extends Translations {
   String get langNameDutch => """Holenderski""";
   String get langNameEnglish => """Angielski""";
   String get langNameGerman => """Niemiecki""";
-  String get langNamePolish => """Polski""";
   String get langNameSpanish => """Hiszpański""";
   String get bottomSheetApply => """Zastosuj""";
   String get bottomSheetCreate => """Utwórz""";
@@ -152,7 +151,7 @@ class TranslationsPl extends Translations {
   String get subscriptionPricingError => """Nie można pobrać szczegółów cen""";
   String get subscriptionPerk1 => """Spersonalizowany strumień""";
   String get subscriptionPerk2 => """Bez reklam""";
-  String get subscriptionPerk3 => """Bez śledzenia""";
+  String get subscriptionPerk3 => """Brak spersonalizowanego śledzenia""";
   String get subscriptionPerk4 =>
       """Neutralny pod względem emisji dwutlenku węgla""";
   String get subscriptionPerk5 => """Anuluj w dowolnym momencie""";
@@ -168,9 +167,9 @@ class TranslationsPl extends Translations {
   String get promoCodeValidUntilText =>
       """Twój kod promocyjny jest ważny do: %s""";
   String get subscriptionPlatformInfoApple =>
-      """Jako użytkownik wersji beta dajemy Ci premię za darmo! Możesz zarządzać swoimi subskrypcjami w __Apple App Store__.""";
+      """Możesz zarządzać swoimi subskrypcjami w __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """Jako użytkownik wersji beta dajemy Ci premię za darmo! Możesz zarządzać swoimi subskrypcjami w __Sklepie Google Play__.""";
+      """Możesz zarządzać swoimi subskrypcjami w __Sklepie Google Play__.""";
   PaymentFlowErrorTranslationsPl get paymentFlowError =>
       PaymentFlowErrorTranslationsPl(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -320,7 +319,6 @@ Map<String, String> get translationsPlMap => {
       """langNameDutch""": """Holenderski""",
       """langNameEnglish""": """Angielski""",
       """langNameGerman""": """Niemiecki""",
-      """langNamePolish""": """Polski""",
       """langNameSpanish""": """Hiszpański""",
       """bottomSheetApply""": """Zastosuj""",
       """bottomSheetCreate""": """Utwórz""",
@@ -362,7 +360,7 @@ Map<String, String> get translationsPlMap => {
       """subscriptionPricingError""": """Nie można pobrać szczegółów cen""",
       """subscriptionPerk1""": """Spersonalizowany strumień""",
       """subscriptionPerk2""": """Bez reklam""",
-      """subscriptionPerk3""": """Bez śledzenia""",
+      """subscriptionPerk3""": """Brak spersonalizowanego śledzenia""",
       """subscriptionPerk4""":
           """Neutralny pod względem emisji dwutlenku węgla""",
       """subscriptionPerk5""": """Anuluj w dowolnym momencie""",
@@ -378,9 +376,9 @@ Map<String, String> get translationsPlMap => {
       """promoCodeValidUntilText""":
           """Twój kod promocyjny jest ważny do: %s""",
       """subscriptionPlatformInfoApple""":
-          """Jako użytkownik wersji beta dajemy Ci premię za darmo! Możesz zarządzać swoimi subskrypcjami w __Apple App Store__.""",
+          """Możesz zarządzać swoimi subskrypcjami w __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """Jako użytkownik wersji beta dajemy Ci premię za darmo! Możesz zarządzać swoimi subskrypcjami w __Sklepie Google Play__.""",
+          """Możesz zarządzać swoimi subskrypcjami w __Sklepie Google Play__.""",
       """paymentFlowError.unknown""": """Wystąpił nieznany błąd""",
       """paymentFlowError.storeNotAvailable""":
           """Sklep jest w tej chwili niedostępny""",

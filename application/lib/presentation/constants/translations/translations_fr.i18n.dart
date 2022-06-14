@@ -107,7 +107,6 @@ class TranslationsFr extends Translations {
   String get langNameDutch => """Néerlandais""";
   String get langNameEnglish => """Anglais""";
   String get langNameGerman => """Allemand""";
-  String get langNamePolish => """Polonais""";
   String get langNameSpanish => """Espagnol""";
   String get bottomSheetApply => """Appliquer""";
   String get bottomSheetCreate => """Créer""";
@@ -156,7 +155,7 @@ class TranslationsFr extends Translations {
       """Impossible de récupérer les détails des prix""";
   String get subscriptionPerk1 => """Flux personnalisé""";
   String get subscriptionPerk2 => """Pas de pub""";
-  String get subscriptionPerk3 => """Pas de suivi""";
+  String get subscriptionPerk3 => """Pas de traqueurs personnalisés""";
   String get subscriptionPerk4 => """Neutre en carbone""";
   String get subscriptionPerk5 => """Neutre en carbone""";
   String get subscriptionSubscribeNow => """Abonnez vous""";
@@ -171,9 +170,9 @@ class TranslationsFr extends Translations {
   String get promoCodeValidUntilText =>
       """Votre code promotionnel est valable jusqu'au : %s""";
   String get subscriptionPlatformInfoApple =>
-      """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement. Vous pouvez gérer vos abonnements dans __Apple App Store__.""";
+      """Vous pouvez gérer vos abonnements dans __Apple App Store__.""";
   String get subscriptionPlatformInfoGoogle =>
-      """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement ! Vous pouvez gérer vos abonnements dans __Google Play Store__.""";
+      """Vous pouvez gérer vos abonnements dans __Google Play Store__.""";
   PaymentFlowErrorTranslationsFr get paymentFlowError =>
       PaymentFlowErrorTranslationsFr(this);
   String get bottomSheetDeleteCollectionWithNoItemsBody =>
@@ -326,7 +325,6 @@ Map<String, String> get translationsFrMap => {
       """langNameDutch""": """Néerlandais""",
       """langNameEnglish""": """Anglais""",
       """langNameGerman""": """Allemand""",
-      """langNamePolish""": """Polonais""",
       """langNameSpanish""": """Espagnol""",
       """bottomSheetApply""": """Appliquer""",
       """bottomSheetCreate""": """Créer""",
@@ -373,7 +371,7 @@ Map<String, String> get translationsFrMap => {
           """Impossible de récupérer les détails des prix""",
       """subscriptionPerk1""": """Flux personnalisé""",
       """subscriptionPerk2""": """Pas de pub""",
-      """subscriptionPerk3""": """Pas de suivi""",
+      """subscriptionPerk3""": """Pas de traqueurs personnalisés""",
       """subscriptionPerk4""": """Neutre en carbone""",
       """subscriptionPerk5""": """Neutre en carbone""",
       """subscriptionSubscribeNow""": """Abonnez vous""",
@@ -388,9 +386,9 @@ Map<String, String> get translationsFrMap => {
       """promoCodeValidUntilText""":
           """Votre code promotionnel est valable jusqu'au : %s""",
       """subscriptionPlatformInfoApple""":
-          """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement. Vous pouvez gérer vos abonnements dans __Apple App Store__.""",
+          """Vous pouvez gérer vos abonnements dans __Apple App Store__.""",
       """subscriptionPlatformInfoGoogle""":
-          """En tant qu'utilisateur bêta, nous vous offrons la prime gratuitement ! Vous pouvez gérer vos abonnements dans __Google Play Store__.""",
+          """Vous pouvez gérer vos abonnements dans __Google Play Store__.""",
       """paymentFlowError.unknown""": """Une erreur inconnue s'est produite""",
       """paymentFlowError.storeNotAvailable""":
           """Le magasin n'est pas disponible pour le moment""",

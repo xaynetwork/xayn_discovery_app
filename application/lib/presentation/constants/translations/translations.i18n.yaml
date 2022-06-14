@@ -50,7 +50,6 @@ langNameFrench: French
 langNameDutch: Dutch
 langNameEnglish: English
 langNameGerman: German
-langNamePolish: Polish
 langNameSpanish: Spanish
 bottomSheetApply: Apply
 bottomSheetCreate: Create
@@ -100,8 +99,8 @@ settingsSubscribedToHeader: You are subscribed to
 doneButtonTitle: Done
 subscriptionRenewsMonthlyText: 'The subscription renews monthly on: %s'
 promoCodeValidUntilText: 'Your promo code is valid until: %s'
-subscriptionPlatformInfoApple: As beta user, we give you premium for free! You can manage your subscriptions in the __Apple App Store__.
-subscriptionPlatformInfoGoogle: As beta user, we give you premium for free! You can manage your subscriptions in the __Google Play Store__.
+subscriptionPlatformInfoApple: You can manage your subscriptions in the __Apple App Store__.
+subscriptionPlatformInfoGoogle: You can manage your subscriptions in the __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation

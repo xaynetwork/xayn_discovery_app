@@ -22,12 +22,12 @@ settingsHaveFoundBug: 'Encontráste una falla?'
 settingsShareBtn: 'Comparte con Amigos'
 settingsVersion: 'Versión:'
 settingsBuild: 'Build:'
-minAgo: 'hace %s minunto'
-momentsAgo: 'hace %s momentos'
-hourAgo: 'hace %s hora'
-hoursAgo: 'hace %s horas'
-dayAgo: 'hace %s día'
-daysAgo: 'hace %s días'
+minAgo: 'minunto'
+momentsAgo: 'momentos'
+hourAgo: 'hora'
+hoursAgo: 'horas'
+dayAgo: 'día'
+daysAgo: 'días'
 readingTimeUnitSingular: 'minuto'
 readingTimeUnitPlural: 'minutos'
 readingTimeSuffix: 'leer'
@@ -50,7 +50,6 @@ langNameFrench: Francés
 langNameDutch: Holandés
 langNameEnglish: Inglés
 langNameGerman: Alemán
-langNamePolish: Polaco
 langNameSpanish: Español
 bottomSheetApply: Aplicar
 bottomSheetCreate: Crear
@@ -89,7 +88,7 @@ subscriptionHeader: Consigue Xayn ilimitado por solo
 subscriptionPricingError: Incapaz de recuperar los precios
 subscriptionPerk1: Flujo personalizado
 subscriptionPerk2: Sin anuncios
-subscriptionPerk3: Sin seguimiento
+subscriptionPerk3: Sin rastreo personalizado
 subscriptionPerk4: Carbono neutral
 subscriptionPerk5: Cancelación en cualquier momento
 subscriptionSubscribeNow: Subscribete Ahora
@@ -100,8 +99,8 @@ settingsSubscribedToHeader: Tu estás subscrito a
 doneButtonTitle: Hecho
 subscriptionRenewsMonthlyText: 'La subscripción se renueva mensualmente en: %s'
 promoCodeValidUntilText: 'Tu código promocional es valido hasta: %s'
-subscriptionPlatformInfoApple: Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Apple App Store__.
-subscriptionPlatformInfoGoogle: Como usuario beta, te damos premium gratis! Tu puedes manejar tu subscripción en el __Google Play Store__.
+subscriptionPlatformInfoApple: Tu puedes manejar tu subscripción en el __Apple App Store__.
+subscriptionPlatformInfoGoogle: Tu puedes manejar tu subscripción en el __Google Play Store__.
 paymentFlowError:
   # DO NOT TRANSLATE THIS FOR NOW!
   # Error msg, shown when the unknown error occurred during payment operation
