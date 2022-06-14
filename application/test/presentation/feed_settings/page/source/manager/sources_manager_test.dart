@@ -177,7 +177,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges();
     },
     verify: (manager) {
       expect(
@@ -226,7 +226,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges();
     },
     verify: (manager) {
       expect(
@@ -275,7 +275,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges();
     },
     verify: (manager) {
       expect(
@@ -326,7 +326,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges();
     },
     verify: (manager) {
       expect(
@@ -403,7 +403,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges();
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
@@ -429,7 +429,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges();
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {

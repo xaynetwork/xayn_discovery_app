@@ -11,8 +11,6 @@ import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manage
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-const Duration _kRemovalInterval = Duration(seconds: 1);
-
 typedef FoldEngineEvent = SourcesState Function(EngineEvent?) Function(
     SourcesState);
 typedef OnGetAvailableSourcesListSucceeded = SourcesState Function(
@@ -107,8 +105,8 @@ class SourcesManager extends Cubit<SourcesState>
   /// Call this method to undo any operations related to [source].
   /// Once [applyChanges] is triggered, operations are persisted, and then
   /// calling this method will no longer have effect.
-  void removePendingSourceOperation(Source source) =>
-      sourcesPendingOperations.removeOperationsBySource(source);
+  void removePendingSourceOperation(Source source) => scheduleComputeState(
+      () => sourcesPendingOperations.removeOperationsBySource(source));
 
   /// This method will persist any pending [SourcesManagementOperation] with
   /// the engine.
@@ -117,11 +115,8 @@ class SourcesManager extends Cubit<SourcesState>
   /// Use [intervalBetweenOperations] to wait between 2 operations, which, if used,
   /// gives the UI some time to visually indicate each addition/removal.
   /// The default value is 1 second.
-  Future<void> applyChanges(
-      {Duration intervalBetweenOperations = _kRemovalInterval}) async {
-    final operationsWithInterval = sourcesPendingOperations.asStream();
-
-    await for (final operation in operationsWithInterval) {
+  void applyChanges() {
+    for (final operation in sourcesPendingOperations.toSet()) {
       sourcesPendingOperations.removeOperation(operation);
 
       switch (operation.task) {
@@ -155,6 +150,7 @@ class SourcesManager extends Cubit<SourcesState>
             ...sourcesPendingOperations
                 .sourcesByTask(SourcesManagementTask.addToTrustedSources)
           },
+          operations: sourcesPendingOperations.toSet(),
         ),
       );
 
