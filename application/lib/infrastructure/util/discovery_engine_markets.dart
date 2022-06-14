@@ -27,8 +27,7 @@ enum SupportedMarkets {
   // Not yet supported because of missing assets
   colombia._('es', 'CO'),
   peru._('es', 'PE'),
-  ukraine._('uk', 'UA'),
-  russia._('ru', 'RU');
+  ukraine._('uk', 'UA');
 
   final String languageCode;
   final String countryCode;
@@ -83,8 +82,6 @@ enum SupportedMarkets {
         return R.assets.illustrations.flagPeru;
       case SupportedMarkets.ukraine:
         return R.assets.illustrations.flagUkraine;
-      case SupportedMarkets.russia:
-        return R.assets.illustrations.flagRussia;
     }
   }
 
