@@ -92,7 +92,7 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: 8e202ac07cfd9537b4f8675230028416582e1f9b
+      ref: 06015a03ff6c4a539e57504afbdeaae0b0cbc872
       path: discovery_engine_flutter
   xayn_readability:
     git:
