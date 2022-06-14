@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
@@ -35,7 +34,7 @@ NavBarItemIconButton buildNavBarItemLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemLike,
-      semanticsLabel: Keys.navBarItemLike.valueKey,
+      semanticsLabel: '${Keys.navBarItemLike.valueKey} = $isLiked',
     );
 
 NavBarItemIconButton buildNavBarItemDisLike({
@@ -49,7 +48,7 @@ NavBarItemIconButton buildNavBarItemDisLike({
       isHighlighted: false,
       onPressed: onPressed,
       key: Keys.navBarItemDisLike,
-      semanticsLabel: Keys.navBarItemDisLike.valueKey,
+      semanticsLabel: '${Keys.navBarItemDisLike.valueKey} = $isDisLiked',
     );
 
 NavBarItemIconButton buildNavBarItemShare({
@@ -130,18 +129,6 @@ NavBarItemIconButton buildNavBarItemPersonalArea({
       semanticsLabel: Keys.navBarItemPersonalArea.valueKey,
     );
 
-/// Should be removed together with [Feature.survey]
-NavBarItemIconButton buildSurveyButton({
-  required VoidCallback onPressed,
-}) =>
-    NavBarItemIconButton(
-      svgIconPath: R.linden.assets.icons.confetti,
-      isHighlighted: false,
-      onPressed: onPressed,
-      key: const Key('survey'),
-      semanticsLabel: 'survey-semantic',
-    );
-
 NavBarItemIconButton buildNavBarItemBookmark({
   required VoidCallback onPressed,
   required VoidCallback onLongPressed,
@@ -155,7 +142,7 @@ NavBarItemIconButton buildNavBarItemBookmark({
       onPressed: onPressed,
       onLongPressed: onLongPressed,
       key: Keys.navBarItemBookmark,
-      semanticsLabel: Keys.navBarItemBookmark.valueKey,
+      semanticsLabel: '${Keys.navBarItemBookmark.valueKey} = ${ bookmarkStatus == BookmarkStatus.bookmarked}',
     );
 
 const configIdSearch = NavBarConfigId('active_search');

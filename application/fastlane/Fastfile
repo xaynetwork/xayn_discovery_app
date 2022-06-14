@@ -272,7 +272,7 @@ lane :publish do |options|
   appcenter_token = config[Keys::APPCENTER_TOKEN]
   output = options[Options::ANDROID_OUTPUT]
 
-  if platform == Platforms::ANDROID and output == AndroidOutputs::APK
+  if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
   end
   output = build_with_flutter(options)
