@@ -8,8 +8,8 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 
 /// The urls are listed in the description of the following task
 /// https://xainag.atlassian.net/browse/TB-3785
-const String notSubscribedUserSurveyUrl = 'Xayn.com/research/nosu_01/';
-const String subscribedUserSurveyUrl = 'Xayn.com/research/subs_01/';
+const String notSubscribedUserSurveyUrl = 'https://xayn.com/research/nosu_01/';
+const String subscribedUserSurveyUrl = 'https://xayn.com/research/subs_01/';
 
 @injectable
 class HandleSurveyBannerClickedUseCase extends UseCase<None, None> {
