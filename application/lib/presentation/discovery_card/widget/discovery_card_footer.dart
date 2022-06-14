@@ -66,7 +66,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       onPressed: onDislikePressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(
-    '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isRelevant}');
+    '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isIrrelevant}');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
