@@ -96,7 +96,7 @@ class AppDiscoveryEngine
     final feedMarkets = await _getLocalMarketsUseCase.singleOutput(none);
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
-      apiBaseUrl: 'http://127.0.0.1:1234',
+      apiBaseUrl: 'http://localhost:1234',
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: _kFeedBatchSize,
