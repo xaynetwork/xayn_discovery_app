@@ -4,7 +4,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
@@ -15,9 +14,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onSharePressed,
     required this.onLikePressed,
     required this.onDislikePressed,
-    required this.onBookmarkPressed,
-    required this.onBookmarkLongPressed,
-    required this.bookmarkStatus,
+    required this.onDeepSearchPressed,
     required this.document,
     required this.explicitDocumentUserReaction,
   }) : super(key: key);
@@ -25,9 +22,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
-  final VoidCallback onBookmarkPressed;
-  final VoidCallback onBookmarkLongPressed;
-  final BookmarkStatus bookmarkStatus;
+  final VoidCallback onDeepSearchPressed;
   final Document document;
   final UserReaction explicitDocumentUserReaction;
 
@@ -41,12 +36,9 @@ class DiscoveryCardFooter extends StatelessWidget {
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(Keys.navBarItemLike.valueKey);
 
-    final bookmarkButton = AppGhostButton.icon(
-      bookmarkStatus == BookmarkStatus.bookmarked
-          ? R.assets.icons.bookmarkActive
-          : R.assets.icons.bookmark,
-      onPressed: onBookmarkPressed,
-      onLongPressed: onBookmarkLongPressed,
+    final deepSearchButton = AppGhostButton.icon(
+      R.assets.icons.binoculars,
+      onPressed: onDeepSearchPressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(Keys.navBarItemBookmark.valueKey);
 
@@ -68,7 +60,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         likeButton,
-        bookmarkButton,
+        deepSearchButton,
         shareButton,
         dislikeButton,
       ],

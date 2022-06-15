@@ -27,7 +27,7 @@ import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 /// maximum context height.
 const double _kImageFractionSize = .4;
 
-/// Implementation of [DiscoveryCardBase] which is used inside the feed view.
+/// Implementation of [DiscoveryCardBase] which is used inside the DiscoveryCardScreen.
 class DiscoveryCardStatic extends DiscoveryCardBase {
   DiscoveryCardStatic({
     Key? key,
@@ -101,9 +101,9 @@ class _DiscoveryCardStaticState
                   .state.processedDocument?.processHtmlResult.contents,
             ),
           ),
-          onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
-          onBookmarkLongPressed: onBookmarkLongPressed(),
-          bookmarkStatus: state.bookmarkStatus,
+          onDeepSearchPressed: () {
+            print("DiscoveryCardStatic onDeepSearchPressed");
+          },
           fractionSize: .0,
           feedType: widget.feedType,
         );

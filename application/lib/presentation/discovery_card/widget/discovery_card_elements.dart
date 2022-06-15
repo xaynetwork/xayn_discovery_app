@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -34,9 +33,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.datePublished,
     required this.onLikePressed,
     required this.onDislikePressed,
-    required this.onBookmarkPressed,
-    required this.onBookmarkLongPressed,
-    required this.bookmarkStatus,
+    required this.onDeepSearchPressed,
     required this.onOpenUrl,
     required this.onToggleTts,
     required this.feedType,
@@ -55,11 +52,9 @@ class DiscoveryCardElements extends StatelessWidget {
   final DateTime datePublished;
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
-  final VoidCallback onBookmarkPressed;
+  final VoidCallback onDeepSearchPressed;
   final VoidCallback onOpenUrl;
   final VoidCallback onToggleTts;
-  final VoidCallback onBookmarkLongPressed;
-  final BookmarkStatus bookmarkStatus;
   final double fractionSize;
   final bool useLargeTitle;
   final bool isInteractionEnabled;
@@ -97,9 +92,7 @@ class DiscoveryCardElements extends StatelessWidget {
         ),
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
-        onBookmarkPressed: onBookmarkPressed,
-        onBookmarkLongPressed: onBookmarkLongPressed,
-        bookmarkStatus: bookmarkStatus,
+        onDeepSearchPressed: onDeepSearchPressed,
         document: document,
         explicitDocumentUserReaction: explicitDocumentUserReaction,
       ),

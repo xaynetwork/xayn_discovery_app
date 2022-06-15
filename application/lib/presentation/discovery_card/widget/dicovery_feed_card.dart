@@ -20,11 +20,13 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
     FeedType? feedType,
     OnTtsData? onTtsData,
     ShaderBuilder? primaryCardShader,
+    OnDeepSearch? onDeepSearch,
   }) : super(
           key: key,
           isPrimary: isPrimary,
           document: document,
           onTtsData: onTtsData,
+          onDeepSearch: onDeepSearch,
           feedType: feedType,
           primaryCardShader:
               primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
@@ -73,9 +75,9 @@ class _DiscoveryFeedCardState
               .state.processedDocument?.processHtmlResult.contents,
         ),
       ),
-      onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
-      onBookmarkLongPressed: onBookmarkLongPressed(),
-      bookmarkStatus: state.bookmarkStatus,
+      onDeepSearchPressed: () => widget.onDeepSearch?.call(
+        widget.document.documentId,
+      ),
       feedType: widget.feedType,
     );
 

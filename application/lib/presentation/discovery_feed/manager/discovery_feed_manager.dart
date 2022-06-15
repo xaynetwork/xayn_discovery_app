@@ -52,6 +52,8 @@ abstract class DiscoveryFeedNavActions {
   void onPersonalAreaNavPressed();
 
   void onTrialExpired();
+
+  void onDeepSearchPressed(DocumentId documentId);
 }
 
 /// Manages the state for the main, or home discovery feed screen.
@@ -215,6 +217,12 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     closeFeedDocuments(documentIds);
     resetParameters();
     requestNextFeedBatch();
+  }
+
+  @override
+  void onDeepSearchPressed(DocumentId documentId) {
+    handleActivityStatus(false);
+    _discoveryFeedNavActions.onDeepSearchPressed(documentId);
   }
 
   void onHomeNavPressed() {

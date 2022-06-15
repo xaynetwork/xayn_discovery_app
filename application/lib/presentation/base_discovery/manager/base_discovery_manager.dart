@@ -170,6 +170,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   void onLoadMorePressed();
 
+  void onDeepSearchPressed(DocumentId documentId);
+
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus);
 
   /// Trigger this handler whenever the primary card changes.

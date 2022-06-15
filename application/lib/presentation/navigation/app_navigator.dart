@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
+import 'package:xayn_discovery_app/presentation/deep_search/manager/deep_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
@@ -15,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_m
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @lazySingleton
 class AppNavigationManager extends xayn.NavigatorManager {
@@ -53,6 +55,24 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
   @override
   void onTrialExpired() =>
       changeStack((stack) => stack.replace(PageRegistry.payment));
+
+  @override
+  void onDeepSearchPressed(DocumentId documentId) => changeStack(
+        (stack) => stack.push(PageRegistry.deepSearch(documentId: documentId)),
+      );
+}
+
+@Injectable(as: DeepSearchScreenManagerNavActions)
+class DeepSearchScreenManagerNavActionsImpl
+    extends DeepSearchScreenManagerNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  DeepSearchScreenManagerNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onBackNavPressed() => changeStack((stack) => stack.pop());
 }
 
 @Injectable(as: DiscoveryCardNavActions)
@@ -135,6 +155,11 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
   @override
   void onTrialExpired() =>
       changeStack((stack) => stack.replace(PageRegistry.payment));
+
+  @override
+  void onDeepSearchPressed(DocumentId documentId) => changeStack(
+        (stack) => stack.push(PageRegistry.deepSearch(documentId: documentId)),
+      );
 }
 
 @Injectable(as: DiscoveryCardScreenManagerNavActions)
