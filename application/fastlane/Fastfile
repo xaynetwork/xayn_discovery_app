@@ -236,7 +236,7 @@ lane :check do |options|
 
   flutter(args: %W(analyze lib test))
   if IS_CI
-    flutter(args: %W(format ./ --set-exit-if-changed"))
+     flutter(args: %W(format ./ --set-exit-if-changed))
   else
     flutter(args: %W(format ./))
   end
