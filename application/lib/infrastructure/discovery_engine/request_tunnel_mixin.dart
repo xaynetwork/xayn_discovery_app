@@ -35,10 +35,6 @@ mixin RequestTunnelMixin {
                 '${fromDate.year}/${fromDate.month}/${fromDate.day}';
           }
 
-          if (queryParameters.containsKey('sort_by')) {
-            queryParameters['sort_by'] = 'date';
-          }
-
           if (queryParameters.containsKey('page_size')) {
             queryParameters['page_size'] = '100';
           }
