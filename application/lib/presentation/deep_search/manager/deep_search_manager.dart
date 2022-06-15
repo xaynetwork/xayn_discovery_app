@@ -47,8 +47,10 @@ class DeepSearchScreenManager extends Cubit<DeepSearchState>
       fold(engineEvents).foldAll((event, errorReport) async {
         if (event is DeepSearchRequestSucceeded) {
           return DeepSearchState.success(event.items.toSet());
-        } else if (event is DeepSearchRequestSucceeded) {
+        } else if (event is DeepSearchRequestFailed) {
           return const DeepSearchState.failure();
+        } else {
+          return state;
         }
       });
 
