@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 mixin RequestTunnelMixin {
   late final client = http.ConsoleClient();
@@ -15,32 +16,24 @@ mixin RequestTunnelMixin {
 
   Future<Response> Function(Request) _echoRequest(Uri uri) =>
       (Request request) async {
-        const days = [3, 7, 14, 30, 100, 365, 1000];
-        var index = 0;
-        _Result? result;
+        final result = await _doRequest(uri)(request);
 
-        while (index < days.length &&
-            (result == null || result.articleCount < 5)) {
-          result = await _doRequest(uri)(request, days[index++]);
-        }
-
-        return Response.ok(result!.body);
+        return Response.ok(result.body);
       };
 
-  Future<_Result> Function(Request, int) _doRequest(Uri uri) =>
-      (Request request, int dateOffset) async {
+  Future<_Result> Function(Request) _doRequest(Uri uri) =>
+      (Request request) async {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
 
-        if (queryParameters.containsKey('sort_by')) {
-          queryParameters['sort_by'] = 'date';
-        }
+        if (request.url.path == '_sn') {
+          if (queryParameters.containsKey('sort_by')) {
+            queryParameters['sort_by'] = 'date';
+          }
 
-        if (queryParameters.containsKey('from')) {
-          final d = DateTime.now().subtract(Duration(days: dateOffset));
-          final from = '${d.year}/${d.month}/${d.day}';
-
-          queryParameters['from'] = from;
+          if (queryParameters.containsKey('page_size')) {
+            queryParameters['page_size'] = '20';
+          }
         }
 
         final actualUri = request.url.replace(
@@ -63,10 +56,13 @@ mixin RequestTunnelMixin {
         final response = await client.send(actualRequest);
         final body = await response.readAsString();
         final json = const JsonDecoder().convert(body) as Map;
+        final articles = json['articles'] as List? ?? const [];
+
+        logger.i('Request: $actualUri, result count: ${articles.length}');
 
         return _Result(
           body: body,
-          articleCount: json['articles']?.length ?? -1,
+          articleCount: articles.length,
         );
       };
 }
