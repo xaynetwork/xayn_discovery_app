@@ -212,7 +212,7 @@ end
 
 desc "Flutter pub get"
 lane :pub_get do |options|
-  flutter(args: %W(pub get))
+  flutter(args: %W(pub get --verbose))
 end
 
 desc "Watch changes for rerunning the build_runner"
