@@ -32,6 +32,10 @@ class PushNotificationsService {
     // Enable notifications (prompts on iOS)
     Airship.setUserNotificationsEnabled(true);
 
+    Airship.onChannelRegistration.listen((event) =>
+        // ignore: avoid_print
+        print('Channel Registration, channelId: ${event.channelId}'));
+
     // Channel ID
     final channelId = await Airship.channelId;
     // ignore: avoid_print
