@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/service/payment/revenue_cat_pa
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
+import 'package:xayn_discovery_app/infrastructure/service/push_notifications/push_notifications_service.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import 'di_config.config.dart';
@@ -68,4 +69,5 @@ void initServices() {
   di.get<AnalyticsNavigatorObserver>();
   di.get<DiscoveryEngine>();
   di.get<PaymentService>();
+  di.get<PushNotificationsService>();
 }

@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_app/presentation/utils/push_notifications.dart';
 
 void main() async {
   await setup();
@@ -30,7 +29,6 @@ void main() async {
 Future<void> setup() async {
   FlutterError.onError = onError;
   WidgetsFlutterBinding.ensureInitialized();
-  PushNotifications.setup();
   final documentsDir = await path.getApplicationDocumentsDirectory();
   final tempDir = await path.getTemporaryDirectory();
   final absoluteAppDir = documentsDir.absolute.path;

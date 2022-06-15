@@ -1,22 +1,34 @@
 import 'package:airship_flutter/airship_flutter.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-class PushNotifications {
-  PushNotifications._();
+const String _kChannelKey = 'basic_channel';
 
-  static void setup() {
-    setupRemote();
-    setupLocal();
+@lazySingleton
+class PushNotificationsService {
+  final DiscoveryEngine _engine;
+
+  PushNotificationsService(
+    this._engine,
+  ) {
+    _setupRemote();
+    _setupLocal();
   }
 
-  static void pushMessageHandler(PushReceivedEvent event) async {
-    // Load news
+  void _pushMessageHandler(PushReceivedEvent event) async {
+    final event = await _engine.requestNextFeedBatch();
+    if (event is! NextFeedBatchRequestSucceeded) return;
+    if (event.items.isEmpty) return;
+    final document = event.items.first;
 
-    // Send local notification
-    PushNotifications.sendLocal();
+    _sendLocal(
+      title: document.resource.title,
+      body: document.resource.snippet,
+    );
   }
 
-  static void setupRemote() async {
+  void _setupRemote() async {
     // Enable notifications (prompts on iOS)
     Airship.setUserNotificationsEnabled(true);
 
@@ -25,16 +37,15 @@ class PushNotifications {
     // ignore: avoid_print
     print('channelId: $channelId');
 
-    Airship.onPushReceived.listen(pushMessageHandler);
+    Airship.onPushReceived.listen(_pushMessageHandler);
   }
 
-  static void setupLocal() async {
+  void _setupLocal() async {
     AwesomeNotifications().initialize(
-        // set the icon to null if you want to use the default app icon
-        'resource://drawable/res_app_icon',
+        null,
         [
           NotificationChannel(
-            channelKey: 'basic_channel',
+            channelKey: _kChannelKey,
             channelName: 'Basic notifications',
             channelDescription: 'Notification channel for basic tests',
           )
@@ -58,12 +69,17 @@ class PushNotifications {
         .listen((ReceivedNotification receivedNotification) {});
   }
 
-  static void sendLocal() {
+  void _sendLocal({
+    required String title,
+    required String body,
+  }) {
     AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 10,
-            channelKey: 'basic_channel',
-            title: 'Simple Notification',
-            body: 'Simple body'));
+      content: NotificationContent(
+        id: 1,
+        channelKey: _kChannelKey,
+        title: title,
+        body: body,
+      ),
+    );
   }
 }
