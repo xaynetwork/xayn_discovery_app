@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:http_client/http_client.dart' as http;
+import 'package:http_client/console.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -189,6 +189,16 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   Future<EngineEvent> resetAi() {
     // TODO: implement resetAi
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement client
+  http.ConsoleClient get client => throw UnimplementedError();
+
+  @override
+  Future<void> startRequestTunneling(String url) {
+    // TODO: implement startRequestTunneling
     throw UnimplementedError();
   }
 }

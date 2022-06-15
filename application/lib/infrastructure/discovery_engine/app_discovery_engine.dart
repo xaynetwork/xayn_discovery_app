@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/request_tunnel_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_local_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engine_init_failed_event.dart';
@@ -23,7 +24,9 @@ const int _kFeedBatchSize = 2;
 
 /// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
-class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
+class AppDiscoveryEngine
+    with AsyncInitMixin, RequestTunnelMixin
+    implements DiscoveryEngine {
   late final SaveInitialFeedMarketUseCase _saveInitialFeedMarketUseCase;
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final GetLocalMarketsUseCase _getLocalMarketsUseCase;
@@ -54,6 +57,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         _getLocalMarketsUseCase = getLocalMarketsUseCase,
         _setIdentityParamUseCase = setIdentityParamUseCase {
     if (!initialized) {
+      startRequestTunneling(Env.searchApiBaseUrl);
       startInitializing();
     }
   }
@@ -92,7 +96,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final feedMarkets = await _getLocalMarketsUseCase.singleOutput(none);
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
-      apiBaseUrl: Env.searchApiBaseUrl,
+      apiBaseUrl: 'http://127.0.0.1:1234',
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: _kFeedBatchSize,
