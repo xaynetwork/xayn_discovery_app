@@ -25,8 +25,9 @@ mixin RequestTunnelMixin {
       (Request request) async {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
+        final isKeywordLookup = request.url.path == '_sn';
 
-        if (request.url.path == '_sn') {
+        if (isKeywordLookup) {
           if (!queryParameters.containsKey('from')) {
             final fromDate = DateTime.now().subtract(const Duration(days: 30));
 
@@ -39,7 +40,7 @@ mixin RequestTunnelMixin {
           }
 
           if (queryParameters.containsKey('page_size')) {
-            queryParameters['page_size'] = '20';
+            queryParameters['page_size'] = '100';
           }
         }
 
@@ -62,13 +63,36 @@ mixin RequestTunnelMixin {
 
         final response = await client.send(actualRequest);
         final body = await response.readAsString();
-        final json = const JsonDecoder().convert(body) as Map;
-        final articles = json['articles'] as List? ?? const [];
+        var json = const JsonDecoder().convert(body) as Map;
+        final articles = List.from(json['articles'] as List? ?? const [])
+          ..sort((a, b) => DateTime.parse(a['published_date'])
+              .compareTo(DateTime.parse(b['published_date'])));
 
-        logger.i('Request: $actualUri, result count: ${articles.length}');
+        if (isKeywordLookup) {
+          final dateThreshold = articles.isNotEmpty
+              ? DateTime.parse(articles.first['published_date'])
+              : DateTime.now();
+          final articlesToKeep = <Map<String, dynamic>>[];
+
+          logger.i('Request: $actualUri, result count: ${articles.length}');
+
+          for (final Map<String, dynamic> article in articles) {
+            final datePublished = DateTime.parse(article['published_date']);
+
+            if (articlesToKeep.length < 20 ||
+                datePublished.difference(dateThreshold) <
+                    const Duration(days: 7)) {
+              articlesToKeep.add(article);
+            } else {
+              logger.i('removed old article from $datePublished');
+            }
+          }
+
+          json = Map<String, dynamic>.from(json)..['articles'] = articlesToKeep;
+        }
 
         return _Result(
-          body: body,
+          body: const JsonEncoder().convert(json),
           articleCount: articles.length,
         );
       };
