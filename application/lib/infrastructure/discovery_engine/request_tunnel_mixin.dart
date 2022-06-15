@@ -27,6 +27,13 @@ mixin RequestTunnelMixin {
             Map<String, String>.from(request.url.queryParameters);
 
         if (request.url.path == '_sn') {
+          if (!queryParameters.containsKey('from')) {
+            final fromDate = DateTime.now().subtract(const Duration(days: 30));
+
+            queryParameters['from'] =
+                '${fromDate.year}/${fromDate.month}/${fromDate.day}';
+          }
+
           if (queryParameters.containsKey('sort_by')) {
             queryParameters['sort_by'] = 'date';
           }
