@@ -52,6 +52,23 @@ mixin RequestTunnelMixin {
       (Request request) async {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
+
+        if (request.url.path == '_sn') {
+          final q = queryParameters['q'] ?? '';
+          final groups = q.split(') OR (');
+          var terms = groups.map((it) => it.substring(1)).join(' ');
+
+          terms = terms.substring(0, terms.length - 1);
+
+          final validTerms = terms.split(' ')
+            ..removeWhere((it) => it.length <= 3);
+          final rewrite = validTerms.toSet().join(' || ');
+
+          if (rewrite.isNotEmpty) {
+            queryParameters['q'] = rewrite;
+          }
+        }
+
         final actualUri = request.url.replace(
           scheme: uri.scheme,
           host: uri.host,
