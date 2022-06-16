@@ -75,21 +75,15 @@ mixin RequestTunnelMixin {
         final rawArticles = List.from(json['articles'] as List? ?? const [])
             .cast<Map<String, dynamic>>()
             .toList(growable: false);
-        final articles = rawArticles
-            .map((it) => Map<String, dynamic>.from(it))
-            .map((it) => it..['summary'] = reportCurrentResultSets())
-            .toList(growable: false);
 
         resultSets.add(ResultSet(
           timestamp: DateTime.now(),
           path: request.url.path,
           query: queryParameters['q'] ?? 'no query',
-          articles: articles,
+          articles: rawArticles,
         ));
 
-        json = Map<String, dynamic>.from(json)..['articles'] = articles;
-
-        return const JsonEncoder().convert(json);
+        return body;
       };
 }
 
