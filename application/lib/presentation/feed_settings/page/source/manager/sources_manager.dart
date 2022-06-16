@@ -9,10 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engi
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/temp.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/engine_events.dart';
 
 const Duration _kRemovalInterval = Duration(seconds: 1);
 
@@ -25,13 +22,13 @@ typedef OnExcludedSourcesListRequestSucceeded = SourcesState Function(
 typedef OnTrustedSourcesListRequestSucceeded = SourcesState Function(
     TrustedSourcesListRequestSucceeded event);
 typedef OnAddExcludeSourceSucceeded = SourcesState Function(
-    AddExcludedSourceSucceeded event);
+    AddExcludedSourceRequestSucceeded event);
 typedef OnRemoveExcludeSourceSucceeded = SourcesState Function(
-    RemoveExcludedSourceSucceeded event);
+    RemoveExcludedSourceRequestSucceeded event);
 typedef OnAddTrustSourceSucceeded = SourcesState Function(
-    AddTrustedSourceSucceeded event);
+    AddTrustedSourceRequestSucceeded event);
 typedef OnRemoveTrustSourceSucceeded = SourcesState Function(
-    RemoveTrustedSourceSucceeded event);
+    RemoveTrustedSourceRequestSucceeded event);
 typedef OnNonMatchedEngineEvent = SourcesState Function();
 
 enum Scope { excludedSources, trustedSources }
@@ -183,13 +180,13 @@ class SourcesManager extends Cubit<SourcesState>
             return excludedSourcesListRequestSucceeded(event);
           } else if (event is TrustedSourcesListRequestSucceeded) {
             return trustedSourcesListRequestSucceeded(event);
-          } else if (event is AddExcludedSourceSucceeded) {
+          } else if (event is AddExcludedSourceRequestSucceeded) {
             return addExcludeSourceSucceeded(event);
-          } else if (event is RemoveExcludedSourceSucceeded) {
+          } else if (event is RemoveExcludedSourceRequestSucceeded) {
             return removeExcludeSourceSucceeded(event);
-          } else if (event is AddTrustedSourceSucceeded) {
+          } else if (event is AddTrustedSourceRequestSucceeded) {
             return addTrustSourceSucceeded(event);
-          } else if (event is RemoveTrustedSourceSucceeded) {
+          } else if (event is RemoveTrustedSourceRequestSucceeded) {
             return removeTrustedSourceSucceeded(event);
           }
 
