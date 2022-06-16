@@ -1,3 +1,4 @@
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -20,7 +21,7 @@ class DocumentTimeSpentEvent extends AnalyticsEvent {
           properties: {
             _kParamDurationInSeconds: duration.inSeconds,
             _kParamViewMode: viewMode.name,
-            _kParamDocument: document.toJson(),
+            _kParamDocument: document.toAnalyticsJson(),
           },
         );
 }

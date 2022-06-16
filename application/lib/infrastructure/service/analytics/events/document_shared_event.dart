@@ -1,3 +1,4 @@
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/feed_analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -15,7 +16,7 @@ class DocumentSharedEvent extends FeedAnalyticsEvent {
           _kEventType,
           feedType: feedType,
           properties: {
-            _kParamDocument: document.toJson(),
+            _kParamDocument: document.toAnalyticsJson(),
           },
         );
 }
