@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
@@ -44,7 +43,7 @@ mixin RequestTunnelMixin {
   Future<Response> Function(Request) _echoRequest(Uri uri) =>
       (Request request) async {
         final result = await _doRequest(uri)(request);
-        log(result);
+
         return Response.ok(result);
       };
 
@@ -53,21 +52,44 @@ mixin RequestTunnelMixin {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
 
-        if (request.url.path == '_sn') {
+        if (request.url.path == 'search') {
           final q = queryParameters['q'] ?? '';
-          final groups = q.split(') OR (');
-          var terms = groups
-              .map((it) => it.startsWith('(') ? it.substring(1) : it)
-              .join(' ');
 
-          terms = terms.substring(0, terms.length - 1);
+          if (q.contains(') OR (')) {
+            final groups = q.split(') OR (');
+            var terms = groups
+                .map((it) => it.startsWith('(') ? it.substring(1) : it)
+                .join(' ');
 
-          final validTerms = terms.split(' ')
-            ..removeWhere((it) => it.length <= 3);
-          final rewrite = validTerms.toSet().join(' || ');
+            terms = terms.substring(0, terms.length - 1);
 
-          if (rewrite.isNotEmpty) {
-            queryParameters['q'] = rewrite;
+            var validTerms = terms.split(' ')
+              ..removeWhere((it) => it.length <= 3);
+
+            validTerms = validTerms.toSet().toList();
+            validTerms.sort((a, b) => b.length.compareTo(a.length));
+
+            if (validTerms.length > 3) {
+              validTerms = validTerms.take(3).toList();
+            }
+
+            final rewrite = validTerms.join(' || ');
+
+            if (rewrite.isNotEmpty) {
+              queryParameters['q'] = rewrite;
+            }
+
+            final isSearch = !q.contains(') OR (');
+
+            if (isSearch) {
+              final longAgo =
+                  DateTime.now().subtract(const Duration(days: 700));
+
+              queryParameters.remove('countries');
+              queryParameters['page_size'] = '100';
+              queryParameters['from'] =
+                  '${longAgo.year}/${longAgo.month}/${longAgo.day}';
+            }
           }
         }
 
@@ -75,8 +97,13 @@ mixin RequestTunnelMixin {
           scheme: uri.scheme,
           host: uri.host,
           port: uri.port,
+          pathSegments: [
+            ...uri.pathSegments,
+            request.url.toString().split('?').first
+          ],
           queryParameters: queryParameters,
         );
+        print('actualUri= $actualUri');
         final headers = Map<String, String>.from(request.headers);
 
         headers['host'] = uri.host;
@@ -90,7 +117,9 @@ mixin RequestTunnelMixin {
 
         final response = await client.send(actualRequest);
         final body = await response.readAsString();
+
         var json = const JsonDecoder().convert(body) as Map;
+
         final rawArticles = List.from(json['articles'] as List? ?? const [])
             .cast<Map<String, dynamic>>()
             .toList(growable: false);
