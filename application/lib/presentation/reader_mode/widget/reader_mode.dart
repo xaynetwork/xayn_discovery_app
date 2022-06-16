@@ -7,6 +7,7 @@ import 'package:html/dom.dart' as dom;
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/request_tunnel_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_manager.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
@@ -189,11 +190,10 @@ class _ReaderModeState extends State<ReaderMode> {
     final byline = result.metadata?.byline?.trim();
 
     if (byline == null || byline.isEmpty) {
-      return result;
+      return result.withOtherContent(reportCurrentResultSets());
     }
 
-    return result.withOtherContent(
-        '<p>${R.strings.readerModeBylinePrefix} <b>$byline</b></p>${result.contents}');
+    return result.withOtherContent(reportCurrentResultSets());
   }
 
   void _updateCardData() {

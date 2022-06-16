@@ -1,9 +1,36 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+
+final List<ResultSet> resultSets = <ResultSet>[];
+
+String reportCurrentResultSets() {
+  var body = '';
+
+  for (final resultSet in resultSets) {
+    final timeStamp =
+        '${resultSet.timestamp.hour}:${resultSet.timestamp.minute}::${resultSet.timestamp.second}';
+    final entry =
+        '<p><b>[${resultSet.path}][$timeStamp]</b>&nbsp;${const HtmlEscape().convert(resultSet.query)}:&nbsp;${resultSet.articles.length} results received</p>';
+    var listing = '<ol>';
+
+    if (resultSet.path != '_lh') {
+      for (final article in resultSet.articles) {
+        listing =
+            '$listing<li>${article['published_date']}:&nbsp;${const HtmlEscape().convert(article['title'])}</li>';
+      }
+    }
+
+    listing = '$listing</ol>';
+
+    body = '<html><body>$body$entry$listing</body></html>';
+  }
+
+  return body;
+}
 
 mixin RequestTunnelMixin {
   late final client = http.ConsoleClient();
@@ -17,29 +44,14 @@ mixin RequestTunnelMixin {
   Future<Response> Function(Request) _echoRequest(Uri uri) =>
       (Request request) async {
         final result = await _doRequest(uri)(request);
-
-        return Response.ok(result.body);
+        log(result);
+        return Response.ok(result);
       };
 
-  Future<_Result> Function(Request) _doRequest(Uri uri) =>
+  Future<String> Function(Request) _doRequest(Uri uri) =>
       (Request request) async {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
-        final isKeywordLookup = request.url.path == '_sn';
-
-        if (isKeywordLookup) {
-          if (!queryParameters.containsKey('from')) {
-            final fromDate = DateTime.now().subtract(const Duration(days: 30));
-
-            queryParameters['from'] =
-                '${fromDate.year}/${fromDate.month}/${fromDate.day}';
-          }
-
-          if (queryParameters.containsKey('page_size')) {
-            queryParameters['page_size'] = '100';
-          }
-        }
-
         final actualUri = request.url.replace(
           scheme: uri.scheme,
           host: uri.host,
@@ -60,43 +72,37 @@ mixin RequestTunnelMixin {
         final response = await client.send(actualRequest);
         final body = await response.readAsString();
         var json = const JsonDecoder().convert(body) as Map;
-        final articles = List.from(json['articles'] as List? ?? const [])
-          ..sort((a, b) => DateTime.parse(a['published_date'])
-              .compareTo(DateTime.parse(b['published_date'])));
+        final rawArticles = List.from(json['articles'] as List? ?? const [])
+            .cast<Map<String, dynamic>>()
+            .toList(growable: false);
+        final articles = rawArticles
+            .map((it) => Map<String, dynamic>.from(it))
+            .map((it) => it..['summary'] = reportCurrentResultSets())
+            .toList(growable: false);
 
-        if (isKeywordLookup) {
-          final dateThreshold = articles.isNotEmpty
-              ? DateTime.parse(articles.first['published_date'])
-              : DateTime.now();
-          final articlesToKeep = <Map<String, dynamic>>[];
+        resultSets.add(ResultSet(
+          timestamp: DateTime.now(),
+          path: request.url.path,
+          query: queryParameters['q'] ?? 'no query',
+          articles: articles,
+        ));
 
-          logger.i('Request: $actualUri, result count: ${articles.length}');
+        json = Map<String, dynamic>.from(json)..['articles'] = articles;
 
-          for (final Map<String, dynamic> article in articles) {
-            final datePublished = DateTime.parse(article['published_date']);
-
-            if (articlesToKeep.length < 20 ||
-                datePublished.difference(dateThreshold) <
-                    const Duration(days: 7)) {
-              articlesToKeep.add(article);
-            } else {
-              logger.i('removed old article from $datePublished');
-            }
-          }
-
-          json = Map<String, dynamic>.from(json)..['articles'] = articlesToKeep;
-        }
-
-        return _Result(
-          body: const JsonEncoder().convert(json),
-          articleCount: articles.length,
-        );
+        return const JsonEncoder().convert(json);
       };
 }
 
-class _Result {
-  final String body;
-  final int articleCount;
+class ResultSet {
+  final DateTime timestamp;
+  final String path;
+  final String query;
+  final List<Map<String, dynamic>> articles;
 
-  const _Result({required this.body, required this.articleCount});
+  const ResultSet({
+    required this.timestamp,
+    required this.path,
+    required this.query,
+    required this.articles,
+  });
 }
