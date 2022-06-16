@@ -17,11 +17,24 @@ class PushNotificationsService {
   }
 
   void _pushMessageHandler(PushReceivedEvent event) async {
+    // ignore: avoid_print
+    print('Notification received');
+
     final event = await _engine.requestNextFeedBatch();
-    if (event is! NextFeedBatchRequestSucceeded) return;
-    if (event.items.isEmpty) return;
+    if (event is! NextFeedBatchRequestSucceeded) {
+      // ignore: avoid_print
+      print('Engine event: $event');
+      return;
+    }
+    if (event.items.isEmpty) {
+      // ignore: avoid_print
+      print('No documents');
+      return;
+    }
     final document = event.items.first;
 
+    // ignore: avoid_print
+    print('Latest news: ${document.resource.title}');
     _sendLocal(
       title: document.resource.title,
       body: document.resource.snippet,
