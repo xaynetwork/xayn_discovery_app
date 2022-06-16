@@ -249,10 +249,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.addSourceToExcludedList(source));
   }
 
-  @Deprecated('remove after engine update')
+  @override
   Future<EngineEvent> addSourceToTrustedList(Source source) {
     _inputLog.add('[addSourceToTrustedList]');
-    return safeRun(() => _engine.send(ClientEvent.trustedSourceAdded(source)));
+    return safeRun(() => _engine.addSourceToTrustedList(source));
   }
 
   @override
@@ -261,11 +261,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.getExcludedSourcesList());
   }
 
-  @Deprecated('remove after engine update')
+  @override
   Future<EngineEvent> getTrustedSourcesList() {
     _inputLog.add('[getTrustedSourcesList]');
-    return safeRun(
-        () => _engine.send(const ClientEvent.trustedSourcesListRequested()));
+    return safeRun(() => _engine.getTrustedSourcesList());
   }
 
   @override
@@ -280,11 +279,10 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
   }
 
-  @Deprecated('remove after engine update')
+  @override
   Future<EngineEvent> removeSourceFromTrustedList(Source source) {
     _inputLog.add('[removeSourceFromTrustedList]');
-    return safeRun(
-        () => _engine.send(ClientEvent.trustedSourceRemoved(source)));
+    return safeRun(() => _engine.removeSourceFromTrustedList(source));
   }
 
   @override
