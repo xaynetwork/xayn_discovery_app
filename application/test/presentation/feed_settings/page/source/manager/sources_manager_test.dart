@@ -7,14 +7,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/temp.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/domain/models/source.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/client_events.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/events/engine_events.dart';
 
 import '../../../../../test_utils/utils.dart';
 
@@ -78,15 +71,17 @@ void main() {
     when(engine.getTrustedSourcesList()).thenAnswer((_) =>
         addEvent(TrustedSourcesListRequestSucceeded(defaultTrustedSources)));
     when(engine.addSourceToExcludedList(any)).thenAnswer((it) =>
-        addEventFromSource(it, (source) => AddExcludedSourceSucceeded(source)));
+        addEventFromSource(
+            it, (source) => AddExcludedSourceRequestSucceeded(source)));
     when(engine.addSourceToTrustedList(any)).thenAnswer((it) =>
-        addEventFromSource(it, (source) => AddTrustedSourceSucceeded(source)));
+        addEventFromSource(
+            it, (source) => AddTrustedSourceRequestSucceeded(source)));
     when(engine.removeSourceFromExcludedList(any)).thenAnswer((it) =>
         addEventFromSource(
-            it, (source) => RemoveExcludedSourceSucceeded(source)));
+            it, (source) => RemoveExcludedSourceRequestSucceeded(source)));
     when(engine.removeSourceFromTrustedList(any)).thenAnswer((it) =>
         addEventFromSource(
-            it, (source) => RemoveTrustedSourceSucceeded(source)));
+            it, (source) => RemoveTrustedSourceRequestSucceeded(source)));
     when(engine.send(any)).thenAnswer((realInvocation) {
       final clientEvent =
           realInvocation.positionalArguments.first as ClientEvent;
@@ -95,16 +90,18 @@ void main() {
         return addEvent(
             TrustedSourcesListRequestSucceeded(defaultTrustedSources));
       } else if (clientEvent is ExcludedSourceAdded) {
-        return addEvent(AddExcludedSourceSucceeded(clientEvent.source));
+        return addEvent(AddExcludedSourceRequestSucceeded(clientEvent.source));
       } else if (clientEvent is TrustedSourceAdded) {
-        return addEvent(AddTrustedSourceSucceeded(clientEvent.source));
+        return addEvent(AddTrustedSourceRequestSucceeded(clientEvent.source));
       } else if (clientEvent is ExcludedSourceRemoved) {
-        return addEvent(RemoveExcludedSourceSucceeded(clientEvent.source));
+        return addEvent(
+            RemoveExcludedSourceRequestSucceeded(clientEvent.source));
       } else if (clientEvent is TrustedSourceRemoved) {
-        return addEvent(RemoveTrustedSourceSucceeded(clientEvent.source));
+        return addEvent(
+            RemoveTrustedSourceRequestSucceeded(clientEvent.source));
       }
 
-      return Future.value(TempEngineEvent());
+      return Future.value(realInvocation.positionalArguments.first);
     });
 
     await configureTestDependencies();
