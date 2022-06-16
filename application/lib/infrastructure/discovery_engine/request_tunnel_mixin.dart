@@ -56,7 +56,9 @@ mixin RequestTunnelMixin {
         if (request.url.path == '_sn') {
           final q = queryParameters['q'] ?? '';
           final groups = q.split(') OR (');
-          var terms = groups.map((it) => it.substring(1)).join(' ');
+          var terms = groups
+              .map((it) => it.startsWith('(') ? it.substring(1) : it)
+              .join(' ');
 
           terms = terms.substring(0, terms.length - 1);
 
