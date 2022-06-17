@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
@@ -18,10 +17,16 @@ String reportCurrentResultSets() {
     var listing = '<ol>';
 
     if (resultSet.path != '_lh') {
-      for (final article in resultSet.articles) {
+      var res = resultSet.articles;
+
+      if (res.length > 5) res = res.sublist(0, 5);
+
+      for (final article in res) {
         listing =
             '$listing<li>${article['published_date']}:&nbsp;${const HtmlEscape().convert(article['title'])}</li>';
       }
+
+      listing = '<span>Displaying top 5 results: </span>$listing';
     }
 
     listing = '$listing</ol>';
@@ -34,6 +39,7 @@ String reportCurrentResultSets() {
 
 mixin RequestTunnelMixin {
   late final client = http.ConsoleClient();
+  var _lhPageCount = 0;
 
   Future<void> startRequestTunneling(String url) async {
     final handler = const Pipeline().addHandler(_echoRequest(Uri.parse(url)));
@@ -44,66 +50,148 @@ mixin RequestTunnelMixin {
   Future<Response> Function(Request) _echoRequest(Uri uri) =>
       (Request request) async {
         final result = await _doRequest(uri)(request);
-        log(result);
+
         return Response.ok(result);
       };
 
-  Future<String> Function(Request) _doRequest(Uri uri) =>
-      (Request request) async {
+  Future<String> Function(Request) _doRequest(Uri uri) => (Request request) {
+        final isLatestHeadlines = request.url.path == '_lh';
+
+        if (isLatestHeadlines) {
+          return _fetchLatestHeadlines(uri)(request);
+        }
+
+        final queryParameters =
+            Map<String, String>.from(request.url.queryParameters);
+        final q = queryParameters['q'] ?? '';
+        final isPersonalizedSearch = q.contains(') OR (');
+
+        if (isPersonalizedSearch) {
+          return _fetchPersonalized(uri)(request);
+        }
+
+        return _fetchQuery(uri)(request);
+      };
+
+  Future<String> Function(Request) _fetchLatestHeadlines(Uri uri) =>
+      (Request request) {
+        final queryParameters =
+            Map<String, String>.from(request.url.queryParameters);
+        final page = _lhPageCount % 5 + 1;
+
+        _lhPageCount++;
+
+        queryParameters['page'] = '$page';
+
+        final actualRequest = _buildActualRequest(
+          request,
+          uri,
+          queryParameters,
+        );
+
+        return _performActualApiCall(
+          _buildActualRequest(
+            request,
+            uri,
+            queryParameters,
+          ),
+          const HtmlEscape().convert(actualRequest.uri.toString()),
+          request.url.path,
+        );
+      };
+
+  Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
+      (Request request) {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
 
-        if (request.url.path == '_sn') {
-          final q = queryParameters['q'] ?? '';
-          final groups = q.split(') OR (');
-          var terms = groups
-              .map((it) => it.startsWith('(') ? it.substring(1) : it)
-              .join(' ');
+        final q = queryParameters['q'] ?? '';
+        final groups = q.split(') OR (');
+        var terms = groups
+            .map((it) => it.startsWith('(') ? it.substring(1) : it)
+            .join(' ');
 
-          terms = terms.substring(0, terms.length - 1);
+        terms = terms.substring(0, terms.length - 1);
 
-          final validTerms = terms.split(' ')
-            ..removeWhere((it) => it.length <= 3);
-          final rewrite = validTerms.toSet().join(' || ');
+        var validTerms = terms.split(' ')..removeWhere((it) => it.length <= 3);
 
-          if (rewrite.isNotEmpty) {
-            queryParameters['q'] = rewrite;
-          }
+        validTerms = validTerms.toSet().toList();
+
+        validTerms.sort((a, b) => b.length.compareTo(a.length));
+
+        if (validTerms.length > 3) validTerms = validTerms.sublist(0, 3);
+
+        final rewrite =
+            '(${validTerms.join(' ')}) OR (${validTerms.join(' || ')})';
+
+        if (rewrite.isNotEmpty) {
+          queryParameters['q'] = rewrite;
         }
 
-        final actualUri = request.url.replace(
-          scheme: uri.scheme,
-          host: uri.host,
-          port: uri.port,
-          queryParameters: queryParameters,
+        return _performActualApiCall(
+          _buildActualRequest(
+            request,
+            uri,
+            queryParameters,
+          ),
+          queryParameters['q'] ?? 'no query',
+          request.url.path,
         );
-        final headers = Map<String, String>.from(request.headers);
-
-        headers['host'] = uri.host;
-
-        final actualRequest = http.Request(
-          request.method,
-          actualUri,
-          headers: headers,
-          encoding: request.encoding,
-        );
-
-        final response = await client.send(actualRequest);
-        final body = await response.readAsString();
-        var json = const JsonDecoder().convert(body) as Map;
-        final rawArticles = List.from(json['articles'] as List? ?? const [])
-            .cast<Map<String, dynamic>>()
-            .toList(growable: false);
-
-        resultSets.add(ResultSet(
-          timestamp: DateTime.now(),
-          path: request.url.path,
-          query: queryParameters['q'] ?? 'no query',
-          articles: rawArticles,
-        ));
-
-        return body;
       };
+
+  Future<String> Function(Request) _fetchQuery(Uri uri) => (Request request) {
+        final queryParameters =
+            Map<String, String>.from(request.url.queryParameters);
+
+        return _performActualApiCall(
+          _buildActualRequest(
+            request,
+            uri,
+            queryParameters,
+          ),
+          queryParameters['q'] ?? 'no query',
+          request.url.path,
+        );
+      };
+
+  http.Request _buildActualRequest(
+      Request request, Uri uri, Map<String, dynamic> queryParameters) {
+    final actualUri = request.url.replace(
+      scheme: uri.scheme,
+      host: uri.host,
+      port: uri.port,
+      queryParameters: queryParameters,
+    );
+    final headers = Map<String, String>.from(request.headers);
+
+    headers['host'] = uri.host;
+
+    return http.Request(
+      request.method,
+      actualUri,
+      headers: headers,
+      encoding: request.encoding,
+    );
+  }
+
+  Future<String> _performActualApiCall(
+      http.Request request, String query, String path) async {
+    final response = await client.send(request);
+    final body = await response.readAsString();
+    var json = const JsonDecoder().convert(body) as Map;
+    final rawArticles = List.from(json['articles'] as List? ?? const [])
+        .cast<Map<String, dynamic>>()
+        .toList(growable: false);
+
+    resultSets.add(ResultSet(
+      timestamp: DateTime.now(),
+      path: path,
+      query: query,
+      articles: rawArticles,
+    ));
+
+    return body;
+  }
 }
 
 class ResultSet {
