@@ -8,6 +8,9 @@ class Keys {
   static const Key personalAreaIconSettings =
       Key('personal_area_icon_settings');
 
+  static const Key personalAreaIconPlus =
+  Key('personal_area_icon_plus');
+
   static const Key settingsThemeSystem = Key('settings_theme_item_system');
   static const Key settingsThemeLight = Key('settings_theme_item_light');
   static const Key settingsThemeDark = Key('settings_theme_item_dark');
