@@ -101,42 +101,77 @@ mixin RequestTunnelMixin {
       };
 
   Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
-      (Request request) {
+      (Request request) async {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
-
-        final q = queryParameters['q'] ?? '';
-        final groups = q.split(') OR (');
-        var terms = groups
-            .map((it) => it.startsWith('(') ? it.substring(1) : it)
-            .join(' ');
-
-        terms = terms.substring(0, terms.length - 1);
-
-        var validTerms = terms.split(' ')..removeWhere((it) => it.length <= 3);
-
-        validTerms = validTerms.toSet().toList();
-
-        validTerms.sort((a, b) => b.length.compareTo(a.length));
-
-        if (validTerms.length > 3) validTerms = validTerms.sublist(0, 3);
-
-        final rewrite =
-            '(${validTerms.join(' ')}) OR (${validTerms.join(' || ')})';
-
-        if (rewrite.isNotEmpty) {
-          queryParameters['q'] = rewrite;
-        }
-
-        return _performActualApiCall(
-          _buildActualRequest(
-            request,
-            uri,
-            queryParameters,
-          ),
+        final optimisticRequest = _buildActualRequest(
+          request,
+          uri,
+          queryParameters,
+        );
+        final optimisticMatch = await _performActualApiCall(
+          optimisticRequest,
           queryParameters['q'] ?? 'no query',
           request.url.path,
         );
+        final optimisticJson = Map<String, dynamic>.from(
+            const JsonDecoder().convert(optimisticMatch) as Map);
+        final optimisticCount = optimisticJson['articles'].length as int;
+
+        if (optimisticCount < 100) {
+          final rest = 100 - optimisticCount;
+
+          queryParameters['page_size'] = '$rest';
+
+          final q = queryParameters['q'] ?? '';
+          final groups = q.split(') OR (');
+          var terms = groups
+              .map((it) => it.startsWith('(') ? it.substring(1) : it)
+              .join(' ');
+
+          terms = terms.substring(0, terms.length - 1);
+
+          var validTerms = terms.split(' ')
+            ..removeWhere((it) => it.length <= 3);
+
+          validTerms = validTerms.toSet().toList();
+
+          validTerms.sort((a, b) => b.length.compareTo(a.length));
+
+          if (validTerms.length > 3) validTerms = validTerms.sublist(0, 3);
+
+          final rewrite =
+              '(${validTerms.join(' ')}) OR (${validTerms.join(' || ')})';
+
+          if (rewrite.isNotEmpty) {
+            queryParameters['q'] = rewrite;
+
+            final fuzzyRequest = _buildActualRequest(
+              request,
+              uri,
+              queryParameters,
+            );
+
+            final fuzzyMatch = await _performActualApiCall(
+              fuzzyRequest,
+              queryParameters['q'] ?? 'no query',
+              request.url.path,
+            );
+
+            final fuzzyJson = const JsonDecoder().convert(fuzzyMatch) as Map;
+
+            optimisticJson['articles'] = [
+              ...optimisticJson['articles'],
+              ...fuzzyJson['articles']
+            ];
+            optimisticJson['total_hits'] =
+                '${optimisticJson['articles'].length as int}';
+
+            return const JsonEncoder().convert(optimisticJson);
+          }
+        }
+
+        return optimisticMatch;
       };
 
   Future<String> Function(Request) _fetchQuery(Uri uri) => (Request request) {
