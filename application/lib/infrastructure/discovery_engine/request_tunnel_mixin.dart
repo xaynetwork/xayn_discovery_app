@@ -123,28 +123,23 @@ mixin RequestTunnelMixin {
 
           queryParameters['page_size'] = '$rest';
 
+          final expr = RegExp(r'\(([^\)]+)\)');
           final q = queryParameters['q'] ?? '';
-          final groups = q.split(') OR (');
-          var terms = groups
-              .map((it) => it.startsWith('(') ? it.substring(1) : it)
-              .join(' ');
+          final groups = expr.allMatches(q);
+          final qry = <String>[];
 
-          terms = terms.substring(0, terms.length - 1);
+          for (final group in groups) {
+            final terms = group.group(1) ?? '';
+            final words = terms
+                .split(' ')
+                .where((it) => it.length > 3)
+                .toList(growable: false);
 
-          var validTerms = terms.split(' ')
-            ..removeWhere((it) => it.length <= 3);
+            qry.add('(${words.join(' ')}) OR (${words.join(' || ')})');
+          }
 
-          validTerms = validTerms.toSet().toList();
-
-          validTerms.sort((a, b) => b.length.compareTo(a.length));
-
-          if (validTerms.length > 3) validTerms = validTerms.sublist(0, 3);
-
-          final rewrite =
-              '(${validTerms.join(' ')}) OR (${validTerms.join(' || ')})';
-
-          if (rewrite.isNotEmpty) {
-            queryParameters['q'] = rewrite;
+          if (qry.isNotEmpty) {
+            queryParameters['q'] = qry.join(' OR ');
 
             final fuzzyRequest = _buildActualRequest(
               request,
