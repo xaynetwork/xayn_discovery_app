@@ -9,13 +9,13 @@ class SourcesView extends StatelessWidget {
   final SourcesManager manager;
   final SourcesState state;
   final Set<Source> sources;
-  final Scope scope;
+  final SourceType sourceType;
 
   SourcesView.excludedSources({
     Key? key,
     required this.manager,
     required this.state,
-  })  : scope = Scope.excludedSources,
+  })  : sourceType = SourceType.excluded,
         sources = state.jointExcludedSources,
         super(key: key);
 
@@ -23,7 +23,7 @@ class SourcesView extends StatelessWidget {
     Key? key,
     required this.manager,
     required this.state,
-  })  : scope = Scope.trustedSources,
+  })  : sourceType = SourceType.trusted,
         sources = state.jointTrustedSources,
         super(key: key);
 
@@ -40,11 +40,11 @@ class SourcesView extends StatelessWidget {
 
   Widget _createItem(BuildContext context, Source source) {
     final isPendingRemoval =
-            manager.isPendingRemoval(source: source, scope: scope),
+            manager.isPendingRemoval(source: source, scope: sourceType),
         isPendingAddition =
-            manager.isPendingAddition(source: source, scope: scope);
+            manager.isPendingAddition(source: source, scope: sourceType);
 
-    onRemove() => scope == Scope.excludedSources
+    onRemove() => sourceType == SourceType.excluded
         ? manager.removeSourceFromExcludedList(source)
         : manager.removeSourceFromTrustedList(source);
     onAdd() => manager.removePendingSourceOperation(source);
