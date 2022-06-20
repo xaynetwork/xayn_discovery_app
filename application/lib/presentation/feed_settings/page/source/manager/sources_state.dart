@@ -4,12 +4,6 @@ import 'package:xayn_discovery_engine/src/domain/models/source.dart';
 
 part 'sources_state.freezed.dart';
 
-enum SourceState {
-  normal,
-  pendingRemoval,
-  pendingAddition,
-}
-
 @freezed
 class SourcesState with _$SourcesState {
   const SourcesState._();
