@@ -9,6 +9,7 @@ class SourceListItem extends StatelessWidget {
   final bool isPendingRemoval;
   final bool isPendingAddition;
   final VoidCallback onActionTapped;
+  final String? fixedIcon;
 
   const SourceListItem({
     Key? key,
@@ -16,6 +17,7 @@ class SourceListItem extends StatelessWidget {
     required this.isPendingAddition,
     required this.isPendingRemoval,
     required this.onActionTapped,
+    this.fixedIcon,
   }) : super(key: key);
 
   @override
@@ -95,7 +97,8 @@ class SourceListItem extends StatelessWidget {
   }
 
   Widget _buildActionIcon() {
-    final icon = isPendingRemoval ? R.assets.icons.plus : R.assets.icons.cross;
+    final icon = fixedIcon ??
+        (isPendingRemoval ? R.assets.icons.plus : R.assets.icons.cross);
     final btn = SvgPicture.asset(
       icon,
       color: R.colors.icon,

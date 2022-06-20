@@ -180,7 +180,7 @@ class TranslationsPl extends Translations {
   String get errorGenericHeaderSomethingWentWrong => """Coś poszło nie tak""";
   String get errorGenericBodyPleaseTryAgainLater =>
       """Spróbuj ponownie później.""";
-  String get errorClose => """Blisko""";
+  String get errorClose => """Zamknij""";
   String get sourceHandlingTooltipLabel => """Czego chcesz mniej widzieć?""";
   String get sourceHandlingTooltipHighlightedWord => """Co""";
   String get enableTextToSpeech => """Włącz zamianę tekstu na mowę""";
@@ -226,6 +226,19 @@ class TranslationsPl extends Translations {
   String get takeSurveySubtitle =>
       """Jak możemy jeszcze bardziej ulepszyć Xayn?""";
   String get takeSurveyCTA => """Zabierz mnie do ankiety""";
+  String get addExcludedSource => """Add a source to exclude""";
+  String get addTrustedSource => """Add a trusted source""";
+  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addSourceDescription =>
+      """Search for a source name or URL to start""";
+  String get btnSave => """Save""";
+  String get trustedSourcesTab => """Trusted Sources""";
+  String get excludedSourcesTab => """Excluded Sources""";
+  String get trustedSourcesDescription =>
+      """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""";
+  String get btnAdd => """Add source""";
+  String get excludedSourcesDescription =>
+      """Sources that you disliked will not be shown in your Home Feed anymore.""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -261,7 +274,7 @@ class OnboardingBottomDialogTranslationsPl
 class GeneralTranslationsPl extends GeneralTranslations {
   final TranslationsPl _parent;
   const GeneralTranslationsPl(this._parent) : super(_parent);
-  String get btnClose => """Zakończyć""";
+  String get btnClose => """Zamknij""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -397,7 +410,7 @@ Map<String, String> get translationsPlMap => {
       """errorGenericHeaderSomethingWentWrong""": """Coś poszło nie tak""",
       """errorGenericBodyPleaseTryAgainLater""":
           """Spróbuj ponownie później.""",
-      """errorClose""": """Blisko""",
+      """errorClose""": """Zamknij""",
       """sourceHandlingTooltipLabel""": """Czego chcesz mniej widzieć?""",
       """sourceHandlingTooltipHighlightedWord""": """Co""",
       """enableTextToSpeech""": """Włącz zamianę tekstu na mowę""",
@@ -446,10 +459,23 @@ Map<String, String> get translationsPlMap => {
       """onboardingBottomDialog.bookmarksManageTitle""":
           """Naciśnij i przytrzymaj, aby zarządzać zakładkami""",
       """onboardingBottomDialog.cancelButton""": """Rozumiem!""",
-      """general.btnClose""": """Zakończyć""",
+      """general.btnClose""": """Zamknij""",
       """subscriptionDurationMonth""": """miesiąc""",
       """takeSurveyTitle""": """Masz minutkę?""",
       """takeSurveySubtitle""":
           """Jak możemy jeszcze bardziej ulepszyć Xayn?""",
       """takeSurveyCTA""": """Zabierz mnie do ankiety""",
+      """addExcludedSource""": """Add a source to exclude""",
+      """addTrustedSource""": """Add a trusted source""",
+      """addSourcePlaceholder""": """Search or enter URL""",
+      """addSourceDescription""":
+          """Search for a source name or URL to start""",
+      """btnSave""": """Save""",
+      """trustedSourcesTab""": """Trusted Sources""",
+      """excludedSourcesTab""": """Excluded Sources""",
+      """trustedSourcesDescription""":
+          """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""",
+      """btnAdd""": """Add source""",
+      """excludedSourcesDescription""":
+          """Sources that you disliked will not be shown in your Home Feed anymore.""",
     };

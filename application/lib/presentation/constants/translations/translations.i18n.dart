@@ -224,6 +224,19 @@ class Translations {
   String get takeSurveySubtitle =>
       """We'd love your opinion on how to make the app better""";
   String get takeSurveyCTA => """Take me to the survey""";
+  String get addExcludedSource => """Add a source to exclude""";
+  String get addTrustedSource => """Add a trusted source""";
+  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addSourceDescription =>
+      """Search for a source name or URL to start""";
+  String get btnSave => """Save""";
+  String get trustedSourcesTab => """Trusted Sources""";
+  String get excludedSourcesTab => """Excluded Sources""";
+  String get trustedSourcesDescription =>
+      """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""";
+  String get btnAdd => """Add source""";
+  String get excludedSourcesDescription =>
+      """Sources that you disliked will not be shown in your Home Feed anymore.""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -444,4 +457,17 @@ Map<String, String> get translationsMap => {
       """takeSurveySubtitle""":
           """We'd love your opinion on how to make the app better""",
       """takeSurveyCTA""": """Take me to the survey""",
+      """addExcludedSource""": """Add a source to exclude""",
+      """addTrustedSource""": """Add a trusted source""",
+      """addSourcePlaceholder""": """Search or enter URL""",
+      """addSourceDescription""":
+          """Search for a source name or URL to start""",
+      """btnSave""": """Save""",
+      """trustedSourcesTab""": """Trusted Sources""",
+      """excludedSourcesTab""": """Excluded Sources""",
+      """trustedSourcesDescription""":
+          """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""",
+      """btnAdd""": """Add source""",
+      """excludedSourcesDescription""":
+          """Sources that you disliked will not be shown in your Home Feed anymore.""",
     };
