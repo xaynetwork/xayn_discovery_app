@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_crdt/hive_crdt.dart';
 import 'package:injectable/injectable.dart';
@@ -43,9 +44,7 @@ class HiveBookmarksRepository extends HiveRepository<Bookmark>
   @override
   Bookmark? getByUrl(String url) {
     final bookmarks = getAll();
-    for (var bookmark in bookmarks) {
-      if (bookmark.url == url) return bookmark;
-    }
-    return null;
+
+    return bookmarks.firstWhereOrNull((it) => it.url == url);
   }
 }

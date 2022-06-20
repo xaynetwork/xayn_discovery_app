@@ -29,7 +29,8 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
     /// The [favicon] field is nullable
     final favicon = map[BookmarkMapperFields.providerThumbnail] as String?;
 
-    final url = map[BookmarkMapperFields.url] ?? '';
+    final url =
+        map[BookmarkMapperFields.url] ?? throwMapperException() as String;
 
     final createdAt =
         map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
