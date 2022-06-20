@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
@@ -17,6 +18,7 @@ void main() {
   late SourcesPendingOperations sourcesPendingOperations;
   late StreamController<EngineEvent> eventsController;
   late MockAppDiscoveryEngine engine;
+  late SourcesScreenNavActions navActions;
 
   final defaultExcludedSources = {
     Source('https://www.a.com'),
@@ -50,6 +52,7 @@ void main() {
     sourcesPendingOperations = InMemorySourcesPendingOperations();
     engineEventsUseCase = MockEngineEventsUseCase();
     engine = MockAppDiscoveryEngine();
+    navActions = MockSourcesScreenNavActions();
     eventsController = StreamController<EngineEvent>();
 
     when(engineEventsUseCase.transaction(any))
@@ -110,7 +113,11 @@ void main() {
 
     di.registerFactory<DiscoveryEngine>(() => engine);
 
-    manager = SourcesManager(engineEventsUseCase, sourcesPendingOperations);
+    manager = SourcesManager(
+      navActions,
+      engineEventsUseCase,
+      sourcesPendingOperations,
+    );
   });
 
   blocTest<SourcesManager, SourcesState>(
@@ -162,6 +169,10 @@ void main() {
             trustedSources: defaultTrustedSources,
             jointExcludedSources: {...defaultExcludedSources, newSource},
             jointTrustedSources: defaultTrustedSources,
+            operations: {
+              SourcesManagementOperation.addToExcludedSources(
+                  Source('https://www.new.com'))
+            },
           ));
 
       expect(
@@ -207,11 +218,17 @@ void main() {
       expect(
           manager.state,
           SourcesState(
-            excludedSources: defaultExcludedSources,
-            trustedSources: defaultTrustedSources,
-            jointExcludedSources: defaultExcludedSources,
-            jointTrustedSources: {...defaultTrustedSources, newSource},
-          ));
+              excludedSources: defaultExcludedSources,
+              trustedSources: defaultTrustedSources,
+              jointExcludedSources: defaultExcludedSources,
+              jointTrustedSources: {
+                ...defaultTrustedSources,
+                newSource
+              },
+              operations: {
+                SourcesManagementOperation.addToTrustedSources(
+                    Source('https://www.new.com'))
+              }));
 
       expect(
           manager.isPendingAddition(
@@ -256,11 +273,14 @@ void main() {
       expect(
           manager.state,
           SourcesState(
-            excludedSources: defaultExcludedSources,
-            trustedSources: defaultTrustedSources,
-            jointExcludedSources: defaultExcludedSources,
-            jointTrustedSources: defaultTrustedSources,
-          ));
+              excludedSources: defaultExcludedSources,
+              trustedSources: defaultTrustedSources,
+              jointExcludedSources: defaultExcludedSources,
+              jointTrustedSources: defaultTrustedSources,
+              operations: {
+                SourcesManagementOperation.removeFromExcludedSources(
+                    Source('https://www.a.com'))
+              }));
 
       expect(
           manager.isPendingRemoval(
@@ -307,11 +327,14 @@ void main() {
       expect(
           manager.state,
           SourcesState(
-            excludedSources: defaultExcludedSources,
-            trustedSources: defaultTrustedSources,
-            jointExcludedSources: defaultExcludedSources,
-            jointTrustedSources: defaultTrustedSources,
-          ));
+              excludedSources: defaultExcludedSources,
+              trustedSources: defaultTrustedSources,
+              jointExcludedSources: defaultExcludedSources,
+              jointTrustedSources: defaultTrustedSources,
+              operations: {
+                SourcesManagementOperation.removeFromTrustedSources(
+                    Source('https://www.x.com'))
+              }));
 
       expect(
           manager.isPendingRemoval(
