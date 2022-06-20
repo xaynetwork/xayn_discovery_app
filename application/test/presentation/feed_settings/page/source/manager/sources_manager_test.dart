@@ -166,7 +166,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.excludedSources),
+              source: newSource, scope: SourceType.excluded),
           true);
     },
   );
@@ -191,7 +191,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.excludedSources),
+              source: newSource, scope: SourceType.excluded),
           false);
     },
   );
@@ -215,7 +215,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.trustedSources),
+              source: newSource, scope: SourceType.trusted),
           true);
     },
   );
@@ -240,7 +240,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.trustedSources),
+              source: newSource, scope: SourceType.trusted),
           false);
     },
   );
@@ -264,8 +264,7 @@ void main() {
 
       expect(
           manager.isPendingRemoval(
-              source: defaultExcludedSources.first,
-              scope: Scope.excludedSources),
+              source: defaultExcludedSources.first, scope: SourceType.excluded),
           true);
     },
   );
@@ -292,8 +291,7 @@ void main() {
 
       expect(
           manager.isPendingRemoval(
-              source: defaultExcludedSources.first,
-              scope: Scope.excludedSources),
+              source: defaultExcludedSources.first, scope: SourceType.excluded),
           false);
     },
   );
@@ -317,7 +315,7 @@ void main() {
 
       expect(
           manager.isPendingRemoval(
-              source: defaultTrustedSources.first, scope: Scope.trustedSources),
+              source: defaultTrustedSources.first, scope: SourceType.trusted),
           true);
     },
   );
@@ -344,7 +342,7 @@ void main() {
 
       expect(
           manager.isPendingRemoval(
-              source: defaultTrustedSources.first, scope: Scope.trustedSources),
+              source: defaultTrustedSources.first, scope: SourceType.trusted),
           false);
     },
   );
@@ -369,7 +367,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.excludedSources),
+              source: newSource, scope: SourceType.excluded),
           false);
     },
   );
@@ -394,7 +392,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.excludedSources),
+              source: newSource, scope: SourceType.excluded),
           false);
     },
   );
@@ -420,7 +418,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.excludedSources),
+              source: newSource, scope: SourceType.excluded),
           false);
     },
   );
@@ -446,7 +444,7 @@ void main() {
 
       expect(
           manager.isPendingAddition(
-              source: newSource, scope: Scope.excludedSources),
+              source: newSource, scope: SourceType.excluded),
           false);
     },
   );

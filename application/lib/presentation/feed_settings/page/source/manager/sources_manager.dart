@@ -31,7 +31,7 @@ typedef OnRemoveTrustSourceSucceeded = SourcesState Function(
     RemoveTrustedSourceRequestSucceeded event);
 typedef OnNonMatchedEngineEvent = SourcesState Function();
 
-enum Scope { excludedSources, trustedSources }
+enum SourceType { excluded, trusted }
 
 @injectable
 class SourcesManager extends Cubit<SourcesState>
@@ -64,22 +64,22 @@ class SourcesManager extends Cubit<SourcesState>
   bool canAddSourceToTrustedList(Source source) =>
       !state.trustedSources.contains(source);
 
-  bool isPendingRemoval({required Source source, required Scope scope}) {
+  bool isPendingRemoval({required Source source, required SourceType scope}) {
     switch (scope) {
-      case Scope.excludedSources:
+      case SourceType.excluded:
         return sourcesPendingOperations
             .containsRemoveFromExcludedSources(source);
-      case Scope.trustedSources:
+      case SourceType.trusted:
         return sourcesPendingOperations
             .containsRemoveFromTrustedSources(source);
     }
   }
 
-  bool isPendingAddition({required Source source, required Scope scope}) {
+  bool isPendingAddition({required Source source, required SourceType scope}) {
     switch (scope) {
-      case Scope.excludedSources:
+      case SourceType.excluded:
         return sourcesPendingOperations.containsAddToExcludedSources(source);
-      case Scope.trustedSources:
+      case SourceType.trusted:
         return sourcesPendingOperations.containsAddToTrustedSources(source);
     }
   }
@@ -207,7 +207,7 @@ class SourcesManager extends Cubit<SourcesState>
             },
           ),
           removeExcludeSourceSucceeded: (event) => state.copyWith(
-              excludedSources: {...state.excludedSources}
+              excludedSources: state.excludedSources.toSet()
                 ..remove(event.source)),
           addTrustSourceSucceeded: (event) => state.copyWith(
             trustedSources: {
@@ -216,7 +216,8 @@ class SourcesManager extends Cubit<SourcesState>
             },
           ),
           removeTrustedSourceSucceeded: (event) => state.copyWith(
-              trustedSources: {...state.trustedSources}..remove(event.source)),
+              trustedSources: state.trustedSources.toSet()
+                ..remove(event.source)),
           orElse: () => state,
         );
   }
