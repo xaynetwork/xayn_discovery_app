@@ -27,8 +27,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get showFeaturesScreen =>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
 
-  bool get isReaderModeSettingsEnabled => isEnabled(Feature.readerModeSettings);
-
   bool get isPaymentEnabled => isEnabled(Feature.payment);
   bool get isGibberishEnabled => isEnabled(Feature.gibberish);
 
