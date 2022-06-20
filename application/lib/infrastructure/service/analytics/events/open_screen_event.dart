@@ -8,8 +8,10 @@ const String _kParamArguments = 'arguments';
 /// - [screenName] is the name of the screen that was navigated into.
 /// - [arguments] are optional screen parameters.
 class OpenScreenEvent extends AnalyticsEvent {
+  final String screenName;
+
   OpenScreenEvent({
-    required String screenName,
+    required this.screenName,
     Object? arguments,
   }) : super(
           _kEventType,
