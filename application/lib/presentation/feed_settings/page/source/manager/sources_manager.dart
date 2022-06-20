@@ -6,6 +6,7 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
@@ -31,11 +32,22 @@ typedef OnNonMatchedEngineEvent = SourcesState Function();
 
 enum SourceType { excluded, trusted }
 
-@injectable
+abstract class SourcesScreenNavActions {
+  void onDismissOverlay();
+  void onExcludeSourceShowOverlay();
+  void onTrustSourceShowOverlay();
+}
+
+@lazySingleton
 class SourcesManager extends Cubit<SourcesState>
-    with UseCaseBlocHelper<SourcesState>, SourcesManagementMixin<SourcesState> {
+    with
+        UseCaseBlocHelper<SourcesState>,
+        SourcesManagementMixin<SourcesState>,
+        OverlayManagerMixin<SourcesState>
+    implements SourcesScreenNavActions {
   final EngineEventsUseCase engineEventsUseCase;
   final SourcesPendingOperations sourcesPendingOperations;
+  final SourcesScreenNavActions _sourcesScreenNavActions;
   late final FoldEngineEvent foldEngineEvent = _foldEngineEvent();
   late final UseCaseValueStream<SourcesState> nextStateValueStream = consume(
     engineEventsUseCase,
@@ -45,9 +57,21 @@ class SourcesManager extends Cubit<SourcesState>
   );
 
   SourcesManager(
+    this._sourcesScreenNavActions,
     this.engineEventsUseCase,
     this.sourcesPendingOperations,
   ) : super(const SourcesState());
+
+  @override
+  void onDismissOverlay() => _sourcesScreenNavActions.onDismissOverlay();
+
+  @override
+  void onExcludeSourceShowOverlay() =>
+      _sourcesScreenNavActions.onExcludeSourceShowOverlay();
+
+  @override
+  void onTrustSourceShowOverlay() =>
+      _sourcesScreenNavActions.onTrustSourceShowOverlay();
 
   /// Trigger this manager to load both [Source] lists.
   /// This method is typically invoked by a `Widget` when running `Widget.initState`.
