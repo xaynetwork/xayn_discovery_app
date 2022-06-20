@@ -12,10 +12,14 @@ const String _kParamDocument = 'document';
 /// - [viewMode] indicates the mode, story or reader.
 /// - [feedType] indicates the current screen the event was triggered from.
 class DocumentViewModeChangedEvent extends FeedAnalyticsEvent {
+  final Document document;
+  final DocumentViewMode viewMode;
+  final FeedType feedType;
+
   DocumentViewModeChangedEvent({
-    required Document document,
-    required DocumentViewMode viewMode,
-    required FeedType feedType,
+    required this.document,
+    required this.viewMode,
+    required this.feedType,
   }) : super(
           _kEventType,
           feedType: feedType,

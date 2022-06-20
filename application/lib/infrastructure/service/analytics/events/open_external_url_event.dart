@@ -7,10 +7,14 @@ const String _kViewMode = 'currentView';
 
 /// An [FeedAnalyticsEvent] which tracks when an external url is opened
 class OpenExternalUrlEvent extends FeedAnalyticsEvent {
+  final String url;
+  final CurrentView currentView;
+  final FeedType? feedType;
+
   OpenExternalUrlEvent({
-    required String url,
-    required CurrentView currentView,
-    FeedType? feedType,
+    required this.url,
+    required this.currentView,
+    this.feedType,
   }) : super(
           _kEventType,
           feedType: feedType,
