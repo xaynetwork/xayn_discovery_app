@@ -16,6 +16,11 @@ dependencies:
   auto_size_text: 3.0.0
   connectivity_plus: 2.2.1
   country_code: 1.0.0
+  dart_remote_config:
+    git:
+      # TODO change to http
+      url: git@github.com:xaynetwork/dart_remote_config.git
+      ref: 1758e556618d7cb9e408bfc68fb101f1378e327f
   equatable: 2.0.3
   envify: 2.0.2
   flat: ^0.4.1
@@ -107,6 +112,7 @@ dependency_overrides:
   analyzer: 3.4.1
   provider: 6.0.2
   dart_style: 2.2.2
+  json_serializable: 6.1.4
 
 # Please list dependencies alphabetically!
 dev_dependencies:

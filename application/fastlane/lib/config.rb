@@ -112,7 +112,9 @@ module Config
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1605873072",
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev",
-                   "MIXPANEL_SERVER_URL" => "https://api-eu.mixpanel.com" }
+                   "MIXPANEL_SERVER_URL" => "https://api-eu.mixpanel.com",
+                   "RCONFIG_S3_REGION" => "s3-de-central",
+                   "RCONFIG_ENDPOINT_URL" => "https://s3-de-central.profitbricks.com"}
 
   # Careful to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...
