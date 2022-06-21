@@ -123,7 +123,7 @@ void main() async {
         image: image,
         provider: DocumentProvider(name: providerNameToMap, favicon: favicon),
         createdAt: createdAt,
-        url: url,
+        uri: Uri.parse(url),
       );
 
       test('given a Bookmark it returns a map with a proper structure', () {

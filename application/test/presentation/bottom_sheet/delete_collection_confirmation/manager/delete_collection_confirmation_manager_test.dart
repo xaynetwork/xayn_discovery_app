@@ -39,7 +39,7 @@ void main() {
       provider: DocumentProvider(),
       image: Uint8List.fromList([1, 2, 3]),
       createdAt: DateTime.now().toString(),
-      url: url,
+      uri: Uri.parse(url),
     ),
     Bookmark(
       collectionId: collection.id,
@@ -48,7 +48,7 @@ void main() {
       provider: DocumentProvider(),
       image: Uint8List.fromList([1, 2, 3]),
       createdAt: DateTime.now().toString(),
-      url: url,
+      uri: Uri.parse(url),
     ),
   ];
 

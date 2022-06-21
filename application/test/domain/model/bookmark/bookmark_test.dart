@@ -26,7 +26,7 @@ void main() {
             image: image,
             provider: provider,
             createdAt: createdAt,
-            url: url,
+            uri: Uri.parse(url),
           ),
           throwsAssertionError,
         );
@@ -44,7 +44,7 @@ void main() {
             image: image,
             provider: null,
             createdAt: createdAt,
-            url: url,
+            uri: Uri.parse(url),
           ),
           predicate((bookmark) => bookmark != null),
         );
@@ -62,7 +62,7 @@ void main() {
             image: image,
             provider: provider,
             createdAt: '',
-            url: url,
+            uri: Uri.parse(url),
           ),
           throwsAssertionError,
         );

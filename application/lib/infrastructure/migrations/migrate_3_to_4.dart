@@ -119,7 +119,7 @@ Bookmark bookmarkFromMap(map) {
       favicon: favicon,
     ),
     createdAt: createdAt,
-    url: url,
+    uri: Uri.parse(url),
   );
 }
 
