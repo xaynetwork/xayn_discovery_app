@@ -48,6 +48,7 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
     body(Map<DocumentFilter, bool> filters) => filters.isNotEmpty
         ? Semantics(
             label: 'document_filter_source',
+            excludeSemantics: true,
             child: SelectItemList<DocumentFilter>(
               items: filters.keys.toList(),
               preSelectedItems: filters.entries
