@@ -76,7 +76,9 @@ class _AddSourceScreenState extends State<AddSourceScreen>
           padding: EdgeInsets.all(R.dimen.unit),
           child: SvgPicture.asset(R.assets.icons.search),
         ),
-        hintText: R.strings.addSourcePlaceholder,
+        hintText:
+            manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
+        autocorrect: false,
       );
 
   Widget _buildAvailableSourcesView() =>
