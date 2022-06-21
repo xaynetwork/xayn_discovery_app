@@ -15,13 +15,12 @@ void main() {
   late MockBookmarksRepository bookmarksRepository;
   late RemoveBookmarkUseCase removeBookmarkUseCase;
   final bookmarkIdToRemove = UniqueId();
-  const bookmarkUrlToRemove = 'https://url_to_remove.com';
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
   const url = 'https://url_test.com';
 
   final bookmark = Bookmark(
-    id: bookmarkIdToRemove,
+    documentId: UniqueId(),
     collectionId: UniqueId(),
     title: 'Bookmark1 title',
     image: Uint8List.fromList([1, 2, 3]),
@@ -43,13 +42,13 @@ void main() {
   group(('Remove bookmark use case'), () {
     useCaseTest(
       'WHEN the bookmark to remove doesn\'t exist THEN throw error',
-      setUp: () => when(bookmarksRepository.getByUrl(bookmarkUrlToRemove))
+      setUp: () => when(bookmarksRepository.getById(bookmarkIdToRemove))
           .thenReturn(null),
       build: () => removeBookmarkUseCase,
-      input: [bookmarkUrlToRemove],
+      input: [bookmarkIdToRemove],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getByUrl(bookmarkUrlToRemove),
+          bookmarksRepository.getById(bookmarkIdToRemove),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
@@ -62,13 +61,13 @@ void main() {
 
     useCaseTest(
       'WHEN the bookmark to remove exists THEN remove it',
-      setUp: () => when(bookmarksRepository.getByUrl(bookmarkUrlToRemove))
+      setUp: () => when(bookmarksRepository.getById(bookmarkIdToRemove))
           .thenReturn(bookmark),
       build: () => removeBookmarkUseCase,
-      input: [bookmarkUrlToRemove],
+      input: [bookmarkIdToRemove],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getByUrl(bookmarkUrlToRemove),
+          bookmarksRepository.getById(bookmarkIdToRemove),
           bookmarksRepository.remove(bookmark),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);

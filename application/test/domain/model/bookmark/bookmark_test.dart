@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 void main() {
   group('Bookmark Object', () {
-    final id = UniqueId();
+    final documentId = UniqueId();
     final collectionId = UniqueId();
     final image = Uint8List.fromList([1, 2, 3]);
     final provider = DocumentProvider(
@@ -20,7 +20,7 @@ void main() {
       () {
         expect(
           () => Bookmark(
-            id: id,
+            documentId: documentId,
             collectionId: collectionId,
             title: '',
             image: image,
@@ -38,7 +38,7 @@ void main() {
       () {
         expect(
           () => Bookmark(
-            id: id,
+            documentId: documentId,
             collectionId: collectionId,
             title: bookmarkTitle,
             image: image,
@@ -56,7 +56,7 @@ void main() {
       () {
         expect(
           () => Bookmark(
-            id: id,
+            documentId: documentId,
             collectionId: collectionId,
             title: bookmarkTitle,
             image: image,

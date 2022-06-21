@@ -42,7 +42,7 @@ AppImageCacheManager createFakeImageCacheManager() {
 }
 
 final fakeBookmark = Bookmark(
-  id: UniqueId(),
+  documentId: UniqueId(),
   collectionId: UniqueId(),
   title: 'Bookmark1 title',
   image: Uint8List.fromList([1, 2, 3]),

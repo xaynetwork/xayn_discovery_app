@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/document_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/crud_entity_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 // ignore: camel_case_types
@@ -44,13 +43,13 @@ class Migration_3_To_4 extends BaseDbMigration {
     /// Get the current bookmarks list
     final bookmarks = bookmarkBoxRepository.getAll();
 
-    /// For each bookmark, get the url from the stored documents
+    /// For each bookmark, get the url from the stored documents and generate a unique id out of it
     for (var bookmark in bookmarks) {
       final document = documentBoxRepository.getById(bookmark!.id);
 
       bookmarksWithUrlUpdated.add(
         bookmark.copyWith(
-          url: document!.document.resource.url.removeQueryParameters.toString(),
+          id: Bookmark.generateUniqueIdFromUri(document!.document.resource.url),
         ),
       );
     }
@@ -59,8 +58,7 @@ class Migration_3_To_4 extends BaseDbMigration {
     /// bookmarksToSave: list of the bookmarks that need to be update in the db
     /// bookmarksToRemove: list of the bookmarks that need to be removed, since they were duplicates
     for (var ub in bookmarksWithUrlUpdated) {
-      if (bookmarksToSave.indexWhere((element) => element.url == ub.url) ==
-          -1) {
+      if (bookmarksToSave.indexWhere((element) => element.id == ub.id) == -1) {
         bookmarksToSave.add(ub);
       } else {
         bookmarksToRemove.add(ub);
@@ -92,6 +90,9 @@ Bookmark bookmarkFromMap(map) {
   final collectionId = map[BookmarkMapperFields.collectionId] ??
       throwMapperException() as String;
 
+  final documentId =
+      map[BookmarkMapperFields.documentId] ?? throwMapperException() as String;
+
   final title =
       map[BookmarkMapperFields.title] ?? throwMapperException() as String;
 
@@ -104,13 +105,12 @@ Bookmark bookmarkFromMap(map) {
   /// The [favicon] field is nullable
   final favicon = map[BookmarkMapperFields.providerThumbnail] as String?;
 
-  final url = map[BookmarkMapperFields.url] ?? '';
-
   final createdAt =
       map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
 
-  return Bookmark(
+  return Bookmark.fromMap(
     id: UniqueId.fromTrustedString(id),
+    documentId: UniqueId.fromTrustedString(documentId),
     collectionId: UniqueId.fromTrustedString(collectionId),
     title: title,
     image: image,
@@ -119,7 +119,6 @@ Bookmark bookmarkFromMap(map) {
       favicon: favicon,
     ),
     createdAt: createdAt,
-    uri: Uri.parse(url),
   );
 }
 
@@ -131,7 +130,7 @@ DbEntityMap bookmarkToMap(Bookmark entity) => {
       BookmarkMapperFields.providerName: entity.provider?.name,
       BookmarkMapperFields.providerThumbnail: entity.provider?.favicon,
       BookmarkMapperFields.createdAt: entity.createdAt,
-      BookmarkMapperFields.url: entity.url,
+      BookmarkMapperFields.documentId: entity.documentId.value,
     };
 
 void throwMapperException([

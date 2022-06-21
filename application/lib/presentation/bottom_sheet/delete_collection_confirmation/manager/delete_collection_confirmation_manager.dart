@@ -28,7 +28,7 @@ class DeleteCollectionConfirmationManager
   late final UseCaseSink<GetAllBookmarksUseCaseIn, GetAllBookmarksUseCaseOut>
       _getBookmarksHandler = pipe(_getAllBookmarksUseCase);
 
-  final List<String> _bookmarksUrls = [];
+  final List<UniqueId> _bookmarksIds = [];
 
   DeleteCollectionConfirmationManager(
     this._removeCollectionUseCase,
@@ -48,7 +48,7 @@ class DeleteCollectionConfirmationManager
 
   Future<void> deleteAll() async {
     await _removeBookmarksUseCase.call(RemoveBookmarksUseCaseIn(
-      bookmarksUrls: state.bookmarksUrls,
+      bookmarksIds: state.bookmarksIds,
     ));
     await deleteCollection();
     _sendAnalyticsUseCase(
@@ -84,15 +84,15 @@ class DeleteCollectionConfirmationManager
         }
 
         if (usecaseOut != null) {
-          _bookmarksUrls
+          _bookmarksIds
             ..clear()
             ..addAll(
-              usecaseOut.bookmarks.map((e) => e.url).toList(),
+              usecaseOut.bookmarks.map((e) => e.id).toList(),
             );
         }
 
         final newState = DeleteCollectionConfirmationState.populated(
-          bookmarksUrls: _bookmarksUrls,
+          bookmarksIds: _bookmarksIds,
         );
 
         return newState;

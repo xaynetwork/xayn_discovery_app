@@ -20,7 +20,7 @@ class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseIn, Bookmark> {
 
   @override
   Stream<Bookmark> transaction(MoveBookmarkUseCaseIn param) async* {
-    final bookmark = _bookmarksRepository.getByUrl(param.bookmarkUrl);
+    final bookmark = _bookmarksRepository.getById(param.bookmarkId);
     if (bookmark == null) {
       throw BookmarkUseCaseError.tryingToMoveNotExistingBookmark;
     }
@@ -38,14 +38,14 @@ class MoveBookmarkUseCase extends UseCase<MoveBookmarkUseCaseIn, Bookmark> {
 }
 
 class MoveBookmarkUseCaseIn extends Equatable {
-  final String bookmarkUrl;
+  final UniqueId bookmarkId;
   final UniqueId collectionId;
 
   const MoveBookmarkUseCaseIn({
-    required this.bookmarkUrl,
+    required this.bookmarkId,
     required this.collectionId,
   });
 
   @override
-  List<Object> get props => [bookmarkUrl, collectionId];
+  List<Object> get props => [bookmarkId, collectionId];
 }

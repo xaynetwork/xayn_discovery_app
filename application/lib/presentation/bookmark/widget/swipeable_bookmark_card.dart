@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_widget.dart';
 import 'package:xayn_swipe_it/xayn_swipe_it.dart';
@@ -13,17 +14,17 @@ enum SwipeOption { move, delete }
 class SwipeableBookmarkCard extends StatelessWidget {
   const SwipeableBookmarkCard({
     Key? key,
+    required this.bookmarkId,
     required this.child,
-    required this.bookmarkUrl,
     required this.onMove,
     required this.onDelete,
     this.onFling,
   }) : super(key: key);
 
-  final String bookmarkUrl;
+  final UniqueId bookmarkId;
   final Widget child;
-  final Function(String) onMove;
-  final Function(String) onDelete;
+  final Function(UniqueId) onMove;
+  final Function(UniqueId) onDelete;
   final double cardHeight = 150;
   final VoidCallback? onFling;
 
@@ -58,10 +59,10 @@ class SwipeableBookmarkCard extends StatelessWidget {
   void onOptionsTap(SwipeOption option) {
     switch (option) {
       case SwipeOption.move:
-        onMove(bookmarkUrl);
+        onMove(bookmarkId);
         break;
       case SwipeOption.delete:
-        onDelete(bookmarkUrl);
+        onDelete(bookmarkId);
         break;
     }
   }

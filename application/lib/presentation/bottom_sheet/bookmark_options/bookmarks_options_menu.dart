@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_card_options/menu_option.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_clickable_option.dart';
@@ -9,7 +10,7 @@ import '../../bookmark/manager/bookmarks_screen_manager.dart';
 
 class BookmarkOptionsBottomSheet extends BottomSheetBase {
   BookmarkOptionsBottomSheet({
-    required String bookmarkUrl,
+    required UniqueId bookmarkId,
     required VoidCallback onSystemPop,
     required VoidCallback onMovePressed,
     Key? key,
@@ -17,19 +18,19 @@ class BookmarkOptionsBottomSheet extends BottomSheetBase {
           key: key,
           onSystemPop: onSystemPop,
           body: _BookmarkOptions(
-              bookmarkUrl: bookmarkUrl,
+              bookmarkId: bookmarkId,
               onSystemPop: onSystemPop,
               onMovePressed: onMovePressed),
         );
 }
 
 class _BookmarkOptions extends StatefulWidget {
-  final String bookmarkUrl;
+  final UniqueId bookmarkId;
   final VoidCallback? onSystemPop;
   final VoidCallback onMovePressed;
 
   const _BookmarkOptions({
-    required this.bookmarkUrl,
+    required this.bookmarkId,
     required this.onMovePressed,
     this.onSystemPop,
   });
@@ -58,7 +59,7 @@ class __BookmarkOptionsState extends State<_BookmarkOptions>
         onPressed: () {
           closeBottomSheet(context);
           widget.onSystemPop?.call();
-          _bookmarkManager.onDeleteSwipe(widget.bookmarkUrl);
+          _bookmarkManager.onDeleteSwipe(widget.bookmarkId);
         },
       ),
     ];

@@ -230,32 +230,32 @@ class OverlayData {
       );
 
   static BottomSheetData bottomSheetBookmarksOptions({
-    required String bookmarkUrl,
+    required UniqueId bookmarkId,
     required VoidCallback onClose,
     required VoidCallback onMovePressed,
   }) =>
-      BottomSheetData<String>(
-        args: bookmarkUrl,
+      BottomSheetData<UniqueId>(
+        args: bookmarkId,
         showBarrierColor: false,
         builder: (_, bookmarkUrl) => BookmarkOptionsBottomSheet(
-          bookmarkUrl: bookmarkUrl!,
+          bookmarkId: bookmarkId,
           onSystemPop: onClose,
           onMovePressed: onMovePressed,
         ),
       );
 
   static BottomSheetData bottomSheetMoveBookmarkToCollection({
-    required String bookmarkUrl,
+    required UniqueId bookmarkId,
     VoidCallback? onSystemPop,
     UniqueId? initialSelectedCollection,
     bool showBarrierColor = true,
     required VoidCallback onAddCollectionPressed,
   }) =>
-      BottomSheetData<String>(
-        args: bookmarkUrl,
+      BottomSheetData<UniqueId>(
+        args: bookmarkId,
         showBarrierColor: showBarrierColor,
         builder: (_, bookmarkUrl) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkUrl: bookmarkUrl!,
+          bookmarkId: bookmarkId,
           onSystemPop: onSystemPop,
           initialSelectedCollection: initialSelectedCollection,
           onAddCollectionPressed: onAddCollectionPressed,
@@ -277,7 +277,7 @@ class OverlayData {
       );
 
   static BottomSheetData bottomSheetMoveBookmarksToCollection({
-    required List<String> bookmarksUrls,
+    required List<UniqueId> bookmarksIds,
     required UniqueId collectionIdToRemove,
     UniqueId? initialSelectedCollection,
     VoidCallback? onClose,
@@ -286,7 +286,7 @@ class OverlayData {
       BottomSheetData(
         showBarrierColor: false,
         builder: (_, __) => MoveBookmarksToCollectionBottomSheet(
-          bookmarksUrls: bookmarksUrls,
+          bookmarksIds: bookmarksIds,
           collectionIdToRemove: collectionIdToRemove,
           initialSelectedCollection: initialSelectedCollection,
           onSystemPop: onClose,

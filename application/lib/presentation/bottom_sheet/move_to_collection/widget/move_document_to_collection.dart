@@ -2,12 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_manager.dart';
@@ -80,8 +80,9 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   @override
   void initState() {
     _manager.updateInitialSelectedCollection(
-      bookmarkUrl:
-          widget.document.resource.url.removeQueryParameters.toString(),
+      bookmarkId: Bookmark.generateUniqueIdFromUri(
+        widget.document.resource.url,
+      ),
       initialSelectedCollectionId: widget.initialSelectedCollectionId,
     );
 

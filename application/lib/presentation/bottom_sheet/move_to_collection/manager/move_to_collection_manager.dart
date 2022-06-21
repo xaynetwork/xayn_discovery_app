@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_bookmark
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/manager/move_to_collection_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
@@ -45,7 +44,7 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
 
   late final UseCaseSink<CreateBookmarkFromDocumentUseCaseIn, Bookmark>
       _createBookmarkHandler;
-  late final UseCaseSink<String, Bookmark> _removeBookmarkHandler;
+  late final UseCaseSink<UniqueId, Bookmark> _removeBookmarkHandler;
   late final UseCaseSink<MoveBookmarkUseCaseIn, Bookmark> _moveBookmarkHandler;
   UniqueId? _selectedCollectionId;
   bool _isBookmarked = false;
@@ -92,13 +91,13 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
   }
 
   Future<void> updateInitialSelectedCollection({
-    required String bookmarkUrl,
+    required UniqueId bookmarkId,
     UniqueId? initialSelectedCollectionId,
   }) async {
     late Bookmark bookmark;
 
     try {
-      bookmark = await _getBookmarkUseCase.singleOutput(bookmarkUrl);
+      bookmark = await _getBookmarkUseCase.singleOutput(bookmarkId);
     } catch (_) {
       updateSelectedCollection(initialSelectedCollectionId);
       return;
@@ -151,7 +150,8 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     }
     if (isBookmarked && !hasSelected) {
       _removeBookmarkHandler(
-          document.resource.url.removeQueryParameters.toString());
+        Bookmark.generateUniqueIdFromUri(document.resource.url),
+      );
       _sendAnalyticsUseCase(
         DocumentBookmarkedEvent(
           document: document,
@@ -163,15 +163,15 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     }
     if (isBookmarked && hasSelected) {
       _moveBookmark(
-          bookmarkUrl: document.resource.url.removeQueryParameters.toString());
+          bookmarkId: Bookmark.generateUniqueIdFromUri(document.resource.url));
     }
   }
 
-  void onApplyToBookmarkPressed({required String bookmarkUrl}) {
+  void onApplyToBookmarkPressed({required UniqueId bookmarkId}) {
     if (state.selectedCollectionId == null) {
-      _removeBookmarkHandler(bookmarkUrl);
+      _removeBookmarkHandler(bookmarkId);
     } else {
-      _moveBookmark(bookmarkUrl: bookmarkUrl);
+      _moveBookmark(bookmarkId: bookmarkId);
     }
   }
 
@@ -182,9 +182,9 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     );
   }
 
-  void _moveBookmark({required String bookmarkUrl}) {
+  void _moveBookmark({required UniqueId bookmarkId}) {
     final param = MoveBookmarkUseCaseIn(
-      bookmarkUrl: bookmarkUrl,
+      bookmarkId: bookmarkId,
       collectionId: state.selectedCollectionId!,
     );
     _moveBookmarkHandler(param);

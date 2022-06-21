@@ -17,6 +17,7 @@ void main() {
   late MockCollectionsRepository collectionsRepository;
   late GetAllBookmarksUseCase getAllBookmarksUseCase;
   final collectionId = UniqueId();
+  final documentId = UniqueId();
   final Collection collection =
       Collection(id: collectionId, name: 'Test collection', index: 3);
   final provider = DocumentProvider(
@@ -26,7 +27,7 @@ void main() {
   const url = 'https://url_test.com';
 
   final bookmark1 = Bookmark(
-    id: UniqueId(),
+    documentId: documentId,
     collectionId: collectionId,
     title: 'Bookmark1 title',
     image: Uint8List.fromList([1, 2, 3]),
@@ -36,7 +37,7 @@ void main() {
   );
 
   final bookmark2 = Bookmark(
-    id: UniqueId(),
+    documentId: documentId,
     collectionId: collectionId,
     title: 'Bookmark2 title',
     image: Uint8List.fromList([1, 2, 3]),
@@ -46,7 +47,7 @@ void main() {
   );
 
   final bookmark3 = Bookmark(
-    id: UniqueId(),
+    documentId: documentId,
     collectionId: UniqueId(),
     title: 'Bookmark3 title',
     image: Uint8List.fromList([1, 2, 3]),

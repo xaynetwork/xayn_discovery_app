@@ -34,7 +34,7 @@ void main() {
   final bookmarks = [
     Bookmark(
       collectionId: collection.id,
-      id: UniqueId(),
+      documentId: UniqueId(),
       title: 'Bookmark1',
       provider: DocumentProvider(),
       image: Uint8List.fromList([1, 2, 3]),
@@ -43,7 +43,7 @@ void main() {
     ),
     Bookmark(
       collectionId: collection.id,
-      id: UniqueId(),
+      documentId: UniqueId(),
       title: 'Bookmark2',
       provider: DocumentProvider(),
       image: Uint8List.fromList([1, 2, 3]),
@@ -52,7 +52,7 @@ void main() {
     ),
   ];
 
-  final bookmarksUrls = bookmarks.map((e) => e.url).toList();
+  final bookmarksUrls = bookmarks.map((e) => e.id).toList();
 
   setUp(
     () {
@@ -126,7 +126,7 @@ void main() {
       ]);
       verifyNoMoreInteractions(getAllBookmarksUseCase);
       expect(
-        deleteCollectionConfirmationManager.state.bookmarksUrls,
+        deleteCollectionConfirmationManager.state.bookmarksIds,
         bookmarksUrls,
       );
     },

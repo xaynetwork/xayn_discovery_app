@@ -32,13 +32,14 @@ void main() {
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
+  final documentId = UniqueId();
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
   const url = 'https://url_test.com';
 
   final bookmarks = [
     Bookmark(
-      id: UniqueId(),
+      documentId: documentId,
       collectionId: collectionId,
       title: 'Bookmark1 title',
       image: Uint8List.fromList([1, 2, 3]),
@@ -135,7 +136,7 @@ void main() {
         'WHEN removeBookmark method has been called THEN call the usecase ',
         setUp: () => when(
           removeBookmarkUseCase.call(
-            bookmarks.first.url,
+            bookmarks.first.id,
           ),
         ).thenAnswer(
           (_) => Future.value(
@@ -149,13 +150,13 @@ void main() {
         build: () => create(),
         act: (manager) {
           manager.onDeleteSwipe(
-            bookmarks.first.url,
+            bookmarks.first.id,
           );
         },
         verify: (manager) {
           verifyInOrder([
             removeBookmarkUseCase.call(
-              bookmarks.first.url,
+              bookmarks.first.id,
             ),
           ]);
 
@@ -171,7 +172,7 @@ void main() {
           )).thenReturn(R.strings.errorMsgBookmarkDoesntExist);
           when(
             removeBookmarkUseCase.call(
-              bookmarks.first.url,
+              bookmarks.first.id,
             ),
           ).thenAnswer(
             (_) => Future.value(
@@ -187,13 +188,13 @@ void main() {
         build: () => create(),
         act: (manager) {
           manager.onDeleteSwipe(
-            bookmarks.first.url,
+            bookmarks.first.id,
           );
         },
         verify: (manager) {
           verifyInOrder([
             removeBookmarkUseCase.call(
-              bookmarks.first.url,
+              bookmarks.first.id,
             ),
           ]);
 

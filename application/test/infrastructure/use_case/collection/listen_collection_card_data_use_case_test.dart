@@ -17,6 +17,7 @@ void main() {
   late MockCollectionsRepository collectionsRepository;
   late ListenCollectionCardDataUseCase getCollectionCardDataUseCase;
   final UniqueId collectionId = UniqueId();
+  final UniqueId documentId = UniqueId();
   final Collection collection = Collection(
     id: UniqueId(),
     index: 2,
@@ -28,7 +29,7 @@ void main() {
 
   final bookmarks = [
     Bookmark(
-      id: UniqueId(),
+      documentId: documentId,
       collectionId: collectionId,
       title: 'Bookmark1 title',
       image: Uint8List.fromList([1, 2, 3]),
