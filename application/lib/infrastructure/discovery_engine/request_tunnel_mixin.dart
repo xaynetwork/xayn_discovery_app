@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
@@ -102,71 +103,74 @@ mixin RequestTunnelMixin {
 
   Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
       (Request request) async {
-        final queryParameters =
-            Map<String, String>.from(request.url.queryParameters);
-        final optimisticRequest = _buildActualRequest(
-          request,
-          uri,
-          queryParameters,
-        );
-        final optimisticMatch = await _performActualApiCall(
-          optimisticRequest,
-          queryParameters['q'] ?? 'no query',
-          request.url.path,
-        );
-        final optimisticJson = Map<String, dynamic>.from(
-            const JsonDecoder().convert(optimisticMatch) as Map);
-        final optimisticCount = optimisticJson['articles'].length as int;
+        generateGibberish(int wordCount) {
+          final rnd = Random();
+          //97
+          for (var i = 0; i < wordCount; i++) {
+            final wordSize = rnd.nextInt(12) + 2;
 
-        if (optimisticCount < 100) {
-          final rest = 100 - optimisticCount;
-
-          queryParameters['page_size'] = '$rest';
-
-          final expr = RegExp(r'\(([^\)]+)\)');
-          final q = queryParameters['q'] ?? '';
-          final groups = expr.allMatches(q);
-          final qry = <String>[];
-
-          for (final group in groups) {
-            final terms = group.group(1) ?? '';
-            final words = terms
-                .split(' ')
-                .where((it) => it.length > 3)
-                .toList(growable: false);
-
-            qry.add('(${words.join(' ')}) OR (${words.join(' || ')})');
-          }
-
-          if (qry.isNotEmpty) {
-            queryParameters['q'] = qry.join(' OR ');
-
-            final fuzzyRequest = _buildActualRequest(
-              request,
-              uri,
-              queryParameters,
-            );
-
-            final fuzzyMatch = await _performActualApiCall(
-              fuzzyRequest,
-              queryParameters['q'] ?? 'no query',
-              request.url.path,
-            );
-
-            final fuzzyJson = const JsonDecoder().convert(fuzzyMatch) as Map;
-
-            optimisticJson['articles'] = [
-              ...optimisticJson['articles'],
-              ...fuzzyJson['articles']
-            ];
-            optimisticJson['total_hits'] =
-                '${optimisticJson['articles'].length as int}';
-
-            return const JsonEncoder().convert(optimisticJson);
+            return String.fromCharCodes(
+                List.generate(wordSize, (i) => rnd.nextInt(26) + 97));
           }
         }
 
-        return optimisticMatch;
+        final queryParameters =
+            Map<String, String>.from(request.url.queryParameters);
+        final pageSize = int.parse(queryParameters['page_size'] ?? '100');
+        final articles = List.generate(
+            pageSize,
+            (index) => <String, dynamic>{
+                  "title": "$index: ${generateGibberish(6)}",
+                  "author": "${generateGibberish(2)}",
+                  "published_date": "2022-01-01 12:00:00",
+                  "published_date_precision": "full",
+                  "link": "https://en.wikipedia.org/wiki/Q*bert",
+                  "clean_url": "en.wikipedia.org",
+                  "excerpt": "${generateGibberish(20)}.",
+                  "summary": "${generateGibberish(50)}.",
+                  "rights": "wikipedia.org",
+                  "rank": 1000,
+                  "topic": "gibberish",
+                  "country": "US",
+                  "language": "en",
+                  "authors": ["${generateGibberish(2)}"],
+                  "media":
+                      "https://i.insider.com/5a96c069aae605ba008b45c7?width=1136&format=jpeg",
+                  "is_opinion": false,
+                  "twitter_account": "@${generateGibberish(1)}",
+                  "_score": .0,
+                  "_id": "${generateGibberish(1)}"
+                });
+        final response = <String, dynamic>{
+          "status": "ok",
+          "total_hits": pageSize,
+          "page": 1,
+          "total_pages": 1,
+          "page_size": pageSize,
+          "articles": articles,
+          "user_input": {
+            "q": "${generateGibberish(1)}",
+            "search_in": ["title_summary"],
+            "lang": null,
+            "not_lang": null,
+            "countries": ["US"],
+            "not_countries": null,
+            "from": "2021-12-15 00:00:00",
+            "to": null,
+            "ranked_only": "True",
+            "from_rank": null,
+            "to_rank": null,
+            "sort_by": "relevancy",
+            "page": 1,
+            "size": 1,
+            "sources": null,
+            "not_sources": null,
+            "topic": null,
+            "published_date_precision": null
+          }
+        };
+
+        return const JsonEncoder().convert(response);
       };
 
   Future<String> Function(Request) _fetchQuery(Uri uri) => (Request request) {
