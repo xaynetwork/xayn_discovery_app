@@ -15,8 +15,8 @@ void main() {
   late MockDateTimeHandler dateTimeHandler;
   late CreateBookmarkUseCase createBookmarkUseCase;
 
-  final bookmarkId = UniqueId();
   final dateTime = DateTime.now();
+  final documentId = UniqueId();
   final collectionId = UniqueId();
   const title = 'Bookmark title';
   final image = Uint8List.fromList([1, 2, 3]);
@@ -27,7 +27,7 @@ void main() {
   const url = 'https://url_test.com';
 
   final createdBookmark = Bookmark(
-    id: bookmarkId,
+    documentId: documentId,
     collectionId: collectionId,
     title: title,
     image: image,
@@ -54,7 +54,7 @@ void main() {
       build: () => createBookmarkUseCase,
       input: [
         CreateBookmarkUseCaseIn(
-          id: bookmarkId,
+          documentId: documentId,
           collectionId: collectionId,
           title: title,
           image: image,

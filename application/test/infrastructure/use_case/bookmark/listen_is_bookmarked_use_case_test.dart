@@ -18,9 +18,10 @@ void main() {
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
   const url = 'https://url_test.com';
+  final documentId = UniqueId();
 
   final bookmark1 = Bookmark(
-    id: UniqueId(),
+    documentId: documentId,
     collectionId: UniqueId(),
     title: 'Bookmark1 title',
     image: Uint8List.fromList([1, 2, 3]),
@@ -46,13 +47,13 @@ void main() {
             ),
           ),
         );
-        when(bookmarksRepository.getByUrl(bookmark1.url)).thenReturn(bookmark1);
+        when(bookmarksRepository.getById(bookmark1.id)).thenReturn(bookmark1);
       },
       build: () => listenIsBookmarkedUseCase,
-      input: [ListenIsBookmarkUseCaseIn(id: bookmark1.id, url: bookmark1.url)],
+      input: [bookmark1.id],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getByUrl(bookmark1.url),
+          bookmarksRepository.getById(bookmark1.id),
           bookmarksRepository.watch(),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
@@ -71,13 +72,13 @@ void main() {
             ),
           ),
         );
-        when(bookmarksRepository.getByUrl(bookmark1.url)).thenReturn(null);
+        when(bookmarksRepository.getById(bookmark1.id)).thenReturn(null);
       },
       build: () => listenIsBookmarkedUseCase,
-      input: [ListenIsBookmarkUseCaseIn(id: bookmark1.id, url: bookmark1.url)],
+      input: [bookmark1.id],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getByUrl(bookmark1.url),
+          bookmarksRepository.getById(bookmark1.id),
           bookmarksRepository.watch(),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);

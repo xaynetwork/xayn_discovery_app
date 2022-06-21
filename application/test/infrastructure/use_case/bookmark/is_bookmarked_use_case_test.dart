@@ -19,13 +19,13 @@ void main() {
     useCaseTest(
       'WHEN bookmark does not exist THEN yield false',
       setUp: () {
-        when(bookmarksRepository.getByUrl(fakeBookmark.url)).thenReturn(null);
+        when(bookmarksRepository.getById(fakeBookmark.id)).thenReturn(null);
       },
       build: () => isBookmarkedUseCase,
-      input: [fakeBookmark.url],
+      input: [fakeBookmark.id],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getByUrl(fakeBookmark.url),
+          bookmarksRepository.getById(fakeBookmark.id),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },
@@ -35,14 +35,14 @@ void main() {
     useCaseTest(
       'WHEN bookmark exists THEN yield true',
       setUp: () {
-        when(bookmarksRepository.getByUrl(fakeBookmark.url))
+        when(bookmarksRepository.getById(fakeBookmark.id))
             .thenReturn(fakeBookmark);
       },
       build: () => isBookmarkedUseCase,
-      input: [fakeBookmark.url],
+      input: [fakeBookmark.id],
       verify: (_) {
         verifyInOrder([
-          bookmarksRepository.getByUrl(fakeBookmark.url),
+          bookmarksRepository.getById(fakeBookmark.id),
         ]);
         verifyNoMoreInteractions(bookmarksRepository);
       },

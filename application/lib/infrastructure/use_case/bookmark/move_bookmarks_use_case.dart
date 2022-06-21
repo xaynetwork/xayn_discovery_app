@@ -19,10 +19,10 @@ class MoveBookmarksUseCase
     MoveBookmarksUseCaseIn param,
   ) async* {
     final List<Bookmark> updatedBookmarks = [];
-    for (final bookmarkId in param.bookmarkUrls) {
+    for (final bookmarkId in param.bookmarkIds) {
       final updatedBookmark = await _moveBookmarkUseCase.singleOutput(
         MoveBookmarkUseCaseIn(
-          bookmarkUrl: bookmarkId,
+          bookmarkId: bookmarkId,
           collectionId: param.collectionId,
         ),
       );
@@ -33,16 +33,16 @@ class MoveBookmarksUseCase
 }
 
 class MoveBookmarksUseCaseIn extends Equatable {
-  final List<String> bookmarkUrls;
+  final List<UniqueId> bookmarkIds;
   final UniqueId collectionId;
 
   const MoveBookmarksUseCaseIn({
-    required this.bookmarkUrls,
+    required this.bookmarkIds,
     required this.collectionId,
   });
 
   @override
-  List<Object> get props => [bookmarkUrls, collectionId];
+  List<Object> get props => [bookmarkIds, collectionId];
 }
 
 class MoveBookmarksUseCaseOut extends Equatable {

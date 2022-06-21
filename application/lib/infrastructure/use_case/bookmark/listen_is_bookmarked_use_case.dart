@@ -8,36 +8,25 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 
 /// Pass DocumentId of a bookmark and listen to repository changes then expect a stream if it was bookmarked or not
 @injectable
-class ListenIsBookmarkedUseCase
-    extends UseCase<ListenIsBookmarkUseCaseIn, BookmarkStatus> {
+class ListenIsBookmarkedUseCase extends UseCase<UniqueId, BookmarkStatus> {
   final BookmarksRepository _bookmarksRepository;
 
   ListenIsBookmarkedUseCase(this._bookmarksRepository);
 
   @override
-  Stream<BookmarkStatus> transaction(ListenIsBookmarkUseCaseIn param) async* {
+  Stream<BookmarkStatus> transaction(UniqueId param) async* {
     // initial event
-    yield _bookmarksRepository.getByUrl(param.url) != null
+    yield _bookmarksRepository.getById(param) != null
         ? BookmarkStatus.bookmarked
         : BookmarkStatus.notBookmarked;
 
     // changes & deletes are from now on watched
     yield* _bookmarksRepository
         .watch()
-        .map((_) => _bookmarksRepository.getByUrl(param.url))
+        .map((_) => _bookmarksRepository.getById(param))
         .distinct()
         .map((event) => event != null
             ? BookmarkStatus.bookmarked
             : BookmarkStatus.notBookmarked);
   }
-}
-
-class ListenIsBookmarkUseCaseIn {
-  final UniqueId id;
-  final String url;
-
-  ListenIsBookmarkUseCaseIn({
-    required this.id,
-    required this.url,
-  });
 }

@@ -65,12 +65,12 @@ class MoveBookmarksToCollectionManager
   }
 
   Future<void> onApplyPressed({
-    required List<String> bookmarksUrls,
+    required List<UniqueId> bookmarksIds,
     required UniqueId collectionIdToRemove,
   }) async {
     await _moveBookmarksUseCase.call(
       MoveBookmarksUseCaseIn(
-        bookmarkUrls: bookmarksUrls,
+        bookmarkIds: bookmarksIds,
         collectionId: state.selectedCollectionId!,
       ),
     );

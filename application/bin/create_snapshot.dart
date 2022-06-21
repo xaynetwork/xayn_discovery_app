@@ -128,7 +128,7 @@ void _createBookmarks() {
     favicon: 'https://www.foo.com/favicon.ico',
   );
   final bookmark = Bookmark(
-    id: UniqueId(),
+    documentId: UniqueId(),
     collectionId: UniqueId(),
     title: 'Bookmark title',
     image: Uint8List.fromList([1, 2, 3]),

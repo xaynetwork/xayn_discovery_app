@@ -16,7 +16,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
-import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
@@ -67,7 +66,7 @@ class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
   Stream<Bookmark> transaction(CreateBookmarkUseCaseIn param) async* {
     final dateTime = _dateTimeHandler.getDateTimeNow();
     final bookmark = Bookmark(
-      id: param.id,
+      documentId: param.documentId,
       collectionId: param.collectionId,
       title: param.title,
       image: param.image,
@@ -94,7 +93,7 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
     final image = await _getImageData(resource.image);
 
     final createBookmarkUseCaseIn = CreateBookmarkUseCaseIn(
-      id: param.document.documentUniqueId,
+      documentId: param.document.documentUniqueId,
       title: resource.title,
       image: image,
       provider: param.provider ?? DocumentProvider(),
@@ -117,7 +116,7 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
 }
 
 class CreateBookmarkUseCaseIn {
-  final UniqueId id;
+  final UniqueId documentId;
   final String title;
   final Uint8List? image;
   final DocumentProvider? provider;
@@ -125,7 +124,7 @@ class CreateBookmarkUseCaseIn {
   final Uri url;
 
   CreateBookmarkUseCaseIn({
-    required this.id,
+    required this.documentId,
     required this.title,
     required this.image,
     required this.provider,

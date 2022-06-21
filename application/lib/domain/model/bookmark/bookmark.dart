@@ -14,13 +14,14 @@ class Bookmark extends DbEntity with _$Bookmark {
   @Assert('title.isNotEmpty', 'title cannot be empty')
   @Assert('createdAt.isNotEmpty', 'createdAt cannot be empty')
   factory Bookmark._({
-    /// Will have the same value of documentId of the [Document] object
     required UniqueId id,
+
+    /// Will have the same value of documentId of the [Document] object
+    required UniqueId documentId,
     required UniqueId collectionId,
     required Uint8List? image,
     required String title,
     required DocumentProvider? provider,
-    required String url,
 
     /// To store as UTC value
     required String createdAt,
@@ -28,7 +29,7 @@ class Bookmark extends DbEntity with _$Bookmark {
 
   factory Bookmark({
     /// Will have the same value of documentId of the [Document] object
-    required UniqueId id,
+    required UniqueId documentId,
     required UniqueId collectionId,
     required Uint8List? image,
     required String title,
@@ -39,12 +40,36 @@ class Bookmark extends DbEntity with _$Bookmark {
     required String createdAt,
   }) =>
       Bookmark._(
-        id: id,
+        id: UniqueId.fromTrustedString(uri.removeQueryParameters.toString()),
+        documentId: documentId,
         collectionId: collectionId,
         image: image,
         title: title,
         provider: provider,
-        url: uri.removeQueryParameters.toString(),
         createdAt: createdAt,
       );
+
+  factory Bookmark.fromMap({
+    required UniqueId id,
+    required UniqueId documentId,
+    required UniqueId collectionId,
+    required Uint8List? image,
+    required String title,
+    required DocumentProvider? provider,
+
+    /// To store as UTC value
+    required String createdAt,
+  }) =>
+      Bookmark._(
+        id: id,
+        documentId: documentId,
+        collectionId: collectionId,
+        image: image,
+        title: title,
+        provider: provider,
+        createdAt: createdAt,
+      );
+
+  static UniqueId generateUniqueIdFromUri(Uri uri) =>
+      UniqueId.fromTrustedString(uri.removeQueryParameters.toString());
 }

@@ -49,7 +49,7 @@ void main() {
           index: 0,
         );
     Bookmark createBookmark() => Bookmark(
-          id: UniqueId(),
+          documentId: UniqueId(),
           collectionId: UniqueId(),
           image: null,
           title: UniqueId().toString(),
