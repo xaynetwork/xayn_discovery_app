@@ -64,7 +64,9 @@ dependencies:
   package_info_plus: 1.4.0
   path_provider: 2.0.9
   purchases_flutter:
-    git: git@github.com:frankpepermans/purchases-flutter.git
+    git:
+      url: git@github.com:RevenueCat/purchases-flutter.git
+      ref: 8937a1fc82a89649cc54be9ae53018daff69782e
   rxdart: 0.27.3
   sprintf: 6.0.0
   share_plus: 4.0.3
