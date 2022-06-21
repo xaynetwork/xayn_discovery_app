@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/available_sources_view.dart';
@@ -27,8 +25,7 @@ class AddSourceScreen extends StatefulWidget {
   State<AddSourceScreen> createState() => _AddSourceScreenState();
 }
 
-class _AddSourceScreenState extends State<AddSourceScreen>
-    with OverlayMixin<AddSourceScreen> {
+class _AddSourceScreenState extends State<AddSourceScreen> {
   late final manager = di.get<SourcesManager>();
   late final TextEditingController _textEditingController =
       TextEditingController();
@@ -36,9 +33,6 @@ class _AddSourceScreenState extends State<AddSourceScreen>
   String get title => widget.sourceType == SourceType.excluded
       ? R.strings.addExcludedSource
       : R.strings.addTrustedSource;
-
-  @override
-  OverlayManager get overlayManager => manager.overlayManager;
 
   @override
   void dispose() {
