@@ -55,6 +55,7 @@ import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_constants.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Creates a database snapshot in the given directory
 void main(List<String> args) async {
@@ -145,6 +146,7 @@ void _createDocuments() {
     documentId: DocumentId(),
     userReaction: UserReaction.neutral,
     batchIndex: -1,
+    stackId: StackId.fromJson(const {}),
     resource: NewsResource(
       title: '',
       snippet: '',

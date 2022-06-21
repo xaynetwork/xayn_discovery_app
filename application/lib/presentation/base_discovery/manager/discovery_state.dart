@@ -10,8 +10,6 @@ part 'discovery_state.freezed.dart';
 /// The state of the [BaseDiscoveryManager].
 @freezed
 class DiscoveryState with _$DiscoveryState {
-  final SetEquality _setEquality = const SetEquality();
-
   const DiscoveryState._();
 
   const factory DiscoveryState({
@@ -38,7 +36,6 @@ class DiscoveryState with _$DiscoveryState {
       isComplete == other.isComplete &&
       didReachEnd == other.didReachEnd &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
-      _setEquality.equals(cards, other.cards) &&
       subscriptionStatus == other.subscriptionStatus &&
       readerModeBackgroundColor == other.readerModeBackgroundColor;
 }

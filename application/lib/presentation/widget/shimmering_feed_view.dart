@@ -33,6 +33,7 @@ class ShimmeringFeedView extends StatelessWidget {
     documentId: DocumentId(),
     resource: _resource,
     batchIndex: -1,
+    stackId: StackId.fromJson(const {}),
     userReaction: UserReaction.neutral,
   );
 

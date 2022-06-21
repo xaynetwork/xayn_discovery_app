@@ -31,7 +31,7 @@ dependencies:
     git:
       url: https://github.com/svonidze/francd
       ref: 170e633af9a7b8b31769eb232f99e105e1359692
-  freezed_annotation: 1.1.0
+  freezed_annotation: ^2.0.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
   # gibberish detection
@@ -63,7 +63,8 @@ dependencies:
   lottie: 1.2.2
   package_info_plus: 1.4.0
   path_provider: 2.0.9
-  purchases_flutter: 3.9.5
+  purchases_flutter:
+    git: git@github.com:frankpepermans/purchases-flutter.git
   rxdart: 0.27.3
   sprintf: 6.0.0
   share_plus: 4.0.3
@@ -93,7 +94,7 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: 8e202ac07cfd9537b4f8675230028416582e1f9b
+      ref: 7df020809f572fdf9423d247ab0b38c66bde85f3
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -104,7 +105,6 @@ dependencies:
 dependency_overrides:
   json_annotation: 4.4.0
   hive: 2.1.0
-  freezed_annotation: 1.1.0
   analyzer: 3.4.1
   provider: 6.0.2
   dart_style: 2.2.2
@@ -117,7 +117,7 @@ dev_dependencies:
   flutter_lints: 2.0.1
   flutter_test:
     sdk: flutter
-  freezed: 1.1.1
+  freezed: ^2.0.0
   injectable_generator: 1.5.3
   mockito: 5.1.0
 

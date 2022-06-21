@@ -305,4 +305,22 @@ class AppDiscoveryEngine
     _inputLog.add('[resetAi]');
     return safeRun(() => _engine.resetAi());
   }
+
+  @override
+  Future<EngineEvent> addSourceToTrustedList(Source source) {
+    // TODO: implement addSourceToTrustedList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> getTrustedSourcesList() {
+    // TODO: implement getTrustedSourcesList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<EngineEvent> removeSourceFromTrustedList(Source source) {
+    // TODO: implement removeSourceFromTrustedList
+    throw UnimplementedError();
+  }
 }

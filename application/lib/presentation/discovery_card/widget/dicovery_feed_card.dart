@@ -47,7 +47,7 @@ class _DiscoveryFeedCardState
       manager: discoveryCardManager,
       document: widget.document,
       explicitDocumentUserReaction: state.explicitDocumentUserReaction,
-      title: webResource.title,
+      title: '${widget.document.stackId.name}: ${webResource.title}',
       timeToRead: timeToReadOrError,
       url: webResource.url,
       provider: provider,

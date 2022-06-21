@@ -45,6 +45,7 @@ void main() {
 
     createDocumentMarkedPositive() => Document(
           documentId: DocumentId(),
+          stackId: StackId.fromJson(const {}),
           resource: NewsResource(
             image: Uri.parse('https://displayUrl.test.xayn.com'),
             sourceDomain: Source('example'),

@@ -22,6 +22,7 @@ void main() {
     documentId: DocumentId(),
     userReaction: UserReaction.neutral,
     batchIndex: -1,
+    stackId: StackId.fromJson(const {}),
     resource: NewsResource(
       title: '',
       snippet: '',
