@@ -1,5 +1,6 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
 import 'package:injectable/injectable.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -24,7 +25,7 @@ class S3Fetcher extends S3RemoteConfigFetcher {
 }
 
 @lazySingleton
-class FetchRemoteConfigUseCase extends UseCase<None, RemoteConfigs?> {
+class FetchRemoteConfigUseCase extends UseCase<None, RemoteConfig?> {
   FetchRemoteConfigUseCase(this._fetcher);
 
   final RemoteConfigFetcher _fetcher;
@@ -33,9 +34,12 @@ class FetchRemoteConfigUseCase extends UseCase<None, RemoteConfigs?> {
   RemoteConfigs? _remoteConfigs;
 
   @override
-  Stream<RemoteConfigs?> transaction(None param) async* {
+  Stream<RemoteConfig?> transaction(None param) async* {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+
     if (_remoteConfigs != null) {
-      yield _remoteConfigs;
+      yield _remoteConfigs?.findConfig(version);
       return;
     }
 
@@ -46,6 +50,6 @@ class FetchRemoteConfigUseCase extends UseCase<None, RemoteConfigs?> {
       logger.e(f.toString());
     });
 
-    yield _remoteConfigs;
+    yield _remoteConfigs?.findConfig(version);
   }
 }
