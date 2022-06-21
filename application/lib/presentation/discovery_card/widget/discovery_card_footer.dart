@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 import 'package:xayn_design/xayn_design.dart';
@@ -16,6 +17,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.onDislikePressed,
     required this.onDeepSearchPressed,
     required this.document,
+    required this.feedType,
     required this.explicitDocumentUserReaction,
   }) : super(key: key);
 
@@ -24,6 +26,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final VoidCallback onDislikePressed;
   final VoidCallback onDeepSearchPressed;
   final Document document;
+  final FeedType? feedType;
   final UserReaction explicitDocumentUserReaction;
 
   @override
@@ -59,10 +62,10 @@ class DiscoveryCardFooter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        likeButton,
-        deepSearchButton,
+        if (feedType != FeedType.deepSearch) likeButton,
+        if (feedType != FeedType.deepSearch) deepSearchButton,
         shareButton,
-        dislikeButton,
+        if (feedType != FeedType.deepSearch) dislikeButton,
       ],
     );
   }

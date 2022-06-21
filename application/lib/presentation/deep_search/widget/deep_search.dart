@@ -35,7 +35,6 @@ class DeepSearchScreen extends StatefulWidget {
 
 class _DeepSearchScreenState extends State<DeepSearchScreen>
     with
-        WidgetsBindingObserver,
         NavBarConfigMixin,
         TooltipStateMixin<DeepSearchScreen>,
         OverlayMixin<DeepSearchScreen>,
@@ -63,33 +62,9 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
   OverlayManager get overlayManager => _screenManager.overlayManager;
 
   @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-
-    super.initState();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        return _screenManager.handleActivityStatus(true);
-      default:
-        return _screenManager.handleActivityStatus(false);
-    }
-  }
-
-  @override
   void dispose() {
     _cardViewController.dispose();
     // featureManager.close();
-
-    WidgetsBinding.instance.removeObserver(this);
-
-    // on dispose, no longer observe any documents
-    // this Function's argument is nullable Document, by not passing anything,
-    // it stops the observer buffer.
-    _screenManager.observeDocument();
 
     super.dispose();
   }
@@ -173,13 +148,6 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
         final normalizedIndex = index.clamp(0, results.length - 1);
         final document = results.elementAt(normalizedIndex);
 
-        if (isPrimary) {
-          _screenManager.handleViewType(
-            document,
-            isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
-          );
-        }
-
         final shaderType = _getShaderType(document.resource);
         final card = isFullScreen
             ? DiscoveryCard(
@@ -192,7 +160,7 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
                 onDrag: _onFullScreenDrag,
                 onController: (controller) =>
                     currentCardController = controller,
-                feedType: FeedType.search,
+                feedType: FeedType.deepSearch,
                 primaryCardShader: ShaderFactory.fromType(
                   shaderType,
                   transitionToIdle: true,
@@ -211,7 +179,7 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
                   isPrimary: isPrimary,
                   document: document,
                   primaryCardShader: ShaderFactory.fromType(shaderType),
-                  feedType: FeedType.search,
+                  feedType: FeedType.deepSearch,
                 ),
               );
 

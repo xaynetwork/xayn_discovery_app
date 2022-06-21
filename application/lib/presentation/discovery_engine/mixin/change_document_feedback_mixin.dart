@@ -37,6 +37,9 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
   }) async {
     _useCaseSink ??= _getUseCaseSink();
 
+    // Block changing reaction for deep search documents
+    if (feedType == null || feedType == FeedType.deepSearch) return;
+
     final isExplicit = context == FeedbackContext.explicit;
 
     // when explicit, then always propagate the feedback,

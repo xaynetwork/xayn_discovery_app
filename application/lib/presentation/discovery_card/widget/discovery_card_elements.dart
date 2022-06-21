@@ -93,6 +93,7 @@ class DiscoveryCardElements extends StatelessWidget {
         onLikePressed: onLikePressed,
         onDislikePressed: onDislikePressed,
         onDeepSearchPressed: onDeepSearchPressed,
+        feedType: feedType,
         document: document,
         explicitDocumentUserReaction: explicitDocumentUserReaction,
       ),
