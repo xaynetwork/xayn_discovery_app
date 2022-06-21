@@ -46,17 +46,22 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
   @override
   Widget build(BuildContext context) {
     body(Map<DocumentFilter, bool> filters) => filters.isNotEmpty
-        ? SelectItemList<DocumentFilter>(
-            items: filters.keys.toList(),
-            preSelectedItems:
-                filters.entries.where((e) => e.value).map((e) => e.key).toSet(),
-            onSelectItem: _manager.onFilterTogglePressed,
-            getTitle: (e) => e.fold((host) => host, (topic) => topic),
-            getImage: (e) => e.fold(
-              buildThumbnailFromFaviconHost,
-              (topic) => Thumbnail.assetImage(
-                R.assets.graphics.formsEmptyCollection,
-                backgroundColor: R.colors.collectionsScreenCard,
+        ? Semantics(
+            label: 'document_filter_source',
+            child: SelectItemList<DocumentFilter>(
+              items: filters.keys.toList(),
+              preSelectedItems: filters.entries
+                  .where((e) => e.value)
+                  .map((e) => e.key)
+                  .toSet(),
+              onSelectItem: _manager.onFilterTogglePressed,
+              getTitle: (e) => e.fold((host) => host, (topic) => topic),
+              getImage: (e) => e.fold(
+                buildThumbnailFromFaviconHost,
+                (topic) => Thumbnail.assetImage(
+                  R.assets.graphics.formsEmptyCollection,
+                  backgroundColor: R.colors.collectionsScreenCard,
+                ),
               ),
             ),
           )
