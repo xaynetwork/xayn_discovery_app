@@ -16,7 +16,11 @@ enum Feature {
   gibberish(
       Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-      'Detects non readable text in Articles.');
+      'Detects non readable text in Articles.'),
+  altPromoCode(
+      Owner.Simon,
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+      'PromoCodes are handled inApp');
 
   final Owner owner;
   final String? description;
