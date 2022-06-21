@@ -151,6 +151,7 @@ void main() {
           trustedSources: defaultTrustedSources,
           jointExcludedSources: defaultExcludedSources,
           jointTrustedSources: defaultTrustedSources,
+          sourcesSearchTerm: 'new',
         )),
   );
 
