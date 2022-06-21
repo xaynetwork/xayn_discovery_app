@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
@@ -33,7 +34,8 @@ class ShimmeringFeedView extends StatelessWidget {
     documentId: DocumentId(),
     resource: _resource,
     batchIndex: -1,
-    stackId: StackId.fromJson(const {}),
+    stackId: StackId.fromJson(
+        <String, Object>{'value': DocumentId().value.toList()}),
     userReaction: UserReaction.neutral,
   );
 
