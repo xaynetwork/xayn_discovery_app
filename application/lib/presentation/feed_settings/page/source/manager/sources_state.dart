@@ -17,5 +17,6 @@ class SourcesState with _$SourcesState {
     @Default(<Source>{}) Set<Source> jointTrustedSources,
     @Default(<SourcesManagementOperation>{})
         Set<SourcesManagementOperation> operations,
+    String? sourcesSearchTerm,
   }) = _SourcesState;
 }

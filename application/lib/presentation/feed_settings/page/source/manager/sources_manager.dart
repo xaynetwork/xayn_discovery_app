@@ -55,6 +55,7 @@ class SourcesManager extends Cubit<SourcesState>
   ).transform(
     (out) => out.map((it) => foldEngineEvent(state)(it)),
   );
+  String? latestSourcesSearchTerm;
 
   SourcesManager(
     this._sourcesScreenNavActions,
@@ -72,6 +73,13 @@ class SourcesManager extends Cubit<SourcesState>
   @override
   void onTrustSourceShowOverlay() =>
       _sourcesScreenNavActions.onTrustSourceShowOverlay();
+
+  @override
+  void getAvailableSourcesList(String fuzzySearchTerm) {
+    super.getAvailableSourcesList(fuzzySearchTerm);
+
+    scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
+  }
 
   /// Trigger this manager to load both [Source] lists.
   /// This method is typically invoked by a `Widget` when running `Widget.initState`.
@@ -175,6 +183,7 @@ class SourcesManager extends Cubit<SourcesState>
                 .sourcesByTask(SourcesManagementTask.addToTrustedSources)
           },
           operations: sourcesPendingOperations.toSet(),
+          sourcesSearchTerm: latestSourcesSearchTerm,
         ),
       );
 
