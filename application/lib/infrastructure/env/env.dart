@@ -38,6 +38,18 @@ abstract class Env {
   static const String mixpanelServerUrl = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.mixpanelServerUrl
       : _EnvProd.mixpanelServerUrl;
+  static const String rconfigAccessKey = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.rconfigAccessKey
+      : _EnvProd.rconfigAccessKey;
+  static const String rconfigSecretKey = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.rconfigSecretKey
+      : _EnvProd.rconfigSecretKey;
+  static const String rconfigRegion = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.rconfigRegion
+      : _EnvProd.rconfigRegion;
+  static const String rconfigEndpointUrl = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.rconfigEndpointUrl
+      : _EnvProd.rconfigEndpointUrl;
 }
 
 /// Standard Env config.
@@ -55,6 +67,10 @@ abstract class _EnvDev {
   static const String revenueCatSdkKeyAndroid =
       __EnvDev.revenueCatSdkKeyAndroid;
   static const String mixpanelServerUrl = __EnvDev.mixpanelServerUrl;
+  static const String rconfigAccessKey = __EnvDev.rconfigAccessKey;
+  static const String rconfigSecretKey = __EnvDev.rconfigSecretKey;
+  static const String rconfigEndpointUrl = __EnvDev.rconfigEndpointUrl;
+  static const String rconfigRegion = __EnvDev.rconfigRegion;
 }
 
 /// Standard Env config.
@@ -72,4 +88,8 @@ abstract class _EnvProd {
   static const String revenueCatSdkKeyAndroid =
       __EnvProd.revenueCatSdkKeyAndroid;
   static const String mixpanelServerUrl = __EnvProd.mixpanelServerUrl;
+  static const String rconfigAccessKey = __EnvProd.rconfigAccessKey;
+  static const String rconfigSecretKey = __EnvProd.rconfigSecretKey;
+  static const String rconfigEndpointUrl = __EnvProd.rconfigEndpointUrl;
+  static const String rconfigRegion = __EnvProd.rconfigRegion;
 }

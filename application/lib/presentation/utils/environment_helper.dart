@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class EnvironmentHelper {
+  EnvironmentHelper._();
+
   static const kIsDebug = !kReleaseMode;
 
-  static const String _flavor =
+  static const String kFlavor =
       String.fromEnvironment('USER_FLAVOR', defaultValue: "internal");
 
   /// The release app ID. When running in the release mode, [kAppId] will be the same as [kReleaseAppId].
@@ -40,9 +42,9 @@ class EnvironmentHelper {
 
   static bool get kIsInTest => Platform.environment.containsKey('FLUTTER_TEST');
 
-  static const bool kIsInternalFlavor = _flavor == "internal";
+  static const bool kIsInternalFlavor = kFlavor == "internal";
 
-  static const bool kIsBetaFlavor = _flavor == "beta";
+  static const bool kIsBetaFlavor = kFlavor == "beta";
 
-  static const bool kIsProductionFlavor = _flavor == "production";
+  static const bool kIsProductionFlavor = kFlavor == "production";
 }

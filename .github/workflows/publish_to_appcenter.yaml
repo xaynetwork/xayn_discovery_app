@@ -116,6 +116,8 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -194,6 +196,8 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
@@ -258,6 +262,8 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -323,6 +329,8 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          RCONFIG_ACCESS_KEY : ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY : ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta store:true
