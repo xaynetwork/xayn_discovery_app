@@ -27,7 +27,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
-    url: url,
+    uri: Uri.parse(url),
   );
 
   final bookmark2 = Bookmark(
@@ -37,7 +37,7 @@ void main() {
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
-    url: url,
+    uri: Uri.parse(url),
   );
 
   final collection = Collection(

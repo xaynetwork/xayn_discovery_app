@@ -45,7 +45,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         favicon: favicon,
       ),
       createdAt: createdAt,
-      url: url,
+      uri: Uri.parse(url),
     );
   }
 

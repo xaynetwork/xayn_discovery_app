@@ -33,7 +33,7 @@ void main() {
     image: image,
     provider: provider,
     createdAt: dateTime.toUtc().toString(),
-    url: url,
+    uri: Uri.parse(url),
   );
 
   setUp(() {
@@ -59,7 +59,7 @@ void main() {
           title: title,
           image: image,
           provider: provider,
-          url: url,
+          url: Uri.parse(url),
         )
       ],
       verify: (_) {
