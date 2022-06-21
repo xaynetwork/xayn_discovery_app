@@ -96,7 +96,6 @@ class PushNotificationsService {
   }
 
   void _setupRemote() async {
-    // Enable notifications (prompts on iOS)
     Airship.setUserNotificationsEnabled(true);
 
     Airship.onChannelRegistration.listen((event) =>
