@@ -18,7 +18,6 @@ mixin RequestDeepSearchMixin<T> on UseCaseBlocHelper<T> {
   }
 
   void requestDeepSearch(DocumentId documentId) async {
-    await Future.delayed(const Duration(seconds: 2));
     _useCaseSink ??= _getUseCaseSink();
     _useCaseSink!(documentId);
   }

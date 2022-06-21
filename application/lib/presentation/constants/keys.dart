@@ -46,6 +46,7 @@ class Keys {
   static const Key navBarItemEditFontSize = Key('nav_bar_item_edit_font_size');
 
   static const Key feedView = Key('feed_view');
+  static const Key deepSearchView = Key('deep_search_view');
 
   static Key collectionItem(String value) => Key('collectionItem$value');
   static Key generateCollectionsScreenCardKey(String collectionId) =>
