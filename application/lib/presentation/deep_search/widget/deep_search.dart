@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mi
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
+import 'package:xayn_discovery_app/presentation/widget/feed_info_card.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -228,11 +229,11 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
         return document.documentId.toString();
       };
 
-  Widget _noItemsBuilder(BuildContext context, double? width, double? height) {
-    return const Center(
-      child: Text('no results available'),
-    );
-  }
+  Widget _noItemsBuilder(BuildContext context, double? width, double? height) =>
+      FeedNoResultsCard(
+        width: width,
+        height: height,
+      );
 
   ShaderType _getShaderType(NewsResource newsResource) {
     // A document doesn't have a unique 'index',

@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
