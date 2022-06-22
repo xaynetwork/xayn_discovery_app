@@ -32,9 +32,9 @@ typedef OnNonMatchedEngineEvent = SourcesState Function();
 enum SourceType { excluded, trusted }
 
 abstract class SourcesScreenNavActions {
-  void onDismissOverlay();
-  void onExcludeSourceShowOverlay();
-  void onTrustSourceShowOverlay();
+  void onDismissSourcesSelection();
+  void onLoadExcludedSourcesInterface();
+  void onLoadTrustedSourcesInterface();
 }
 
 @lazySingleton
@@ -60,15 +60,16 @@ class SourcesManager extends Cubit<SourcesState>
   ) : super(const SourcesState());
 
   @override
-  void onDismissOverlay() => _sourcesScreenNavActions.onDismissOverlay();
+  void onDismissSourcesSelection() =>
+      _sourcesScreenNavActions.onDismissSourcesSelection();
 
   @override
-  void onExcludeSourceShowOverlay() =>
-      _sourcesScreenNavActions.onExcludeSourceShowOverlay();
+  void onLoadExcludedSourcesInterface() =>
+      _sourcesScreenNavActions.onLoadExcludedSourcesInterface();
 
   @override
-  void onTrustSourceShowOverlay() =>
-      _sourcesScreenNavActions.onTrustSourceShowOverlay();
+  void onLoadTrustedSourcesInterface() =>
+      _sourcesScreenNavActions.onLoadTrustedSourcesInterface();
 
   @override
   void getAvailableSourcesList(String fuzzySearchTerm) {

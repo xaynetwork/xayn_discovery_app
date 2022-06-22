@@ -83,9 +83,9 @@ class TranslationsDe extends Translations {
   String get hoursAgo => """hours ago""";
   String get dayAgo => """day ago""";
   String get daysAgo => """days ago""";
-  String get readingTimeUnitSingular => """Min Lesedauer""";
-  String get readingTimeUnitPlural => """Min Lesedauer""";
-  String get readingTimeSuffix => """read""";
+  String get readingTimeUnitSingular => """Min""";
+  String get readingTimeUnitPlural => """Min""";
+  String get readingTimeSuffix => """Lesedauer""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Dein Bereich""";
   String get personalAreaCollections => """Deine Collections""";
@@ -230,19 +230,25 @@ class TranslationsDe extends Translations {
   String get takeSurveySubtitle =>
       """Wie können wir Xayn noch besser machen?""";
   String get takeSurveyCTA => """Bring mich zur Umfrage""";
-  String get addExcludedSource => """Add a source to exclude""";
-  String get addTrustedSource => """Add a trusted source""";
-  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addExcludedSource =>
+      """Welche Quellen sollen nicht mehr im Feed auftauchen?""";
+  String get addTrustedSource =>
+      """Welchen Quellen möchtest du gerne folgen?""";
+  String get addSourcePlaceholder => """Suchen oder URL eintippen""";
   String get addSourceDescription =>
-      """Search for a source name or URL to start""";
-  String get btnSave => """Save""";
-  String get trustedSourcesTab => """Trusted Sources""";
-  String get excludedSourcesTab => """Excluded Sources""";
+      """Nach Namen oder URL der Quelle suchen""";
+  String get btnSave => """Speichern""";
+  String get trustedSourcesTab => """Lieblingsquellen""";
+  String get excludedSourcesTab => """Verborgene Quellen""";
   String get trustedSourcesDescription =>
-      """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""";
-  String get btnAdd => """Add source""";
+      """Füge dem Feed Deine Lieblingsquellen hinzu""";
+  String get btnAdd => """Newsquelle hinzufügen""";
   String get excludedSourcesDescription =>
-      """Sources that you disliked will not be shown in your Home Feed anymore.""";
+      """Diese Quellen werden nicht mehr im Feed angezeigt.""";
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -311,9 +317,9 @@ Map<String, String> get translationsDeMap => {
       """hoursAgo""": """hours ago""",
       """dayAgo""": """day ago""",
       """daysAgo""": """days ago""",
-      """readingTimeUnitSingular""": """Min Lesedauer""",
-      """readingTimeUnitPlural""": """Min Lesedauer""",
-      """readingTimeSuffix""": """read""",
+      """readingTimeUnitSingular""": """Min""",
+      """readingTimeUnitPlural""": """Min""",
+      """readingTimeSuffix""": """Lesedauer""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Dein Bereich""",
       """personalAreaCollections""": """Deine Collections""",
@@ -472,17 +478,20 @@ Map<String, String> get translationsDeMap => {
       """takeSurveyTitle""": """Hast Du mal 'ne Minute?""",
       """takeSurveySubtitle""": """Wie können wir Xayn noch besser machen?""",
       """takeSurveyCTA""": """Bring mich zur Umfrage""",
-      """addExcludedSource""": """Add a source to exclude""",
-      """addTrustedSource""": """Add a trusted source""",
-      """addSourcePlaceholder""": """Search or enter URL""",
-      """addSourceDescription""":
-          """Search for a source name or URL to start""",
-      """btnSave""": """Save""",
-      """trustedSourcesTab""": """Trusted Sources""",
-      """excludedSourcesTab""": """Excluded Sources""",
+      """addExcludedSource""":
+          """Welche Quellen sollen nicht mehr im Feed auftauchen?""",
+      """addTrustedSource""": """Welchen Quellen möchtest du gerne folgen?""",
+      """addSourcePlaceholder""": """Suchen oder URL eintippen""",
+      """addSourceDescription""": """Nach Namen oder URL der Quelle suchen""",
+      """btnSave""": """Speichern""",
+      """trustedSourcesTab""": """Lieblingsquellen""",
+      """excludedSourcesTab""": """Verborgene Quellen""",
       """trustedSourcesDescription""":
-          """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""",
-      """btnAdd""": """Add source""",
+          """Füge dem Feed Deine Lieblingsquellen hinzu""",
+      """btnAdd""": """Newsquelle hinzufügen""",
       """excludedSourcesDescription""":
-          """Sources that you disliked will not be shown in your Home Feed anymore.""",
+          """Diese Quellen werden nicht mehr im Feed angezeigt.""",
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
     };

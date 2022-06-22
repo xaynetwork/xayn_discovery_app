@@ -226,19 +226,25 @@ class TranslationsPl extends Translations {
   String get takeSurveySubtitle =>
       """Jak możemy jeszcze bardziej ulepszyć Xayn?""";
   String get takeSurveyCTA => """Zabierz mnie do ankiety""";
-  String get addExcludedSource => """Add a source to exclude""";
-  String get addTrustedSource => """Add a trusted source""";
-  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addExcludedSource =>
+      """Dodaj źródło do wykluczenia z pliku danych""";
+  String get addTrustedSource =>
+      """Which news sources do you want to follow?""";
+  String get addSourcePlaceholder => """Wyszukaj lub wpisz adres URL""";
   String get addSourceDescription =>
-      """Search for a source name or URL to start""";
-  String get btnSave => """Save""";
-  String get trustedSourcesTab => """Trusted Sources""";
-  String get excludedSourcesTab => """Excluded Sources""";
+      """Wyszukaj nazwę źródła lub jego adres URL""";
+  String get btnSave => """Zapisać""";
+  String get trustedSourcesTab => """Favorite news sources""";
+  String get excludedSourcesTab => """Hidden sources""";
   String get trustedSourcesDescription =>
-      """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""";
-  String get btnAdd => """Add source""";
+      """Dodaj swoje ulubione źródła do swojego kanału""";
+  String get btnAdd => """Dodaj źródło wiadomości""";
   String get excludedSourcesDescription =>
-      """Sources that you disliked will not be shown in your Home Feed anymore.""";
+      """Wykluczone źródła nie będą już pojawiać się w Twoim kanale.""";
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -465,17 +471,20 @@ Map<String, String> get translationsPlMap => {
       """takeSurveySubtitle""":
           """Jak możemy jeszcze bardziej ulepszyć Xayn?""",
       """takeSurveyCTA""": """Zabierz mnie do ankiety""",
-      """addExcludedSource""": """Add a source to exclude""",
-      """addTrustedSource""": """Add a trusted source""",
-      """addSourcePlaceholder""": """Search or enter URL""",
+      """addExcludedSource""": """Dodaj źródło do wykluczenia z pliku danych""",
+      """addTrustedSource""": """Which news sources do you want to follow?""",
+      """addSourcePlaceholder""": """Wyszukaj lub wpisz adres URL""",
       """addSourceDescription""":
-          """Search for a source name or URL to start""",
-      """btnSave""": """Save""",
-      """trustedSourcesTab""": """Trusted Sources""",
-      """excludedSourcesTab""": """Excluded Sources""",
+          """Wyszukaj nazwę źródła lub jego adres URL""",
+      """btnSave""": """Zapisać""",
+      """trustedSourcesTab""": """Favorite news sources""",
+      """excludedSourcesTab""": """Hidden sources""",
       """trustedSourcesDescription""":
-          """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""",
-      """btnAdd""": """Add source""",
+          """Dodaj swoje ulubione źródła do swojego kanału""",
+      """btnAdd""": """Dodaj źródło wiadomości""",
       """excludedSourcesDescription""":
-          """Sources that you disliked will not be shown in your Home Feed anymore.""",
+          """Wykluczone źródła nie będą już pojawiać się w Twoim kanale.""",
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
     };

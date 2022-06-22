@@ -166,13 +166,15 @@ subscriptionDurationMonth: Mes
 takeSurveyTitle: ¿Tienes un minuto?
 takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
 takeSurveyCTA: Llévame a la encuesta
-addExcludedSource: Add a source to exclude
-addTrustedSource: Add a trusted source
-addSourcePlaceholder: Search or enter URL
-addSourceDescription: Search for a source name or URL to start
-btnSave: Save
-trustedSourcesTab: Trusted Sources
-excludedSourcesTab: Excluded Sources
-trustedSourcesDescription: Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.
-btnAdd: Add source
-excludedSourcesDescription: Sources that you disliked will not be shown in your Home Feed anymore.
+addExcludedSource: Agregue una fuente para excluir de tu feed
+addTrustedSource: Agregue una fuente para incluir en tu feed
+addSourcePlaceholder: Buscar o escribir URL
+addSourceDescription: Buscar el nombre de una fuente o su URL
+btnSave: Guardar
+trustedSourcesTab: Fuentes incluidas
+excludedSourcesTab: Fuentes excluidas
+trustedSourcesDescription: Agrega tus fuentes favoritas a tu feed
+btnAdd: Agregar una fuente de noticias
+excludedSourcesDescription: Las fuentes excluidas ya no aparecerán en su feed.
+sourcePendingAddition: This source will be added to the list
+sourcePendingRemoval: This source was just removed from the list

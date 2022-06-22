@@ -174,13 +174,15 @@ subscriptionDurationMonth: month
 takeSurveyTitle: Got a minute?
 takeSurveySubtitle: We'd love your opinion on how to make the app better
 takeSurveyCTA: Take me to the survey
-addExcludedSource: Add a source to exclude
-addTrustedSource: Add a trusted source
+addExcludedSource: Add a source to exclude it from your feed
+addTrustedSource: Which news sources do you want to follow?
 addSourcePlaceholder: Search or enter URL
-addSourceDescription: Search for a source name or URL to start
+addSourceDescription: Search for a source name or its URL
 btnSave: Save
-trustedSourcesTab: Trusted Sources
-excludedSourcesTab: Excluded Sources
-trustedSourcesDescription: Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.
-btnAdd: Add source
-excludedSourcesDescription: Sources that you disliked will not be shown in your Home Feed anymore.
+trustedSourcesTab: Favorite news sources
+excludedSourcesTab: Hidden sources
+trustedSourcesDescription: Add your favorite news outlets to your feed
+btnAdd: Add a news source
+excludedSourcesDescription: These sources will no longer appear in your feed.
+sourcePendingAddition: This source will be added to the list
+sourcePendingRemoval: This source was just removed from the list

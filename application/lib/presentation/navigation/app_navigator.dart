@@ -232,13 +232,13 @@ class SourcesScreenNavActionsImpl implements SourcesScreenNavActions {
       : changeStack = manager.manipulateStack;
 
   @override
-  void onDismissOverlay() => changeStack((stack) => stack.pop());
+  void onDismissSourcesSelection() => changeStack((stack) => stack.pop());
 
   @override
-  void onExcludeSourceShowOverlay() =>
+  void onLoadExcludedSourcesInterface() =>
       changeStack((stack) => stack.push(PageRegistry.excludedSourceSelection));
 
   @override
-  void onTrustSourceShowOverlay() =>
+  void onLoadTrustedSourcesInterface() =>
       changeStack((stack) => stack.push(PageRegistry.trustedSourceSelection));
 }

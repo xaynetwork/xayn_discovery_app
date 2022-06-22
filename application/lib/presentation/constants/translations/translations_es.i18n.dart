@@ -228,19 +228,25 @@ class TranslationsEs extends Translations {
   String get takeSurveySubtitle =>
       """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""";
   String get takeSurveyCTA => """Llévame a la encuesta""";
-  String get addExcludedSource => """Add a source to exclude""";
-  String get addTrustedSource => """Add a trusted source""";
-  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addExcludedSource =>
+      """Agregue una fuente para excluir de tu feed""";
+  String get addTrustedSource =>
+      """Agregue una fuente para incluir en tu feed""";
+  String get addSourcePlaceholder => """Buscar o escribir URL""";
   String get addSourceDescription =>
-      """Search for a source name or URL to start""";
-  String get btnSave => """Save""";
-  String get trustedSourcesTab => """Trusted Sources""";
-  String get excludedSourcesTab => """Excluded Sources""";
+      """Buscar el nombre de una fuente o su URL""";
+  String get btnSave => """Guardar""";
+  String get trustedSourcesTab => """Fuentes incluidas""";
+  String get excludedSourcesTab => """Fuentes excluidas""";
   String get trustedSourcesDescription =>
-      """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""";
-  String get btnAdd => """Add source""";
+      """Agrega tus fuentes favoritas a tu feed""";
+  String get btnAdd => """Agregar una fuente de noticias""";
   String get excludedSourcesDescription =>
-      """Sources that you disliked will not be shown in your Home Feed anymore.""";
+      """Las fuentes excluidas ya no aparecerán en su feed.""";
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -470,17 +476,19 @@ Map<String, String> get translationsEsMap => {
       """takeSurveySubtitle""":
           """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""",
       """takeSurveyCTA""": """Llévame a la encuesta""",
-      """addExcludedSource""": """Add a source to exclude""",
-      """addTrustedSource""": """Add a trusted source""",
-      """addSourcePlaceholder""": """Search or enter URL""",
-      """addSourceDescription""":
-          """Search for a source name or URL to start""",
-      """btnSave""": """Save""",
-      """trustedSourcesTab""": """Trusted Sources""",
-      """excludedSourcesTab""": """Excluded Sources""",
+      """addExcludedSource""": """Agregue una fuente para excluir de tu feed""",
+      """addTrustedSource""": """Agregue una fuente para incluir en tu feed""",
+      """addSourcePlaceholder""": """Buscar o escribir URL""",
+      """addSourceDescription""": """Buscar el nombre de una fuente o su URL""",
+      """btnSave""": """Guardar""",
+      """trustedSourcesTab""": """Fuentes incluidas""",
+      """excludedSourcesTab""": """Fuentes excluidas""",
       """trustedSourcesDescription""":
-          """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""",
-      """btnAdd""": """Add source""",
+          """Agrega tus fuentes favoritas a tu feed""",
+      """btnAdd""": """Agregar una fuente de noticias""",
       """excludedSourcesDescription""":
-          """Sources that you disliked will not be shown in your Home Feed anymore.""",
+          """Las fuentes excluidas ya no aparecerán en su feed.""",
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
     };

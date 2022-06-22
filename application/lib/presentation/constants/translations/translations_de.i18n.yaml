@@ -28,9 +28,9 @@ hourAgo: 'hour ago'
 hoursAgo: 'hours ago'
 dayAgo: 'day ago'
 daysAgo: 'days ago'
-readingTimeUnitSingular: 'Min Lesedauer'
-readingTimeUnitPlural: 'Min Lesedauer'
-readingTimeSuffix: 'read'
+readingTimeUnitSingular: 'Min'
+readingTimeUnitPlural: 'Min'
+readingTimeSuffix: 'Lesedauer'
 cannotLoadUrlError: 'Unable to load image with url: '
 personalAreaTitle: Dein Bereich
 personalAreaCollections: Deine Collections
@@ -166,13 +166,15 @@ subscriptionDurationMonth: Monat
 takeSurveyTitle: Hast Du mal 'ne Minute?
 takeSurveySubtitle: Wie können wir Xayn noch besser machen?
 takeSurveyCTA: Bring mich zur Umfrage
-addExcludedSource: Add a source to exclude
-addTrustedSource: Add a trusted source
-addSourcePlaceholder: Search or enter URL
-addSourceDescription: Search for a source name or URL to start
-btnSave: Save
-trustedSourcesTab: Trusted Sources
-excludedSourcesTab: Excluded Sources
-trustedSourcesDescription: Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.
-btnAdd: Add source
-excludedSourcesDescription: Sources that you disliked will not be shown in your Home Feed anymore.
+addExcludedSource: Welche Quellen sollen nicht mehr im Feed auftauchen?
+addTrustedSource: Welchen Quellen möchtest du gerne folgen?
+addSourcePlaceholder: Suchen oder URL eintippen
+addSourceDescription: Nach Namen oder URL der Quelle suchen
+btnSave: Speichern
+trustedSourcesTab: Lieblingsquellen
+excludedSourcesTab: Verborgene Quellen
+trustedSourcesDescription: Füge dem Feed Deine Lieblingsquellen hinzu
+btnAdd: Newsquelle hinzufügen
+excludedSourcesDescription: Diese Quellen werden nicht mehr im Feed angezeigt.
+sourcePendingAddition: This source will be added to the list
+sourcePendingRemoval: This source was just removed from the list

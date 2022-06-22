@@ -226,19 +226,24 @@ class TranslationsNl extends Translations {
   String get takeSurveyTitle => """Heb je even?""";
   String get takeSurveySubtitle => """Hoe kunnen we Xayn nog beter maken?""";
   String get takeSurveyCTA => """Breng me naar de enquête""";
-  String get addExcludedSource => """Add a source to exclude""";
-  String get addTrustedSource => """Add a trusted source""";
-  String get addSourcePlaceholder => """Search or enter URL""";
-  String get addSourceDescription =>
-      """Search for a source name or URL to start""";
-  String get btnSave => """Save""";
-  String get trustedSourcesTab => """Trusted Sources""";
-  String get excludedSourcesTab => """Excluded Sources""";
+  String get addExcludedSource =>
+      """Voeg bronnen toe die je liever niet ziet in je feed""";
+  String get addTrustedSource =>
+      """Voeg bronnen toe die je uitdrukkelijk wil zien in je feed""";
+  String get addSourcePlaceholder => """Zoek of typ de URL""";
+  String get addSourceDescription => """Zoek naar een naam of de URL ervan""";
+  String get btnSave => """Opslaan""";
+  String get trustedSourcesTab => """Inbegrepen bronnen""";
+  String get excludedSourcesTab => """Uitgesloten bronnen""";
   String get trustedSourcesDescription =>
-      """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""";
-  String get btnAdd => """Add source""";
+      """Voeg je favoriete bronnen toe aan je feed""";
+  String get btnAdd => """Nieuwsbron toevoegen""";
   String get excludedSourcesDescription =>
-      """Sources that you disliked will not be shown in your Home Feed anymore.""";
+      """Uitgesloten bronnen verschijnen niet meer in uw feed.""";
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -464,17 +469,21 @@ Map<String, String> get translationsNlMap => {
       """takeSurveyTitle""": """Heb je even?""",
       """takeSurveySubtitle""": """Hoe kunnen we Xayn nog beter maken?""",
       """takeSurveyCTA""": """Breng me naar de enquête""",
-      """addExcludedSource""": """Add a source to exclude""",
-      """addTrustedSource""": """Add a trusted source""",
-      """addSourcePlaceholder""": """Search or enter URL""",
-      """addSourceDescription""":
-          """Search for a source name or URL to start""",
-      """btnSave""": """Save""",
-      """trustedSourcesTab""": """Trusted Sources""",
-      """excludedSourcesTab""": """Excluded Sources""",
+      """addExcludedSource""":
+          """Voeg bronnen toe die je liever niet ziet in je feed""",
+      """addTrustedSource""":
+          """Voeg bronnen toe die je uitdrukkelijk wil zien in je feed""",
+      """addSourcePlaceholder""": """Zoek of typ de URL""",
+      """addSourceDescription""": """Zoek naar een naam of de URL ervan""",
+      """btnSave""": """Opslaan""",
+      """trustedSourcesTab""": """Inbegrepen bronnen""",
+      """excludedSourcesTab""": """Uitgesloten bronnen""",
       """trustedSourcesDescription""":
-          """Add your favorite content providers so that we can show you more of their news/articles on your Home Feed.""",
-      """btnAdd""": """Add source""",
+          """Voeg je favoriete bronnen toe aan je feed""",
+      """btnAdd""": """Nieuwsbron toevoegen""",
       """excludedSourcesDescription""":
-          """Sources that you disliked will not be shown in your Home Feed anymore.""",
+          """Uitgesloten bronnen verschijnen niet meer in uw feed.""",
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
     };
