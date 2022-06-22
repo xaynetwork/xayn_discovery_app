@@ -234,13 +234,19 @@ class TranslationsPl extends Translations {
   String get addSourceDescription =>
       """Wyszukaj nazwę źródła lub jego adres URL""";
   String get btnSave => """Zapisać""";
+<<<<<<< HEAD
   String get trustedSourcesTab => """Favored""";
   String get excludedSourcesTab => """Hidden""";
+=======
+  String get trustedSourcesTab => """Favorite news sources""";
+  String get excludedSourcesTab => """Hidden sources""";
+>>>>>>> address review comments
   String get trustedSourcesDescription =>
       """Dodaj swoje ulubione źródła do swojego kanału""";
   String get btnAdd => """Dodaj źródło wiadomości""";
   String get excludedSourcesDescription =>
       """Wykluczone źródła nie będą już pojawiać się w Twoim kanale.""";
+<<<<<<< HEAD
   String get sourcePendingAddition => """To źródło zostanie dodane do listy""";
   String get sourcePendingRemoval =>
       """To źródło zostało właśnie usunięte z listy""";
@@ -266,6 +272,12 @@ class TranslationsPl extends Translations {
       """We couldn't find any sources for your search""";
   String get sourceExcludedTooltipMessage => """Source Excluded""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
+>>>>>>> address review comments
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -498,13 +510,19 @@ Map<String, String> get translationsPlMap => {
       """addSourceDescription""":
           """Wyszukaj nazwę źródła lub jego adres URL""",
       """btnSave""": """Zapisać""",
+<<<<<<< HEAD
       """trustedSourcesTab""": """Favored""",
       """excludedSourcesTab""": """Hidden""",
+=======
+      """trustedSourcesTab""": """Favorite news sources""",
+      """excludedSourcesTab""": """Hidden sources""",
+>>>>>>> address review comments
       """trustedSourcesDescription""":
           """Dodaj swoje ulubione źródła do swojego kanału""",
       """btnAdd""": """Dodaj źródło wiadomości""",
       """excludedSourcesDescription""":
           """Wykluczone źródła nie będą już pojawiać się w Twoim kanale.""",
+<<<<<<< HEAD
       """sourcePendingAddition""": """To źródło zostanie dodane do listy""",
       """sourcePendingRemoval""":
           """To źródło zostało właśnie usunięte z listy""",
@@ -527,4 +545,9 @@ Map<String, String> get translationsPlMap => {
           """We couldn't find any sources for your search""",
       """sourceExcludedTooltipMessage""": """Source Excluded""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
+>>>>>>> address review comments
     };

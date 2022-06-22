@@ -243,6 +243,7 @@ class TranslationsEs extends Translations {
   String get btnAdd => """Agregar una fuente de noticias""";
   String get excludedSourcesDescription =>
       """Las fuentes excluidas ya no aparecerán en su feed.""";
+<<<<<<< HEAD
   String get sourcePendingAddition => """Esta fuente se añadirá a la lista.""";
   String get sourcePendingRemoval =>
       """Esta fuente acaba de ser eliminada de la lista.""";
@@ -268,6 +269,12 @@ class TranslationsEs extends Translations {
       """No pudimos encontrar ninguna fuente para su búsqueda.""";
   String get sourceExcludedTooltipMessage => """Source Excluded""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
+>>>>>>> address review comments
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -509,6 +516,7 @@ Map<String, String> get translationsEsMap => {
       """btnAdd""": """Agregar una fuente de noticias""",
       """excludedSourcesDescription""":
           """Las fuentes excluidas ya no aparecerán en su feed.""",
+<<<<<<< HEAD
       """sourcePendingAddition""": """Esta fuente se añadirá a la lista.""",
       """sourcePendingRemoval""":
           """Esta fuente acaba de ser eliminada de la lista.""",
@@ -531,4 +539,9 @@ Map<String, String> get translationsEsMap => {
           """No pudimos encontrar ninguna fuente para su búsqueda.""",
       """sourceExcludedTooltipMessage""": """Source Excluded""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
+>>>>>>> address review comments
     };

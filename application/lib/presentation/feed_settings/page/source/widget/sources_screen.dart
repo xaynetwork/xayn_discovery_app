@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/sources_view.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -16,13 +17,21 @@ class SourcesScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _SourcesScreenState();
 }
 
-class _SourcesScreenState extends State<SourcesScreen> {
+class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
   late final SourcesManager manager = di.get()..init();
   int _selectedTabIndex = 0;
 
   Error get indexError => ArgumentError.value(
         _selectedTabIndex,
         'could not resolve the correct tab index',
+      );
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        const NavBarConfigId('sourcesNavBarConfigId'),
+        buildNavBarItemBack(
+          onPressed: manager.onDismissSourcesSelection,
+        ),
       );
 
   @override
@@ -109,9 +118,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
   Widget _buildAddSourceButton(BuildContext context) => AppRaisedButton.text(
         onPressed: () {
           if (_selectedTabIndex == 0) {
-            return manager.onTrustSourceShowOverlay();
+            return manager.onLoadTrustedSourcesInterface();
           } else if (_selectedTabIndex == 1) {
-            return manager.onExcludeSourceShowOverlay();
+            return manager.onLoadExcludedSourcesInterface();
           }
 
           throw indexError;
