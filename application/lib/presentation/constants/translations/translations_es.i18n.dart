@@ -1,6 +1,7 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
+
 import 'translations.i18n.dart';
 
 String get _languageCode => 'es';
@@ -228,6 +229,25 @@ class TranslationsEs extends Translations {
   String get takeSurveySubtitle =>
       """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""";
   String get takeSurveyCTA => """Llévame a la encuesta""";
+  String get addExcludedSource =>
+      """Agregue una fuente para excluir de tu feed""";
+  String get addTrustedSource =>
+      """Agregue una fuente para incluir en tu feed""";
+  String get addSourcePlaceholder => """Buscar o escribir URL""";
+  String get addSourceDescription =>
+      """Buscar el nombre de una fuente o su URL""";
+  String get btnSave => """Guardar""";
+  String get trustedSourcesTab => """Fuentes incluidas""";
+  String get excludedSourcesTab => """Fuentes excluidas""";
+  String get trustedSourcesDescription =>
+      """Agrega tus fuentes favoritas a tu feed""";
+  String get btnAdd => """Agregar una fuente de noticias""";
+  String get excludedSourcesDescription =>
+      """Las fuentes excluidas ya no aparecerán en su feed.""";
+  String get sourcePendingAddition => """Esta fuente se añadirá a la lista.""";
+  String get sourcePendingRemoval =>
+      """Esta fuente acaba de ser eliminada de la lista.""";
+  String get settingsGiveFeedback => """Give feedback""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -457,4 +477,20 @@ Map<String, String> get translationsEsMap => {
       """takeSurveySubtitle""":
           """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""",
       """takeSurveyCTA""": """Llévame a la encuesta""",
+      """addExcludedSource""": """Agregue una fuente para excluir de tu feed""",
+      """addTrustedSource""": """Agregue una fuente para incluir en tu feed""",
+      """addSourcePlaceholder""": """Buscar o escribir URL""",
+      """addSourceDescription""": """Buscar el nombre de una fuente o su URL""",
+      """btnSave""": """Guardar""",
+      """trustedSourcesTab""": """Fuentes incluidas""",
+      """excludedSourcesTab""": """Fuentes excluidas""",
+      """trustedSourcesDescription""":
+          """Agrega tus fuentes favoritas a tu feed""",
+      """btnAdd""": """Agregar una fuente de noticias""",
+      """excludedSourcesDescription""":
+          """Las fuentes excluidas ya no aparecerán en su feed.""",
+      """sourcePendingAddition""": """Esta fuente se añadirá a la lista.""",
+      """sourcePendingRemoval""":
+          """Esta fuente acaba de ser eliminada de la lista.""",
+      """settingsGiveFeedback""": """Give feedback""",
     };

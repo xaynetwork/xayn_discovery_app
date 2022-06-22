@@ -1,6 +1,7 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
+
 import 'translations.i18n.dart';
 
 String get _languageCode => 'nl';
@@ -226,6 +227,25 @@ class TranslationsNl extends Translations {
   String get takeSurveyTitle => """Heb je even?""";
   String get takeSurveySubtitle => """Hoe kunnen we Xayn nog beter maken?""";
   String get takeSurveyCTA => """Breng me naar de enquête""";
+  String get addExcludedSource =>
+      """Voeg bronnen toe die je liever niet ziet in je feed""";
+  String get addTrustedSource =>
+      """Voeg bronnen toe die je uitdrukkelijk wil zien in je feed""";
+  String get addSourcePlaceholder => """Zoek of typ de URL""";
+  String get addSourceDescription => """Zoek naar een naam of de URL ervan""";
+  String get btnSave => """Opslaan""";
+  String get trustedSourcesTab => """Inbegrepen bronnen""";
+  String get excludedSourcesTab => """Uitgesloten bronnen""";
+  String get trustedSourcesDescription =>
+      """Voeg je favoriete bronnen toe aan je feed""";
+  String get btnAdd => """Nieuwsbron toevoegen""";
+  String get excludedSourcesDescription =>
+      """Uitgesloten bronnen verschijnen niet meer in uw feed.""";
+  String get sourcePendingAddition =>
+      """Deze bron wordt toegevoegd aan de lijst""";
+  String get sourcePendingRemoval =>
+      """Deze bron is zojuist van de lijst verwijderd""";
+  String get settingsGiveFeedback => """Give feedback""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -451,4 +471,23 @@ Map<String, String> get translationsNlMap => {
       """takeSurveyTitle""": """Heb je even?""",
       """takeSurveySubtitle""": """Hoe kunnen we Xayn nog beter maken?""",
       """takeSurveyCTA""": """Breng me naar de enquête""",
+      """addExcludedSource""":
+          """Voeg bronnen toe die je liever niet ziet in je feed""",
+      """addTrustedSource""":
+          """Voeg bronnen toe die je uitdrukkelijk wil zien in je feed""",
+      """addSourcePlaceholder""": """Zoek of typ de URL""",
+      """addSourceDescription""": """Zoek naar een naam of de URL ervan""",
+      """btnSave""": """Opslaan""",
+      """trustedSourcesTab""": """Inbegrepen bronnen""",
+      """excludedSourcesTab""": """Uitgesloten bronnen""",
+      """trustedSourcesDescription""":
+          """Voeg je favoriete bronnen toe aan je feed""",
+      """btnAdd""": """Nieuwsbron toevoegen""",
+      """excludedSourcesDescription""":
+          """Uitgesloten bronnen verschijnen niet meer in uw feed.""",
+      """sourcePendingAddition""":
+          """Deze bron wordt toegevoegd aan de lijst""",
+      """sourcePendingRemoval""":
+          """Deze bron is zojuist van de lijst verwijderd""",
+      """settingsGiveFeedback""": """Give feedback""",
     };
