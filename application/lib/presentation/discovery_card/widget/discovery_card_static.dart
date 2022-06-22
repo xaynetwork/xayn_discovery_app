@@ -101,9 +101,7 @@ class _DiscoveryCardStaticState
                   .state.processedDocument?.processHtmlResult.contents,
             ),
           ),
-          onDeepSearchPressed: () {
-            print("DiscoveryCardStatic onDeepSearchPressed");
-          },
+          onDeepSearchPressed: () {},
           fractionSize: .0,
           feedType: widget.feedType,
         );
