@@ -231,6 +231,7 @@ desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "Available options:\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
+  shell('gitleaks detect -c ../.gitleaks.toml')
   maybe_pub_get(options)
   build_runner(options)
 

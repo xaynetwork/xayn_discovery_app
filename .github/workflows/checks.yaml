@@ -34,19 +34,17 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name: gitleaks-action
-        uses: zricethezav/gitleaks-action@master
-        with:
-          config-path: .gitleaks.toml
+      - name: Install gitleaks
+        run: |
+          wget https://github.com/zricethezav/gitleaks/releases/download/v8.8.8/gitleaks_8.8.8_linux_x64.tar.gz
+          tar -xzf gitleaks_8.8.8_linux_x64.tar.gz
+          sudo cp gitleaks /usr/bin/
+          gitleaks
 
       - name: Install Flutter
         uses: britannio/action-install-flutter@v1
         with:
           version: $FLUTTER_VERSION
-
-      - name: Install lcov and jq
-        run: |
-          sudo apt install lcov jq
 
       - name: Run checks
         timeout-minutes: 20
