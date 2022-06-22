@@ -166,3 +166,16 @@ subscriptionDurationMonth: Maand
 takeSurveyTitle: Heb je even?
 takeSurveySubtitle: Hoe kunnen we Xayn nog beter maken?
 takeSurveyCTA: Breng me naar de enquête
+addExcludedSource: Voeg bronnen toe die je liever niet ziet in je feed
+addTrustedSource: Voeg bronnen toe die je uitdrukkelijk wil zien in je feed
+addSourcePlaceholder: Zoek of typ de URL
+addSourceDescription: Zoek naar een naam of de URL ervan
+btnSave: Opslaan
+trustedSourcesTab: Inbegrepen bronnen
+excludedSourcesTab: Uitgesloten bronnen
+trustedSourcesDescription: Voeg je favoriete bronnen toe aan je feed
+btnAdd: Nieuwsbron toevoegen
+excludedSourcesDescription: Uitgesloten bronnen verschijnen niet meer in uw feed.
+sourcePendingAddition: Deze bron wordt toegevoegd aan de lijst
+sourcePendingRemoval: Deze bron is zojuist van de lijst verwijderd
+settingsGiveFeedback: Give feedback

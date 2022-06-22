@@ -16,7 +16,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_manage
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
@@ -160,7 +160,8 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
-        onFindBugPressed: _manager.reportBug,
+        onReportBugPressed: _manager.reportBug,
+        onGiveFeedbackPressed: _manager.giveFeedback,
       );
 
   Widget _buildShareAppSection() =>
