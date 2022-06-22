@@ -131,9 +131,11 @@ class AppToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(
-        additionalWidgetData == null
-            ? R.dimen.unit12
-            : R.dimen.unit12 * additionalWidgetData!.widgetHeight,
+        appToolbarData.preferredHeight != null
+            ? appToolbarData.preferredHeight!
+            : additionalWidgetData == null
+                ? R.dimen.unit12
+                : R.dimen.unit12 * additionalWidgetData!.widgetHeight,
       );
 
   Widget _maybeWrapSemantics(Widget child, String? semanticsLabel) =>

@@ -231,8 +231,13 @@ class Translations {
   String get addSourcePlaceholder => """Search or enter URL""";
   String get addSourceDescription => """Search for a source name or its URL""";
   String get btnSave => """Save""";
+<<<<<<< HEAD
   String get trustedSourcesTab => """Favored""";
   String get excludedSourcesTab => """Hidden""";
+=======
+  String get trustedSourcesTab => """Favorite news sources""";
+  String get excludedSourcesTab => """Hidden sources""";
+>>>>>>> address review comments
   String get trustedSourcesDescription =>
       """Add your favorite news outlets to your feed""";
   String get btnAdd => """Add a news source""";
@@ -242,6 +247,7 @@ class Translations {
       """This source will be added to the list""";
   String get sourcePendingRemoval =>
       """This source was just removed from the list""";
+<<<<<<< HEAD
   String get settingsGiveFeedback => """Give feedback""";
   String get subscriptionExpiresText => """The subscription expires on: %s""";
   String get promoCodeEnterTitle => """Enter your promo code""";
@@ -264,6 +270,8 @@ class Translations {
       """We couldn't find any sources for your search""";
   String get sourceExcludedTooltipMessage => """Source Excluded""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+>>>>>>> address review comments
 }
 
 class PaymentFlowErrorTranslations {
@@ -489,8 +497,13 @@ Map<String, String> get translationsMap => {
       """addSourcePlaceholder""": """Search or enter URL""",
       """addSourceDescription""": """Search for a source name or its URL""",
       """btnSave""": """Save""",
+<<<<<<< HEAD
       """trustedSourcesTab""": """Favored""",
       """excludedSourcesTab""": """Hidden""",
+=======
+      """trustedSourcesTab""": """Favorite news sources""",
+      """excludedSourcesTab""": """Hidden sources""",
+>>>>>>> address review comments
       """trustedSourcesDescription""":
           """Add your favorite news outlets to your feed""",
       """btnAdd""": """Add a news source""",
@@ -499,6 +512,7 @@ Map<String, String> get translationsMap => {
       """sourcePendingAddition""": """This source will be added to the list""",
       """sourcePendingRemoval""":
           """This source was just removed from the list""",
+<<<<<<< HEAD
       """settingsGiveFeedback""": """Give feedback""",
       """subscriptionExpiresText""": """The subscription expires on: %s""",
       """promoCodeEnterTitle""": """Enter your promo code""",
@@ -518,4 +532,6 @@ Map<String, String> get translationsMap => {
           """We couldn't find any sources for your search""",
       """sourceExcludedTooltipMessage""": """Source Excluded""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+>>>>>>> address review comments
     };

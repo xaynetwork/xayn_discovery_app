@@ -72,9 +72,9 @@ class SourceListItem extends StatelessWidget {
     ];
 
     final subTitleText = isPendingRemoval
-        ? 'This source was just removed from the list'
+        ? R.strings.sourcePendingRemoval
         : isPendingAddition
-            ? 'This source will be added to the list'
+            ? R.strings.sourcePendingAddition
             : null;
     if (subTitleText != null) {
       final subTitle = Text(
@@ -82,6 +82,7 @@ class SourceListItem extends StatelessWidget {
         style: R.styles.sStyle.copyWith(
           color: R.colors.primaryAction,
         ),
+        overflow: TextOverflow.ellipsis,
       );
       children.add(subTitle);
     }

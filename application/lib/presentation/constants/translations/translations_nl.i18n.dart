@@ -241,6 +241,7 @@ class TranslationsNl extends Translations {
   String get excludedSourcesDescription =>
       """Uitgesloten bronnen verschijnen niet meer in uw feed.""";
   String get sourcePendingAddition =>
+<<<<<<< HEAD
       """Deze bron wordt toegevoegd aan de lijst""";
   String get sourcePendingRemoval =>
       """Deze bron is zojuist van de lijst verwijderd""";
@@ -266,6 +267,11 @@ class TranslationsNl extends Translations {
       """We konden geen bronnen vinden voor je zoekopdracht""";
   String get sourceExcludedTooltipMessage => """Source Excluded""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
+>>>>>>> address review comments
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -505,6 +511,7 @@ Map<String, String> get translationsNlMap => {
       """btnAdd""": """Nieuwsbron toevoegen""",
       """excludedSourcesDescription""":
           """Uitgesloten bronnen verschijnen niet meer in uw feed.""",
+<<<<<<< HEAD
       """sourcePendingAddition""":
           """Deze bron wordt toegevoegd aan de lijst""",
       """sourcePendingRemoval""":
@@ -530,4 +537,9 @@ Map<String, String> get translationsNlMap => {
           """We konden geen bronnen vinden voor je zoekopdracht""",
       """sourceExcludedTooltipMessage""": """Source Excluded""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
+>>>>>>> address review comments
     };

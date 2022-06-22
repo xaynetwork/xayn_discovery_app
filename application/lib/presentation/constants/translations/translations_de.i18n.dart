@@ -246,6 +246,7 @@ class TranslationsDe extends Translations {
   String get excludedSourcesDescription =>
       """Diese Quellen werden nicht mehr im Feed angezeigt.""";
   String get sourcePendingAddition =>
+<<<<<<< HEAD
       """Diese Quelle wird der Liste hinzugefügt""";
   String get sourcePendingRemoval =>
       """Diese Quelle wurde gerade aus der Liste entfernt""";
@@ -271,6 +272,11 @@ class TranslationsDe extends Translations {
       """Wir konnten keine Quellen für diese Suche finden""";
   String get sourceExcludedTooltipMessage => """Source Excluded""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
+>>>>>>> address review comments
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -513,6 +519,7 @@ Map<String, String> get translationsDeMap => {
       """btnAdd""": """Newsquelle hinzufügen""",
       """excludedSourcesDescription""":
           """Diese Quellen werden nicht mehr im Feed angezeigt.""",
+<<<<<<< HEAD
       """sourcePendingAddition""":
           """Diese Quelle wird der Liste hinzugefügt""",
       """sourcePendingRemoval""":
@@ -538,4 +545,9 @@ Map<String, String> get translationsDeMap => {
           """Wir konnten keine Quellen für diese Suche finden""",
       """sourceExcludedTooltipMessage""": """Source Excluded""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
+>>>>>>> address review comments
     };

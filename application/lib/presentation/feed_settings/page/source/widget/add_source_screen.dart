@@ -42,38 +42,47 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AppScaffold(
-      resizeToAvoidBottomInset: false,
-      appToolbarData: AppToolbarData.titleOnly(
-        title: title,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
-        child: Column(
-          children: [
-            _buildInputField(),
-            Expanded(
-              child: _buildAvailableSourcesView(),
-            ),
-          ],
+  Widget build(BuildContext context) => AppScaffold(
+        resizeToAvoidBottomInset: false,
+        appToolbarData: AppToolbarData.titleOnly(
+          title: title,
+          preferredHeight: R.dimen.unit15,
         ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
+          child: Column(
+            children: [
+              _buildInputField(),
+              Expanded(
+                child: _buildAvailableSourcesView(),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildInputField() {
+    getAvailableSourcesListWithSizeCheck(String searchTerm) {
+      final normalizedSearchTerm = searchTerm.trim();
+
+      if (normalizedSearchTerm.length < 3) return;
+
+      manager.getAvailableSourcesList(searchTerm);
+    }
+
+    return AppTextField(
+      autofocus: true,
+      controller: _textEditingController,
+      onChanged: getAvailableSourcesListWithSizeCheck,
+      prefixIcon: Padding(
+        padding: EdgeInsets.all(R.dimen.unit),
+        child: SvgPicture.asset(R.assets.icons.search),
       ),
+      hintText:
+          manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
+      autocorrect: false,
     );
   }
-
-  Widget _buildInputField() => AppTextField(
-        autofocus: true,
-        controller: _textEditingController,
-        onSubmitted: manager.getAvailableSourcesList,
-        prefixIcon: Padding(
-          padding: EdgeInsets.all(R.dimen.unit),
-          child: SvgPicture.asset(R.assets.icons.search),
-        ),
-        hintText:
-            manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
-        autocorrect: false,
-      );
 
   Widget _buildAvailableSourcesView() =>
       BlocBuilder<SourcesManager, SourcesState>(
@@ -84,7 +93,7 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
                 sources: state.availableSources,
                 onTap: (source) {
                   manager.addSourceToExcludedList(source);
-                  manager.onDismissOverlay();
+                  manager.onDismissSourcesSelection();
                 },
               )
             : AvailableSourcesView.trustedSources(
@@ -92,7 +101,7 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
                 sources: state.availableSources,
                 onTap: (source) {
                   manager.addSourceToTrustedList(source);
-                  manager.onDismissOverlay();
+                  manager.onDismissSourcesSelection();
                 },
               ),
       );
