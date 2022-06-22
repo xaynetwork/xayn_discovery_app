@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:super_rich_text/super_rich_text.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 /// A widget which we use to highlight the 'perks' of subscribing,
 /// includes a number of handlers to cancel, subscribe or enter a promo code.
@@ -165,6 +167,7 @@ class TrialExpired extends StatelessWidget {
   }
 
   Widget _buildSubscriptionOptions() {
+    final FeatureManager featureManager = di.get();
     final spacer = SizedBox(
       width: R.dimen.unit,
     );
@@ -192,7 +195,9 @@ class TrialExpired extends StatelessWidget {
       ),
     );
 
-    if (!Platform.isIOS) return Center(child: restore);
+    if (!Platform.isIOS && !featureManager.isAlternativePromoCodeEnabled) {
+      return Center(child: restore);
+    }
 
     final promoCode = TextButton(
       onPressed: _onPromoCode,

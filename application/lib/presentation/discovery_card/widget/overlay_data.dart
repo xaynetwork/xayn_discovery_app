@@ -229,6 +229,8 @@ class OverlayData {
         ),
       );
 
+  static BottomSheetData bottomSheetAlternativePromoCode() => BottomSheetData(builder: (_, __) => , allowStacking: false);
+
   static BottomSheetData bottomSheetBookmarksOptions({
     required UniqueId bookmarkId,
     required VoidCallback onClose,

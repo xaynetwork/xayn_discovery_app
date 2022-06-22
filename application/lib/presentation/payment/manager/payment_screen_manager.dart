@@ -23,6 +23,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subsc
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -54,6 +55,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   final SendMarketingAnalyticsUseCase _sendMarketingAnalyticsUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final PurchaseEventMapper _purchaseEventMapper;
+  final FeatureManager _featureManager;
 
   late final UseCaseValueStream<PurchasableProduct>
       _getPurchasableProductHandler = consume(
@@ -84,6 +86,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._sendMarketingAnalyticsUseCase,
     this._sendAnalyticsUseCase,
     this._purchaseEventMapper,
+    this._featureManager,
   ) : super(const PaymentScreenState.initial()) {
     _init();
   }
@@ -118,6 +121,10 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
         action: SubscriptionAction.promoCode,
       ),
     );
+
+    if (_featureManager.isAlternativePromoCodeEnabled) {
+      showOverlay(OverlayData.bottomSheetBookmarksOptions(bookmarkId: bookmarkId, onClose: onClose, onMovePressed: onMovePressed))
+    }
 
     if (!Platform.isIOS) return;
     _requestCodeRedemptionSheetUseCase.call(none);
