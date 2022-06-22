@@ -31,22 +31,23 @@ class DeepSearchScreenManager extends Cubit<DeepSearchState>
   final DeepSearchScreenManagerNavActions _navActions;
 
   int? _cardIndex;
-  bool _isFullScreen = false;
-
   int get cardIndex => _cardIndex ?? 0;
-  bool get isFullScreen => _isFullScreen;
+  bool get isFullScreen => state is DocumentViewState;
 
   DeepSearchScreenManager(
     @factoryParam DocumentId? documentId,
     this._engineEventsUseCase,
     this._hapticFeedbackMediumUseCase,
     this._navActions,
-  ) : super(const DeepSearchState.init()) {
-    if (documentId != null) {
+  ) : super(const InitState()) {
+    final currentState = state;
+    final isInit = currentState is InitState;
+    if (isInit && documentId != null) {
+      emit(currentState.requestDeepSearch());
+      // TODO: this should be a side effect of state transition
       requestDeepSearch(documentId);
-      emit(const DeepSearchState.loading());
     } else {
-      emit(const DeepSearchState.failure());
+      emit(currentState.reportError());
     }
   }
 
@@ -58,16 +59,16 @@ class DeepSearchScreenManager extends Cubit<DeepSearchState>
   @override
   Future<DeepSearchState?> computeState() async =>
       fold(engineEvents).foldAll((event, errorReport) async {
-        print('---- computeState ----');
-        print('---- event ----');
-        print(event);
-        print('---- event ----\n');
-        if (event is DeepSearchRequestSucceeded) {
-          return DeepSearchState.success(event.items.toSet());
-        } else if (event is DeepSearchRequestFailed) {
-          return const DeepSearchState.failure();
-          // } else if (event is EngineExceptionRaised) {
-          //   return const DeepSearchState.failure();
+        final currentState = state;
+
+        final isLoading = currentState is LoadingState;
+        final isSuccessful = isLoading && event is DeepSearchRequestSucceeded;
+        final isFailure = isLoading && event is DeepSearchRequestFailed;
+
+        if (isSuccessful) {
+          return currentState.requestSucceeded(event.items.toSet());
+        } else if (isFailure) {
+          return currentState.requestFailed();
         } else {
           return state;
         }
@@ -79,9 +80,9 @@ class DeepSearchScreenManager extends Cubit<DeepSearchState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) async {
-    if (state is! SearchSuccessState) return;
+    final currentState = state;
 
-    final currentState = state as SearchSuccessState;
+    if (currentState is! SearchSuccessState) return;
     if (index >= currentState.results.length) return;
 
     scheduleComputeState(() {
@@ -90,11 +91,19 @@ class DeepSearchScreenManager extends Cubit<DeepSearchState>
   }
 
   void handleNavigateOutOfCard(Document document) {
-    scheduleComputeState(() => _isFullScreen = false);
+    final currentState = state;
+
+    if (currentState is DocumentViewState) {
+      emit(currentState.goBack());
+    }
   }
 
   void handleNavigateIntoCard(Document document) {
-    scheduleComputeState(() => _isFullScreen = true);
+    final currentState = state;
+
+    if (currentState is SearchSuccessState) {
+      emit(currentState.openDocument(document));
+    }
   }
 
   void maybeNavigateIntoCard(Document document) =>

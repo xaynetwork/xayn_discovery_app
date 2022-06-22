@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/deep_search/manager/deep_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/deep_search/manager/deep_search_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
@@ -42,6 +43,7 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
   late final DeepSearchScreenManager _screenManager =
       di.get(param1: widget.documentId);
   late final CardViewController _cardViewController = CardViewController();
+  late final CardManagersCache _cardManagersCache = di.get();
 
   CardViewController get cardViewController => _cardViewController;
 
@@ -51,12 +53,41 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
   double _dragDistance = .0;
 
   @override
-  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+  NavBarConfig get navBarConfig {
+    final state = _screenManager.state;
+
+    if (state is DocumentViewState) {
+      final document = state.document;
+      final managers = _cardManagersCache.managersOf(document);
+
+      return NavBarConfig(
+        _deepSearchNavBarConfigId,
+        [
+          buildNavBarItemArrowLeft(onPressed: () async {
+            removeOverlay();
+            await currentCardController?.animateToClose();
+            _screenManager.handleNavigateOutOfCard(document);
+          }),
+          buildNavBarItemShare(
+            onPressed: () {
+              managers.discoveryCardManager.shareUri(
+                document: document,
+                feedType: FeedType.deepSearch,
+              );
+            },
+          ),
+        ],
+        isWidthExpanded: true,
+      );
+    } else {
+      return NavBarConfig.backBtn(
         _deepSearchNavBarConfigId,
         buildNavBarItemBack(
           onPressed: _screenManager.onBackNavPressed,
         ),
       );
+    }
+  }
 
   @override
   OverlayManager get overlayManager => _screenManager.overlayManager;
@@ -64,7 +95,6 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
   @override
   void dispose() {
     _cardViewController.dispose();
-    // featureManager.close();
 
     super.dispose();
   }
@@ -78,7 +108,12 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
       backgroundColor: R.colors.homePageBackground,
       body: Padding(
         padding: EdgeInsets.only(top: topPadding),
-        child: BlocBuilder<DeepSearchScreenManager, DeepSearchState>(
+        child: BlocConsumer<DeepSearchScreenManager, DeepSearchState>(
+          listener: (context, state) {
+            if (state is DocumentViewState || state is SearchSuccessState) {
+              NavBarContainer.updateNavBar(context);
+            }
+          },
           builder: (context, state) => _buildFeedView(state),
           bloc: _screenManager,
         ),
@@ -93,11 +128,8 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
     return LayoutBuilder(builder: (context, constraints) {
       // transform the cardNotchSize to a fractional value between [0.0, 1.0]
       final notchSize = 1.0 - R.dimen.cardNotchSize / constraints.maxHeight;
-      final results =
-          state is SearchSuccessState ? state.results : <Document>{};
+      final results = state.results;
       final totalResults = results.length;
-
-      // if (state.shouldUpdateNavBar) NavBarContainer.updateNavBar(context);
 
       if (state is InitState || state is LoadingState) {
         return _buildLoadingIndicator(notchSize);
