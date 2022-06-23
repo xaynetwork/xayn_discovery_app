@@ -3,10 +3,9 @@ import 'dart:typed_data';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/document_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/crud_entity_repository.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -36,77 +35,77 @@ class Migration_3_To_4 extends BaseDbMigration {
       toMap: bookmarkToMap,
     );
 
-    final List<Bookmark> bookmarksWithUrlUpdated = [];
-    final List<Bookmark> bookmarksToRemove = [];
-    final List<Bookmark> bookmarksToSave = [];
-
     /// Get the current bookmarks list
     final bookmarks = bookmarkBoxRepository.getAll();
 
+    final newBookmarks = <UniqueId, Bookmark>{};
+
     /// For each bookmark, get the url from the stored documents and generate a unique id out of it
     for (var bookmark in bookmarks) {
-      final document = documentBoxRepository.getById(bookmark!.id);
+      if (bookmark == null) continue;
 
-      bookmarksWithUrlUpdated.add(
-        bookmark.copyWith(
-          id: Bookmark.generateUniqueIdFromUri(document!.document.resource.url),
-        ),
+      final document = documentBoxRepository.getById(bookmark.id);
+
+      if (document == null) continue;
+
+      final bookmarkId = document.document.toBookmarkId;
+      final newBookmark = bookmark.copyWith(
+        id: bookmarkId,
+        documentId: document.document.documentUniqueId,
       );
+
+      newBookmarks.addAll({bookmarkId: newBookmark});
     }
 
-    /// Create two list of bookmarks:
-    /// bookmarksToSave: list of the bookmarks that need to be update in the db
-    /// bookmarksToRemove: list of the bookmarks that need to be removed, since they were duplicates
-    for (var ub in bookmarksWithUrlUpdated) {
-      if (bookmarksToSave.indexWhere((element) => element.id == ub.id) == -1) {
-        bookmarksToSave.add(ub);
-      } else {
-        bookmarksToRemove.add(ub);
-      }
-    }
+    bookmarkBoxRepository.deleteValues(bookmarks);
 
-    bookmarkBoxRepository.deleteValues(bookmarksToRemove);
-
-    bookmarkBoxRepository.saveValues(bookmarksToSave);
+    bookmarkBoxRepository.saveValues(newBookmarks.values.toList());
 
     return 4;
   }
 }
 
-DocumentWrapper documentWrapperFromMap(Map map) {
-  final json = map[DocumentBookmarkMapperFields.json] as Map<dynamic, dynamic>;
+DocumentWrapper? documentWrapperFromMap(Map? map) {
+  if (map == null) return null;
+
+  final json =
+      map[DocumentBookmarkMapperFieldsMigration.json] as Map<dynamic, dynamic>;
 
   return DocumentWrapper(Document.fromJson(json.cast()));
 }
 
 DbEntityMap documentWrapperToMap(DocumentWrapper entity) => {
-      DocumentBookmarkMapperFields.id: entity.id.value,
-      DocumentBookmarkMapperFields.json: entity.document.toJson(),
+      DocumentBookmarkMapperFieldsMigration.id: entity.id.value,
+      DocumentBookmarkMapperFieldsMigration.json: entity.document.toJson(),
     };
 
-Bookmark bookmarkFromMap(map) {
-  final id = map[BookmarkMapperFields.id] ?? throwMapperException() as String;
+Bookmark? bookmarkFromMap(Map? map) {
+  if (map == null) return null;
 
-  final collectionId = map[BookmarkMapperFields.collectionId] ??
+  final id =
+      map[BookmarkMapperFieldsMigration.id] ?? throwMapperException() as String;
+
+  final collectionId = map[BookmarkMapperFieldsMigration.collectionId] ??
       throwMapperException() as String;
 
-  final documentId =
-      map[BookmarkMapperFields.documentId] ?? throwMapperException() as String;
+  final documentId = map[BookmarkMapperFieldsMigration.documentId] ??
+      throwMapperException() as String;
 
-  final title =
-      map[BookmarkMapperFields.title] ?? throwMapperException() as String;
+  final title = map[BookmarkMapperFieldsMigration.title] ??
+      throwMapperException() as String;
 
   /// The [image] field is nullable
-  final image = map[BookmarkMapperFields.image] as Uint8List?;
+  final image = map[BookmarkMapperFieldsMigration.image] as Uint8List?;
 
   /// The [providerName] field is nullable
-  final providerName = map[BookmarkMapperFields.providerName];
+  final providerName = map[BookmarkMapperFieldsMigration.providerName];
 
   /// The [favicon] field is nullable
-  final favicon = map[BookmarkMapperFields.providerThumbnail] as String?;
+  final favicon =
+      map[BookmarkMapperFieldsMigration.providerThumbnail] as String?;
 
-  final createdAt =
-      map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
+  final createdAt = map[BookmarkMapperFieldsMigration.createdAt] ??
+      throwMapperException() as String;
 
   return Bookmark.fromMap(
     id: UniqueId.fromTrustedString(id),
@@ -123,14 +122,14 @@ Bookmark bookmarkFromMap(map) {
 }
 
 DbEntityMap bookmarkToMap(Bookmark entity) => {
-      BookmarkMapperFields.id: entity.id.value,
-      BookmarkMapperFields.collectionId: entity.collectionId.value,
-      BookmarkMapperFields.title: entity.title,
-      BookmarkMapperFields.image: entity.image,
-      BookmarkMapperFields.providerName: entity.provider?.name,
-      BookmarkMapperFields.providerThumbnail: entity.provider?.favicon,
-      BookmarkMapperFields.createdAt: entity.createdAt,
-      BookmarkMapperFields.documentId: entity.documentId.value,
+      BookmarkMapperFieldsMigration.id: entity.id.value,
+      BookmarkMapperFieldsMigration.collectionId: entity.collectionId.value,
+      BookmarkMapperFieldsMigration.title: entity.title,
+      BookmarkMapperFieldsMigration.image: entity.image,
+      BookmarkMapperFieldsMigration.providerName: entity.provider?.name,
+      BookmarkMapperFieldsMigration.providerThumbnail: entity.provider?.favicon,
+      BookmarkMapperFieldsMigration.createdAt: entity.createdAt,
+      BookmarkMapperFieldsMigration.documentId: entity.documentId.value,
     };
 
 void throwMapperException([
@@ -138,3 +137,23 @@ void throwMapperException([
       'error occurred while mapping the object during migration',
 ]) =>
     throw DbEntityMapperException(exceptionText);
+
+abstract class DocumentBookmarkMapperFieldsMigration {
+  const DocumentBookmarkMapperFieldsMigration._();
+
+  static const int id = 0;
+  static const int json = 1;
+}
+
+abstract class BookmarkMapperFieldsMigration {
+  const BookmarkMapperFieldsMigration._();
+
+  static const int id = 0;
+  static const int collectionId = 1;
+  static const int title = 2;
+  static const int image = 3;
+  static const int providerName = 4;
+  static const int providerThumbnail = 5;
+  static const int createdAt = 6;
+  static const int documentId = 7;
+}
