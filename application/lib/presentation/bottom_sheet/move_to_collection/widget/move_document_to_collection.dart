@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -80,9 +80,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   @override
   void initState() {
     _manager.updateInitialSelectedCollection(
-      bookmarkId: Bookmark.generateUniqueIdFromUri(
-        widget.document.resource.url,
-      ),
+      bookmarkId: widget.document.toBookmarkId,
       initialSelectedCollectionId: widget.initialSelectedCollectionId,
     );
 

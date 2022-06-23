@@ -111,13 +111,13 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   ///
   @protected
   void startMoveBookmarksFlow(
-    List<UniqueId> bookmarksIds, {
+    List<UniqueId> bookmarkIds, {
     required UniqueId collectionIdToRemove,
     VoidCallback? onClose,
     UniqueId? initialSelectedCollectionId,
   }) {
     void onCollectionAdded(Collection collection) => startMoveBookmarksFlow(
-          bookmarksIds,
+          bookmarkIds,
           collectionIdToRemove: collectionIdToRemove,
           onClose: onClose,
           initialSelectedCollectionId: collection.id,
@@ -132,7 +132,7 @@ mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
 
     final moveBookmarksToCollectionSheet =
         OverlayData.bottomSheetMoveBookmarksToCollection(
-      bookmarksIds: bookmarksIds,
+      bookmarksIds: bookmarkIds,
       collectionIdToRemove: collectionIdToRemove,
       onClose: onClose,
       initialSelectedCollection: initialSelectedCollectionId,

@@ -23,6 +23,7 @@ class ListenIsBookmarkedUseCase extends UseCase<UniqueId, BookmarkStatus> {
     // changes & deletes are from now on watched
     yield* _bookmarksRepository
         .watch()
+        .where((event) => event.id == param)
         .map((_) => _bookmarksRepository.getById(param))
         .distinct()
         .map((event) => event != null

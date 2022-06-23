@@ -10,7 +10,7 @@ typedef MigrationTransformFromMap<T> = T Function(Map map);
 class CrudEntityRepository<T extends DbEntity> {
   final HiveCrdt<String, dynamic> recordBox;
   final MigrationTransformToMap<T> toMap;
-  final MigrationTransformFromMap<T> fromMap;
+  final MigrationTransformFromMap<T?> fromMap;
 
   CrudEntityRepository({
     required String box,
@@ -22,15 +22,19 @@ class CrudEntityRepository<T extends DbEntity> {
 
   T? getById(UniqueId id) => fromMap(recordBox.get(id.value));
 
-  void saveValues(List<T> list) {
+  void saveValues(List<T?> list) {
     for (var e in list) {
-      recordBox.put(e.id.value, toMap(e));
+      if (e != null) {
+        recordBox.put(e.id.value, toMap(e));
+      }
     }
   }
 
-  void deleteValues(List<T> list) {
+  void deleteValues(List<T?> list) {
     for (var e in list) {
-      recordBox.delete(e.id.value);
+      if (e != null) {
+        recordBox.delete(e.id.value);
+      }
     }
   }
 }

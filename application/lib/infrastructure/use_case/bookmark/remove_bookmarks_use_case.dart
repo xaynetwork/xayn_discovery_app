@@ -17,9 +17,9 @@ class RemoveBookmarksUseCase
   Stream<RemoveBookmarksUseCaseOut> transaction(
       RemoveBookmarksUseCaseIn param) async* {
     List<Bookmark> removedBookmarks = [];
-    for (var bookmarkUrl in param.bookmarksIds) {
+    for (var bookmarkId in param.bookmarksIds) {
       final removedBookmark = await _removeBookmarkUseCase.singleOutput(
-        bookmarkUrl,
+        bookmarkId,
       );
       removedBookmarks.add(removedBookmark);
     }

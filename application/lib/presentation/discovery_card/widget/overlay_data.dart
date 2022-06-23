@@ -237,8 +237,8 @@ class OverlayData {
       BottomSheetData<UniqueId>(
         args: bookmarkId,
         showBarrierColor: false,
-        builder: (_, bookmarkUrl) => BookmarkOptionsBottomSheet(
-          bookmarkId: bookmarkId,
+        builder: (_, bookmarkId) => BookmarkOptionsBottomSheet(
+          bookmarkId: bookmarkId!,
           onSystemPop: onClose,
           onMovePressed: onMovePressed,
         ),

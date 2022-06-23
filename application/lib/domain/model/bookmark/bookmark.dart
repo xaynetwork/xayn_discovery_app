@@ -40,7 +40,7 @@ class Bookmark extends DbEntity with _$Bookmark {
     required String createdAt,
   }) =>
       Bookmark._(
-        id: UniqueId.fromTrustedString(uri.removeQueryParameters.toString()),
+        id: generateUniqueIdFromUri(uri),
         documentId: documentId,
         collectionId: collectionId,
         image: image,

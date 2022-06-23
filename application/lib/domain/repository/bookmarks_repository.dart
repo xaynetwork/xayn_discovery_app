@@ -6,7 +6,6 @@ abstract class BookmarksRepository {
   void save(Bookmark bookmark);
   List<Bookmark> getAll();
   Bookmark? getById(UniqueId id);
-  // Bookmark? getByUrl(String url);
   List<Bookmark> getByCollectionId(UniqueId collectionId);
   void remove(Bookmark bookmark);
   void removeAllByCollectionId(UniqueId collectionId);
