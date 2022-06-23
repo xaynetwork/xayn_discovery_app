@@ -96,6 +96,7 @@ class _DeepSearchScreenState extends State<DeepSearchScreen>
   @override
   void dispose() {
     _cardViewController.dispose();
+    _screenManager.close();
 
     super.dispose();
   }
