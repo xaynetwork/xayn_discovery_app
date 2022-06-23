@@ -18,6 +18,7 @@ dependencies:
   country_code: 1.0.0
   equatable: 2.0.3
   envify: 2.0.2
+  flat: ^0.4.1
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
   flutter_localized_countries:
