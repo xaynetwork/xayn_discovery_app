@@ -39,11 +39,4 @@ class HiveBookmarksRepository extends HiveRepository<Bookmark>
     bookmarks.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     return bookmarks;
   }
-
-  // @override
-  // Bookmark? getByUrl(String url) {
-  //   final bookmarks = getAll();
-
-  //   return bookmarks.firstWhereOrNull((it) => it.url == url);
-  // }
 }

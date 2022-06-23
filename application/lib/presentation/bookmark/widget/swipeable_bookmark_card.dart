@@ -14,8 +14,8 @@ enum SwipeOption { move, delete }
 class SwipeableBookmarkCard extends StatelessWidget {
   const SwipeableBookmarkCard({
     Key? key,
-    required this.bookmarkId,
     required this.child,
+    required this.bookmarkId,
     required this.onMove,
     required this.onDelete,
     this.onFling,

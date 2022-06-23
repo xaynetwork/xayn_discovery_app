@@ -10,7 +10,7 @@ class DeleteCollectionConfirmationState
   const DeleteCollectionConfirmationState._();
 
   const factory DeleteCollectionConfirmationState({
-    /// List of bookmarksUrls
+    /// List of bookmarksIds
     required List<UniqueId> bookmarksIds,
 
     /// Error Message
