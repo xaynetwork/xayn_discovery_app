@@ -28,9 +28,9 @@ hourAgo: 'hour ago'
 hoursAgo: 'hours ago'
 dayAgo: 'day ago'
 daysAgo: 'days ago'
-readingTimeUnitSingular: 'Min Lesedauer'
-readingTimeUnitPlural: 'Min Lesedauer'
-readingTimeSuffix: 'read'
+readingTimeUnitSingular: 'Min'
+readingTimeUnitPlural: 'Min'
+readingTimeSuffix: 'Lesedauer'
 cannotLoadUrlError: 'Unable to load image with url: '
 personalAreaTitle: Dein Bereich
 personalAreaCollections: Deine Collections
@@ -166,3 +166,17 @@ subscriptionDurationMonth: Monat
 takeSurveyTitle: Hast Du mal 'ne Minute?
 takeSurveySubtitle: Wie können wir Xayn noch besser machen?
 takeSurveyCTA: Bring mich zur Umfrage
+addExcludedSource: Welche Quellen sollen nicht mehr im Feed auftauchen?
+addTrustedSource: Welchen Quellen möchtest du gerne folgen?
+addSourcePlaceholder: Suchen oder URL eintippen
+addSourceDescription: Nach Namen oder URL der Quelle suchen
+btnSave: Speichern
+trustedSourcesTab: Lieblingsquellen
+excludedSourcesTab: Verborgene Quellen
+trustedSourcesDescription: Füge dem Feed Deine Lieblingsquellen hinzu
+btnAdd: Newsquelle hinzufügen
+excludedSourcesDescription: Diese Quellen werden nicht mehr im Feed angezeigt.
+sourcePendingAddition: Diese Quelle wird der Liste hinzugefügt
+sourcePendingRemoval: Diese Quelle wurde gerade aus der Liste entfernt
+settingsGiveFeedback: Give feedback
+subscriptionExpiresText: 'The subscription expires on: %s'

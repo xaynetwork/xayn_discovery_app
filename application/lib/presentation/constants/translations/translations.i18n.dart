@@ -224,6 +224,26 @@ class Translations {
   String get takeSurveySubtitle =>
       """We'd love your opinion on how to make the app better""";
   String get takeSurveyCTA => """Take me to the survey""";
+  String get addExcludedSource =>
+      """Add a source to exclude it from your feed""";
+  String get addTrustedSource =>
+      """Which news sources do you want to follow?""";
+  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addSourceDescription => """Search for a source name or its URL""";
+  String get btnSave => """Save""";
+  String get trustedSourcesTab => """Favorite news sources""";
+  String get excludedSourcesTab => """Hidden sources""";
+  String get trustedSourcesDescription =>
+      """Add your favorite news outlets to your feed""";
+  String get btnAdd => """Add a news source""";
+  String get excludedSourcesDescription =>
+      """These sources will no longer appear in your feed.""";
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -444,4 +464,21 @@ Map<String, String> get translationsMap => {
       """takeSurveySubtitle""":
           """We'd love your opinion on how to make the app better""",
       """takeSurveyCTA""": """Take me to the survey""",
+      """addExcludedSource""": """Add a source to exclude it from your feed""",
+      """addTrustedSource""": """Which news sources do you want to follow?""",
+      """addSourcePlaceholder""": """Search or enter URL""",
+      """addSourceDescription""": """Search for a source name or its URL""",
+      """btnSave""": """Save""",
+      """trustedSourcesTab""": """Favorite news sources""",
+      """excludedSourcesTab""": """Hidden sources""",
+      """trustedSourcesDescription""":
+          """Add your favorite news outlets to your feed""",
+      """btnAdd""": """Add a news source""",
+      """excludedSourcesDescription""":
+          """These sources will no longer appear in your feed.""",
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
     };

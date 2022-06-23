@@ -233,6 +233,27 @@ class TranslationsFr extends Translations {
   String get takeSurveySubtitle =>
       """Comment pouvons-nous encore améliorer Xayn ?""";
   String get takeSurveyCTA => """Emmenez-moi à l'enquête""";
+  String get addExcludedSource =>
+      """Ajouter une source à exclure de votre flux""";
+  String get addTrustedSource =>
+      """Ajouter une source à inclure dans votre flux""";
+  String get addSourcePlaceholder => """Rechercher ou saisir l'URL""";
+  String get addSourceDescription =>
+      """Rechercher un nom de source ou une URL""";
+  String get btnSave => """Sauvegarder""";
+  String get trustedSourcesTab => """Sources préférées""";
+  String get excludedSourcesTab => """Sources exclues""";
+  String get trustedSourcesDescription =>
+      """Ajoutez vos sources préférées à votre flux""";
+  String get btnAdd => """Ajouter une source d'actualités""";
+  String get excludedSourcesDescription =>
+      """Sources exclues n'apparaîtront plus dans votre flux.""";
+  String get sourcePendingAddition =>
+      """Cette source sera ajoutée à la liste""";
+  String get sourcePendingRemoval =>
+      """Cette source vient d'être supprimée de la liste""";
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -464,4 +485,22 @@ Map<String, String> get translationsFrMap => {
       """takeSurveySubtitle""":
           """Comment pouvons-nous encore améliorer Xayn ?""",
       """takeSurveyCTA""": """Emmenez-moi à l'enquête""",
+      """addExcludedSource""": """Ajouter une source à exclure de votre flux""",
+      """addTrustedSource""":
+          """Ajouter une source à inclure dans votre flux""",
+      """addSourcePlaceholder""": """Rechercher ou saisir l'URL""",
+      """addSourceDescription""": """Rechercher un nom de source ou une URL""",
+      """btnSave""": """Sauvegarder""",
+      """trustedSourcesTab""": """Sources préférées""",
+      """excludedSourcesTab""": """Sources exclues""",
+      """trustedSourcesDescription""":
+          """Ajoutez vos sources préférées à votre flux""",
+      """btnAdd""": """Ajouter une source d'actualités""",
+      """excludedSourcesDescription""":
+          """Sources exclues n'apparaîtront plus dans votre flux.""",
+      """sourcePendingAddition""": """Cette source sera ajoutée à la liste""",
+      """sourcePendingRemoval""":
+          """Cette source vient d'être supprimée de la liste""",
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
     };

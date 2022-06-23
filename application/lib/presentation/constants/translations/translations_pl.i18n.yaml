@@ -123,7 +123,7 @@ bottomSheetMoveSingleBookmark: Przejdź do innej kolekcji
 readerModeSettingsErrorChangesNotApplied: Nie udało się zastosować zmian
 errorGenericHeaderSomethingWentWrong: Coś poszło nie tak
 errorGenericBodyPleaseTryAgainLater: Spróbuj ponownie później.
-errorClose: Blisko
+errorClose: Zamknij
 sourceHandlingTooltipLabel: Czego chcesz mniej widzieć?
 sourceHandlingTooltipHighlightedWord: Co
 enableTextToSpeech: Włącz zamianę tekstu na mowę
@@ -161,8 +161,22 @@ onboardingBottomDialog:
   bookmarksManageTitle: Naciśnij i przytrzymaj, aby zarządzać zakładkami
   cancelButton: Rozumiem!
 general:
-  btnClose: Zakończyć
+  btnClose: Zamknij
 subscriptionDurationMonth: miesiąc
 takeSurveyTitle: Masz minutkę?
 takeSurveySubtitle: Jak możemy jeszcze bardziej ulepszyć Xayn?
 takeSurveyCTA: Zabierz mnie do ankiety
+addExcludedSource: Dodaj źródło do wykluczenia z pliku danych
+addTrustedSource: Which news sources do you want to follow?
+addSourcePlaceholder: Wyszukaj lub wpisz adres URL
+addSourceDescription: Wyszukaj nazwę źródła lub jego adres URL
+btnSave: Zapisać
+trustedSourcesTab: Favorite news sources
+excludedSourcesTab: Hidden sources
+trustedSourcesDescription: Dodaj swoje ulubione źródła do swojego kanału
+btnAdd: Dodaj źródło wiadomości
+excludedSourcesDescription: Wykluczone źródła nie będą już pojawiać się w Twoim kanale.
+sourcePendingAddition: To źródło zostanie dodane do listy
+sourcePendingRemoval: To źródło zostało właśnie usunięte z listy
+settingsGiveFeedback: Give feedback
+subscriptionExpiresText: 'Subskrypcja wygasa w dniu: %s'
