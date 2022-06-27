@@ -16,17 +16,22 @@ class PaymentBottomSheet extends BottomSheetBase {
   PaymentBottomSheet({
     Key? key,
     required VoidCallback onClosePressed,
+    required VoidCallback? onRedeemPressed,
   }) : super(
           key: key,
-          body: _Payment(onClosePressed),
+          body: _Payment(onClosePressed, onRedeemPressed),
           onSystemPop: onClosePressed,
         );
 }
 
 class _Payment extends StatefulWidget {
   final VoidCallback onClosePressed;
+  final VoidCallback? onRedeemPressed;
 
-  const _Payment(this.onClosePressed);
+  const _Payment(
+    this.onClosePressed,
+    this.onRedeemPressed,
+  );
 
   @override
   State<_Payment> createState() => _PaymentState();
@@ -88,7 +93,14 @@ class _PaymentState extends State<_Payment>
       TrialExpired(
         product: state.product,
         onSubscribe: manager.subscribe,
-        onPromoCode: manager.enterRedeemCode,
+        onPromoCode: () {
+          if (widget.onRedeemPressed != null) {
+            widget.onRedeemPressed!();
+            closeBottomSheet(context);
+          } else {
+            manager.enterRedeemCode();
+          }
+        },
         onRestore: manager.restore,
         onCancel: () {
           manager.cancel();

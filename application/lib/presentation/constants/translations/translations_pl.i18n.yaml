@@ -171,7 +171,7 @@ addTrustedSource: Which news sources do you want to follow?
 addSourcePlaceholder: Wyszukaj lub wpisz adres URL
 addSourceDescription: Wyszukaj nazwę źródła lub jego adres URL
 btnSave: Zapisać
-trustedSourcesTab: Favored
+trustedSourcesTab: Favoured
 excludedSourcesTab: Hidden
 trustedSourcesDescription: Dodaj swoje ulubione źródła do swojego kanału
 btnAdd: Dodaj źródło wiadomości
@@ -192,5 +192,5 @@ noTrustedSourcesYet: No favoured sources, yet
 noExcludedSourcesYet: No disliked source yet
 noSourcesFoundTitle: No results
 noSourcesFoundInfo: We couldn't find any sources for your search
-sourceExcludedTooltipMessage: Source Excluded
+sourceExcludedTooltipMessage: Source excluded Manage Sources
 manageSourcesTooltipMessage: Manage Sources

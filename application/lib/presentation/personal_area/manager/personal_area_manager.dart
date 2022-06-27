@@ -24,6 +24,7 @@ import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
@@ -47,7 +48,8 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         OverlayManagerMixin<PersonalAreaState>,
         OpenExternalUrlMixin<PersonalAreaState>,
         CollectionManagerFlowMixin<PersonalAreaState>,
-        ObserveSubscriptionWindowMixin<PersonalAreaState>
+        ObserveSubscriptionWindowMixin<PersonalAreaState>,
+        RedeemPromoCodeMixin<PersonalAreaState>
     implements PersonalAreaNavActions {
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
@@ -229,6 +231,9 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         onClosePressed: () => onSubscriptionWindowClosed(
           currentView: SubscriptionWindowCurrentView.personalArea,
         ),
+        onRedeemPressed: _featureManager.isAlternativePromoCodeEnabled
+            ? redeemAlternativeCodeFlow
+            : null,
       ),
     );
   }
