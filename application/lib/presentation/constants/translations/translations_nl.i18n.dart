@@ -257,15 +257,18 @@ class TranslationsNl extends Translations {
       """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""";
   String get promoCodeErrorAlreadyUsed =>
       """Je hebt deze promotiecode al gebruikt""";
-  String get excludeSourceMenuItemTitle =>
-      """Exclude this source from my feed""";
-  String get noTrustedSourcesYet => """No favoured sources, yet""";
-  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get excludeSourceMenuItemTitle => """Verberg deze bron in mijn feed""";
+  String get noTrustedSourcesYet => """Nog geen favoriete bronnen""";
+  String get noExcludedSourcesYet => """Nog geen verborgen bronnen""";
   String get noSourcesFoundTitle => """Geen resultaten""";
   String get noSourcesFoundInfo =>
       """We konden geen bronnen vinden voor je zoekopdracht""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+  String get allowSourceBackMenuItemTitle =>
+      """Allow this source back on my feed""";
+  String get sourceAllowedBackTooltipMessage => """Source allowed back""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -522,12 +525,15 @@ Map<String, String> get translationsNlMap => {
           """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""",
       """promoCodeErrorAlreadyUsed""":
           """Je hebt deze promotiecode al gebruikt""",
-      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
-      """noTrustedSourcesYet""": """No favoured sources, yet""",
-      """noExcludedSourcesYet""": """No disliked source yet""",
+      """excludeSourceMenuItemTitle""": """Verberg deze bron in mijn feed""",
+      """noTrustedSourcesYet""": """Nog geen favoriete bronnen""",
+      """noExcludedSourcesYet""": """Nog geen verborgen bronnen""",
       """noSourcesFoundTitle""": """Geen resultaten""",
       """noSourcesFoundInfo""":
           """We konden geen bronnen vinden voor je zoekopdracht""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+      """allowSourceBackMenuItemTitle""":
+          """Allow this source back on my feed""",
+      """sourceAllowedBackTooltipMessage""": """Source allowed back""",
     };

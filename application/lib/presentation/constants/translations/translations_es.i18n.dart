@@ -259,15 +259,18 @@ class TranslationsEs extends Translations {
       """Nos encantaría escuchar sus comentarios. Puede enviarnos una nota desde la configuración.""";
   String get promoCodeErrorAlreadyUsed =>
       """Ya usaste este código de promoción""";
-  String get excludeSourceMenuItemTitle =>
-      """Exclude this source from my feed""";
+  String get excludeSourceMenuItemTitle => """Ocultar esta fuente de mi feed""";
   String get noTrustedSourcesYet => """No hay fuentes favoritas, todavía""";
-  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noExcludedSourcesYet => """No hay fuentes ocultas, todavía""";
   String get noSourcesFoundTitle => """No hay resultados""";
   String get noSourcesFoundInfo =>
       """No pudimos encontrar ninguna fuente para su búsqueda.""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+  String get allowSourceBackMenuItemTitle =>
+      """Allow this source back on my feed""";
+  String get sourceAllowedBackTooltipMessage => """Source allowed back""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -523,12 +526,15 @@ Map<String, String> get translationsEsMap => {
       """promoCodeSuccessResultBody""":
           """Nos encantaría escuchar sus comentarios. Puede enviarnos una nota desde la configuración.""",
       """promoCodeErrorAlreadyUsed""": """Ya usaste este código de promoción""",
-      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """excludeSourceMenuItemTitle""": """Ocultar esta fuente de mi feed""",
       """noTrustedSourcesYet""": """No hay fuentes favoritas, todavía""",
-      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noExcludedSourcesYet""": """No hay fuentes ocultas, todavía""",
       """noSourcesFoundTitle""": """No hay resultados""",
       """noSourcesFoundInfo""":
           """No pudimos encontrar ninguna fuente para su búsqueda.""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+      """allowSourceBackMenuItemTitle""":
+          """Allow this source back on my feed""",
+      """sourceAllowedBackTooltipMessage""": """Source allowed back""",
     };

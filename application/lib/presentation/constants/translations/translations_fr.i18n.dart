@@ -265,14 +265,18 @@ class TranslationsFr extends Translations {
   String get promoCodeErrorAlreadyUsed =>
       """Vous avez déjà utilisé ce code promo""";
   String get excludeSourceMenuItemTitle =>
-      """Exclude this source from my feed""";
+      """Cacher cette source de mon flux""";
   String get noTrustedSourcesYet => """No favoured sources, yet""";
-  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noExcludedSourcesYet => """Pas encore de sources cachées""";
   String get noSourcesFoundTitle => """Aucun résultat""";
   String get noSourcesFoundInfo =>
       """Nous n'avons trouvé aucune source pour votre recherche""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+  String get allowSourceBackMenuItemTitle =>
+      """Allow this source back on my feed""";
+  String get sourceAllowedBackTooltipMessage => """Source allowed back""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -532,12 +536,15 @@ Map<String, String> get translationsFrMap => {
           """Nous aimerions entendre vos commentaires. Vous pouvez nous envoyer une note dans les paramètres.""",
       """promoCodeErrorAlreadyUsed""":
           """Vous avez déjà utilisé ce code promo""",
-      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """excludeSourceMenuItemTitle""": """Cacher cette source de mon flux""",
       """noTrustedSourcesYet""": """No favoured sources, yet""",
-      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noExcludedSourcesYet""": """Pas encore de sources cachées""",
       """noSourcesFoundTitle""": """Aucun résultat""",
       """noSourcesFoundInfo""":
           """Nous n'avons trouvé aucune source pour votre recherche""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+      """allowSourceBackMenuItemTitle""":
+          """Allow this source back on my feed""",
+      """sourceAllowedBackTooltipMessage""": """Source allowed back""",
     };

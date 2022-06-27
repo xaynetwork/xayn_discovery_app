@@ -234,7 +234,7 @@ class TranslationsPl extends Translations {
   String get addSourceDescription =>
       """Wyszukaj nazwę źródła lub jego adres URL""";
   String get btnSave => """Zapisać""";
-  String get trustedSourcesTab => """Favored""";
+  String get trustedSourcesTab => """Favoured""";
   String get excludedSourcesTab => """Hidden""";
   String get trustedSourcesDescription =>
       """Dodaj swoje ulubione źródła do swojego kanału""";
@@ -257,15 +257,18 @@ class TranslationsPl extends Translations {
       """We'd love to hear your feedback. You can drop us a note in the settings.""";
   String get promoCodeErrorAlreadyUsed =>
       """You already used this promo code""";
-  String get excludeSourceMenuItemTitle =>
-      """Exclude this source from my feed""";
+  String get excludeSourceMenuItemTitle => """Hide this source from my feed""";
   String get noTrustedSourcesYet => """No favoured sources, yet""";
-  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noExcludedSourcesYet => """No hidden sources yet""";
   String get noSourcesFoundTitle => """No results""";
   String get noSourcesFoundInfo =>
       """We couldn't find any sources for your search""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+  String get allowSourceBackMenuItemTitle =>
+      """Allow this source back on my feed""";
+  String get sourceAllowedBackTooltipMessage => """Source allowed back""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -498,7 +501,7 @@ Map<String, String> get translationsPlMap => {
       """addSourceDescription""":
           """Wyszukaj nazwę źródła lub jego adres URL""",
       """btnSave""": """Zapisać""",
-      """trustedSourcesTab""": """Favored""",
+      """trustedSourcesTab""": """Favoured""",
       """excludedSourcesTab""": """Hidden""",
       """trustedSourcesDescription""":
           """Dodaj swoje ulubione źródła do swojego kanału""",
@@ -519,12 +522,15 @@ Map<String, String> get translationsPlMap => {
       """promoCodeSuccessResultBody""":
           """We'd love to hear your feedback. You can drop us a note in the settings.""",
       """promoCodeErrorAlreadyUsed""": """You already used this promo code""",
-      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """excludeSourceMenuItemTitle""": """Hide this source from my feed""",
       """noTrustedSourcesYet""": """No favoured sources, yet""",
-      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noExcludedSourcesYet""": """No hidden sources yet""",
       """noSourcesFoundTitle""": """No results""",
       """noSourcesFoundInfo""":
           """We couldn't find any sources for your search""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+      """allowSourceBackMenuItemTitle""":
+          """Allow this source back on my feed""",
+      """sourceAllowedBackTooltipMessage""": """Source allowed back""",
     };
