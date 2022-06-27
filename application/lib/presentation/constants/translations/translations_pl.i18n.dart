@@ -234,7 +234,7 @@ class TranslationsPl extends Translations {
   String get addSourceDescription =>
       """Wyszukaj nazwę źródła lub jego adres URL""";
   String get btnSave => """Zapisać""";
-  String get trustedSourcesTab => """Favored""";
+  String get trustedSourcesTab => """Favoured""";
   String get excludedSourcesTab => """Hidden""";
   String get trustedSourcesDescription =>
       """Dodaj swoje ulubione źródła do swojego kanału""";
@@ -264,7 +264,8 @@ class TranslationsPl extends Translations {
   String get noSourcesFoundTitle => """No results""";
   String get noSourcesFoundInfo =>
       """We couldn't find any sources for your search""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
@@ -498,7 +499,7 @@ Map<String, String> get translationsPlMap => {
       """addSourceDescription""":
           """Wyszukaj nazwę źródła lub jego adres URL""",
       """btnSave""": """Zapisać""",
-      """trustedSourcesTab""": """Favored""",
+      """trustedSourcesTab""": """Favoured""",
       """excludedSourcesTab""": """Hidden""",
       """trustedSourcesDescription""":
           """Dodaj swoje ulubione źródła do swojego kanału""",
@@ -525,6 +526,6 @@ Map<String, String> get translationsPlMap => {
       """noSourcesFoundTitle""": """No results""",
       """noSourcesFoundInfo""":
           """We couldn't find any sources for your search""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
     };

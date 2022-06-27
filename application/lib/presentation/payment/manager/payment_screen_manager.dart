@@ -25,6 +25,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_ma
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
@@ -44,8 +45,8 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     with
         UseCaseBlocHelper<PaymentScreenState>,
         OverlayManagerMixin<PaymentScreenState>,
-        ErrorHandlingManagerMixin<PaymentScreenState>
-    implements PaymentScreenNavActions {
+        ErrorHandlingManagerMixin<PaymentScreenState>,
+        RedeemPromoCodeMixin<PaymentScreenState> {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
   final RestoreSubscriptionUseCase _restoreSubscriptionUseCase;
@@ -115,6 +116,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     _purchaseSubscriptionHandler(product.id);
   }
 
+  /// Returns true when the calling experience (i.e. the bottom sheet) should be closed
   void enterRedeemCode() {
     _sendAnalyticsUseCase(
       SubscriptionActionEvent(
@@ -123,11 +125,11 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     );
 
     if (_featureManager.isAlternativePromoCodeEnabled) {
-      showOverlay(OverlayData.bottomSheetBookmarksOptions(bookmarkId: bookmarkId, onClose: onClose, onMovePressed: onMovePressed))
+      redeemAlternativeCodeFlow();
+    } else {
+      if (!Platform.isIOS) return;
+      _requestCodeRedemptionSheetUseCase.call(none);
     }
-
-    if (!Platform.isIOS) return;
-    _requestCodeRedemptionSheetUseCase.call(none);
   }
 
   void restore() {
@@ -219,6 +221,14 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           return state;
         } else if (_subscriptionProduct != null) {
           _maybeHandleError(paymentFlowError);
+          final purchasableProduct = _subscriptionProduct!;
+          if (purchasableProduct.status.isPurchased ||
+              purchasableProduct.status.isRestored ||
+              // In case we extended the free trial
+              _subscriptionStatus?.isFreeTrialActive == true) {
+            _onDismiss();
+          }
+
           return PaymentScreenState.ready(
             product: _subscriptionProduct!,
           );
@@ -230,7 +240,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
   void _maybeHandleError(PaymentFlowError? error) {
     if (error == null) return;
     if (error == PaymentFlowError.itemAlreadyOwned) {
-      onDismiss();
+      _onDismiss();
       return;
     }
 
@@ -278,6 +288,5 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     return product.copyWith(updatedStatus);
   }
 
-  @override
-  void onDismiss() => _paymentScreenNavActions.onDismiss();
+  void _onDismiss() => _paymentScreenNavActions.onDismiss();
 }

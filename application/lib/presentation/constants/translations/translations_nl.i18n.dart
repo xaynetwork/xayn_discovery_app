@@ -264,7 +264,8 @@ class TranslationsNl extends Translations {
   String get noSourcesFoundTitle => """Geen resultaten""";
   String get noSourcesFoundInfo =>
       """We konden geen bronnen vinden voor je zoekopdracht""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
@@ -528,6 +529,6 @@ Map<String, String> get translationsNlMap => {
       """noSourcesFoundTitle""": """Geen resultaten""",
       """noSourcesFoundInfo""":
           """We konden geen bronnen vinden voor je zoekopdracht""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
     };

@@ -67,4 +67,13 @@ class FeatureManager extends Cubit<FeatureManagerState>
         appStatusRepo.appStatus.copyWith(firstAppLaunchDate: DateTime.now());
     appStatusRepo.save(newStatus);
   }
+
+  void setTrialDurationToZero() {
+    final appStatusRepo = di.get<AppStatusRepository>();
+    final newStatus = appStatusRepo.appStatus.copyWith(
+      firstAppLaunchDate: DateTime.now().subtract(const Duration(days: 7)),
+      extraTrialEndDate: null,
+    );
+    appStatusRepo.save(newStatus);
+  }
 }

@@ -1,7 +1,8 @@
 name: xayn_discovery_app
 description: Xayn discovery app
 publish_to: 'none'
-version: 0.0.1
+# this version is only useful for internal tests
+version: 3.45.0
 
 environment:
   sdk: '>=2.17.0 <3.0.0'

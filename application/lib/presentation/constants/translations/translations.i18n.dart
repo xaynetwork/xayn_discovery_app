@@ -231,7 +231,7 @@ class Translations {
   String get addSourcePlaceholder => """Search or enter URL""";
   String get addSourceDescription => """Search for a source name or its URL""";
   String get btnSave => """Save""";
-  String get trustedSourcesTab => """Favored""";
+  String get trustedSourcesTab => """Favoured""";
   String get excludedSourcesTab => """Hidden""";
   String get trustedSourcesDescription =>
       """Add your favorite news outlets to your feed""";
@@ -262,7 +262,8 @@ class Translations {
   String get noSourcesFoundTitle => """No results""";
   String get noSourcesFoundInfo =>
       """We couldn't find any sources for your search""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
@@ -489,7 +490,7 @@ Map<String, String> get translationsMap => {
       """addSourcePlaceholder""": """Search or enter URL""",
       """addSourceDescription""": """Search for a source name or its URL""",
       """btnSave""": """Save""",
-      """trustedSourcesTab""": """Favored""",
+      """trustedSourcesTab""": """Favoured""",
       """excludedSourcesTab""": """Hidden""",
       """trustedSourcesDescription""":
           """Add your favorite news outlets to your feed""",
@@ -516,6 +517,6 @@ Map<String, String> get translationsMap => {
       """noSourcesFoundTitle""": """No results""",
       """noSourcesFoundInfo""":
           """We couldn't find any sources for your search""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
     };

@@ -269,7 +269,8 @@ class TranslationsDe extends Translations {
   String get noSourcesFoundTitle => """Keine Ergebnisse""";
   String get noSourcesFoundInfo =>
       """Wir konnten keine Quellen für diese Suche finden""";
-  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
@@ -536,6 +537,6 @@ Map<String, String> get translationsDeMap => {
       """noSourcesFoundTitle""": """Keine Ergebnisse""",
       """noSourcesFoundInfo""":
           """Wir konnten keine Quellen für diese Suche finden""",
-      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
     };
