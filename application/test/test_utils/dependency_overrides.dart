@@ -296,4 +296,7 @@ class TestablePaymentServices implements PaymentService {
 
   @override
   Future<String?> get subscriptionManagementURL async => null;
+
+  @override
+  Future<void> setAppsFlyerID(String appsFlyerId) async {}
 }

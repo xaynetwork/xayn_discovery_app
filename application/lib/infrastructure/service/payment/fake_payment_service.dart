@@ -71,4 +71,7 @@ class FakePaymentService implements PaymentService {
   @override
   Future<String?> get subscriptionManagementURL =>
       Future.value(Constants.xaynUrl);
+
+  @override
+  Future<void> setAppsFlyerID(String appsFlyerId) => Future.value();
 }

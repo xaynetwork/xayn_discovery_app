@@ -66,6 +66,10 @@ class RevenueCatPaymentService implements PaymentService {
   @override
   Future<PurchaserInfo> getPurchaserInfo() => Purchases.getPurchaserInfo();
 
+  @override
+  Future<void> setAppsFlyerID(String appsFlyerId) =>
+      Purchases.setAppsflyerID(appsFlyerId);
+
   /// iOS only. Presents a code redemption sheet, useful for redeeming offer codes
   /// Refer to https://docs.revenuecat.com/docs/ios-subscription-offers#offer-codes for more information on how
   /// to configure and use offer codes

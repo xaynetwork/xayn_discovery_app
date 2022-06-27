@@ -62,10 +62,11 @@ Future<void> configureDependencies({
       : di.get<FakePaymentService>());
 }
 
-void initServices() {
+void initServices() async {
   di.get<LogManager>();
-  di.get<MarketingAnalyticsService>();
   di.get<AnalyticsNavigatorObserver>();
   di.get<DiscoveryEngine>();
-  di.get<PaymentService>();
+  final paymentService = di.get<PaymentService>();
+  final appsFlyerId = await di.get<MarketingAnalyticsService>().getUID();
+  if (appsFlyerId != null) paymentService.setAppsFlyerID(appsFlyerId);
 }
