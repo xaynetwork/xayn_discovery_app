@@ -27,12 +27,10 @@ void main() {
 
       expect(stringizedMap['isBool'], isInstanceOf<String>());
       expect(stringizedMap['isString'], isInstanceOf<String>());
-      expect(((stringizedMap['document'] as Map)['documentId'] as Map)['value'],
-          isInstanceOf<String>());
-      expect(((stringizedMap['document'] as Map)['resource'] as Map)['rank'],
-          isInstanceOf<String>());
-      expect(((stringizedMap['document'] as Map)['resource'] as Map)['score'],
-          isInstanceOf<String>());
+      expect(
+          stringizedMap['document.documentId.value'], isInstanceOf<String>());
+      expect(stringizedMap['document.resource.rank'], isInstanceOf<String>());
+      expect(stringizedMap['document.resource.score'], isInstanceOf<String>());
     },
   );
 }
