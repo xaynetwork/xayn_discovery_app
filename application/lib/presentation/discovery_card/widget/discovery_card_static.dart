@@ -16,6 +16,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scroll
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -47,7 +48,7 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 }
 
 class _DiscoveryCardStaticState
-    extends DiscoveryCardBaseState<DiscoveryCardStatic> {
+    extends DiscoveryCardBaseState<DiscoveryCardStatic> with OverlayStateMixin {
   late final _scrollController = ScrollController(keepScrollOffset: false);
   late final DiscoveryCardShadowManager _shadowManager = di.get();
   double _scrollOffset = .0;
@@ -83,13 +84,20 @@ class _DiscoveryCardStaticState
           isInteractionEnabled: true,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-          onOpenUrl: () {
+          onOpenHeaderMenu: () {
             widget.onTtsData?.call(TtsData.disabled());
 
-            discoveryCardManager.openWebResourceUrl(
-              widget.document,
-              CurrentView.reader,
-              widget.feedType,
+            // discoveryCardManager.openWebResourceUrl(
+            //   widget.document,
+            //   CurrentView.reader,
+            //   widget.feedType,
+            // );
+
+            toggleOverlay(
+              (_) => DiscoveryCardHeaderMenu(
+                items: buildDiscoveryCardHeaderMenuItems,
+                onClose: removeOverlay,
+              ),
             );
           },
           onToggleTts: () => widget.onTtsData?.call(
@@ -195,4 +203,26 @@ class _DiscoveryCardStaticState
       },
     );
   }
+
+  List<DiscoveryCardHeaderMenuItem> get buildDiscoveryCardHeaderMenuItems => [
+        DiscoveryCardHeaderMenuItem(
+          iconPath: R.assets.icons.globe,
+          title: R.strings.readerModeUnableToLoadCTA,
+          onTap: () {
+            removeOverlay();
+            discoveryCardManager.openWebResourceUrl(
+              widget.document,
+              CurrentView.story,
+              widget.feedType,
+            );
+          },
+        ),
+        DiscoveryCardHeaderMenuItem(
+          iconPath: R.assets.icons.neutral,
+          title: R.strings.excludeSourceMenuItemTitle,
+          onTap: () {
+            removeOverlay();
+          },
+        ),
+      ];
 }
