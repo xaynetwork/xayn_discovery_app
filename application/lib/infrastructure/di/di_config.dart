@@ -2,9 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
-import 'package:xayn_discovery_app/domain/repository/document_filter_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/repository/hive_document_filter_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/fake_payment_service.dart';
@@ -53,8 +51,6 @@ Future<void> configureDependencies({
   );
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
-  di.registerLazySingleton<DocumentFilterRepository>(
-      () => di.get<HiveDocumentFilterRepository>());
   di.registerLazySingleton<AppSettingsRepository>(
       () => di.get<HiveAppSettingsRepository>());
   di.registerLazySingleton<PaymentService>(() => _isProdPayment

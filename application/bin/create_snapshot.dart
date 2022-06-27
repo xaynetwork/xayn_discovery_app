@@ -14,7 +14,6 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
-import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
@@ -43,7 +42,6 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_r
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_bookmarks_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_collections_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/repository/hive_document_filter_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_document_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_repository.dart';
@@ -81,7 +79,6 @@ void main(List<String> args) async {
   _createCollections();
   _createBookmarks();
   _createDocuments();
-  _createDocumentFilters();
   _createAppStatus(version);
   _createFeed();
   _createFeedSettings();
@@ -161,12 +158,6 @@ void _createDocuments() {
   );
   final documentWrapper = DocumentWrapper(document);
   repository.save(documentWrapper);
-}
-
-void _createDocumentFilters() {
-  final repository = HiveDocumentFilterRepository();
-  final documentFilter = DocumentFilter.fromSource('xayn.com');
-  repository.save(documentFilter);
 }
 
 void _createAppStatus(int version) {
