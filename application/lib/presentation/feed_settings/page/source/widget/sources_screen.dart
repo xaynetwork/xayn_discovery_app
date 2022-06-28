@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manage
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/sources_view.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -61,32 +62,26 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
         tabController?.addListener(
             () => setState(() => _selectedTabIndex = tabController.index));
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildTabBar(),
-            Divider(
-              color: R.colors.divider,
-              height: 1.0,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: R.dimen.unit2,
-                bottom: R.dimen.unit2_5,
+        return BlocBuilder<SourcesManager, SourcesState>(
+          bloc: manager,
+          builder: (_, state) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTabBar(),
+              Divider(
+                color: R.colors.divider,
+                height: 1.0,
               ),
-              child: _buildInfoText(context),
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: R.dimen.unit2_5),
-              child: _buildAddSourceButton(context),
-            ),
-            Expanded(
-              child: BlocBuilder<SourcesManager, SourcesState>(
-                bloc: manager,
-                builder: (_, state) => _buildTabBarView(state),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: R.dimen.unit2,
+                  bottom: R.dimen.unit2_5,
+                ),
+                child: _buildInfoText(context),
               ),
-            ),
-          ],
+              ..._buildButtonAndTabView(context, state),
+            ],
+          ),
         );
       },
     );
@@ -96,6 +91,49 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
       initialIndex: _selectedTabIndex,
       child: body,
     );
+  }
+
+  List<Widget> _buildButtonAndTabView(
+      BuildContext context, SourcesState state) {
+    final button = Padding(
+      padding: EdgeInsets.only(bottom: R.dimen.unit2_5),
+      child: _buildAddSourceButton(context),
+    );
+    final tabView = Expanded(
+      child: _buildTabBarView(state),
+    );
+    final empty =
+        AnimationPlayer.asset(R.linden.assets.lottie.contextual.emptySources);
+
+    if (_selectedTabIndex == 0) {
+      final emptyInfo = Padding(
+        padding: EdgeInsets.only(bottom: R.dimen.unit1_5),
+        child: Center(
+          child: Text(
+            R.strings.noTrustedSourcesYet,
+            style: R.styles.mBoldStyle,
+          ),
+        ),
+      );
+
+      return state.jointTrustedSources.isEmpty
+          ? [empty, emptyInfo, button]
+          : [button, tabView];
+    }
+
+    final emptyInfo = Padding(
+      padding: EdgeInsets.only(bottom: R.dimen.unit1_5),
+      child: Center(
+        child: Text(
+          R.strings.noExcludedSourcesYet,
+          style: R.styles.mBoldStyle,
+        ),
+      ),
+    );
+
+    return state.jointExcludedSources.isEmpty
+        ? [empty, emptyInfo, button]
+        : [button, tabView];
   }
 
   Widget _buildTabBar() => AppTabBar(
