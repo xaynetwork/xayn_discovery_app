@@ -18,6 +18,8 @@ extension on RedeemPromoCodeError {
         return R.strings.promoCodeErrorCodeNotFound;
       case RedeemPromoCodeError.expiredPromoCode:
         return R.strings.promoCodeErrorExpired;
+      case RedeemPromoCodeError.alreadyUsedPromoCode:
+        return R.strings.promoCodeErrorAlreadyUsed;
     }
   }
 }

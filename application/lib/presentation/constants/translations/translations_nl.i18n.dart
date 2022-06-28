@@ -256,6 +256,7 @@ class TranslationsNl extends Translations {
   String get promoCodeSuccessResultBody =>
       """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""";
   String get promoCodeErrorAlreadyUsed =>
+<<<<<<< HEAD
       """Je hebt deze promotiecode al gebruikt""";
   String get excludeSourceMenuItemTitle =>
       """Exclude this source from my feed""";
@@ -267,6 +268,16 @@ class TranslationsNl extends Translations {
   String get sourceExcludedTooltipMessage =>
       """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+>>>>>>> 2ecf8e21 (String updates)
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -521,6 +532,7 @@ Map<String, String> get translationsNlMap => {
           """Je kan Xayn nog gedurende %s dagen gratis testen""",
       """promoCodeSuccessResultBody""":
           """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""",
+<<<<<<< HEAD
       """promoCodeErrorAlreadyUsed""":
           """Je hebt deze promotiecode al gebruikt""",
       """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
@@ -531,4 +543,13 @@ Map<String, String> get translationsNlMap => {
           """We konden geen bronnen vinden voor je zoekopdracht""",
       """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+>>>>>>> 2ecf8e21 (String updates)
     };

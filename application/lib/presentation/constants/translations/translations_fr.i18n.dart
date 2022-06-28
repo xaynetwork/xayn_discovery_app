@@ -252,15 +252,26 @@ class TranslationsFr extends Translations {
       """Cette source sera ajoutée à la liste""";
   String get sourcePendingRemoval =>
       """Cette source vient d'être supprimée de la liste""";
+<<<<<<< HEAD
   String get settingsGiveFeedback => """Donner votre avis""";
   String get subscriptionExpiresText => """L'abonnement expire le : %s""";
   String get promoCodeEnterTitle => """Entrez votre code promo""";
   String get promoCodeActionApplyCode => """Appliquer""";
   String get promoCodeErrorCodeNotFound => """Ce code promo est introuvable""";
   String get promoCodeErrorExpired => """Ce code promotionnel a expiré""";
+=======
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
+  String get promoCodeEnterTitle => """Enter your promo code""";
+  String get promoCodeActionApplyCode => """Apply code""";
+  String get promoCodeErrorCodeNotFound =>
+      """This promo code can not be found""";
+  String get promoCodeErrorExpired => """This promo code expired""";
+>>>>>>> 2ecf8e21 (String updates)
   String get promoCodeSuccessResultTitle =>
       """Vous pouvez tester Xayn gratuitement pendant %s jours de plus""";
   String get promoCodeSuccessResultBody =>
+<<<<<<< HEAD
       """Nous aimerions entendre vos commentaires. Vous pouvez nous envoyer une note dans les paramètres.""";
   String get promoCodeErrorAlreadyUsed =>
       """Vous avez déjà utilisé ce code promo""";
@@ -274,6 +285,18 @@ class TranslationsFr extends Translations {
   String get sourceExcludedTooltipMessage =>
       """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+      """We'd love to hear your feedback. You can drop us a note from settings at any time.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+>>>>>>> 2ecf8e21 (String updates)
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -521,15 +544,25 @@ Map<String, String> get translationsFrMap => {
       """sourcePendingAddition""": """Cette source sera ajoutée à la liste""",
       """sourcePendingRemoval""":
           """Cette source vient d'être supprimée de la liste""",
+<<<<<<< HEAD
       """settingsGiveFeedback""": """Donner votre avis""",
       """subscriptionExpiresText""": """L'abonnement expire le : %s""",
       """promoCodeEnterTitle""": """Entrez votre code promo""",
       """promoCodeActionApplyCode""": """Appliquer""",
       """promoCodeErrorCodeNotFound""": """Ce code promo est introuvable""",
       """promoCodeErrorExpired""": """Ce code promotionnel a expiré""",
+=======
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
+      """promoCodeEnterTitle""": """Enter your promo code""",
+      """promoCodeActionApplyCode""": """Apply code""",
+      """promoCodeErrorCodeNotFound""": """This promo code can not be found""",
+      """promoCodeErrorExpired""": """This promo code expired""",
+>>>>>>> 2ecf8e21 (String updates)
       """promoCodeSuccessResultTitle""":
           """Vous pouvez tester Xayn gratuitement pendant %s jours de plus""",
       """promoCodeSuccessResultBody""":
+<<<<<<< HEAD
           """Nous aimerions entendre vos commentaires. Vous pouvez nous envoyer une note dans les paramètres.""",
       """promoCodeErrorAlreadyUsed""":
           """Vous avez déjà utilisé ce code promo""",
@@ -541,4 +574,14 @@ Map<String, String> get translationsFrMap => {
           """Nous n'avons trouvé aucune source pour votre recherche""",
       """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+          """We'd love to hear your feedback. You can drop us a note from settings at any time.""",
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+>>>>>>> 2ecf8e21 (String updates)
     };
