@@ -254,19 +254,31 @@ class TranslationsPl extends Translations {
   String get promoCodeSuccessResultTitle =>
       """You can test Xayn for free for %s more days""";
   String get promoCodeSuccessResultBody =>
+<<<<<<< HEAD
       """We'd love to hear your feedback. You can drop us a note in the settings.""";
   String get promoCodeErrorAlreadyUsed =>
       """You already used this promo code""";
   String get excludeSourceMenuItemTitle =>
       """Exclude this source from my feed""";
   String get noTrustedSourcesYet => """No favoured sources, yet""";
+=======
+      """We'd love to hear your feedback. You can drop us a note from settings at any time.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+>>>>>>> 2ecf8e21 (String updates)
   String get noExcludedSourcesYet => """No disliked source yet""";
   String get noSourcesFoundTitle => """No results""";
   String get noSourcesFoundInfo =>
       """We couldn't find any sources for your search""";
+<<<<<<< HEAD
   String get sourceExcludedTooltipMessage =>
       """Source excluded Manage Sources""";
   String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+>>>>>>> 2ecf8e21 (String updates)
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -518,14 +530,24 @@ Map<String, String> get translationsPlMap => {
       """promoCodeSuccessResultTitle""":
           """You can test Xayn for free for %s more days""",
       """promoCodeSuccessResultBody""":
+<<<<<<< HEAD
           """We'd love to hear your feedback. You can drop us a note in the settings.""",
       """promoCodeErrorAlreadyUsed""": """You already used this promo code""",
       """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
       """noTrustedSourcesYet""": """No favoured sources, yet""",
+=======
+          """We'd love to hear your feedback. You can drop us a note from settings at any time.""",
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+>>>>>>> 2ecf8e21 (String updates)
       """noExcludedSourcesYet""": """No disliked source yet""",
       """noSourcesFoundTitle""": """No results""",
       """noSourcesFoundInfo""":
           """We couldn't find any sources for your search""",
+<<<<<<< HEAD
       """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
       """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+>>>>>>> 2ecf8e21 (String updates)
     };

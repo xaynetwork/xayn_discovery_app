@@ -32,14 +32,17 @@ class RedeemPromoCodeManager extends Cubit<RedeemPromoCodeState>
 
   @override
   Future<RedeemPromoCodeState> computeState() async =>
-      fold(_checkPromoCodeHandler).foldAll((promoCode, errorReport) {
-        if (promoCode != null && promoCode.isValid) {
+      fold(_checkPromoCodeHandler).foldAll((res, errorReport) {
+        final promoCode = res?.promoCode;
+        final alreadyUsed = res?.alreadyUsed ?? false;
+        if (promoCode != null && promoCode.isValid && !alreadyUsed) {
           return RedeemPromoCodeState.successful(promoCode);
         } else if (promoCode != null &&
-            !promoCode.isValid &&
+            (!promoCode.isValid || alreadyUsed) &&
             lastAppliedCode != null) {
-          return const RedeemPromoCodeState.error(
-              RedeemPromoCodeError.expiredPromoCode);
+          return RedeemPromoCodeState.error(alreadyUsed
+              ? RedeemPromoCodeError.alreadyUsedPromoCode
+              : RedeemPromoCodeError.expiredPromoCode);
         } else if (lastAppliedCode != null) {
           return const RedeemPromoCodeState.error(
               RedeemPromoCodeError.unknownPromoCode);

@@ -5,7 +5,8 @@ part 'redeem_promo_code_state.freezed.dart';
 
 enum RedeemPromoCodeError {
   unknownPromoCode,
-  expiredPromoCode;
+  expiredPromoCode,
+  alreadyUsedPromoCode;
 }
 
 @freezed

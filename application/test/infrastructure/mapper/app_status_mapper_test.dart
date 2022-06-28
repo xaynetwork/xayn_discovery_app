@@ -106,6 +106,8 @@ void main() {
           ratingDialogAlreadyVisible: false,
           isBetaUser: false,
           cta: ctaValue,
+          extraTrialEndDate: null,
+          usedPromoCodes: {},
         ),
       );
     });
