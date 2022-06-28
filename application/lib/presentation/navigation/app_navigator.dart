@@ -182,7 +182,7 @@ class PaymentScreenNavActionsImpl implements PaymentScreenNavActions {
       : changeStack = manager.manipulateStack;
 
   @override
-  void onDismiss() =>
+  void onGoBackToFeed() =>
       changeStack((stack) => stack.replace(PageRegistry.discovery));
 }
 

@@ -18,7 +18,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen>
     with OverlayMixin<PaymentScreen> {
-  late final manager = di.get<PaymentScreenManager>();
+  late final manager = di.get<PagePaymentScreenManager>();
 
   @override
   OverlayManager get overlayManager => manager.overlayManager;

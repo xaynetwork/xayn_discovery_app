@@ -82,7 +82,9 @@ class _RedeemPromoCodeState extends State<_RedeemPromoCode>
             controller: _textEditingController,
             onChanged: _manager.onPromoCodeTyped,
             onSubmitted: _manager.redeemPromoCode,
-            errorText: state.mapOrNull(error: (e) => e.error.translation),
+            errorText: state.mapOrNull(error: (e) {
+              return e.error.translation;
+            }),
           );
 
           final header = Padding(

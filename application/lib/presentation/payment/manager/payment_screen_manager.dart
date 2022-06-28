@@ -35,18 +35,89 @@ enum PaymentAction {
 }
 
 abstract class PaymentScreenNavActions {
-  void onDismiss();
+  void onGoBackToFeed();
 }
 
 const _ignoredPaymentErrors = [PaymentFlowError.canceled];
 
 @injectable
-class PaymentScreenManager extends Cubit<PaymentScreenState>
+class PagePaymentScreenManager extends PaymentScreenManager
+    with RedeemPromoCodeMixin<PaymentScreenState> {
+  PagePaymentScreenManager(
+    super.getPurchasableProductUseCase,
+    super.purchaseSubscriptionUseCase,
+    super.restoreSubscriptionUseCase,
+    super.getSubscriptionStatusUseCase,
+    super.listenSubscriptionStatusUseCase,
+    super.requestCodeRedemptionSheetUseCase,
+    super.sendMarketingAnalyticsUseCase,
+    super.sendAnalyticsUseCase,
+    super.purchaseEventMapper,
+    super.featureManager,
+    this._paymentScreenNavActions,
+  );
+
+  final PaymentScreenNavActions _paymentScreenNavActions;
+
+  @override
+  void _onDismiss() => _paymentScreenNavActions.onGoBackToFeed();
+
+  @override
+  void enterRedeemCode() {
+    if (_featureManager.isAlternativePromoCodeEnabled) {
+      _sendAnalyticsUseCase(
+        SubscriptionActionEvent(
+          action: SubscriptionAction.promoCode,
+        ),
+      );
+
+      redeemAlternativeCodeFlow();
+    } else {
+      super.enterRedeemCode();
+    }
+  }
+}
+
+@injectable
+class BottomSheetPaymentScreenManager extends PaymentScreenManager {
+  BottomSheetPaymentScreenManager(
+      super.getPurchasableProductUseCase,
+      super.purchaseSubscriptionUseCase,
+      super.restoreSubscriptionUseCase,
+      super.getSubscriptionStatusUseCase,
+      super.listenSubscriptionStatusUseCase,
+      super.requestCodeRedemptionSheetUseCase,
+      super.sendMarketingAnalyticsUseCase,
+      super.sendAnalyticsUseCase,
+      super.purchaseEventMapper,
+      super.featureManager);
+
+  /// This is a speciol case where the manager receives a dismiss callback from the UI
+  /// in order to have full control over the screen
+  late VoidCallback dismissBottomSheet;
+  bool _dismissed = false;
+
+  @override
+  void _onDismiss() {
+    if (!_dismissed) dismissBottomSheet();
+    _dismissed = true;
+  }
+
+  @override
+  void enterRedeemCode() {
+    if (_featureManager.isAlternativePromoCodeEnabled) {
+      // this can not happen, because enter enterRedeemCode is not called in the alternative flow
+    } else {
+      super.enterRedeemCode();
+    }
+  }
+}
+
+abstract class PaymentScreenManager extends Cubit<PaymentScreenState>
     with
         UseCaseBlocHelper<PaymentScreenState>,
         OverlayManagerMixin<PaymentScreenState>,
-        ErrorHandlingManagerMixin<PaymentScreenState>,
-        RedeemPromoCodeMixin<PaymentScreenState> {
+        ErrorHandlingManagerMixin<PaymentScreenState> {
   final GetSubscriptionDetailsUseCase _getPurchasableProductUseCase;
   final PurchaseSubscriptionUseCase _purchaseSubscriptionUseCase;
   final RestoreSubscriptionUseCase _restoreSubscriptionUseCase;
@@ -74,10 +145,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
       _restoreSubscriptionHandler = pipe(_restoreSubscriptionUseCase);
   PurchasableProduct? _subscriptionProduct;
 
-  final PaymentScreenNavActions _paymentScreenNavActions;
-
   PaymentScreenManager(
-    this._paymentScreenNavActions,
     this._getPurchasableProductUseCase,
     this._purchaseSubscriptionUseCase,
     this._restoreSubscriptionUseCase,
@@ -114,22 +182,6 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     if (product == null || !product.canBePurchased) return;
     _paymentAction = PaymentAction.subscribe;
     _purchaseSubscriptionHandler(product.id);
-  }
-
-  /// Returns true when the calling experience (i.e. the bottom sheet) should be closed
-  void enterRedeemCode() {
-    _sendAnalyticsUseCase(
-      SubscriptionActionEvent(
-        action: SubscriptionAction.promoCode,
-      ),
-    );
-
-    if (_featureManager.isAlternativePromoCodeEnabled) {
-      redeemAlternativeCodeFlow();
-    } else {
-      if (!Platform.isIOS) return;
-      _requestCodeRedemptionSheetUseCase.call(none);
-    }
   }
 
   void restore() {
@@ -198,6 +250,11 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
         }
 
         if (subscriptionStatus != null) {
+          if (_subscriptionStatus?.isFreeTrialActive == false &&
+              subscriptionStatus.isFreeTrialActive) {
+            _onDismiss();
+            return state;
+          }
           _subscriptionStatus = subscriptionStatus;
         }
 
@@ -223,9 +280,7 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
           _maybeHandleError(paymentFlowError);
           final purchasableProduct = _subscriptionProduct!;
           if (purchasableProduct.status.isPurchased ||
-              purchasableProduct.status.isRestored ||
-              // In case we extended the free trial
-              _subscriptionStatus?.isFreeTrialActive == true) {
+              purchasableProduct.status.isRestored) {
             _onDismiss();
           }
 
@@ -288,5 +343,18 @@ class PaymentScreenManager extends Cubit<PaymentScreenState>
     return product.copyWith(updatedStatus);
   }
 
-  void _onDismiss() => _paymentScreenNavActions.onDismiss();
+  /// Returns true when the calling experience (i.e. the bottom sheet) should be closed
+  void enterRedeemCode() {
+    _sendAnalyticsUseCase(
+      SubscriptionActionEvent(
+        action: SubscriptionAction.promoCode,
+      ),
+    );
+
+    if (!Platform.isIOS) return;
+    _requestCodeRedemptionSheetUseCase.call(none);
+  }
+
+  /// leaving the experience
+  void _onDismiss();
 }
