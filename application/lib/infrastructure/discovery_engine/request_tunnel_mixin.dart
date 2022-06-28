@@ -1,41 +1,48 @@
+import 'dart:collection';
 import 'dart:convert';
-import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 
 final List<ResultSet> resultSets = <ResultSet>[];
+
+final Uri searchEndpointAlternate = Uri.parse(
+    'https://c8tuq9oow3.execute-api.eu-west-1.amazonaws.com/dev/v2/search_mlt');
 
 String reportCurrentResultSets() {
   var body = '';
 
   for (final resultSet in resultSets) {
     final timeStamp =
-        '${resultSet.timestamp.hour}:${resultSet.timestamp.minute}::${resultSet.timestamp.second}';
+        '${resultSet.timestamp.hour}h:${resultSet.timestamp.minute}m';
     final entry =
-        '<p><b>[${resultSet.path}][$timeStamp]</b>&nbsp;${const HtmlEscape().convert(resultSet.query)}:&nbsp;${resultSet.articles.length} results received</p>';
+        '<p><b>${resultSet.path}: $timeStamp</b>&nbsp;<i>${resultSet.articles.length} results received</i><br>${resultSet.query}</p>';
     var listing = '<ol>';
 
     if (resultSet.path != '_lh') {
       var res = resultSet.articles;
-
-      if (res.length > 5) res = res.sublist(0, 5);
+      final actualLen = res.length;
 
       for (final article in res) {
         listing =
-            '$listing<li>${article['published_date']}:&nbsp;${const HtmlEscape().convert(article['title'])}</li>';
+            '$listing<li>${article['published_date']}:&nbsp;<a href="${article['link']}">${const HtmlEscape().convert(article['title'])}</a>&nbsp;[${article['_score']}]</li>';
       }
 
-      listing = '<span>Displaying top 5 results: </span>$listing';
+      listing =
+          '<span>Displaying top ${res.length} of $actualLen results: </span>$listing';
     }
 
     listing = '$listing</ol>';
 
-    body = '<html><body>$body$entry$listing</body></html>';
+    body = '$body$entry$listing';
   }
 
-  return body;
+  dev.log('<html><body>$body</body></html>');
+
+  return '<html><body>$body</body></html>';
 }
 
 mixin RequestTunnelMixin {
@@ -103,53 +110,75 @@ mixin RequestTunnelMixin {
 
   Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
       (Request request) async {
-        generateGibberish(int wordCount) {
-          final rnd = Random();
-          //97
-          for (var i = 0; i < wordCount; i++) {
-            final wordSize = rnd.nextInt(12) + 2;
+        final groupMatcher = RegExp(r'\(([^\)]+)\)');
+        final keywordGroups = request.url.queryParameters['q']!;
 
-            return String.fromCharCodes(
-                List.generate(wordSize, (i) => rnd.nextInt(26) + 97));
-          }
+        http.Request Function(String) buildActualRequest(Request request) =>
+            (String keywords) {
+              final mtlUri = searchEndpointAlternate.replace(
+                queryParameters: <String, dynamic>{
+                  'like': keywords,
+                  'search_in': 'title_excerpt',
+                  'min_term_freq': '1',
+                  'page_size': '34',
+                  'to_rank': '9000',
+                },
+              );
+              final headers = Map<String, String>.from(request.headers)
+                ..remove('authorization');
+
+              headers['host'] = mtlUri.host;
+              headers['x-api-key'] = Env.searchApiSecretKeyAlternate;
+
+              return http.Request(
+                request.method,
+                mtlUri,
+                headers: headers,
+                encoding: request.encoding,
+              );
+            };
+
+        final mapper = buildActualRequest(request);
+        final keySets =
+            groupMatcher.allMatches(keywordGroups).map((it) => it.group(1)!);
+        final requests = keySets.map(mapper).toList(growable: false);
+        final allArticles = HashSet<Map<String, dynamic>>(
+          equals: (a, b) => a['_id'] == b['_id'],
+          hashCode: (a) => a['_id']?.hashCode ?? 0,
+          isValidKey: (a) => true,
+        );
+
+        for (final request in requests) {
+          final r = await client.send(request);
+          final body = await r.readAsString();
+          final json =
+              Map<String, dynamic>.from(const JsonDecoder().convert(body));
+          final articles = json['articles'] as List;
+
+          allArticles.addAll(articles.cast<Map<String, dynamic>>());
         }
 
-        final queryParameters =
-            Map<String, String>.from(request.url.queryParameters);
-        final pageSize = int.parse(queryParameters['page_size'] ?? '100');
-        final articles = List.generate(
-            pageSize,
-            (index) => <String, dynamic>{
-                  "title": "$index: ${generateGibberish(6)}",
-                  "author": "${generateGibberish(2)}",
-                  "published_date": "2022-01-01 12:00:00",
-                  "published_date_precision": "full",
-                  "link": "https://en.wikipedia.org/wiki/Q*bert",
-                  "clean_url": "en.wikipedia.org",
-                  "excerpt": "${generateGibberish(20)}.",
-                  "summary": "${generateGibberish(50)}.",
-                  "rights": "wikipedia.org",
-                  "rank": 1000,
-                  "topic": "gibberish",
-                  "country": "US",
-                  "language": "en",
-                  "authors": ["${generateGibberish(2)}"],
-                  "media":
-                      "https://i.insider.com/5a96c069aae605ba008b45c7?width=1136&format=jpeg",
-                  "is_opinion": false,
-                  "twitter_account": "@${generateGibberish(1)}",
-                  "_score": .0,
-                  "_id": "${generateGibberish(1)}"
-                });
+        var sortedArticlesByScore = allArticles.toList()
+          ..sort((a, b) {
+            final rankA = a['_score'] as double? ?? .0,
+                rankB = b['_score'] as double? ?? .0;
+
+            return rankB.compareTo(rankA);
+          });
+
+        if (sortedArticlesByScore.length > 100) {
+          sortedArticlesByScore = sortedArticlesByScore.sublist(0, 100);
+        }
+
         final response = <String, dynamic>{
           "status": "ok",
-          "total_hits": pageSize,
+          "total_hits": sortedArticlesByScore.length,
           "page": 1,
           "total_pages": 1,
-          "page_size": pageSize,
-          "articles": articles,
+          "page_size": sortedArticlesByScore.length,
+          "articles": sortedArticlesByScore,
           "user_input": {
-            "q": "${generateGibberish(1)}",
+            "q": keywordGroups,
             "search_in": ["title_summary"],
             "lang": null,
             "not_lang": null,
@@ -169,6 +198,15 @@ mixin RequestTunnelMixin {
             "published_date_precision": null
           }
         };
+
+        resultSets.add(
+          ResultSet(
+            timestamp: DateTime.now(),
+            path: '_mlt',
+            query: keySets.join(' || '),
+            articles: sortedArticlesByScore,
+          ),
+        );
 
         return const JsonEncoder().convert(response);
       };

@@ -11,6 +11,9 @@ abstract class Env {
       kReleaseMode ? _EnvProd.searchApiBaseUrl : _EnvDev.searchApiBaseUrl;
   static const String searchApiSecretKey =
       kReleaseMode ? _EnvProd.searchApiSecretKey : _EnvDev.searchApiSecretKey;
+  static const String searchApiSecretKeyAlternate = kReleaseMode
+      ? _EnvProd.searchApiSecretKeyAlternate
+      : _EnvDev.searchApiSecretKeyAlternate;
   static const String imageFetcherUrl =
       kReleaseMode ? _EnvProd.imageFetcherUrl : _EnvDev.imageFetcherUrl;
   static const String instabugToken = EnvironmentHelper.kIsInternalFlavor
@@ -42,6 +45,8 @@ abstract class Env {
 abstract class _EnvDev {
   static const String searchApiBaseUrl = __EnvDev.searchApiBaseUrl;
   static const String searchApiSecretKey = __EnvDev.searchApiSecretKey;
+  static const String searchApiSecretKeyAlternate =
+      __EnvDev.searchApiSecretKeyAlternate;
   static const String imageFetcherUrl = __EnvDev.imageFetcherUrl;
   static const String instabugToken = __EnvDev.instabugToken;
   static const String amplitudeApiKey = __EnvDev.amplitudeApiKey;
@@ -58,6 +63,8 @@ abstract class _EnvDev {
 abstract class _EnvProd {
   static const String searchApiBaseUrl = __EnvProd.searchApiBaseUrl;
   static const String searchApiSecretKey = __EnvProd.searchApiSecretKey;
+  static const String searchApiSecretKeyAlternate =
+      __EnvProd.searchApiSecretKeyAlternate;
   static const String imageFetcherUrl = __EnvProd.imageFetcherUrl;
   static const String instabugToken = __EnvProd.instabugToken;
   static const String amplitudeApiKey = __EnvProd.amplitudeApiKey;

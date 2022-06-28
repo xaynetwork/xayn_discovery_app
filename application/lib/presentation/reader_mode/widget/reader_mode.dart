@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_
 import 'package:xayn_discovery_app/presentation/reader_mode/manager/reader_mode_state.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/custom_elements/error_element.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
+import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 import 'package:xayn_discovery_app/presentation/widget/widget_testable_progress_indicator.dart';
 import 'package:xayn_readability/xayn_readability.dart' as readability;
 
@@ -120,13 +121,6 @@ class _ReaderModeState extends State<ReaderMode> {
           return loading;
         }
 
-        overrideLinkStyle(element) => element.localName?.toLowerCase() == 'a'
-            ? {
-                'text-decoration': 'none',
-                'color': _getHtmlColorString(fontSettings),
-              }
-            : null;
-
         _readerModeController.loadUri(uri);
 
         final readerMode = readability.ReaderMode(
@@ -138,13 +132,19 @@ class _ReaderModeState extends State<ReaderMode> {
           rendererPadding: widget.padding,
           factoryBuilder: () => _ReaderModeWidgetFactory(baseUri: uri),
           loadingBuilder: () => loading,
+          onNavigation: (a, b) {
+            if (b.host.trim().isNotEmpty) {
+              final urlOpener = di.get<UrlOpener>();
+
+              urlOpener.openUrl(b.toString());
+            }
+          },
           onProcessedHtml: (result) async {
             widget.onProcessedHtml?.call();
 
             return _onProcessedHtml(result);
           },
           onScroll: widget.onScroll,
-          customStylesBuilder: overrideLinkStyle,
           customWidgetBuilder: _customElements,
         );
 
@@ -178,13 +178,6 @@ class _ReaderModeState extends State<ReaderMode> {
     );
   }
 
-  String _getHtmlColorString(ReaderModeSettings settings) {
-    final textColor = settings.backgroundColor.textColor;
-    final htmlColor =
-        'rgba(${textColor.red},${textColor.green},${textColor.blue},${textColor.alpha ~/ 0xff})';
-    return htmlColor;
-  }
-
   Future<readability.ProcessHtmlResult> _onProcessedHtml(
       readability.ProcessHtmlResult result) async {
     final byline = result.metadata?.byline?.trim();
@@ -213,12 +206,6 @@ class _ReaderModeWidgetFactory extends readability.WidgetFactory
   final Uri baseUri;
 
   _ReaderModeWidgetFactory({required this.baseUri});
-
-  /// This property is actually used for link callbacks,
-  /// we don't want to follow links, so this is set to be null.
-  /// Simply remove this override to re-enable links, when needed.
-  @override
-  GestureTapCallback? gestureTapCallback(String url) => null;
 
   @override
   Widget? buildImageWidget(
