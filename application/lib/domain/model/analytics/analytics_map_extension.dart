@@ -1,12 +1,12 @@
 import 'package:flat/flat.dart';
 
-extension MapExtension on Map<String, dynamic> {
+extension AnalyticsMapExtension on Map<String, dynamic> {
   /// This ensures that unserializable objects like i.e. [UniqueId] can
   /// tracked in services like [AnalyticsService]
-  Map<String, dynamic> toSerializableMap() => flatten(
+  Map<String, dynamic> toAnalyticsMap() => flatten(
         map((key, value) {
           final serializableValue = value is Map<String, dynamic>
-              ? value.toSerializableMap()
+              ? value.toAnalyticsMap()
               : value.toString();
           return MapEntry(key, serializableValue);
         }),
