@@ -88,9 +88,6 @@ Bookmark? bookmarkFromMap(Map? map) {
   final collectionId = map[_BookmarkMapperFieldsMigration.collectionId] ??
       throwMapperException() as String;
 
-  final documentId = map[_BookmarkMapperFieldsMigration.documentId] ??
-      throwMapperException() as String;
-
   final title = map[_BookmarkMapperFieldsMigration.title] ??
       throwMapperException() as String;
 
@@ -109,7 +106,10 @@ Bookmark? bookmarkFromMap(Map? map) {
 
   return Bookmark.fromMap(
     id: UniqueId.fromTrustedString(id),
-    documentId: UniqueId.fromTrustedString(documentId),
+
+    /// Temporary unique id
+    /// This is going to be set with the correct value during migration
+    documentId: UniqueId(),
     collectionId: UniqueId.fromTrustedString(collectionId),
     title: title,
     image: image,
