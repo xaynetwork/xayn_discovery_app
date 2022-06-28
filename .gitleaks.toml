@@ -24,6 +24,12 @@ id = "search-api-secret-key"
 description = "SEARCH_API_SECRET_KEY"
 regex = '''(?i)['\"]?search(.*)api(.*)secret(.*)[key|debug|production]?['\"]?(\s*)(=|>|:=|\|\|:|<=|=>|:)(\s*)['\"]?([a-z0-9]{60})['\"]?'''
 
+[[rules]]
+id = "instabug-like-token"
+description = "Tokens like the INSTABUG_TOKEN"
+regex = '''(?i)[a-z_]*=[a-z0-9]{20,32}'''
+
+
 #### DEFAULT RULES SET
 
 [[rules]]
