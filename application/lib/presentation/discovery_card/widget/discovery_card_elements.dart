@@ -38,6 +38,7 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onBookmarkLongPressed,
     required this.bookmarkStatus,
     required this.onOpenHeaderMenu,
+    required this.onProviderSectionTap,
     required this.onToggleTts,
     required this.feedType,
     this.isInteractionEnabled = true,
@@ -57,6 +58,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
   final VoidCallback onOpenHeaderMenu;
+  final VoidCallback onProviderSectionTap;
   final VoidCallback onToggleTts;
   final VoidCallback onBookmarkLongPressed;
   final BookmarkStatus bookmarkStatus;
@@ -187,7 +189,7 @@ class DiscoveryCardElements extends StatelessWidget {
     return Row(
       children: [
         if (provider?.favicon != null)
-          Expanded(child: maybeWithTap(faviconRow, onOpenHeaderMenu))
+          Expanded(child: maybeWithTap(faviconRow, onProviderSectionTap))
         else
           const Spacer(),
         if (featureManager.isTtsEnabled) maybeWithTap(ttsIcon, onToggleTts),
