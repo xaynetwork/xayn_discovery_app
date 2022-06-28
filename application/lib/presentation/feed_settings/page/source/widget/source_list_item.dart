@@ -80,7 +80,7 @@ class SourceListItem extends StatelessWidget {
       final subTitle = Text(
         subTitleText,
         style: R.styles.sStyle.copyWith(
-          color: R.colors.primaryAction,
+          color: isPendingRemoval ? R.colors.primaryAction : R.colors.accent,
         ),
         overflow: TextOverflow.ellipsis,
       );

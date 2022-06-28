@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/available_sources_view.dart';
+import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -39,6 +40,7 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
     super.dispose();
 
     _textEditingController.dispose();
+    manager.resetAvailableSourcesList();
   }
 
   @override
@@ -61,48 +63,60 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
         ),
       );
 
-  Widget _buildInputField() {
-    getAvailableSourcesListWithSizeCheck(String searchTerm) {
-      final normalizedSearchTerm = searchTerm.trim();
-
-      if (normalizedSearchTerm.length < 3) return;
-
-      manager.getAvailableSourcesList(searchTerm);
-    }
-
-    return AppTextField(
-      autofocus: true,
-      controller: _textEditingController,
-      onChanged: getAvailableSourcesListWithSizeCheck,
-      prefixIcon: Padding(
-        padding: EdgeInsets.all(R.dimen.unit),
-        child: SvgPicture.asset(R.assets.icons.search),
-      ),
-      hintText:
-          manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
-      autocorrect: false,
-    );
-  }
+  Widget _buildInputField() => AppTextField(
+        autofocus: true,
+        controller: _textEditingController,
+        onChanged: (searchTerm) =>
+            manager.getAvailableSourcesList(searchTerm.trim()),
+        prefixIcon: Padding(
+          padding: EdgeInsets.all(R.dimen.unit),
+          child: SvgPicture.asset(R.assets.icons.search),
+        ),
+        hintText:
+            manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
+        autocorrect: false,
+      );
 
   Widget _buildAvailableSourcesView() =>
       BlocBuilder<SourcesManager, SourcesState>(
         bloc: manager,
-        builder: (_, state) => widget.sourceType == SourceType.excluded
-            ? AvailableSourcesView.excludedSources(
-                manager: manager,
-                sources: state.availableSources,
-                onTap: (source) {
-                  manager.addSourceToExcludedList(source);
-                  manager.onDismissSourcesSelection();
-                },
+        builder: (_, state) => state.availableSources.isEmpty
+            ? Column(
+                children: [
+                  AnimationPlayer.asset(
+                      R.linden.assets.lottie.contextual.emptySources),
+                  if (state.sourcesSearchTerm == null ||
+                      state.sourcesSearchTerm!.isEmpty)
+                    Text(R.strings.addSourceDescription),
+                  if (state.sourcesSearchTerm != null &&
+                      state.sourcesSearchTerm!.isNotEmpty) ...[
+                    Padding(
+                      padding: EdgeInsets.only(bottom: R.dimen.unit1_5),
+                      child: Text(
+                        R.strings.noSourcesFoundTitle,
+                        style: R.styles.mBoldStyle,
+                      ),
+                    ),
+                    Text(R.strings.noSourcesFoundInfo)
+                  ],
+                ],
               )
-            : AvailableSourcesView.trustedSources(
-                manager: manager,
-                sources: state.availableSources,
-                onTap: (source) {
-                  manager.addSourceToTrustedList(source);
-                  manager.onDismissSourcesSelection();
-                },
-              ),
+            : widget.sourceType == SourceType.excluded
+                ? AvailableSourcesView.excludedSources(
+                    manager: manager,
+                    sources: state.availableSources,
+                    onTap: (source) {
+                      manager.addSourceToExcludedList(source);
+                      manager.onDismissSourcesSelection();
+                    },
+                  )
+                : AvailableSourcesView.trustedSources(
+                    manager: manager,
+                    sources: state.availableSources,
+                    onTap: (source) {
+                      manager.addSourceToTrustedList(source);
+                      manager.onDismissSourcesSelection();
+                    },
+                  ),
       );
 }

@@ -242,6 +242,7 @@ class TranslationsNl extends Translations {
       """Uitgesloten bronnen verschijnen niet meer in uw feed.""";
   String get sourcePendingAddition =>
 <<<<<<< HEAD
+<<<<<<< HEAD
       """Deze bron wordt toegevoegd aan de lijst""";
   String get sourcePendingRemoval =>
       """Deze bron is zojuist van de lijst verwijderd""";
@@ -272,6 +273,31 @@ class TranslationsNl extends Translations {
   String get sourcePendingRemoval =>
       """This source was just removed from the list""";
 >>>>>>> address review comments
+=======
+      """Deze bron wordt toegevoegd aan de lijst""";
+  String get sourcePendingRemoval =>
+      """Deze bron is zojuist van de lijst verwijderd""";
+  String get settingsGiveFeedback => """Geef feedback""";
+  String get subscriptionExpiresText => """Het abonnement loopt af op: %s""";
+  String get promoCodeEnterTitle => """Voer je promotiecode in""";
+  String get promoCodeActionApplyCode => """Code toepassen""";
+  String get promoCodeErrorCodeNotFound =>
+      """Deze promotiecode kon niet worden teruggevonden""";
+  String get promoCodeErrorExpired => """Deze promotiecode is verlopen""";
+  String get promoCodeSuccessResultTitle =>
+      """Je kan Xayn nog gedurende %s dagen gratis testen""";
+  String get promoCodeSuccessResultBody =>
+      """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+>>>>>>> address QA/design comments
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -512,6 +538,7 @@ Map<String, String> get translationsNlMap => {
       """excludedSourcesDescription""":
           """Uitgesloten bronnen verschijnen niet meer in uw feed.""",
 <<<<<<< HEAD
+<<<<<<< HEAD
       """sourcePendingAddition""":
           """Deze bron wordt toegevoegd aan de lijst""",
       """sourcePendingRemoval""":
@@ -542,4 +569,28 @@ Map<String, String> get translationsNlMap => {
       """sourcePendingRemoval""":
           """This source was just removed from the list""",
 >>>>>>> address review comments
+=======
+      """sourcePendingAddition""":
+          """Deze bron wordt toegevoegd aan de lijst""",
+      """sourcePendingRemoval""":
+          """Deze bron is zojuist van de lijst verwijderd""",
+      """settingsGiveFeedback""": """Geef feedback""",
+      """subscriptionExpiresText""": """Het abonnement loopt af op: %s""",
+      """promoCodeEnterTitle""": """Voer je promotiecode in""",
+      """promoCodeActionApplyCode""": """Code toepassen""",
+      """promoCodeErrorCodeNotFound""":
+          """Deze promotiecode kon niet worden teruggevonden""",
+      """promoCodeErrorExpired""": """Deze promotiecode is verlopen""",
+      """promoCodeSuccessResultTitle""":
+          """Je kan Xayn nog gedurende %s dagen gratis testen""",
+      """promoCodeSuccessResultBody""":
+          """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""",
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+>>>>>>> address QA/design comments
     };
