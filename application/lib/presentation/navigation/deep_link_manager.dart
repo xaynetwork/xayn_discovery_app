@@ -1,9 +1,18 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/navigation/page_data.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
-import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
+import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
+
+enum DeepLinkValue {
+  none,
+  activeSearch,
+}
+
+abstract class DeepLinkManager {
+  void onDeepLink(DeepLinkData deepLinkData);
+}
 
 @LazySingleton(as: DeepLinkManager)
 class DeepLinkManagerImpl extends DeepLinkManager {
@@ -14,20 +23,19 @@ class DeepLinkManagerImpl extends DeepLinkManager {
       : changeStack = manager.manipulateStack;
 
   @override
-  void onDeepLink(DeepLinkValue deepLink) {
-    final page = deepLink.toPage;
+  void onDeepLink(DeepLinkData deepLinkData) {
+    final page = deepLinkData.toPage;
     if (page == null) return;
     changeStack((stack) => stack.push(page));
   }
 }
 
-extension on DeepLinkValue {
+extension on DeepLinkData {
   UntypedPageData? get toPage {
-    switch (this) {
-      case DeepLinkValue.activeSearch:
-        return PageRegistry.search;
-      default:
-        return null;
-    }
+    return when(
+      none: () => null,
+      activeSearch: () => PageRegistry.search,
+      feed: (documentId) => PageRegistry.cardDetails(documentId: documentId),
+    );
   }
 }
