@@ -173,7 +173,7 @@ class DiscoveryCardElements extends StatelessWidget {
     final openUrlIcon = Padding(
       padding: EdgeInsets.all(R.dimen.unit),
       child: SvgPicture.asset(
-        R.assets.icons.menu,
+        R.assets.icons.more,
         color: openIconColor,
       ),
     );
