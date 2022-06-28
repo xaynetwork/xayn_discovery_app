@@ -71,6 +71,9 @@ class SourcesManager extends Cubit<SourcesState>
   void onLoadTrustedSourcesInterface() =>
       _sourcesScreenNavActions.onLoadTrustedSourcesInterface();
 
+  void resetAvailableSourcesList() =>
+      scheduleComputeState(() => latestSourcesSearchTerm = null);
+
   @override
   void getAvailableSourcesList(String fuzzySearchTerm) {
     super.getAvailableSourcesList(fuzzySearchTerm);
@@ -181,6 +184,10 @@ class SourcesManager extends Cubit<SourcesState>
           },
           operations: sourcesPendingOperations.toSet(),
           sourcesSearchTerm: latestSourcesSearchTerm,
+          availableSources: latestSourcesSearchTerm == null ||
+                  latestSourcesSearchTerm!.length < 3
+              ? const <AvailableSource>{}
+              : nextState.availableSources,
         ),
       );
 

@@ -176,5 +176,19 @@ excludedSourcesTab: Hidden sources
 trustedSourcesDescription: Dodaj swoje ulubione źródła do swojego kanału
 btnAdd: Dodaj źródło wiadomości
 excludedSourcesDescription: Wykluczone źródła nie będą już pojawiać się w Twoim kanale.
-sourcePendingAddition: This source will be added to the list
-sourcePendingRemoval: This source was just removed from the list
+sourcePendingAddition: To źródło zostanie dodane do listy
+sourcePendingRemoval: To źródło zostało właśnie usunięte z listy
+settingsGiveFeedback: Give feedback
+subscriptionExpiresText: 'Subskrypcja wygasa w dniu: %s'
+promoCodeEnterTitle: Enter your promo code
+promoCodeActionApplyCode: Apply code
+promoCodeErrorCodeNotFound: This promo code can not be found
+promoCodeErrorExpired: This promo code expired
+promoCodeSuccessResultTitle: You can test Xayn for free for %s more days
+promoCodeSuccessResultBody: We'd love to hear your feedback. You can drop us a note from settings at any time.
+promoCodeErrorAlreadyUsed: This promo code was already used
+excludeSourceMenuItemTitle: Exclude this source from my feed
+noTrustedSourcesYet: No trusted source yet
+noExcludedSourcesYet: No disliked source yet
+noSourcesFoundTitle: No results
+noSourcesFoundInfo: We couldn't find any sources for your search

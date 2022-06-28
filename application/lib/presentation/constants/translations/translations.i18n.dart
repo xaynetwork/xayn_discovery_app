@@ -242,6 +242,26 @@ class Translations {
       """This source will be added to the list""";
   String get sourcePendingRemoval =>
       """This source was just removed from the list""";
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
+  String get promoCodeEnterTitle => """Enter your promo code""";
+  String get promoCodeActionApplyCode => """Apply code""";
+  String get promoCodeErrorCodeNotFound =>
+      """This promo code can not be found""";
+  String get promoCodeErrorExpired => """This promo code expired""";
+  String get promoCodeSuccessResultTitle =>
+      """You can test Xayn for free for %s more days""";
+  String get promoCodeSuccessResultBody =>
+      """We'd love to hear your feedback. You can drop us a note from settings at any time.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -477,4 +497,21 @@ Map<String, String> get translationsMap => {
       """sourcePendingAddition""": """This source will be added to the list""",
       """sourcePendingRemoval""":
           """This source was just removed from the list""",
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
+      """promoCodeEnterTitle""": """Enter your promo code""",
+      """promoCodeActionApplyCode""": """Apply code""",
+      """promoCodeErrorCodeNotFound""": """This promo code can not be found""",
+      """promoCodeErrorExpired""": """This promo code expired""",
+      """promoCodeSuccessResultTitle""":
+          """You can test Xayn for free for %s more days""",
+      """promoCodeSuccessResultBody""":
+          """We'd love to hear your feedback. You can drop us a note from settings at any time.""",
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
     };

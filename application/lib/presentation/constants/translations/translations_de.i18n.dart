@@ -246,9 +246,29 @@ class TranslationsDe extends Translations {
   String get excludedSourcesDescription =>
       """Diese Quellen werden nicht mehr im Feed angezeigt.""";
   String get sourcePendingAddition =>
-      """This source will be added to the list""";
+      """Diese Quelle wird der Liste hinzugefügt""";
   String get sourcePendingRemoval =>
-      """This source was just removed from the list""";
+      """Diese Quelle wurde gerade aus der Liste entfernt""";
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
+  String get promoCodeEnterTitle => """Enter your promo code""";
+  String get promoCodeActionApplyCode => """Apply code""";
+  String get promoCodeErrorCodeNotFound =>
+      """This promo code can not be found""";
+  String get promoCodeErrorExpired => """This promo code expired""";
+  String get promoCodeSuccessResultTitle =>
+      """You can test Xayn for free for %s more days""";
+  String get promoCodeSuccessResultBody =>
+      """We'd love to hear your feedback. You can drop us a note from settings at any time.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -491,7 +511,25 @@ Map<String, String> get translationsDeMap => {
       """btnAdd""": """Newsquelle hinzufügen""",
       """excludedSourcesDescription""":
           """Diese Quellen werden nicht mehr im Feed angezeigt.""",
-      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingAddition""":
+          """Diese Quelle wird der Liste hinzugefügt""",
       """sourcePendingRemoval""":
-          """This source was just removed from the list""",
+          """Diese Quelle wurde gerade aus der Liste entfernt""",
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
+      """promoCodeEnterTitle""": """Enter your promo code""",
+      """promoCodeActionApplyCode""": """Apply code""",
+      """promoCodeErrorCodeNotFound""": """This promo code can not be found""",
+      """promoCodeErrorExpired""": """This promo code expired""",
+      """promoCodeSuccessResultTitle""":
+          """You can test Xayn for free for %s more days""",
+      """promoCodeSuccessResultBody""":
+          """We'd love to hear your feedback. You can drop us a note from settings at any time.""",
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
     };

@@ -176,5 +176,19 @@ excludedSourcesTab: Sources exclues
 trustedSourcesDescription: Ajoutez vos sources préférées à votre flux
 btnAdd: Ajouter une source d'actualités
 excludedSourcesDescription: Sources exclues n'apparaîtront plus dans votre flux.
-sourcePendingAddition: This source will be added to the list
-sourcePendingRemoval: This source was just removed from the list
+sourcePendingAddition: Cette source sera ajoutée à la liste
+sourcePendingRemoval: Cette source vient d'être supprimée de la liste
+settingsGiveFeedback: Give feedback
+subscriptionExpiresText: 'The subscription expires on: %s'
+promoCodeEnterTitle: Enter your promo code
+promoCodeActionApplyCode: Apply code
+promoCodeErrorCodeNotFound: This promo code can not be found
+promoCodeErrorExpired: This promo code expired
+promoCodeSuccessResultTitle: You can test Xayn for free for %s more days
+promoCodeSuccessResultBody: We'd love to hear your feedback. You can drop us a note from settings at any time.
+promoCodeErrorAlreadyUsed: This promo code was already used
+excludeSourceMenuItemTitle: Exclude this source from my feed
+noTrustedSourcesYet: No trusted source yet
+noExcludedSourcesYet: No disliked source yet
+noSourcesFoundTitle: No results
+noSourcesFoundInfo: We couldn't find any sources for your search
