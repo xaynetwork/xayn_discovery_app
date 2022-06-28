@@ -130,6 +130,8 @@ void main() {
         ratingDialogAlreadyVisible: false,
         isBetaUser: true,
         cta: ctaValue,
+        usedPromoCodes: {},
+        extraTrialEndDate: null,
       );
 
       final map = mapper.toMap(appStatus);
@@ -143,6 +145,8 @@ void main() {
         AppStatusFields.ratingDialogAlreadyVisible: false,
         AppStatusFields.isBetaUser: true,
         AppStatusFields.cta: ctaMap,
+        AppStatusFields.extraTrialDate: null,
+        AppStatusFields.usedPromoCodes: [],
       };
       expect(map, expectedMap);
     });

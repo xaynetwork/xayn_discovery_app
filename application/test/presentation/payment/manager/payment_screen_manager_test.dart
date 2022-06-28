@@ -22,6 +22,7 @@ void main() {
   late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockPurchaseEventMapper purchaseEventMapper;
+  late MockFeatureManager featureManager;
 
   final testPurchaseEvent = PurchaseMarketingEvent(
     productIdentifier: 'id',
@@ -40,6 +41,9 @@ void main() {
     sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     purchaseEventMapper = MockPurchaseEventMapper();
+    featureManager = MockFeatureManager();
+
+    when(featureManager.isAlternativePromoCodeEnabled).thenReturn(false);
 
     when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) async => SubscriptionStatus.initial());
@@ -55,8 +59,7 @@ void main() {
 
     when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
-    manager = PaymentScreenManager(
-      paymentScreenNavActions,
+    manager = PagePaymentScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
       restoreSubscriptionUseCase,
@@ -66,6 +69,8 @@ void main() {
       sendMarketingAnalyticsUseCase,
       sendAnalyticsUseCase,
       purchaseEventMapper,
+      featureManager,
+      paymentScreenNavActions,
     );
   });
 
