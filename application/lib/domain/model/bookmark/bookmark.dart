@@ -14,6 +14,7 @@ class Bookmark extends DbEntity with _$Bookmark {
   @Assert('title.isNotEmpty', 'title cannot be empty')
   @Assert('createdAt.isNotEmpty', 'createdAt cannot be empty')
   factory Bookmark._({
+    /// Unique id based on the url of the bookmark
     required UniqueId id,
 
     /// Will have the same value of documentId of the [Document] object
