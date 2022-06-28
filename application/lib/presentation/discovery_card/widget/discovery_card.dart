@@ -400,7 +400,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           },
         ),
         DiscoveryCardHeaderMenuItem(
-          iconPath: R.assets.icons.neutral,
+          iconPath: R.assets.icons.block,
           title: R.strings.excludeSourceMenuItemTitle,
           onTap: () {
             removeOverlay();
