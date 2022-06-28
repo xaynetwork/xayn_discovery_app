@@ -197,17 +197,20 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           onOpenHeaderMenu: () {
             widget.onTtsData?.call(TtsData.disabled());
 
-            // discoveryCardManager.openWebResourceUrl(
-            //   widget.document,
-            //   CurrentView.reader,
-            //   widget.feedType,
-            // );
-
             toggleOverlay(
               (_) => DiscoveryCardHeaderMenu(
                 items: buildDiscoveryCardHeaderMenuItems,
                 onClose: removeOverlay,
               ),
+            );
+          },
+          onProviderSectionTap: () {
+            widget.onTtsData?.call(TtsData.disabled());
+
+            discoveryCardManager.openWebResourceUrl(
+              widget.document,
+              CurrentView.story,
+              widget.feedType,
             );
           },
           onToggleTts: () => widget.onTtsData?.call(
