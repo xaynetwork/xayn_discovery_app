@@ -32,10 +32,26 @@ class DiscoveryState with _$DiscoveryState {
 
   bool equals(DiscoveryState other) =>
       isFullScreen == other.isFullScreen &&
+      shouldUpdateNavBar == other.shouldUpdateNavBar &&
       cardIndex == other.cardIndex &&
       isComplete == other.isComplete &&
       didReachEnd == other.didReachEnd &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       subscriptionStatus == other.subscriptionStatus &&
-      readerModeBackgroundColor == other.readerModeBackgroundColor;
+      readerModeBackgroundColor == other.readerModeBackgroundColor &&
+      _areCardsEqual(cards, other.cards);
+
+  bool _areCardsEqual(Set<Card> a, Set<Card> b) {
+    final aSize = a.length, bSize = b.length;
+
+    if (aSize != bSize) return false;
+
+    for (var i = 0; i < aSize; i++) {
+      final aCard = a.elementAt(i), bCard = b.elementAt(i);
+
+      if (aCard != bCard) return false;
+    }
+
+    return true;
+  }
 }
