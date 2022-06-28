@@ -23,7 +23,11 @@ class ApplyPromoCodeUseCase extends UseCase<PromoCode, bool> {
           ? status.trialEndDate
           : DateTime.now();
       _appStatusRepository.save(status.copyWith(
-          extraTrialEndDate: previousTrialEndDate.add(duration)));
+          extraTrialEndDate: previousTrialEndDate.add(duration),
+          usedPromoCodes: {
+            ...status.usedPromoCodes,
+            param.code,
+          }));
       yield true;
     } else {
       yield false;

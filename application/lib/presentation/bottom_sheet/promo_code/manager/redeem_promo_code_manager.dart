@@ -35,17 +35,22 @@ class RedeemPromoCodeManager extends Cubit<RedeemPromoCodeState>
       fold(_checkPromoCodeHandler).foldAll((res, errorReport) {
         final promoCode = res?.promoCode;
         final alreadyUsed = res?.alreadyUsed ?? false;
-        if (promoCode != null && promoCode.isValid && !alreadyUsed) {
-          return RedeemPromoCodeState.successful(promoCode);
+        RedeemPromoCodeError? error;
+
+        if (alreadyUsed) {
+          error = RedeemPromoCodeError.alreadyUsedPromoCode;
         } else if (promoCode != null &&
-            (!promoCode.isValid || alreadyUsed) &&
+            !promoCode.isValid &&
             lastAppliedCode != null) {
-          return RedeemPromoCodeState.error(alreadyUsed
-              ? RedeemPromoCodeError.alreadyUsedPromoCode
-              : RedeemPromoCodeError.expiredPromoCode);
-        } else if (lastAppliedCode != null) {
-          return const RedeemPromoCodeState.error(
-              RedeemPromoCodeError.unknownPromoCode);
+          error = RedeemPromoCodeError.expiredPromoCode;
+        } else if (promoCode == null && lastAppliedCode != null) {
+          error = RedeemPromoCodeError.unknownPromoCode;
+        }
+
+        if (promoCode != null && error == null) {
+          return RedeemPromoCodeState.successful(promoCode);
+        } else if (error != null) {
+          return RedeemPromoCodeState.error(error);
         } else {
           return const RedeemPromoCodeState.initial();
         }
