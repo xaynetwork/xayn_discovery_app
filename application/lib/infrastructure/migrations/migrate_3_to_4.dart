@@ -69,42 +69,42 @@ DocumentWrapper? documentWrapperFromMap(Map? map) {
   if (map == null) return null;
 
   final json =
-      map[DocumentBookmarkMapperFieldsMigration.json] as Map<dynamic, dynamic>;
+      map[_DocumentBookmarkMapperFieldsMigration.json] as Map<dynamic, dynamic>;
 
   return DocumentWrapper(Document.fromJson(json.cast()));
 }
 
 DbEntityMap documentWrapperToMap(DocumentWrapper entity) => {
-      DocumentBookmarkMapperFieldsMigration.id: entity.id.value,
-      DocumentBookmarkMapperFieldsMigration.json: entity.document.toJson(),
+      _DocumentBookmarkMapperFieldsMigration.id: entity.id.value,
+      _DocumentBookmarkMapperFieldsMigration.json: entity.document.toJson(),
     };
 
 Bookmark? bookmarkFromMap(Map? map) {
   if (map == null) return null;
 
-  final id =
-      map[BookmarkMapperFieldsMigration.id] ?? throwMapperException() as String;
-
-  final collectionId = map[BookmarkMapperFieldsMigration.collectionId] ??
+  final id = map[_BookmarkMapperFieldsMigration.id] ??
       throwMapperException() as String;
 
-  final documentId = map[BookmarkMapperFieldsMigration.documentId] ??
+  final collectionId = map[_BookmarkMapperFieldsMigration.collectionId] ??
       throwMapperException() as String;
 
-  final title = map[BookmarkMapperFieldsMigration.title] ??
+  final documentId = map[_BookmarkMapperFieldsMigration.documentId] ??
+      throwMapperException() as String;
+
+  final title = map[_BookmarkMapperFieldsMigration.title] ??
       throwMapperException() as String;
 
   /// The [image] field is nullable
-  final image = map[BookmarkMapperFieldsMigration.image] as Uint8List?;
+  final image = map[_BookmarkMapperFieldsMigration.image] as Uint8List?;
 
   /// The [providerName] field is nullable
-  final providerName = map[BookmarkMapperFieldsMigration.providerName];
+  final providerName = map[_BookmarkMapperFieldsMigration.providerName];
 
   /// The [favicon] field is nullable
   final favicon =
-      map[BookmarkMapperFieldsMigration.providerThumbnail] as String?;
+      map[_BookmarkMapperFieldsMigration.providerThumbnail] as String?;
 
-  final createdAt = map[BookmarkMapperFieldsMigration.createdAt] ??
+  final createdAt = map[_BookmarkMapperFieldsMigration.createdAt] ??
       throwMapperException() as String;
 
   return Bookmark.fromMap(
@@ -122,14 +122,15 @@ Bookmark? bookmarkFromMap(Map? map) {
 }
 
 DbEntityMap bookmarkToMap(Bookmark entity) => {
-      BookmarkMapperFieldsMigration.id: entity.id.value,
-      BookmarkMapperFieldsMigration.collectionId: entity.collectionId.value,
-      BookmarkMapperFieldsMigration.title: entity.title,
-      BookmarkMapperFieldsMigration.image: entity.image,
-      BookmarkMapperFieldsMigration.providerName: entity.provider?.name,
-      BookmarkMapperFieldsMigration.providerThumbnail: entity.provider?.favicon,
-      BookmarkMapperFieldsMigration.createdAt: entity.createdAt,
-      BookmarkMapperFieldsMigration.documentId: entity.documentId.value,
+      _BookmarkMapperFieldsMigration.id: entity.id.value,
+      _BookmarkMapperFieldsMigration.collectionId: entity.collectionId.value,
+      _BookmarkMapperFieldsMigration.title: entity.title,
+      _BookmarkMapperFieldsMigration.image: entity.image,
+      _BookmarkMapperFieldsMigration.providerName: entity.provider?.name,
+      _BookmarkMapperFieldsMigration.providerThumbnail:
+          entity.provider?.favicon,
+      _BookmarkMapperFieldsMigration.createdAt: entity.createdAt,
+      _BookmarkMapperFieldsMigration.documentId: entity.documentId.value,
     };
 
 void throwMapperException([
@@ -138,15 +139,15 @@ void throwMapperException([
 ]) =>
     throw DbEntityMapperException(exceptionText);
 
-abstract class DocumentBookmarkMapperFieldsMigration {
-  const DocumentBookmarkMapperFieldsMigration._();
+abstract class _DocumentBookmarkMapperFieldsMigration {
+  const _DocumentBookmarkMapperFieldsMigration._();
 
   static const int id = 0;
   static const int json = 1;
 }
 
-abstract class BookmarkMapperFieldsMigration {
-  const BookmarkMapperFieldsMigration._();
+abstract class _BookmarkMapperFieldsMigration {
+  const _BookmarkMapperFieldsMigration._();
 
   static const int id = 0;
   static const int collectionId = 1;

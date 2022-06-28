@@ -254,8 +254,8 @@ class OverlayData {
       BottomSheetData<UniqueId>(
         args: bookmarkId,
         showBarrierColor: showBarrierColor,
-        builder: (_, bookmarkUrl) => MoveBookmarkToCollectionBottomSheet(
-          bookmarkId: bookmarkId,
+        builder: (_, bookmarkId) => MoveBookmarkToCollectionBottomSheet(
+          bookmarkId: bookmarkId!,
           onSystemPop: onSystemPop,
           initialSelectedCollection: initialSelectedCollection,
           onAddCollectionPressed: onAddCollectionPressed,
