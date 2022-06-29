@@ -1,7 +1,6 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
-
 import 'translations.i18n.dart';
 
 String get _languageCode => 'nl';
