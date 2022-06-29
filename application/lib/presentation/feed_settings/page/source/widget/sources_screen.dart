@@ -102,8 +102,8 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
     final tabView = Expanded(
       child: _buildTabBarView(state),
     );
-    final empty =
-        AnimationPlayer.asset(R.linden.assets.lottie.contextual.emptySources);
+    final empty = AnimationPlayer.asset(
+        R.linden.assets.lottie.contextual.emptySourcesMgmt);
 
     if (_selectedTabIndex == 0) {
       final emptyInfo = Padding(
