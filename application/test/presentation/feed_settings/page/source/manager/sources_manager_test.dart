@@ -19,6 +19,7 @@ void main() {
   late StreamController<EngineEvent> eventsController;
   late MockAppDiscoveryEngine engine;
   late SourcesScreenNavActions navActions;
+  late MockAnalyticsService analyticsService;
 
   final defaultExcludedSources = {
     Source('https://www.a.com'),
@@ -53,6 +54,7 @@ void main() {
     engineEventsUseCase = MockEngineEventsUseCase();
     engine = MockAppDiscoveryEngine();
     navActions = MockSourcesScreenNavActions();
+    analyticsService = MockAnalyticsService();
     eventsController = StreamController<EngineEvent>();
 
     when(engineEventsUseCase.transaction(any))
@@ -106,6 +108,7 @@ void main() {
 
       return Future.value(realInvocation.positionalArguments.first);
     });
+    when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 
     await configureTestDependencies();
 
@@ -114,6 +117,7 @@ void main() {
     di.registerFactory<DiscoveryEngine>(() => engine);
 
     manager = SourcesManager(
+      analyticsService,
       navActions,
       engineEventsUseCase,
       sourcesPendingOperations,
@@ -189,7 +193,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges();
+      manager.applyChanges(isTriggeredFromSettings: true);
     },
     verify: (manager) {
       expect(
@@ -244,7 +248,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges();
+      manager.applyChanges(isTriggeredFromSettings: true);
     },
     verify: (manager) {
       expect(
@@ -296,7 +300,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
-      manager.applyChanges();
+      manager.applyChanges(isTriggeredFromSettings: true);
     },
     verify: (manager) {
       expect(
@@ -350,7 +354,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
-      manager.applyChanges();
+      manager.applyChanges(isTriggeredFromSettings: true);
     },
     verify: (manager) {
       expect(
@@ -427,7 +431,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges();
+      manager.applyChanges(isTriggeredFromSettings: true);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
@@ -453,7 +457,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges();
+      manager.applyChanges(isTriggeredFromSettings: true);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
