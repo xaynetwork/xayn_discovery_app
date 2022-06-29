@@ -173,7 +173,9 @@ class DiscoveryCardElements extends StatelessWidget {
     final openUrlIcon = Padding(
       padding: EdgeInsets.all(R.dimen.unit),
       child: SvgPicture.asset(
-        R.assets.icons.more,
+        featureManager.isNewExcludeSourceFlowEnabled
+            ? R.assets.icons.more
+            : R.assets.icons.globe,
         color: openIconColor,
       ),
     );
@@ -193,7 +195,12 @@ class DiscoveryCardElements extends StatelessWidget {
         else
           const Spacer(),
         if (featureManager.isTtsEnabled) maybeWithTap(ttsIcon, onToggleTts),
-        maybeWithTap(openUrlIcon, onOpenHeaderMenu),
+        maybeWithTap(
+          openUrlIcon,
+          featureManager.isNewExcludeSourceFlowEnabled
+              ? onOpenHeaderMenu
+              : onProviderSectionTap,
+        ),
       ],
     );
   }
