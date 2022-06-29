@@ -58,7 +58,7 @@ where `X` is the new app db version.
 
 | Dependency                                                            | Description                                                                                                                                                            |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Amplitude](https://github.com/amplitude/Amplitude-Flutter)           | Amplitude platform helps in building analytics dashboards to better understand user behavior. You can check a list of events we send to Amplitude [here](#analytics-). |
+| [Mixpanel](https://pub.dev/packages/mixpanel_flutter)           | Mixpanel platform helps in building analytics dashboards to better understand user behavior. You can check a list of events we send to Mixpanel [here](#analytics-). |
 | [AppsFlyer](https://github.com/AppsFlyerSDK/appsflyer-flutter-plugin) | A marketing analytics tool that helps in understanding how well marketing campaigns achieve their targets.                                                             |
 
 ### Xayn dependencies
