@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:platform/platform.dart' as google;
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
@@ -56,6 +57,7 @@ Future<void> configureDependencies({
   di.registerLazySingleton<PaymentService>(() => _isProdPayment
       ? di.get<RevenueCatPaymentService>()
       : di.get<FakePaymentService>());
+  di.registerFactory<google.Platform>(() => const google.LocalPlatform());
 }
 
 void initServices() async {
