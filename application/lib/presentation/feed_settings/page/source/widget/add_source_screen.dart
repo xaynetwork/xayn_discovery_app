@@ -70,7 +70,10 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
             manager.getAvailableSourcesList(searchTerm.trim()),
         prefixIcon: Padding(
           padding: EdgeInsets.all(R.dimen.unit),
-          child: SvgPicture.asset(R.assets.icons.searchActive),
+          child: SvgPicture.asset(
+            R.assets.icons.search,
+            color: R.colors.icon,
+          ),
         ),
         hintText:
             manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
