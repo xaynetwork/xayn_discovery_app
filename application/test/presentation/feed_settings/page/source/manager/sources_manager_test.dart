@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
@@ -19,7 +21,7 @@ void main() {
   late StreamController<EngineEvent> eventsController;
   late MockAppDiscoveryEngine engine;
   late SourcesScreenNavActions navActions;
-  late MockAnalyticsService analyticsService;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
 
   final defaultExcludedSources = {
     Source('https://www.a.com'),
@@ -54,7 +56,7 @@ void main() {
     engineEventsUseCase = MockEngineEventsUseCase();
     engine = MockAppDiscoveryEngine();
     navActions = MockSourcesScreenNavActions();
-    analyticsService = MockAnalyticsService();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     eventsController = StreamController<EngineEvent>();
 
     when(engineEventsUseCase.transaction(any))
@@ -108,7 +110,10 @@ void main() {
 
       return Future.value(realInvocation.positionalArguments.first);
     });
-    when(analyticsService.send(any)).thenAnswer((_) => Future.value());
+    when(sendAnalyticsUseCase.call(any)).thenAnswer((realInvocation) async => [
+          UseCaseResult.success(
+              realInvocation.positionalArguments.first as AnalyticsEvent),
+        ]);
 
     await configureTestDependencies();
 
@@ -117,7 +122,7 @@ void main() {
     di.registerFactory<DiscoveryEngine>(() => engine);
 
     manager = SourcesManager(
-      analyticsService,
+      sendAnalyticsUseCase,
       navActions,
       engineEventsUseCase,
       sourcesPendingOperations,

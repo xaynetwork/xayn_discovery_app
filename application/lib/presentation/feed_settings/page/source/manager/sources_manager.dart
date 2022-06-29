@@ -7,9 +7,9 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_single_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
@@ -53,7 +53,7 @@ class SourcesManager extends Cubit<SourcesState>
   final EngineEventsUseCase engineEventsUseCase;
   final SourcesPendingOperations sourcesPendingOperations;
   final SourcesScreenNavActions _sourcesScreenNavActions;
-  final AnalyticsService _analyticsService;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final FoldEngineEvent foldEngineEvent = _foldEngineEvent();
   late final UseCaseValueStream<SourcesState> nextStateValueStream = consume(
     engineEventsUseCase,
@@ -64,7 +64,7 @@ class SourcesManager extends Cubit<SourcesState>
   String? latestSourcesSearchTerm;
 
   SourcesManager(
-    this._analyticsService,
+    this._sendAnalyticsUseCase,
     this._sourcesScreenNavActions,
     this.engineEventsUseCase,
     this.sourcesPendingOperations,
@@ -213,7 +213,7 @@ class SourcesManager extends Cubit<SourcesState>
       );
     }
 
-    _analyticsService.send(analyticsEvent);
+    _sendAnalyticsUseCase(analyticsEvent);
   }
 
   @override
