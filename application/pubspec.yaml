@@ -61,6 +61,7 @@ dependencies:
   logger: 1.1.0
   lottie: 1.2.2
   mixpanel_flutter: 1.5.0
+  ntp: ^2.0.0
   package_info_plus: 1.4.0
   path_provider: 2.0.9
   purchases_flutter: 3.9.5
