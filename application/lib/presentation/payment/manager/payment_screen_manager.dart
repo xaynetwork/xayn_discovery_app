@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:platform/platform.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
@@ -54,6 +54,7 @@ class PagePaymentScreenManager extends PaymentScreenManager
     super.sendAnalyticsUseCase,
     super.purchaseEventMapper,
     super.featureManager,
+    super.platform,
     this._paymentScreenNavActions,
   );
 
@@ -81,16 +82,18 @@ class PagePaymentScreenManager extends PaymentScreenManager
 @injectable
 class BottomSheetPaymentScreenManager extends PaymentScreenManager {
   BottomSheetPaymentScreenManager(
-      super.getPurchasableProductUseCase,
-      super.purchaseSubscriptionUseCase,
-      super.restoreSubscriptionUseCase,
-      super.getSubscriptionStatusUseCase,
-      super.listenSubscriptionStatusUseCase,
-      super.requestCodeRedemptionSheetUseCase,
-      super.sendMarketingAnalyticsUseCase,
-      super.sendAnalyticsUseCase,
-      super.purchaseEventMapper,
-      super.featureManager);
+    super.getPurchasableProductUseCase,
+    super.purchaseSubscriptionUseCase,
+    super.restoreSubscriptionUseCase,
+    super.getSubscriptionStatusUseCase,
+    super.listenSubscriptionStatusUseCase,
+    super.requestCodeRedemptionSheetUseCase,
+    super.sendMarketingAnalyticsUseCase,
+    super.sendAnalyticsUseCase,
+    super.purchaseEventMapper,
+    super.featureManager,
+    super.platform,
+  );
 
   /// This is a speciol case where the manager receives a dismiss callback from the UI
   /// in order to have full control over the screen
@@ -128,6 +131,7 @@ abstract class PaymentScreenManager extends Cubit<PaymentScreenState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final PurchaseEventMapper _purchaseEventMapper;
   final FeatureManager _featureManager;
+  final Platform _platform;
 
   late final UseCaseValueStream<PurchasableProduct>
       _getPurchasableProductHandler = consume(
@@ -156,6 +160,7 @@ abstract class PaymentScreenManager extends Cubit<PaymentScreenState>
     this._sendAnalyticsUseCase,
     this._purchaseEventMapper,
     this._featureManager,
+    this._platform,
   ) : super(const PaymentScreenState.initial()) {
     _init();
   }
@@ -351,7 +356,7 @@ abstract class PaymentScreenManager extends Cubit<PaymentScreenState>
       ),
     );
 
-    if (!Platform.isIOS) return;
+    if (!_platform.isIOS) return;
     _requestCodeRedemptionSheetUseCase.call(none);
   }
 

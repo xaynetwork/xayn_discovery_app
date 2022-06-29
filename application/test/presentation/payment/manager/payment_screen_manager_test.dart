@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:platform/platform.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
@@ -70,6 +71,7 @@ void main() {
       sendAnalyticsUseCase,
       purchaseEventMapper,
       featureManager,
+      FakePlatform(operatingSystem: 'ios'),
       paymentScreenNavActions,
     );
   });
@@ -215,6 +217,9 @@ void main() {
             ),
           ],
         );
+
+        when(requestCodeRedemptionSheetUseCase.call(none))
+            .thenAnswer((realInvocation) async => []);
 
         manager.enterRedeemCode();
 
