@@ -17,9 +17,7 @@ enum Feature {
       Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
       'Detects non readable text in Articles.'),
-  pushNotificationDeepLinks(
-      Owner.Peter,
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+  pushNotificationDeepLinks(Owner.Peter, false,
       'Allows to deep link to an article when tapping on push notification');
 
   final Owner owner;

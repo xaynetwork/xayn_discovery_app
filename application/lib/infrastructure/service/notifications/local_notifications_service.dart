@@ -11,7 +11,7 @@ const String _channelDescription = 'Notification channel for basic tests';
 
 abstract class LocalNotificationsService {
   void requestPermission();
-  Future<bool> sendLocal({
+  Future<bool> sendNotification({
     required String title,
     required String body,
     required UniqueId documentId,
@@ -67,7 +67,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   }
 
   @override
-  Future<bool> sendLocal({
+  Future<bool> sendNotification({
     required String title,
     required String body,
     required UniqueId documentId,

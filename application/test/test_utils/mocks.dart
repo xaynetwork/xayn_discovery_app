@@ -50,6 +50,7 @@ import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/local_notifications_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
@@ -269,6 +270,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   MarketingAnalyticsService,
   CountryFeedSettingsNavActions,
   SourceFilterSettingsNavActions,
+  LocalNotificationsService,
 ])
 class Mocks {
   Mocks._();
