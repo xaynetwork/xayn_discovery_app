@@ -72,6 +72,13 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+
+    _textEditingController.dispose();
+  }
+
   void _setInitialCollectionName(String collectionName) {
     _createOrRenameCollectionManager.updateCollectionName(collectionName);
     _textEditingController.text = collectionName;

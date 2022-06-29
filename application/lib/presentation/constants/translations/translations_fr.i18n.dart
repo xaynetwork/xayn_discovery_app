@@ -252,7 +252,27 @@ class TranslationsFr extends Translations {
       """Cette source sera ajoutée à la liste""";
   String get sourcePendingRemoval =>
       """Cette source vient d'être supprimée de la liste""";
-  String get settingsGiveFeedback => """Give feedback""";
+  String get settingsGiveFeedback => """Donner votre avis""";
+  String get subscriptionExpiresText => """L'abonnement expire le : %s""";
+  String get promoCodeEnterTitle => """Entrez votre code promo""";
+  String get promoCodeActionApplyCode => """Appliquer""";
+  String get promoCodeErrorCodeNotFound => """Ce code promo est introuvable""";
+  String get promoCodeErrorExpired => """Ce code promotionnel a expiré""";
+  String get promoCodeSuccessResultTitle =>
+      """Vous pouvez tester Xayn gratuitement pendant %s jours de plus""";
+  String get promoCodeSuccessResultBody =>
+      """Nous aimerions entendre vos commentaires. Vous pouvez nous envoyer une note dans les paramètres.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """Vous avez déjà utilisé ce code promo""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """Aucun résultat""";
+  String get noSourcesFoundInfo =>
+      """Nous n'avons trouvé aucune source pour votre recherche""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslationsFr extends PaymentFlowErrorTranslations {
@@ -500,5 +520,24 @@ Map<String, String> get translationsFrMap => {
       """sourcePendingAddition""": """Cette source sera ajoutée à la liste""",
       """sourcePendingRemoval""":
           """Cette source vient d'être supprimée de la liste""",
-      """settingsGiveFeedback""": """Give feedback""",
+      """settingsGiveFeedback""": """Donner votre avis""",
+      """subscriptionExpiresText""": """L'abonnement expire le : %s""",
+      """promoCodeEnterTitle""": """Entrez votre code promo""",
+      """promoCodeActionApplyCode""": """Appliquer""",
+      """promoCodeErrorCodeNotFound""": """Ce code promo est introuvable""",
+      """promoCodeErrorExpired""": """Ce code promotionnel a expiré""",
+      """promoCodeSuccessResultTitle""":
+          """Vous pouvez tester Xayn gratuitement pendant %s jours de plus""",
+      """promoCodeSuccessResultBody""":
+          """Nous aimerions entendre vos commentaires. Vous pouvez nous envoyer une note dans les paramètres.""",
+      """promoCodeErrorAlreadyUsed""":
+          """Vous avez déjà utilisé ce code promo""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """Aucun résultat""",
+      """noSourcesFoundInfo""":
+          """Nous n'avons trouvé aucune source pour votre recherche""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

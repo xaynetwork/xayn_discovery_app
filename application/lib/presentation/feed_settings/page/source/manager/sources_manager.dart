@@ -11,8 +11,6 @@ import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manage
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-const Duration _kRemovalInterval = Duration(seconds: 1);
-
 typedef FoldEngineEvent = SourcesState Function(EngineEvent?) Function(
     SourcesState);
 typedef OnGetAvailableSourcesListSucceeded = SourcesState Function(
@@ -33,11 +31,19 @@ typedef OnNonMatchedEngineEvent = SourcesState Function();
 
 enum SourceType { excluded, trusted }
 
-@injectable
+abstract class SourcesScreenNavActions {
+  void onDismissSourcesSelection();
+  void onLoadExcludedSourcesInterface();
+  void onLoadTrustedSourcesInterface();
+}
+
+@lazySingleton
 class SourcesManager extends Cubit<SourcesState>
-    with UseCaseBlocHelper<SourcesState>, SourcesManagementMixin<SourcesState> {
+    with UseCaseBlocHelper<SourcesState>, SourcesManagementMixin<SourcesState>
+    implements SourcesScreenNavActions {
   final EngineEventsUseCase engineEventsUseCase;
   final SourcesPendingOperations sourcesPendingOperations;
+  final SourcesScreenNavActions _sourcesScreenNavActions;
   late final FoldEngineEvent foldEngineEvent = _foldEngineEvent();
   late final UseCaseValueStream<SourcesState> nextStateValueStream = consume(
     engineEventsUseCase,
@@ -45,11 +51,35 @@ class SourcesManager extends Cubit<SourcesState>
   ).transform(
     (out) => out.map((it) => foldEngineEvent(state)(it)),
   );
+  String? latestSourcesSearchTerm;
 
   SourcesManager(
+    this._sourcesScreenNavActions,
     this.engineEventsUseCase,
     this.sourcesPendingOperations,
   ) : super(const SourcesState());
+
+  @override
+  void onDismissSourcesSelection() =>
+      _sourcesScreenNavActions.onDismissSourcesSelection();
+
+  @override
+  void onLoadExcludedSourcesInterface() =>
+      _sourcesScreenNavActions.onLoadExcludedSourcesInterface();
+
+  @override
+  void onLoadTrustedSourcesInterface() =>
+      _sourcesScreenNavActions.onLoadTrustedSourcesInterface();
+
+  void resetAvailableSourcesList() =>
+      scheduleComputeState(() => latestSourcesSearchTerm = null);
+
+  @override
+  void getAvailableSourcesList(String fuzzySearchTerm) {
+    super.getAvailableSourcesList(fuzzySearchTerm);
+
+    scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
+  }
 
   /// Trigger this manager to load both [Source] lists.
   /// This method is typically invoked by a `Widget` when running `Widget.initState`.
@@ -107,8 +137,8 @@ class SourcesManager extends Cubit<SourcesState>
   /// Call this method to undo any operations related to [source].
   /// Once [applyChanges] is triggered, operations are persisted, and then
   /// calling this method will no longer have effect.
-  void removePendingSourceOperation(Source source) =>
-      sourcesPendingOperations.removeOperationsBySource(source);
+  void removePendingSourceOperation(Source source) => scheduleComputeState(
+      () => sourcesPendingOperations.removeOperationsBySource(source));
 
   /// This method will persist any pending [SourcesManagementOperation] with
   /// the engine.
@@ -117,11 +147,8 @@ class SourcesManager extends Cubit<SourcesState>
   /// Use [intervalBetweenOperations] to wait between 2 operations, which, if used,
   /// gives the UI some time to visually indicate each addition/removal.
   /// The default value is 1 second.
-  Future<void> applyChanges(
-      {Duration intervalBetweenOperations = _kRemovalInterval}) async {
-    final operationsWithInterval = sourcesPendingOperations.asStream();
-
-    await for (final operation in operationsWithInterval) {
+  void applyChanges() {
+    for (final operation in sourcesPendingOperations.toSet()) {
       sourcesPendingOperations.removeOperation(operation);
 
       switch (operation.task) {
@@ -155,6 +182,12 @@ class SourcesManager extends Cubit<SourcesState>
             ...sourcesPendingOperations
                 .sourcesByTask(SourcesManagementTask.addToTrustedSources)
           },
+          operations: sourcesPendingOperations.toSet(),
+          sourcesSearchTerm: latestSourcesSearchTerm,
+          availableSources: latestSourcesSearchTerm == null ||
+                  latestSourcesSearchTerm!.length < 3
+              ? const <AvailableSource>{}
+              : nextState.availableSources,
         ),
       );
 
