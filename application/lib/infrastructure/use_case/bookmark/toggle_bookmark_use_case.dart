@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/is_bookmarked_use_case.dart';
@@ -24,7 +23,8 @@ class ToggleBookmarkUseCase extends UseCase<CreateBookmarkFromDocumentUseCaseIn,
   @override
   Stream<ToggleBookmarkUseCaseOut> transaction(
       CreateBookmarkFromDocumentUseCaseIn param) async* {
-    final bookmarkId = param.document.documentUniqueId;
+    final bookmarkId =
+        Bookmark.generateUniqueIdFromUri(param.document.resource.url);
     final isBookmarked = await _isBookmarkedUseCase.singleOutput(bookmarkId);
     final bookmark = isBookmarked
         ? await _removeBookmarkUseCase.singleOutput(bookmarkId)

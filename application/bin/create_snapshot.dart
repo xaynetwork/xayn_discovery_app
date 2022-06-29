@@ -128,12 +128,13 @@ void _createBookmarks() {
     favicon: 'https://www.foo.com/favicon.ico',
   );
   final bookmark = Bookmark(
-    id: UniqueId(),
+    documentId: UniqueId(),
     collectionId: UniqueId(),
     title: 'Bookmark title',
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    uri: Uri.parse('https://url_test.com'),
   );
   repository.save(bookmark);
 }

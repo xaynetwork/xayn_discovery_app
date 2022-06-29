@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 
@@ -13,6 +13,8 @@ void main() {
   late MockIsBookmarkedUseCase isBookmarkedUseCase;
   late MockCreateBookmarkFromDocumentUseCase createBookmarkFromDocumentUseCase;
   late MockRemoveBookmarkUseCase removeBookmarkUseCase;
+  final bookmarkId =
+      Bookmark.generateUniqueIdFromUri(fakeDocument.resource.url);
 
   setUp(() {
     isBookmarkedUseCase = MockIsBookmarkedUseCase();
@@ -23,6 +25,7 @@ void main() {
       createBookmarkFromDocumentUseCase,
       removeBookmarkUseCase,
     );
+
     when(createBookmarkFromDocumentUseCase.singleOutput(any))
         .thenAnswer((_) async => fakeBookmark);
     when(removeBookmarkUseCase.singleOutput(any))
@@ -40,8 +43,8 @@ void main() {
       input: [CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument)],
       verify: (_) {
         verifyInOrder([
-          isBookmarkedUseCase.singleOutput(fakeDocument.documentUniqueId),
-          removeBookmarkUseCase.singleOutput(fakeDocument.documentUniqueId),
+          isBookmarkedUseCase.singleOutput(bookmarkId),
+          removeBookmarkUseCase.singleOutput(bookmarkId)
         ]);
         verifyNoMoreInteractions(isBookmarkedUseCase);
         verifyNoMoreInteractions(createBookmarkFromDocumentUseCase);
@@ -52,14 +55,14 @@ void main() {
     useCaseTest(
       'WHEN bookmark does not exist THEN bookmark',
       setUp: () {
-        when(isBookmarkedUseCase.singleOutput(fakeDocument.documentUniqueId))
+        when(isBookmarkedUseCase.singleOutput(bookmarkId))
             .thenAnswer((_) async => false);
       },
       build: () => toggleBookmarkUseCase,
       input: [CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument)],
       verify: (_) {
         verifyInOrder([
-          isBookmarkedUseCase.singleOutput(fakeDocument.documentUniqueId),
+          isBookmarkedUseCase.singleOutput(bookmarkId),
           createBookmarkFromDocumentUseCase.singleOutput(any),
         ]);
         verifyNoMoreInteractions(isBookmarkedUseCase);
