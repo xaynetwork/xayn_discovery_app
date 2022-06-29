@@ -70,7 +70,7 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
             manager.getAvailableSourcesList(searchTerm.trim()),
         prefixIcon: Padding(
           padding: EdgeInsets.all(R.dimen.unit),
-          child: SvgPicture.asset(R.assets.icons.search),
+          child: SvgPicture.asset(R.assets.icons.searchActive),
         ),
         hintText:
             manager.state.sourcesSearchTerm ?? R.strings.addSourcePlaceholder,
@@ -84,7 +84,7 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
             ? Column(
                 children: [
                   AnimationPlayer.asset(
-                      R.linden.assets.lottie.contextual.emptySources),
+                      R.linden.assets.lottie.contextual.emptySourcesLookup),
                   if (state.sourcesSearchTerm == null ||
                       state.sourcesSearchTerm!.isEmpty)
                     Text(R.strings.addSourceDescription),
