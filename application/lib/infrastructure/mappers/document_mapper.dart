@@ -9,15 +9,16 @@ class DocumentMapper extends BaseDbEntityMapper<DocumentWrapper> {
   DocumentWrapper? fromMap(Map? map) {
     if (map == null) return null;
 
-    final json = map[BookmarkMapperFields.json] as Map<dynamic, dynamic>;
+    final json =
+        map[DocumentBookmarkMapperFields.json] as Map<dynamic, dynamic>;
 
     return DocumentWrapper(Document.fromJson(json.cast()));
   }
 
   @override
   DbEntityMap toMap(DocumentWrapper entity) => {
-        BookmarkMapperFields.id: entity.id.value,
-        BookmarkMapperFields.json: entity.document.toJson(),
+        DocumentBookmarkMapperFields.id: entity.id.value,
+        DocumentBookmarkMapperFields.json: entity.document.toJson(),
       };
 
   @override
@@ -28,8 +29,8 @@ class DocumentMapper extends BaseDbEntityMapper<DocumentWrapper> {
       super.throwMapperException(exceptionText);
 }
 
-abstract class BookmarkMapperFields {
-  const BookmarkMapperFields._();
+abstract class DocumentBookmarkMapperFields {
+  const DocumentBookmarkMapperFields._();
 
   static const int id = 0;
   static const int json = 1;

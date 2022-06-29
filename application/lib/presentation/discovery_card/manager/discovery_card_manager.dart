@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
@@ -158,7 +159,8 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
-    _isBookmarkedHandler(document.documentUniqueId);
+    _isBookmarkedHandler(
+        Bookmark.generateUniqueIdFromUri(document.resource.url));
     _crudExplicitDocumentFeedbackHandler(
       DbCrudIn.watch(
         document.documentId.uniqueId,

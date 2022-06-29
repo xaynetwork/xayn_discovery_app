@@ -5,7 +5,6 @@ import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/collections_repository.dart';
@@ -150,7 +149,9 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
       );
     }
     if (isBookmarked && !hasSelected) {
-      _removeBookmarkHandler(document.documentUniqueId);
+      _removeBookmarkHandler(
+        Bookmark.generateUniqueIdFromUri(document.resource.url),
+      );
       _sendAnalyticsUseCase(
         DocumentBookmarkedEvent(
           document: document,
@@ -161,7 +162,8 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
       );
     }
     if (isBookmarked && hasSelected) {
-      _moveBookmark(bookmarkId: document.documentUniqueId);
+      _moveBookmark(
+          bookmarkId: Bookmark.generateUniqueIdFromUri(document.resource.url));
     }
   }
 
