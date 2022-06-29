@@ -16,7 +16,12 @@ enum Feature {
   gibberish(
       Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-      'Detects non readable text in Articles.');
+      'Detects non readable text in Articles.'),
+  newExcludeSourceFlow(
+    Owner.Carmine,
+    false,
+    'Open menu when clicking card header icon',
+  );
 
   final Owner owner;
   final String? description;
