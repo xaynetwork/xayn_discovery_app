@@ -198,7 +198,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(isTriggeredFromSettings: true);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -253,7 +253,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(isTriggeredFromSettings: true);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -305,7 +305,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
-      manager.applyChanges(isTriggeredFromSettings: true);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -359,7 +359,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
-      manager.applyChanges(isTriggeredFromSettings: true);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -436,7 +436,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(isTriggeredFromSettings: true);
+      manager.applyChanges(isBatchedProcess: true);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
@@ -462,7 +462,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(isTriggeredFromSettings: true);
+      manager.applyChanges(isBatchedProcess: true);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {

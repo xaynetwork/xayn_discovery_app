@@ -37,7 +37,7 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
 
   @override
   void dispose() {
-    manager.applyChanges(isTriggeredFromSettings: true);
+    manager.applyChanges(isBatchedProcess: true);
 
     super.dispose();
   }

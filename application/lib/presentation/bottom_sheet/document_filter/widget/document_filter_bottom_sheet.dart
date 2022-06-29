@@ -56,7 +56,7 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
           onPressed: () {
             _manager
               ..addSourceToExcludedList(widget.source)
-              ..applyChanges(isTriggeredFromSettings: false);
+              ..applyChanges(isBatchedProcess: false);
             closeBottomSheet(context);
           },
         ),

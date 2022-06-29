@@ -158,19 +158,19 @@ class SourcesManager extends Cubit<SourcesState>
   /// Use [intervalBetweenOperations] to wait between 2 operations, which, if used,
   /// gives the UI some time to visually indicate each addition/removal.
   /// The default value is 1 second.
-  void applyChanges({required bool isTriggeredFromSettings}) {
+  void applyChanges({required bool isBatchedProcess}) {
     final oldTrustedCount = state.trustedSources.length;
     final oldExcludedCount = state.excludedSources.length;
     var newTrustedCount = oldTrustedCount;
     var newExcludedCount = oldExcludedCount;
-    late final AnalyticsEvent analyticsEvent;
+    AnalyticsEvent? analyticsEvent;
 
     for (final operation in sourcesPendingOperations.toSet()) {
       sourcesPendingOperations.removeOperation(operation);
 
       switch (operation.task) {
         case SourcesManagementTask.removeFromExcludedSources:
-          newExcludedCount--;
+          if (newExcludedCount > 0) newExcludedCount--;
           super.removeSourceFromExcludedList(operation.source);
           break;
         case SourcesManagementTask.addToExcludedSources:
@@ -178,7 +178,7 @@ class SourcesManager extends Cubit<SourcesState>
           super.addSourceToExcludedList(operation.source);
           break;
         case SourcesManagementTask.removeFromTrustedSources:
-          newTrustedCount--;
+          if (newTrustedCount > 0) newTrustedCount--;
           super.removeSourceFromTrustedList(operation.source);
           break;
         case SourcesManagementTask.addToTrustedSources:
@@ -188,13 +188,16 @@ class SourcesManager extends Cubit<SourcesState>
       }
     }
 
-    if (isTriggeredFromSettings) {
-      analyticsEvent = SourcesManagementChangedEvent(
-        newTrustedCount: newTrustedCount,
-        oldTrustedCount: oldTrustedCount,
-        newExcludedCount: newExcludedCount,
-        oldExcludedCount: oldExcludedCount,
-      );
+    if (isBatchedProcess) {
+      if (newTrustedCount != oldTrustedCount ||
+          newExcludedCount != oldExcludedCount) {
+        analyticsEvent = SourcesManagementChangedEvent(
+          newTrustedCount: newTrustedCount,
+          oldTrustedCount: oldTrustedCount,
+          newExcludedCount: newExcludedCount,
+          oldExcludedCount: oldExcludedCount,
+        );
+      }
     } else {
       // in this case, only a single source was affected,
       // so old and new are all the same values, except for 1 of the 4,
@@ -213,7 +216,7 @@ class SourcesManager extends Cubit<SourcesState>
       );
     }
 
-    _sendAnalyticsUseCase(analyticsEvent);
+    if (analyticsEvent != null) _sendAnalyticsUseCase(analyticsEvent);
   }
 
   @override
