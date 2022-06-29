@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_provider.dart'
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/util/uri_extensions.dart';
 
 void main() async {
   final mapper = BookmarkMapper();
@@ -15,8 +16,11 @@ void main() async {
     const bookmarkTitleToMap = 'ToMap bookmark title';
     const providerNameFromMap = 'FromMap bookmark title';
     const providerNameToMap = 'ToMap bookmark title';
-    final id = UniqueId();
+    const url = 'https://url_test.com';
+    final id = UniqueId.fromTrustedString(
+        Uri.parse(url).removeQueryParameters.toString());
     final collectionId = UniqueId();
+    final documentId = UniqueId();
     final image = Uint8List.fromList([1, 2, 3]);
     const favicon = 'https://www.foo.com/favicon.ico';
     const createdAt = '2021-12-05';
@@ -30,6 +34,7 @@ void main() async {
         4: providerNameFromMap,
         5: favicon,
         6: createdAt,
+        7: documentId.value,
       };
 
       test(
@@ -39,6 +44,7 @@ void main() async {
 
         expect(bookmark is Bookmark, isTrue);
         expect(bookmark!.id, equals(id));
+        expect(bookmark.documentId, equals(documentId));
         expect(bookmark.collectionId, equals(collectionId));
         expect(bookmark.title, equals(bookmarkTitleFromMap));
         expect(bookmark.image, equals(image));
@@ -114,12 +120,13 @@ void main() async {
 
     group('toMap method:', () {
       final bookmark = Bookmark(
-        id: id,
+        documentId: documentId,
         collectionId: collectionId,
         title: bookmarkTitleToMap,
         image: image,
         provider: DocumentProvider(name: providerNameToMap, favicon: favicon),
         createdAt: createdAt,
+        uri: Uri.parse(url),
       );
 
       test('given a Bookmark it returns a map with a proper structure', () {
@@ -133,6 +140,7 @@ void main() async {
             4: providerNameToMap,
             5: favicon,
             6: createdAt,
+            7: documentId.value
           }),
         );
       });

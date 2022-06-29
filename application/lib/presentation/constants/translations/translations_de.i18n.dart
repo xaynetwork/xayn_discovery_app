@@ -1,6 +1,7 @@
 // GENERATED FILE, do not edit!
 // ignore_for_file: unused_element, unused_field
 import 'package:i18n/i18n.dart' as i18n;
+
 import 'translations.i18n.dart';
 
 String get _languageCode => 'de';
@@ -83,9 +84,9 @@ class TranslationsDe extends Translations {
   String get hoursAgo => """hours ago""";
   String get dayAgo => """day ago""";
   String get daysAgo => """days ago""";
-  String get readingTimeUnitSingular => """Min Lesedauer""";
-  String get readingTimeUnitPlural => """Min Lesedauer""";
-  String get readingTimeSuffix => """read""";
+  String get readingTimeUnitSingular => """Min""";
+  String get readingTimeUnitPlural => """Min""";
+  String get readingTimeSuffix => """Lesedauer""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Dein Bereich""";
   String get personalAreaCollections => """Deine Collections""";
@@ -230,6 +231,26 @@ class TranslationsDe extends Translations {
   String get takeSurveySubtitle =>
       """Wie können wir Xayn noch besser machen?""";
   String get takeSurveyCTA => """Bring mich zur Umfrage""";
+  String get addExcludedSource =>
+      """Welche Quellen sollen nicht mehr im Feed auftauchen?""";
+  String get addTrustedSource =>
+      """Welchen Quellen möchtest du gerne folgen?""";
+  String get addSourcePlaceholder => """Suchen oder URL eintippen""";
+  String get addSourceDescription =>
+      """Nach Namen oder URL der Quelle suchen""";
+  String get btnSave => """Speichern""";
+  String get trustedSourcesTab => """Lieblingsquellen""";
+  String get excludedSourcesTab => """Verborgene Quellen""";
+  String get trustedSourcesDescription =>
+      """Füge dem Feed Deine Lieblingsquellen hinzu""";
+  String get btnAdd => """Newsquelle hinzufügen""";
+  String get excludedSourcesDescription =>
+      """Diese Quellen werden nicht mehr im Feed angezeigt.""";
+  String get sourcePendingAddition =>
+      """Diese Quelle wird der Liste hinzugefügt""";
+  String get sourcePendingRemoval =>
+      """Diese Quelle wurde gerade aus der Liste entfernt""";
+  String get settingsGiveFeedback => """Give feedback""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -298,9 +319,9 @@ Map<String, String> get translationsDeMap => {
       """hoursAgo""": """hours ago""",
       """dayAgo""": """day ago""",
       """daysAgo""": """days ago""",
-      """readingTimeUnitSingular""": """Min Lesedauer""",
-      """readingTimeUnitPlural""": """Min Lesedauer""",
-      """readingTimeSuffix""": """read""",
+      """readingTimeUnitSingular""": """Min""",
+      """readingTimeUnitPlural""": """Min""",
+      """readingTimeSuffix""": """Lesedauer""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Dein Bereich""",
       """personalAreaCollections""": """Deine Collections""",
@@ -459,4 +480,22 @@ Map<String, String> get translationsDeMap => {
       """takeSurveyTitle""": """Hast Du mal 'ne Minute?""",
       """takeSurveySubtitle""": """Wie können wir Xayn noch besser machen?""",
       """takeSurveyCTA""": """Bring mich zur Umfrage""",
+      """addExcludedSource""":
+          """Welche Quellen sollen nicht mehr im Feed auftauchen?""",
+      """addTrustedSource""": """Welchen Quellen möchtest du gerne folgen?""",
+      """addSourcePlaceholder""": """Suchen oder URL eintippen""",
+      """addSourceDescription""": """Nach Namen oder URL der Quelle suchen""",
+      """btnSave""": """Speichern""",
+      """trustedSourcesTab""": """Lieblingsquellen""",
+      """excludedSourcesTab""": """Verborgene Quellen""",
+      """trustedSourcesDescription""":
+          """Füge dem Feed Deine Lieblingsquellen hinzu""",
+      """btnAdd""": """Newsquelle hinzufügen""",
+      """excludedSourcesDescription""":
+          """Diese Quellen werden nicht mehr im Feed angezeigt.""",
+      """sourcePendingAddition""":
+          """Diese Quelle wird der Liste hinzugefügt""",
+      """sourcePendingRemoval""":
+          """Diese Quelle wurde gerade aus der Liste entfernt""",
+      """settingsGiveFeedback""": """Give feedback""",
     };
