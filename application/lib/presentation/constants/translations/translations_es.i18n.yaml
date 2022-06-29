@@ -166,3 +166,16 @@ subscriptionDurationMonth: Mes
 takeSurveyTitle: ¿Tienes un minuto?
 takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
 takeSurveyCTA: Llévame a la encuesta
+addExcludedSource: Agregue una fuente para excluir de tu feed
+addTrustedSource: Agregue una fuente para incluir en tu feed
+addSourcePlaceholder: Buscar o escribir URL
+addSourceDescription: Buscar el nombre de una fuente o su URL
+btnSave: Guardar
+trustedSourcesTab: Fuentes incluidas
+excludedSourcesTab: Fuentes excluidas
+trustedSourcesDescription: Agrega tus fuentes favoritas a tu feed
+btnAdd: Agregar una fuente de noticias
+excludedSourcesDescription: Las fuentes excluidas ya no aparecerán en su feed.
+sourcePendingAddition: Esta fuente se añadirá a la lista.
+sourcePendingRemoval: Esta fuente acaba de ser eliminada de la lista.
+settingsGiveFeedback: Give feedback
