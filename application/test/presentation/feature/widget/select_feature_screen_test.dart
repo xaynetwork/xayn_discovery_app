@@ -27,6 +27,7 @@ void main() {
       when(manager.isGibberishEnabled).thenReturn(false);
       when(manager.isTtsEnabled).thenReturn(false);
       when(manager.isCustomInlineCardEnabled).thenReturn(false);
+      when(manager.isNewExcludeSourceFlowEnabled).thenReturn(false);
 
       // we swap FeatureScreen with another one
       await tester.initToDiscoveryPage();
