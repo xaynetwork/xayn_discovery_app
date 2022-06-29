@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
@@ -10,92 +8,58 @@ import '../../../test_utils/utils.dart';
 import 'analytics_service_test_utils.dart';
 
 void main() async {
-  late MockAmplitude amplitude;
-  late AmplitudeAnalyticsService analyticsService;
+  late MockMixpanel mixpanel;
+  late MockPeople profile;
+  late MixpanelAnalyticsService analyticsService;
   final mockInAppEvent = FakeAnalyticsEvent();
 
   setUp(() {
-    amplitude = MockAmplitude();
-    analyticsService = AmplitudeAnalyticsService(
-      amplitude: amplitude,
+    mixpanel = MockMixpanel();
+    profile = MockPeople();
+
+    when(mixpanel.getPeople()).thenReturn(profile);
+
+    analyticsService = MixpanelAnalyticsService.test(
+      mixpanel: mixpanel,
       userId: 'userId',
-      initialized: true,
     );
   });
 
   group('Analytics Service', () {
     test('send', () {
       analyticsService.send(mockInAppEvent);
-      verify(amplitude.logEvent(
+      verify(mixpanel.track(
         mockInAppEvent.type,
-        eventProperties: mockInAppEvent.properties,
+        properties: mockInAppEvent.properties,
       )).called(1);
     });
 
     test('flush', () {
       analyticsService.flush();
-      verify(amplitude.uploadEvents()).called(1);
+      verify(mixpanel.flush()).called(1);
     });
   });
 
-  test(
-    'GIVEN identityParam WHEN updateParam THEN amplitude set param as well',
-    () async {
-      const param = NumberOfActiveSelectedCountriesIdentityParam(2);
-
-      expect(
-        analyticsService.identify.payload.isEmpty,
-        isTrue,
-      );
-      await analyticsService.updateIdentityParam(param);
-
-      final map = HashMap.from(analyticsService.identify.payload.values.first);
-
-      expect(
-        map.containsKey(param.key),
-        isTrue,
-      );
-      expect(
-        map[param.key],
-        equals(param.value),
-      );
-      verify(amplitude.identify(analyticsService.identify));
-    },
-  );
+  test('GIVEN identityParam WHEN updateParam THEN set param as well', () {
+    const param = NumberOfActiveSelectedCountriesIdentityParam(2);
+    analyticsService.updateIdentityParam(param);
+    verify(profile.set(param.key, param.value)).called(1);
+  });
 
   test(
-    'GIVEN a list of identityParams WHEN updateParam THEN amplitude set params as well',
+    'GIVEN a list of identityParams WHEN updateParam THEN set params as well',
     () async {
       final params = {
         const NumberOfActiveSelectedCountriesIdentityParam(2),
         const NumberOfTotalSessionIdentityParam(3),
       };
 
-      expect(
-        analyticsService.identify.payload.isEmpty,
-        isTrue,
-      );
-      await analyticsService.updateIdentityParams(params);
+      analyticsService.updateIdentityParams(params);
 
-      final map = HashMap.from(analyticsService.identify.payload.values.first);
-
-      expect(
-        map.containsKey(params.first.key),
-        isTrue,
-      );
-      expect(
-        map.containsKey(params.last.key),
-        isTrue,
-      );
-      expect(
-        map[params.first.key],
-        equals(params.first.value),
-      );
-      expect(
-        map[params.last.key],
-        equals(params.last.value),
-      );
-      verify(amplitude.identify(analyticsService.identify));
+      verifyInOrder([
+        profile.set(params.first.key, params.first.value),
+        profile.set(params.last.key, params.last.value)
+      ]);
     },
   );
 }

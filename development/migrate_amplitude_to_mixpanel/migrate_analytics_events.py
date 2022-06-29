@@ -35,21 +35,35 @@ def process_event(event: Mapping[str, Any]) -> Dict:
     output["event"] = event["event_type"]
     output["properties"] = event["event_properties"]
     output["properties"]["$insert_id"] = event["$insert_id"]
-    output["properties"]["distinct_id"] = event.get("user_id",  event["amplitude_id"])	        
-    output["properties"]["$user_id"] = event.get("user_id",  event["amplitude_id"])	        
-    output["properties"]["$manufacturer"] = event["device_manufacturer"]
-    output["properties"]["$model"] = event["device_model"]
-    output["properties"]["$os"] = event["platform"]
-    output["properties"]["$carrier"] = event["device_carrier"]
-    output["properties"]["$os_version"] = event["os_version"]
-    output["properties"]["$app_version_string"] = event["version_name"]
-    output["properties"]["$device_id"] = event["device_id"]
-    
+    output["properties"]["distinct_id"] = event.get("user_id", event["amplitude_id"])
+    output["properties"]["$user_id"] = event.get("user_id", event["amplitude_id"])
+
+    if "device_id" in event:
+        output["properties"]["$device_id"] = event["device_id"]
+
+    if "version_name" in event:
+        output["properties"]["$app_version_string"] = event["version_name"]
+
+    if "os_version" in event:
+        output["properties"]["$os_version"] = event["os_version"]
+
+    if "device_manufacturer" in event:
+        output["properties"]["$manufacturer"] = event["device_manufacturer"]
+
+    if "device_model" in event:
+        output["properties"]["$model"] = event["device_model"]
+
+    if "device_carrier" in event:
+        output["properties"]["$carrier"] = event["device_carrier"]
+
+    if "platform" in event:
+        output["properties"]["$os"] = event["platform"]
+
     try:
         event_time = datetime.datetime.strptime(event["event_time"], '%Y-%m-%d %H:%M:%S.%f')
     except Exception as _:
         event_time = datetime.datetime.strptime(event["event_time"], '%Y-%m-%d %H:%M:%S')
-        
+
     timestamp = event_time.replace(tzinfo=timezone.utc).timestamp()
     output["properties"]["time"] = timestamp
 

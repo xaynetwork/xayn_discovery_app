@@ -171,6 +171,8 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       );
     }
 
+    if (webResource.image == null) return getDeterministicNoImage();
+
     return CachedImage(
       imageManager: imageManager,
       shaderBuilder: widget.primaryCardShader,

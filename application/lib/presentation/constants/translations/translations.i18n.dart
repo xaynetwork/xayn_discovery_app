@@ -231,8 +231,8 @@ class Translations {
   String get addSourcePlaceholder => """Search or enter URL""";
   String get addSourceDescription => """Search for a source name or its URL""";
   String get btnSave => """Save""";
-  String get trustedSourcesTab => """Favorite news sources""";
-  String get excludedSourcesTab => """Hidden sources""";
+  String get trustedSourcesTab => """Favored""";
+  String get excludedSourcesTab => """Hidden""";
   String get trustedSourcesDescription =>
       """Add your favorite news outlets to your feed""";
   String get btnAdd => """Add a news source""";
@@ -243,6 +243,27 @@ class Translations {
   String get sourcePendingRemoval =>
       """This source was just removed from the list""";
   String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
+  String get promoCodeEnterTitle => """Enter your promo code""";
+  String get promoCodeActionApplyCode => """Apply code""";
+  String get promoCodeErrorCodeNotFound =>
+      """This promo code can not be found""";
+  String get promoCodeErrorExpired => """This promo code expired""";
+  String get promoCodeSuccessResultTitle =>
+      """You can test Xayn for free for %s more days""";
+  String get promoCodeSuccessResultBody =>
+      """We'd love to hear your feedback. You can drop us a note in the settings.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """You already used this promo code""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -468,8 +489,8 @@ Map<String, String> get translationsMap => {
       """addSourcePlaceholder""": """Search or enter URL""",
       """addSourceDescription""": """Search for a source name or its URL""",
       """btnSave""": """Save""",
-      """trustedSourcesTab""": """Favorite news sources""",
-      """excludedSourcesTab""": """Hidden sources""",
+      """trustedSourcesTab""": """Favored""",
+      """excludedSourcesTab""": """Hidden""",
       """trustedSourcesDescription""":
           """Add your favorite news outlets to your feed""",
       """btnAdd""": """Add a news source""",
@@ -479,4 +500,22 @@ Map<String, String> get translationsMap => {
       """sourcePendingRemoval""":
           """This source was just removed from the list""",
       """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
+      """promoCodeEnterTitle""": """Enter your promo code""",
+      """promoCodeActionApplyCode""": """Apply code""",
+      """promoCodeErrorCodeNotFound""": """This promo code can not be found""",
+      """promoCodeErrorExpired""": """This promo code expired""",
+      """promoCodeSuccessResultTitle""":
+          """You can test Xayn for free for %s more days""",
+      """promoCodeSuccessResultBody""":
+          """We'd love to hear your feedback. You can drop us a note in the settings.""",
+      """promoCodeErrorAlreadyUsed""": """You already used this promo code""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

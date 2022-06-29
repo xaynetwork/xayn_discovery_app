@@ -249,7 +249,28 @@ class TranslationsDe extends Translations {
       """Diese Quelle wird der Liste hinzugefügt""";
   String get sourcePendingRemoval =>
       """Diese Quelle wurde gerade aus der Liste entfernt""";
-  String get settingsGiveFeedback => """Give feedback""";
+  String get settingsGiveFeedback => """Feedback geben""";
+  String get subscriptionExpiresText => """Das Abo läuft ab am: %s""";
+  String get promoCodeEnterTitle => """Gib Deinen Code hier ein""";
+  String get promoCodeActionApplyCode => """Anwenden""";
+  String get promoCodeErrorCodeNotFound =>
+      """Dieser Aktionscode kann nicht gefunden werden""";
+  String get promoCodeErrorExpired => """Dieser Aktionscode ist abgelaufen""";
+  String get promoCodeSuccessResultTitle =>
+      """Du kannst Xayn noch %s weitere Tage kostenlos testen""";
+  String get promoCodeSuccessResultBody =>
+      """Wir würden gerne Dein Feedback hören. Du kasnnst uns eine Nachricht in den Einstellungen hinterlassen.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """Du hast diesen Aktionscode bereits verwendet""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """Keine Ergebnisse""";
+  String get noSourcesFoundInfo =>
+      """Wir konnten keine Quellen für diese Suche finden""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -496,5 +517,25 @@ Map<String, String> get translationsDeMap => {
           """Diese Quelle wird der Liste hinzugefügt""",
       """sourcePendingRemoval""":
           """Diese Quelle wurde gerade aus der Liste entfernt""",
-      """settingsGiveFeedback""": """Give feedback""",
+      """settingsGiveFeedback""": """Feedback geben""",
+      """subscriptionExpiresText""": """Das Abo läuft ab am: %s""",
+      """promoCodeEnterTitle""": """Gib Deinen Code hier ein""",
+      """promoCodeActionApplyCode""": """Anwenden""",
+      """promoCodeErrorCodeNotFound""":
+          """Dieser Aktionscode kann nicht gefunden werden""",
+      """promoCodeErrorExpired""": """Dieser Aktionscode ist abgelaufen""",
+      """promoCodeSuccessResultTitle""":
+          """Du kannst Xayn noch %s weitere Tage kostenlos testen""",
+      """promoCodeSuccessResultBody""":
+          """Wir würden gerne Dein Feedback hören. Du kasnnst uns eine Nachricht in den Einstellungen hinterlassen.""",
+      """promoCodeErrorAlreadyUsed""":
+          """Du hast diesen Aktionscode bereits verwendet""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """Keine Ergebnisse""",
+      """noSourcesFoundInfo""":
+          """Wir konnten keine Quellen für diese Suche finden""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

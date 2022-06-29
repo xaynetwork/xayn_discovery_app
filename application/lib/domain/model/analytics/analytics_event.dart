@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_map_extension.dart';
 
 const String _kTimestampEntry = 'timeStamp';
 const String _kDay = 'dayOfWeek';
@@ -14,5 +14,5 @@ abstract class AnalyticsEvent {
           _kTimestampEntry: DateTime.now().toUtc().toIso8601String(),
           _kDay: DateFormat.EEEE(_defaultLocale).format(DateTime.now()),
           if (properties != null) ...properties,
-        }.toSerializableMap();
+        }.toAnalyticsMap();
 }
