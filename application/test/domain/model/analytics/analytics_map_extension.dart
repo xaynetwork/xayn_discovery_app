@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xayn_discovery_app/presentation/utils/map_utils.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_map_extension.dart';
 
-import '../../test_utils/fakes.dart';
+import '../../../test_utils/fakes.dart';
 
 void main() {
   test(
@@ -13,7 +13,7 @@ void main() {
         'document': fakeDocument.toJson()
       };
 
-      final stringizedMap = nonStringizedMap.toSerializableMap();
+      final stringizedMap = nonStringizedMap.toAnalyticsMap();
 
       expect(nonStringizedMap['isBool'], isInstanceOf<bool>());
       expect(
@@ -27,12 +27,10 @@ void main() {
 
       expect(stringizedMap['isBool'], isInstanceOf<String>());
       expect(stringizedMap['isString'], isInstanceOf<String>());
-      expect(((stringizedMap['document'] as Map)['documentId'] as Map)['value'],
-          isInstanceOf<String>());
-      expect(((stringizedMap['document'] as Map)['resource'] as Map)['rank'],
-          isInstanceOf<String>());
-      expect(((stringizedMap['document'] as Map)['resource'] as Map)['score'],
-          isInstanceOf<String>());
+      expect(
+          stringizedMap['document.documentId.value'], isInstanceOf<String>());
+      expect(stringizedMap['document.resource.rank'], isInstanceOf<String>());
+      expect(stringizedMap['document.resource.score'], isInstanceOf<String>());
     },
   );
 }
