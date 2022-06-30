@@ -109,4 +109,12 @@ class DiscoveryCardHeaderMenuHelper {
         title: R.strings.excludeSourceMenuItemTitle,
         onTap: onTap,
       );
+
+  static DiscoveryCardHeaderMenuItem buildIncludeSourceBackItem(
+          {required VoidCallback onTap}) =>
+      DiscoveryCardHeaderMenuItem(
+        iconPath: R.assets.icons.plus,
+        title: R.strings.allowSourceBackMenuItemTitle,
+        onTap: onTap,
+      );
 }
