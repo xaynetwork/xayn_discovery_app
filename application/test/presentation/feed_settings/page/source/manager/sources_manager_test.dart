@@ -51,6 +51,27 @@ void main() {
     return Future.value(event);
   }
 
+  addEventFromOverride(
+      Invocation invocation,
+      EngineEvent Function({
+    required Set<Source> trustedSources,
+    required Set<Source> excludedSources,
+  })
+          buildEvent) {
+    final trustedSources =
+        invocation.namedArguments[#trustedSources] as Set<Source>;
+    final excludedSources =
+        invocation.namedArguments[#excludedSources] as Set<Source>;
+    final event = buildEvent(
+      trustedSources: trustedSources,
+      excludedSources: excludedSources,
+    );
+
+    eventsController.add(event);
+
+    return Future.value(event);
+  }
+
   setUp(() async {
     sourcesPendingOperations = InMemorySourcesPendingOperations();
     engineEventsUseCase = MockEngineEventsUseCase();
@@ -89,6 +110,19 @@ void main() {
     when(engine.removeSourceFromTrustedList(any)).thenAnswer((it) =>
         addEventFromSource(
             it, (source) => RemoveTrustedSourceRequestSucceeded(source)));
+    when(engine.overrideSources(
+      trustedSources: anyNamed('trustedSources'),
+      excludedSources: anyNamed('excludedSources'),
+    )).thenAnswer((it) => addEventFromOverride(
+        it,
+        ({
+          required Set<Source> trustedSources,
+          required Set<Source> excludedSources,
+        }) =>
+            SetSourcesRequestSucceeded(
+              trustedSources: trustedSources,
+              excludedSources: excludedSources,
+            )));
     when(engine.send(any)).thenAnswer((realInvocation) {
       final clientEvent =
           realInvocation.positionalArguments.first as ClientEvent;
@@ -198,7 +232,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -253,7 +287,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -305,7 +339,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -359,7 +393,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -436,7 +470,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
@@ -462,7 +496,7 @@ void main() {
     act: (manager) {
       manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
