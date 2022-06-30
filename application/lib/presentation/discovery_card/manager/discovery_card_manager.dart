@@ -180,12 +180,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required UserReaction userReaction,
     required FeedType? feedType,
   }) async {
-    showOverlay(
-      OverlayData.tooltipDocumentFilter(onTap: () {
-        showOverlay(OverlayData.bottomSheetDocumentFilter(document));
-      }),
-      when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
-    );
+    if (!_featureManager.isNewExcludeSourceFlowEnabled) {
+      showOverlay(
+        OverlayData.tooltipDocumentFilter(onTap: () {
+          showOverlay(OverlayData.bottomSheetDocumentFilter(document));
+        }),
+        when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
+      );
+    }
 
     _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.likeOrDislikedArticle);
