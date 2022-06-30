@@ -65,6 +65,10 @@ class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
+
+  @override
+  void onManageSourcesPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.sourceFeedSettings));
 }
 
 @Injectable(as: BookmarksScreenNavActions)
