@@ -92,6 +92,11 @@ class SourcesManager extends Cubit<SourcesState>
     scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
   }
 
+  bool isSourceExcluded(Source source) {
+    getExcludedSourcesList();
+    return state.excludedSources.contains(source);
+  }
+
   /// Trigger this manager to load both [Source] lists.
   /// This method is typically invoked by a `Widget` when running `Widget.initState`.
   void init() {
