@@ -6,7 +6,6 @@ import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_theme_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
@@ -37,7 +36,6 @@ import 'package:xayn_discovery_app/presentation/payment/util/observe_subscriptio
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 abstract class SettingsNavActions {
   void onBackNavPressed();

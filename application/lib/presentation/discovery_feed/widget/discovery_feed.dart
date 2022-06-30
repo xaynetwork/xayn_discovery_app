@@ -138,15 +138,18 @@ class _DiscoveryFeedState
   void initState() {
     manager.checkIfNeedToShowOnboarding();
 
+    // TODO: Replace this PoC code when we have a working solution to fetch a document from the engine by providing an ID
     if (widget.selectedDocumentId != null) {
       final cardIndex = manager.state.cards
           .map((it) => it.document?.documentId.toString())
           .toList()
           .indexOf(widget.selectedDocumentId!.value);
       if (cardIndex == -1) return;
-      cardViewController.index = cardIndex;
-      manager.handleIndexChanged(cardIndex);
-      manager.maybeSelectCard(widget.selectedDocumentId!);
+      setState(() {
+        cardViewController.index = cardIndex;
+        manager.handleIndexChanged(cardIndex);
+        manager.maybeSelectCard(widget.selectedDocumentId!);
+      });
     }
 
     super.initState();

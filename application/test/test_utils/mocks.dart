@@ -116,6 +116,7 @@ import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_en
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_manager.dart';
@@ -271,6 +272,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   CountryFeedSettingsNavActions,
   SourceFilterSettingsNavActions,
   LocalNotificationsService,
+  DiscoveryFeedManager,
 ])
 class Mocks {
   Mocks._();
