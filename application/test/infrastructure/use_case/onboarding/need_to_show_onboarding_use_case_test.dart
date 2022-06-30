@@ -49,12 +49,13 @@ void main() {
           index: 0,
         );
     Bookmark createBookmark() => Bookmark(
-          id: UniqueId(),
+          documentId: UniqueId(),
           collectionId: UniqueId(),
           image: null,
           title: UniqueId().toString(),
           provider: null,
           createdAt: DateTime.now().toIso8601String(),
+          uri: Uri.parse('https://url_test.com'),
         );
     when(collectionsRepository.getAll())
         .thenReturn(List.filled(collectionsCount, createCollection()));

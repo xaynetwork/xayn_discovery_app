@@ -28,6 +28,7 @@ class Keys {
   static const Key settingsTermsAndConditions =
       Key('settings_terms_and_conditions');
   static const Key settingsHaveFoundBug = Key('settings_have_found_bug');
+  static const Key settingsGiveFeedback = Key('settings_give_feedback');
   static const Key settingsShareBtn = Key('settings_share');
   static const Key settingsToggleTextToSpeechPreference =
       Key('settingsToggleTextToSpeechPreference');

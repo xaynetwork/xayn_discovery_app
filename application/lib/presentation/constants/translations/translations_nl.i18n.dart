@@ -226,6 +226,46 @@ class TranslationsNl extends Translations {
   String get takeSurveyTitle => """Heb je even?""";
   String get takeSurveySubtitle => """Hoe kunnen we Xayn nog beter maken?""";
   String get takeSurveyCTA => """Breng me naar de enquête""";
+  String get addExcludedSource =>
+      """Voeg bronnen toe die je liever niet ziet in je feed""";
+  String get addTrustedSource =>
+      """Voeg bronnen toe die je uitdrukkelijk wil zien in je feed""";
+  String get addSourcePlaceholder => """Zoek of typ de URL""";
+  String get addSourceDescription => """Zoek naar een naam of de URL ervan""";
+  String get btnSave => """Opslaan""";
+  String get trustedSourcesTab => """Inbegrepen bronnen""";
+  String get excludedSourcesTab => """Uitgesloten bronnen""";
+  String get trustedSourcesDescription =>
+      """Voeg je favoriete bronnen toe aan je feed""";
+  String get btnAdd => """Nieuwsbron toevoegen""";
+  String get excludedSourcesDescription =>
+      """Uitgesloten bronnen verschijnen niet meer in uw feed.""";
+  String get sourcePendingAddition =>
+      """Deze bron wordt toegevoegd aan de lijst""";
+  String get sourcePendingRemoval =>
+      """Deze bron is zojuist van de lijst verwijderd""";
+  String get settingsGiveFeedback => """Geef feedback""";
+  String get subscriptionExpiresText => """Het abonnement loopt af op: %s""";
+  String get promoCodeEnterTitle => """Voer je promotiecode in""";
+  String get promoCodeActionApplyCode => """Code toepassen""";
+  String get promoCodeErrorCodeNotFound =>
+      """Deze promotiecode kon niet worden teruggevonden""";
+  String get promoCodeErrorExpired => """Deze promotiecode is verlopen""";
+  String get promoCodeSuccessResultTitle =>
+      """Je kan Xayn nog gedurende %s dagen gratis testen""";
+  String get promoCodeSuccessResultBody =>
+      """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """Je hebt deze promotiecode al gebruikt""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """Geen resultaten""";
+  String get noSourcesFoundInfo =>
+      """We konden geen bronnen vinden voor je zoekopdracht""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -451,4 +491,43 @@ Map<String, String> get translationsNlMap => {
       """takeSurveyTitle""": """Heb je even?""",
       """takeSurveySubtitle""": """Hoe kunnen we Xayn nog beter maken?""",
       """takeSurveyCTA""": """Breng me naar de enquête""",
+      """addExcludedSource""":
+          """Voeg bronnen toe die je liever niet ziet in je feed""",
+      """addTrustedSource""":
+          """Voeg bronnen toe die je uitdrukkelijk wil zien in je feed""",
+      """addSourcePlaceholder""": """Zoek of typ de URL""",
+      """addSourceDescription""": """Zoek naar een naam of de URL ervan""",
+      """btnSave""": """Opslaan""",
+      """trustedSourcesTab""": """Inbegrepen bronnen""",
+      """excludedSourcesTab""": """Uitgesloten bronnen""",
+      """trustedSourcesDescription""":
+          """Voeg je favoriete bronnen toe aan je feed""",
+      """btnAdd""": """Nieuwsbron toevoegen""",
+      """excludedSourcesDescription""":
+          """Uitgesloten bronnen verschijnen niet meer in uw feed.""",
+      """sourcePendingAddition""":
+          """Deze bron wordt toegevoegd aan de lijst""",
+      """sourcePendingRemoval""":
+          """Deze bron is zojuist van de lijst verwijderd""",
+      """settingsGiveFeedback""": """Geef feedback""",
+      """subscriptionExpiresText""": """Het abonnement loopt af op: %s""",
+      """promoCodeEnterTitle""": """Voer je promotiecode in""",
+      """promoCodeActionApplyCode""": """Code toepassen""",
+      """promoCodeErrorCodeNotFound""":
+          """Deze promotiecode kon niet worden teruggevonden""",
+      """promoCodeErrorExpired""": """Deze promotiecode is verlopen""",
+      """promoCodeSuccessResultTitle""":
+          """Je kan Xayn nog gedurende %s dagen gratis testen""",
+      """promoCodeSuccessResultBody""":
+          """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""",
+      """promoCodeErrorAlreadyUsed""":
+          """Je hebt deze promotiecode al gebruikt""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """Geen resultaten""",
+      """noSourcesFoundInfo""":
+          """We konden geen bronnen vinden voor je zoekopdracht""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

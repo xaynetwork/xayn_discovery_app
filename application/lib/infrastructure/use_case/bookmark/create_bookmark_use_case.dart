@@ -66,12 +66,13 @@ class CreateBookmarkUseCase extends UseCase<CreateBookmarkUseCaseIn, Bookmark> {
   Stream<Bookmark> transaction(CreateBookmarkUseCaseIn param) async* {
     final dateTime = _dateTimeHandler.getDateTimeNow();
     final bookmark = Bookmark(
-      id: param.id,
+      documentId: param.documentId,
       collectionId: param.collectionId,
       title: param.title,
       image: param.image,
       provider: param.provider,
       createdAt: dateTime.toUtc().toString(),
+      uri: param.url,
     );
     _bookmarksRepository.save(bookmark);
     yield bookmark;
@@ -92,11 +93,12 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
     final image = await _getImageData(resource.image);
 
     final createBookmarkUseCaseIn = CreateBookmarkUseCaseIn(
-      id: param.document.documentUniqueId,
+      documentId: param.document.documentUniqueId,
       title: resource.title,
       image: image,
       provider: param.provider ?? DocumentProvider(),
       collectionId: param.collectionId,
+      url: param.document.resource.url,
     );
     yield createBookmarkUseCaseIn;
   }
@@ -114,17 +116,19 @@ class MapDocumentToCreateBookmarkParamUseCase extends UseCase<
 }
 
 class CreateBookmarkUseCaseIn {
-  final UniqueId id;
+  final UniqueId documentId;
   final String title;
   final Uint8List? image;
   final DocumentProvider? provider;
   final UniqueId collectionId;
+  final Uri url;
 
   CreateBookmarkUseCaseIn({
-    required this.id,
+    required this.documentId,
     required this.title,
     required this.image,
     required this.provider,
+    required this.url,
     this.collectionId = Collection.readLaterId,
   });
 }

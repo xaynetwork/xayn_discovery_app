@@ -1,8 +1,11 @@
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 extension DocumentExtension on Document {
   UniqueId get documentUniqueId => documentId.uniqueId;
+
+  UniqueId get toBookmarkId => Bookmark.generateUniqueIdFromUri(resource.url);
 }
 
 extension DocumentIdUtils on DocumentId {

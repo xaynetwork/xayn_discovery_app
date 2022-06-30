@@ -83,9 +83,9 @@ class TranslationsDe extends Translations {
   String get hoursAgo => """hours ago""";
   String get dayAgo => """day ago""";
   String get daysAgo => """days ago""";
-  String get readingTimeUnitSingular => """Min Lesedauer""";
-  String get readingTimeUnitPlural => """Min Lesedauer""";
-  String get readingTimeSuffix => """read""";
+  String get readingTimeUnitSingular => """Min""";
+  String get readingTimeUnitPlural => """Min""";
+  String get readingTimeSuffix => """Lesedauer""";
   String get cannotLoadUrlError => """Unable to load image with url: """;
   String get personalAreaTitle => """Dein Bereich""";
   String get personalAreaCollections => """Deine Collections""";
@@ -230,6 +230,47 @@ class TranslationsDe extends Translations {
   String get takeSurveySubtitle =>
       """Wie können wir Xayn noch besser machen?""";
   String get takeSurveyCTA => """Bring mich zur Umfrage""";
+  String get addExcludedSource =>
+      """Welche Quellen sollen nicht mehr im Feed auftauchen?""";
+  String get addTrustedSource =>
+      """Welchen Quellen möchtest du gerne folgen?""";
+  String get addSourcePlaceholder => """Suchen oder URL eintippen""";
+  String get addSourceDescription =>
+      """Nach Namen oder URL der Quelle suchen""";
+  String get btnSave => """Speichern""";
+  String get trustedSourcesTab => """Lieblingsquellen""";
+  String get excludedSourcesTab => """Verborgene Quellen""";
+  String get trustedSourcesDescription =>
+      """Füge dem Feed Deine Lieblingsquellen hinzu""";
+  String get btnAdd => """Newsquelle hinzufügen""";
+  String get excludedSourcesDescription =>
+      """Diese Quellen werden nicht mehr im Feed angezeigt.""";
+  String get sourcePendingAddition =>
+      """Diese Quelle wird der Liste hinzugefügt""";
+  String get sourcePendingRemoval =>
+      """Diese Quelle wurde gerade aus der Liste entfernt""";
+  String get settingsGiveFeedback => """Feedback geben""";
+  String get subscriptionExpiresText => """Das Abo läuft ab am: %s""";
+  String get promoCodeEnterTitle => """Gib Deinen Code hier ein""";
+  String get promoCodeActionApplyCode => """Anwenden""";
+  String get promoCodeErrorCodeNotFound =>
+      """Dieser Aktionscode kann nicht gefunden werden""";
+  String get promoCodeErrorExpired => """Dieser Aktionscode ist abgelaufen""";
+  String get promoCodeSuccessResultTitle =>
+      """Du kannst Xayn noch %s weitere Tage kostenlos testen""";
+  String get promoCodeSuccessResultBody =>
+      """Wir würden gerne Dein Feedback hören. Du kasnnst uns eine Nachricht in den Einstellungen hinterlassen.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """Du hast diesen Aktionscode bereits verwendet""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """Keine Ergebnisse""";
+  String get noSourcesFoundInfo =>
+      """Wir konnten keine Quellen für diese Suche finden""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslationsDe extends PaymentFlowErrorTranslations {
@@ -298,9 +339,9 @@ Map<String, String> get translationsDeMap => {
       """hoursAgo""": """hours ago""",
       """dayAgo""": """day ago""",
       """daysAgo""": """days ago""",
-      """readingTimeUnitSingular""": """Min Lesedauer""",
-      """readingTimeUnitPlural""": """Min Lesedauer""",
-      """readingTimeSuffix""": """read""",
+      """readingTimeUnitSingular""": """Min""",
+      """readingTimeUnitPlural""": """Min""",
+      """readingTimeSuffix""": """Lesedauer""",
       """cannotLoadUrlError""": """Unable to load image with url: """,
       """personalAreaTitle""": """Dein Bereich""",
       """personalAreaCollections""": """Deine Collections""",
@@ -459,4 +500,42 @@ Map<String, String> get translationsDeMap => {
       """takeSurveyTitle""": """Hast Du mal 'ne Minute?""",
       """takeSurveySubtitle""": """Wie können wir Xayn noch besser machen?""",
       """takeSurveyCTA""": """Bring mich zur Umfrage""",
+      """addExcludedSource""":
+          """Welche Quellen sollen nicht mehr im Feed auftauchen?""",
+      """addTrustedSource""": """Welchen Quellen möchtest du gerne folgen?""",
+      """addSourcePlaceholder""": """Suchen oder URL eintippen""",
+      """addSourceDescription""": """Nach Namen oder URL der Quelle suchen""",
+      """btnSave""": """Speichern""",
+      """trustedSourcesTab""": """Lieblingsquellen""",
+      """excludedSourcesTab""": """Verborgene Quellen""",
+      """trustedSourcesDescription""":
+          """Füge dem Feed Deine Lieblingsquellen hinzu""",
+      """btnAdd""": """Newsquelle hinzufügen""",
+      """excludedSourcesDescription""":
+          """Diese Quellen werden nicht mehr im Feed angezeigt.""",
+      """sourcePendingAddition""":
+          """Diese Quelle wird der Liste hinzugefügt""",
+      """sourcePendingRemoval""":
+          """Diese Quelle wurde gerade aus der Liste entfernt""",
+      """settingsGiveFeedback""": """Feedback geben""",
+      """subscriptionExpiresText""": """Das Abo läuft ab am: %s""",
+      """promoCodeEnterTitle""": """Gib Deinen Code hier ein""",
+      """promoCodeActionApplyCode""": """Anwenden""",
+      """promoCodeErrorCodeNotFound""":
+          """Dieser Aktionscode kann nicht gefunden werden""",
+      """promoCodeErrorExpired""": """Dieser Aktionscode ist abgelaufen""",
+      """promoCodeSuccessResultTitle""":
+          """Du kannst Xayn noch %s weitere Tage kostenlos testen""",
+      """promoCodeSuccessResultBody""":
+          """Wir würden gerne Dein Feedback hören. Du kasnnst uns eine Nachricht in den Einstellungen hinterlassen.""",
+      """promoCodeErrorAlreadyUsed""":
+          """Du hast diesen Aktionscode bereits verwendet""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """Keine Ergebnisse""",
+      """noSourcesFoundInfo""":
+          """Wir konnten keine Quellen für diese Suche finden""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

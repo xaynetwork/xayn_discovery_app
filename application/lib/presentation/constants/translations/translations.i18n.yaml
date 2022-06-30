@@ -174,3 +174,31 @@ subscriptionDurationMonth: month
 takeSurveyTitle: Got a minute?
 takeSurveySubtitle: We'd love your opinion on how to make the app better
 takeSurveyCTA: Take me to the survey
+addExcludedSource: Add a source to exclude it from your feed
+addTrustedSource: Which news sources do you want to follow?
+addSourcePlaceholder: Search or enter URL
+addSourceDescription: Search for a source name or its URL
+btnSave: Save
+trustedSourcesTab: Favored
+excludedSourcesTab: Hidden
+trustedSourcesDescription: Add your favorite news outlets to your feed
+btnAdd: Add a news source
+excludedSourcesDescription: These sources will no longer appear in your feed.
+sourcePendingAddition: This source will be added to the list
+sourcePendingRemoval: This source was just removed from the list
+settingsGiveFeedback: Give feedback
+subscriptionExpiresText: 'The subscription expires on: %s'
+promoCodeEnterTitle: Enter your promo code
+promoCodeActionApplyCode: Apply code
+promoCodeErrorCodeNotFound: This promo code can not be found
+promoCodeErrorExpired: This promo code expired
+promoCodeSuccessResultTitle: You can test Xayn for free for %s more days
+promoCodeSuccessResultBody: We'd love to hear your feedback. You can drop us a note in the settings.
+promoCodeErrorAlreadyUsed: You already used this promo code
+excludeSourceMenuItemTitle: Exclude this source from my feed
+noTrustedSourcesYet: No favoured sources, yet
+noExcludedSourcesYet: No disliked source yet
+noSourcesFoundTitle: No results
+noSourcesFoundInfo: We couldn't find any sources for your search
+sourceExcludedTooltipMessage: Source Excluded
+manageSourcesTooltipMessage: Manage Sources

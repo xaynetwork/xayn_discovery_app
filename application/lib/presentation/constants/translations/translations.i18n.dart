@@ -224,6 +224,46 @@ class Translations {
   String get takeSurveySubtitle =>
       """We'd love your opinion on how to make the app better""";
   String get takeSurveyCTA => """Take me to the survey""";
+  String get addExcludedSource =>
+      """Add a source to exclude it from your feed""";
+  String get addTrustedSource =>
+      """Which news sources do you want to follow?""";
+  String get addSourcePlaceholder => """Search or enter URL""";
+  String get addSourceDescription => """Search for a source name or its URL""";
+  String get btnSave => """Save""";
+  String get trustedSourcesTab => """Favored""";
+  String get excludedSourcesTab => """Hidden""";
+  String get trustedSourcesDescription =>
+      """Add your favorite news outlets to your feed""";
+  String get btnAdd => """Add a news source""";
+  String get excludedSourcesDescription =>
+      """These sources will no longer appear in your feed.""";
+  String get sourcePendingAddition =>
+      """This source will be added to the list""";
+  String get sourcePendingRemoval =>
+      """This source was just removed from the list""";
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """The subscription expires on: %s""";
+  String get promoCodeEnterTitle => """Enter your promo code""";
+  String get promoCodeActionApplyCode => """Apply code""";
+  String get promoCodeErrorCodeNotFound =>
+      """This promo code can not be found""";
+  String get promoCodeErrorExpired => """This promo code expired""";
+  String get promoCodeSuccessResultTitle =>
+      """You can test Xayn for free for %s more days""";
+  String get promoCodeSuccessResultBody =>
+      """We'd love to hear your feedback. You can drop us a note in the settings.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """You already used this promo code""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslations {
@@ -444,4 +484,38 @@ Map<String, String> get translationsMap => {
       """takeSurveySubtitle""":
           """We'd love your opinion on how to make the app better""",
       """takeSurveyCTA""": """Take me to the survey""",
+      """addExcludedSource""": """Add a source to exclude it from your feed""",
+      """addTrustedSource""": """Which news sources do you want to follow?""",
+      """addSourcePlaceholder""": """Search or enter URL""",
+      """addSourceDescription""": """Search for a source name or its URL""",
+      """btnSave""": """Save""",
+      """trustedSourcesTab""": """Favored""",
+      """excludedSourcesTab""": """Hidden""",
+      """trustedSourcesDescription""":
+          """Add your favorite news outlets to your feed""",
+      """btnAdd""": """Add a news source""",
+      """excludedSourcesDescription""":
+          """These sources will no longer appear in your feed.""",
+      """sourcePendingAddition""": """This source will be added to the list""",
+      """sourcePendingRemoval""":
+          """This source was just removed from the list""",
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """The subscription expires on: %s""",
+      """promoCodeEnterTitle""": """Enter your promo code""",
+      """promoCodeActionApplyCode""": """Apply code""",
+      """promoCodeErrorCodeNotFound""": """This promo code can not be found""",
+      """promoCodeErrorExpired""": """This promo code expired""",
+      """promoCodeSuccessResultTitle""":
+          """You can test Xayn for free for %s more days""",
+      """promoCodeSuccessResultBody""":
+          """We'd love to hear your feedback. You can drop us a note in the settings.""",
+      """promoCodeErrorAlreadyUsed""": """You already used this promo code""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

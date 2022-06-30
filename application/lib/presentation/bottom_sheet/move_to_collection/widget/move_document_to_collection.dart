@@ -80,7 +80,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
   @override
   void initState() {
     _manager.updateInitialSelectedCollection(
-      bookmarkId: widget.document.documentUniqueId,
+      bookmarkId: widget.document.toBookmarkId,
       initialSelectedCollectionId: widget.initialSelectedCollectionId,
     );
 

@@ -180,7 +180,7 @@ class TranslationsPl extends Translations {
   String get errorGenericHeaderSomethingWentWrong => """Coś poszło nie tak""";
   String get errorGenericBodyPleaseTryAgainLater =>
       """Spróbuj ponownie później.""";
-  String get errorClose => """Blisko""";
+  String get errorClose => """Zamknij""";
   String get sourceHandlingTooltipLabel => """Czego chcesz mniej widzieć?""";
   String get sourceHandlingTooltipHighlightedWord => """Co""";
   String get enableTextToSpeech => """Włącz zamianę tekstu na mowę""";
@@ -226,6 +226,46 @@ class TranslationsPl extends Translations {
   String get takeSurveySubtitle =>
       """Jak możemy jeszcze bardziej ulepszyć Xayn?""";
   String get takeSurveyCTA => """Zabierz mnie do ankiety""";
+  String get addExcludedSource =>
+      """Dodaj źródło do wykluczenia z pliku danych""";
+  String get addTrustedSource =>
+      """Which news sources do you want to follow?""";
+  String get addSourcePlaceholder => """Wyszukaj lub wpisz adres URL""";
+  String get addSourceDescription =>
+      """Wyszukaj nazwę źródła lub jego adres URL""";
+  String get btnSave => """Zapisać""";
+  String get trustedSourcesTab => """Favored""";
+  String get excludedSourcesTab => """Hidden""";
+  String get trustedSourcesDescription =>
+      """Dodaj swoje ulubione źródła do swojego kanału""";
+  String get btnAdd => """Dodaj źródło wiadomości""";
+  String get excludedSourcesDescription =>
+      """Wykluczone źródła nie będą już pojawiać się w Twoim kanale.""";
+  String get sourcePendingAddition => """To źródło zostanie dodane do listy""";
+  String get sourcePendingRemoval =>
+      """To źródło zostało właśnie usunięte z listy""";
+  String get settingsGiveFeedback => """Give feedback""";
+  String get subscriptionExpiresText => """Subskrypcja wygasa w dniu: %s""";
+  String get promoCodeEnterTitle => """Enter your promo code""";
+  String get promoCodeActionApplyCode => """Apply code""";
+  String get promoCodeErrorCodeNotFound =>
+      """This promo code can not be found""";
+  String get promoCodeErrorExpired => """This promo code expired""";
+  String get promoCodeSuccessResultTitle =>
+      """You can test Xayn for free for %s more days""";
+  String get promoCodeSuccessResultBody =>
+      """We'd love to hear your feedback. You can drop us a note in the settings.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """You already used this promo code""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslationsPl extends PaymentFlowErrorTranslations {
@@ -261,7 +301,7 @@ class OnboardingBottomDialogTranslationsPl
 class GeneralTranslationsPl extends GeneralTranslations {
   final TranslationsPl _parent;
   const GeneralTranslationsPl(this._parent) : super(_parent);
-  String get btnClose => """Zakończyć""";
+  String get btnClose => """Zamknij""";
 }
 
 Map<String, String> get translationsPlMap => {
@@ -397,7 +437,7 @@ Map<String, String> get translationsPlMap => {
       """errorGenericHeaderSomethingWentWrong""": """Coś poszło nie tak""",
       """errorGenericBodyPleaseTryAgainLater""":
           """Spróbuj ponownie później.""",
-      """errorClose""": """Blisko""",
+      """errorClose""": """Zamknij""",
       """sourceHandlingTooltipLabel""": """Czego chcesz mniej widzieć?""",
       """sourceHandlingTooltipHighlightedWord""": """Co""",
       """enableTextToSpeech""": """Włącz zamianę tekstu na mowę""",
@@ -446,10 +486,45 @@ Map<String, String> get translationsPlMap => {
       """onboardingBottomDialog.bookmarksManageTitle""":
           """Naciśnij i przytrzymaj, aby zarządzać zakładkami""",
       """onboardingBottomDialog.cancelButton""": """Rozumiem!""",
-      """general.btnClose""": """Zakończyć""",
+      """general.btnClose""": """Zamknij""",
       """subscriptionDurationMonth""": """miesiąc""",
       """takeSurveyTitle""": """Masz minutkę?""",
       """takeSurveySubtitle""":
           """Jak możemy jeszcze bardziej ulepszyć Xayn?""",
       """takeSurveyCTA""": """Zabierz mnie do ankiety""",
+      """addExcludedSource""": """Dodaj źródło do wykluczenia z pliku danych""",
+      """addTrustedSource""": """Which news sources do you want to follow?""",
+      """addSourcePlaceholder""": """Wyszukaj lub wpisz adres URL""",
+      """addSourceDescription""":
+          """Wyszukaj nazwę źródła lub jego adres URL""",
+      """btnSave""": """Zapisać""",
+      """trustedSourcesTab""": """Favored""",
+      """excludedSourcesTab""": """Hidden""",
+      """trustedSourcesDescription""":
+          """Dodaj swoje ulubione źródła do swojego kanału""",
+      """btnAdd""": """Dodaj źródło wiadomości""",
+      """excludedSourcesDescription""":
+          """Wykluczone źródła nie będą już pojawiać się w Twoim kanale.""",
+      """sourcePendingAddition""": """To źródło zostanie dodane do listy""",
+      """sourcePendingRemoval""":
+          """To źródło zostało właśnie usunięte z listy""",
+      """settingsGiveFeedback""": """Give feedback""",
+      """subscriptionExpiresText""": """Subskrypcja wygasa w dniu: %s""",
+      """promoCodeEnterTitle""": """Enter your promo code""",
+      """promoCodeActionApplyCode""": """Apply code""",
+      """promoCodeErrorCodeNotFound""": """This promo code can not be found""",
+      """promoCodeErrorExpired""": """This promo code expired""",
+      """promoCodeSuccessResultTitle""":
+          """You can test Xayn for free for %s more days""",
+      """promoCodeSuccessResultBody""":
+          """We'd love to hear your feedback. You can drop us a note in the settings.""",
+      """promoCodeErrorAlreadyUsed""": """You already used this promo code""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

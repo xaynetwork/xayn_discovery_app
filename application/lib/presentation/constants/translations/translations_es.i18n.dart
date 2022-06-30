@@ -228,6 +228,46 @@ class TranslationsEs extends Translations {
   String get takeSurveySubtitle =>
       """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""";
   String get takeSurveyCTA => """Llévame a la encuesta""";
+  String get addExcludedSource =>
+      """Agregue una fuente para excluir de tu feed""";
+  String get addTrustedSource =>
+      """Agregue una fuente para incluir en tu feed""";
+  String get addSourcePlaceholder => """Buscar o escribir URL""";
+  String get addSourceDescription =>
+      """Buscar el nombre de una fuente o su URL""";
+  String get btnSave => """Guardar""";
+  String get trustedSourcesTab => """Fuentes incluidas""";
+  String get excludedSourcesTab => """Fuentes excluidas""";
+  String get trustedSourcesDescription =>
+      """Agrega tus fuentes favoritas a tu feed""";
+  String get btnAdd => """Agregar una fuente de noticias""";
+  String get excludedSourcesDescription =>
+      """Las fuentes excluidas ya no aparecerán en su feed.""";
+  String get sourcePendingAddition => """Esta fuente se añadirá a la lista.""";
+  String get sourcePendingRemoval =>
+      """Esta fuente acaba de ser eliminada de la lista.""";
+  String get settingsGiveFeedback => """Dar opinion""";
+  String get subscriptionExpiresText => """La suscripción caduca el: %s""";
+  String get promoCodeEnterTitle => """Introduce tu código de promoción""";
+  String get promoCodeActionApplyCode => """Aplica el código""";
+  String get promoCodeErrorCodeNotFound =>
+      """Este código no se puede encontrar""";
+  String get promoCodeErrorExpired => """Este código de promoción caducó""";
+  String get promoCodeSuccessResultTitle =>
+      """Puedes probar Xayn gratis por %s días más""";
+  String get promoCodeSuccessResultBody =>
+      """Nos encantaría escuchar sus comentarios. Puede enviarnos una nota desde la configuración.""";
+  String get promoCodeErrorAlreadyUsed =>
+      """Ya usaste este código de promoción""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No hay fuentes favoritas, todavía""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No hay resultados""";
+  String get noSourcesFoundInfo =>
+      """No pudimos encontrar ninguna fuente para su búsqueda.""";
+  String get sourceExcludedTooltipMessage => """Source Excluded""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
 }
 
 class PaymentFlowErrorTranslationsEs extends PaymentFlowErrorTranslations {
@@ -457,4 +497,38 @@ Map<String, String> get translationsEsMap => {
       """takeSurveySubtitle""":
           """Nos encantaría tu opinión sobre cómo mejorar la aplicación.""",
       """takeSurveyCTA""": """Llévame a la encuesta""",
+      """addExcludedSource""": """Agregue una fuente para excluir de tu feed""",
+      """addTrustedSource""": """Agregue una fuente para incluir en tu feed""",
+      """addSourcePlaceholder""": """Buscar o escribir URL""",
+      """addSourceDescription""": """Buscar el nombre de una fuente o su URL""",
+      """btnSave""": """Guardar""",
+      """trustedSourcesTab""": """Fuentes incluidas""",
+      """excludedSourcesTab""": """Fuentes excluidas""",
+      """trustedSourcesDescription""":
+          """Agrega tus fuentes favoritas a tu feed""",
+      """btnAdd""": """Agregar una fuente de noticias""",
+      """excludedSourcesDescription""":
+          """Las fuentes excluidas ya no aparecerán en su feed.""",
+      """sourcePendingAddition""": """Esta fuente se añadirá a la lista.""",
+      """sourcePendingRemoval""":
+          """Esta fuente acaba de ser eliminada de la lista.""",
+      """settingsGiveFeedback""": """Dar opinion""",
+      """subscriptionExpiresText""": """La suscripción caduca el: %s""",
+      """promoCodeEnterTitle""": """Introduce tu código de promoción""",
+      """promoCodeActionApplyCode""": """Aplica el código""",
+      """promoCodeErrorCodeNotFound""": """Este código no se puede encontrar""",
+      """promoCodeErrorExpired""": """Este código de promoción caducó""",
+      """promoCodeSuccessResultTitle""":
+          """Puedes probar Xayn gratis por %s días más""",
+      """promoCodeSuccessResultBody""":
+          """Nos encantaría escuchar sus comentarios. Puede enviarnos una nota desde la configuración.""",
+      """promoCodeErrorAlreadyUsed""": """Ya usaste este código de promoción""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No hay fuentes favoritas, todavía""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No hay resultados""",
+      """noSourcesFoundInfo""":
+          """No pudimos encontrar ninguna fuente para su búsqueda.""",
+      """sourceExcludedTooltipMessage""": """Source Excluded""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
     };

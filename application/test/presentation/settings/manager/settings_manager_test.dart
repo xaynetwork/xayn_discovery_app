@@ -267,7 +267,7 @@ void main() {
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'INVOKE showDialog for bug reporting THEN call bug Reporting Service',
     setUp: () {
-      when(bugReportingService.showDialog()).thenAnswer((_) async {});
+      when(bugReportingService.reportBug()).thenAnswer((_) async {});
     },
     build: () => create(),
     act: (manager) => manager.reportBug(),
@@ -276,7 +276,7 @@ void main() {
     verify: (manager) {
       verifyInOrder([
         getAppVersionUseCase.singleOutput(none),
-        bugReportingService.showDialog(
+        bugReportingService.reportBug(
           brightness: R.brightness,
           primaryColor: R.colors.primaryAction,
         ),

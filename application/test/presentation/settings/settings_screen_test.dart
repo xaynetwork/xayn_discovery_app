@@ -19,7 +19,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/help_imptrove_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 
