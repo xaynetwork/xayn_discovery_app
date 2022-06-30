@@ -67,6 +67,8 @@ class DiscoveryCard extends DiscoveryCardBase {
 
 abstract class DiscoveryCardNavActions {
   void onBackNavPressed();
+
+  void onManageSourcesPressed();
 }
 
 /// A controller which allows to programmatically close this widget
@@ -197,9 +199,12 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           onOpenHeaderMenu: () {
             widget.onTtsData?.call(TtsData.disabled());
 
+            final isSourceExcluded = discoveryCardManager
+                .isDocumentSourceExcluded(document: widget.document);
+
             toggleOverlay(
               (_) => DiscoveryCardHeaderMenu(
-                items: buildDiscoveryCardHeaderMenuItems,
+                items: buildDiscoveryCardHeaderMenuItems(isSourceExcluded),
                 onClose: removeOverlay,
               ),
             );
@@ -386,7 +391,10 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     );
   }
 
-  List<DiscoveryCardHeaderMenuItem> get buildDiscoveryCardHeaderMenuItems => [
+  List<DiscoveryCardHeaderMenuItem> buildDiscoveryCardHeaderMenuItems(
+    bool isSourceExcluded,
+  ) =>
+      [
         DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
           onTap: () {
             removeOverlay();
@@ -397,11 +405,22 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             );
           },
         ),
-        DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
-          /// TODO Will be completed in a follow up PR
-          onTap: () {
-            removeOverlay();
-          },
-        ),
+        isSourceExcluded
+            ? DiscoveryCardHeaderMenuHelper.buildIncludeSourceBackItem(
+                onTap: () {
+                  removeOverlay();
+                  discoveryCardManager.onIncludeSource(
+                    document: widget.document,
+                  );
+                },
+              )
+            : DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
+                onTap: () {
+                  removeOverlay();
+                  discoveryCardManager.onExcludeSource(
+                    document: widget.document,
+                  );
+                },
+              ),
       ];
 }
