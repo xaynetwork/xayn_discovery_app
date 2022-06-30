@@ -3,9 +3,15 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_single_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
@@ -39,11 +45,15 @@ abstract class SourcesScreenNavActions {
 
 @lazySingleton
 class SourcesManager extends Cubit<SourcesState>
-    with UseCaseBlocHelper<SourcesState>, SourcesManagementMixin<SourcesState>
+    with
+        UseCaseBlocHelper<SourcesState>,
+        SourcesManagementMixin<SourcesState>,
+        OverlayManagerMixin<SourcesState>
     implements SourcesScreenNavActions {
   final EngineEventsUseCase engineEventsUseCase;
   final SourcesPendingOperations sourcesPendingOperations;
   final SourcesScreenNavActions _sourcesScreenNavActions;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final FoldEngineEvent foldEngineEvent = _foldEngineEvent();
   late final UseCaseValueStream<SourcesState> nextStateValueStream = consume(
     engineEventsUseCase,
@@ -54,6 +64,7 @@ class SourcesManager extends Cubit<SourcesState>
   String? latestSourcesSearchTerm;
 
   SourcesManager(
+    this._sendAnalyticsUseCase,
     this._sourcesScreenNavActions,
     this.engineEventsUseCase,
     this.sourcesPendingOperations,
@@ -147,31 +158,81 @@ class SourcesManager extends Cubit<SourcesState>
   /// Use [intervalBetweenOperations] to wait between 2 operations, which, if used,
   /// gives the UI some time to visually indicate each addition/removal.
   /// The default value is 1 second.
-  void applyChanges() {
+  void applyChanges({required bool isBatchedProcess}) {
+    final oldTrustedCount = state.trustedSources.length;
+    final oldExcludedCount = state.excludedSources.length;
+    var newTrustedCount = oldTrustedCount;
+    var newExcludedCount = oldExcludedCount;
+    AnalyticsEvent? analyticsEvent;
+
     for (final operation in sourcesPendingOperations.toSet()) {
       sourcesPendingOperations.removeOperation(operation);
 
       switch (operation.task) {
         case SourcesManagementTask.removeFromExcludedSources:
+          if (newExcludedCount > 0) newExcludedCount--;
           super.removeSourceFromExcludedList(operation.source);
           break;
         case SourcesManagementTask.addToExcludedSources:
+          newExcludedCount++;
           super.addSourceToExcludedList(operation.source);
           break;
         case SourcesManagementTask.removeFromTrustedSources:
+          if (newTrustedCount > 0) newTrustedCount--;
           super.removeSourceFromTrustedList(operation.source);
           break;
         case SourcesManagementTask.addToTrustedSources:
+          newTrustedCount++;
           super.addSourceToTrustedList(operation.source);
           break;
       }
     }
+
+    if (isBatchedProcess) {
+      if (newTrustedCount != oldTrustedCount ||
+          newExcludedCount != oldExcludedCount) {
+        analyticsEvent = SourcesManagementChangedEvent(
+          newTrustedCount: newTrustedCount,
+          oldTrustedCount: oldTrustedCount,
+          newExcludedCount: newExcludedCount,
+          oldExcludedCount: oldExcludedCount,
+        );
+      }
+    } else {
+      // in this case, only a single source was affected,
+      // so old and new are all the same values, except for 1 of the 4,
+      // which is then either +1 or -1
+      final sourceType = newTrustedCount != oldTrustedCount
+          ? SourceType.trusted
+          : SourceType.excluded;
+      final operation = newTrustedCount + newExcludedCount >
+              oldTrustedCount + oldExcludedCount
+          ? SourcesManagementSingleChangedEventOperation.addition
+          : SourcesManagementSingleChangedEventOperation.removal;
+
+      analyticsEvent = SourcesManagementSingleChangedEvent(
+        sourceType: sourceType,
+        operation: operation,
+      );
+    }
+
+    if (analyticsEvent != null) _sendAnalyticsUseCase(analyticsEvent);
   }
 
   @override
   Future<SourcesState?> computeState() async =>
-      fold(nextStateValueStream).foldAll(
-        (nextState, errorReport) async => nextState?.copyWith(
+      fold(nextStateValueStream).foldAll((nextState, errorReport) async {
+        if (errorReport.exists(nextStateValueStream)) {
+          final report = errorReport.of(nextStateValueStream)!;
+
+          showOverlay(
+            OverlayData.bottomSheetGenericError(
+              errorCode: report.error.toString(),
+            ),
+          );
+        }
+
+        return nextState?.copyWith(
           jointExcludedSources: {
             ...nextState.excludedSources,
             ...sourcesPendingOperations
@@ -188,8 +249,8 @@ class SourcesManager extends Cubit<SourcesState>
                   latestSourcesSearchTerm!.length < 3
               ? const <AvailableSource>{}
               : nextState.availableSources,
-        ),
-      );
+        );
+      });
 
   static SourcesState Function(EngineEvent?) Function(SourcesState)
       _foldEngineEvent() {
