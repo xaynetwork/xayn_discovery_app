@@ -24,8 +24,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_faile
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/widget/move_bookmarks_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/onboarding/widget/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/onboarding/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';

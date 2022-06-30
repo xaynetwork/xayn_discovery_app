@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/onboarding/manager/onboarding_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
@@ -33,6 +35,8 @@ class _OnboardingView extends StatefulWidget {
 
 class _OnboardingViewState extends State<_OnboardingView>
     with BottomSheetBodyMixin, TickerProviderStateMixin {
+  late final _manager = di.get<OnboardingManager>(param1: widget.type);
+
   @override
   Widget build(BuildContext context) {
     final text = _buildText();
@@ -65,6 +69,7 @@ class _OnboardingViewState extends State<_OnboardingView>
           R.strings.onboardingBottomDialog.cancelButton,
           backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
           onPressed: () {
+            _manager.onCancelPressed();
             widget.onDismiss();
             closeBottomSheet(context);
           },
