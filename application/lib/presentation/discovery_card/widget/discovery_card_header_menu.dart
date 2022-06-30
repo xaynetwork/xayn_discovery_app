@@ -92,3 +92,21 @@ class DiscoveryCardHeaderMenuItem {
         onTap: onTap ?? this.onTap,
       );
 }
+
+class DiscoveryCardHeaderMenuHelper {
+  static DiscoveryCardHeaderMenuItem buildOpenInBrowserItem(
+          {required VoidCallback onTap}) =>
+      DiscoveryCardHeaderMenuItem(
+        iconPath: R.assets.icons.globe,
+        title: R.strings.readerModeUnableToLoadCTA,
+        onTap: onTap,
+      );
+
+  static DiscoveryCardHeaderMenuItem buildExcludeSourceItem(
+          {required VoidCallback onTap}) =>
+      DiscoveryCardHeaderMenuItem(
+        iconPath: R.assets.icons.block,
+        title: R.strings.excludeSourceMenuItemTitle,
+        onTap: onTap,
+      );
+}

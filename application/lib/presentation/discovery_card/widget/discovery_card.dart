@@ -387,9 +387,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 
   List<DiscoveryCardHeaderMenuItem> get buildDiscoveryCardHeaderMenuItems => [
-        DiscoveryCardHeaderMenuItem(
-          iconPath: R.assets.icons.globe,
-          title: R.strings.readerModeUnableToLoadCTA,
+        DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
           onTap: () {
             removeOverlay();
             discoveryCardManager.openWebResourceUrl(
@@ -399,9 +397,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
             );
           },
         ),
-        DiscoveryCardHeaderMenuItem(
-          iconPath: R.assets.icons.block,
-          title: R.strings.excludeSourceMenuItemTitle,
+        DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
+          /// TODO Will be completed in a follow up PR
           onTap: () {
             removeOverlay();
           },
