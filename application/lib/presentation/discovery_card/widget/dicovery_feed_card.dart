@@ -104,9 +104,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       super.buildImage(R.colors.swipeCardBackgroundHome);
 
   List<DiscoveryCardHeaderMenuItem> get buildDiscoveryCardHeaderMenuItems => [
-        DiscoveryCardHeaderMenuItem(
-          iconPath: R.assets.icons.globe,
-          title: R.strings.readerModeUnableToLoadCTA,
+        DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
           onTap: () {
             removeOverlay();
             discoveryCardManager.openWebResourceUrl(
@@ -116,9 +114,8 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
             );
           },
         ),
-        DiscoveryCardHeaderMenuItem(
-          iconPath: R.assets.icons.block,
-          title: R.strings.excludeSourceMenuItemTitle,
+        DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
+          /// TODO Will be completed in a follow up PR
           onTap: () {
             removeOverlay();
           },
