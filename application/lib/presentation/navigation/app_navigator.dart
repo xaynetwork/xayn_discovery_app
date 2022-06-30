@@ -31,7 +31,7 @@ class SplashScreenNavActionsImpl extends SplashScreenNavActions {
 
   @override
   void onSplashScreenAnimationFinished() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
+      changeStack((stack) => stack.replace(PageRegistry.discovery()));
 }
 
 @Injectable(as: DiscoveryFeedNavActions)
@@ -126,7 +126,7 @@ class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
 
   @override
   void onHomeNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
+      changeStack((stack) => stack.replace(PageRegistry.discovery()));
 
   @override
   void onPersonalAreaNavPressed() =>
@@ -183,7 +183,7 @@ class PaymentScreenNavActionsImpl implements PaymentScreenNavActions {
 
   @override
   void onDismiss() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
+      changeStack((stack) => stack.replace(PageRegistry.discovery()));
 }
 
 @Injectable(as: PersonalAreaNavActions)
@@ -196,7 +196,7 @@ class NewPersonalAreaNavActionsImpl implements PersonalAreaNavActions {
 
   @override
   void onHomeNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
+      changeStack((stack) => stack.replace(PageRegistry.discovery()));
 
   @override
   void onActiveSearchNavPressed() =>

@@ -16,7 +16,7 @@ class PushNotificationDebugSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: SettingsSection.custom(
-          title: R.strings.settingsSectionTitleSpreadTheWord,
+          title: 'Push notifications',
           crossAxisAlignment: CrossAxisAlignment.center,
           child: Row(
             children: [
@@ -27,23 +27,19 @@ class PushNotificationDebugSection extends StatelessWidget {
         ),
       );
 
-  AppGhostButton _buildRequestNotificationBtn() => AppGhostButton.textWithIcon(
+  AppGhostButton _buildRequestNotificationBtn() => AppGhostButton.text(
+        'Request',
         key: Keys.settingsRequestNotificationBtn,
         onPressed: onRequestNotificationPermissionPressed,
-        text: 'Request',
-        svgIconPath: R.assets.icons.info,
         backgroundColor: R.colors.iconBackground,
-        iconColor: R.colors.iconInverse,
         textColor: R.colors.quaternaryText,
       );
 
-  AppGhostButton _buildSendNotificationBtn() => AppGhostButton.textWithIcon(
+  AppGhostButton _buildSendNotificationBtn() => AppGhostButton.text(
+        'Send',
         key: Keys.settingsSendNotificationBtn,
         onPressed: onSendTestPushNotificationPressed,
-        text: 'Send',
-        svgIconPath: R.assets.icons.devices,
         backgroundColor: R.colors.iconBackground,
-        iconColor: R.colors.iconInverse,
         textColor: R.colors.quaternaryText,
       );
 }

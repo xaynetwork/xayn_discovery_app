@@ -35,7 +35,7 @@ extension on DeepLinkData {
     return when(
       none: () => null,
       activeSearch: () => PageRegistry.search,
-      feed: (documentId) => PageRegistry.cardDetails(documentId: documentId),
+      feed: (documentId) => PageRegistry.discovery(documentId: documentId),
     );
   }
 }

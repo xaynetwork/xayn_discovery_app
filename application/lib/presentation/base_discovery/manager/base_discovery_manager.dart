@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -10,6 +11,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
@@ -165,6 +167,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   int? get currentCardIndex => _cardIndex;
 
   void onEngineEvent(EngineEvent event);
+
+  void maybeSelectCard(UniqueId documentId) {
+    final card = state.cards.firstWhereOrNull(
+        (card) => card.document?.documentId.toString() == documentId.value);
+    if (card?.document == null) return;
+    maybeNavigateIntoCard(card!.document!);
+  }
 
   void maybeNavigateIntoCard(Document document) =>
       checkIfDocumentNotProcessable(
