@@ -10,8 +10,8 @@ import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 final Map<Uri, String> cardOrigin = <Uri, String>{};
-final Map<UniqueRequest, Future<http.Response>> _cache =
-    <UniqueRequest, Future<http.Response>>{};
+final Map<UniqueRequest, Future<String>> _cache =
+    <UniqueRequest, Future<String>>{};
 
 final Uri searchEndpointAlternate = Uri.parse(
     'https://c8tuq9oow3.execute-api.eu-west-1.amazonaws.com/dev/v2/search_mlt');
@@ -133,11 +133,13 @@ mixin RequestTunnelMixin {
             logger.i(
                 'will load from cache: ${_cache.containsKey(request)} ${request.keywords}');
 
-            final r = await _cache.putIfAbsent(
-                request, () => client.send(request.request));
-            final body = await r.readAsString();
+            final body = await _cache.putIfAbsent(request, () async {
+              final data = await client.send(request.request);
+
+              return await data.readAsString();
+            });
             final json = Map<String, dynamic>.from(decoder.convert(body));
-            final articles = json['articles'] as List;
+            final articles = json['articles'] as List? ?? const [];
             final entries = articles
                 .cast<Map<String, dynamic>>()
                 .map(DocumentVO.fromJson)
@@ -161,6 +163,8 @@ mixin RequestTunnelMixin {
           final rawArticles = sortedArticlesByScore
               .map((it) => it.jsonRaw)
               .toList(growable: false);
+
+          logger.i('fetched ${rawArticles.length} personalized articles');
 
           final response = <String, dynamic>{
             "status": "ok",
