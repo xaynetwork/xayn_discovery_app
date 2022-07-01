@@ -154,7 +154,7 @@ mixin RequestTunnelMixin {
           }
 
           var sortedArticlesByScore = allArticles.toList()
-            /*..removeWhere((it) => it.score < 14.0)*/
+            ..removeWhere((it) => it.score < 14.0)
             ..sort();
 
           if (sortedArticlesByScore.length > 100) {
