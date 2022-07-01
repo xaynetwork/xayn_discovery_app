@@ -1,13 +1,16 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer' as dev;
 
 import 'package:http_client/console.dart' as http;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:xayn_discovery_app/domain/model/document/document_vo.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 final List<ResultSet> resultSets = <ResultSet>[];
+final Map<UniqueRequest, Future<http.Response>> _cache =
+    <UniqueRequest, Future<http.Response>>{};
 
 final Uri searchEndpointAlternate = Uri.parse(
     'https://c8tuq9oow3.execute-api.eu-west-1.amazonaws.com/dev/v2/search_mlt');
@@ -110,10 +113,13 @@ mixin RequestTunnelMixin {
 
   Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
       (Request request) async {
+        const decoder = JsonDecoder();
+        const encoder = JsonEncoder();
         final groupMatcher = RegExp(r'\(([^\)]+)\)');
         final keywordGroups = request.url.queryParameters['q']!;
+        final params = Map<String, String>.from(request.url.queryParameters);
 
-        http.Request Function(String) buildActualRequest(Request request) =>
+        UniqueRequest Function(String) buildActualRequest(Request request) =>
             (String keywords) {
               final mtlUri = searchEndpointAlternate.replace(
                 queryParameters: <String, dynamic>{
@@ -121,7 +127,12 @@ mixin RequestTunnelMixin {
                   'search_in': 'title_excerpt',
                   'min_term_freq': '1',
                   'page_size': '34',
-                  'to_rank': '9000',
+                  'to_rank': params['to_rank'],
+                  'lang': params['lang'],
+                  'countries': params['countries'],
+                  'page': params['page'],
+                  'sort_by': params['sort_by'],
+                  'from': params['from'],
                 },
               );
               final headers = Map<String, String>.from(request.headers)
@@ -130,11 +141,15 @@ mixin RequestTunnelMixin {
               headers['host'] = mtlUri.host;
               headers['x-api-key'] = Env.searchApiSecretKeyAlternate;
 
-              return http.Request(
-                request.method,
-                mtlUri,
-                headers: headers,
-                encoding: request.encoding,
+              return UniqueRequest.fromMap(
+                request.requestedUri.queryParameters,
+                keywords: keywords,
+                request: http.Request(
+                  request.method,
+                  mtlUri,
+                  headers: headers,
+                  encoding: request.encoding,
+                ),
               );
             };
 
@@ -142,55 +157,59 @@ mixin RequestTunnelMixin {
         final keySets =
             groupMatcher.allMatches(keywordGroups).map((it) => it.group(1)!);
         final requests = keySets.map(mapper).toList(growable: false);
-        final allArticles = HashSet<Map<String, dynamic>>(
-          equals: (a, b) => a['_id'] == b['_id'],
-          hashCode: (a) => a['_id']?.hashCode ?? 0,
-          isValidKey: (a) => true,
-        );
+        final allArticles = <DocumentVO>{};
 
         for (final request in requests) {
-          final r = await client.send(request);
+          logger.i(
+              'will load from cache: ${_cache.containsKey(request)} ${request.keywords}');
+
+          final r = await _cache.putIfAbsent(
+              request, () => client.send(request.request));
           final body = await r.readAsString();
-          final json =
-              Map<String, dynamic>.from(const JsonDecoder().convert(body));
+          final json = Map<String, dynamic>.from(decoder.convert(body));
           final articles = json['articles'] as List;
 
-          allArticles.addAll(articles.cast<Map<String, dynamic>>());
+          try {
+            allArticles.addAll(
+                articles.cast<Map<String, dynamic>>().map(DocumentVO.fromJson));
+          } catch (e, s) {
+            logger.e('e: $e\n$s');
+          }
         }
 
         var sortedArticlesByScore = allArticles.toList()
-          ..sort((a, b) {
-            final rankA = a['_score'] as double? ?? .0,
-                rankB = b['_score'] as double? ?? .0;
-
-            return rankB.compareTo(rankA);
-          });
+          /*..removeWhere((it) => it.score < 14.5)*/
+          ..sort();
 
         if (sortedArticlesByScore.length > 100) {
           sortedArticlesByScore = sortedArticlesByScore.sublist(0, 100);
         }
 
+        final rawArticles = sortedArticlesByScore
+            .map((it) => it.jsonRaw)
+            .toList(growable: false);
+
         final response = <String, dynamic>{
           "status": "ok",
-          "total_hits": sortedArticlesByScore.length,
-          "page": 1,
+          "total_hits": rawArticles.length,
+          "page": params['page'],
           "total_pages": 1,
-          "page_size": sortedArticlesByScore.length,
-          "articles": sortedArticlesByScore,
+          "page_size": rawArticles.length,
+          "articles": rawArticles,
           "user_input": {
             "q": keywordGroups,
             "search_in": ["title_summary"],
-            "lang": null,
+            "lang": params['lang'],
             "not_lang": null,
-            "countries": ["US"],
+            "countries": params['countries']!.split(','),
             "not_countries": null,
-            "from": "2021-12-15 00:00:00",
+            "from": params['from'],
             "to": null,
             "ranked_only": "True",
             "from_rank": null,
             "to_rank": null,
-            "sort_by": "relevancy",
-            "page": 1,
+            "sort_by": params['sort_by'],
+            "page": params['page'],
             "size": 1,
             "sources": null,
             "not_sources": null,
@@ -204,11 +223,11 @@ mixin RequestTunnelMixin {
             timestamp: DateTime.now(),
             path: '_mlt',
             query: keySets.join(' || '),
-            articles: sortedArticlesByScore,
+            articles: rawArticles,
           ),
         );
 
-        return const JsonEncoder().convert(response);
+        return encoder.convert(response);
       };
 
   Future<String> Function(Request) _fetchQuery(Uri uri) => (Request request) {
@@ -278,4 +297,45 @@ class ResultSet {
     required this.query,
     required this.articles,
   });
+}
+
+class UniqueRequest {
+  final http.Request request;
+  final String lang;
+  final List<String> countries;
+  final int toRank;
+  final int pageSize;
+  final int page;
+  final String sortBy;
+  final String from;
+  final String keywords;
+  final int _hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is UniqueRequest) return hashCode == other.hashCode;
+
+    return false;
+  }
+
+  @override
+  int get hashCode => _hashCode;
+
+  UniqueRequest.fromMap(
+    Map<String, String> data, {
+    required this.keywords,
+    required this.request,
+  })  : lang = data['lang']!,
+        countries = data['countries']!.split(','),
+        toRank = int.parse(data['to_rank']!),
+        pageSize = int.parse(data['page_size']!),
+        page = int.parse(data['page']!),
+        sortBy = data['sort_by']!,
+        from = data['from']!,
+        _hashCode = Object.hashAll([
+          keywords,
+          data['lang'],
+          data['countries'],
+          data['page'],
+        ]);
 }
