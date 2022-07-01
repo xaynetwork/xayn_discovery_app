@@ -43,40 +43,45 @@ class _DiscoveryFeedCardState
     final processedDocument = state.processedDocument;
     final provider = processedDocument?.getProvider(webResource);
 
-    final elements = DiscoveryCardElements(
-      manager: discoveryCardManager,
-      document: widget.document,
-      explicitDocumentUserReaction: state.explicitDocumentUserReaction,
-      title: '${widget.document.stackId.name}: ${webResource.title}',
-      timeToRead: timeToReadOrError,
-      url: webResource.url,
-      provider: provider,
-      datePublished: webResource.datePublished,
-      isInteractionEnabled: widget.isPrimary,
-      onLikePressed: () => onFeedbackPressed(UserReaction.positive),
-      onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-      onOpenUrl: () {
-        widget.onTtsData?.call(TtsData.disabled());
+    final elements = GestureDetector(
+      onLongPress: () =>
+          discoveryCardManager.showCardInfo(widget.document.resource.url),
+      child: DiscoveryCardElements(
+        manager: discoveryCardManager,
+        document: widget.document,
+        explicitDocumentUserReaction: state.explicitDocumentUserReaction,
+        title:
+            '[${widget.document.stackId.name[0].toUpperCase()}] ${webResource.title}',
+        timeToRead: timeToReadOrError,
+        url: webResource.url,
+        provider: provider,
+        datePublished: webResource.datePublished,
+        isInteractionEnabled: widget.isPrimary,
+        onLikePressed: () => onFeedbackPressed(UserReaction.positive),
+        onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
+        onOpenUrl: () {
+          widget.onTtsData?.call(TtsData.disabled());
 
-        discoveryCardManager.openWebResourceUrl(
-          widget.document,
-          CurrentView.story,
-          widget.feedType,
-        );
-      },
-      onToggleTts: () => widget.onTtsData?.call(
-        TtsData(
-          enabled: true,
-          languageCode: widget.document.resource.language,
-          uri: widget.document.resource.url,
-          html: discoveryCardManager
-              .state.processedDocument?.processHtmlResult.contents,
+          discoveryCardManager.openWebResourceUrl(
+            widget.document,
+            CurrentView.story,
+            widget.feedType,
+          );
+        },
+        onToggleTts: () => widget.onTtsData?.call(
+          TtsData(
+            enabled: true,
+            languageCode: widget.document.resource.language,
+            uri: widget.document.resource.url,
+            html: discoveryCardManager
+                .state.processedDocument?.processHtmlResult.contents,
+          ),
         ),
+        onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
+        onBookmarkLongPressed: onBookmarkLongPressed(),
+        bookmarkStatus: state.bookmarkStatus,
+        feedType: widget.feedType,
       ),
-      onBookmarkPressed: () => onBookmarkPressed(feedType: widget.feedType),
-      onBookmarkLongPressed: onBookmarkLongPressed(),
-      bookmarkStatus: state.bookmarkStatus,
-      feedType: widget.feedType,
     );
 
     return Stack(

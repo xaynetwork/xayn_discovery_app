@@ -185,7 +185,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           manager: discoveryCardManager,
           document: widget.document,
           explicitDocumentUserReaction: state.explicitDocumentUserReaction,
-          title: '${widget.document.stackId.name}: ${webResource.title}',
+          title:
+              '[${widget.document.stackId.name[0].toUpperCase()}] ${webResource.title}',
           timeToRead: state.processedDocument?.timeToRead ?? '',
           url: webResource.url,
           provider: provider,

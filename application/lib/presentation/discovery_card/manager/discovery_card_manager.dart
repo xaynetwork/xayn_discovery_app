@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/document_extension.da
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/request_tunnel_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_bookmarked_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_shared_event.dart';
@@ -202,6 +203,17 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
       context: FeedbackContext.explicit,
       feedType: feedType,
     );
+  }
+
+  void showCardInfo(Uri uri) {
+    if (cardOrigin.containsKey(uri)) {
+      final keywords = cardOrigin[uri]!;
+
+      return showOverlay(OverlayData.tooltipTextError(keywords));
+    }
+
+    showOverlay(OverlayData.tooltipTextError(
+        'This article was not fetched using keywords'));
   }
 
   void shareUri({
