@@ -146,7 +146,8 @@ mixin RequestTunnelMixin {
                 .toList(growable: false);
 
             for (final entry in entries) {
-              cardOrigin[entry.uri] = request.keywords;
+              cardOrigin[entry.uri] =
+                  '${request.keywords} [mlt score ${entry.score}/100]';
             }
 
             allArticles.addAll(entries);
