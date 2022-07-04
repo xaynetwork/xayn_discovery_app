@@ -187,10 +187,12 @@ promoCodeErrorExpired: This promo code expired
 promoCodeSuccessResultTitle: You can test Xayn for free for %s more days
 promoCodeSuccessResultBody: We'd love to hear your feedback. You can drop us a note in the settings.
 promoCodeErrorAlreadyUsed: You already used this promo code
-excludeSourceMenuItemTitle: Exclude this source from my feed
+excludeSourceMenuItemTitle: Hide this source from my feed
 noTrustedSourcesYet: No favoured sources, yet
-noExcludedSourcesYet: No disliked source yet
+noExcludedSourcesYet: No hidden sources yet
 noSourcesFoundTitle: No results
 noSourcesFoundInfo: We couldn't find any sources for your search
 sourceExcludedTooltipMessage: Source excluded Manage Sources
 manageSourcesTooltipMessage: Manage Sources
+allowSourceBackMenuItemTitle: Allow this source back on my feed
+sourceAllowedBackTooltipMessage: Source allowed back

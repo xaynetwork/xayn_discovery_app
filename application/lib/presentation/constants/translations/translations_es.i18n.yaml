@@ -144,7 +144,7 @@ feedSettingsScreenTabSources: Fuentes
 feedSettingsScreenSubtitleDislikedSources: Fuentes no gustadas
 settingsSectionHomeFeed: Configuración del feed
 paymentPromoCodeAndroidBottomSheetTitle: Tienes un código promocional?
-paymentPromoCodeAndroidBottomSheetBody: Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.
+paymentPromoCodeAndroidBottomSheetBody: Para ingresar el código de promoción, selecciona “Canjear código” como método de pago.
 paymentFailedBottomSheetTitle: Pago fallido
 paymentFailedBottomSheetBody: La Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.
 readerModeUnableToLoadTitle: No pudimos cargar el contenido
@@ -187,10 +187,12 @@ promoCodeErrorExpired: Este código de promoción caducó
 promoCodeSuccessResultTitle: Puedes probar Xayn gratis por %s días más
 promoCodeSuccessResultBody: Nos encantaría escuchar sus comentarios. Puede enviarnos una nota desde la configuración.
 promoCodeErrorAlreadyUsed: Ya usaste este código de promoción
-excludeSourceMenuItemTitle: Exclude this source from my feed
+excludeSourceMenuItemTitle: Ocultar esta fuente de mi feed
 noTrustedSourcesYet: No hay fuentes favoritas, todavía
-noExcludedSourcesYet: No disliked source yet
+noExcludedSourcesYet: No hay fuentes ocultas, todavía
 noSourcesFoundTitle: No hay resultados
 noSourcesFoundInfo: No pudimos encontrar ninguna fuente para su búsqueda.
-sourceExcludedTooltipMessage: Source excluded Manage Sources
-manageSourcesTooltipMessage: Manage Sources
+sourceExcludedTooltipMessage: Fuente excluida Fuentes Administradas
+manageSourcesTooltipMessage: Fuentes administradas
+allowSourceBackMenuItemTitle: Permitir esta fuente nuevamente en mi feed
+sourceAllowedBackTooltipMessage: Fuente permitida nuevamente
