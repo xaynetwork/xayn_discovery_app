@@ -13,12 +13,10 @@ final Map<Uri, String> cardOrigin = <Uri, String>{};
 final Map<UniqueRequest, Future<String>> _cache =
     <UniqueRequest, Future<String>>{};
 
-final Uri searchEndpointAlternate = Uri.parse(
-    'https://c8tuq9oow3.execute-api.eu-west-1.amazonaws.com/dev/v2/search_mlt');
-
 mixin RequestTunnelMixin {
   late final http.Client client = http.ConsoleClient();
   late final RequestLogger requestLogger = di.get();
+  late final Uri baseUri = Uri.parse(Env.searchApiBaseUrl);
   var _lhPageCount = 0;
 
   Future<void> startRequestTunneling(String url) async {
@@ -91,7 +89,8 @@ mixin RequestTunnelMixin {
 
           UniqueRequest Function(String) buildActualRequest(Request request) =>
               (String keywords) {
-                final mtlUri = searchEndpointAlternate.replace(
+                final mtlUri = baseUri.replace(
+                  path: '_mlt',
                   queryParameters: <String, dynamic>{
                     'like': keywords,
                     'search_in': 'title_excerpt',
@@ -103,13 +102,12 @@ mixin RequestTunnelMixin {
                     'page': params['page'],
                     'sort_by': params['sort_by'],
                     'from': params['from'],
+                    'topic': 'sport',
                   },
                 );
-                final headers = Map<String, String>.from(request.headers)
-                  ..remove('authorization');
+                final headers = Map<String, String>.from(request.headers);
 
                 headers['host'] = mtlUri.host;
-                headers['x-api-key'] = Env.searchApiSecretKeyAlternate;
 
                 return UniqueRequest.fromMap(
                   request.requestedUri.queryParameters,

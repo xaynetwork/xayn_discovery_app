@@ -224,6 +224,10 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   // TODO: implement requestLogger
   RequestLogger get requestLogger => throw UnimplementedError();
+
+  @override
+  // TODO: implement baseUri
+  Uri get baseUri => throw UnimplementedError();
 }
 
 @LazySingleton(as: AnalyticsService)
