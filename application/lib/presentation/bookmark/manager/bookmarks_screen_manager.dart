@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
@@ -37,8 +38,7 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     with
         UseCaseBlocHelper<BookmarksScreenState>,
         OverlayManagerMixin<BookmarksScreenState>,
-        CollectionManagerFlowMixin<BookmarksScreenState>
-    implements BookmarksScreenNavActions {
+        CollectionManagerFlowMixin<BookmarksScreenState> {
   final ListenBookmarksUseCase _listenBookmarksUseCase;
   final RemoveBookmarkUseCase _removeBookmarkUseCase;
   final BookmarkErrorsEnumMapper _bookmarkErrorsEnumMapper;
@@ -153,20 +153,17 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
         ),
       );
 
-  @override
   void onBackNavPressed() => _bookmarksScreenNavActions.onBackNavPressed();
 
-  @override
   void onBookmarkPressed({
-    required bool isPrimary,
-    required UniqueId bookmarkId,
-    FeedType? feedType,
-  }) =>
-      _bookmarksScreenNavActions.onBookmarkPressed(
-        bookmarkId: bookmarkId,
-        isPrimary: true,
-        feedType: feedType,
-      );
+    required Bookmark bookmark,
+  }) {
+    _bookmarksScreenNavActions.onBookmarkPressed(
+      bookmarkId: bookmark.documentId,
+      isPrimary: true,
+      feedType: null,
+    );
+  }
 
   void checkIfNeedToShowOnboarding() async {
     const type = OnboardingType.bookmarksManage;
