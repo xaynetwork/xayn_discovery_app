@@ -101,7 +101,7 @@ mixin RequestTunnelMixin {
                     'countries': params['countries'],
                     'page': params['page'],
                     'sort_by': params['sort_by'],
-                    'from': params['from'],
+                    'from': '3d',
                   },
                 );
                 final headers = Map<String, String>.from(request.headers);
