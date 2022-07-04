@@ -113,7 +113,7 @@ mixin RequestTunnelMixin {
                         : params['countries'],
                     'page': params['page'],
                     'sort_by': params['sort_by'],
-                    'from': isNormalSearch ? '30d' : '3d',
+                    'from': '30d',
                   },
                 );
 
