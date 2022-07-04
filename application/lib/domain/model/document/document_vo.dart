@@ -9,7 +9,7 @@ class DocumentVO implements Comparable {
   final String? excerpt;
   final String topic;
   final String country;
-  final String language;
+  final String? language;
   final DateTime publishedDate;
   final int rank;
   final Uri uri;

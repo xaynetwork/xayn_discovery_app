@@ -70,11 +70,9 @@ class UniqueRequest {
   final http.Request request;
   final String lang;
   final List<String> countries;
-  final int toRank;
   final int pageSize;
   final int page;
   final String sortBy;
-  final String from;
   final String keywords;
   final int _hashCode;
 
@@ -94,11 +92,9 @@ class UniqueRequest {
     required this.request,
   })  : lang = data['lang']!,
         countries = data['countries']!.split(','),
-        toRank = int.parse(data['to_rank']!),
         pageSize = int.parse(data['page_size']!),
         page = int.parse(data['page']!),
         sortBy = data['sort_by']!,
-        from = data['from']!,
         _hashCode = Object.hashAll([
           keywords,
           data['lang'],

@@ -45,10 +45,10 @@ mixin RequestTunnelMixin {
         final isPersonalizedSearch = q.contains(') OR (');
 
         if (isPersonalizedSearch) {
-          return _fetchPersonalized(uri)(request);
+          return _fetchPersonalized(uri, false)(request);
         }
 
-        return _fetchQuery(uri)(request);
+        return _fetchPersonalized(uri, true)(request);
       };
 
   Future<String> Function(Request) _fetchLatestHeadlines(Uri uri) =>
@@ -78,13 +78,16 @@ mixin RequestTunnelMixin {
         );
       };
 
-  Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
+  Future<String> Function(Request) _fetchPersonalized(
+          Uri uri, bool isNormalSearch) =>
       (Request request) async {
         try {
           const decoder = JsonDecoder();
           const encoder = JsonEncoder();
           final groupMatcher = RegExp(r'\(([^\)]+)\)');
-          final keywordGroups = request.url.queryParameters['q']!;
+          final keywordGroups = isNormalSearch
+              ? '(${request.url.queryParameters['q']})'
+              : request.url.queryParameters['q']!;
           final params = Map<String, String>.from(request.url.queryParameters);
 
           UniqueRequest Function(String) buildActualRequest(Request request) =>
@@ -95,15 +98,25 @@ mixin RequestTunnelMixin {
                     'like': keywords,
                     'search_in': 'title_excerpt',
                     'min_term_freq': '1',
-                    'page_size': '34',
+                    'page_size': isNormalSearch ? '100' : '34',
                     'to_rank': params['to_rank'],
-                    'lang': params['lang'],
-                    'countries': params['countries'],
+                    'lang': isNormalSearch
+                        ? <String>{params['lang']!.toLowerCase(), 'en'}
+                            .join(',')
+                        : params['lang'],
+                    'countries': isNormalSearch
+                        ? <String>{
+                            params['countries']!.toUpperCase(),
+                            'US',
+                            'GB'
+                          }.join(',')
+                        : params['countries'],
                     'page': params['page'],
                     'sort_by': params['sort_by'],
-                    'from': '3d',
+                    'from': isNormalSearch ? '30d' : '3d',
                   },
                 );
+
                 final headers = Map<String, String>.from(request.headers);
 
                 headers['host'] = mtlUri.host;
@@ -210,7 +223,7 @@ mixin RequestTunnelMixin {
         return '';
       };
 
-  Future<String> Function(Request) _fetchQuery(Uri uri) => (Request request) {
+  /*Future<String> Function(Request) _fetchQuery(Uri uri) => (Request request) {
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
 
@@ -223,7 +236,7 @@ mixin RequestTunnelMixin {
           queryParameters['q'] ?? 'no query',
           request.url.path,
         );
-      };
+      };*/
 
   http.Request _buildActualRequest(
       Request request, Uri uri, Map<String, dynamic> queryParameters) {
