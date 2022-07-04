@@ -187,10 +187,12 @@ promoCodeErrorExpired: Deze promotiecode is verlopen
 promoCodeSuccessResultTitle: Je kan Xayn nog gedurende %s dagen gratis testen
 promoCodeSuccessResultBody: We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.
 promoCodeErrorAlreadyUsed: Je hebt deze promotiecode al gebruikt
-excludeSourceMenuItemTitle: Exclude this source from my feed
-noTrustedSourcesYet: No favoured sources, yet
-noExcludedSourcesYet: No disliked source yet
+excludeSourceMenuItemTitle: Verberg deze bron in mijn feed
+noTrustedSourcesYet: Nog geen favoriete bronnen
+noExcludedSourcesYet: Nog geen verborgen bronnen
 noSourcesFoundTitle: Geen resultaten
 noSourcesFoundInfo: We konden geen bronnen vinden voor je zoekopdracht
 sourceExcludedTooltipMessage: Source excluded Manage Sources
 manageSourcesTooltipMessage: Manage Sources
+allowSourceBackMenuItemTitle: Allow this source back on my feed
+sourceAllowedBackTooltipMessage: Source allowed back
