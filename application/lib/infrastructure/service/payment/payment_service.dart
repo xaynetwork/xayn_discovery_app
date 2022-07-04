@@ -19,4 +19,6 @@ abstract class PaymentService {
   Future<void> presentCodeRedemptionSheet();
 
   Future<String?> get subscriptionManagementURL;
+
+  Future<void> setAppsFlyerID(String appsFlyerId);
 }

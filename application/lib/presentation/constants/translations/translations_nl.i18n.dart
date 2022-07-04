@@ -244,7 +244,40 @@ class TranslationsNl extends Translations {
       """Deze bron wordt toegevoegd aan de lijst""";
   String get sourcePendingRemoval =>
       """Deze bron is zojuist van de lijst verwijderd""";
-  String get settingsGiveFeedback => """Give feedback""";
+  String get settingsGiveFeedback => """Geef feedback""";
+  String get subscriptionExpiresText => """Het abonnement loopt af op: %s""";
+  String get promoCodeEnterTitle => """Voer je promotiecode in""";
+  String get promoCodeActionApplyCode => """Code toepassen""";
+  String get promoCodeErrorCodeNotFound =>
+      """Deze promotiecode kon niet worden teruggevonden""";
+  String get promoCodeErrorExpired => """Deze promotiecode is verlopen""";
+  String get promoCodeSuccessResultTitle =>
+      """Je kan Xayn nog gedurende %s dagen gratis testen""";
+  String get promoCodeSuccessResultBody =>
+      """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""";
+  String get promoCodeErrorAlreadyUsed =>
+<<<<<<< HEAD
+      """Je hebt deze promotiecode al gebruikt""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No favoured sources, yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """Geen resultaten""";
+  String get noSourcesFoundInfo =>
+      """We konden geen bronnen vinden voor je zoekopdracht""";
+  String get sourceExcludedTooltipMessage =>
+      """Source excluded Manage Sources""";
+  String get manageSourcesTooltipMessage => """Manage Sources""";
+=======
+      """This promo code was already used""";
+  String get excludeSourceMenuItemTitle =>
+      """Exclude this source from my feed""";
+  String get noTrustedSourcesYet => """No trusted source yet""";
+  String get noExcludedSourcesYet => """No disliked source yet""";
+  String get noSourcesFoundTitle => """No results""";
+  String get noSourcesFoundInfo =>
+      """We couldn't find any sources for your search""";
+>>>>>>> 2ecf8e21 (String updates)
 }
 
 class PaymentFlowErrorTranslationsNl extends PaymentFlowErrorTranslations {
@@ -488,5 +521,35 @@ Map<String, String> get translationsNlMap => {
           """Deze bron wordt toegevoegd aan de lijst""",
       """sourcePendingRemoval""":
           """Deze bron is zojuist van de lijst verwijderd""",
-      """settingsGiveFeedback""": """Give feedback""",
+      """settingsGiveFeedback""": """Geef feedback""",
+      """subscriptionExpiresText""": """Het abonnement loopt af op: %s""",
+      """promoCodeEnterTitle""": """Voer je promotiecode in""",
+      """promoCodeActionApplyCode""": """Code toepassen""",
+      """promoCodeErrorCodeNotFound""":
+          """Deze promotiecode kon niet worden teruggevonden""",
+      """promoCodeErrorExpired""": """Deze promotiecode is verlopen""",
+      """promoCodeSuccessResultTitle""":
+          """Je kan Xayn nog gedurende %s dagen gratis testen""",
+      """promoCodeSuccessResultBody""":
+          """We horen graag jouw feedback. Je kunt ons op elk moment een bericht sturen via de instellingen.""",
+<<<<<<< HEAD
+      """promoCodeErrorAlreadyUsed""":
+          """Je hebt deze promotiecode al gebruikt""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No favoured sources, yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """Geen resultaten""",
+      """noSourcesFoundInfo""":
+          """We konden geen bronnen vinden voor je zoekopdracht""",
+      """sourceExcludedTooltipMessage""": """Source excluded Manage Sources""",
+      """manageSourcesTooltipMessage""": """Manage Sources""",
+=======
+      """promoCodeErrorAlreadyUsed""": """This promo code was already used""",
+      """excludeSourceMenuItemTitle""": """Exclude this source from my feed""",
+      """noTrustedSourcesYet""": """No trusted source yet""",
+      """noExcludedSourcesYet""": """No disliked source yet""",
+      """noSourcesFoundTitle""": """No results""",
+      """noSourcesFoundInfo""":
+          """We couldn't find any sources for your search""",
+>>>>>>> 2ecf8e21 (String updates)
     };

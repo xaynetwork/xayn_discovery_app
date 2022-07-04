@@ -1,4 +1,6 @@
 import 'package:injectable/injectable.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.dart';
@@ -18,12 +20,21 @@ class ListenSubscriptionStatusUseCase
     this._repository,
   );
 
+  PurchaserInfo? purchaserInfo;
+
   @override
   Stream<SubscriptionStatus> transaction(None param) {
-    return _paymentService.purchaserInfoStream.map((purchaserInfo) {
-      final willRenew = purchaserInfo.willRenew;
-      final expirationDate = purchaserInfo.expirationDate;
-      final purchaseDate = purchaserInfo.purchaseDate;
+    return MergeStream(
+            [_paymentService.purchaserInfoStream, _repository.watch()])
+        .map((object) {
+      if (object is PurchaserInfo) {
+        purchaserInfo = object;
+      }
+
+      final willRenew = purchaserInfo?.willRenew ?? false;
+      final expirationDate = purchaserInfo?.expirationDate;
+      final purchaseDate = purchaserInfo?.purchaseDate;
+
       return SubscriptionStatus(
         willRenew: willRenew,
         expirationDate: expirationDate,

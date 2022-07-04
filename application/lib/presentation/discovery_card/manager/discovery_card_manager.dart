@@ -6,7 +6,6 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
-import 'package:xayn_discovery_app/domain/model/document_filter/document_filter.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
@@ -21,7 +20,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bo
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/document_filter/crud_document_filter_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/gibberish_detection_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
@@ -76,7 +74,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final CrudExplicitDocumentFeedbackUseCase
       _crudExplicitDocumentFeedbackUseCase;
-  final CrudDocumentFilterUseCase _crudDocumentFilterUseCase;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final RatingDialogManager _ratingDialogManager;
   final AppManager _appManager;
@@ -150,7 +147,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._sendAnalyticsUseCase,
     this._crudExplicitDocumentFeedbackUseCase,
     this._hapticFeedbackMediumUseCase,
-    this._crudDocumentFilterUseCase,
     this._ratingDialogManager,
     this._appManager,
     this._saveUserInteractionUseCase,
@@ -181,19 +177,12 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required UserReaction userReaction,
     required FeedType? feedType,
   }) async {
-    final url = document.resource.sourceDomain.value;
-    final filter = DocumentFilter.fromSource(url);
-    final op = DbCrudIn.get(filter.id);
-    final res = await _crudDocumentFilterUseCase.singleOutput(op);
-
-    if (res.mapOrNull(single: (s) => s.value) == null) {
-      showOverlay(
-        OverlayData.tooltipDocumentFilter(onTap: () {
-          showOverlay(OverlayData.bottomSheetDocumentFilter(document));
-        }),
-        when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
-      );
-    }
+    showOverlay(
+      OverlayData.tooltipDocumentFilter(onTap: () {
+        showOverlay(OverlayData.bottomSheetDocumentFilter(document));
+      }),
+      when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
+    );
 
     _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.likeOrDislikedArticle);

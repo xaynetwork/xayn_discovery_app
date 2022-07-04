@@ -14,6 +14,7 @@ class FakePaymentService implements PaymentService {
   final StreamController<PurchaserInfo> _controller =
       StreamController<PurchaserInfo>.broadcast();
 
+  bool calledPresentCodeRedemptionSheet = false;
   @override
   Stream<PurchaserInfo> get purchaserInfoStream => _controller.stream;
 
@@ -66,9 +67,15 @@ class FakePaymentService implements PaymentService {
           withActiveSubscription: _hasMockActiveSubscription));
 
   @override
-  Future<void> presentCodeRedemptionSheet() => Future.value();
+  Future<void> presentCodeRedemptionSheet() {
+    calledPresentCodeRedemptionSheet = true;
+    return Future.value();
+  }
 
   @override
   Future<String?> get subscriptionManagementURL =>
       Future.value(Constants.xaynUrl);
+
+  @override
+  Future<void> setAppsFlyerID(String appsFlyerId) => Future.value();
 }

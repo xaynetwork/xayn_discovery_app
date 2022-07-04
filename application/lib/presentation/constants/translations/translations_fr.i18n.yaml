@@ -178,4 +178,19 @@ btnAdd: Ajouter une source d'actualités
 excludedSourcesDescription: Sources exclues n'apparaîtront plus dans votre flux.
 sourcePendingAddition: Cette source sera ajoutée à la liste
 sourcePendingRemoval: Cette source vient d'être supprimée de la liste
-settingsGiveFeedback: Give feedback
+settingsGiveFeedback: Donner votre avis
+subscriptionExpiresText: 'L''abonnement expire le : %s'
+promoCodeEnterTitle: Entrez votre code promo
+promoCodeActionApplyCode: Appliquer
+promoCodeErrorCodeNotFound: Ce code promo est introuvable
+promoCodeErrorExpired: Ce code promotionnel a expiré
+promoCodeSuccessResultTitle: Vous pouvez tester Xayn gratuitement pendant %s jours de plus
+promoCodeSuccessResultBody: Nous aimerions entendre vos commentaires. Vous pouvez nous envoyer une note dans les paramètres.
+promoCodeErrorAlreadyUsed: Vous avez déjà utilisé ce code promo
+excludeSourceMenuItemTitle: Exclude this source from my feed
+noTrustedSourcesYet: No favoured sources, yet
+noExcludedSourcesYet: No disliked source yet
+noSourcesFoundTitle: Aucun résultat
+noSourcesFoundInfo: Nous n'avons trouvé aucune source pour votre recherche
+sourceExcludedTooltipMessage: Source excluded Manage Sources
+manageSourcesTooltipMessage: Manage Sources
