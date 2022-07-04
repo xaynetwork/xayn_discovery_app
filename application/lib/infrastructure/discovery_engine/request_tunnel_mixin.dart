@@ -102,7 +102,6 @@ mixin RequestTunnelMixin {
                     'page': params['page'],
                     'sort_by': params['sort_by'],
                     'from': params['from'],
-                    'topic': 'sport',
                   },
                 );
                 final headers = Map<String, String>.from(request.headers);
