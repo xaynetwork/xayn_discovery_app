@@ -68,7 +68,12 @@ class SourcesManager extends Cubit<SourcesState>
   );
   late final StreamController<String> _onSearchInput =
       StreamController<String>();
-  late final StreamSubscription<String> _searchInputSubscription;
+  late final StreamSubscription<String> _searchInputSubscription =
+      _onSearchInput.stream
+          .debounceTime(EnvironmentHelper.kIsInTest
+              ? Duration.zero
+              : _kSearchInputDebounceTime)
+          .listen(_onSearchSources);
   String? latestSourcesSearchTerm;
 
   SourcesManager(
@@ -98,18 +103,6 @@ class SourcesManager extends Cubit<SourcesState>
       _onSearchInput.add(fuzzySearchTerm);
 
   void init() {
-    onSearchSources(String fuzzySearchTerm) {
-      super.getAvailableSourcesList(fuzzySearchTerm);
-
-      scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
-    }
-
-    _searchInputSubscription = _onSearchInput.stream
-        .debounceTime(EnvironmentHelper.kIsInTest
-            ? Duration.zero
-            : _kSearchInputDebounceTime)
-        .listen(onSearchSources);
-
     getExcludedSourcesList();
     getTrustedSourcesList();
   }
@@ -304,6 +297,12 @@ class SourcesManager extends Cubit<SourcesState>
         operation: sourceOperation,
       ),
     );
+  }
+
+  void _onSearchSources(String fuzzySearchTerm) {
+    super.getAvailableSourcesList(fuzzySearchTerm);
+
+    scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
   }
 
   static SourcesState Function(EngineEvent?) Function(SourcesState)
