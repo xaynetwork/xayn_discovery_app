@@ -102,7 +102,7 @@ class SourcesManager extends Cubit<SourcesState>
   void getAvailableSourcesList(String fuzzySearchTerm) =>
       _onSearchInput.add(fuzzySearchTerm);
 
-  void init() {
+  void _init() {
     getExcludedSourcesList();
     getTrustedSourcesList();
   }
