@@ -19,12 +19,13 @@ class OnboardingManager extends Cubit<OnboardingState>
           OnboardingState(onboardingType: onboardingType),
         );
 
-  void onCancelPressed() async {
+  void onCancelPressed({required Duration screenDuration}) async {
     if (state.onboardingType == null) return;
 
     _sendAnalyticsUseCase(
       BottomSheetDismissedEvent(
         bottomSheetView: state.onboardingType!.toBottomSheetView,
+        duration: screenDuration,
       ),
     );
   }

@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/screen_duration_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 
@@ -61,7 +62,10 @@ class _MoveBookmarkToCollection extends StatefulWidget {
 }
 
 class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
-    with BottomSheetBodyMixin, OverlayMixin<_MoveBookmarkToCollection> {
+    with
+        BottomSheetBodyMixin,
+        ScreenDurationMixin,
+        OverlayMixin<_MoveBookmarkToCollection> {
   late final MoveBookmarksToCollectionManager
       _moveBookmarksToCollectionManager = di.get();
   late final CollectionCardManagersCache _collectionCardManagersCache =
@@ -107,7 +111,9 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () {
-        _moveBookmarksToCollectionManager.onCancelPressed();
+        _moveBookmarksToCollectionManager.onCancelPressed(
+          screenDuration: getWidgetDuration,
+        );
         widget.onSystemPop?.call();
         closeBottomSheet(context);
       },

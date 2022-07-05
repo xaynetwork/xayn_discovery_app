@@ -9,6 +9,5 @@ mixin ScreenDurationMixin<T extends StatefulWidget> on State<T> {
     super.initState();
   }
 
-  Duration get getDurationFromWidgetInit =>
-      DateTime.now().difference(_startDateTime);
+  Duration get getWidgetDuration => DateTime.now().difference(_startDateTime);
 }

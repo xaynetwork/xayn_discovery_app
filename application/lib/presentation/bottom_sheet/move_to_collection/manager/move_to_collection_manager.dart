@@ -175,10 +175,12 @@ class MoveToCollectionManager extends Cubit<MoveToCollectionState>
     }
   }
 
-  void onCancelPressed() {
+  void onCancelPressed({required Duration screenDuration}) {
     _sendAnalyticsUseCase(
       BottomSheetDismissedEvent(
-          bottomSheetView: BottomSheetView.saveToCollection),
+        bottomSheetView: BottomSheetView.saveToCollection,
+        duration: screenDuration,
+      ),
     );
   }
 

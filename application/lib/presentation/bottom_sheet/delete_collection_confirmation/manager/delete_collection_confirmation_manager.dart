@@ -67,10 +67,12 @@ class DeleteCollectionConfirmationManager
     );
   }
 
-  void onCancelPressed() {
+  void onCancelPressed({required Duration screenDuration}) {
     _sendAnalyticsUseCase(
       BottomSheetDismissedEvent(
-          bottomSheetView: BottomSheetView.confirmDeletingCollection),
+        bottomSheetView: BottomSheetView.confirmDeletingCollection,
+        duration: screenDuration,
+      ),
     );
   }
 
