@@ -94,8 +94,6 @@ class SourcesManager extends Cubit<SourcesState>
     scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
   }
 
-  /// Trigger this manager to load both [Source] lists.
-  /// This method is typically invoked by a `Widget` when running `Widget.initState`.
   void _init() {
     getExcludedSourcesList();
     getTrustedSourcesList();

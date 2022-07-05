@@ -23,7 +23,7 @@ enum Feature {
 
   newExcludeSourceFlow(
     Owner.Carmine,
-    false,
+    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
     'Open menu when clicking card header icon',
   );
 
