@@ -30,15 +30,23 @@ class AdCardInjectionUseCase extends UseCase<AdCardInjectionData, Set<Card>> {
 
   @visibleForTesting
   Iterable<Card> toCards(Set<Document> documents) sync* {
-    final list = _buffer.toList(growable: false);
-
     for (final document in documents) {
       yield Card.document(document);
 
-      if (list.indexOf(document.documentId) % _skipEvery == 0) {
+      if (shouldShowAdAfter(document.documentId)) {
         yield Card.other(CardType.ad, document.documentId.uniqueId);
       }
     }
+  }
+
+  @visibleForTesting
+  bool shouldShowAdAfter(DocumentId documentId) {
+    final list = _buffer.toList(growable: false);
+    final index = list.indexOf(documentId);
+    final isFirstGroup = index == 0;
+    final isAtSkipLocation = index % _skipEvery == 0;
+
+    return !isFirstGroup && isAtSkipLocation;
   }
 }
 
