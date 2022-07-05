@@ -13,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -97,13 +98,17 @@ class SourcesManager extends Cubit<SourcesState>
       _onSearchInput.add(fuzzySearchTerm);
 
   void init() {
-    _searchInputSubscription = _onSearchInput.stream
-        .debounceTime(_kSearchInputDebounceTime)
-        .listen((it) {
-      super.getAvailableSourcesList(it);
+    onSearchSources(String fuzzySearchTerm) {
+      super.getAvailableSourcesList(fuzzySearchTerm);
 
-      scheduleComputeState(() => latestSourcesSearchTerm = it);
-    });
+      scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
+    }
+
+    _searchInputSubscription = _onSearchInput.stream
+        .debounceTime(EnvironmentHelper.kIsInTest
+            ? Duration.zero
+            : _kSearchInputDebounceTime)
+        .listen(onSearchSources);
 
     getExcludedSourcesList();
     getTrustedSourcesList();
