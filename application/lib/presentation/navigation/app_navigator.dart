@@ -67,8 +67,8 @@ class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
   void onBackNavPressed() => changeStack((stack) => stack.pop());
 
   @override
-  void onManageSourcesPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.sourceFeedSettings));
+  void onManageSourcesPressed() => changeStack((stack) => stack
+      .push(PageRegistry.sourceFeedSettings(openOnHiddenSourcesTab: true)));
 }
 
 @Injectable(as: BookmarksScreenNavActions)
@@ -115,7 +115,7 @@ class SettingsNavActionsImpl extends SettingsNavActions {
   @override
   void onSourcesOptionsPressed() => changeStack(
         (stack) => stack.push(
-          PageRegistry.sourceFeedSettings,
+          PageRegistry.sourceFeedSettings(),
         ),
       );
 }
