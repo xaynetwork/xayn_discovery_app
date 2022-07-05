@@ -86,24 +86,17 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
     initialData: none,
   );
   late SubscriptionStatus _subscriptionStatus;
-  List<ListItemModel> _items = [];
+  List<ListItemModel> _collectionItems = [];
   late final _contactItem =
       ListItemModel.contact(id: _uniqueIdHandler.generateUniqueId());
+  ListItemModel? _paymentItem;
   String? _useCaseError;
 
   void _init() {
     scheduleComputeState(() async {
       // read values
-      _items = (await _getAllCollectionsUseCase.singleOutput(none))
-          .collections
-          .map(
-            (e) => ListItemModel.collection(
-              id: e.id,
-              collection: e,
-            ),
-          )
-          .toList()
-        ..add(_contactItem);
+      _updateItemsWithNewCollections(
+          (await _getAllCollectionsUseCase.singleOutput(none)).collections);
 
       _subscriptionStatus =
           await _getSubscriptionStatusUseCase.singleOutput(none);
@@ -146,52 +139,37 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         }
 
         return PersonalAreaState.populated(
-          _items.toList(),
+          [
+            if (_paymentItem != null) _paymentItem!,
+            ..._collectionItems,
+            _contactItem,
+          ],
         );
       },
     );
   }
 
   void _updateItemsWithNewCollections(List<Collection> collections) {
-    final List<ListItemModel> newCollectionItems = collections
+    _collectionItems = collections
         .map(
           (e) => ListItemModel.collection(
             id: e.id,
             collection: e,
           ),
         )
-        .toList()
-      ..add(_contactItem);
-    _items.first.map(
-      payment: (_) => _items.replaceRange(1, _items.length, newCollectionItems),
-      collection: (_) => _items = newCollectionItems,
-      contact: (_) => _items = newCollectionItems,
-    );
+        .toList();
   }
 
   void _maybeUpdateTrialBannerToItems() {
     final trialEndDate = _subscriptionStatus.trialEndDate;
     if (!_featureManager.isPaymentEnabled || trialEndDate == null) return;
     if (_subscriptionStatus.isFreeTrialActive) {
-      _items.first.map(
-        collection: (_) => _items.insert(
-          0,
-          ListItemModel.payment(
-            id: _uniqueIdHandler.generateUniqueId(),
-            trialEndDate: trialEndDate,
-          ),
-        ),
-        payment: (data) => _items.first = data.copyWith(
-          trialEndDate: trialEndDate,
-        ),
-        contact: (data) => {},
+      _paymentItem = ListItemModel.payment(
+        id: _paymentItem?.id ?? _uniqueIdHandler.generateUniqueId(),
+        trialEndDate: trialEndDate,
       );
     } else {
-      _items.first.map(
-        payment: (_) => _items.removeAt(0),
-        collection: (item) => item,
-        contact: (data) => {},
-      );
+      _paymentItem = null;
     }
   }
 

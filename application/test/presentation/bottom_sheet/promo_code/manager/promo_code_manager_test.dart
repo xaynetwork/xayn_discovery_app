@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/manager/redeem_promo_code_manager.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/manager/redeem_promo_code_state.dart';
 
-import '../../../../test_utils/utils.dart';
 import '../../../../test_utils/widget_test_utils.dart';
 
 class StringRemoteConfigFetcher
@@ -25,8 +24,6 @@ class StringRemoteConfigFetcher
 }
 
 void main() {
-  late MockPaymentScreenNavActions navActions;
-
   setUp(() async {
     await setupWidgetTest();
   });

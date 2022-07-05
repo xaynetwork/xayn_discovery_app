@@ -10,6 +10,9 @@ hasProductTitle(matcher) => HasFeature<PurchasableProduct>(
 hasProductStatus(matcher) => HasFeature<PurchasableProduct>(
     matcher, 'PurchasableProduct', 'status', (object) => object.status);
 
+hasItems(matcher) =>
+    HasFeature<dynamic>(matcher, 'dynamic', 'items', (object) => object.items);
+
 withPurchasableProduct(matcher) => WithPurchasableProduct(matcher);
 
 class HasFeature<T> extends CustomMatcher {

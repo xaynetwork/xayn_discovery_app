@@ -10,14 +10,14 @@ class ListItemModel with _$ListItemModel {
   const factory ListItemModel.collection({
     required UniqueId id,
     required Collection collection,
-  }) = _ListItemModelCollection;
+  }) = ListItemModelCollection;
 
   const factory ListItemModel.payment({
     required UniqueId id,
     required DateTime trialEndDate,
-  }) = _ListItemModelPayment;
+  }) = ListItemModelPayment;
 
   const factory ListItemModel.contact({
     required UniqueId id,
-  }) = _ListItemModelContact;
+  }) = ListItemModelContact;
 }

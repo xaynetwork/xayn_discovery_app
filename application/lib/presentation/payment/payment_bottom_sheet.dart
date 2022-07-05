@@ -18,26 +18,27 @@ class PaymentBottomSheet extends BottomSheetBase {
     required VoidCallback? onRedeemPressed,
   }) : super(
           key: key,
-          body: _Payment(onClosePressed, onRedeemPressed),
+          body: PaymentBottomSheetBody(onClosePressed, onRedeemPressed),
           onSystemPop: onClosePressed,
         );
 }
 
-class _Payment extends StatefulWidget {
+class PaymentBottomSheetBody extends StatefulWidget {
   final VoidCallback onClosePressed;
   final VoidCallback? onRedeemPressed;
 
-  const _Payment(
+  const PaymentBottomSheetBody(
     this.onClosePressed,
-    this.onRedeemPressed,
-  );
+    this.onRedeemPressed, {
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<_Payment> createState() => _PaymentState();
+  State<PaymentBottomSheetBody> createState() => _PaymentBottomSheetBodyState();
 }
 
-class _PaymentState extends State<_Payment>
-    with BottomSheetBodyMixin, OverlayMixin<_Payment> {
+class _PaymentBottomSheetBodyState extends State<PaymentBottomSheetBody>
+    with BottomSheetBodyMixin, OverlayMixin<PaymentBottomSheetBody> {
   late final manager = di.get<BottomSheetPaymentScreenManager>()
     ..dismissBottomSheet = () {
       closeBottomSheet(context);
