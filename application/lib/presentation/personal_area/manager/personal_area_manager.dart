@@ -54,7 +54,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final PersonalAreaNavActions _navActions;
-  final DateTimeHandler _dateTimeHandler;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final FeatureManager _featureManager;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
@@ -68,7 +67,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
     this._listenCollectionsUseCase,
     this._hapticFeedbackMediumUseCase,
     this._navActions,
-    this._dateTimeHandler,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
@@ -139,7 +137,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
           );
         }
 
-        final newTimestamp = _dateTimeHandler.getDateTimeNow();
         if (usecaseOut != null) {
           _updateItemsWithNewCollections(usecaseOut.collections);
         }
@@ -149,8 +146,7 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         }
 
         return PersonalAreaState.populated(
-          _items,
-          newTimestamp,
+          _items.toList(),
         );
       },
     );
