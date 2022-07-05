@@ -87,12 +87,10 @@ class _DiscoveryCardStaticState
           onOpenHeaderMenu: () {
             widget.onTtsData?.call(TtsData.disabled());
 
-            final isSourceExcluded = discoveryCardManager
-                .isDocumentSourceExcluded(document: widget.document);
-
             toggleOverlay(
               (_) => DiscoveryCardHeaderMenu(
-                items: buildDiscoveryCardHeaderMenuItems(isSourceExcluded),
+                itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                source: Source.fromJson(widget.document.resource.url.host),
                 onClose: removeOverlay,
               ),
             );
@@ -210,36 +208,36 @@ class _DiscoveryCardStaticState
     );
   }
 
-  List<DiscoveryCardHeaderMenuItem> buildDiscoveryCardHeaderMenuItems(
-    bool isSourceExcluded,
-  ) =>
-      [
-        DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
-          onTap: () {
-            removeOverlay();
-            discoveryCardManager.openWebResourceUrl(
-              widget.document,
-              CurrentView.story,
-              widget.feedType,
-            );
-          },
-        ),
-        isSourceExcluded
-            ? DiscoveryCardHeaderMenuHelper.buildIncludeSourceBackItem(
-                onTap: () {
-                  removeOverlay();
-                  discoveryCardManager.onIncludeSource(
-                    document: widget.document,
-                  );
-                },
-              )
-            : DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
-                onTap: () {
-                  removeOverlay();
-                  discoveryCardManager.onExcludeSource(
-                    document: widget.document,
-                  );
-                },
-              ),
-      ];
+  Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
+      get _buildDiscoveryCardHeaderMenuItems => {
+            DiscoveryCardHeaderMenuItemEnum.openInBrowser:
+                DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.openWebResourceUrl(
+                  widget.document,
+                  CurrentView.story,
+                  widget.feedType,
+                );
+              },
+            ),
+            DiscoveryCardHeaderMenuItemEnum.excludeSource:
+                DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.onExcludeSource(
+                  document: widget.document,
+                );
+              },
+            ),
+            DiscoveryCardHeaderMenuItemEnum.includeSource:
+                DiscoveryCardHeaderMenuHelper.buildIncludeSourceBackItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.onIncludeSource(
+                  document: widget.document,
+                );
+              },
+            ),
+          };
 }

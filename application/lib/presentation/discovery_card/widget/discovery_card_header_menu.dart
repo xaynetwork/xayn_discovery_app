@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+
+import '../../feed_settings/page/source/manager/sources_state.dart';
+
+enum DiscoveryCardHeaderMenuItemEnum {
+  openInBrowser,
+  excludeSource,
+  includeSource,
+}
 
 class DiscoveryCardHeaderMenu extends StatelessWidget {
-  const DiscoveryCardHeaderMenu({
+  DiscoveryCardHeaderMenu({
     Key? key,
-    required this.items,
+    required this.itemsMap,
+    required this.source,
     this.onClose,
   }) : super(key: key);
 
   final VoidCallback? onClose;
-  final List<DiscoveryCardHeaderMenuItem> items;
+  final Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
+      itemsMap;
+  final Source source;
+
+  late final SourcesManager _sourcesManager = di.get();
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +37,47 @@ class DiscoveryCardHeaderMenu extends StatelessWidget {
       width: R.dimen.screenWidth - R.dimen.unit8,
       borderRadius: R.styles.roundBorder3,
       onClose: onClose,
-      child: _buildMenuBody(items),
+      child: _buildMenuBody(itemsMap),
     );
   }
 
-  Widget _buildMenuBody(List<DiscoveryCardHeaderMenuItem> items) =>
-      ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        padding: EdgeInsets.symmetric(
-            vertical: R.dimen.unit3, horizontal: R.dimen.unit3),
-        itemBuilder: (_, i) {
-          final menuItem = items.elementAt(i);
-          if (i == items.length - 1) {
-            return _buildRow(menuItem);
-          }
-          return _buildRowWithBottomPadding(
-            _buildRow(menuItem),
+  Widget _buildMenuBody(
+          Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
+              items) =>
+      BlocBuilder<SourcesManager, SourcesState>(
+        bloc: _sourcesManager,
+        builder: (context, state) {
+          final itemsList = _buildItemsList(state);
+          return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(
+                vertical: R.dimen.unit3, horizontal: R.dimen.unit3),
+            itemBuilder: (_, i) {
+              final menuItem = itemsList.elementAt(i);
+              if (i == itemsList.length - 1) {
+                return _buildRow(menuItem);
+              }
+              return _buildRowWithBottomPadding(
+                _buildRow(menuItem),
+              );
+            },
+            itemCount: itemsList.length,
           );
         },
-        itemCount: items.length,
       );
+
+  List<DiscoveryCardHeaderMenuItem> _buildItemsList(SourcesState state) {
+    final itemsList = [
+      itemsMap[DiscoveryCardHeaderMenuItemEnum.openInBrowser]!
+    ];
+    if (state.excludedSources.contains(source)) {
+      itemsList.add(itemsMap[DiscoveryCardHeaderMenuItemEnum.includeSource]!);
+    } else {
+      itemsList.add(itemsMap[DiscoveryCardHeaderMenuItemEnum.excludeSource]!);
+    }
+    return itemsList;
+  }
 
   Widget _buildRow(DiscoveryCardHeaderMenuItem item) => InkWell(
         onTap: item.onTap,
