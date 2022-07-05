@@ -31,7 +31,7 @@ class SourcesScreen extends StatefulWidget {
 }
 
 class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
-  late final SourcesManager manager = di.get();
+  late final SourcesManager manager = di.get()..init();
   int _selectedTabIndex = tabsMap[SourcesScreenTabs.favoured]!;
 
   Error get indexError => ArgumentError.value(
