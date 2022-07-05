@@ -61,11 +61,12 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
         widget.onTtsData?.call(TtsData.disabled());
 
         toggleOverlay(
-          (_) => DiscoveryCardHeaderMenu(
+          builder: (_) => DiscoveryCardHeaderMenu(
             itemsMap: _buildDiscoveryCardHeaderMenuItems,
             source: Source.fromJson(widget.document.resource.url.host),
             onClose: removeOverlay,
           ),
+          useRootOverlay: true,
         );
       },
       onProviderSectionTap: () {
