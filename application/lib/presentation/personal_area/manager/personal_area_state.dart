@@ -12,24 +12,19 @@ class PersonalAreaState with _$PersonalAreaState {
     /// List of collections
     required List<ListItemModel> items,
 
-    /// Timestamp of update time (for making sure that state is emitted)
-    required DateTime timestamp,
-
     /// Error Message
     String? errorMsg,
   }) = _PersonalAreaState;
 
-  factory PersonalAreaState.initial({DateTime? timestamp}) => PersonalAreaState(
-        items: const [],
-        timestamp: timestamp ?? DateTime.now(),
+  factory PersonalAreaState.initial({DateTime? timestamp}) =>
+      const PersonalAreaState(
+        items: [],
       );
 
   factory PersonalAreaState.populated(
     List<ListItemModel> items,
-    DateTime timestamp,
   ) =>
       PersonalAreaState(
         items: items,
-        timestamp: timestamp,
       );
 }
