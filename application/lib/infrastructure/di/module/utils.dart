@@ -18,7 +18,7 @@ abstract class UtilsModule {
           appName: '',
           buildNumber: '',
           packageName: '',
-          version: '',
+          version: '3.45.0',
           buildSignature: '',
         ),
       );

@@ -16,5 +16,6 @@ class RedeemPromoCodeState with _$RedeemPromoCodeState {
   const factory RedeemPromoCodeState.error(RedeemPromoCodeError error) =
       RedeemPromoCodeStateError;
 
-  const factory RedeemPromoCodeState.successful(PromoCode code) = _Sucessful;
+  const factory RedeemPromoCodeState.successful(PromoCode code) =
+      RedeemPromoCodeStateSuccess;
 }
