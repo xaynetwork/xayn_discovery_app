@@ -94,7 +94,8 @@ class _EditReaderModeSettingsMenuState
               R.dimen.unit4_25,
           end: R.dimen.unit2,
           width: R.dimen.unit22,
-          onClose: widget.onCloseMenu,
+          onTapOutside: widget.onCloseMenu,
+          onPop: widget.onCloseMenu,
           errorMessage: state.error != null
               ? R.strings.readerModeSettingsErrorChangesNotApplied
               : null,

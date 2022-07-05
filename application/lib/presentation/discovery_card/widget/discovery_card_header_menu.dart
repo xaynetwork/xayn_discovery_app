@@ -36,7 +36,9 @@ class DiscoveryCardHeaderMenu extends StatelessWidget {
       start: R.dimen.unit4,
       width: R.dimen.screenWidth - R.dimen.unit8,
       borderRadius: R.styles.roundBorder3,
-      onClose: onClose,
+      onDragOutside: onClose,
+      onPop: onClose,
+      onTapOutside: onClose,
       child: _buildMenuBody(itemsMap),
     );
   }
