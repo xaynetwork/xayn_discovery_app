@@ -27,7 +27,7 @@ class DiscoveryCardHeaderMenu extends StatelessWidget {
       itemsMap;
   final Source source;
 
-  late final SourcesManager _sourcesManager = di.get();
+  late final SourcesManager _sourcesManager = di.get()..init();
 
   @override
   Widget build(BuildContext context) {

@@ -68,9 +68,7 @@ class SourcesManager extends Cubit<SourcesState>
     this._sourcesScreenNavActions,
     this.engineEventsUseCase,
     this.sourcesPendingOperations,
-  ) : super(const SourcesState()) {
-    _init();
-  }
+  ) : super(const SourcesState());
 
   @override
   void onDismissSourcesSelection() =>
@@ -94,7 +92,9 @@ class SourcesManager extends Cubit<SourcesState>
     scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
   }
 
-  void _init() {
+  /// Trigger this manager to load both [Source] lists.
+  /// This method is typically invoked by a `Widget` when running `Widget.initState`
+  void init() {
     getExcludedSourcesList();
     getTrustedSourcesList();
   }
