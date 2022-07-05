@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -45,7 +46,7 @@ class SurveyCardInjectionUseCase
   Iterable<Card> toCards(Set<Document> documents) sync* {
     for (final document in documents) {
       if (document == nextDocumentSibling) {
-        yield const Card.other(CardType.survey);
+        yield Card.other(CardType.survey, document.documentId.uniqueId);
       }
 
       yield Card.document(document);

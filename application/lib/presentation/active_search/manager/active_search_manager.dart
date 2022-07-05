@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/searc
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_next_batch_query_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_query_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/ad_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -77,6 +78,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
     HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
     HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
     SurveyCardInjectionUseCase customCardInjectionUseCase,
+    AdCardInjectionUseCase adCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -95,6 +97,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           customCardInjectionUseCase,
+          adCardInjectionUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
