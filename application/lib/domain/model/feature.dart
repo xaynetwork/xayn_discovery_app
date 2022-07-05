@@ -17,10 +17,15 @@ enum Feature {
       Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
       'Detects non readable text in Articles.'),
-  altPromoCode(
-      Owner.Simon,
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-      'PromoCodes are handled inApp');
+
+  ///TODO remove flag
+  altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
+
+  newExcludeSourceFlow(
+    Owner.Carmine,
+    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+    'Open menu when clicking card header icon',
+  );
 
   final Owner owner;
   final String? description;

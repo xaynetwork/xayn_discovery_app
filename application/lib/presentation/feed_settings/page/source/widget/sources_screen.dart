@@ -11,16 +11,28 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
+enum SourcesScreenTabs {
+  favoured,
+  hidden,
+}
+
+const Map<SourcesScreenTabs, int> tabsMap = {
+  SourcesScreenTabs.favoured: 0,
+  SourcesScreenTabs.hidden: 1,
+};
+
 class SourcesScreen extends StatefulWidget {
-  const SourcesScreen({Key? key}) : super(key: key);
+  final bool openOnHiddenSourcesTab;
+  const SourcesScreen({Key? key, this.openOnHiddenSourcesTab = false})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SourcesScreenState();
 }
 
 class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
-  late final SourcesManager manager = di.get()..init();
-  int _selectedTabIndex = 0;
+  late final SourcesManager manager = di.get();
+  int _selectedTabIndex = tabsMap[SourcesScreenTabs.favoured]!;
 
   Error get indexError => ArgumentError.value(
         _selectedTabIndex,
@@ -58,6 +70,10 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
     final body = Builder(
       builder: (context) {
         final tabController = DefaultTabController.of(context);
+
+        if (widget.openOnHiddenSourcesTab) {
+          tabController?.animateTo(tabsMap[SourcesScreenTabs.hidden]!);
+        }
 
         tabController?.addListener(
             () => setState(() => _selectedTabIndex = tabController.index));

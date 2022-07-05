@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -9,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -34,8 +36,8 @@ class DiscoveryFeedCard extends DiscoveryCardBase {
   State<StatefulWidget> createState() => _DiscoveryFeedCardState();
 }
 
-class _DiscoveryFeedCardState
-    extends DiscoveryCardBaseState<DiscoveryFeedCard> {
+class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
+    with OverlayStateMixin {
   @override
   Widget buildFromState(
       BuildContext context, DiscoveryCardState state, Widget image) {
@@ -55,7 +57,18 @@ class _DiscoveryFeedCardState
       isInteractionEnabled: widget.isPrimary,
       onLikePressed: () => onFeedbackPressed(UserReaction.positive),
       onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-      onOpenUrl: () {
+      onOpenHeaderMenu: () {
+        widget.onTtsData?.call(TtsData.disabled());
+
+        toggleOverlay(
+          (_) => DiscoveryCardHeaderMenu(
+            itemsMap: _buildDiscoveryCardHeaderMenuItems,
+            source: Source.fromJson(widget.document.resource.url.host),
+            onClose: removeOverlay,
+          ),
+        );
+      },
+      onProviderSectionTap: () {
         widget.onTtsData?.call(TtsData.disabled());
 
         discoveryCardManager.openWebResourceUrl(
@@ -90,4 +103,37 @@ class _DiscoveryFeedCardState
   @override
   Widget buildImage(Color shadowColor) =>
       super.buildImage(R.colors.swipeCardBackgroundHome);
+
+  Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
+      get _buildDiscoveryCardHeaderMenuItems => {
+            DiscoveryCardHeaderMenuItemEnum.openInBrowser:
+                DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.openWebResourceUrl(
+                  widget.document,
+                  CurrentView.story,
+                  widget.feedType,
+                );
+              },
+            ),
+            DiscoveryCardHeaderMenuItemEnum.excludeSource:
+                DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.onExcludeSource(
+                  document: widget.document,
+                );
+              },
+            ),
+            DiscoveryCardHeaderMenuItemEnum.includeSource:
+                DiscoveryCardHeaderMenuHelper.buildIncludeSourceBackItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.onIncludeSource(
+                  document: widget.document,
+                );
+              },
+            ),
+          };
 }
