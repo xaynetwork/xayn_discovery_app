@@ -315,11 +315,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     );
   }
 
-  bool isDocumentSourceExcluded({required Document document}) {
-    final source = Source.fromJson(document.resource.url.host);
-    return _sourcesManager.isSourceExcluded(source);
-  }
-
   @override
   Future<DiscoveryCardState?> computeState() async => fold4(
         _updateUri,

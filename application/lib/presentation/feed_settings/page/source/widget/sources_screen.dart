@@ -19,7 +19,7 @@ class SourcesScreen extends StatefulWidget {
 }
 
 class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
-  late final SourcesManager manager = di.get()..init();
+  late final SourcesManager manager = di.get();
   int _selectedTabIndex = 0;
 
   Error get indexError => ArgumentError.value(
