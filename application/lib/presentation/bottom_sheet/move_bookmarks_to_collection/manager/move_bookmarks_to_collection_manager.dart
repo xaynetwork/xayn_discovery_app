@@ -84,10 +84,12 @@ class MoveBookmarksToCollectionManager
     );
   }
 
-  void onCancelPressed() {
+  void onCancelPressed({required Duration screenDuration}) {
     _sendAnalyticsUseCase(
       BottomSheetDismissedEvent(
-          bottomSheetView: BottomSheetView.moveMultipleBookmarksToCollection),
+        bottomSheetView: BottomSheetView.moveMultipleBookmarksToCollection,
+        duration: screenDuration,
+      ),
     );
   }
 

@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/screen_duration_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 typedef OnApplyPressed = Function(Collection)?;
@@ -55,6 +56,7 @@ class _CreateOrRenameCollection extends StatefulWidget {
 class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
     with
         BottomSheetBodyMixin,
+        ScreenDurationMixin,
         AnimationPlayerChildBuilderStateMixin<_CreateOrRenameCollection> {
   late final CreateOrRenameCollectionManager _createOrRenameCollectionManager =
       di.get();
@@ -111,7 +113,9 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
           final footer = BottomSheetFooter(
             onCancelPressed: () {
               _createOrRenameCollectionManager.onCancelPressed(
-                  isRenameMode: isRenameMode);
+                isRenameMode: isRenameMode,
+                screenDuration: getWidgetDuration,
+              );
               widget.onSystemPop?.call();
               closeBottomSheet(context);
             },
