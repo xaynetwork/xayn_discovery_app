@@ -34,15 +34,15 @@ class RedeemPromoCodeBottomSheet extends BottomSheetBase {
   }) : super(
           key: key,
           onSystemPop: onSystemPop,
-          body: _RedeemPromoCode(
+          body: RedeemPromoCodeBottomSheetBody(
             onRedeemSuccessful: onRedeemSuccessful,
             onSystemPop: onSystemPop,
           ),
         );
 }
 
-class _RedeemPromoCode extends StatefulWidget {
-  const _RedeemPromoCode({
+class RedeemPromoCodeBottomSheetBody extends StatefulWidget {
+  const RedeemPromoCodeBottomSheetBody({
     Key? key,
     required this.onRedeemSuccessful,
     this.onSystemPop,
@@ -52,11 +52,12 @@ class _RedeemPromoCode extends StatefulWidget {
   final VoidCallback? onSystemPop;
 
   @override
-  _RedeemPromoCodeState createState() => _RedeemPromoCodeState();
+  RedeemPromoCodeBottomSheetBodyState createState() =>
+      RedeemPromoCodeBottomSheetBodyState();
 }
 
-class _RedeemPromoCodeState extends State<_RedeemPromoCode>
-    with BottomSheetBodyMixin {
+class RedeemPromoCodeBottomSheetBodyState
+    extends State<RedeemPromoCodeBottomSheetBody> with BottomSheetBodyMixin {
   late final RedeemPromoCodeManager _manager = di.get();
   late final TextEditingController _textEditingController;
 

@@ -27,7 +27,10 @@ class OverlayManager<T> extends Cubit<List<OverlayData>> {
       _futureOverlays.remove(element.key);
     }
     _oldState = state;
-    _currentVisible = overlays.map((e) => e.key).toList();
+    _currentVisible = [
+      ..._currentVisible,
+      ...overlays.map((e) => e.key).toList()
+    ];
     _computeState();
   }
 
