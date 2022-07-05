@@ -9,11 +9,11 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_mana
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.

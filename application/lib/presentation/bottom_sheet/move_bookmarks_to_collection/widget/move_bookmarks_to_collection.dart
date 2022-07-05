@@ -15,8 +15,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 
 class MoveBookmarksToCollectionBottomSheet extends BottomSheetBase {
   MoveBookmarksToCollectionBottomSheet({

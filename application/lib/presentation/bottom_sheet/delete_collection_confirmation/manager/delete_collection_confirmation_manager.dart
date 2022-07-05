@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_book
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/delete_collection_confirmation/manager/delete_collection_confirmation_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 
 import '../../../utils/logger/logger.dart';
 
