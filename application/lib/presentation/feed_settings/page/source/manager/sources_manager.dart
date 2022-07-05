@@ -68,12 +68,7 @@ class SourcesManager extends Cubit<SourcesState>
   );
   late final StreamController<String> _onSearchInput =
       StreamController<String>();
-  late final StreamSubscription<String> _searchInputSubscription =
-      _onSearchInput.stream
-          .debounceTime(EnvironmentHelper.kIsInTest
-              ? Duration.zero
-              : _kSearchInputDebounceTime)
-          .listen(_onSearchSources);
+  StreamSubscription<String>? _searchInputSubscription;
   String? latestSourcesSearchTerm;
 
   SourcesManager(
@@ -102,7 +97,14 @@ class SourcesManager extends Cubit<SourcesState>
   void getAvailableSourcesList(String fuzzySearchTerm) =>
       _onSearchInput.add(fuzzySearchTerm);
 
-  void _init() {
+  void init() {
+    _searchInputSubscription = _searchInputSubscription ??
+        _onSearchInput.stream
+            .debounceTime(EnvironmentHelper.kIsInTest
+                ? Duration.zero
+                : _kSearchInputDebounceTime)
+            .listen(_onSearchSources);
+
     getExcludedSourcesList();
     getTrustedSourcesList();
   }
@@ -111,7 +113,7 @@ class SourcesManager extends Cubit<SourcesState>
   Future<void> close() async {
     _onSearchInput.close();
 
-    await _searchInputSubscription.cancel();
+    await _searchInputSubscription?.cancel();
     await super.close();
   }
 
