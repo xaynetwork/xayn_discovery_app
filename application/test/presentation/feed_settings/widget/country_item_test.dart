@@ -33,7 +33,6 @@ void main() {
 
       expect(find.text(countryName), findsOneWidget);
       expect(find.text(countryLanguage), findsNothing);
-      expect(find.byType(AppGhostButton), findsOneWidget);
       final svgFinder = find.byType(SvgPicture);
       expect(svgFinder, findsNWidgets(2));
 
@@ -62,7 +61,6 @@ void main() {
 
       expect(find.text(countryName), findsOneWidget);
       expect(find.text(countryLanguage), findsOneWidget);
-      expect(find.byType(AppGhostButton), findsOneWidget);
       expect(find.byType(ClipRRect), findsOneWidget);
       final svgFinder = find.byType(SvgPicture);
       expect(svgFinder, findsNWidgets(2));

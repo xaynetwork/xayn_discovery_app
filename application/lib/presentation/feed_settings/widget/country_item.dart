@@ -39,6 +39,7 @@ class CountryItem extends StatelessWidget {
       height: R.dimen.iconButtonSize,
       decoration: decoration,
       padding: EdgeInsets.only(left: R.dimen.unit1_5),
+      key: country.key,
       child: row,
     );
     return Padding(
