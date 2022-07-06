@@ -61,21 +61,16 @@ class BottomSheetFooter extends StatelessWidget {
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildRaisedButton(buttonsData[0]),
-          SizedBox(
-            height: R.dimen.unit0_5,
-          ),
-          _buildRaisedButton(buttonsData[1]),
-          SizedBox(
-            height: R.dimen.unit0_5,
-          ),
+          ...buttonsData.map(_buildRaisedButton),
           cancelButton,
         ],
       );
 
-  Widget _buildRaisedButton(BottomSheetFooterButton buttonData) =>
-      AppRaisedButton.text(
-        text: buttonData.text,
-        onPressed: buttonData.isDisabled ? null : buttonData.onPressed,
+  Widget _buildRaisedButton(BottomSheetFooterButton buttonData) => Padding(
+        padding: EdgeInsets.only(bottom: R.dimen.unit0_5),
+        child: AppRaisedButton.text(
+          text: buttonData.text,
+          onPressed: buttonData.isDisabled ? null : buttonData.onPressed,
+        ),
       );
 }
