@@ -26,6 +26,7 @@ void main() {
       when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
       when(manager.isTtsEnabled).thenReturn(false);
       when(manager.isNewExcludeSourceFlowEnabled).thenReturn(false);
+      when(manager.isResetAIEnabled).thenReturn(false);
 
       // we swap FeatureScreen with another one
       await tester.initToDiscoveryPage();

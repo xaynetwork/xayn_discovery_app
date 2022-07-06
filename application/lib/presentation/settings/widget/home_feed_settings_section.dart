@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 
 class SettingsHomeFeedSection extends StatelessWidget {
   final VoidCallback onSourcesPressed;
@@ -9,13 +11,15 @@ class SettingsHomeFeedSection extends StatelessWidget {
   final VoidCallback onResetAIPressed;
   final bool isFirstSection;
 
-  const SettingsHomeFeedSection({
+  SettingsHomeFeedSection({
     Key? key,
     required this.onSourcesPressed,
     required this.onCountriesPressed,
     required this.onResetAIPressed,
     this.isFirstSection = false,
   }) : super(key: key);
+
+  late final FeatureManager _featureManager = di.get();
 
   @override
   Widget build(BuildContext context) => SettingsSection(
@@ -24,7 +28,7 @@ class SettingsHomeFeedSection extends StatelessWidget {
         items: [
           _buildSourcesOption(),
           _buildCountriesOption(),
-          _buildResetAIOption(),
+          if (_featureManager.isResetAIEnabled) _buildResetAIOption(),
         ],
       );
 
