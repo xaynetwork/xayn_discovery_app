@@ -28,6 +28,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/onboarding/widget/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/promo_code_applied_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/redeem_promo_code_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/widget/reset_ai_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
@@ -342,6 +343,15 @@ class OverlayData {
       BottomSheetData(
         allowStacking: allowStacking,
         builder: (_, __) => NoActiveSubscriptionFoundErrorBottomSheet(),
+      );
+
+  static BottomSheetData bottomSheetResetAI({
+    VoidCallback? onSystemPop,
+  }) =>
+      BottomSheetData(
+        builder: (_, __) => ResetAIBottomSheet(
+          onSystemPop: onSystemPop,
+        ),
       );
 }
 

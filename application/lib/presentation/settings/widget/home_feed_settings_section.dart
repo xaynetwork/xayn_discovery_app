@@ -6,12 +6,14 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 class SettingsHomeFeedSection extends StatelessWidget {
   final VoidCallback onSourcesPressed;
   final VoidCallback onCountriesPressed;
+  final VoidCallback onResetAIPressed;
   final bool isFirstSection;
 
   const SettingsHomeFeedSection({
     Key? key,
     required this.onSourcesPressed,
     required this.onCountriesPressed,
+    required this.onResetAIPressed,
     this.isFirstSection = false,
   }) : super(key: key);
 
@@ -22,6 +24,7 @@ class SettingsHomeFeedSection extends StatelessWidget {
         items: [
           _buildSourcesOption(),
           _buildCountriesOption(),
+          _buildResetAIOption(),
         ],
       );
 
@@ -45,6 +48,18 @@ class SettingsHomeFeedSection extends StatelessWidget {
             key: Keys.settingsCountriesOption,
             svgIconPath: R.assets.icons.arrowRight,
             onPressed: onCountriesPressed,
+          ),
+        ),
+      );
+
+  SettingsCardData _buildResetAIOption() => SettingsCardData.fromTile(
+        SettingsTileData(
+          title: R.strings.feedSettingsScreenResetAIOption,
+          svgIconPath: R.assets.icons.brainy,
+          action: SettingsTileActionIcon(
+            key: Keys.settingsResetAIOption,
+            svgIconPath: R.assets.icons.arrowRight,
+            onPressed: onResetAIPressed,
           ),
         ),
       );
