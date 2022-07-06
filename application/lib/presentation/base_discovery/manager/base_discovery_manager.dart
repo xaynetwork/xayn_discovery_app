@@ -372,7 +372,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         if (_cardIndex == null) return null;
 
         final cards = await _injectCustomCardsIfAny(
-          documents: documents,
+          cards: documents == null
+              ? state.cards
+              : documents.map(Card.document).toSet(),
           surveyConditionStatus: surveyConditionStatus,
         );
 
@@ -431,23 +433,21 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
 
   Future<Set<Card>> _injectCustomCardsIfAny({
-    Set<Document>? documents,
+    required Set<Card> cards,
     SurveyConditionsStatus? surveyConditionStatus,
   }) async {
-    final cards = await surveyCardInjectionUseCase.singleOutput(
+    var nextCards = cards;
+
+    nextCards = await surveyCardInjectionUseCase.singleOutput(
       SurveyCardInjectionData(
-        currentCards: state.cards,
-        nextDocuments: documents,
+        cards: nextCards,
         status: surveyConditionStatus,
       ),
     );
 
-    return adCardInjectionUseCase.singleOutput(
-      AdCardInjectionData(
-        currentCards: cards,
-        nextDocuments: documents,
-      ),
-    );
+    nextCards = await adCardInjectionUseCase.singleOutput(nextCards);
+
+    return nextCards;
   }
 
   /// secondary observation action, check if we should implicitly like the [Document]
