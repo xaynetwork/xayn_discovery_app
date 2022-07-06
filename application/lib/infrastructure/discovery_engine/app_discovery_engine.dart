@@ -103,6 +103,7 @@ class AppDiscoveryEngine
       maxItemsPerSearchBatch: _kSearchPageSize,
       feedMarkets: feedMarkets,
       manifest: manifest,
+      logFile: applicationDocumentsDirectory.path,
     );
 
     _updateFeedMarketIdentityParam(feedMarkets);
