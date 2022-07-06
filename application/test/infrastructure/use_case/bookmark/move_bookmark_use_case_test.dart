@@ -16,22 +16,24 @@ void main() {
   late MockBookmarksRepository bookmarksRepository;
   late MockCollectionsRepository collectionsRepository;
   late MoveBookmarkUseCase moveBookmarkUseCase;
-  final bookmarkIdToMove = UniqueId();
+  const bookamarkUrlToMove = 'https://url_bookmark_to_move.com';
   final collectionIdWhereToMoveBookmark = UniqueId();
   final input = MoveBookmarkUseCaseIn(
-    bookmarkId: bookmarkIdToMove,
+    bookmarkId: Bookmark.generateUniqueIdFromUri(Uri.parse(bookamarkUrlToMove)),
     collectionId: collectionIdWhereToMoveBookmark,
   );
   final provider = DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
+  const url = 'https://url_test.com';
 
   final bookmark = Bookmark(
-    id: bookmarkIdToMove,
+    documentId: UniqueId(),
     collectionId: UniqueId(),
     title: 'Bookmark1 title',
     image: Uint8List.fromList([1, 2, 3]),
     provider: provider,
     createdAt: DateTime.now().toUtc().toString(),
+    uri: Uri.parse(url),
   );
 
   final collection = Collection(

@@ -15,6 +15,7 @@ enum SupportedMarkets {
   germany._('de', 'DE'),
   spain._('es', 'ES'),
   uk._('en', 'GB'),
+  india._('en', 'IN'),
   ireland._('en', 'IE'),
   netherlands._('nl', 'NL'),
   poland._('pl', 'PL'),
@@ -82,6 +83,8 @@ enum SupportedMarkets {
         return R.assets.illustrations.flagPeru;
       case SupportedMarkets.ukraine:
         return R.assets.illustrations.flagUkraine;
+      case SupportedMarkets.india:
+        return R.assets.illustrations.flagIndia;
     }
   }
 

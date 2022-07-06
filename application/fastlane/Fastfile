@@ -182,12 +182,17 @@ lane :check_config_files do |options|
     "SEARCH_API_SECRET_KEY_ALTERNATE" => "SEARCH_API_SECRET_KEY_ALTERNATE",
     "IMAGE_FETCHER_URL_DEBUG" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN",
-    "AMPLITUDE_API_KEY_DEBUG" => "AMPLITUDE_API_KEY",
+    "MIXPANEL_TOKEN_DEBUG" => "MIXPANEL_TOKEN",
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_DEBUG" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "MIXPANEL_SERVER_URL" => "MIXPANEL_SERVER_URL",
     "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
     "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
+    "RCONFIG_ENDPOINT_URL" => "RCONFIG_ENDPOINT_URL",
+    "RCONFIG_S3_REGION" => "RCONFIG_REGION",
+    "RCONFIG_ACCESS_KEY" => "RCONFIG_ACCESS_KEY",
+    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY"
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -197,12 +202,17 @@ lane :check_config_files do |options|
     "SEARCH_API_SECRET_KEY_ALTERNATE" => "SEARCH_API_SECRET_KEY_ALTERNATE",
     "IMAGE_FETCHER_URL_PRODUCTION" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN",
-    "AMPLITUDE_API_KEY_PRODUCTION" => "AMPLITUDE_API_KEY",
+    "MIXPANEL_TOKEN_PRODUCTION" => "MIXPANEL_TOKEN",
     "APPSFLYER_DEV_KEY" => "APPSFLYER_DEV_KEY",
     "APP_STORE_NUMERICAL_ID_PRODUCTION" => "APP_STORE_NUMERICAL_ID",
     "AI_ASSETS_URL" => "AI_ASSETS_URL",
+    "MIXPANEL_SERVER_URL" => "MIXPANEL_SERVER_URL",
     "REVENUE_CAT_SDK_KEY_ANDROID" => "REVENUE_CAT_SDK_KEY_ANDROID",
     "REVENUE_CAT_SDK_KEY_IOS" => "REVENUE_CAT_SDK_KEY_IOS",
+    "RCONFIG_ENDPOINT_URL" => "RCONFIG_ENDPOINT_URL",
+    "RCONFIG_S3_REGION" => "RCONFIG_REGION",
+    "RCONFIG_ACCESS_KEY" => "RCONFIG_ACCESS_KEY",
+    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY"
   }, Config::ENV_DEFAULTS)
 
   if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
@@ -233,6 +243,7 @@ desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "Available options:\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
+  shell('gitleaks detect -c ../.gitleaks.toml')
   maybe_pub_get(options)
   build_runner(options)
 
@@ -247,17 +258,17 @@ lane :check do |options|
     # Creates a fake test that imports all files so that lcov calculates the correct coverage
     shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
     shell("cat test/test_stub.dart >> test/all_imports_test.dart")
-    flutter(args: %W(test --coverage --reporter=json > machine.log || echo 'Tests failed'))
+    shell("flutter test --coverage --reporter=json > machine.log || echo 'Tests failed'")
     lcov_ignore_rules = shell("cat lcov_ignore | grep -v \\# | tr '\n' ' '")
     shell("mv coverage/lcov.info coverage/original_lcov.info")
     shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
     shell("genhtml coverage/lcov.info -o coverage/html")
   else
-    machine_log = flutter(args: %W(test --reporter=json), capture_stdout: true)
-    File.write("../machine.log", machine_log)
+      shell("flutter test --reporter=json > machine.log || echo 'Tests failed'")
   end
+
   begin
-    flutter(args: %W(pub global run dart_dot_reporter machine.log --show-message))
+    shell("flutter pub global run dart_dot_reporter machine.log --show-message")
   rescue
     UI.user_error!("Checks failed!")
   end

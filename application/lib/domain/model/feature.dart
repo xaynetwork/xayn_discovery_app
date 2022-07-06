@@ -5,7 +5,6 @@ enum Feature {
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
   payment(
       Owner.Peter, EnvironmentHelper.kAppId == EnvironmentHelper.kReleaseAppId),
-  readerModeSettings(Owner.Michael, true),
   discoveryEngineReportOverlay(Owner.Simon, false),
   ratingDialog(Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
@@ -17,7 +16,16 @@ enum Feature {
   gibberish(
       Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-      'Detects non readable text in Articles.');
+      'Detects non readable text in Articles.'),
+
+  ///TODO remove flag
+  altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
+
+  newExcludeSourceFlow(
+    Owner.Carmine,
+    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+    'Open menu when clicking card header icon',
+  );
 
   final Owner owner;
   final String? description;

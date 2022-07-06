@@ -105,10 +105,9 @@ class _DiscoveryFeedState
                     document: document,
                     feedType: FeedType.feed,
                   )),
-          if (featureManager.isReaderModeSettingsEnabled)
-            buildNavBarItemEditFont(
-              onPressed: onEditReaderModeSettingsPressed,
-            ),
+          buildNavBarItemEditFont(
+            onPressed: onEditReaderModeSettingsPressed,
+          ),
           buildNavBarItemDisLike(
             isDisLiked: managers.discoveryCardManager.state
                 .explicitDocumentUserReaction.isIrrelevant,

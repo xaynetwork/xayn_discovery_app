@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-// ignore: implementation_imports
-import 'package:xayn_discovery_engine/src/api/models/document.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 part 'discovery_card_screen_state.freezed.dart';
 

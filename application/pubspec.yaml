@@ -1,7 +1,8 @@
 name: xayn_discovery_app
 description: Xayn discovery app
 publish_to: 'none'
-version: 0.0.1
+# this version is only useful for internal tests
+version: 3.45.0
 
 environment:
   sdk: '>=2.17.0 <3.0.0'
@@ -12,13 +13,18 @@ dependencies:
   flutter:
     sdk: flutter
 
-  amplitude_flutter: 3.8.1
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   connectivity_plus: 2.2.1
   country_code: 1.0.0
+  dart_remote_config:
+    git:
+      # TODO change to http
+      url: git@github.com:xaynetwork/dart_remote_config.git
+      ref: 1758e556618d7cb9e408bfc68fb101f1378e327f
   equatable: 2.0.3
   envify: 2.0.2
+  flat: ^0.4.1
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
   flutter_localized_countries:
@@ -34,11 +40,10 @@ dependencies:
   freezed_annotation: ^2.0.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
-  # gibberish detection
   gibberish:
     git:
       url: https://github.com/xaynetwork/gibberish
-      ref: 940a1907597a908d67ad1735da4f6e4fe97258c2
+      ref: 14f604df399fc9b8c2d2f3ca86768ff8f58a8c79
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
@@ -61,12 +66,14 @@ dependencies:
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
+  mixpanel_flutter: 1.5.0
   package_info_plus: 1.4.0
   path_provider: 2.0.9
   purchases_flutter:
     git:
       url: git@github.com:RevenueCat/purchases-flutter.git
       ref: 8937a1fc82a89649cc54be9ae53018daff69782e
+  platform: ^3.1.0
   rxdart: 0.27.3
   sprintf: 6.0.0
   share_plus: 4.0.3
@@ -92,7 +99,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 3539e911a5831eaeae4c716054703f4a93ea4029
+      ref: d4a509f0dbc7a775e0461f303abc231d42b2983a
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
@@ -111,6 +118,7 @@ dependency_overrides:
   provider: 6.0.2
   dart_style: 2.2.2
   freezed_annotation: ^2.0.0
+  json_serializable: 6.1.4
 
 # Please list dependencies alphabetically!
 dev_dependencies:
@@ -195,6 +203,8 @@ flutter:
     - packages/xayn_design/assets/lottie/contextual/empty_collection.json
     - packages/xayn_design/assets/lottie/contextual/empty_search.json
     - packages/xayn_design/assets/lottie/contextual/empty_sources.json
+    - packages/xayn_design/assets/lottie/contextual/empty_sources_lookup.json
+    - packages/xayn_design/assets/lottie/contextual/empty_sources_mgmt.json
     - packages/xayn_design/assets/lottie/contextual/error.json
     - packages/xayn_design/assets/lottie/contextual/no_image_1.json
     - packages/xayn_design/assets/lottie/contextual/no_image_2.json

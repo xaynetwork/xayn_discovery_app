@@ -120,6 +120,7 @@ class _FeaturesList extends StatelessWidget {
         children: [
           Expanded(child: _buildFeaturesList(featureMap)),
           resetFirstStartupButton(),
+          setTrialDurationToZero(),
           continueButton(),
         ],
       ),
@@ -169,7 +170,13 @@ class _FeaturesList extends StatelessWidget {
   Widget resetFirstStartupButton() => MaterialButton(
         color: Colors.white,
         onPressed: featureManager.resetFirstAppStartupDate,
-        child: const Text('Reset First Startup Time'),
+        child: const Text('Reset first startup time'),
+      );
+
+  Widget setTrialDurationToZero() => MaterialButton(
+        color: Colors.white,
+        onPressed: featureManager.setTrialDurationToZero,
+        child: const Text('Set trial duration to 0'),
       );
 
   Widget continueButton() => MaterialButton(

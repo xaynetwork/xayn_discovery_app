@@ -144,7 +144,7 @@ feedSettingsScreenTabSources: Fuentes
 feedSettingsScreenSubtitleDislikedSources: Fuentes no gustadas
 settingsSectionHomeFeed: Configuración del feed
 paymentPromoCodeAndroidBottomSheetTitle: Tienes un código promocional?
-paymentPromoCodeAndroidBottomSheetBody: Para ingresar el código de promoción, seleccione “Canjear código” como método de pago.
+paymentPromoCodeAndroidBottomSheetBody: Para ingresar el código de promoción, selecciona “Canjear código” como método de pago.
 paymentFailedBottomSheetTitle: Pago fallido
 paymentFailedBottomSheetBody: La Store no pudo procesar tu pago. Por favor intenta de nuevo más tarde.
 readerModeUnableToLoadTitle: No pudimos cargar el contenido
@@ -166,3 +166,33 @@ subscriptionDurationMonth: Mes
 takeSurveyTitle: ¿Tienes un minuto?
 takeSurveySubtitle: Nos encantaría tu opinión sobre cómo mejorar la aplicación.
 takeSurveyCTA: Llévame a la encuesta
+addExcludedSource: Agregue una fuente para excluir de tu feed
+addTrustedSource: Agregue una fuente para incluir en tu feed
+addSourcePlaceholder: Buscar o escribir URL
+addSourceDescription: Buscar el nombre de una fuente o su URL
+btnSave: Guardar
+trustedSourcesTab: Fuentes incluidas
+excludedSourcesTab: Fuentes excluidas
+trustedSourcesDescription: Agrega tus fuentes favoritas a tu feed
+btnAdd: Agregar una fuente de noticias
+excludedSourcesDescription: Las fuentes excluidas ya no aparecerán en su feed.
+sourcePendingAddition: Esta fuente se añadirá a la lista.
+sourcePendingRemoval: Esta fuente acaba de ser eliminada de la lista.
+settingsGiveFeedback: Dar opinion
+subscriptionExpiresText: 'La suscripción caduca el: %s'
+promoCodeEnterTitle: Introduce tu código de promoción
+promoCodeActionApplyCode: Aplica el código
+promoCodeErrorCodeNotFound: Este código no se puede encontrar
+promoCodeErrorExpired: Este código de promoción caducó
+promoCodeSuccessResultTitle: Puedes probar Xayn gratis por %s días más
+promoCodeSuccessResultBody: Nos encantaría escuchar sus comentarios. Puede enviarnos una nota desde la configuración.
+promoCodeErrorAlreadyUsed: Ya usaste este código de promoción
+excludeSourceMenuItemTitle: Ocultar esta fuente de mi feed
+noTrustedSourcesYet: No hay fuentes favoritas, todavía
+noExcludedSourcesYet: No hay fuentes ocultas, todavía
+noSourcesFoundTitle: No hay resultados
+noSourcesFoundInfo: No pudimos encontrar ninguna fuente para su búsqueda.
+sourceExcludedTooltipMessage: Fuente excluida Fuentes Administradas
+manageSourcesTooltipMessage: Fuentes administradas
+allowSourceBackMenuItemTitle: Permitir esta fuente nuevamente en mi feed
+sourceAllowedBackTooltipMessage: Fuente permitida nuevamente

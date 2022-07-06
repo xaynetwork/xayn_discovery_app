@@ -254,9 +254,21 @@ class AppDiscoveryEngine
   }
 
   @override
+  Future<EngineEvent> addSourceToTrustedList(Source source) {
+    _inputLog.add('[addSourceToTrustedList]');
+    return safeRun(() => _engine.addSourceToTrustedList(source));
+  }
+
+  @override
   Future<EngineEvent> getExcludedSourcesList() {
     _inputLog.add('[getExcludedSourcesList]');
     return safeRun(() => _engine.getExcludedSourcesList());
+  }
+
+  @override
+  Future<EngineEvent> getTrustedSourcesList() {
+    _inputLog.add('[getTrustedSourcesList]');
+    return safeRun(() => _engine.getTrustedSourcesList());
   }
 
   @override
@@ -269,6 +281,12 @@ class AppDiscoveryEngine
   Future<EngineEvent> removeSourceFromExcludedList(Source source) {
     _inputLog.add('[removeSourceFromExcludedList]');
     return safeRun(() => _engine.removeSourceFromExcludedList(source));
+  }
+
+  @override
+  Future<EngineEvent> removeSourceFromTrustedList(Source source) {
+    _inputLog.add('[removeSourceFromTrustedList]');
+    return safeRun(() => _engine.removeSourceFromTrustedList(source));
   }
 
   @override
@@ -289,11 +307,6 @@ class AppDiscoveryEngine
     return safeRun(() => _engine.requestTrendingTopics());
   }
 
-  void _updateFeedMarketIdentityParam(FeedMarkets markets) {
-    final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
-    _setIdentityParamUseCase.call(param);
-  }
-
   @override
   Future<EngineEvent> requestDeepSearch(DocumentId id) {
     _inputLog.add('[requestDeepSearch]');
@@ -306,21 +319,16 @@ class AppDiscoveryEngine
     return safeRun(() => _engine.resetAi());
   }
 
-  @override
-  Future<EngineEvent> addSourceToTrustedList(Source source) {
-    // TODO: implement addSourceToTrustedList
-    throw UnimplementedError();
+  void _updateFeedMarketIdentityParam(FeedMarkets markets) {
+    final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
+    _setIdentityParamUseCase.call(param);
   }
 
   @override
-  Future<EngineEvent> getTrustedSourcesList() {
-    // TODO: implement getTrustedSourcesList
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<EngineEvent> removeSourceFromTrustedList(Source source) {
-    // TODO: implement removeSourceFromTrustedList
+  Future<EngineEvent> overrideSources(
+      {required Set<Source> trustedSources,
+      required Set<Source> excludedSources}) {
+    // TODO: implement overrideSources
     throw UnimplementedError();
   }
 }

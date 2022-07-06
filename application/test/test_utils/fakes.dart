@@ -43,11 +43,12 @@ AppImageCacheManager createFakeImageCacheManager() {
 }
 
 final fakeBookmark = Bookmark(
-  id: UniqueId(),
+  documentId: UniqueId(),
   collectionId: UniqueId(),
   title: 'Bookmark1 title',
   image: Uint8List.fromList([1, 2, 3]),
   provider: DocumentProvider(
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico'),
   createdAt: DateTime.now().toUtc().toString(),
+  uri: Uri.parse('https://url_test.com'),
 );

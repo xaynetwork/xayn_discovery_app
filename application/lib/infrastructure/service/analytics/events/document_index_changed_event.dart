@@ -1,4 +1,5 @@
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/feed_analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -25,7 +26,7 @@ class DocumentIndexChangedEvent extends FeedAnalyticsEvent {
           feedType: feedType,
           properties: {
             _kParamCardType: cardType.name,
-            if (next != null) _kParamNextDocument: next.toJson(),
+            if (next != null) _kParamNextDocument: next.toAnalyticsJson(),
             _kParamDirection: direction.name,
           },
         );

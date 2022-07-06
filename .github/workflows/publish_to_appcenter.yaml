@@ -111,12 +111,14 @@ jobs:
           SEARCH_API_SECRET_KEY_ALTERNATE: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
-          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
-          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
+          MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -190,12 +192,14 @@ jobs:
           SEARCH_API_SECRET_KEY_ALTERNATE: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
-          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
-          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
+          MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
@@ -255,12 +259,14 @@ jobs:
           SEARCH_API_SECRET_KEY_ALTERNATE: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
-          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
-          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
+          MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -321,12 +327,14 @@ jobs:
           SEARCH_API_SECRET_KEY_ALTERNATE: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
-          AMPLITUDE_API_KEY_DEBUG: ${{ secrets.AMPLITUDE_API_KEY_DEBUG }}
-          AMPLITUDE_API_KEY_PRODUCTION: ${{ secrets.AMPLITUDE_API_KEY_PRODUCTION }}
+          MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
+          MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
           APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          RCONFIG_ACCESS_KEY : ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY : ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta store:true

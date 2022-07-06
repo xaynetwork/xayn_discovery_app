@@ -8,6 +8,7 @@ part 'app_toolbar_data.freezed.dart';
 class AppToolbarData with _$AppToolbarData {
   const factory AppToolbarData.titleOnly({
     required String title,
+    double? preferredHeight,
   }) = _AppToolbarDataTitleOnly;
 
   const factory AppToolbarData.withTrailingIcon({
@@ -16,11 +17,13 @@ class AppToolbarData with _$AppToolbarData {
     VoidCallback? onPressed,
     Key? iconkey,
     String? semanticsLabel,
+    double? preferredHeight,
   }) = _AppToolbarDataWithTrailingIcon;
 
   const factory AppToolbarData.withTwoTrailingIcons({
     @Assert('iconModels.length == 2', 'a list with two AppToolbarIconModel must be passed')
         required List<AppToolbarIconModel> iconModels,
     required String title,
+    double? preferredHeight,
   }) = _AppToolbarDataWithTwoTrailingIcons;
 }

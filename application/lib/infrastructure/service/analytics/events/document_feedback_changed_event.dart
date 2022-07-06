@@ -1,3 +1,4 @@
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/feed_analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
@@ -26,7 +27,7 @@ class DocumentFeedbackChangedEvent extends FeedAnalyticsEvent {
           _kEventType,
           feedType: feedType,
           properties: {
-            _kParamDocument: document.toJson(),
+            _kParamDocument: document.toAnalyticsJson(),
             _kParamContext: context.name,
           },
         );

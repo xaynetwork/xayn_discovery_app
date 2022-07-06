@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:http_client/console.dart' as http;
 import 'package:injectable/injectable.dart';
@@ -11,6 +12,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/request_logge
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
+import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
@@ -228,6 +230,14 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
   @override
   // TODO: implement baseUri
   Uri get baseUri => throw UnimplementedError();
+
+  @override
+  Future<EngineEvent> overrideSources(
+      {required Set<Source> trustedSources,
+      required Set<Source> excludedSources}) {
+    // TODO: implement overrideSources
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)
@@ -315,4 +325,30 @@ class TestablePaymentServices implements PaymentService {
 
   @override
   Future<String?> get subscriptionManagementURL async => null;
+
+  @override
+  Future<void> setAppsFlyerID(String appsFlyerId) async {}
+}
+
+@LazySingleton(as: BugReportingService)
+class FakeBugReportingService implements BugReportingService {
+  @override
+  void giveFeedback({Brightness? brightness, Color? primaryColor}) {
+    logger.i('FakeBugReportingService: giveFeedback');
+  }
+
+  @override
+  void reportBug({Brightness? brightness, Color? primaryColor}) {
+    logger.i('FakeBugReportingService: reportBug');
+  }
+
+  @override
+  void reportCrash(Object error, StackTrace stackTrace) {
+    logger.e('FakeBugReportingService: reportCrash', error, stackTrace);
+  }
+
+  @override
+  void reportHandledCrash(dynamic exception, [StackTrace? stack]) {
+    logger.e('FakeBugReportingService: reportHandledCrash', exception, stack);
+  }
 }

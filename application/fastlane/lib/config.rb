@@ -111,9 +111,12 @@ module Config
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
                    "APP_STORE_NUMERICAL_ID_PRODUCTION" => "1605873072",
-                   "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev" }
+                   "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev",
+                   "MIXPANEL_SERVER_URL" => "https://api-eu.mixpanel.com",
+                   "RCONFIG_S3_REGION" => "s3-de-central",
+                   "RCONFIG_ENDPOINT_URL" => "https://s3-de-central.profitbricks.com"}
 
-  # Carefull to change those offsets, they are defining the beta process:
+  # Careful to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...
   # beta      :   10001, 10002, 10003, ... 10479, ... |  ^^close beta
   #
