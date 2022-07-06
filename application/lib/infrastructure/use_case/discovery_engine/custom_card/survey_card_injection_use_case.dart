@@ -22,16 +22,14 @@ class SurveyCardInjectionUseCase
 
   @override
   Stream<Set<Card>> transaction(SurveyCardInjectionData param) async* {
-    final nextDocuments = param.nextDocuments;
-
-    if (nextDocuments == null) {
-      yield param.currentCards;
+    if (param.nextDocumentsCount == 0) {
+      yield param.cards;
     } else {
       if (shouldMarkInjectionPoint(param)) {
-        nextDocumentSibling = nextDocuments.last;
+        nextDocumentSibling = param.lastDocument;
       }
 
-      yield toCards(nextDocuments).toSet();
+      yield toCards(param.cards).toSet();
     }
   }
 
@@ -43,31 +41,38 @@ class SurveyCardInjectionUseCase
       data.nextDocumentsCount > 2;
 
   @visibleForTesting
-  Iterable<Card> toCards(Set<Document> documents) sync* {
-    for (final document in documents) {
-      if (document == nextDocumentSibling) {
-        yield Card.other(CardType.survey, document.documentId.uniqueId);
+  Iterable<Card> toCards(Set<Card> cards) sync* {
+    for (final card in cards) {
+      if (card.type == CardType.document &&
+          card.requireDocument == nextDocumentSibling) {
+        yield Card.other(
+            CardType.survey, card.requireDocument.documentId.uniqueId);
       }
 
-      yield Card.document(document);
+      yield card;
     }
   }
 }
 
 @immutable
 class SurveyCardInjectionData {
-  final Set<Card> currentCards;
-  final Set<Document>? nextDocuments;
+  final Set<Card> cards;
+  final Set<Document> _documents;
   final SurveyConditionsStatus status;
 
   int get currentDocumentsCount =>
-      currentCards.where((it) => it.document != null).length;
+      cards.where((it) => it.document != null).length;
 
-  int get nextDocumentsCount => nextDocuments?.length ?? 0;
+  int get nextDocumentsCount => _documents.length;
 
-  const SurveyCardInjectionData({
-    required this.currentCards,
-    this.nextDocuments,
+  Document get lastDocument => _documents.last;
+
+  SurveyCardInjectionData({
+    required this.cards,
     SurveyConditionsStatus? status,
-  }) : status = status ?? SurveyConditionsStatus.notReached;
+  })  : status = status ?? SurveyConditionsStatus.notReached,
+        _documents = cards
+            .where((it) => it.type == CardType.document)
+            .map((it) => it.document!)
+            .toSet();
 }

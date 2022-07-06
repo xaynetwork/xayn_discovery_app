@@ -9,32 +9,37 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 const int _skipEvery = 5;
 
 @lazySingleton
-class AdCardInjectionUseCase extends UseCase<AdCardInjectionData, Set<Card>> {
+class AdCardInjectionUseCase extends UseCase<Set<Card>, Set<Card>> {
   final FeatureManager featureManager;
   final Set<DocumentId> _buffer = <DocumentId>{};
 
   AdCardInjectionUseCase(this.featureManager);
 
   @override
-  Stream<Set<Card>> transaction(AdCardInjectionData param) async* {
-    final nextDocuments = param.nextDocuments;
+  Stream<Set<Card>> transaction(Set<Card> param) async* {
+    if (!featureManager.areAdsEnabled) yield param;
 
-    if (nextDocuments == null) {
-      yield param.currentCards;
-    } else {
-      _buffer.addAll(nextDocuments.map((it) => it.documentId));
+    final documents = param
+        .where((it) => it.type == CardType.document)
+        .map((it) => it.document!)
+        .toSet();
 
-      yield toCards(nextDocuments).toSet();
-    }
+    _buffer.addAll(documents.map((it) => it.documentId));
+
+    yield toCards(param).toSet();
   }
 
   @visibleForTesting
-  Iterable<Card> toCards(Set<Document> documents) sync* {
-    for (final document in documents) {
-      yield Card.document(document);
+  Iterable<Card> toCards(Set<Card> cards) sync* {
+    for (final card in cards) {
+      yield card;
 
-      if (shouldShowAdAfter(document.documentId)) {
-        yield Card.other(CardType.ad, document.documentId.uniqueId);
+      if (card.type == CardType.document) {
+        final document = card.requireDocument;
+
+        if (shouldShowAdAfter(document.documentId)) {
+          yield Card.other(CardType.ad, document.documentId.uniqueId);
+        }
       }
     }
   }
@@ -48,20 +53,4 @@ class AdCardInjectionUseCase extends UseCase<AdCardInjectionData, Set<Card>> {
 
     return !isFirstGroup && isAtSkipLocation;
   }
-}
-
-@immutable
-class AdCardInjectionData {
-  final Set<Card> currentCards;
-  final Set<Document>? nextDocuments;
-
-  int get currentDocumentsCount =>
-      currentCards.where((it) => it.document != null).length;
-
-  int get nextDocumentsCount => nextDocuments?.length ?? 0;
-
-  const AdCardInjectionData({
-    required this.currentCards,
-    this.nextDocuments,
-  });
 }
