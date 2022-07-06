@@ -77,6 +77,22 @@ class OverlayData {
         ),
       );
 
+  static tooltipSourceExcluded({required VoidCallback onTap}) => _wrapTooltip(
+        design.TooltipData.customized(
+          key: 'sourceExcluded',
+          label: R.strings.sourceExcludedTooltipMessage,
+          highlightText: R.strings.manageSourcesTooltipMessage,
+          onTap: onTap,
+        ),
+      );
+
+  static tooltipSourceIncluded() => _wrapTooltip(
+        design.TooltipData.customized(
+          key: 'sourceIncluded',
+          label: R.strings.sourceAllowedBackTooltipMessage,
+        ),
+      );
+
   static tooltipInvalidSearch() => _wrapTooltip(design.TooltipData.customized(
         key: 'invalidSearch',
         label: R.strings.invalidSearch,
