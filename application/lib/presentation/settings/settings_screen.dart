@@ -128,6 +128,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         isFirstSection: !isPaymentEnabled,
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
+        onResetAIPressed: _manager.onResetAIPressed,
       );
 
   Widget _buildAppThemeSection({

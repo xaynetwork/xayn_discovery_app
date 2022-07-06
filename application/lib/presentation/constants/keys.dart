@@ -38,6 +38,7 @@ class Keys {
       Key('settings_request_notification');
   static const Key settingsSendNotificationBtn =
       Key('settings_send_notification');
+  static const Key settingsResetAIOption = Key('settings_reset_ai_option');
 
   static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
   static const Key navBarItemHome = Key('nav_bar_item_home');
