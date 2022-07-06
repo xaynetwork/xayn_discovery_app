@@ -96,7 +96,7 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: 7df020809f572fdf9423d247ab0b38c66bde85f3
+      ref: 614ae1b1118397cd628bd374d9258a5dfb90b030
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -110,6 +110,7 @@ dependency_overrides:
   analyzer: 3.4.1
   provider: 6.0.2
   dart_style: 2.2.2
+  freezed_annotation: ^2.0.0
 
 # Please list dependencies alphabetically!
 dev_dependencies:
