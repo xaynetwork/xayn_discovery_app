@@ -19,7 +19,13 @@ enum Feature {
       'Detects non readable text in Articles.'),
 
   ///TODO remove flag
-  altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp');
+  altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
+
+  newExcludeSourceFlow(
+    Owner.Carmine,
+    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+    'Open menu when clicking card header icon',
+  );
 
   final Owner owner;
   final String? description;
