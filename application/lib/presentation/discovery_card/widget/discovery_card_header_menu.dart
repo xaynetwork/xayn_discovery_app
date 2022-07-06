@@ -31,8 +31,10 @@ class DiscoveryCardHeaderMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+
     return AppMenu.single(
-      top: R.dimen.unit15,
+      top: topPadding + R.dimen.cardNotchSize + R.dimen.unit,
       start: R.dimen.unit4,
       width: R.dimen.screenWidth - R.dimen.unit8,
       borderRadius: R.styles.roundBorder3,
