@@ -19,6 +19,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -66,6 +67,8 @@ class DiscoveryCard extends DiscoveryCardBase {
 
 abstract class DiscoveryCardNavActions {
   void onBackNavPressed();
+
+  void onManageSourcesPressed();
 }
 
 /// A controller which allows to programmatically close this widget
@@ -89,7 +92,7 @@ class DiscoveryCardController extends ChangeNotifier {
 }
 
 class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, OverlayStateMixin {
   late final AnimationController _openingAnimation;
   late final AnimationController _dragToCloseAnimation;
   late final DragBackRecognizer _recognizer;
@@ -193,12 +196,23 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           isInteractionEnabled: widget.isPrimary,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-          onOpenUrl: () {
+          onOpenHeaderMenu: () {
+            widget.onTtsData?.call(TtsData.disabled());
+
+            toggleOverlay(
+              (_) => DiscoveryCardHeaderMenu(
+                itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                source: Source.fromJson(widget.document.resource.url.host),
+                onClose: removeOverlay,
+              ),
+            );
+          },
+          onProviderSectionTap: () {
             widget.onTtsData?.call(TtsData.disabled());
 
             discoveryCardManager.openWebResourceUrl(
               widget.document,
-              CurrentView.reader,
+              CurrentView.story,
               widget.feedType,
             );
           },
@@ -374,4 +388,37 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       ),
     );
   }
+
+  Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
+      get _buildDiscoveryCardHeaderMenuItems => {
+            DiscoveryCardHeaderMenuItemEnum.openInBrowser:
+                DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.openWebResourceUrl(
+                  widget.document,
+                  CurrentView.story,
+                  widget.feedType,
+                );
+              },
+            ),
+            DiscoveryCardHeaderMenuItemEnum.excludeSource:
+                DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.onExcludeSource(
+                  document: widget.document,
+                );
+              },
+            ),
+            DiscoveryCardHeaderMenuItemEnum.includeSource:
+                DiscoveryCardHeaderMenuHelper.buildIncludeSourceBackItem(
+              onTap: () {
+                removeOverlay();
+                discoveryCardManager.onIncludeSource(
+                  document: widget.document,
+                );
+              },
+            ),
+          };
 }
