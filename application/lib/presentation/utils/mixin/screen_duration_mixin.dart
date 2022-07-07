@@ -1,13 +1,19 @@
 import 'package:flutter/widgets.dart';
 
 mixin ScreenDurationMixin<T extends StatefulWidget> on State<T> {
-  late final DateTime _startDateTime;
+  final Stopwatch _stopwatch = Stopwatch();
 
   @override
   void initState() {
-    _startDateTime = DateTime.now();
+    _stopwatch.start();
     super.initState();
   }
 
-  Duration get getWidgetDuration => DateTime.now().difference(_startDateTime);
+  @override
+  void dispose() {
+    _stopwatch.stop();
+    super.dispose();
+  }
+
+  Duration get getWidgetDuration => _stopwatch.elapsed;
 }
