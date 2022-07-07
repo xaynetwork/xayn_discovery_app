@@ -29,6 +29,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/onboarding/widget/o
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/promo_code_applied_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/redeem_promo_code_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/widget/reset_ai_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/widget/resetting_ai_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
@@ -346,10 +347,22 @@ class OverlayData {
       );
 
   static BottomSheetData bottomSheetResetAI({
+    required VoidCallback onResetAIPressed,
     VoidCallback? onSystemPop,
   }) =>
       BottomSheetData(
         builder: (_, __) => ResetAIBottomSheet(
+          onSystemPop: onSystemPop,
+          onResetAIPressed: onResetAIPressed,
+        ),
+      );
+  static BottomSheetData bottomSheetResettingAI({
+    VoidCallback? onSystemPop,
+    bool isDismissible = false,
+  }) =>
+      BottomSheetData(
+        isDismissible: isDismissible,
+        builder: (_, __) => ResettingAIBottomSheet(
           onSystemPop: onSystemPop,
         ),
       );
