@@ -7,11 +7,15 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class ResetAIBottomSheet extends BottomSheetBase {
-  ResetAIBottomSheet({Key? key, VoidCallback? onSystemPop})
-      : super(
+  ResetAIBottomSheet({
+    Key? key,
+    VoidCallback? onSystemPop,
+    required VoidCallback onResetAIPressed,
+  }) : super(
           key: key,
           body: _ResetAI(
             onSystemPop: onSystemPop,
+            onResetAIPressed: onResetAIPressed,
           ),
         );
 }
@@ -20,10 +24,12 @@ class _ResetAI extends StatefulWidget {
   const _ResetAI({
     Key? key,
     this.onSystemPop,
+    required this.onResetAIPressed,
   }) : super(
           key: key,
         );
 
+  final VoidCallback onResetAIPressed;
   final VoidCallback? onSystemPop;
 
   @override
@@ -66,6 +72,7 @@ class __ResetAIState extends State<_ResetAI> with BottomSheetBodyMixin {
           BottomSheetFooterButton(
             text: R.strings.bottomSheetResetAIButton,
             onPressed: () {
+              widget.onResetAIPressed();
               closeBottomSheet(context);
             },
           )
