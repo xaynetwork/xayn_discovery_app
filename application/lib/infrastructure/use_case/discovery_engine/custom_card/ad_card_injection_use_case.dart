@@ -17,7 +17,10 @@ class AdCardInjectionUseCase extends UseCase<Set<Card>, Set<Card>> {
 
   @override
   Stream<Set<Card>> transaction(Set<Card> param) async* {
-    if (!featureManager.areAdsEnabled) yield param;
+    if (!featureManager.areAdsEnabled) {
+      yield param;
+      return;
+    }
 
     final documents = param
         .where((it) => it.type == CardType.document)

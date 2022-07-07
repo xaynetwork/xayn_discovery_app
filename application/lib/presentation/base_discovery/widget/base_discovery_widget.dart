@@ -14,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/ad_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/survey_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
@@ -276,21 +277,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
-                child: document != null
-                    ? DiscoveryFeedCard(
-                        isPrimary: isPrimary,
-                        document: document,
-                        primaryCardShader: ShaderFactory.fromType(shaderType!),
-                        onTtsData: (it) => setState(() => ttsData =
-                            ttsData.enabled ? TtsData.disabled() : it),
-                        feedType: manager.feedType,
-                      )
-                    : SurveyCard(
-                        cardType: card.type,
-                        onPressed: manager.handleSurveyTapped,
-                        primaryCardShader:
-                            ShaderFactory.fromType(ShaderType.static),
-                      ),
+                child: _buildCard(
+                  card: card,
+                  isPrimary: isPrimary,
+                  shaderType: shaderType,
+                ),
               );
 
         return Semantics(
@@ -314,6 +305,32 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   )
                 : cardWidget);
       };
+
+  Widget _buildCard({
+    required item_renderer.Card card,
+    bool isPrimary = false,
+    ShaderType? shaderType,
+  }) {
+    switch (card.type) {
+      case item_renderer.CardType.document:
+        return DiscoveryFeedCard(
+          isPrimary: isPrimary,
+          document: card.requireDocument,
+          primaryCardShader: ShaderFactory.fromType(shaderType!),
+          onTtsData: (it) => setState(
+              () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
+          feedType: manager.feedType,
+        );
+      case item_renderer.CardType.survey:
+        return SurveyCard(
+          onPressed: manager.handleSurveyTapped,
+        );
+      case item_renderer.CardType.ad:
+        return AdCard(
+          onPressed: manager.handleAdTapped,
+        );
+    }
+  }
 
   ShaderType _getShaderType(NewsResource newsResource) {
     // A document doesn't have a unique 'index',
