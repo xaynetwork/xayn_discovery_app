@@ -98,7 +98,7 @@ mixin RequestTunnelMixin {
                     'like': keywords,
                     'search_in': 'title_excerpt',
                     'min_term_freq': '1',
-                    'page_size': isNormalSearch ? '100' : '34',
+                    'page_size': '100',
                     'to_rank': params['to_rank'],
                     'lang': isNormalSearch
                         ? <String>{params['lang']!.toLowerCase(), 'en'}
@@ -136,41 +136,34 @@ mixin RequestTunnelMixin {
           final mapper = buildActualRequest(request);
           final keySets =
               groupMatcher.allMatches(keywordGroups).map((it) => it.group(1)!);
-          final requests = keySets.map(mapper).toList(growable: false);
+          final query = keySets.join(' ');
+          final ncRequest = mapper(query);
           final allArticles = <DocumentVO>{};
 
-          for (final request in requests) {
-            logger.i(
-                'will load from cache: ${_cache.containsKey(request)} ${request.keywords}');
+          logger
+              .i('will load from cache: ${_cache.containsKey(request)} $query');
 
-            final body = await _cache.putIfAbsent(request, () async {
-              final data = await client.send(request.request);
+          final body = await _cache.putIfAbsent(ncRequest, () async {
+            final data = await client.send(ncRequest.request);
 
-              return await data.readAsString();
-            });
-            final json = Map<String, dynamic>.from(decoder.convert(body));
-            final articles = json['articles'] as List? ?? const [];
-            final entries = articles
-                .cast<Map<String, dynamic>>()
-                .map(DocumentVO.fromJson)
-                .toList(growable: false);
+            return await data.readAsString();
+          });
+          final json = Map<String, dynamic>.from(decoder.convert(body));
+          final articles = json['articles'] as List? ?? const [];
+          final entries = articles
+              .cast<Map<String, dynamic>>()
+              .map(DocumentVO.fromJson)
+              .toList(growable: false);
 
-            for (final entry in entries) {
-              cardOrigin[entry.uri] =
-                  '${request.keywords} (${entry.score.floor()})';
-            }
-
-            allArticles.addAll(entries);
+          for (final entry in entries) {
+            cardOrigin[entry.uri] = '$query (${entry.score.floor()})';
           }
 
-          var sortedArticlesByScore = allArticles.toList()
+          allArticles.addAll(entries);
+
+          final sortedArticlesByScore = allArticles.toList()
             ..removeWhere((it) => it.score < 14.0)
             ..sort();
-
-          if (sortedArticlesByScore.length > 100) {
-            sortedArticlesByScore = sortedArticlesByScore.sublist(0, 100);
-          }
-
           final rawArticles = sortedArticlesByScore
               .map((it) => it.jsonRaw)
               .toList(growable: false);
