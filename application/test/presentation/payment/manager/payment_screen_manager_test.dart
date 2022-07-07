@@ -60,7 +60,7 @@ void main() {
 
     when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
-    manager = PagePaymentScreenManager(
+    manager = PaywallScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
       restoreSubscriptionUseCase,
@@ -190,7 +190,7 @@ void main() {
           (_) async => [
             UseCaseResult.success(
               SubscriptionActionEvent(
-                action: SubscriptionAction.subscribe,
+                action: SubscriptionAction.subscribeNow,
               ),
             ),
           ],

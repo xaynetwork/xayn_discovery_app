@@ -41,9 +41,9 @@ abstract class PaymentScreenNavActions {
 const _ignoredPaymentErrors = [PaymentFlowError.canceled];
 
 @injectable
-class PagePaymentScreenManager extends PaymentScreenManager
+class PaywallScreenManager extends PaymentScreenManager
     with RedeemPromoCodeMixin<PaymentScreenState> {
-  PagePaymentScreenManager(
+  PaywallScreenManager(
     super.getPurchasableProductUseCase,
     super.purchaseSubscriptionUseCase,
     super.restoreSubscriptionUseCase,
@@ -178,7 +178,7 @@ abstract class PaymentScreenManager extends Cubit<PaymentScreenState>
   void subscribe() {
     _sendAnalyticsUseCase(
       SubscriptionActionEvent(
-        action: SubscriptionAction.subscribe,
+        action: SubscriptionAction.subscribeNow,
       ),
     );
 

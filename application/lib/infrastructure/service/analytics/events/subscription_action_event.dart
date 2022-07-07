@@ -22,7 +22,7 @@ class SubscriptionActionEvent extends AnalyticsEvent {
 }
 
 enum SubscriptionAction {
-  subscribe,
+  subscribeNow,
   unsubscribe,
   cancel,
   restore,
