@@ -6,12 +6,12 @@ import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart
 import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
-class SurveyCard extends StatelessWidget {
+class AdCard extends StatelessWidget {
   late final ShaderBuilder primaryCardShader =
       ShaderFactory.fromType(ShaderType.static);
   final VoidCallback onPressed;
 
-  SurveyCard({
+  AdCard({
     Key? key,
     required this.onPressed,
   }) : super(key: key);
@@ -23,13 +23,13 @@ class SurveyCard extends StatelessWidget {
       Expanded(child: _buildAnimation()),
       SizedBox(height: R.dimen.unit2),
       Text(
-        R.strings.takeSurveyTitle,
+        'Buy buy buy!',
         textAlign: TextAlign.center,
         style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
       ),
       SizedBox(height: R.dimen.unit2),
       Text(
-        R.strings.takeSurveySubtitle,
+        'click this ad for great success!!',
         textAlign: TextAlign.center,
         style: R.styles.mStyle.copyWith(color: R.colors.brightText),
       ),
@@ -62,12 +62,12 @@ class SurveyCard extends StatelessWidget {
   }
 
   Widget _buildAnimation() =>
-      AnimationPlayer.assetUnrestrictedSize(R.assets.lottie.survey);
+      AnimationPlayer.assetUnrestrictedSize(R.assets.lottie.bookmarkClick);
 
   Widget _buildTakeSurveyBtn() => SizedBox(
         width: double.maxFinite,
         child: AppRaisedButton.text(
-          text: R.strings.takeSurveyCTA,
+          text: 'OMG I WANT THIS NOW!!!',
           onPressed: onPressed,
         ),
       );
