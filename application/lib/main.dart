@@ -17,7 +17,6 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/feature/widget/select_feature_screen.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_app/presentation/utils/real_time.dart';
 
 void main() async {
   await setup();
@@ -28,7 +27,6 @@ void main() async {
 }
 
 Future<void> setup() async {
-  await RealTime().updateTime();
   FlutterError.onError = onError;
   WidgetsFlutterBinding.ensureInitialized();
   final documentsDir = await path.getApplicationDocumentsDirectory();
