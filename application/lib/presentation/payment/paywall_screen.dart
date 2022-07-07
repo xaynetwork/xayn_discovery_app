@@ -9,16 +9,16 @@ import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.da
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+class PaywallScreen extends StatefulWidget {
+  const PaywallScreen({Key? key}) : super(key: key);
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<PaywallScreen> createState() => _PaywallScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen>
-    with OverlayMixin<PaymentScreen> {
-  late final manager = di.get<PagePaymentScreenManager>();
+class _PaywallScreenState extends State<PaywallScreen>
+    with OverlayMixin<PaywallScreen> {
+  late final manager = di.get<PaywallScreenManager>();
 
   @override
   OverlayManager get overlayManager => manager.overlayManager;
