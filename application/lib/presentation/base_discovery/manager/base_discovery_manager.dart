@@ -209,6 +209,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   void handleSurveyTapped() => handleSurveyBannerClickedUseCase(none);
 
+  void handleAdTapped() {
+    throw UnimplementedError('handleAdTapped was not implemented');
+  }
+
   void handleLoadMore();
 
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus);
