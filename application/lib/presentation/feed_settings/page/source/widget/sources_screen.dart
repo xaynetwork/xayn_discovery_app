@@ -48,6 +48,14 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
       );
 
   @override
+  void didChangeDependencies() {
+    if (widget.openOnHiddenSourcesTab) {
+      _selectedTabIndex = tabsMap[SourcesScreenTabs.hidden]!;
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     manager.applyChanges(isBatchedProcess: true);
 
@@ -70,10 +78,6 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
     final body = Builder(
       builder: (context) {
         final tabController = DefaultTabController.of(context);
-
-        if (widget.openOnHiddenSourcesTab) {
-          tabController?.animateTo(tabsMap[SourcesScreenTabs.hidden]!);
-        }
 
         tabController?.addListener(
             () => setState(() => _selectedTabIndex = tabController.index));
