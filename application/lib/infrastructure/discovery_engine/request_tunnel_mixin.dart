@@ -162,8 +162,7 @@ mixin RequestTunnelMixin {
           allArticles.addAll(entries);
 
           final sortedArticlesByScore = allArticles.toList()
-            ..removeWhere((it) => it.score < 14.0)
-            ..sort();
+            ..removeWhere((it) => it.score < 16.0);
           final rawArticles = sortedArticlesByScore
               .map((it) => it.jsonRaw)
               .toList(growable: false);
