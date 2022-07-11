@@ -81,11 +81,13 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             AppToolbarIconModel(
               iconPath: R.assets.icons.plus,
               onPressed: _manager.onAddCollectionPressed,
+              semanticsLabel: SemanticsLabels.personalAreaIconPlus,
             ),
             AppToolbarIconModel(
               iconPath: R.assets.icons.gear,
               onPressed: _manager.onSettingsNavPressed,
               iconKey: Keys.personalAreaIconSettings,
+              semanticsLabel: SemanticsLabels.personalAreaIconSettings,
             ),
           ],
         ),
