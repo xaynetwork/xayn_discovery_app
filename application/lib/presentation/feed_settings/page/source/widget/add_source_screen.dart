@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/available_sources_view.dart';
+import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
@@ -26,7 +27,8 @@ class AddSourceScreen extends StatefulWidget {
   State<AddSourceScreen> createState() => _AddSourceScreenState();
 }
 
-class _AddSourceScreenState extends State<AddSourceScreen> {
+class _AddSourceScreenState extends State<AddSourceScreen>
+    with NavBarConfigMixin {
   late final manager = di.get<SourcesManager>();
   late final TextEditingController _textEditingController =
       TextEditingController();
@@ -34,6 +36,14 @@ class _AddSourceScreenState extends State<AddSourceScreen> {
   String get title => widget.sourceType == SourceType.excluded
       ? R.strings.addExcludedSource
       : R.strings.addTrustedSource;
+
+  @override
+  NavBarConfig get navBarConfig => NavBarConfig.backBtn(
+        const NavBarConfigId('sourcesNavBarConfigId'),
+        buildNavBarItemBack(
+          onPressed: manager.onDismissSourcesSelection,
+        ),
+      );
 
   @override
   void dispose() {
