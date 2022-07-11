@@ -104,6 +104,8 @@ void main() {
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
 
+    when(featureManager.arePushNotificationDeepLinksEnabled).thenReturn(false);
+
     when(getSubscriptionManagementUrlUseCase.singleOutput(none)).thenAnswer(
       (_) => Future.value(
           GetSubscriptionManagementUrlOutput(subscriptionManagementURL)),
