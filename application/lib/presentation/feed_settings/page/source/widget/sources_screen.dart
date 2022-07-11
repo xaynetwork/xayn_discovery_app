@@ -31,7 +31,7 @@ class SourcesScreen extends StatefulWidget {
 }
 
 class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
-  late final SourcesManager manager = di.get();
+  late final SourcesManager manager = di.get()..init();
   int _selectedTabIndex = tabsMap[SourcesScreenTabs.favoured]!;
 
   Error get indexError => ArgumentError.value(
@@ -46,6 +46,14 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
           onPressed: manager.onDismissSourcesSelection,
         ),
       );
+
+  @override
+  void didChangeDependencies() {
+    if (widget.openOnHiddenSourcesTab) {
+      _selectedTabIndex = tabsMap[SourcesScreenTabs.hidden]!;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   void dispose() {
@@ -70,10 +78,6 @@ class _SourcesScreenState extends State<SourcesScreen> with NavBarConfigMixin {
     final body = Builder(
       builder: (context) {
         final tabController = DefaultTabController.of(context);
-
-        if (widget.openOnHiddenSourcesTab) {
-          tabController?.animateTo(tabsMap[SourcesScreenTabs.hidden]!);
-        }
 
         tabController?.addListener(
             () => setState(() => _selectedTabIndex = tabController.index));
