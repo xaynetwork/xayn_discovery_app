@@ -35,7 +35,7 @@ void main() {
       // ASSERT
       expect(subscriptionStatus.isSubscriptionActive, isTrue);
       expect(subscriptionStatus.isFreeTrialActive, isFalse);
-      expect(subscriptionStatus.willRenew, isTrue);
+      expect(subscriptionStatus.willRenew, isFalse);
       expect(subscriptionStatus.expirationDate, isNotNull);
       expect(subscriptionStatus.trialEndDate, isNotNull);
       verify(paymentService.getPurchaserInfo());

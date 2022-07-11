@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 class FakePaymentService implements PaymentService {
   final StreamController<PurchaserInfo> _controller =
       StreamController<PurchaserInfo>.broadcast();
+  final _randomNumberGenerator = Random();
 
   bool calledPresentCodeRedemptionSheet = false;
   @override
@@ -20,6 +22,7 @@ class FakePaymentService implements PaymentService {
 
   /// Allow to test the purchase flow for non-release builds.
   bool _hasMockActiveSubscription = false;
+  bool _willRenew = false;
 
   FakePaymentService();
 
@@ -36,11 +39,14 @@ class FakePaymentService implements PaymentService {
     PurchaseType type = PurchaseType.subs,
   }) {
     _hasMockActiveSubscription = true;
+    _willRenew = _randomNumberGenerator.nextBool();
     return Future.delayed(
       PaymentMockData.requestSimulationDuration,
       () {
         final purchaserInfo = PaymentMockData.createPurchaserInfo(
-            withActiveSubscription: _hasMockActiveSubscription);
+          withActiveSubscription: _hasMockActiveSubscription,
+          willRenew: _willRenew,
+        );
         _controller.sink.add(purchaserInfo);
         return purchaserInfo;
       },
@@ -50,11 +56,14 @@ class FakePaymentService implements PaymentService {
   @override
   Future<PurchaserInfo> restore() {
     _hasMockActiveSubscription = true;
+    _willRenew = _randomNumberGenerator.nextBool();
     return Future.delayed(
       PaymentMockData.requestSimulationDuration,
       () {
         final purchaserInfo = PaymentMockData.createPurchaserInfo(
-            withActiveSubscription: _hasMockActiveSubscription);
+          withActiveSubscription: _hasMockActiveSubscription,
+          willRenew: _willRenew,
+        );
         _controller.sink.add(purchaserInfo);
         return purchaserInfo;
       },
@@ -64,7 +73,9 @@ class FakePaymentService implements PaymentService {
   @override
   Future<PurchaserInfo> getPurchaserInfo() =>
       Future.value(PaymentMockData.createPurchaserInfo(
-          withActiveSubscription: _hasMockActiveSubscription));
+        withActiveSubscription: _hasMockActiveSubscription,
+        willRenew: _willRenew,
+      ));
 
   @override
   Future<void> presentCodeRedemptionSheet() {
