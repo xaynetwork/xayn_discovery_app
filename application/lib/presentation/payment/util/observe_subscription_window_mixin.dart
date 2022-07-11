@@ -8,12 +8,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/subscription_window_observation_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/datetime_utils.dart';
+import 'package:xayn_discovery_app/presentation/utils/real_time.dart';
 
 typedef OnSubscriptionObservation = void Function(
     SubscriptionWindowMeasuredObservation observation);
 
 mixin ObserveSubscriptionWindowMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<SubscriptionWindowObservation, None>? _useCaseSink;
+  late final RealTime _realTime = di.get();
 
   @override
   Future<void> close() {
@@ -79,7 +81,7 @@ mixin ObserveSubscriptionWindowMixin<T> on UseCaseBlocHelper<T> {
         final subscriptionStatus =
             await getSubscriptionStatusUseCase.singleOutput(none);
         final daysToSubscribe = subscriptionStatus.trialEndDate
-            ?.calculateDifferenceInDays(DateTime.now());
+            ?.calculateDifferenceInDays(_realTime.now);
         final purchaseDate = subscriptionStatus.purchaseDate;
 
         sendAnalyticsUseCase(
