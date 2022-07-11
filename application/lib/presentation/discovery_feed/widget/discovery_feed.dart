@@ -74,7 +74,7 @@ class _DiscoveryFeedState
 
       void onEditReaderModeSettingsPressed() {
         toggleOverlay(
-          (_) => EditReaderModeSettingsMenu(
+          builder: (_) => EditReaderModeSettingsMenu(
             onCloseMenu: removeOverlay,
           ),
         );

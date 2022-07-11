@@ -100,7 +100,7 @@ class _ActiveSearchState
           );
 
       void onEditReaderModeSettingsPressed() => toggleOverlay(
-            (_) => EditReaderModeSettingsMenu(
+            builder: (_) => EditReaderModeSettingsMenu(
               onCloseMenu: removeOverlay,
             ),
           );

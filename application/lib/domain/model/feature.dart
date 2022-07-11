@@ -17,6 +17,16 @@ enum Feature {
       Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
       'Detects non readable text in Articles.'),
+
+  ///TODO remove flag
+  altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
+
+  newExcludeSourceFlow(
+    Owner.Carmine,
+    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+    'Open menu when clicking card header icon',
+  ),
+
   pushNotificationDeepLinks(Owner.Peter, false,
       'Allows to deep link to an article when tapping on push notification');
 

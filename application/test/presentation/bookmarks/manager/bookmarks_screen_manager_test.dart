@@ -37,17 +37,16 @@ void main() {
       name: 'Provider name', favicon: 'https://www.foo.com/favicon.ico');
   const url = 'https://url_test.com';
 
-  final bookmarks = [
-    Bookmark(
-      documentId: documentId,
-      collectionId: collectionId,
-      title: 'Bookmark1 title',
-      image: Uint8List.fromList([1, 2, 3]),
-      provider: provider,
-      createdAt: DateTime.now().toUtc().toString(),
-      uri: Uri.parse(url),
-    )
-  ];
+  final bookmark = Bookmark(
+    documentId: documentId,
+    collectionId: collectionId,
+    title: 'Bookmark1 title',
+    image: Uint8List.fromList([1, 2, 3]),
+    provider: provider,
+    createdAt: DateTime.now().toUtc().toString(),
+    uri: Uri.parse(url),
+  );
+  final bookmarks = [bookmark];
 
   BookmarksScreenManager create({
     bool setMockOverlayManager = false,
@@ -244,6 +243,18 @@ void main() {
           .singleOutput(OnboardingType.bookmarksManage));
       verifyNoMoreInteractions(needToShowOnboardingUseCase);
       verifyZeroInteractions(manager.overlayManager);
+    },
+  );
+
+  blocTest<BookmarksScreenManager, BookmarksScreenState>(
+    'Opening a document should be done by using a document ID',
+    build: () => create(setMockOverlayManager: true),
+    act: (manager) => manager.onBookmarkPressed(bookmark: bookmark),
+    verify: (manager) {
+      verify(bookmarksScreenNavActions.onBookmarkPressed(
+        isPrimary: true,
+        bookmarkId: documentId,
+      ));
     },
   );
 }

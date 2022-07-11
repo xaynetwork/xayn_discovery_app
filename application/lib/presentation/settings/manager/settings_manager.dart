@@ -33,6 +33,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_da
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -52,7 +53,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         UseCaseBlocHelper<SettingsScreenState>,
         OpenExternalUrlMixin<SettingsScreenState>,
         ObserveSubscriptionWindowMixin<SettingsScreenState>,
-        OverlayManagerMixin<SettingsScreenState>
+        OverlayManagerMixin<SettingsScreenState>,
+        RedeemPromoCodeMixin<SettingsScreenState>
     implements SettingsNavActions {
   final FeatureManager _featureManager;
   final GetAppVersionUseCase _getAppVersionUseCase;
@@ -225,11 +227,15 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       onSubscriptionWindowOpened(
         currentView: SubscriptionWindowCurrentView.settings,
       );
+
       showOverlay(
         OverlayData.bottomSheetPayment(
           onClosePressed: () => onSubscriptionWindowClosed(
             currentView: SubscriptionWindowCurrentView.settings,
           ),
+          onRedeemPressed: _featureManager.isAlternativePromoCodeEnabled
+              ? redeemAlternativeCodeFlow
+              : null,
         ),
       );
     }

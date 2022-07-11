@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:platform/platform.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 
@@ -13,7 +13,8 @@ class RequestCodeRedemptionSheetUseCase extends UseCase<None, None> {
 
   RequestCodeRedemptionSheetUseCase(
     this._paymentService,
-  ) : _isIOS = Platform.isIOS;
+    Platform platform,
+  ) : _isIOS = platform.isIOS;
 
   @visibleForTesting
   RequestCodeRedemptionSheetUseCase.test(

@@ -129,7 +129,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
   void onEditReaderModeSettingsPressed() {
     toggleOverlay(
-      (_) => EditReaderModeSettingsMenu(
+      builder: (_) => EditReaderModeSettingsMenu(
         onCloseMenu: removeOverlay,
       ),
     );

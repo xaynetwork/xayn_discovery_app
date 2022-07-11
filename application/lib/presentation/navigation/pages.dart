@@ -31,7 +31,6 @@ class PageRegistry {
     personalArea,
     settings,
     countryFeedSettings,
-    sourceFeedSettings,
     payment,
   };
 
@@ -103,11 +102,14 @@ class PageRegistry {
     builder: (_, args) => SettingsScreen(),
   );
 
-  static final sourceFeedSettings = xayn.PageData(
-    name: "sourceFeedSettings",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => SourcesScreen(),
-  );
+  static sourceFeedSettings({bool openOnHiddenSourcesTab = false}) =>
+      xayn.PageData(
+        name: "sourceFeedSettings",
+        arguments: openOnHiddenSourcesTab,
+        builder: (_, bool? args) => SourcesScreen(
+          openOnHiddenSourcesTab: args!,
+        ),
+      );
 
   static final countryFeedSettings = xayn.PageData(
     name: "countryFeedSettings",

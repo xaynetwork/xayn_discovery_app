@@ -18,32 +18,17 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen>
     with OverlayMixin<PaymentScreen> {
-  late final manager = di.get<PaymentScreenManager>();
+  late final manager = di.get<PagePaymentScreenManager>();
 
   @override
   OverlayManager get overlayManager => manager.overlayManager;
 
   @override
   Widget build(BuildContext context) =>
-      BlocConsumer<PaymentScreenManager, PaymentScreenState>(
+      BlocBuilder<PaymentScreenManager, PaymentScreenState>(
         bloc: manager,
-        listener: (_, state) => _handlePurchasedOrRestored(
-          state: state,
-          context: context,
-        ),
         builder: (_, state) => _buildScreen(state),
       );
-
-  void _handlePurchasedOrRestored({
-    required PaymentScreenState state,
-    required BuildContext context,
-  }) =>
-      state.whenOrNull(ready: (product) {
-        if (product.status.isPurchased || product.status.isRestored) {
-          manager.onDismiss();
-        }
-        return null;
-      });
 
   Widget _buildLoading() => SizedBox(
         height: R.dimen.unit20,

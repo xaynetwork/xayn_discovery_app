@@ -40,6 +40,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_do
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -68,7 +69,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         ChangeUserReactionMixin<DiscoveryState>,
         ObserveSubscriptionWindowMixin<DiscoveryState>,
         OverlayManagerMixin<DiscoveryState>,
-        CheckValidDocumentMixin<DiscoveryState> {
+        CheckValidDocumentMixin<DiscoveryState>,
+        RedeemPromoCodeMixin<DiscoveryState> {
   final EngineEventsUseCase engineEventsUseCase;
   final FoldEngineEvent foldEngineEvent;
   final FetchCardIndexUseCase fetchCardIndexUseCase;
@@ -308,6 +310,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         onClosePressed: () => onSubscriptionWindowClosed(
           currentView: SubscriptionWindowCurrentView.feed,
         ),
+        onRedeemPressed: featureManager.isAlternativePromoCodeEnabled
+            ? redeemAlternativeCodeFlow
+            : null,
       ),
     );
   }

@@ -42,11 +42,15 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         map[AppStatusFields.ratingDialogAlreadyVisible] as bool?;
     final isBetaUser = map[AppStatusFields.isBetaUser] as bool?;
     final cta = _mapToCTAMapper.map(map[AppStatusFields.cta]);
+    final extraTrialDate = map[AppStatusFields.extraTrialDate] as DateTime?;
+    final usedPromoCodes = map[AppStatusFields.usedPromoCodes] as List<String>?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
       lastKnownAppVersion: appVersion,
       firstAppLaunchDate: firstAppLaunchDate ?? DateTime.now(),
+      extraTrialEndDate: extraTrialDate,
+      usedPromoCodes: usedPromoCodes?.toSet() ?? {},
       lastSeenDate: lastSeenDate ?? DateTime.now(),
       userId: UniqueId.fromTrustedString(userId ?? const Uuid().v4()),
       onboardingStatus: onboardingStatus,
@@ -70,6 +74,8 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
             entity.ratingDialogAlreadyVisible,
         AppStatusFields.isBetaUser: entity.isBetaUser,
         AppStatusFields.cta: _ctaMapToDbEntityMapper.map(entity.cta),
+        AppStatusFields.extraTrialDate: entity.extraTrialEndDate,
+        AppStatusFields.usedPromoCodes: entity.usedPromoCodes.toList(),
       };
 }
 
@@ -85,4 +91,6 @@ abstract class AppStatusFields {
   static const int ratingDialogAlreadyVisible = 6;
   static const int isBetaUser = 7;
   static const int cta = 8;
+  static const int extraTrialDate = 9;
+  static const int usedPromoCodes = 10;
 }
