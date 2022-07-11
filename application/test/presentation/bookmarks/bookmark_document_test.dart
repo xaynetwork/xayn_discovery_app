@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookmark_use_case.dart';
@@ -38,7 +38,7 @@ void main() {
   test('Creating bookmark from a document also stores the document.', () async {
     final bookmark = await createBookmark.singleOutput(
         CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument));
-    final document = await getDocumentUseCase.singleOutput(bookmark.id);
+    final document = await getDocumentUseCase.singleOutput(bookmark.documentId);
 
     expect(document, fakeDocument);
   });
@@ -48,8 +48,8 @@ void main() {
       () async {
     final original = await createBookmark.singleOutput(
         CreateBookmarkFromDocumentUseCaseIn(document: fakeDocument));
-    final secondCall =
-        await getBookmarkUseCase.singleOutput(fakeDocument.documentId.uniqueId);
+    final secondCall = await getBookmarkUseCase.singleOutput(
+        Bookmark.generateUniqueIdFromUri(fakeDocument.resource.url));
 
     expect(original, secondCall);
   });

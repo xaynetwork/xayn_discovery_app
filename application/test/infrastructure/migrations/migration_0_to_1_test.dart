@@ -47,10 +47,6 @@ void main() async {
       expect(Hive.safeBox<Record>(BoxNames.documents).values, isNotNull);
     });
 
-    test('DocumentFilters should be set', () async {
-      expect(Hive.safeBox<Record>(BoxNames.documentFilters).values, isNotNull);
-    });
-
     test('AppStatus should be set', () async {
       expect(Hive.safeBox<Record>(BoxNames.appStatus).values, isNotNull);
     });
@@ -113,12 +109,6 @@ void main() async {
       final migrations = HiveDbMigrations();
       await migrations.migrate(toVersion: 1);
       expect(Hive.safeBox<Record>(BoxNames.documents).values, isNotEmpty);
-    });
-
-    test('DocumentFilters should be set', () async {
-      final migrations = HiveDbMigrations();
-      await migrations.migrate(toVersion: 1);
-      expect(Hive.safeBox<Record>(BoxNames.documentFilters).values, isNotEmpty);
     });
 
     test('AppStatus should be set', () async {

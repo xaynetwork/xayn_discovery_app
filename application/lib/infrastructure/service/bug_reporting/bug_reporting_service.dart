@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:injectable/injectable.dart';
+import 'package:instabug_flutter/BugReporting.dart';
 import 'package:instabug_flutter/CrashReporting.dart';
 import 'package:instabug_flutter/Instabug.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
@@ -13,6 +13,7 @@ const kInstabugTokenParamName = 'token';
 const kInstabugInvocationEventsParamName = 'invocationEvents';
 const kInstabugToken = Env.instabugToken;
 const kInstabugInvocationEvents = [InvocationEvent.none];
+const kUserIdAttributeKey = 'USER_ID';
 
 @lazySingleton
 class BugReportingService {
@@ -21,27 +22,38 @@ class BugReportingService {
   }
 
   void _init({required String userId}) {
-    Instabug.setUserAttribute(userId, 'userId');
-    //init method for Andriod is called natively from CustomFlutterApplication class
-    if (Platform.isIOS) {
-      _initiOS(kInstabugToken, kInstabugInvocationEvents);
-      Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
-    }
+    Instabug.start(kInstabugToken, kInstabugInvocationEvents);
+    Instabug.setWelcomeMessageMode(WelcomeMessageMode.disabled);
+    Instabug.setUserAttribute(userId, kUserIdAttributeKey);
+    Instabug.setUserData(userId);
+    BugReporting.setInvocationOptions([InvocationOption.emailFieldOptional]);
   }
 
-  _initiOS(
-    String token,
-    List<InvocationEvent> invocationEvents,
-  ) =>
-      Instabug.start(token, invocationEvents);
-
-  void showDialog({
+  void reportBug({
     Brightness? brightness,
     Color? primaryColor,
   }) {
+    _setInstabugStyle(brightness, primaryColor);
+    BugReporting.show(
+      ReportType.bug,
+      [InvocationOption.emailFieldOptional],
+    );
+  }
+
+  void giveFeedback({
+    Brightness? brightness,
+    Color? primaryColor,
+  }) {
+    _setInstabugStyle(brightness, primaryColor);
+    BugReporting.show(
+      ReportType.feedback,
+      [InvocationOption.emailFieldOptional],
+    );
+  }
+
+  void _setInstabugStyle(Brightness? brightness, Color? primaryColor) {
     if (brightness != null) Instabug.setColorTheme(_getTheme(brightness));
     if (primaryColor != null) Instabug.setPrimaryColor(primaryColor);
-    Instabug.show();
   }
 
   ColorTheme _getTheme(Brightness brightness) =>

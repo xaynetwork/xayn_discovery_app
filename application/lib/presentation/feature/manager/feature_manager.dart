@@ -29,12 +29,16 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPaymentEnabled => isEnabled(Feature.payment);
   bool get isGibberishEnabled => isEnabled(Feature.gibberish);
+  bool get isAlternativePromoCodeEnabled => isEnabled(Feature.altPromoCode);
 
   bool get isTtsEnabled => isEnabled(Feature.tts);
 
   bool get isCustomInlineCardEnabled => isEnabled(Feature.inlineCustomCard);
 
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
+
+  bool get isNewExcludeSourceFlowEnabled =>
+      isEnabled(Feature.newExcludeSourceFlow);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
@@ -64,6 +68,16 @@ class FeatureManager extends Cubit<FeatureManagerState>
     final appStatusRepo = di.get<AppStatusRepository>();
     final newStatus =
         appStatusRepo.appStatus.copyWith(firstAppLaunchDate: DateTime.now());
+    appStatusRepo.save(newStatus);
+  }
+
+  void setTrialDurationToZero() {
+    final appStatusRepo = di.get<AppStatusRepository>();
+    final newStatus = appStatusRepo.appStatus.copyWith(
+      firstAppLaunchDate: DateTime.now().subtract(const Duration(days: 7)),
+      extraTrialEndDate: null,
+      usedPromoCodes: {},
+    );
     appStatusRepo.save(newStatus);
   }
 }

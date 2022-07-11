@@ -1,12 +1,12 @@
 import 'dart:ui' as ui;
 
-import 'package:amplitude_flutter/amplitude.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:logger/logger.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:mockito/annotations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
@@ -103,10 +103,10 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_style_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
@@ -117,7 +117,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/source_filter_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -129,9 +129,10 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 /// Please, keep those alphabetically sorted.
 /// It is easier to support end expand
 @GenerateMocks([
+  Mixpanel,
+  People,
   AddSourceToExcludedListUseCase,
   AddSourceToTrustedListUseCase,
-  Amplitude,
   ActiveSearchNavActions,
   AnalyticsService,
   AppDiscoveryEngine,
@@ -259,6 +260,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SettingsScreenManager,
   ShareHandler,
   ShareUriUseCase,
+  SourcesScreenNavActions,
   SurveyBannerMapper,
   UniqueIdHandler,
   UpdateSessionUseCase,
@@ -267,7 +269,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DeepLinkManager,
   MarketingAnalyticsService,
   CountryFeedSettingsNavActions,
-  SourceFilterSettingsNavActions,
 ])
 class Mocks {
   Mocks._();

@@ -8,7 +8,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/country_feed_settings_page.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source_filter_settings_page.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/add_source_screen.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/sources_screen.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -30,7 +31,6 @@ class PageRegistry {
     personalArea,
     settings,
     countryFeedSettings,
-    sourceFeedSettings,
     payment,
   };
 
@@ -97,11 +97,14 @@ class PageRegistry {
     builder: (_, args) => SettingsScreen(),
   );
 
-  static final sourceFeedSettings = xayn.PageData(
-    name: "sourceFeedSettings",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => SourceFilterSettingsPage(),
-  );
+  static sourceFeedSettings({bool openOnHiddenSourcesTab = false}) =>
+      xayn.PageData(
+        name: "sourceFeedSettings",
+        arguments: openOnHiddenSourcesTab,
+        builder: (_, bool? args) => SourcesScreen(
+          openOnHiddenSourcesTab: args!,
+        ),
+      );
 
   static final countryFeedSettings = xayn.PageData(
     name: "countryFeedSettings",
@@ -122,5 +125,17 @@ class PageRegistry {
     name: "payment",
     //ignore: prefer_const_constructors
     builder: (_, args) => PaymentScreen(),
+  );
+
+  static final excludedSourceSelection = xayn.PageData(
+    name: "excludedSourceSelection",
+    //ignore: prefer_const_constructors
+    builder: (_, args) => AddSourceScreen.excluded(),
+  );
+
+  static final trustedSourceSelection = xayn.PageData(
+    name: "trustedSourceSelection",
+    //ignore: prefer_const_constructors
+    builder: (_, args) => AddSourceScreen.trusted(),
   );
 }

@@ -178,5 +178,21 @@ btnAdd: Newsquelle hinzufügen
 excludedSourcesDescription: Diese Quellen werden nicht mehr im Feed angezeigt.
 sourcePendingAddition: Diese Quelle wird der Liste hinzugefügt
 sourcePendingRemoval: Diese Quelle wurde gerade aus der Liste entfernt
-settingsGiveFeedback: Give feedback
-subscriptionExpiresText: 'The subscription expires on: %s'
+settingsGiveFeedback: Feedback geben
+subscriptionExpiresText: 'Das Abo läuft ab am: %s'
+promoCodeEnterTitle: Gib Deinen Code hier ein
+promoCodeActionApplyCode: Anwenden
+promoCodeErrorCodeNotFound: Dieser Aktionscode kann nicht gefunden werden
+promoCodeErrorExpired: Dieser Aktionscode ist abgelaufen
+promoCodeSuccessResultTitle: Du kannst Xayn noch %s weitere Tage kostenlos testen
+promoCodeSuccessResultBody: Wir würden gerne Dein Feedback hören. Du kasnnst uns eine Nachricht in den Einstellungen hinterlassen.
+promoCodeErrorAlreadyUsed: Du hast diesen Aktionscode bereits verwendet
+excludeSourceMenuItemTitle: Diese Quelle aus dem Feed ausblenden
+noTrustedSourcesYet: Noch keine bevorzugten Quellen
+noExcludedSourcesYet: Noch keine verborgenen Quellen
+noSourcesFoundTitle: Keine Ergebnisse
+noSourcesFoundInfo: Wir konnten keine Quellen für diese Suche finden
+sourceExcludedTooltipMessage: Source excluded Manage Sources
+manageSourcesTooltipMessage: Manage Sources
+allowSourceBackMenuItemTitle: Allow this source back on my feed
+sourceAllowedBackTooltipMessage: Source allowed back

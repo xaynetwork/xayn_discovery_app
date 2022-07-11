@@ -17,6 +17,9 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
     final collectionId = map[BookmarkMapperFields.collectionId] ??
         throwMapperException() as String;
 
+    final documentId = map[BookmarkMapperFields.documentId] ??
+        throwMapperException() as String;
+
     final title =
         map[BookmarkMapperFields.title] ?? throwMapperException() as String;
 
@@ -32,8 +35,9 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
     final createdAt =
         map[BookmarkMapperFields.createdAt] ?? throwMapperException() as String;
 
-    return Bookmark(
+    return Bookmark.fromMap(
       id: UniqueId.fromTrustedString(id),
+      documentId: UniqueId.fromTrustedString(documentId),
       collectionId: UniqueId.fromTrustedString(collectionId),
       title: title,
       image: image,
@@ -54,6 +58,7 @@ class BookmarkMapper extends BaseDbEntityMapper<Bookmark> {
         BookmarkMapperFields.providerName: entity.provider?.name,
         BookmarkMapperFields.providerThumbnail: entity.provider?.favicon,
         BookmarkMapperFields.createdAt: entity.createdAt,
+        BookmarkMapperFields.documentId: entity.documentId.value,
       };
 
   @override
@@ -74,4 +79,5 @@ abstract class BookmarkMapperFields {
   static const int providerName = 4;
   static const int providerThumbnail = 5;
   static const int createdAt = 6;
+  static const int documentId = 7;
 }

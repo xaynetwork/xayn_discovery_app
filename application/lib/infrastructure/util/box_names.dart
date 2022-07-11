@@ -3,7 +3,6 @@ enum BoxNames {
   collections,
   bookmarks,
   documents,
-  documentFilters,
   appStatus,
   feed,
   feedSettings,

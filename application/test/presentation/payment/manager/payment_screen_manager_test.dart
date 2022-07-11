@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:platform/platform.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
@@ -22,6 +23,7 @@ void main() {
   late MockSendMarketingAnalyticsUseCase sendMarketingAnalyticsUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockPurchaseEventMapper purchaseEventMapper;
+  late MockFeatureManager featureManager;
 
   final testPurchaseEvent = PurchaseMarketingEvent(
     productIdentifier: 'id',
@@ -40,6 +42,9 @@ void main() {
     sendMarketingAnalyticsUseCase = MockSendMarketingAnalyticsUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     purchaseEventMapper = MockPurchaseEventMapper();
+    featureManager = MockFeatureManager();
+
+    when(featureManager.isAlternativePromoCodeEnabled).thenReturn(false);
 
     when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) async => SubscriptionStatus.initial());
@@ -55,8 +60,7 @@ void main() {
 
     when(purchaseEventMapper.map(any)).thenReturn(testPurchaseEvent);
 
-    manager = PaymentScreenManager(
-      paymentScreenNavActions,
+    manager = PagePaymentScreenManager(
       getSubscriptionDetailsUseCase,
       purchaseSubscriptionUseCase,
       restoreSubscriptionUseCase,
@@ -66,6 +70,9 @@ void main() {
       sendMarketingAnalyticsUseCase,
       sendAnalyticsUseCase,
       purchaseEventMapper,
+      featureManager,
+      FakePlatform(operatingSystem: 'ios'),
+      paymentScreenNavActions,
     );
   });
 
@@ -210,6 +217,9 @@ void main() {
             ),
           ],
         );
+
+        when(requestCodeRedemptionSheetUseCase.call(none))
+            .thenAnswer((realInvocation) async => []);
 
         manager.enterRedeemCode();
 

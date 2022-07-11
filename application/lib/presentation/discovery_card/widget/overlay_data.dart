@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:dart_remote_config/dart_remote_config.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -24,8 +25,10 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/error/payment_faile
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_bookmarks_to_collection/widget/move_bookmarks_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_bookmark_to_collection.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/widget/move_document_to_collection.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/onboarding/widget/onboarding_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/promo_code_applied_bottom_sheet.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/redeem_promo_code_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/onboarding/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
@@ -71,6 +74,22 @@ class OverlayData {
           label: R.strings.sourceHandlingTooltipLabel,
           highlightText: R.strings.sourceHandlingTooltipHighlightedWord,
           onTap: onTap,
+        ),
+      );
+
+  static tooltipSourceExcluded({required VoidCallback onTap}) => _wrapTooltip(
+        design.TooltipData.customized(
+          key: 'sourceExcluded',
+          label: R.strings.sourceExcludedTooltipMessage,
+          highlightText: R.strings.manageSourcesTooltipMessage,
+          onTap: onTap,
+        ),
+      );
+
+  static tooltipSourceIncluded() => _wrapTooltip(
+        design.TooltipData.customized(
+          key: 'sourceIncluded',
+          label: R.strings.sourceAllowedBackTooltipMessage,
         ),
       );
 
@@ -175,10 +194,12 @@ class OverlayData {
 
   static BottomSheetData bottomSheetPayment({
     required VoidCallback onClosePressed,
+    required VoidCallback? onRedeemPressed,
   }) =>
       BottomSheetData(
         builder: (context, subscriptionStatus) => PaymentBottomSheet(
           onClosePressed: onClosePressed,
+          onRedeemPressed: onRedeemPressed,
         ),
       );
 
@@ -226,6 +247,19 @@ class OverlayData {
           collectionId: collectionId,
           onMovePressed: onMovePressed,
           onSystemPop: onClose,
+        ),
+      );
+
+  static BottomSheetData bottomSheetPromoCodeApplied(PromoCode promoCode) =>
+      BottomSheetData(
+        builder: (_, __) => PromoCodeAppliedBottomSheet(promoCode: promoCode),
+      );
+
+  static BottomSheetData bottomSheetAlternativePromoCode(
+          OnRedeemSuccessful onRedeemSuccessful) =>
+      BottomSheetData(
+        builder: (_, __) => RedeemPromoCodeBottomSheet(
+          onRedeemSuccessful: onRedeemSuccessful,
         ),
       );
 

@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
+import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
@@ -17,6 +20,8 @@ void main() {
   late SourcesPendingOperations sourcesPendingOperations;
   late StreamController<EngineEvent> eventsController;
   late MockAppDiscoveryEngine engine;
+  late SourcesScreenNavActions navActions;
+  late MockSendAnalyticsUseCase sendAnalyticsUseCase;
 
   final defaultExcludedSources = {
     Source('https://www.a.com'),
@@ -50,6 +55,8 @@ void main() {
     sourcesPendingOperations = InMemorySourcesPendingOperations();
     engineEventsUseCase = MockEngineEventsUseCase();
     engine = MockAppDiscoveryEngine();
+    navActions = MockSourcesScreenNavActions();
+    sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     eventsController = StreamController<EngineEvent>();
 
     when(engineEventsUseCase.transaction(any))
@@ -103,6 +110,10 @@ void main() {
 
       return Future.value(realInvocation.positionalArguments.first);
     });
+    when(sendAnalyticsUseCase.call(any)).thenAnswer((realInvocation) async => [
+          UseCaseResult.success(
+              realInvocation.positionalArguments.first as AnalyticsEvent),
+        ]);
 
     await configureTestDependencies();
 
@@ -110,13 +121,18 @@ void main() {
 
     di.registerFactory<DiscoveryEngine>(() => engine);
 
-    manager = SourcesManager(engineEventsUseCase, sourcesPendingOperations);
+    manager = SourcesManager(
+      sendAnalyticsUseCase,
+      navActions,
+      engineEventsUseCase,
+      sourcesPendingOperations,
+    );
   });
 
   blocTest<SourcesManager, SourcesState>(
     'WHEN SourcesManager initializes THEN expect excluded and trusted sources to be filled ',
     build: () => manager,
-    act: (manager) => manager.init(),
+    act: (manager) => manager,
     verify: (manager) => expect(
         manager.state,
         SourcesState(
@@ -131,7 +147,7 @@ void main() {
     'WHEN requesting all sources THEN expect the result in the state ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.getAvailableSourcesList('new');
     },
     verify: (manager) => expect(
@@ -144,6 +160,7 @@ void main() {
           trustedSources: defaultTrustedSources,
           jointExcludedSources: defaultExcludedSources,
           jointTrustedSources: defaultTrustedSources,
+          sourcesSearchTerm: 'new',
         )),
   );
 
@@ -151,7 +168,7 @@ void main() {
     'WHEN adding a pending excluded source THEN expect this entry in the jointExcludedSources ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToExcludedList(newSource);
     },
     verify: (manager) {
@@ -162,6 +179,10 @@ void main() {
             trustedSources: defaultTrustedSources,
             jointExcludedSources: {...defaultExcludedSources, newSource},
             jointTrustedSources: defaultTrustedSources,
+            operations: {
+              SourcesManagementOperation.addToExcludedSources(
+                  Source('https://www.new.com'))
+            },
           ));
 
       expect(
@@ -175,9 +196,9 @@ void main() {
     'WHEN persisting a pending excluded source THEN expect this entry in the excludedSources as well ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -200,18 +221,24 @@ void main() {
     'WHEN adding a pending trusted source THEN expect this entry in the jointTrustedSources ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToTrustedList(newSource);
     },
     verify: (manager) {
       expect(
           manager.state,
           SourcesState(
-            excludedSources: defaultExcludedSources,
-            trustedSources: defaultTrustedSources,
-            jointExcludedSources: defaultExcludedSources,
-            jointTrustedSources: {...defaultTrustedSources, newSource},
-          ));
+              excludedSources: defaultExcludedSources,
+              trustedSources: defaultTrustedSources,
+              jointExcludedSources: defaultExcludedSources,
+              jointTrustedSources: {
+                ...defaultTrustedSources,
+                newSource
+              },
+              operations: {
+                SourcesManagementOperation.addToTrustedSources(
+                    Source('https://www.new.com'))
+              }));
 
       expect(
           manager.isPendingAddition(
@@ -224,9 +251,9 @@ void main() {
     'WHEN persisting a pending trusted source THEN expect this entry in the trustedSources as well ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -249,18 +276,21 @@ void main() {
     'WHEN removing an excluded source THEN expect this entry to become a pending removal ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
     },
     verify: (manager) {
       expect(
           manager.state,
           SourcesState(
-            excludedSources: defaultExcludedSources,
-            trustedSources: defaultTrustedSources,
-            jointExcludedSources: defaultExcludedSources,
-            jointTrustedSources: defaultTrustedSources,
-          ));
+              excludedSources: defaultExcludedSources,
+              trustedSources: defaultTrustedSources,
+              jointExcludedSources: defaultExcludedSources,
+              jointTrustedSources: defaultTrustedSources,
+              operations: {
+                SourcesManagementOperation.removeFromExcludedSources(
+                    Source('https://www.a.com'))
+              }));
 
       expect(
           manager.isPendingRemoval(
@@ -273,9 +303,9 @@ void main() {
     'WHEN persisting a pending removal of an excluded source THEN expect this entry to become an actual removal ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -300,18 +330,21 @@ void main() {
     'WHEN removing a trusted source THEN expect this entry to become a pending removal ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
     },
     verify: (manager) {
       expect(
           manager.state,
           SourcesState(
-            excludedSources: defaultExcludedSources,
-            trustedSources: defaultTrustedSources,
-            jointExcludedSources: defaultExcludedSources,
-            jointTrustedSources: defaultTrustedSources,
-          ));
+              excludedSources: defaultExcludedSources,
+              trustedSources: defaultTrustedSources,
+              jointExcludedSources: defaultExcludedSources,
+              jointTrustedSources: defaultTrustedSources,
+              operations: {
+                SourcesManagementOperation.removeFromTrustedSources(
+                    Source('https://www.x.com'))
+              }));
 
       expect(
           manager.isPendingRemoval(
@@ -324,9 +357,9 @@ void main() {
     'WHEN persisting a pending removal of a trusted source THEN expect this entry to become an actual removal ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges(isBatchedProcess: true);
     },
     verify: (manager) {
       expect(
@@ -351,7 +384,7 @@ void main() {
     'WHEN adding a pending excluded source and then undoing it THEN expect the state to reflect this ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToExcludedList(newSource);
       manager.removePendingSourceOperation(newSource);
     },
@@ -376,7 +409,7 @@ void main() {
     'WHEN adding a pending trusted source and then undoing it THEN expect the state to reflect this ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToTrustedList(newSource);
       manager.removePendingSourceOperation(newSource);
     },
@@ -401,9 +434,9 @@ void main() {
     'WHEN adding a pending excluded source and then undoing it AFTER applyChanges THEN expect nothing changes ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges(isBatchedProcess: true);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
@@ -427,9 +460,9 @@ void main() {
     'WHEN adding a pending trusted source and then undoing it AFTER applyChanges THEN expect nothing changes ',
     build: () => manager,
     act: (manager) {
-      manager.init();
+      manager;
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(intervalBetweenOperations: Duration.zero);
+      manager.applyChanges(isBatchedProcess: true);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {

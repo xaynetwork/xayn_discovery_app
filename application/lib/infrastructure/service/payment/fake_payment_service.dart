@@ -16,6 +16,7 @@ class FakePaymentService implements PaymentService {
       StreamController<PurchaserInfo>.broadcast();
   final _randomNumberGenerator = Random();
 
+  bool calledPresentCodeRedemptionSheet = false;
   @override
   Stream<PurchaserInfo> get purchaserInfoStream => _controller.stream;
 
@@ -77,9 +78,15 @@ class FakePaymentService implements PaymentService {
       ));
 
   @override
-  Future<void> presentCodeRedemptionSheet() => Future.value();
+  Future<void> presentCodeRedemptionSheet() {
+    calledPresentCodeRedemptionSheet = true;
+    return Future.value();
+  }
 
   @override
   Future<String?> get subscriptionManagementURL =>
       Future.value(Constants.xaynUrl);
+
+  @override
+  Future<void> setAppsFlyerID(String appsFlyerId) => Future.value();
 }

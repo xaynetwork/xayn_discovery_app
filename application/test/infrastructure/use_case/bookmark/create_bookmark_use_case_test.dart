@@ -15,8 +15,8 @@ void main() {
   late MockDateTimeHandler dateTimeHandler;
   late CreateBookmarkUseCase createBookmarkUseCase;
 
-  final bookmarkId = UniqueId();
   final dateTime = DateTime.now();
+  final documentId = UniqueId();
   final collectionId = UniqueId();
   const title = 'Bookmark title';
   final image = Uint8List.fromList([1, 2, 3]);
@@ -24,14 +24,16 @@ void main() {
     name: 'Provider name',
     favicon: 'https://www.foo.com/favicon.ico',
   );
+  const url = 'https://url_test.com';
 
   final createdBookmark = Bookmark(
-    id: bookmarkId,
+    documentId: documentId,
     collectionId: collectionId,
     title: title,
     image: image,
     provider: provider,
     createdAt: dateTime.toUtc().toString(),
+    uri: Uri.parse(url),
   );
 
   setUp(() {
@@ -52,11 +54,12 @@ void main() {
       build: () => createBookmarkUseCase,
       input: [
         CreateBookmarkUseCaseIn(
-          id: bookmarkId,
+          documentId: documentId,
           collectionId: collectionId,
           title: title,
           image: image,
           provider: provider,
+          url: Uri.parse(url),
         )
       ],
       verify: (_) {

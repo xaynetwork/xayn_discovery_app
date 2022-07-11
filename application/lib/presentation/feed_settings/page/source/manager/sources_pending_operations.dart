@@ -12,7 +12,7 @@ abstract class SourcesPendingOperations {
   bool containsRemoveFromTrustedSources(Source source);
   bool containsAddToTrustedSources(Source source);
 
-  Stream<SourcesManagementOperation> asStream();
+  Set<SourcesManagementOperation> toSet();
 
   void addOperation(SourcesManagementOperation operation);
 
@@ -54,8 +54,7 @@ class InMemorySourcesPendingOperations implements SourcesPendingOperations {
       it.source == source);
 
   @override
-  Stream<SourcesManagementOperation> asStream() =>
-      Stream.fromIterable(_operations.toList(growable: false));
+  Set<SourcesManagementOperation> toSet() => _operations.toSet();
 
   @override
   void addOperation(SourcesManagementOperation operation) => _operations
