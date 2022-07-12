@@ -13,7 +13,6 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -22,6 +21,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 
 import '../../test_utils/utils.dart';
 import '../../test_utils/widget_test_utils.dart';

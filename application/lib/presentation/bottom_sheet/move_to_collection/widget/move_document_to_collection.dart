@@ -18,8 +18,9 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/collections
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/select_item_list.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/screen_duration_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
@@ -69,7 +70,10 @@ class _MoveDocumentToCollection extends StatefulWidget {
 }
 
 class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
-    with BottomSheetBodyMixin, OverlayMixin<_MoveDocumentToCollection> {
+    with
+        BottomSheetBodyMixin,
+        ScreenDurationMixin,
+        OverlayMixin<_MoveDocumentToCollection> {
   late final MoveToCollectionManager _manager = di.get();
   late final CollectionCardManagersCache _collectionCardManagersCache =
       di.get();
@@ -131,7 +135,7 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () {
-        _manager.onCancelPressed();
+        _manager.onCancelPressed(screenDuration: getWidgetDuration);
         closeBottomSheet(context);
       },
       setup: BottomSheetFooterSetup.row(
