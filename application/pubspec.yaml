@@ -15,6 +15,7 @@ dependencies:
 
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
+  awesome_notifications: 0.6.21
   connectivity_plus: 2.2.1
   country_code: 1.0.0
   dart_remote_config:
@@ -95,7 +96,7 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: d4a509f0dbc7a775e0461f303abc231d42b2983a
+      ref: 1d700cb37c2c7e16b57a422a52cf00aa683630ee
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release

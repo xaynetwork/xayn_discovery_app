@@ -3,12 +3,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
   late final CardManagersCache _cardManagersCache = di.get();
+
   // late final FeatureManager _featureManager = di.get();
 
   void checkIfDocumentNotProcessable(

@@ -10,8 +10,9 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/mixin/screen_duration_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 import 'manager/delete_collection_confirmation_manager.dart';
@@ -59,6 +60,7 @@ class _DeleteCollection extends StatefulWidget {
 class _CreateCollectionState extends State<_DeleteCollection>
     with
         BottomSheetBodyMixin,
+        ScreenDurationMixin,
         AnimationPlayerChildBuilderStateMixin<_DeleteCollection>,
         OverlayMixin<_DeleteCollection> {
   late final DeleteCollectionConfirmationManager
@@ -94,7 +96,9 @@ class _CreateCollectionState extends State<_DeleteCollection>
 
           final footer = BottomSheetFooter(
             onCancelPressed: () {
-              _deleteCollectionConfirmationManager.onCancelPressed();
+              _deleteCollectionConfirmationManager.onCancelPressed(
+                screenDuration: getWidgetDuration,
+              );
               closeBottomSheet(context);
               widget.onSystemPop?.call();
             },

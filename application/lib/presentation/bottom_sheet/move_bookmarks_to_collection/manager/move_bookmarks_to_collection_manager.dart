@@ -10,9 +10,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/move_bookmar
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/get_all_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/listen_collections_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 
 import 'move_bookmarks_to_collection_state.dart';
 
@@ -84,10 +84,12 @@ class MoveBookmarksToCollectionManager
     );
   }
 
-  void onCancelPressed() {
+  void onCancelPressed({required Duration screenDuration}) {
     _sendAnalyticsUseCase(
       BottomSheetDismissedEvent(
-          bottomSheetView: BottomSheetView.moveMultipleBookmarksToCollection),
+        bottomSheetView: BottomSheetView.moveMultipleBookmarksToCollection,
+        duration: screenDuration,
+      ),
     );
   }
 

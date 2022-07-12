@@ -15,9 +15,9 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -88,11 +88,12 @@ class _DiscoveryCardStaticState
             widget.onTtsData?.call(TtsData.disabled());
 
             toggleOverlay(
-              (_) => DiscoveryCardHeaderMenu(
+              builder: (_) => DiscoveryCardHeaderMenu(
                 itemsMap: _buildDiscoveryCardHeaderMenuItems,
                 source: Source.fromJson(widget.document.resource.url.host),
                 onClose: removeOverlay,
               ),
+              useRootOverlay: true,
             );
           },
           onProviderSectionTap: () {

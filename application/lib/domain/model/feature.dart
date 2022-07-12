@@ -25,7 +25,10 @@ enum Feature {
     Owner.Carmine,
     EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
     'Open menu when clicking card header icon',
-  );
+  ),
+
+  pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
+      'Allows to deep link to an article when tapping on push notification');
 
   final Owner owner;
   final String? description;
