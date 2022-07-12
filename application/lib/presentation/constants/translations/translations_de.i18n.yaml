@@ -192,7 +192,14 @@ noTrustedSourcesYet: Noch keine bevorzugten Quellen
 noExcludedSourcesYet: Noch keine verborgenen Quellen
 noSourcesFoundTitle: Keine Ergebnisse
 noSourcesFoundInfo: Wir konnten keine Quellen für diese Suche finden
-sourceExcludedTooltipMessage: Source excluded Manage Sources
+sourceExcludedTooltipMessage: Quelle verborgen. Quellen verwalten
 manageSourcesTooltipMessage: Manage Sources
 allowSourceBackMenuItemTitle: Allow this source back on my feed
-sourceAllowedBackTooltipMessage: Source allowed back
+sourceAllowedBackTooltipMessage: Quelle wieder erlaubt
+bottomSheetResetAIBody: This clears your personalisation history of read, liked and disliked articles. It won't affect your source preferences, country settings or collections.
+bottomSheetResetAIHeader: Are you sure?
+bottomSheetResetAIButton: Reset now
+feedSettingsScreenResetAIOption: Reset AI
+bottomSheetResettingAIBody: Resetting...
+notificationsChannelName: Basic notifications
+notificationsChannelDescription: Notification channel for basic tests

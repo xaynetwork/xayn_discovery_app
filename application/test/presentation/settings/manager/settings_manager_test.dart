@@ -31,6 +31,7 @@ void main() {
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
+    arePushNotificationDeepLinksEnabled: false,
     subscriptionStatus: subscriptionStatus,
   );
 
@@ -51,6 +52,8 @@ void main() {
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
+  late MockLocalNotificationsService localNotificationsService;
+  late MockDiscoveryFeedManager discoveryFeedManager;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -70,6 +73,8 @@ void main() {
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
+    localNotificationsService = MockLocalNotificationsService();
+    discoveryFeedManager = MockDiscoveryFeedManager();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
@@ -99,6 +104,8 @@ void main() {
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
 
+    when(featureManager.arePushNotificationDeepLinksEnabled).thenReturn(false);
+
     when(getSubscriptionManagementUrlUseCase.singleOutput(none)).thenAnswer(
       (_) => Future.value(
           GetSubscriptionManagementUrlOutput(subscriptionManagementURL)),
@@ -122,6 +129,8 @@ void main() {
         sendAnalyticsUseCase,
         appManager,
         ratingDialogManager,
+        localNotificationsService,
+        discoveryFeedManager,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

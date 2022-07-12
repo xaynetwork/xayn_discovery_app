@@ -34,6 +34,10 @@ class Keys {
       Key('settingsToggleTextToSpeechPreference');
   static const Key settingsCountriesOption = Key('settings_countries_option');
   static const Key settingsSourcesOption = Key('settings_sources_option');
+  static const Key settingsRequestNotificationBtn =
+      Key('settings_request_notification');
+  static const Key settingsSendNotificationBtn =
+      Key('settings_send_notification');
 
   static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
   static const Key navBarItemHome = Key('nav_bar_item_home');

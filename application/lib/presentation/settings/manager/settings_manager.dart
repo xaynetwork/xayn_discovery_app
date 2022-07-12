@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_shared_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_theme_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
@@ -13,6 +14,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/local_notifications_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
@@ -27,6 +29,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
@@ -70,6 +73,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final AppManager _appManager;
   final RatingDialogManager _ratingDialogManager;
+  final LocalNotificationsService _localNotificationsService;
+  final DiscoveryFeedManager _discoveryFeedManager;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -88,6 +93,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._sendAnalyticsUseCase,
     this._appManager,
     this._ratingDialogManager,
+    this._localNotificationsService,
+    this._discoveryFeedManager,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -175,6 +182,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
+          arePushNotificationDeepLinksEnabled:
+              _featureManager.arePushNotificationDeepLinksEnabled,
           subscriptionStatus: _subscriptionStatus,
         );
     return fold2(
@@ -230,5 +239,22 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         ),
       );
     }
+  }
+
+  void requestNotificationPermission() =>
+      _localNotificationsService.requestPermission();
+
+  void sendTestPushNotification() async {
+    if (_discoveryFeedManager.state.cards.isEmpty) return;
+    final card = _discoveryFeedManager.state.cards.first;
+    final document = card.document;
+    if (document == null) return;
+
+    _localNotificationsService.sendNotification(
+      title: document.resource.title,
+      body: document.resource.snippet,
+      documentId: UniqueId.fromTrustedString(document.documentId.toString()),
+      delay: const Duration(seconds: 5),
+    );
   }
 }

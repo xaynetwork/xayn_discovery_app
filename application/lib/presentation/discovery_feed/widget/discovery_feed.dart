@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
@@ -11,7 +12,12 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
-  const DiscoveryFeed({Key? key}) : super(key: key);
+  final UniqueId? selectedDocumentId;
+
+  const DiscoveryFeed({
+    Key? key,
+    this.selectedDocumentId,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DiscoveryFeedState();
@@ -131,6 +137,21 @@ class _DiscoveryFeedState
   @override
   void initState() {
     manager.checkIfNeedToShowOnboarding();
+
+    // TODO: Replace this PoC code when we have a working solution to fetch a document from the engine by providing an ID
+    if (widget.selectedDocumentId != null) {
+      final cardIndex = manager.state.cards
+          .map((it) => it.document?.documentId.toString())
+          .toList()
+          .indexOf(widget.selectedDocumentId!.value);
+      if (cardIndex == -1) return;
+      setState(() {
+        cardViewController.index = cardIndex;
+        manager.handleIndexChanged(cardIndex);
+        manager.maybeSelectCard(widget.selectedDocumentId!);
+      });
+    }
+
     super.initState();
   }
 }
