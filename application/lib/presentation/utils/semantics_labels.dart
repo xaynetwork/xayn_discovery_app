@@ -5,6 +5,8 @@ class SemanticsLabels {
 
   static const String personalAreaIconSettings = 'personal_area_icon_settings';
 
+  static const String textInputField = 'text_input_field';
+
   static String generateCollectionItemLabel(int index) =>
       'collection_item_$index';
 

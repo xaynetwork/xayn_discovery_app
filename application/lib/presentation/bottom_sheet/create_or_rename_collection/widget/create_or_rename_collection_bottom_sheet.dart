@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/screen_duration_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/semantics_labels.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player_child_builder_mixin.dart';
 
 typedef OnApplyPressed = Function(Collection)?;
@@ -99,6 +100,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
             hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
             onChanged: _createOrRenameCollectionManager.updateCollectionName,
             errorText: state.error.errorMsgIfHasOrNull,
+            semantics: SemanticsLabels.textInputField,
           );
 
           final header = Padding(
