@@ -211,6 +211,15 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     // TODO: implement removeSourceFromTrustedList
     throw UnimplementedError();
   }
+
+  @override
+  Future<EngineEvent> overrideSources({
+    required Set<Source> trustedSources,
+    required Set<Source> excludedSources,
+  }) {
+    // TODO: implement overrideSources
+    throw UnimplementedError();
+  }
 }
 
 @LazySingleton(as: AnalyticsService)

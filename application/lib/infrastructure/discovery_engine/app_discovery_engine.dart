@@ -244,6 +244,20 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
+  Future<EngineEvent> overrideSources({
+    required Set<Source> trustedSources,
+    required Set<Source> excludedSources,
+  }) {
+    _inputLog.add('[overrideSources]');
+    return safeRun(
+      () => _engine.overrideSources(
+        trustedSources: trustedSources,
+        excludedSources: excludedSources,
+      ),
+    );
+  }
+
+  @override
   Future<EngineEvent> addSourceToExcludedList(Source source) {
     _inputLog.add('[addSourceToExcludedList]');
     return safeRun(() => _engine.addSourceToExcludedList(source));

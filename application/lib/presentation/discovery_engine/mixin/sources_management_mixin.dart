@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/add_
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_available_sources_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_excluded_sources_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_trusted_sources_list_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/override_sources_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_excluded_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/remove_source_from_trusted_list_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
@@ -18,6 +19,7 @@ mixin SourcesManagementMixin<T> on UseCaseBlocHelper<T> {
       _addSourceToTrustedListUseCaseSink,
       _removeSourceFromExcludedListUseCaseSink,
       _removeSourceFromTrustedListUseCaseSink;
+  UseCaseSink<OverrideSourcesPayload, EngineEvent>? _overrideSourcesUseCaseSink;
 
   @override
   Future<void> close() {
@@ -80,6 +82,16 @@ mixin SourcesManagementMixin<T> on UseCaseBlocHelper<T> {
     _removeSourceFromTrustedListUseCaseSink!(source);
   }
 
+  void overrideSources({
+    required Set<Source> trustedSources,
+    required Set<Source> excludedSources,
+  }) {
+    _overrideSourcesUseCaseSink ??= _getOverrideSourcesUseCaseSink();
+
+    _overrideSourcesUseCaseSink!(OverrideSourcesPayload(
+        trustedSources: trustedSources, excludedSources: excludedSources));
+  }
+
   UseCaseSink<String, EngineEvent> _getAvailableSourcesListUseCaseSink() {
     final useCase = di.get<GetAvailableSourcesListUseCase>();
 
@@ -126,6 +138,14 @@ mixin SourcesManagementMixin<T> on UseCaseBlocHelper<T> {
   UseCaseSink<Source, EngineEvent>
       _getRemoveSourceFromTrustedListUseCaseSink() {
     final useCase = di.get<RemoveSourceFromTrustedListUseCase>();
+
+    return pipe(useCase)
+      ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
+  }
+
+  UseCaseSink<OverrideSourcesPayload, EngineEvent>
+      _getOverrideSourcesUseCaseSink() {
+    final useCase = di.get<OverrideSourcesUseCase>();
 
     return pipe(useCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));
