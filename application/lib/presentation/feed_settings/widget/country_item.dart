@@ -22,7 +22,7 @@ class CountryItem extends StatelessWidget {
         _buildFlag(),
         _buildName(),
         const Spacer(),
-        _buildActionButton(),
+        _buildIcon(),
       ],
     );
     final decoration = BoxDecoration(
@@ -39,11 +39,12 @@ class CountryItem extends StatelessWidget {
       height: R.dimen.iconButtonSize,
       decoration: decoration,
       padding: EdgeInsets.only(left: R.dimen.unit1_5),
+      key: country.key,
       child: row,
     );
     return Padding(
       padding: EdgeInsets.only(top: R.dimen.unit),
-      child: container,
+      child: GestureDetector(onTap: onActionPressed, child: container),
     );
   }
 
@@ -77,16 +78,14 @@ class CountryItem extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton() {
-    final icon = isSelected ? R.assets.icons.cross : R.assets.icons.plus;
-    final btn = AppGhostButton.icon(
-      icon,
-      onPressed: onActionPressed,
-      contentPadding: EdgeInsets.all(R.dimen.unit2),
-      key: country.key,
-      iconColor: R.colors.settingsIcon,
-    );
-    return SizedBox(width: R.dimen.iconButtonSize, child: btn);
+  Widget _buildIcon() {
+    return SizedBox(
+        width: R.dimen.iconButtonSize,
+        child: SvgPicture.asset(
+          isSelected ? R.assets.icons.cross : R.assets.icons.plus,
+          width: R.dimen.unit2,
+          height: R.dimen.unit2,
+        ));
   }
 
   Widget _buildFlag() => ClipRRect(
