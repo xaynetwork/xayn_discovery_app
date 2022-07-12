@@ -100,19 +100,26 @@ extension on String {
       lang = toThreeLetterLang;
     }
 
+    /// check language aliases here https://www.loc.gov/standards/iso639-2/php/code_list.php
     switch (lang) {
       case 'eng':
-        return Language.english;
+        return Language.eng;
       case 'deu':
-        return Language.german;
+        return Language.deu;
       case 'esp':
-        return Language.spanish;
+        return Language.esp;
       case 'nld':
-        return Language.dutch;
+      case 'dut':
+        return Language.dut;
       case 'pol':
-        return Language.polish;
+        return Language.pol;
       case 'fra':
-        return Language.french;
+      case 'fre':
+        return Language.fre;
+      case 'ukr':
+        return Language.ukr;
+      case 'ita':
+        return Language.ita;
       default:
         return null;
     }
