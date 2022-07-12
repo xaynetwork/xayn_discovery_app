@@ -2,12 +2,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/document_id_payload_mapper.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String _kChannelKey = 'basic_channel';
-const String _channelName = 'Basic notifications';
-const String _channelDescription = 'Notification channel for basic tests';
 
 abstract class LocalNotificationsService {
   void requestPermission();
@@ -39,20 +40,26 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
         [
           NotificationChannel(
             channelKey: _kChannelKey,
-            channelName: _channelName,
-            channelDescription: _channelDescription,
+            channelName: R.strings.notificationsChannelName,
+            channelDescription: R.strings.notificationsChannelDescription,
           )
         ],
-        debug: true);
+        debug: EnvironmentHelper.kIsDebug);
 
     AwesomeNotifications().actionStream.listen(_deepLinkHandler);
   }
 
   void _deepLinkHandler(ReceivedNotification receivedNotification) {
     final payload = receivedNotification.payload;
-    if (payload == null) return;
+    if (payload == null) {
+      logger.i('Notification payload not set.');
+      return;
+    }
     final documentId = _payloadToDocumentIdMapper.map(payload);
-    if (documentId == null) return;
+    if (documentId == null) {
+      logger.i('documentId not found in notification payload.');
+      return;
+    }
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
     _deepLinkManager.onDeepLink(deepLinkData);
   }

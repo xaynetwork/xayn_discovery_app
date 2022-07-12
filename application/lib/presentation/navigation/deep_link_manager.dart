@@ -26,7 +26,7 @@ class DeepLinkManagerImpl extends DeepLinkManager {
   void onDeepLink(DeepLinkData deepLinkData) {
     final page = deepLinkData.toPage;
     if (page == null) return;
-    changeStack((stack) => stack.push(page));
+    changeStack((stack) => stack.replace(page));
   }
 }
 
