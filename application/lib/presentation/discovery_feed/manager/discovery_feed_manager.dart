@@ -295,7 +295,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
               lastResults = nextFeedBatchRequestFailed(event);
             } else if (event is RestoreFeedFailed) {
               lastResults = restoreFeedFailed(event);
-            } else if (event.toString() == 'EngineEvent.resetAiSucceeded()') {
+            } else if (event is ResetAiSucceeded) {
               lastResults = {};
             } else {
               lastResults = orElse();

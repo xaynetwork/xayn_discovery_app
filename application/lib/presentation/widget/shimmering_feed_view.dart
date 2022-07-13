@@ -34,6 +34,13 @@ class ShimmeringFeedView extends StatelessWidget {
     resource: _resource,
     batchIndex: -1,
     userReaction: UserReaction.neutral,
+
+    /// StackId.nil() is supposed to be used only for testing but in this case we
+    /// might use it because the document that we're creating is used for the
+    /// shimmering view
+    ///
+    // ignore: invalid_use_of_visible_for_testing_member
+    stackId: StackId.nil(),
   );
 
   ShimmeringFeedView({
