@@ -29,7 +29,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPaymentEnabled => isEnabled(Feature.payment);
 
-  bool get isGibberishEnabled => isEnabled(Feature.gibberish);
   bool get isAlternativePromoCodeEnabled => isEnabled(Feature.altPromoCode);
 
   bool get isTtsEnabled => isEnabled(Feature.tts);

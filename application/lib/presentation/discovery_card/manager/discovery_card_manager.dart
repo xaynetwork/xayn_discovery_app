@@ -113,8 +113,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
           ),
         )
         .followedBy(_injectReaderMetaDataUseCase)
-        .followedByConditionally(_gibberishDetectionUseCase,
-            () => _featureManager.isGibberishEnabled),
+        .followedBy(_gibberishDetectionUseCase),
   );
   late final UseCaseSink<UniqueId, BookmarkStatus> _isBookmarkedHandler =
       pipe(_listenIsBookmarkedUseCase);
@@ -399,12 +398,5 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
         if (previous != BookmarkStatus.bookmarked) callRatingWhenBookmarked();
       },
     );
-  }
-}
-
-extension<In> on Stream<In> {
-  Stream<In> followedByConditionally(
-      UseCase<In, In> useCase, bool Function() condition) {
-    return condition() ? followedBy(useCase) : this;
   }
 }
