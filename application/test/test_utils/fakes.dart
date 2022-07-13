@@ -30,6 +30,7 @@ final fakeDocument = Document(
     datePublished: DateTime.parse("2021-12-29 07:59:49.000Z"),
   ),
   batchIndex: -1,
+  stackId: StackId.nil(),
 );
 
 AppImageCacheManager createFakeImageCacheManager() {

@@ -21,6 +21,9 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 const int _kSearchPageSize = 20;
 const int _kFeedBatchSize = 2;
 
+const String _kHeadlinesProviderPath = '/newscatcher/v1/latest-headlines';
+const String _kNewsProviderPath = '/newscatcher/v1/search-news';
+
 /// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
 class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
@@ -99,6 +102,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       maxItemsPerSearchBatch: _kSearchPageSize,
       feedMarkets: feedMarkets,
       manifest: manifest,
+      headlinesProviderPath: _kHeadlinesProviderPath,
+      newsProviderPath: _kNewsProviderPath,
     );
 
     _updateFeedMarketIdentityParam(feedMarkets);

@@ -156,6 +156,8 @@ void _createDocuments() {
       score: .0,
       topic: 'topic',
     ),
+    // ignore: invalid_use_of_visible_for_testing_member
+    stackId: StackId.nil(),
   );
   final documentWrapper = DocumentWrapper(document);
   repository.save(documentWrapper);

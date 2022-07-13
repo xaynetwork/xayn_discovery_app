@@ -35,6 +35,7 @@ void main() {
       score: .0,
       topic: 'topic',
     ),
+    stackId: StackId.nil(),
   );
 
   setUp(() async {
