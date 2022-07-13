@@ -165,11 +165,7 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
     );
 
-    final openIconColor = !featureManager.isGibberishEnabled
-        ? R.colors.brightIcon
-        : (manager.state.textIsReadable
-            ? R.colors.brightIcon
-            : R.colors.swipeBackgroundIrrelevant);
+    final openIconColor = R.colors.brightIcon;
     final openUrlIcon = Padding(
       padding: EdgeInsets.all(R.dimen.unit),
       child: SvgPicture.asset(

@@ -13,10 +13,6 @@ enum Feature {
       Owner.Frank, false, 'show an inline custom card, as a test only'),
   promptSurvey(Owner.Carmine, false,
       'When enabled, collects the user interactions in order to prompt the survey card'),
-  gibberish(
-      Owner.Simon,
-      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-      'Detects non readable text in Articles.'),
 
   ///TODO remove flag
   altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
