@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/manager/resetting_ai_manager.dart';
+import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/manager/resetting_ai_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class ResettingAIBottomSheet extends BottomSheetBase {
-  ResettingAIBottomSheet({Key? key, VoidCallback? onSystemPop})
-      : super(
+  ResettingAIBottomSheet({
+    Key? key,
+    VoidCallback? onSystemPop,
+    required VoidCallback onResetAIFailed,
+  }) : super(
           key: key,
           body: _ResettingAI(
             onSystemPop: onSystemPop,
+            onResetAIFailed: onResetAIFailed,
           ),
         );
 }
@@ -16,24 +24,29 @@ class _ResettingAI extends StatefulWidget {
   const _ResettingAI({
     Key? key,
     this.onSystemPop,
+    required this.onResetAIFailed,
   }) : super(
           key: key,
         );
 
   final VoidCallback? onSystemPop;
+  final VoidCallback onResetAIFailed;
 
   @override
   State<_ResettingAI> createState() => __ResettingAIState();
 }
 
 class __ResettingAIState extends State<_ResettingAI> with BottomSheetBodyMixin {
+  late final ResettingAIManager _resettingAIManager = di.get();
+
+  @override
+  void didChangeDependencies() {
+    _resettingAIManager.resetAI();
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ///TODO
-    ///A timer used for closing the bottom sheet after few seconds
-    ///To remove when the business logic will be implemented
-    Future.delayed(const Duration(seconds: 3), () => closeBottomSheet(context));
-
     final body = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,6 +67,20 @@ class __ResettingAIState extends State<_ResettingAI> with BottomSheetBodyMixin {
       ],
     );
 
-    return body;
+    return BlocBuilder<ResettingAIManager, ResettingAIState>(
+      bloc: _resettingAIManager,
+      builder: (_, state) => state.map(
+        loading: (_) => body,
+        resetSucceeded: (_) {
+          closeBottomSheet(context);
+          return body;
+        },
+        resetFailed: (_) {
+          widget.onResetAIFailed();
+          closeBottomSheet(context);
+          return body;
+        },
+      ),
+    );
   }
 }

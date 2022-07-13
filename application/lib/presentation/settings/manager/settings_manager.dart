@@ -216,7 +216,11 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void onResetAIPressed() => showOverlay(
         OverlayData.bottomSheetResetAI(
           onResetAIPressed: () => showOverlay(
-            OverlayData.bottomSheetResettingAI(),
+            OverlayData.bottomSheetResettingAI(
+              onResetAIFailed: () => showOverlay(
+                OverlayData.bottomSheetGenericError(),
+              ),
+            ),
           ),
         ),
       );
