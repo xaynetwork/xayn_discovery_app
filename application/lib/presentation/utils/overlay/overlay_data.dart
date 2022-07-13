@@ -256,9 +256,11 @@ class OverlayData {
       );
 
   static BottomSheetData bottomSheetAlternativePromoCode(
-          OnRedeemSuccessful onRedeemSuccessful) =>
+          OnRedeemSuccessful onRedeemSuccessful,
+          {VoidCallback? onCancel}) =>
       BottomSheetData(
         builder: (_, __) => RedeemPromoCodeBottomSheet(
+          onSystemPop: onCancel,
           onRedeemSuccessful: onRedeemSuccessful,
         ),
       );
