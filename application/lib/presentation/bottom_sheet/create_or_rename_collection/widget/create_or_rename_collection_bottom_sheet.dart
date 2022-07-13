@@ -101,7 +101,7 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
             hintText: R.strings.bottomSheetCreateCollectionTextFieldHint,
             onChanged: _createOrRenameCollectionManager.updateCollectionName,
             errorText: state.error.errorMsgIfHasOrNull,
-          ).withSemanticsLabel(SemanticsLabels.textInputField);
+          ).withSemanticsLabel(SemanticsLabels.textInputField, excludeChildren: false);
 
           final header = Padding(
             padding: EdgeInsets.symmetric(vertical: R.dimen.unit),
