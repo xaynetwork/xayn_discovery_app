@@ -238,6 +238,12 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     resetObservedDocument();
   }
 
+  void onResetAISucceeded() {
+    resetParameters();
+    requestNextFeedBatch();
+    handleIndexChanged(0);
+  }
+
   /// A higher-order Function, which tracks the last event passed in,
   /// and ultimately runs the inner fold Function when the incoming event
   /// no longer matches lastEvent.
@@ -289,6 +295,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
               lastResults = nextFeedBatchRequestFailed(event);
             } else if (event is RestoreFeedFailed) {
               lastResults = restoreFeedFailed(event);
+            } else if (event.toString() == 'EngineEvent.resetAiSucceeded()') {
+              lastResults = {};
             } else {
               lastResults = orElse();
             }

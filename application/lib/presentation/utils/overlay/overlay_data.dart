@@ -359,11 +359,13 @@ class OverlayData {
   static BottomSheetData bottomSheetResettingAI({
     VoidCallback? onSystemPop,
     bool isDismissible = false,
+    required VoidCallback onResetAIFailed,
   }) =>
       BottomSheetData(
         isDismissible: isDismissible,
         builder: (_, __) => ResettingAIBottomSheet(
           onSystemPop: onSystemPop,
+          onResetAIFailed: onResetAIFailed,
         ),
       );
 }
