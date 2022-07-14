@@ -4,9 +4,10 @@ import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
 
 @lazySingleton
-class DbEntityMapToFeedMarketMapper extends Mapper<DbEntityMap?, FeedMarket?> {
+class DbEntityMapToFeedMarketMapper
+    extends Mapper<DbEntityMap?, InternalFeedMarket?> {
   @override
-  FeedMarket? map(DbEntityMap? input) {
+  InternalFeedMarket? map(DbEntityMap? input) {
     if (input == null) return null;
 
     final countryCode = input[FeedMarketFields.countryCode];
@@ -15,7 +16,7 @@ class DbEntityMapToFeedMarketMapper extends Mapper<DbEntityMap?, FeedMarket?> {
     final languageCode = input[FeedMarketFields.languageCode];
     if (languageCode == null) return null;
 
-    return FeedMarket(
+    return InternalFeedMarket(
       countryCode: countryCode,
       languageCode: languageCode,
     );
@@ -23,9 +24,10 @@ class DbEntityMapToFeedMarketMapper extends Mapper<DbEntityMap?, FeedMarket?> {
 }
 
 @lazySingleton
-class FeedMarketToDbEntityMapMapper extends Mapper<FeedMarket, DbEntityMap> {
+class FeedMarketToDbEntityMapMapper
+    extends Mapper<InternalFeedMarket, DbEntityMap> {
   @override
-  DbEntityMap map(FeedMarket input) => {
+  DbEntityMap map(InternalFeedMarket input) => {
         FeedMarketFields.countryCode: input.countryCode,
         FeedMarketFields.languageCode: input.languageCode,
       };

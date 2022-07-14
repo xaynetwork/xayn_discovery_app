@@ -1,10 +1,6 @@
 import 'dart:math';
 
-import 'package:purchases_flutter/models/entitlement_info_wrapper.dart';
-import 'package:purchases_flutter/models/entitlement_infos_wrapper.dart';
-import 'package:purchases_flutter/models/package_wrapper.dart';
-import 'package:purchases_flutter/models/product_wrapper.dart';
-import 'package:purchases_flutter/models/purchaser_info_wrapper.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/presentation/constants/entitlement_ids.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -18,7 +14,7 @@ class PaymentMockData {
 
   static const productId = 'product_id';
 
-  static const product = Product(
+  static const product = StoreProduct(
     productId,
     'Access to all features (Mock)',
     'Xayn Unlimited (Mock)',
@@ -44,7 +40,7 @@ class PaymentMockData {
     status: PurchasableProductStatus.purchasable,
   );
 
-  static PurchaserInfo createPurchaserInfo({
+  static CustomerInfo createCustomerInfo({
     bool withActiveSubscription = true,
     bool willRenew = false,
   }) {
@@ -67,7 +63,7 @@ class PaymentMockData {
       {entitlementId: entitlementInfo},
       {entitlementId: entitlementInfo},
     );
-    return PurchaserInfo(
+    return CustomerInfo(
       withActiveSubscription ? entitlements : const EntitlementInfos({}, {}),
       {},
       withActiveSubscription ? [entitlementId] : [],

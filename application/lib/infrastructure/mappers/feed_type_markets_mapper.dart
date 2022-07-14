@@ -73,11 +73,11 @@ class FeedTypeMarketsMapper extends BaseDbEntityMapper<FeedTypeMarkets> {
   ]) =>
       super.throwMapperException(exceptionText);
 
-  Set<FeedMarket> _mapMarkets(Map map) {
+  Set<InternalFeedMarket> _mapMarkets(Map map) {
     final feedMarketsRaw =
         map[FeedTypeMarketsMapperFields.feedMarkets] as List? ?? [];
 
-    final feedMarkets = <FeedMarket>{};
+    final feedMarkets = <InternalFeedMarket>{};
     for (final element in feedMarketsRaw) {
       final market =
           _feedMarketFromMapMapper.map(Map<int, dynamic>.from(element));

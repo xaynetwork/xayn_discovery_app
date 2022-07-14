@@ -9,12 +9,12 @@ part 'feed_settings.freezed.dart';
 class FeedSettings extends DbEntity with _$FeedSettings {
   /// [feedMarkets] represents a Set of FeedMarket
   factory FeedSettings._({
-    required FeedMarkets feedMarkets,
+    required Set<InternalFeedMarket> feedMarkets,
     required UniqueId id,
   }) = _FeedSettings;
 
   factory FeedSettings({
-    required FeedMarkets feedMarkets,
+    required Set<InternalFeedMarket> feedMarkets,
   }) =>
       FeedSettings._(
         feedMarkets: feedMarkets,

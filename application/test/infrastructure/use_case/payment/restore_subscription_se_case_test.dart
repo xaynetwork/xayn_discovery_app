@@ -22,12 +22,12 @@ void main() {
   });
 
   test(
-    'GIVEN PurchaserInfo with active subscription THEN yield PurchasableProductStatus.restored',
+    'GIVEN CustomerInfo with active subscription THEN yield PurchasableProductStatus.restored',
     () async {
       // ARRANGE
       when(paymentService.restore()).thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: true),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: true),
       );
 
       // ACT
@@ -48,12 +48,12 @@ void main() {
   );
 
   test(
-    'GIVEN PurchaserInfo without active subscription THEN throw PaymentFlowError.noActiveSubscriptionFound',
+    'GIVEN CustomerInfo without active subscription THEN throw PaymentFlowError.noActiveSubscriptionFound',
     () async {
       // ARRANGE
       when(paymentService.restore()).thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: false),
       );
 
       // ACT

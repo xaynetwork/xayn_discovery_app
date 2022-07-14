@@ -1,5 +1,5 @@
-import 'package:injectable/injectable.dart';
 import 'package:collection/collection.dart';
+import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
@@ -24,7 +24,7 @@ class GetSelectedCountriesUseCase extends UseCase<Set<Country>, Set<Country>> {
   }
 
   Set<Country> _mapMarkets(
-    Set<FeedMarket> selectedMarkets,
+    Set<InternalFeedMarket> selectedMarkets,
     Set<Country> allCountries,
   ) {
     final selectedCountries = <Country>{};
