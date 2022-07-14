@@ -238,6 +238,10 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     // TODO: implement overrideSources
     throw UnimplementedError();
   }
+
+  @override
+  // TODO: implement observer
+  ConnectivityObserver get observer => throw UnimplementedError();
 }
 
 @LazySingleton(as: AnalyticsService)

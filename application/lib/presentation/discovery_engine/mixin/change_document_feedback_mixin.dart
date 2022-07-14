@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedb
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/request_tunnel_mixin.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
@@ -74,6 +75,10 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
               duration: _kExplicitLikeTimeSpentDuration,
             ),
           );
+        }
+
+        if (userReaction == UserReaction.positive) {
+          likeDocument(document.resource.url);
         }
 
         sendAnalyticsUseCase(
