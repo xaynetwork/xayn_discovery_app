@@ -21,13 +21,13 @@ void main() {
   });
 
   test(
-    'GIVEN PurchaserInfo that contains product id THEN yield PurchasableProductStatus.purchased',
+    'GIVEN CustomerInfo that contains product id THEN yield PurchasableProductStatus.purchased',
     () async {
       // ARRANGE
       when(paymentService.purchaseProduct(PaymentMockData.productId))
           .thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: true),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: true),
       );
 
       // ACT
@@ -48,13 +48,13 @@ void main() {
   );
 
   test(
-    'GIVEN PurchaserInfo that DOES NOT contains product id THEN throw PaymentFlowError.paymentFailed',
+    'GIVEN CustomerInfo that DOES NOT contains product id THEN throw PaymentFlowError.paymentFailed',
     () async {
       // ARRANGE
       when(paymentService.purchaseProduct(PaymentMockData.productId))
           .thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: false),
       );
 
       // ACT

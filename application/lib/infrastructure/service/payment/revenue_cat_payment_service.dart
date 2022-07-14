@@ -19,12 +19,12 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 class RevenueCatPaymentService implements PaymentService {
   /// This class is the only one place where we use [Purchases].
 
-  final StreamController<PurchaserInfo> _controller =
-      StreamController<PurchaserInfo>.broadcast();
+  final StreamController<CustomerInfo> _controller =
+      StreamController<CustomerInfo>.broadcast();
 
-  /// A stream of [PurchaserInfo] objects. Emits when subscription state changes.
+  /// A stream of [CustomerInfo] objects. Emits when subscription state changes.
   @override
-  Stream<PurchaserInfo> get purchaserInfoStream => _controller.stream;
+  Stream<CustomerInfo> get customerInfoStream => _controller.stream;
 
   RevenueCatPaymentService(AppStatusRepository appStatusRepository) {
     _init(userId: appStatusRepository.appStatus.userId.value);
@@ -32,9 +32,9 @@ class RevenueCatPaymentService implements PaymentService {
 
   void _init({required String userId}) async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
-    await Purchases.setup(Env.revenueCatSdkKey);
-    Purchases.addPurchaserInfoUpdateListener((purchaserInfo) {
-      _controller.sink.add(purchaserInfo);
+    await Purchases.configure(PurchasesConfiguration(Env.revenueCatSdkKey));
+    Purchases.addCustomerInfoUpdateListener((customerInfo) {
+      _controller.sink.add(customerInfo);
     });
     try {
       Purchases.logIn(userId);
@@ -49,7 +49,7 @@ class RevenueCatPaymentService implements PaymentService {
   }
 
   @override
-  Future<PurchaserInfo> purchaseProduct(
+  Future<CustomerInfo> purchaseProduct(
     PurchasableProductId id, {
     UpgradeInfo? upgradeInfo,
     PurchaseType type = PurchaseType.subs,
@@ -61,10 +61,10 @@ class RevenueCatPaymentService implements PaymentService {
       );
 
   @override
-  Future<PurchaserInfo> restore() => Purchases.restoreTransactions();
+  Future<CustomerInfo> restore() => Purchases.restorePurchases();
 
   @override
-  Future<PurchaserInfo> getPurchaserInfo() => Purchases.getPurchaserInfo();
+  Future<CustomerInfo> getCustomerInfo() => Purchases.getCustomerInfo();
 
   @override
   Future<void> setAppsFlyerID(String appsFlyerId) =>
@@ -79,7 +79,7 @@ class RevenueCatPaymentService implements PaymentService {
 
   @override
   Future<String?> get subscriptionManagementURL async {
-    final purchaserInfo = await Purchases.getPurchaserInfo();
-    return purchaserInfo.managementURL;
+    final customerInfo = await Purchases.getCustomerInfo();
+    return customerInfo.managementURL;
   }
 }

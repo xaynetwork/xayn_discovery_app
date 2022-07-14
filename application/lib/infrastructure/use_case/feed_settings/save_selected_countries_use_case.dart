@@ -23,7 +23,8 @@ class SaveSelectedCountriesUseCase extends UseCase<Set<Country>, None> {
     }
 
     final localMarkets = param.map(
-      (e) => FeedMarket(countryCode: e.countryCode, languageCode: e.langCode),
+      (e) => InternalFeedMarket(
+          countryCode: e.countryCode, languageCode: e.langCode),
     );
 
     // update local storage with markets below

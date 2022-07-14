@@ -8,11 +8,11 @@ import 'package:xayn_discovery_app/infrastructure/mappers/mapper.dart';
 class PurchasableProductMapper implements Mapper<Package, PurchasableProduct> {
   @override
   PurchasableProduct map(Package input) => PurchasableProduct(
-        id: input.product.identifier,
-        title: input.product.title,
-        description: input.product.description,
-        price: input.product.priceString,
-        currency: input.product.currencyCode,
+        id: input.storeProduct.identifier,
+        title: input.storeProduct.title,
+        description: input.storeProduct.description,
+        price: input.storeProduct.priceString,
+        currency: input.storeProduct.currencyCode,
         duration: input.packageType.localizedString,
         status: PurchasableProductStatus.purchasable,
       );

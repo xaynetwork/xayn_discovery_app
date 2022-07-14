@@ -3,7 +3,7 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart'
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart' as engine;
 
 extension FeedMarketExtension on engine.FeedMarket {
-  local.FeedMarket toLocal() => local.FeedMarket(
+  local.InternalFeedMarket toLocal() => local.InternalFeedMarket(
         countryCode: countryCode,
         languageCode: langCode,
       );

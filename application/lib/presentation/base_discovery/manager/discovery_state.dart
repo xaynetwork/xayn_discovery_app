@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
