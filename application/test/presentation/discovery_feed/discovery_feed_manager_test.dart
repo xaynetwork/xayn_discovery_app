@@ -51,23 +51,24 @@ void main() async {
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   createFakeDocument() => Document(
-      documentId: DocumentId(),
-      resource: NewsResource(
-        image: Uri.parse('https://displayUrl.test.xayn.com'),
-        sourceDomain: Source('example'),
-        topic: 'topic',
-        score: .0,
-        rank: -1,
-        language: 'en-US',
-        country: 'US',
-        snippet: 'snippet',
-        title: 'title',
-        url: Uri.parse('https://url.test.xayn.com'),
-        datePublished: DateTime.parse("2021-01-01 00:00:00.000Z"),
-      ),
-      batchIndex: -1,
-      userReaction: UserReaction.neutral,
-      stackId: StackId.nil());
+        documentId: DocumentId(),
+        resource: NewsResource(
+          image: Uri.parse('https://displayUrl.test.xayn.com'),
+          sourceDomain: Source('example'),
+          topic: 'topic',
+          score: .0,
+          rank: -1,
+          language: 'en-US',
+          country: 'US',
+          snippet: 'snippet',
+          title: 'title',
+          url: Uri.parse('https://url.test.xayn.com'),
+          datePublished: DateTime.parse("2021-01-01 00:00:00.000Z"),
+        ),
+        batchIndex: -1,
+        userReaction: UserReaction.neutral,
+        stackId: StackId.nil(),
+      );
 
   final fakeDocumentA = createFakeDocument();
   final fakeDocumentB = createFakeDocument();
