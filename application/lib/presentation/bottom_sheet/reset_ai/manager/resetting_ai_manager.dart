@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/reset_ai_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/manager/resetting_ai_state.dart';
-import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 
 @injectable
@@ -12,11 +11,9 @@ class ResettingAIManager extends Cubit<ResettingAIState>
         UseCaseBlocHelper<ResettingAIState>,
         OverlayManagerMixin<ResettingAIState> {
   final ResetAIUseCase resetAIUseCase;
-  final DiscoveryFeedManager discoveryFeedManager;
 
   ResettingAIManager(
     this.resetAIUseCase,
-    this.discoveryFeedManager,
   ) : super(Loading());
 
   late final UseCaseValueStream<bool> _resetAIHandler =
@@ -32,15 +29,14 @@ class ResettingAIManager extends Cubit<ResettingAIState>
           errorReport,
         ) {
           final error = errorReport.of(_resetAIHandler);
-          if (error != null) return ResetFailed();
-
-          if (resetAISucceeded == null) return state;
-
-          if (!resetAISucceeded) return ResetFailed();
-
-          if (resetAISucceeded) return ResetSucceeded();
-
-          return state;
+          final failed = error != null || resetAISucceeded == false;
+          if (failed) {
+            return ResetFailed();
+          } else if (resetAISucceeded == true) {
+            return ResetSucceeded();
+          } else {
+            return Loading();
+          }
         },
       );
 }
