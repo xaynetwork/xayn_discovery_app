@@ -1,18 +1,23 @@
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
+import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/presentation/utils/real_time.dart';
 
 extension SubscriptionStatusExtension on SubscriptionStatus {
+  RealTime get _realTime => di.get();
+
   SubscriptionType get subscriptionType {
+    _realTime.updateTime();
+
     if (isBetaUser) {
       return SubscriptionType.subscribed;
     }
 
-    final now = DateTime.now();
-    if (expirationDate?.isAfter(now) ?? false) {
+    if (expirationDate?.isAfter(_realTime.now) ?? false) {
       return SubscriptionType.subscribed;
     }
 
-    if (trialEndDate?.isAfter(now) ?? false) {
+    if (trialEndDate?.isAfter(_realTime.now) ?? false) {
       return SubscriptionType.freeTrial;
     }
 
@@ -26,7 +31,6 @@ extension SubscriptionStatusExtension on SubscriptionStatus {
 
   bool get isLastDayOfFreeTrial {
     if (subscriptionType != SubscriptionType.freeTrial) return false;
-    final now = DateTime.now();
-    return trialEndDate!.difference(now).inHours < 24;
+    return trialEndDate!.difference(_realTime.now).inHours < 24;
   }
 }

@@ -9,15 +9,18 @@ import 'package:xayn_discovery_app/domain/model/payment/payment_flow_error.dart'
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/aip_error_to_payment_flow_error_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
+import 'package:xayn_discovery_app/presentation/utils/real_time.dart';
 
 @injectable
 class RestoreSubscriptionUseCase
     extends UseCase<None, PurchasableProductStatus> {
   final PaymentService _paymentService;
+  final RealTime _realTime;
   final PurchasesErrorCodeToPaymentFlowErrorMapper _errorMapper;
 
   RestoreSubscriptionUseCase(
     this._paymentService,
+    this._realTime,
     this._errorMapper,
   );
 
@@ -26,7 +29,7 @@ class RestoreSubscriptionUseCase
     yield PurchasableProductStatus.restorePending;
     try {
       final info = await _paymentService.restore();
-      final restored = info.expirationDate?.isAfter(DateTime.now()) ?? false;
+      final restored = info.expirationDate?.isAfter(_realTime.now) ?? false;
       yield restored
           ? PurchasableProductStatus.restored
           : throw PaymentFlowError.noActiveSubscriptionFound;
