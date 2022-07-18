@@ -1,6 +1,5 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_redeem_code_window_event.dart';
@@ -33,7 +32,7 @@ mixin RedeemPromoCodeMixin<T> on OverlayManagerMixin<T> {
       ));
       if (success) {
         _params.singleOutput(SubscriptionTypeIdentityParam(
-            SubscriptionType.promoCodeFreeTrialExtension));
+            AnalyticsSubscriptionType.promoCodeFreeTrialExtension));
         showOverlay(OverlayData.bottomSheetPromoCodeApplied(code));
       }
     }, onCancel: () {

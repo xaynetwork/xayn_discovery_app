@@ -129,8 +129,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
 
   void _setSubscriptionStatusAnalyticsEvent(
       SubscriptionStatus subscriptionStatus) {
-    final param =
-        SubscriptionTypeIdentityParam(subscriptionStatus.subscriptionType);
+    final param = SubscriptionTypeIdentityParam(
+        subscriptionStatus.subscriptionType.toAnalyticsType);
     _setIdentityParamUseCase.call(param);
   }
 
@@ -209,6 +209,7 @@ typedef AppTransitionCondition = bool Function(
 
 class AppTransitionConditions {
   AppTransitionConditions._();
+
   static bool returnToApp(first, second) {
     return (first == AppLifecycleState.paused ||
             first == AppLifecycleState.inactive) &&
