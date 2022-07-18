@@ -18,7 +18,7 @@ enum Feature {
   altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
   newExcludeSourceFlow(
     Owner.Carmine,
-    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+    true,
     'Open menu when clicking card header icon',
   ),
   pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
