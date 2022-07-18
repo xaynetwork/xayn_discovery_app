@@ -193,13 +193,13 @@ noExcludedSourcesYet: Nog geen verborgen bronnen
 noSourcesFoundTitle: Geen resultaten
 noSourcesFoundInfo: We konden geen bronnen vinden voor je zoekopdracht
 sourceExcludedTooltipMessage: Bron verborgen. Bronnen beheren
-manageSourcesTooltipMessage: Manage Sources
-allowSourceBackMenuItemTitle: Allow this source back on my feed
-sourceAllowedBackTooltipMessage: Source allowed back
-bottomSheetResetAIBody: This clears your personalisation history of read, liked and disliked articles. It won't affect your source preferences, country settings or collections.
-bottomSheetResetAIHeader: Are you sure?
-bottomSheetResetAIButton: Reset now
-feedSettingsScreenResetAIOption: Reset AI
-bottomSheetResettingAIBody: Resetting...
-notificationsChannelName: Basic notifications
-notificationsChannelDescription: Notification channel for basic tests
+manageSourcesTooltipMessage: Bronnen beheren
+allowSourceBackMenuItemTitle: Sta deze bron weer toe op mijn feed
+sourceAllowedBackTooltipMessage: Bron toegestaan terug
+bottomSheetResetAIBody: Hiermee wordt uw personalisatiegeschiedenis. Het heeft geen invloed op je bronvoorkeuren, landinstellingen of collecties.
+bottomSheetResetAIHeader: Weet je het zeker?
+bottomSheetResetAIButton: Nu resetten
+feedSettingsScreenResetAIOption: AI resetten
+bottomSheetResettingAIBody: Resetten...
+notificationsChannelName: Basismeldingen
+notificationsChannelDescription: Meldingskanaal voor testen
