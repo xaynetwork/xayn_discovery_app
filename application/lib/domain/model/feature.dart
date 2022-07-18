@@ -16,11 +16,7 @@ enum Feature {
 
   /// Keep flag for remote config
   altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
-  newExcludeSourceFlow(
-    Owner.Carmine,
-    true,
-    'Open menu when clicking card header icon',
-  ),
+
   pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
       'Allows to deep link to an article when tapping on push notification'),
 
