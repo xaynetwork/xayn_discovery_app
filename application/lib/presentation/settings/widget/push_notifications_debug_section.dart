@@ -6,11 +6,13 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 class PushNotificationDebugSection extends StatelessWidget {
   final VoidCallback onRequestNotificationPermissionPressed;
   final VoidCallback onSendTestPushNotificationPressed;
+  final VoidCallback onBackgroundProcessingPressed;
 
   const PushNotificationDebugSection({
     Key? key,
     required this.onRequestNotificationPermissionPressed,
     required this.onSendTestPushNotificationPressed,
+    required this.onBackgroundProcessingPressed,
   }) : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class PushNotificationDebugSection extends StatelessWidget {
             children: [
               _buildRequestNotificationBtn(),
               _buildSendNotificationBtn(),
+              _buildBackgroundProcessingBtn(),
             ],
           ),
         ),
@@ -39,6 +42,14 @@ class PushNotificationDebugSection extends StatelessWidget {
         'Send',
         key: Keys.settingsSendNotificationBtn,
         onPressed: onSendTestPushNotificationPressed,
+        backgroundColor: R.colors.iconBackground,
+        textColor: R.colors.quaternaryText,
+      );
+
+  AppGhostButton _buildBackgroundProcessingBtn() => AppGhostButton.text(
+        'Background',
+        key: Keys.settingsBackgroundProcessingBtn,
+        onPressed: onBackgroundProcessingPressed,
         backgroundColor: R.colors.iconBackground,
         textColor: R.colors.quaternaryText,
       );

@@ -23,6 +23,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/notifications/background_notifications_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
@@ -75,6 +76,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final RatingDialogManager _ratingDialogManager;
   final LocalNotificationsService _localNotificationsService;
   final DiscoveryFeedManager _discoveryFeedManager;
+  final BackgroundNotificationsUseCase _backgroundNotificationsUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -95,6 +97,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._ratingDialogManager,
     this._localNotificationsService,
     this._discoveryFeedManager,
+    this._backgroundNotificationsUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -257,4 +260,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       delay: const Duration(seconds: 5),
     );
   }
+
+  void triggerBackgroundProcessing() =>
+      _backgroundNotificationsUseCase.call(none);
 }

@@ -174,6 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         onRequestNotificationPermissionPressed:
             _manager.requestNotificationPermission,
         onSendTestPushNotificationPressed: _manager.sendTestPushNotification,
+        onBackgroundProcessingPressed: _manager.triggerBackgroundProcessing,
       );
 
   Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(

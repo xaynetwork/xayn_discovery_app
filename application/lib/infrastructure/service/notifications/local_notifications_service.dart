@@ -11,6 +11,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 const String _kChannelKey = 'basic_channel';
 
 abstract class LocalNotificationsService {
+  Future<bool> isNotificationAllowed();
   void requestPermission();
   Future<bool> sendNotification({
     required String title,
@@ -63,6 +64,10 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
     _deepLinkManager.onDeepLink(deepLinkData);
   }
+
+  @override
+  Future<bool> isNotificationAllowed() =>
+      AwesomeNotifications().isNotificationAllowed();
 
   @override
   void requestPermission() {
