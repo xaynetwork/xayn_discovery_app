@@ -196,7 +196,7 @@ sourceExcludedTooltipMessage: Source hidden. Manage Sources
 manageSourcesTooltipMessage: Manage Sources
 allowSourceBackMenuItemTitle: Allow this source back on my feed
 sourceAllowedBackTooltipMessage: Source allowed back
-bottomSheetResetAIBody: This clears your personalisation history of read, liked and disliked articles. It won't affect your source preferences, country settings or collections.
+bottomSheetResetAIBody: This clears your personalisation history. It won't affect your source preferences, country settings or collections.
 bottomSheetResetAIHeader: Are you sure?
 bottomSheetResetAIButton: Reset now
 feedSettingsScreenResetAIOption: Reset AI
