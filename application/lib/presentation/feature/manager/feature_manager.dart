@@ -35,9 +35,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
 
-  bool get isNewExcludeSourceFlowEnabled =>
-      isEnabled(Feature.newExcludeSourceFlow);
-
   bool get arePushNotificationDeepLinksEnabled =>
       isEnabled(Feature.pushNotificationDeepLinks);
 
