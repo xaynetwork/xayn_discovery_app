@@ -196,10 +196,10 @@ sourceExcludedTooltipMessage: Fuente oculta. Administrar fuentes
 manageSourcesTooltipMessage: Fuentes administradas
 allowSourceBackMenuItemTitle: Permitir esta fuente nuevamente en mi feed
 sourceAllowedBackTooltipMessage: Fuente permitida nuevamente
-bottomSheetResetAIBody: This clears your personalisation history of read, liked and disliked articles. It won't affect your source preferences, country settings or collections.
-bottomSheetResetAIHeader: Are you sure?
-bottomSheetResetAIButton: Reset now
-feedSettingsScreenResetAIOption: Reset AI
-bottomSheetResettingAIBody: Resetting...
-notificationsChannelName: Basic notifications
-notificationsChannelDescription: Notification channel for basic tests
+bottomSheetResetAIBody: Esto borra su historial de personalización. No afectará sus preferencias de fuente, configuración de país o colecciones.
+bottomSheetResetAIHeader: Estas segura?
+bottomSheetResetAIButton: Restablecer
+feedSettingsScreenResetAIOption: Restablecer IA
+bottomSheetResettingAIBody: Restableciendo...
+notificationsChannelName: Notificaciones básicas
+notificationsChannelDescription: Canal de notificaciones para pruebas
