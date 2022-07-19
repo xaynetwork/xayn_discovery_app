@@ -30,12 +30,8 @@ mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
     if (processedDocument != null) {
       final html = processedDocument.processHtmlResult.contents ?? '';
       final isInvalidHtml = html.trim().isEmpty;
-      // TODO after some intensive testing period we should enable gibberish detection to block content,
-      // but for now it is better to use the red globe as an indicator
-      // final isGibberish = (_featureManager.isGibberishEnabled &&
-      //     !discoveryCardManager.state.textIsReadable);
-      // if (isInvalidHtml || isGibberish) {
-      if (isInvalidHtml) {
+      final isGibberish = !discoveryCardManager.state.textIsReadable;
+      if (isInvalidHtml || isGibberish) {
         showOverlay(
           OverlayData.bottomSheetReaderModeUnavailableBottomSheet(
             isDismissible: isDismissible,
