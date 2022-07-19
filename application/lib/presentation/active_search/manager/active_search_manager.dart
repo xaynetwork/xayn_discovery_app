@@ -10,6 +10,9 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/engin
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_search_batch_request_failed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_search_failed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_items_restored_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_next_batch_query_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_query_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
@@ -26,10 +29,10 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_disc
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/utils/engine_error_messages.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 typedef OnSearchRequestSucceeded = Set<Document> Function(
@@ -221,10 +224,33 @@ class ActiveSearchManager extends BaseDiscoveryManager
           };
 
       return foldEngineEvent(
-        searchRequestSucceeded: (event) => event.items.toSet(),
-        restoreSearchSucceeded: (event) => event.items.toSet(),
-        nextSearchBatchRequestSucceeded: (event) =>
-            {...lastResults, ...event.items},
+        searchRequestSucceeded: (event) {
+          final results = event.items.toSet();
+          manager.sendAnalyticsUseCase(
+            SearchQueryEvent(
+              numberOfResults: results.length,
+            ),
+          );
+          return results;
+        },
+        restoreSearchSucceeded: (event) {
+          final results = event.items.toSet();
+          manager.sendAnalyticsUseCase(
+            SearchItemsRestoredEvent(
+              numberOfResults: results.length,
+            ),
+          );
+          return results;
+        },
+        nextSearchBatchRequestSucceeded: (event) {
+          final results = {...lastResults, ...event.items};
+          manager.sendAnalyticsUseCase(
+            SearchNextBatchQueryEvent(
+              numberOfResults: results.length,
+            ),
+          );
+          return results;
+        },
         documentsUpdated: (event) => lastResults
             .map(
               (it) => event.items.firstWhere(

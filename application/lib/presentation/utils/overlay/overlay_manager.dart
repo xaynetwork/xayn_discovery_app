@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 
 typedef OverlayCondition<T> = Function(T? oldState, T newState);
 
@@ -27,7 +27,10 @@ class OverlayManager<T> extends Cubit<List<OverlayData>> {
       _futureOverlays.remove(element.key);
     }
     _oldState = state;
-    _currentVisible = overlays.map((e) => e.key).toList();
+    _currentVisible = [
+      ..._currentVisible,
+      ...overlays.map((e) => e.key).toList()
+    ];
     _computeState();
   }
 

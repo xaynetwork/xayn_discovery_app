@@ -51,6 +51,27 @@ void main() {
     return Future.value(event);
   }
 
+  addEventFromOverride(
+      Invocation invocation,
+      EngineEvent Function({
+    required Set<Source> trustedSources,
+    required Set<Source> excludedSources,
+  })
+          buildEvent) {
+    final trustedSources =
+        invocation.namedArguments[#trustedSources] as Set<Source>;
+    final excludedSources =
+        invocation.namedArguments[#excludedSources] as Set<Source>;
+    final event = buildEvent(
+      trustedSources: trustedSources,
+      excludedSources: excludedSources,
+    );
+
+    eventsController.add(event);
+
+    return Future.value(event);
+  }
+
   setUp(() async {
     sourcesPendingOperations = InMemorySourcesPendingOperations();
     engineEventsUseCase = MockEngineEventsUseCase();
@@ -89,6 +110,19 @@ void main() {
     when(engine.removeSourceFromTrustedList(any)).thenAnswer((it) =>
         addEventFromSource(
             it, (source) => RemoveTrustedSourceRequestSucceeded(source)));
+    when(engine.overrideSources(
+      trustedSources: anyNamed('trustedSources'),
+      excludedSources: anyNamed('excludedSources'),
+    )).thenAnswer((it) => addEventFromOverride(
+        it,
+        ({
+          required Set<Source> trustedSources,
+          required Set<Source> excludedSources,
+        }) =>
+            SetSourcesRequestSucceeded(
+              trustedSources: trustedSources,
+              excludedSources: excludedSources,
+            )));
     when(engine.send(any)).thenAnswer((realInvocation) {
       final clientEvent =
           realInvocation.positionalArguments.first as ClientEvent;
@@ -132,7 +166,7 @@ void main() {
   blocTest<SourcesManager, SourcesState>(
     'WHEN SourcesManager initializes THEN expect excluded and trusted sources to be filled ',
     build: () => manager,
-    act: (manager) => manager,
+    act: (manager) => manager.init(),
     verify: (manager) => expect(
         manager.state,
         SourcesState(
@@ -147,7 +181,7 @@ void main() {
     'WHEN requesting all sources THEN expect the result in the state ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.getAvailableSourcesList('new');
     },
     verify: (manager) => expect(
@@ -168,7 +202,7 @@ void main() {
     'WHEN adding a pending excluded source THEN expect this entry in the jointExcludedSources ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToExcludedList(newSource);
     },
     verify: (manager) {
@@ -196,9 +230,9 @@ void main() {
     'WHEN persisting a pending excluded source THEN expect this entry in the excludedSources as well ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -221,7 +255,7 @@ void main() {
     'WHEN adding a pending trusted source THEN expect this entry in the jointTrustedSources ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToTrustedList(newSource);
     },
     verify: (manager) {
@@ -251,9 +285,9 @@ void main() {
     'WHEN persisting a pending trusted source THEN expect this entry in the trustedSources as well ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -276,7 +310,7 @@ void main() {
     'WHEN removing an excluded source THEN expect this entry to become a pending removal ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
     },
     verify: (manager) {
@@ -303,9 +337,9 @@ void main() {
     'WHEN persisting a pending removal of an excluded source THEN expect this entry to become an actual removal ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.removeSourceFromExcludedList(defaultExcludedSources.first);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -330,7 +364,7 @@ void main() {
     'WHEN removing a trusted source THEN expect this entry to become a pending removal ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
     },
     verify: (manager) {
@@ -357,9 +391,9 @@ void main() {
     'WHEN persisting a pending removal of a trusted source THEN expect this entry to become an actual removal ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.removeSourceFromTrustedList(defaultTrustedSources.first);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
     },
     verify: (manager) {
       expect(
@@ -384,7 +418,7 @@ void main() {
     'WHEN adding a pending excluded source and then undoing it THEN expect the state to reflect this ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToExcludedList(newSource);
       manager.removePendingSourceOperation(newSource);
     },
@@ -409,7 +443,7 @@ void main() {
     'WHEN adding a pending trusted source and then undoing it THEN expect the state to reflect this ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToTrustedList(newSource);
       manager.removePendingSourceOperation(newSource);
     },
@@ -434,9 +468,9 @@ void main() {
     'WHEN adding a pending excluded source and then undoing it AFTER applyChanges THEN expect nothing changes ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToExcludedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {
@@ -460,9 +494,9 @@ void main() {
     'WHEN adding a pending trusted source and then undoing it AFTER applyChanges THEN expect nothing changes ',
     build: () => manager,
     act: (manager) {
-      manager;
+      manager.init();
       manager.addSourceToTrustedList(newSource);
-      manager.applyChanges(isBatchedProcess: true);
+      manager.applyChanges(isBatchedProcess: false);
       manager.removePendingSourceOperation(newSource);
     },
     verify: (manager) {

@@ -2,19 +2,20 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_single_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 typedef FoldEngineEvent = SourcesState Function(EngineEvent?) Function(
@@ -33,9 +34,13 @@ typedef OnAddTrustSourceSucceeded = SourcesState Function(
     AddTrustedSourceRequestSucceeded event);
 typedef OnRemoveTrustSourceSucceeded = SourcesState Function(
     RemoveTrustedSourceRequestSucceeded event);
+typedef OnSetSourcesRequestSucceeded = SourcesState Function(
+    SetSourcesRequestSucceeded event);
 typedef OnNonMatchedEngineEvent = SourcesState Function();
 
 enum SourceType { excluded, trusted }
+
+const Duration _kSearchInputDebounceTime = Duration(seconds: 1);
 
 abstract class SourcesScreenNavActions {
   void onDismissSourcesSelection();
@@ -61,6 +66,9 @@ class SourcesManager extends Cubit<SourcesState>
   ).transform(
     (out) => out.map((it) => foldEngineEvent(state)(it)),
   );
+  late final StreamController<String> _onSearchInput =
+      StreamController<String>();
+  StreamSubscription<String>? _searchInputSubscription;
   String? latestSourcesSearchTerm;
 
   SourcesManager(
@@ -68,9 +76,7 @@ class SourcesManager extends Cubit<SourcesState>
     this._sourcesScreenNavActions,
     this.engineEventsUseCase,
     this.sourcesPendingOperations,
-  ) : super(const SourcesState()) {
-    _init();
-  }
+  ) : super(const SourcesState());
 
   @override
   void onDismissSourcesSelection() =>
@@ -88,15 +94,27 @@ class SourcesManager extends Cubit<SourcesState>
       scheduleComputeState(() => latestSourcesSearchTerm = null);
 
   @override
-  void getAvailableSourcesList(String fuzzySearchTerm) {
-    super.getAvailableSourcesList(fuzzySearchTerm);
+  void getAvailableSourcesList(String fuzzySearchTerm) =>
+      _onSearchInput.add(fuzzySearchTerm);
 
-    scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
-  }
+  void init() {
+    _searchInputSubscription = _searchInputSubscription ??
+        _onSearchInput.stream
+            .debounceTime(EnvironmentHelper.kIsInTest
+                ? Duration.zero
+                : _kSearchInputDebounceTime)
+            .listen(_onSearchSources);
 
-  void _init() {
     getExcludedSourcesList();
     getTrustedSourcesList();
+  }
+
+  @override
+  Future<void> close() async {
+    _onSearchInput.close();
+
+    await _searchInputSubscription?.cancel();
+    await super.close();
   }
 
   bool canAddSourceToExcludedList(Source source) =>
@@ -158,66 +176,8 @@ class SourcesManager extends Cubit<SourcesState>
   /// Use [intervalBetweenOperations] to wait between 2 operations, which, if used,
   /// gives the UI some time to visually indicate each addition/removal.
   /// The default value is 1 second.
-  void applyChanges({required bool isBatchedProcess}) {
-    final oldTrustedCount = state.trustedSources.length;
-    final oldExcludedCount = state.excludedSources.length;
-    var newTrustedCount = oldTrustedCount;
-    var newExcludedCount = oldExcludedCount;
-    AnalyticsEvent? analyticsEvent;
-
-    for (final operation in sourcesPendingOperations.toSet()) {
-      sourcesPendingOperations.removeOperation(operation);
-
-      switch (operation.task) {
-        case SourcesManagementTask.removeFromExcludedSources:
-          if (newExcludedCount > 0) newExcludedCount--;
-          super.removeSourceFromExcludedList(operation.source);
-          break;
-        case SourcesManagementTask.addToExcludedSources:
-          newExcludedCount++;
-          super.addSourceToExcludedList(operation.source);
-          break;
-        case SourcesManagementTask.removeFromTrustedSources:
-          if (newTrustedCount > 0) newTrustedCount--;
-          super.removeSourceFromTrustedList(operation.source);
-          break;
-        case SourcesManagementTask.addToTrustedSources:
-          newTrustedCount++;
-          super.addSourceToTrustedList(operation.source);
-          break;
-      }
-    }
-
-    if (isBatchedProcess) {
-      if (newTrustedCount != oldTrustedCount ||
-          newExcludedCount != oldExcludedCount) {
-        analyticsEvent = SourcesManagementChangedEvent(
-          newTrustedCount: newTrustedCount,
-          oldTrustedCount: oldTrustedCount,
-          newExcludedCount: newExcludedCount,
-          oldExcludedCount: oldExcludedCount,
-        );
-      }
-    } else {
-      // in this case, only a single source was affected,
-      // so old and new are all the same values, except for 1 of the 4,
-      // which is then either +1 or -1
-      final sourceType = newTrustedCount != oldTrustedCount
-          ? SourceType.trusted
-          : SourceType.excluded;
-      final operation = newTrustedCount + newExcludedCount >
-              oldTrustedCount + oldExcludedCount
-          ? SourcesManagementSingleChangedEventOperation.addition
-          : SourcesManagementSingleChangedEventOperation.removal;
-
-      analyticsEvent = SourcesManagementSingleChangedEvent(
-        sourceType: sourceType,
-        operation: operation,
-      );
-    }
-
-    if (analyticsEvent != null) _sendAnalyticsUseCase(analyticsEvent);
-  }
+  void applyChanges({required bool isBatchedProcess}) =>
+      isBatchedProcess ? _applyBatchedChanges() : _applySingleChange();
 
   @override
   Future<SourcesState?> computeState() async =>
@@ -252,6 +212,101 @@ class SourcesManager extends Cubit<SourcesState>
         );
       });
 
+  void _applyBatchedChanges() {
+    final trustedSources = state.trustedSources.toSet();
+    final excludedSources = state.excludedSources.toSet();
+    final oldTrustedCount = state.trustedSources.length;
+    final oldExcludedCount = state.excludedSources.length;
+
+    for (final operation in sourcesPendingOperations.toSet()) {
+      sourcesPendingOperations.removeOperation(operation);
+
+      switch (operation.task) {
+        case SourcesManagementTask.removeFromExcludedSources:
+          excludedSources.remove(operation.source);
+          break;
+        case SourcesManagementTask.addToExcludedSources:
+          excludedSources.add(operation.source);
+          break;
+        case SourcesManagementTask.removeFromTrustedSources:
+          trustedSources.remove(operation.source);
+          break;
+        case SourcesManagementTask.addToTrustedSources:
+          trustedSources.add(operation.source);
+          break;
+      }
+    }
+
+    overrideSources(
+        trustedSources: trustedSources, excludedSources: excludedSources);
+
+    _sendAnalyticsUseCase(
+      SourcesManagementChangedEvent(
+        newTrustedCount: trustedSources.length,
+        oldTrustedCount: oldTrustedCount,
+        newExcludedCount: excludedSources.length,
+        oldExcludedCount: oldExcludedCount,
+      ),
+    );
+  }
+
+  void _applySingleChange() {
+    late final SourceType sourceType;
+    late final SourcesManagementSingleChangedEventOperation sourceOperation;
+
+    for (final operation in sourcesPendingOperations.toSet()) {
+      sourcesPendingOperations.removeOperation(operation);
+
+      switch (operation.task) {
+        case SourcesManagementTask.removeFromExcludedSources:
+          super.removeSourceFromExcludedList(operation.source);
+
+          sourceType = SourceType.excluded;
+          sourceOperation =
+              SourcesManagementSingleChangedEventOperation.removal;
+
+          break;
+        case SourcesManagementTask.addToExcludedSources:
+          super.addSourceToExcludedList(operation.source);
+
+          sourceType = SourceType.excluded;
+          sourceOperation =
+              SourcesManagementSingleChangedEventOperation.addition;
+
+          break;
+        case SourcesManagementTask.removeFromTrustedSources:
+          super.removeSourceFromTrustedList(operation.source);
+
+          sourceType = SourceType.trusted;
+          sourceOperation =
+              SourcesManagementSingleChangedEventOperation.removal;
+
+          break;
+        case SourcesManagementTask.addToTrustedSources:
+          super.addSourceToTrustedList(operation.source);
+
+          sourceType = SourceType.trusted;
+          sourceOperation =
+              SourcesManagementSingleChangedEventOperation.addition;
+
+          break;
+      }
+    }
+
+    _sendAnalyticsUseCase(
+      SourcesManagementSingleChangedEvent(
+        sourceType: sourceType,
+        operation: sourceOperation,
+      ),
+    );
+  }
+
+  void _onSearchSources(String fuzzySearchTerm) {
+    super.getAvailableSourcesList(fuzzySearchTerm);
+
+    scheduleComputeState(() => latestSourcesSearchTerm = fuzzySearchTerm);
+  }
+
   static SourcesState Function(EngineEvent?) Function(SourcesState)
       _foldEngineEvent() {
     foldEngineEvent({
@@ -265,6 +320,7 @@ class SourcesManager extends Cubit<SourcesState>
       required OnRemoveExcludeSourceSucceeded removeExcludeSourceSucceeded,
       required OnAddTrustSourceSucceeded addTrustSourceSucceeded,
       required OnRemoveTrustSourceSucceeded removeTrustedSourceSucceeded,
+      required OnSetSourcesRequestSucceeded setSourcesRequestSucceeded,
       required OnNonMatchedEngineEvent orElse,
     }) =>
         (EngineEvent? event) {
@@ -282,6 +338,8 @@ class SourcesManager extends Cubit<SourcesState>
             return addTrustSourceSucceeded(event);
           } else if (event is RemoveTrustedSourceRequestSucceeded) {
             return removeTrustedSourceSucceeded(event);
+          } else if (event is SetSourcesRequestSucceeded) {
+            return setSourcesRequestSucceeded(event);
           }
 
           return orElse();
@@ -312,6 +370,10 @@ class SourcesManager extends Cubit<SourcesState>
           removeTrustedSourceSucceeded: (event) => state.copyWith(
               trustedSources: state.trustedSources.toSet()
                 ..remove(event.source)),
+          setSourcesRequestSucceeded: (event) => state.copyWith(
+            trustedSources: event.trustedSources,
+            excludedSources: event.excludedSources,
+          ),
           orElse: () => state,
         );
   }

@@ -7,17 +7,10 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
+import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-
-enum DeepLinkValue {
-  none,
-  activeSearch,
-}
-
-abstract class DeepLinkManager {
-  void onDeepLink(DeepLinkValue deepLink);
-}
 
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
@@ -124,7 +117,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
         (it) => it.name == deepLinkString,
         orElse: () => DeepLinkValue.none,
       );
-      _deepLinkManager.onDeepLink(deepLinkValue);
+      final deepLinkData = DeepLinkData.fromValue(deepLinkValue);
+      _deepLinkManager.onDeepLink(deepLinkData);
     }
   }
 }

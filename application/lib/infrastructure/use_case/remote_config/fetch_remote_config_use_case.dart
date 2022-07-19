@@ -26,17 +26,17 @@ class S3Fetcher extends S3RemoteConfigFetcher {
 
 @lazySingleton
 class FetchRemoteConfigUseCase extends UseCase<None, RemoteConfig?> {
-  FetchRemoteConfigUseCase(this._fetcher);
+  FetchRemoteConfigUseCase(this._fetcher, this._packageInfo);
 
   final RemoteConfigFetcher _fetcher;
+  final PackageInfo _packageInfo;
 
   /// TODO use the last-modified field and also cache the config
   RemoteConfigs? _remoteConfigs;
 
   @override
   Stream<RemoteConfig?> transaction(None param) async* {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
+    String version = _packageInfo.version;
 
     if (_remoteConfigs != null) {
       yield _remoteConfigs?.findConfig(version);

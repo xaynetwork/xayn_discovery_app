@@ -192,7 +192,14 @@ noTrustedSourcesYet: Nog geen favoriete bronnen
 noExcludedSourcesYet: Nog geen verborgen bronnen
 noSourcesFoundTitle: Geen resultaten
 noSourcesFoundInfo: We konden geen bronnen vinden voor je zoekopdracht
-sourceExcludedTooltipMessage: Source excluded Manage Sources
+sourceExcludedTooltipMessage: Bron verborgen. Bronnen beheren
 manageSourcesTooltipMessage: Manage Sources
 allowSourceBackMenuItemTitle: Allow this source back on my feed
 sourceAllowedBackTooltipMessage: Source allowed back
+bottomSheetResetAIBody: This clears your personalisation history of read, liked and disliked articles. It won't affect your source preferences, country settings or collections.
+bottomSheetResetAIHeader: Are you sure?
+bottomSheetResetAIButton: Reset now
+feedSettingsScreenResetAIOption: Reset AI
+bottomSheetResettingAIBody: Resetting...
+notificationsChannelName: Basic notifications
+notificationsChannelDescription: Notification channel for basic tests

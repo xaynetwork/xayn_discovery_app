@@ -61,12 +61,18 @@ class CreateOrRenameCollectionManager
     _sendAnalyticsUseCase(CollectionRenamedEvent());
   }
 
-  void onCancelPressed({required bool isRenameMode}) {
+  void onCancelPressed({
+    required bool isRenameMode,
+    required Duration screenDuration,
+  }) {
     final view = isRenameMode
         ? BottomSheetView.renameCollection
         : BottomSheetView.createCollection;
     _sendAnalyticsUseCase(
-      BottomSheetDismissedEvent(bottomSheetView: view),
+      BottomSheetDismissedEvent(
+        bottomSheetView: view,
+        duration: screenDuration,
+      ),
     );
   }
 

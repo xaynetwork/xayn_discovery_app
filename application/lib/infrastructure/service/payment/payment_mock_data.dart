@@ -44,13 +44,14 @@ class PaymentMockData {
     status: PurchasableProductStatus.purchasable,
   );
 
-  static PurchaserInfo createPurchaserInfo(
-      {bool withActiveSubscription = true}) {
+  static PurchaserInfo createPurchaserInfo({
+    bool withActiveSubscription = true,
+    bool willRenew = false,
+  }) {
     const subscriptionId = productId;
     const entitlementId = EntitlementIds.unlimited;
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final isActive = withActiveSubscription;
-    final willRenew = withActiveSubscription;
     final entitlementInfo = EntitlementInfo(
       entitlementId,
       isActive,

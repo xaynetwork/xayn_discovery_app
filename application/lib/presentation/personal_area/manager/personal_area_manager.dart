@@ -21,13 +21,13 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/mixin/collection_manager_flow_mixin.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 
 import 'personal_area_state.dart';
 
@@ -54,7 +54,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
   final GetAllCollectionsUseCase _getAllCollectionsUseCase;
   final ListenCollectionsUseCase _listenCollectionsUseCase;
   final PersonalAreaNavActions _navActions;
-  final DateTimeHandler _dateTimeHandler;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
   final FeatureManager _featureManager;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
@@ -68,7 +67,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
     this._listenCollectionsUseCase,
     this._hapticFeedbackMediumUseCase,
     this._navActions,
-    this._dateTimeHandler,
     this._featureManager,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
@@ -88,24 +86,17 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
     initialData: none,
   );
   late SubscriptionStatus _subscriptionStatus;
-  List<ListItemModel> _items = [];
+  List<ListItemModel> _collectionItems = [];
   late final _contactItem =
       ListItemModel.contact(id: _uniqueIdHandler.generateUniqueId());
+  ListItemModel? _paymentItem;
   String? _useCaseError;
 
   void _init() {
     scheduleComputeState(() async {
       // read values
-      _items = (await _getAllCollectionsUseCase.singleOutput(none))
-          .collections
-          .map(
-            (e) => ListItemModel.collection(
-              id: e.id,
-              collection: e,
-            ),
-          )
-          .toList()
-        ..add(_contactItem);
+      _updateItemsWithNewCollections(
+          (await _getAllCollectionsUseCase.singleOutput(none)).collections);
 
       _subscriptionStatus =
           await _getSubscriptionStatusUseCase.singleOutput(none);
@@ -139,7 +130,6 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
           );
         }
 
-        final newTimestamp = _dateTimeHandler.getDateTimeNow();
         if (usecaseOut != null) {
           _updateItemsWithNewCollections(usecaseOut.collections);
         }
@@ -149,53 +139,37 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
         }
 
         return PersonalAreaState.populated(
-          _items,
-          newTimestamp,
+          [
+            if (_paymentItem != null) _paymentItem!,
+            ..._collectionItems,
+            _contactItem,
+          ],
         );
       },
     );
   }
 
   void _updateItemsWithNewCollections(List<Collection> collections) {
-    final List<ListItemModel> newCollectionItems = collections
+    _collectionItems = collections
         .map(
           (e) => ListItemModel.collection(
             id: e.id,
             collection: e,
           ),
         )
-        .toList()
-      ..add(_contactItem);
-    _items.first.map(
-      payment: (_) => _items.replaceRange(1, _items.length, newCollectionItems),
-      collection: (_) => _items = newCollectionItems,
-      contact: (_) => _items = newCollectionItems,
-    );
+        .toList();
   }
 
   void _maybeUpdateTrialBannerToItems() {
     final trialEndDate = _subscriptionStatus.trialEndDate;
     if (!_featureManager.isPaymentEnabled || trialEndDate == null) return;
     if (_subscriptionStatus.isFreeTrialActive) {
-      _items.first.map(
-        collection: (_) => _items.insert(
-          0,
-          ListItemModel.payment(
-            id: _uniqueIdHandler.generateUniqueId(),
-            trialEndDate: trialEndDate,
-          ),
-        ),
-        payment: (data) => _items.first = data.copyWith(
-          trialEndDate: trialEndDate,
-        ),
-        contact: (data) => {},
+      _paymentItem = ListItemModel.payment(
+        id: _paymentItem?.id ?? _uniqueIdHandler.generateUniqueId(),
+        trialEndDate: trialEndDate,
       );
     } else {
-      _items.first.map(
-        payment: (_) => _items.removeAt(0),
-        collection: (item) => item,
-        contact: (data) => {},
-      );
+      _paymentItem = null;
     }
   }
 

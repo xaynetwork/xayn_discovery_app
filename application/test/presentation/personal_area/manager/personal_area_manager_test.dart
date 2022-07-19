@@ -62,7 +62,6 @@ void main() {
 
   final populatedStateOnlyCollections = PersonalAreaState.populated(
     collectionsList,
-    timeStamp,
   );
 
   final populatedStateWithTrialBanner = PersonalAreaState.populated(
@@ -75,7 +74,6 @@ void main() {
       collectionsList[1],
       contacts,
     ],
-    timeStamp,
   );
 
   void _mockManagerInitMethodCalls() {
@@ -141,7 +139,6 @@ void main() {
       listenCollectionsUseCase,
       hapticFeedbackMediumUseCase,
       actions,
-      dateTimeHandler,
       featureManager,
       getSubscriptionStatusUseCase,
       listenSubscriptionStatusUseCase,

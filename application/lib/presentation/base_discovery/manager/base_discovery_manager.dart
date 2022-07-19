@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
@@ -33,8 +34,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/use
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
@@ -42,6 +41,8 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnDocumentsUpdated = Set<Document> Function(DocumentsUpdated event);
@@ -167,6 +168,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   int? get currentCardIndex => _cardIndex;
 
   void onEngineEvent(EngineEvent event);
+
+  void maybeSelectCard(UniqueId documentId) {
+    final card = state.cards.firstWhereOrNull(
+        (card) => card.document?.documentId.toString() == documentId.value);
+    if (card?.document == null) return;
+    maybeNavigateIntoCard(card!.document!);
+  }
 
   void maybeNavigateIntoCard(Document document) =>
       checkIfDocumentNotProcessable(

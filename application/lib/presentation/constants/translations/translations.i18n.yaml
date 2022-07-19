@@ -171,9 +171,9 @@ onboardingBottomDialog:
 general:
   btnClose: Close
 subscriptionDurationMonth: month
-takeSurveyTitle: Got a minute?
-takeSurveySubtitle: We'd love your opinion on how to make the app better
-takeSurveyCTA: Take me to the survey
+takeSurveyTitle: Want to help us improve Xayn?
+takeSurveySubtitle: "We are always working on improving Xayn and we’d love to understand what is important to you.  \n \nIf you’d like to participate, please share your contact information with us, so that we can set up a time for us to chat."
+takeSurveyCTA: Share contact details
 addExcludedSource: Add a source to exclude it from your feed
 addTrustedSource: Which news sources do you want to follow?
 addSourcePlaceholder: Search or enter URL
@@ -200,7 +200,14 @@ noTrustedSourcesYet: No favoured sources, yet
 noExcludedSourcesYet: No hidden sources yet
 noSourcesFoundTitle: No results
 noSourcesFoundInfo: We couldn't find any sources for your search
-sourceExcludedTooltipMessage: Source excluded Manage Sources
+sourceExcludedTooltipMessage: Source hidden. Manage Sources
 manageSourcesTooltipMessage: Manage Sources
 allowSourceBackMenuItemTitle: Allow this source back on my feed
 sourceAllowedBackTooltipMessage: Source allowed back
+bottomSheetResetAIBody: This clears your personalisation history of read, liked and disliked articles. It won't affect your source preferences, country settings or collections.
+bottomSheetResetAIHeader: Are you sure?
+bottomSheetResetAIButton: Reset now
+feedSettingsScreenResetAIOption: Reset AI
+bottomSheetResettingAIBody: Resetting...
+notificationsChannelName: Basic notifications
+notificationsChannelDescription: Notification channel for basic tests

@@ -50,6 +50,7 @@ import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/local_notifications_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
@@ -114,15 +115,17 @@ import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_scree
 import 'package:xayn_discovery_app/presentation/bookmark/util/bookmark_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/url_opener.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
@@ -269,6 +272,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DeepLinkManager,
   MarketingAnalyticsService,
   CountryFeedSettingsNavActions,
+  LocalNotificationsService,
+  DiscoveryFeedManager,
 ])
 class Mocks {
   Mocks._();

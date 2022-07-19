@@ -3,14 +3,17 @@ import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart'
 
 const String _kEventType = 'bottomSheetDismissed';
 const String _kParamBottomSheetView = 'bottomSheetView';
+const String _kParamDuration = 'duration';
 
 class BottomSheetDismissedEvent extends AnalyticsEvent {
   BottomSheetDismissedEvent({
     required BottomSheetView bottomSheetView,
+    required Duration duration,
   }) : super(
           _kEventType,
           properties: {
             _kParamBottomSheetView: bottomSheetView.name,
+            _kParamDuration: duration.inSeconds,
           },
         );
 }

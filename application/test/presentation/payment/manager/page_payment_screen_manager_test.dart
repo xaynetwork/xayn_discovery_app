@@ -10,10 +10,10 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/fake_payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/redeem_promo_code_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 
 import '../../../test_utils/matchers.dart';
 import '../../../test_utils/mocks.mocks.dart';
@@ -26,7 +26,7 @@ void main() {
     await setupWidgetTest();
   });
 
-  PagePaymentScreenManager manager(
+  PaywallScreenManager manager(
       {bool altPromoCode = false,
       String platform = 'ios',
       bool zeroTrialTime = false}) {
@@ -44,7 +44,7 @@ void main() {
     return di.get();
   }
 
-  blocTest<PagePaymentScreenManager, PaymentScreenState>(
+  blocTest<PaywallScreenManager, PaymentScreenState>(
       'Startup state shows a product',
       build: manager,
       wait: const Duration(),
@@ -58,7 +58,7 @@ void main() {
         verifyNever(navActions.onGoBackToFeed());
       });
 
-  blocTest<PagePaymentScreenManager, PaymentScreenState>(
+  blocTest<PaywallScreenManager, PaymentScreenState>(
       'When subscribing the product, the state should end up being purchased and we leave the screen.',
       build: manager,
       act: (m) async {
@@ -81,7 +81,7 @@ void main() {
         verify(navActions.onGoBackToFeed());
       });
 
-  blocTest<PagePaymentScreenManager, PaymentScreenState>(
+  blocTest<PaywallScreenManager, PaymentScreenState>(
     'When restoring the product, the state should end up being purchased and we leave the screen.',
     build: manager,
     act: (m) async {
@@ -106,7 +106,7 @@ void main() {
     },
   );
 
-  blocTest<PagePaymentScreenManager, PaymentScreenState>(
+  blocTest<PaywallScreenManager, PaymentScreenState>(
     'When pressing redeem promo code, we should enter to the native promo code experience.',
     build: () {
       return manager();
@@ -122,7 +122,7 @@ void main() {
     },
   );
 
-  blocTest<PagePaymentScreenManager, PaymentScreenState>(
+  blocTest<PaywallScreenManager, PaymentScreenState>(
     'Alt RedeemCode: When pressing redeem promo code, show the alt redeem bottom sheet',
     build: () {
       return manager(altPromoCode: true);
@@ -141,7 +141,7 @@ void main() {
     },
   );
 
-  blocTest<PagePaymentScreenManager, PaymentScreenState>(
+  blocTest<PaywallScreenManager, PaymentScreenState>(
     'When the free trial period wasn\'t active and now we activate it, close the screen',
     build: () => manager(zeroTrialTime: true),
     act: (m) async {

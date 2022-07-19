@@ -20,14 +20,14 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_data.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 
 enum PaymentAction {
   subscribe,
@@ -41,9 +41,9 @@ abstract class PaymentScreenNavActions {
 const _ignoredPaymentErrors = [PaymentFlowError.canceled];
 
 @injectable
-class PagePaymentScreenManager extends PaymentScreenManager
+class PaywallScreenManager extends PaymentScreenManager
     with RedeemPromoCodeMixin<PaymentScreenState> {
-  PagePaymentScreenManager(
+  PaywallScreenManager(
     super.getPurchasableProductUseCase,
     super.purchaseSubscriptionUseCase,
     super.restoreSubscriptionUseCase,
@@ -178,7 +178,7 @@ abstract class PaymentScreenManager extends Cubit<PaymentScreenState>
   void subscribe() {
     _sendAnalyticsUseCase(
       SubscriptionActionEvent(
-        action: SubscriptionAction.subscribe,
+        action: SubscriptionAction.subscribeNow,
       ),
     );
 

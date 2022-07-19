@@ -4,12 +4,12 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/error/generic_error_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
 import 'package:xayn_discovery_app/presentation/utils/error_code_extensions.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 
 class PaymentBottomSheet extends BottomSheetBase {
   PaymentBottomSheet({
@@ -18,26 +18,27 @@ class PaymentBottomSheet extends BottomSheetBase {
     required VoidCallback? onRedeemPressed,
   }) : super(
           key: key,
-          body: _Payment(onClosePressed, onRedeemPressed),
+          body: PaymentBottomSheetBody(onClosePressed, onRedeemPressed),
           onSystemPop: onClosePressed,
         );
 }
 
-class _Payment extends StatefulWidget {
+class PaymentBottomSheetBody extends StatefulWidget {
   final VoidCallback onClosePressed;
   final VoidCallback? onRedeemPressed;
 
-  const _Payment(
+  const PaymentBottomSheetBody(
     this.onClosePressed,
-    this.onRedeemPressed,
-  );
+    this.onRedeemPressed, {
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<_Payment> createState() => _PaymentState();
+  State<PaymentBottomSheetBody> createState() => _PaymentBottomSheetBodyState();
 }
 
-class _PaymentState extends State<_Payment>
-    with BottomSheetBodyMixin, OverlayMixin<_Payment> {
+class _PaymentBottomSheetBodyState extends State<PaymentBottomSheetBody>
+    with BottomSheetBodyMixin, OverlayMixin<PaymentBottomSheetBody> {
   late final manager = di.get<BottomSheetPaymentScreenManager>()
     ..dismissBottomSheet = () {
       closeBottomSheet(context);

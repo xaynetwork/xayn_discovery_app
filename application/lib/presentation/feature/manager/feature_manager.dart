@@ -28,17 +28,18 @@ class FeatureManager extends Cubit<FeatureManagerState>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
 
   bool get isPaymentEnabled => isEnabled(Feature.payment);
-  bool get isGibberishEnabled => isEnabled(Feature.gibberish);
+
   bool get isAlternativePromoCodeEnabled => isEnabled(Feature.altPromoCode);
 
   bool get isTtsEnabled => isEnabled(Feature.tts);
-
-  bool get isCustomInlineCardEnabled => isEnabled(Feature.inlineCustomCard);
 
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
 
   bool get isNewExcludeSourceFlowEnabled =>
       isEnabled(Feature.newExcludeSourceFlow);
+
+  bool get arePushNotificationDeepLinksEnabled =>
+      isEnabled(Feature.pushNotificationDeepLinks);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);

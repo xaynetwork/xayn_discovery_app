@@ -15,6 +15,7 @@ dependencies:
 
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
+  awesome_notifications: 0.6.21
   connectivity_plus: 2.2.1
   country_code: 1.0.0
   dart_remote_config:
@@ -43,7 +44,7 @@ dependencies:
   gibberish:
     git:
       url: https://github.com/xaynetwork/gibberish
-      ref: 14f604df399fc9b8c2d2f3ca86768ff8f58a8c79
+      ref: 0.1.0
   hive: 2.0.5
   hive_crdt: 2.0.2
   # Pointing to a branch where the issue with "deprecated version of the Android embedding" is fixed.
@@ -95,11 +96,11 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: d4a509f0dbc7a775e0461f303abc231d42b2983a
+      ref: 1d700cb37c2c7e16b57a422a52cf00aa683630ee
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: ef9f007b2ac649cd924fb6d1edf6afaba9de6fd1
+      ref: c31313e6577badabf291a8cc08bc2d63c09ce07f
       path: discovery_engine_flutter
   xayn_readability:
     git:

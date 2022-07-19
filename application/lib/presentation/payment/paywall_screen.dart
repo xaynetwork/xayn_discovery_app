@@ -3,22 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/payment/purchasable_product.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/premium/widgets/trial_expired.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+class PaywallScreen extends StatefulWidget {
+  const PaywallScreen({Key? key}) : super(key: key);
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<PaywallScreen> createState() => _PaywallScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen>
-    with OverlayMixin<PaymentScreen> {
-  late final manager = di.get<PagePaymentScreenManager>();
+class _PaywallScreenState extends State<PaywallScreen>
+    with OverlayMixin<PaywallScreen> {
+  late final manager = di.get<PaywallScreenManager>();
 
   @override
   OverlayManager get overlayManager => manager.overlayManager;

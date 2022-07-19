@@ -36,7 +36,6 @@ class SurveyCardInjectionUseCase
 
   @visibleForTesting
   bool shouldMarkInjectionPoint(SurveyCardInjectionData data) =>
-      featureManager.isCustomInlineCardEnabled &&
       nextDocumentSibling == null &&
       data.status == SurveyConditionsStatus.reached &&
       data.nextDocumentsCount > data.currentDocumentsCount &&
