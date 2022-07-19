@@ -37,7 +37,7 @@ class _AdCardState extends State<AdCard> {
 
   void loadAd() => startAppSdk
           .loadNativeAd(
-              prefs: StartAppAdPreferences(
+              prefs: const StartAppAdPreferences(
                   // somehow this is ignored
                   // desiredWidth: R.dimen.screenSize.width.floor(),
                   // desiredHeight: R.dimen.screenSize.height.floor(),
