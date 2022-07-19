@@ -17,13 +17,10 @@ enum Feature {
   /// Keep flag for remote config
   altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
 
-  pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
-      'Allows to deep link to an article when tapping on push notification'),
-
-  resetAI(
-    Owner.Carmine,
-    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-    'Shows the reset AI option in the settings screen',
+  pushNotificationDeepLinks(
+    Owner.Peter,
+    EnvironmentHelper.kIsDebug,
+    'Allows to deep link to an article when tapping on push notification',
   );
 
   final Owner owner;
