@@ -96,11 +96,11 @@ dependencies:
   xayn_design:
     git:
       url: git@github.com:xaynetwork/xayn_design.git
-      ref: 1d700cb37c2c7e16b57a422a52cf00aa683630ee
+      ref: a20fd18491d6799e8ec4394646c8f8dad1becc60
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: c31313e6577badabf291a8cc08bc2d63c09ce07f
+      ref: 328abe7726a1e8acb9f8392a28d526ffb1e1c5eb
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -120,7 +120,7 @@ dependency_overrides:
 # Please list dependencies alphabetically!
 dev_dependencies:
   bloc_test: 8.5.0
-  build_runner: 2.1.8
+  build_runner: 2.1.11
   envify_generator: 2.0.2
   flutter_lints: 2.0.1
   flutter_test:

@@ -22,7 +22,13 @@ enum Feature {
     'Open menu when clicking card header icon',
   ),
   pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
-      'Allows to deep link to an article when tapping on push notification');
+      'Allows to deep link to an article when tapping on push notification'),
+
+  resetAI(
+    Owner.Carmine,
+    EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+    'Shows the reset AI option in the settings screen',
+  );
 
   final Owner owner;
   final String? description;

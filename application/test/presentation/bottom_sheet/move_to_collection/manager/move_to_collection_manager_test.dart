@@ -60,6 +60,7 @@ void main() {
           ),
           batchIndex: -1,
           userReaction: UserReaction.positive,
+          stackId: StackId.nil(),
         );
 
     final documentMarkedPositive = createDocumentMarkedPositive();

@@ -67,6 +67,7 @@ void main() async {
         ),
         batchIndex: -1,
         userReaction: UserReaction.neutral,
+        stackId: StackId.nil(),
       );
 
   final fakeDocumentA = createFakeDocument();

@@ -213,6 +213,18 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   void onSourcesOptionsPressed() =>
       _settingsNavActions.onSourcesOptionsPressed();
 
+  void onResetAIPressed() => showOverlay(
+        OverlayData.bottomSheetResetAI(
+          onResetAIPressed: () => showOverlay(
+            OverlayData.bottomSheetResettingAI(
+              onResetAIFailed: () => showOverlay(
+                OverlayData.bottomSheetGenericError(),
+              ),
+            ),
+          ),
+        ),
+      );
+
   void onSubscriptionSectionPressed({
     required SubscriptionStatus subscriptionStatus,
   }) {
