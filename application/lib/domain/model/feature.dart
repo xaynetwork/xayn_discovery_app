@@ -21,6 +21,10 @@ enum Feature {
     true,
     'Open menu when clicking card header icon',
   ),
+  ads(
+      Owner.Frank,
+      EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
+      'Show ads in the feed based on logic'),
   pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
       'Allows to deep link to an article when tapping on push notification'),
 

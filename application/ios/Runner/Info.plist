@@ -20,6 +20,12 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>com.startapp.sdk.APPLICATION_ID</key>
+    <string>206340173</string>
+    <key>com.startapp.sdk.RETURN_ADS_ENABLED</key>
+    <false/>
+    <key>com.startapp.sdk.SPLASH_ADS_ENABLED</key>
+    <false/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

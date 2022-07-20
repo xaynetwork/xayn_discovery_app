@@ -20,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/ad_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -84,6 +85,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
+  final AdCardInjectionUseCase adCardInjectionUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -111,6 +113,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.handleSurveyBannerClickedUseCase,
     this.handleSurveyBannerShownUseCase,
     this.surveyCardInjectionUseCase,
+    this.adCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
@@ -204,6 +207,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   }
 
   void handleSurveyTapped() => handleSurveyBannerClickedUseCase(none);
+
+  void handleAdTapped() {
+    throw UnimplementedError('handleAdTapped was not implemented');
+  }
 
   void handleLoadMore();
 
@@ -367,13 +374,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final cards = await surveyCardInjectionUseCase.singleOutput(
-          SurveyCardInjectionData(
-            currentCards: state.cards,
-            nextDocuments: documents,
-            status: surveyConditionStatus,
-          ),
+        final cards = await _injectCustomCardsIfAny(
+          cards: documents == null
+              ? state.cards
+              : documents.map(Card.document).toSet(),
+          surveyConditionStatus: surveyConditionStatus,
         );
+
         final sets = await maybeReduceCardCount(cards);
         final nextCardIndex = sets.nextCardIndex;
 
@@ -427,6 +434,24 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   DocumentViewMode _currentViewMode(DocumentId id) =>
       _documentCurrentViewMode[id] ?? DocumentViewMode.story;
+
+  Future<Set<Card>> _injectCustomCardsIfAny({
+    required Set<Card> cards,
+    SurveyConditionsStatus? surveyConditionStatus,
+  }) async {
+    var nextCards = cards;
+
+    nextCards = await surveyCardInjectionUseCase.singleOutput(
+      SurveyCardInjectionData(
+        cards: nextCards,
+        status: surveyConditionStatus,
+      ),
+    );
+
+    nextCards = await adCardInjectionUseCase.singleOutput(nextCards);
+
+    return nextCards;
+  }
 
   /// secondary observation action, check if we should implicitly like the [Document]
   @override
