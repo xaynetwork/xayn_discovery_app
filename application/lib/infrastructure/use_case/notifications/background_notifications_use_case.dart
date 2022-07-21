@@ -34,7 +34,7 @@ class BackgroundNotificationsUseCase extends UseCase<None, None> {
       title: document.resource.title,
       body: document.resource.snippet,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
-      delay: Duration.zero,
+      delay: const Duration(seconds: 1),
     );
   }
 
