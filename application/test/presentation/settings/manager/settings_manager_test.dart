@@ -54,6 +54,7 @@ void main() {
   late MockAppManager appManager;
   late MockLocalNotificationsService localNotificationsService;
   late MockDiscoveryFeedManager discoveryFeedManager;
+  late MockBackgroundNotificationsUseCase backgroundNotificationsUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -75,6 +76,7 @@ void main() {
     appManager = MockAppManager();
     localNotificationsService = MockLocalNotificationsService();
     discoveryFeedManager = MockDiscoveryFeedManager();
+    backgroundNotificationsUseCase = MockBackgroundNotificationsUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
@@ -131,6 +133,7 @@ void main() {
         ratingDialogManager,
         localNotificationsService,
         discoveryFeedManager,
+        backgroundNotificationsUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',
