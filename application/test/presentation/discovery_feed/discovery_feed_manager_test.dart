@@ -130,11 +130,11 @@ void main() async {
         (realInvocation) async => surveyCardInjectionUseCase
             .toCards((realInvocation.positionalArguments.first
                     as SurveyCardInjectionData)
-                .nextDocuments)
+                .cards)
             .toSet());
     when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
-        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
-            .map(item_renderer.Card.document));
+        (realInvocation.positionalArguments.first as Set<item_renderer.Card>? ??
+            const {}));
 
     di.reset();
 
@@ -160,6 +160,7 @@ void main() async {
     await eventsController.close();
     await engine.dispose();
     await manager.close();
+    await tearDownWidgetTest();
   });
 
   blocTest<DiscoveryFeedManager, DiscoveryState>(
@@ -182,7 +183,6 @@ void main() async {
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );
-
   blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN feed card index changes THEN store the new index in the repository ',
     build: () => manager,
@@ -193,20 +193,20 @@ void main() async {
       await manager.stream.firstWhere((it) => it.cards.isNotEmpty);
     },
     act: (manager) async => manager.handleIndexChanged(1),
-    expect: () => [
-      DiscoveryState(
-        cards: {
-          item_renderer.Card.document(fakeDocumentA),
-          item_renderer.Card.document(fakeDocumentB),
-        },
-        cardIndex: 1,
-        isComplete: true,
-        isFullScreen: false,
-        didReachEnd: false,
-        subscriptionStatus: null,
-      ),
-    ],
     verify: (manager) {
+      expect(
+          manager.state,
+          DiscoveryState(
+            cards: {
+              item_renderer.Card.document(fakeDocumentA),
+              item_renderer.Card.document(fakeDocumentB),
+            },
+            cardIndex: 1,
+            isComplete: true,
+            isFullScreen: false,
+            didReachEnd: false,
+            subscriptionStatus: null,
+          ));
       verifyInOrder([
         // when manager inits
         feedRepository.get(),
@@ -305,6 +305,7 @@ void main() async {
         .thenAnswer((_) async => Session.withFeedRequested()),
     act: (manager) async {
       manager.handleNavigateIntoCard(fakeDocumentA);
+      await manager.stream.firstWhere((it) => it.isComplete);
     },
     verify: (manager) {
       expect(
@@ -314,8 +315,8 @@ void main() async {
             item_renderer.Card.document(fakeDocumentA),
             item_renderer.Card.document(fakeDocumentB),
           },
-          cardIndex: 0,
-          isComplete: false,
+          cardIndex: 1,
+          isComplete: true,
           isFullScreen: true,
           shouldUpdateNavBar: false,
           didReachEnd: false,

@@ -44,6 +44,7 @@ void main() {
   late MockHandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   late MockHandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
+  late MockAdCardInjectionUseCase adCardInjectionUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
@@ -60,6 +61,7 @@ void main() {
     handleSurveyBannerClickedUseCase = MockHandleSurveyBannerClickedUseCase();
     handleSurveyBannerShownUseCase = MockHandleSurveyBannerShownUseCase();
     surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
+    adCardInjectionUseCase = MockAdCardInjectionUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
@@ -89,6 +91,13 @@ void main() {
 
       return Stream.value(documents.map(Card.document).toSet());
     });
+    when(adCardInjectionUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(adCardInjectionUseCase.transaction(any)).thenAnswer((realInvocation) {
+      final Set<Document> documents = realInvocation.positionalArguments.first;
+
+      return Stream.value(documents.map(Card.document).toSet());
+    });
     when(listenSurveyConditionsStatusUseCase.transaction(any)).thenAnswer(
         (realInvocation) => Stream.value(SurveyConditionsStatus.notReached));
     when(listenSurveyConditionsStatusUseCase.transform(any)).thenAnswer(
@@ -98,7 +107,7 @@ void main() {
         (realInvocation) async => surveyCardInjectionUseCase
             .toCards((realInvocation.positionalArguments.first
                     as SurveyCardInjectionData)
-                .nextDocuments)
+                .cards)
             .toSet());
     when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
         (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
@@ -125,6 +134,7 @@ void main() {
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           surveyCardInjectionUseCase,
+          adCardInjectionUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(
