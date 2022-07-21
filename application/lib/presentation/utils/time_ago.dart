@@ -3,7 +3,9 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 String timeAgo(DateTime dateTime, DateFormat dateFormat) {
   final moment = DateTime.now();
-  final elapsed = moment.difference(dateTime);
+  final dateTimeWithOffset = dateTime.add(moment.timeZoneOffset);
+
+  final elapsed = moment.difference(dateTimeWithOffset);
   final minutesAgo = elapsed.inMinutes;
   final hoursAgo = elapsed.inHours;
   final daysAgo = elapsed.inDays;
