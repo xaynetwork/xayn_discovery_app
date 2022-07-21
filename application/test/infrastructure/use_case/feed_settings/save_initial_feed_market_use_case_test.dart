@@ -25,7 +25,7 @@ void main() {
     languageCode: 'en',
     countryCode: 'DE',
   );
-  final FeedMarket defaultMarket = defaultFeedMarket;
+  final InternalFeedMarket defaultMarket = defaultFeedMarket;
 
   setUp(() {
     repository = MockFeedSettingsRepository();
@@ -40,7 +40,7 @@ void main() {
     when(feedTypeMarketsRepository.save(any)).thenReturn(null);
   });
 
-  FeedSettings getSettings([FeedMarket? market]) =>
+  FeedSettings getSettings([InternalFeedMarket? market]) =>
       FeedSettings(feedMarkets: {market ?? defaultMarket});
 
   SaveDefaultFeedMarketInput getInput(Locale local) =>

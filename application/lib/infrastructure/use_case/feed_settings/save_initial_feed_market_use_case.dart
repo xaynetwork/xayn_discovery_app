@@ -30,7 +30,7 @@ class SaveInitialFeedMarketUseCase
     yield none;
   }
 
-  FeedMarket _getMarket(SaveDefaultFeedMarketInput param) {
+  InternalFeedMarket _getMarket(SaveDefaultFeedMarketInput param) {
     final deviceCountryCode = param.deviceLocale.countryCode;
     if (deviceCountryCode == null) return param.defaultMarket;
 
@@ -44,8 +44,8 @@ class SaveInitialFeedMarketUseCase
 
 class SaveDefaultFeedMarketInput {
   final Locale deviceLocale;
-  final FeedMarket defaultMarket;
-  final FeedMarkets supportedMarkets;
+  final InternalFeedMarket defaultMarket;
+  final Set<InternalFeedMarket> supportedMarkets;
 
   SaveDefaultFeedMarketInput(
     this.deviceLocale,

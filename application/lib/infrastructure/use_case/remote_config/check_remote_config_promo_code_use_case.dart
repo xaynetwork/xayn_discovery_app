@@ -1,6 +1,6 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
+import 'package:dart_remote_config/utils/extensions.dart';
 import 'package:equatable/equatable.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';

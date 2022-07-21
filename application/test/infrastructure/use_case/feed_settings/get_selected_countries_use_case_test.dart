@@ -11,8 +11,8 @@ void main() {
   late GetSelectedCountriesUseCase useCase;
   late MockFeedSettingsRepository repository;
 
-  const uaMarket = FeedMarket(countryCode: 'UA', languageCode: 'uk');
-  const usMarket = FeedMarket(countryCode: 'US', languageCode: 'en');
+  const uaMarket = InternalFeedMarket(countryCode: 'UA', languageCode: 'uk');
+  const usMarket = InternalFeedMarket(countryCode: 'US', languageCode: 'en');
   late final markets = {uaMarket, usMarket};
 
   const ukraine = Country(

@@ -33,15 +33,12 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isTtsEnabled => isEnabled(Feature.tts);
 
-  bool get isCustomInlineCardEnabled => isEnabled(Feature.inlineCustomCard);
-
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
-
-  bool get isNewExcludeSourceFlowEnabled =>
-      isEnabled(Feature.newExcludeSourceFlow);
 
   bool get arePushNotificationDeepLinksEnabled =>
       isEnabled(Feature.pushNotificationDeepLinks);
+
+  bool get isResetAIEnabled => isEnabled(Feature.resetAI);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);

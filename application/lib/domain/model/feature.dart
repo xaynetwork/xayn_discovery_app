@@ -9,22 +9,22 @@ enum Feature {
   ratingDialog(Owner.Simon,
       EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor),
   tts(Owner.Frank, false, 'Enables text-to-speech function for articles'),
-  inlineCustomCard(
-      Owner.Frank, false, 'show an inline custom card, as a test only'),
-  promptSurvey(Owner.Carmine, false,
+
+  /// Keep flag for remote config
+  promptSurvey(Owner.Carmine, true,
       'When enabled, collects the user interactions in order to prompt the survey card'),
 
-  ///TODO remove flag
+  /// Keep flag for remote config
   altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
 
-  newExcludeSourceFlow(
+  pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
+      'Allows to deep link to an article when tapping on push notification'),
+
+  resetAI(
     Owner.Carmine,
     EnvironmentHelper.kIsDebug || EnvironmentHelper.kIsInternalFlavor,
-    'Open menu when clicking card header icon',
-  ),
-
-  pushNotificationDeepLinks(Owner.Peter, EnvironmentHelper.kIsDebug,
-      'Allows to deep link to an article when tapping on push notification');
+    'Shows the reset AI option in the settings screen',
+  );
 
   final Owner owner;
   final String? description;

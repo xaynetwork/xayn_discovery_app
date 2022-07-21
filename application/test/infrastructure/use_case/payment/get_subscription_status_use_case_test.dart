@@ -25,9 +25,9 @@ void main() {
   test(
     'GIVEN purchaseInfo with active subscription THEN yield false',
     () async {
-      when(paymentService.getPurchaserInfo()).thenAnswer(
+      when(paymentService.getCustomerInfo()).thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: true),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: true),
       );
       // ACT
       final subscriptionStatus = await useCase.singleOutput(none);
@@ -38,7 +38,7 @@ void main() {
       expect(subscriptionStatus.willRenew, isFalse);
       expect(subscriptionStatus.expirationDate, isNotNull);
       expect(subscriptionStatus.trialEndDate, isNotNull);
-      verify(paymentService.getPurchaserInfo());
+      verify(paymentService.getCustomerInfo());
       verifyNoMoreInteractions(paymentService);
     },
   );
@@ -47,9 +47,9 @@ void main() {
     'GIVEN purchaseInfo without active subscription THEN yield false',
     () async {
       // ARRANGE
-      when(paymentService.getPurchaserInfo()).thenAnswer(
+      when(paymentService.getCustomerInfo()).thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: false),
       );
 
       // ACT
@@ -61,7 +61,7 @@ void main() {
       expect(subscriptionStatus.willRenew, isFalse);
       expect(subscriptionStatus.expirationDate, isNull);
       expect(subscriptionStatus.trialEndDate, isNotNull);
-      verify(paymentService.getPurchaserInfo());
+      verify(paymentService.getCustomerInfo());
       verifyNoMoreInteractions(paymentService);
     },
   );
@@ -70,9 +70,9 @@ void main() {
     'GIVEN purchaseInfo without active subscription and is beta user THEN yield true',
     () async {
       // ARRANGE
-      when(paymentService.getPurchaserInfo()).thenAnswer(
+      when(paymentService.getCustomerInfo()).thenAnswer(
         (_) async =>
-            PaymentMockData.createPurchaserInfo(withActiveSubscription: false),
+            PaymentMockData.createCustomerInfo(withActiveSubscription: false),
       );
 
       when(repository.appStatus)
@@ -87,7 +87,7 @@ void main() {
       expect(subscriptionStatus.willRenew, isFalse);
       expect(subscriptionStatus.expirationDate, isNull);
       expect(subscriptionStatus.trialEndDate, isNotNull);
-      verify(paymentService.getPurchaserInfo());
+      verify(paymentService.getCustomerInfo());
       verifyNoMoreInteractions(paymentService);
     },
   );

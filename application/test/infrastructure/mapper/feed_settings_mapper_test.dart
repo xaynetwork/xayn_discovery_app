@@ -11,8 +11,8 @@ void main() {
   const usaMap = {0: 'US', 1: 'en'};
   const marketsMap = [uaMap, usaMap];
 
-  const uaMarket = FeedMarket(countryCode: 'UA', languageCode: 'uk');
-  const usaMarket = FeedMarket(countryCode: 'US', languageCode: 'en');
+  const uaMarket = InternalFeedMarket(countryCode: 'UA', languageCode: 'uk');
+  const usaMarket = InternalFeedMarket(countryCode: 'US', languageCode: 'en');
   late final markets = {uaMarket, usaMarket};
   late final feedSettings = FeedSettings(feedMarkets: markets);
 

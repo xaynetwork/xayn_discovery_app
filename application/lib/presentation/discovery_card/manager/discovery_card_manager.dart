@@ -35,7 +35,6 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_document_feedback_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -79,7 +78,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final RatingDialogManager _ratingDialogManager;
   final AppManager _appManager;
   final SaveUserInteractionUseCase _saveUserInteractionUseCase;
-  final FeatureManager _featureManager;
   final SourcesManager _sourcesManager;
 
   /// html reader mode elements:
@@ -152,7 +150,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._appManager,
     this._saveUserInteractionUseCase,
     this._gibberishDetectionUseCase,
-    this._featureManager,
     this._sourcesManager,
   ) : super(DiscoveryCardState.initial());
 
@@ -179,15 +176,6 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required UserReaction userReaction,
     required FeedType? feedType,
   }) async {
-    if (!_featureManager.isNewExcludeSourceFlowEnabled) {
-      showOverlay(
-        OverlayData.tooltipDocumentFilter(onTap: () {
-          showOverlay(OverlayData.bottomSheetDocumentFilter(document));
-        }),
-        when: (_, nS) => nS.explicitDocumentUserReaction.isIrrelevant,
-      );
-    }
-
     _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.likeOrDislikedArticle);
 

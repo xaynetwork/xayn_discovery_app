@@ -11,7 +11,7 @@ abstract class _Fields {
 
 const langCodeUA = 'uk';
 const countryCodeUA = 'UA';
-const uaMarket = FeedMarket(
+const uaMarket = InternalFeedMarket(
   countryCode: countryCodeUA,
   languageCode: langCodeUA,
 );

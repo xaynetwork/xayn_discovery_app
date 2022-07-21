@@ -12,6 +12,8 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_r
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/feedback_given_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_reset_ai_window_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reset_ai_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/notifications/local_notifications_service.dart';
@@ -215,6 +217,32 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   void onSourcesOptionsPressed() =>
       _settingsNavActions.onSourcesOptionsPressed();
+
+  void onResetAIPressed() {
+    _sendAnalyticsUseCase(OpenResetAIWindowEvent());
+
+    showOverlay(
+      OverlayData.bottomSheetResetAI(
+        onSystemPop: () => _sendAnalyticsUseCase(
+          ResetAIActionEvent(
+            action: ResetAIActionValueEnum.cancel,
+          ),
+        ),
+        onResetAIPressed: () {
+          _sendAnalyticsUseCase(
+            ResetAIActionEvent(action: ResetAIActionValueEnum.reset),
+          );
+          showOverlay(
+            OverlayData.bottomSheetResettingAI(
+              onResetAIFailed: () => showOverlay(
+                OverlayData.bottomSheetGenericError(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   void onSubscriptionSectionPressed({
     required SubscriptionStatus subscriptionStatus,

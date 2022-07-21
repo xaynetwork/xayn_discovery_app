@@ -43,6 +43,8 @@ const int _kMaxCardCount = 10;
 typedef OnRestoreFeedSucceeded = Set<Document> Function(
     RestoreFeedSucceeded event);
 typedef OnRestoreFeedFailed = Set<Document> Function(RestoreFeedFailed event);
+
+typedef OnResetAiSucceeded = Set<Document> Function(ResetAiSucceeded event);
 typedef OnNextFeedBatchRequestSucceeded = Set<Document> Function(
     NextFeedBatchRequestSucceeded event);
 typedef OnNextFeedBatchRequestFailed = Set<Document> Function(
@@ -238,6 +240,12 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     resetObservedDocument();
   }
 
+  void onResetAISucceeded() {
+    resetParameters();
+    requestNextFeedBatch();
+    handleIndexChanged(0);
+  }
+
   /// A higher-order Function, which tracks the last event passed in,
   /// and ultimately runs the inner fold Function when the incoming event
   /// no longer matches lastEvent.
@@ -268,6 +276,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
         required OnEngineExceptionRaised engineExceptionRaised,
         required OnNextFeedBatchRequestFailed nextFeedBatchRequestFailed,
         required OnRestoreFeedFailed restoreFeedFailed,
+        required OnResetAiSucceeded resetAiSucceeded,
         required OnNonMatchedEngineEvent orElse,
       }) =>
           (EngineEvent? event) {
@@ -289,6 +298,9 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
               lastResults = nextFeedBatchRequestFailed(event);
             } else if (event is RestoreFeedFailed) {
               lastResults = restoreFeedFailed(event);
+            } else if (event is ResetAiSucceeded) {
+              self.onResetAISucceeded();
+              lastResults = {};
             } else {
               lastResults = orElse();
             }
@@ -342,6 +354,10 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
 
           return lastResults;
         },
+
+        ///TODO will add the analytics
+        resetAiSucceeded: (event) => lastResults,
+
         orElse: () => lastResults,
       );
     };

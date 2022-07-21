@@ -274,7 +274,7 @@ class TestableDirectUriUseCase extends DirectUriUseCase {
 @LazySingleton(as: PaymentService)
 class TestablePaymentServices implements PaymentService {
   static const _info =
-      PurchaserInfo(EntitlementInfos({}, {}), {}, [], [], [], "", "", {}, "");
+      CustomerInfo(EntitlementInfos({}, {}), {}, [], [], [], "", "", {}, "");
 
   @override
   Future<List<Package>> getPackages() async {
@@ -282,7 +282,7 @@ class TestablePaymentServices implements PaymentService {
   }
 
   @override
-  Future<PurchaserInfo> getPurchaserInfo() async {
+  Future<CustomerInfo> getCustomerInfo() async {
     return _info;
   }
 
@@ -292,16 +292,16 @@ class TestablePaymentServices implements PaymentService {
   }
 
   @override
-  Future<PurchaserInfo> purchaseProduct(String id,
+  Future<CustomerInfo> purchaseProduct(String id,
       {UpgradeInfo? upgradeInfo, PurchaseType type = PurchaseType.subs}) {
     throw UnimplementedError();
   }
 
   @override
-  Stream<PurchaserInfo> get purchaserInfoStream => const Stream.empty();
+  Stream<CustomerInfo> get customerInfoStream => const Stream.empty();
 
   @override
-  Future<PurchaserInfo> restore() async {
+  Future<CustomerInfo> restore() async {
     return _info;
   }
 

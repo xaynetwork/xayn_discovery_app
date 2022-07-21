@@ -10,7 +10,7 @@ void main() {
     Package(
       'id_0',
       PackageType.monthly,
-      Product(
+      StoreProduct(
         'id_0',
         'description_0',
         'title_0',
@@ -23,7 +23,7 @@ void main() {
     Package(
       'id_1',
       PackageType.monthly,
-      Product(
+      StoreProduct(
         'id_1',
         'description_1',
         'title_1',
@@ -36,7 +36,7 @@ void main() {
     Package(
       'id_2',
       PackageType.monthly,
-      Product(
+      StoreProduct(
         'id_2',
         'description_2',
         'title_2',
@@ -49,7 +49,7 @@ void main() {
     Package(
       'id_3',
       PackageType.monthly,
-      Product(
+      StoreProduct(
         'id_3',
         'description_3',
         'title_3',
