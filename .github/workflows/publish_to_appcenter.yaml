@@ -95,10 +95,10 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
-      - name: Select Xcode version
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+      # - name: Select Xcode version
+      #   uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
         timeout-minutes: 25
@@ -175,10 +175,10 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
-      - name: Select Xcode version
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+      # - name: Select Xcode version
+      #   uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
         timeout-minutes: 25
@@ -234,15 +234,15 @@ jobs:
       - name: Cache pubspec dependencies
         uses: actions/cache@v2
         with:
-         path: |
-           ${{ env.PUB_CACHE }}
-           **/.packages
-           **/.flutter-plugins
-           **/.flutter-plugin-dependencies
-           **/.dart_tool/package_config.json
-         key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
-         restore-keys: |
-           build-pubspec-
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
 
       - name: Fix fastlane permissions
         run: sudo chmod -R a+w /var/lib/gems/
@@ -329,8 +329,8 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
-          RCONFIG_ACCESS_KEY : ${{ secrets.RCONFIG_ACCESS_KEY }}
-          RCONFIG_SECRET_KEY : ${{ secrets.RCONFIG_SECRET_KEY }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta store:true
@@ -344,7 +344,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       message: ${{ needs.publish_android_beta.outputs.message }}
-      status:  ${{ needs.publish_android_beta.outputs.status }}
+      status: ${{ needs.publish_android_beta.outputs.status }}
 
   slack-notification-ios-beta:
     needs: publish_ios_beta
@@ -353,4 +353,4 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       message: ${{ needs.publish_ios_beta.outputs.message  }}
-      status:  ${{ needs.publish_ios_beta.outputs.status }}
+      status: ${{ needs.publish_ios_beta.outputs.status }}
