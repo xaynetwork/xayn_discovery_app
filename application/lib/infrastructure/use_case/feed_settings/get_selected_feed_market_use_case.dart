@@ -4,7 +4,8 @@ import 'package:xayn_discovery_app/domain/model/feed_market/feed_market.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 
 @injectable
-class GetSelectedFeedMarketsUseCase extends UseCase<None, FeedMarkets> {
+class GetSelectedFeedMarketsUseCase
+    extends UseCase<None, Set<InternalFeedMarket>> {
   final FeedSettingsRepository _repository;
 
   GetSelectedFeedMarketsUseCase(
@@ -12,7 +13,7 @@ class GetSelectedFeedMarketsUseCase extends UseCase<None, FeedMarkets> {
   );
 
   @override
-  Stream<FeedMarkets> transaction(None param) async* {
+  Stream<Set<InternalFeedMarket>> transaction(None param) async* {
     final settings = _repository.settings;
     yield settings.feedMarkets;
   }

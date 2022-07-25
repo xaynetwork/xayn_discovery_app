@@ -14,16 +14,18 @@ class FeedTypeMarkets extends DbEntity with _$FeedTypeMarkets {
   factory FeedTypeMarkets({
     required UniqueId id,
     required FeedType feedType,
-    required FeedMarkets feedMarkets,
+    required Set<InternalFeedMarket> feedMarkets,
   }) = _FeedTypeMarkets;
 
-  factory FeedTypeMarkets.forFeed(FeedMarkets feedMarkets) => FeedTypeMarkets(
+  factory FeedTypeMarkets.forFeed(Set<InternalFeedMarket> feedMarkets) =>
+      FeedTypeMarkets(
         id: feedId,
         feedType: FeedType.feed,
         feedMarkets: feedMarkets,
       );
 
-  factory FeedTypeMarkets.forSearch(FeedMarkets feedMarkets) => FeedTypeMarkets(
+  factory FeedTypeMarkets.forSearch(Set<InternalFeedMarket> feedMarkets) =>
+      FeedTypeMarkets(
         id: searchId,
         feedType: FeedType.search,
         feedMarkets: feedMarkets,

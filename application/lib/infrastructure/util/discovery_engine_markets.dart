@@ -37,8 +37,8 @@ enum SupportedMarkets {
   const SupportedMarkets._(this.languageCode, this.countryCode,
       [this._languageName]);
 
-  FeedMarket get toFeedMarket =>
-      FeedMarket(countryCode: countryCode, languageCode: languageCode);
+  InternalFeedMarket get toFeedMarket =>
+      InternalFeedMarket(countryCode: countryCode, languageCode: languageCode);
 
   // Use a function instead of hardcoding the string, because R.assets.illustrations is not a const
   String get flag {

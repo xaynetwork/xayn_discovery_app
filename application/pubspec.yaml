@@ -18,10 +18,10 @@ dependencies:
   awesome_notifications: 0.6.21
   connectivity_plus: 2.2.1
   country_code: 1.0.0
+  collection: ^1.16.0
   dart_remote_config:
     git:
-      # TODO change to http
-      url: git@github.com:xaynetwork/dart_remote_config.git
+      url: https://github.com/xaynetwork/dart_remote_config
       ref: 1758e556618d7cb9e408bfc68fb101f1378e327f
   equatable: 2.0.3
   envify: 2.0.2
@@ -32,13 +32,13 @@ dependencies:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
       ref: 1.0.0
-  flutter_tts: 3.3.3
+  flutter_tts: 3.5.0
   # language detection
   franc:
     git:
       url: https://github.com/svonidze/francd
       ref: 170e633af9a7b8b31769eb232f99e105e1359692
-  freezed_annotation: 1.1.0
+  freezed_annotation: 2.0.3
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
   gibberish:
@@ -70,7 +70,7 @@ dependencies:
   mixpanel_flutter: 1.5.0
   package_info_plus: 1.4.0
   path_provider: 2.0.9
-  purchases_flutter: 3.9.5
+  purchases_flutter: 4.0.0-beta.1
   platform: ^3.1.0
   rxdart: 0.27.3
   sprintf: 6.0.0
@@ -100,7 +100,7 @@ dependencies:
   xayn_discovery_engine_flutter:
     git:
       url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: 328abe7726a1e8acb9f8392a28d526ffb1e1c5eb
+      ref: 090c6bef3a1e04a2985bcba015d43209adb2298b
       path: discovery_engine_flutter
   xayn_readability:
     git:
@@ -111,8 +111,7 @@ dependencies:
 dependency_overrides:
   json_annotation: 4.4.0
   hive: 2.1.0
-  freezed_annotation: 1.1.0
-  analyzer: 3.4.1
+  analyzer: 4.2.0
   provider: 6.0.2
   dart_style: 2.2.2
   json_serializable: 6.1.4
@@ -120,12 +119,12 @@ dependency_overrides:
 # Please list dependencies alphabetically!
 dev_dependencies:
   bloc_test: 8.5.0
-  build_runner: 2.1.11
+  build_runner: 2.2.0
   envify_generator: 2.0.2
   flutter_lints: 2.0.1
   flutter_test:
     sdk: flutter
-  freezed: 1.1.1
+  freezed: 2.0.5
   injectable_generator: 1.5.3
   mockito: 5.1.0
 

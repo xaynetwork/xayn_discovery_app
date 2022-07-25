@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_remote_config/utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/rxdart.dart';

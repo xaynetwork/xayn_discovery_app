@@ -12,13 +12,14 @@ import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 /// to test UI related code.
 @lazySingleton
 class FakePaymentService implements PaymentService {
-  final StreamController<PurchaserInfo> _controller =
-      StreamController<PurchaserInfo>.broadcast();
+  final StreamController<CustomerInfo> _controller =
+      StreamController<CustomerInfo>.broadcast();
   final _randomNumberGenerator = Random();
 
   bool calledPresentCodeRedemptionSheet = false;
+
   @override
-  Stream<PurchaserInfo> get purchaserInfoStream => _controller.stream;
+  Stream<CustomerInfo> get customerInfoStream => _controller.stream;
 
   /// Allow to test the purchase flow for non-release builds.
   bool _hasMockActiveSubscription = false;
@@ -33,7 +34,7 @@ class FakePaymentService implements PaymentService {
       );
 
   @override
-  Future<PurchaserInfo> purchaseProduct(
+  Future<CustomerInfo> purchaseProduct(
     PurchasableProductId id, {
     UpgradeInfo? upgradeInfo,
     PurchaseType type = PurchaseType.subs,
@@ -43,36 +44,36 @@ class FakePaymentService implements PaymentService {
     return Future.delayed(
       PaymentMockData.requestSimulationDuration,
       () {
-        final purchaserInfo = PaymentMockData.createPurchaserInfo(
+        final customerInfo = PaymentMockData.createCustomerInfo(
           withActiveSubscription: _hasMockActiveSubscription,
           willRenew: _willRenew,
         );
-        _controller.sink.add(purchaserInfo);
-        return purchaserInfo;
+        _controller.sink.add(customerInfo);
+        return customerInfo;
       },
     );
   }
 
   @override
-  Future<PurchaserInfo> restore() {
+  Future<CustomerInfo> restore() {
     _hasMockActiveSubscription = true;
     _willRenew = _randomNumberGenerator.nextBool();
     return Future.delayed(
       PaymentMockData.requestSimulationDuration,
       () {
-        final purchaserInfo = PaymentMockData.createPurchaserInfo(
+        final customerInfo = PaymentMockData.createCustomerInfo(
           withActiveSubscription: _hasMockActiveSubscription,
           willRenew: _willRenew,
         );
-        _controller.sink.add(purchaserInfo);
-        return purchaserInfo;
+        _controller.sink.add(customerInfo);
+        return customerInfo;
       },
     );
   }
 
   @override
-  Future<PurchaserInfo> getPurchaserInfo() =>
-      Future.value(PaymentMockData.createPurchaserInfo(
+  Future<CustomerInfo> getCustomerInfo() =>
+      Future.value(PaymentMockData.createCustomerInfo(
         withActiveSubscription: _hasMockActiveSubscription,
         willRenew: _willRenew,
       ));

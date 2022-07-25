@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_feed_market_use_case.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -16,6 +16,7 @@ class GetLocalMarketsUseCase extends UseCase<None, Set<FeedMarket>> {
         await _getSelectedFeedMarketsUseCase.singleOutput(none);
 
     yield localMarkets
+        .toList()
         .sortedBy((it) => '${it.countryCode}|${it.languageCode}')
         .map((e) =>
             FeedMarket(countryCode: e.countryCode, langCode: e.languageCode))

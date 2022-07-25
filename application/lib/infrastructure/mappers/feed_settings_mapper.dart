@@ -30,10 +30,10 @@ class FeedSettingsMapper extends BaseDbEntityMapper<FeedSettings> {
             entity.feedMarkets.map(_feedMarketToMapMapper.map).toList(),
       };
 
-  Set<FeedMarket> _mapMarkets(Map map) {
+  Set<InternalFeedMarket> _mapMarkets(Map map) {
     final feedMarketsRaw = map[FeedSettingsFields.feedMarkets] as List? ?? [];
 
-    final feedMarkets = <FeedMarket>{};
+    final feedMarkets = <InternalFeedMarket>{};
     for (final element in feedMarketsRaw) {
       final market =
           _feedMarketFromMapMapper.map(Map<int, dynamic>.from(element));
