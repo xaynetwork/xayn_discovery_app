@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
@@ -7,10 +8,24 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/document/decode_document_use_case.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
+import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+
+import 'utils/generate_invite_link_result.dart';
+
+/// You can find it in the appsflyer dashboard
+const String _kAppInviteOneLinkID = 'gvbN';
+const String _kDeepLinkNameForSharingDocument = 'cardDetails';
+
+/// The name of this parameter is the one used by default for getting the deep link name
+/// when onDeepLink has been called. Found it by debugging the object DeepLinkResult
+const String _kDeepLinkNameParamName = 'deep_link_value';
+const String _kDocumentLinkParamName = 'document';
 
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
@@ -23,6 +38,10 @@ abstract class MarketingAnalyticsService {
   /// TODO: call this function in language change
   void setCurrentDeviceLanguage(String language);
 
+  Future<GenerateInviteLinkResult> generateLinkForSharingDocument({
+    required String encodedDocument,
+  });
+
   Future<String?> getUID();
 }
 
@@ -31,11 +50,13 @@ abstract class MarketingAnalyticsService {
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   final DeepLinkManager _deepLinkManager;
   final AppsflyerSdk _appsflyer;
+  final DecodeDocumentUseCase _decodeDocumentUseCase;
 
   @visibleForTesting
   AppsFlyerMarketingAnalyticsService(
     this._appsflyer,
     this._deepLinkManager,
+    this._decodeDocumentUseCase,
   ) {
     _appsflyer.onDeepLinking(_onDeepLinking);
     _appsflyer.setMinTimeBetweenSessions(60);
@@ -46,6 +67,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   static MarketingAnalyticsService initialized(
     AppStatusRepository appStatusRepository,
     DeepLinkManager deepLinkManager,
+    DecodeDocumentUseCase decodeDocumentUseCase,
   ) {
     final options = Platform.isIOS
         ? AppsFlyerOptions(
@@ -68,6 +90,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     return AppsFlyerMarketingAnalyticsService(
       appsFlyer,
       deepLinkManager,
+      decodeDocumentUseCase,
     );
   }
 
@@ -110,17 +133,69 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   /// It handles Deferred & Direct Deep link in a single callback
   ///
-  _onDeepLinking(dynamic res) {
+  _onDeepLinking(dynamic res) async {
     if (res is DeepLinkResult && res.status == Status.FOUND) {
-      final deepLinkString = res.deepLink?.deepLinkValue;
-      final deepLinkValue = DeepLinkValue.values.firstWhere(
-        (it) => it.name == deepLinkString,
-        orElse: () => DeepLinkValue.none,
-      );
-      final deepLinkData = DeepLinkData.fromValue(deepLinkValue);
+      final deepLinkData = await _retrieveDeepLinkData(res);
       _deepLinkManager.onDeepLink(deepLinkData);
     }
   }
+
+  Future<DeepLinkData> _retrieveDeepLinkData(DeepLinkResult res) async {
+    final deepLinkName = res.deepLink?.deepLinkValue;
+    Document? document;
+
+    /// Check if the deep link is the one used for sharing a document
+    if (deepLinkName == PageName.cardDetails.name) {
+      /// If yes, retrieve the encoded document from the deepLink and decode it
+      final encodedDocument =
+          res.deepLink!.getStringValue(_kDocumentLinkParamName);
+
+      if (encodedDocument != null) {
+        document = await _decodeDocumentUseCase.singleOutput(encodedDocument);
+      }
+
+      return DeepLinkData.fromValue(DeepLinkValue.cardDetails, document);
+    }
+    final deepLinkValue = DeepLinkValue.values.firstWhere(
+      (it) => it.name == deepLinkName,
+      orElse: () => DeepLinkValue.none,
+    );
+    return DeepLinkData.fromValue(deepLinkValue);
+  }
+
+  @override
+  Future<GenerateInviteLinkResult> generateLinkForSharingDocument({
+    required String encodedDocument,
+  }) async {
+    _appsflyer.setAppInviteOneLinkID(_kAppInviteOneLinkID, (_) {});
+
+    final completer = Completer<GenerateInviteLinkResult>();
+
+    _appsflyer.generateInviteLink(
+      _buildAppsFlyerInviteLinkParams(
+        deepLinkName: _kDeepLinkNameForSharingDocument,
+        encodedDocument: encodedDocument,
+      ),
+      (map) {
+        completer.complete(GenerateInviteLinkSuccess.fromMap(map));
+      },
+      (error) {
+        completer.complete(GenerateInviteLinkError(message: error));
+      },
+    );
+    return completer.future;
+  }
+
+  AppsFlyerInviteLinkParams _buildAppsFlyerInviteLinkParams({
+    required String deepLinkName,
+    required String encodedDocument,
+  }) =>
+      AppsFlyerInviteLinkParams(
+        customParams: {
+          _kDocumentLinkParamName: encodedDocument,
+          _kDeepLinkNameParamName: deepLinkName,
+        },
+      );
 }
 
 /// Appsflyer is disabled in debug mode
@@ -144,4 +219,10 @@ class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
 
   @override
   Future<String?> getUID() async => null;
+
+  @override
+  Future<GenerateInviteLinkResult> generateLinkForSharingDocument({
+    required String encodedDocument,
+  }) async =>
+      GenerateInviteLinkError();
 }
