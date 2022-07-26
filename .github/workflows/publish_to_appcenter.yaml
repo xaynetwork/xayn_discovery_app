@@ -66,29 +66,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            /Users/runner/hostedtoolcache/flutter
-            ~/application/ios/Pods
-          key: ios-flutter-${{ env.flutter_version }}
-          restore-keys: |
-            ios-flutter-cache-
-
-      - name: Cache pubspec dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ env.PUB_CACHE }}
-            **/.packages
-            **/.flutter-plugins
-            **/.flutter-plugin-dependencies
-            **/.dart_tool/package_config.json
-          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            build-pubspec-
-
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
