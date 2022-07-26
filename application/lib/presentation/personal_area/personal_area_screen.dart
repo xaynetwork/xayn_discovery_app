@@ -109,9 +109,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
           collection: (itemModel) => _buildCard(
             itemModel.collection,
           ),
-          payment: (itemModel) => _buildTrialBanner(
-            itemModel.trialEndDate,
-          ),
+          payment: (itemModel) => Container(),
           contact: (_) => _buildContact(),
         );
         final isLastItem = index == screenState.items.length - 1;
@@ -181,14 +179,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         collectionCard: _buildBaseCard(collection),
         onSwipeOptionTap: _onSwipeOptionsTap(collection),
         onFling: _manager.triggerHapticFeedbackMedium,
-      );
-
-  Widget _buildTrialBanner(DateTime trialEndDate) => Padding(
-        padding: EdgeInsets.only(bottom: R.dimen.unit2),
-        child: SubscriptionTrialBanner(
-          trialEndDate: trialEndDate,
-          onPressed: _manager.onPaymentTrialBannerPressed,
-        ),
       );
 
   Map<SwipeOptionCollectionCard, VoidCallback> _onSwipeOptionsTap(
