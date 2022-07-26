@@ -47,7 +47,6 @@ import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_m
 import 'package:xayn_discovery_app/infrastructure/mappers/survey_banner_data_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/repository/hive_feed_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
@@ -208,7 +207,6 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HapticFeedbackMediumUseCase,
   HiveExplicitDocumentFeedbackRepository,
   HiveAppSettingsRepository,
-  HiveFeedSettingsRepository,
   InAppReview,
   ui.Image,
   IncrementAppSessionUseCase,
