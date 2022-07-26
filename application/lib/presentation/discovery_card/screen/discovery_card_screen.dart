@@ -20,11 +20,17 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 class DiscoveryCardScreen extends StatefulWidget {
   const DiscoveryCardScreen({
     Key? key,
-    required this.documentId,
+    this.documentId,
+    this.document,
     this.feedType,
-  }) : super(key: key);
+  })  : assert(
+          documentId != null || document != null,
+          'Please provide either a document or a document id',
+        ),
+        super(key: key);
 
-  final UniqueId documentId;
+  final UniqueId? documentId;
+  final Document? document;
   final FeedType? feedType;
 
   @override
@@ -39,8 +45,10 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         NavBarConfigMixin,
         OverlayMixin<DiscoveryCardScreen>,
         OverlayStateMixin<DiscoveryCardScreen> {
-  late final DiscoveryCardScreenManager _discoveryCardScreenManager =
-      di.get(param1: widget.documentId);
+  late final DiscoveryCardScreenManager _discoveryCardScreenManager = di.get(
+    param1: widget.documentId,
+    param2: widget.document,
+  );
   late final CardManagersCache _cardManagersCache = di.get();
 
   TtsData ttsData = TtsData.disabled();
@@ -84,7 +92,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
         /// Like and dislike can not be called because the Document is not related to the feed anymore and will not be updated
         buildNavBarItemShare(
-          onPressed: () => discoveryCardManager.shareUri(
+          onPressed: () => discoveryCardManager.shareDocument(
             document: document,
             feedType: widget.feedType,
           ),
