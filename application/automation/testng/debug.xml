@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Debug">
+    <listeners>
+        <listener class-name="com.xayn.listeners.ITestListenerImp"/>
+        <listener class-name="com.xayn.listeners.AnnotationTransformerImp"/>
+    </listeners>
+    <test name="Debug">
+        <classes>
+            <class name="android.AndroidNewsfeedTest"/>
+        </classes>
+    </test>
+</suite>
