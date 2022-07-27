@@ -38,8 +38,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get arePushNotificationDeepLinksEnabled =>
       isEnabled(Feature.pushNotificationDeepLinks);
 
-  bool get isResetAIEnabled => isEnabled(Feature.resetAI);
-
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
 
