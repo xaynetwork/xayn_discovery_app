@@ -93,6 +93,8 @@
                         </argLine>
                         <suiteXmlFiles>
                             <suiteXmlFile>testng/debug.xml</suiteXmlFile>
+                            <suiteXmlFile>testng/regression.xml</suiteXmlFile>
+                            <suiteXmlFile>testng/sanity.xml</suiteXmlFile>
                         </suiteXmlFiles>
                     </configuration>
                 </plugin>
