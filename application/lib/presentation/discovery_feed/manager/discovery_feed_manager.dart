@@ -234,7 +234,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     final documentIds =
         state.cards.map((it) => it.document!.documentId).toSet();
     closeFeedDocuments(documentIds);
-    resetParameters();
+    resetCardIndex();
+    resetObservedDocument();
     requestNextFeedBatch();
   }
 
