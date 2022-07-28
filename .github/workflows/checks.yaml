@@ -1,7 +1,7 @@
 name: Code Quality
 
 env:
-  FLUTTER_VERSION: '3.0.0'
+  FLUTTER_VERSION: '3.0.2'
 
 on:
   push:

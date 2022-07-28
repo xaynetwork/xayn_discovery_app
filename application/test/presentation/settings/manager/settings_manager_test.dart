@@ -31,7 +31,8 @@ void main() {
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
-    arePushNotificationDeepLinksEnabled: false,
+    areLocalNotificationsEnabled: false,
+    areRemoteNotificationsEnabled: false,
     subscriptionStatus: subscriptionStatus,
   );
 
@@ -53,6 +54,7 @@ void main() {
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
   late MockLocalNotificationsService localNotificationsService;
+  late MockRemoteNotificationsService remoteNotificationsService;
   late MockDiscoveryFeedManager discoveryFeedManager;
 
   setUp(() {
@@ -74,6 +76,7 @@ void main() {
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
     localNotificationsService = MockLocalNotificationsService();
+    remoteNotificationsService = MockRemoteNotificationsService();
     discoveryFeedManager = MockDiscoveryFeedManager();
 
     di.allowReassignment = true;
@@ -104,7 +107,9 @@ void main() {
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
 
-    when(featureManager.arePushNotificationDeepLinksEnabled).thenReturn(false);
+    when(featureManager.areLocalNotificationsEnabled).thenReturn(false);
+
+    when(featureManager.areRemoteNotificationsEnabled).thenReturn(false);
 
     when(getSubscriptionManagementUrlUseCase.singleOutput(none)).thenAnswer(
       (_) => Future.value(
@@ -130,6 +135,7 @@ void main() {
         appManager,
         ratingDialogManager,
         localNotificationsService,
+        remoteNotificationsService,
         discoveryFeedManager,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(

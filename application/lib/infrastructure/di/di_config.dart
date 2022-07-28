@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dar
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/engine_background_news/engine_background_news_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/fake_payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/revenue_cat_payment_service.dart';
@@ -67,4 +68,5 @@ void initServices() async {
   final paymentService = di.get<PaymentService>();
   final appsFlyerId = await di.get<MarketingAnalyticsService>().getUID();
   if (appsFlyerId != null) paymentService.setAppsFlyerID(appsFlyerId);
+  di.get<EngineBackgroundNewsService>();
 }

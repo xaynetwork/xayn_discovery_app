@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reset
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/notifications/local_notifications_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/remote_notifications_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/get_app_theme_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_theme/listen_app_theme_use_case.dart';
@@ -76,6 +77,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final AppManager _appManager;
   final RatingDialogManager _ratingDialogManager;
   final LocalNotificationsService _localNotificationsService;
+  final RemoteNotificationsService _remoteNotificationsService;
   final DiscoveryFeedManager _discoveryFeedManager;
 
   SettingsScreenManager(
@@ -96,6 +98,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._appManager,
     this._ratingDialogManager,
     this._localNotificationsService,
+    this._remoteNotificationsService,
     this._discoveryFeedManager,
   ) : super(const SettingsScreenState.initial()) {
     _init();
@@ -184,8 +187,10 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
           theme: _theme,
           appVersion: _appVersion,
           isPaymentEnabled: _featureManager.isPaymentEnabled,
-          arePushNotificationDeepLinksEnabled:
-              _featureManager.arePushNotificationDeepLinksEnabled,
+          areLocalNotificationsEnabled:
+              _featureManager.areLocalNotificationsEnabled,
+          areRemoteNotificationsEnabled:
+              _featureManager.areRemoteNotificationsEnabled,
           subscriptionStatus: _subscriptionStatus,
         );
     return fold2(
@@ -269,10 +274,10 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     }
   }
 
-  void requestNotificationPermission() =>
+  void requestLocalNotificationPermission() =>
       _localNotificationsService.requestPermission();
 
-  void sendTestPushNotification() async {
+  void sendTestLocalNotification() async {
     if (_discoveryFeedManager.state.cards.isEmpty) return;
     final card = _discoveryFeedManager.state.cards.first;
     final document = card.document;
@@ -285,4 +290,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       delay: const Duration(seconds: 5),
     );
   }
+
+  void requestRemoteNotificationPermission() =>
+      _remoteNotificationsService.enableNotifications();
 }

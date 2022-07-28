@@ -16,7 +16,8 @@ import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_sectio
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/push_notifications_debug_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/local_notifications_debug_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/remote_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
@@ -98,8 +99,10 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
-      if (state.arePushNotificationDeepLinksEnabled)
-        _buildPushNotificationDebugSection(),
+      if (state.areLocalNotificationsEnabled)
+        _buildLocalNotificationDebugSection(),
+      if (state.areRemoteNotificationsEnabled)
+        _buildRemoteNotificationDebugSection(),
       _buildAppVersion(state.appVersion),
       _buildBottomSpace(),
     ];
@@ -171,10 +174,17 @@ class _SettingsScreenState extends State<SettingsScreen>
   Widget _buildShareAppSection() =>
       ShareAppSection(onShareAppPressed: _manager.shareApp);
 
-  Widget _buildPushNotificationDebugSection() => PushNotificationDebugSection(
-        onRequestNotificationPermissionPressed:
-            _manager.requestNotificationPermission,
-        onSendTestPushNotificationPressed: _manager.sendTestPushNotification,
+  Widget _buildLocalNotificationDebugSection() =>
+      LocalNotificationsDebugSection(
+        onRequestLocalNotificationPermissionPressed:
+            _manager.requestLocalNotificationPermission,
+        onSendTestLocalNotificationPressed: _manager.sendTestLocalNotification,
+      );
+
+  Widget _buildRemoteNotificationDebugSection() =>
+      RemoteNotificationsDebugSection(
+        onRequestRemoteNotificationPermissionPressed:
+            _manager.requestRemoteNotificationPermission,
       );
 
   Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(
