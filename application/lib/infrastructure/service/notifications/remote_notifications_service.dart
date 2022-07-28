@@ -25,8 +25,6 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
   }
 
   void _init() async {
-    // await enableNotifications();
-
     final channelId = await Airship.channelId;
     logger.i('[Remote notifications] Current channel ID: $channelId');
 
