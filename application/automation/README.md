@@ -29,4 +29,4 @@ Configuration file is located in _**src/main/resources**_
 
 ### Execution
 
-1. `mvn clean test` - to compile sources and run tests with test configuration from _**pom.xml**_ (see **_suiteXmlFile_** tag)
+1. `mvn clean test -DsuiteXmlFile=testng/regression.xml` - to compile sources and run tests with test configuration from _**pom.xml**_ (see **_suiteXmlFile_** tag)
