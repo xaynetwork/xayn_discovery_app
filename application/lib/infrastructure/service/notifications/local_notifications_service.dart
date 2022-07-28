@@ -52,12 +52,13 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   void _deepLinkHandler(ReceivedNotification receivedNotification) {
     final payload = receivedNotification.payload;
     if (payload == null) {
-      logger.i('Notification payload not set.');
+      logger.i('[Local Notifications] Payload not set.');
       return;
     }
     final documentId = _payloadToDocumentIdMapper.map(payload);
     if (documentId == null) {
-      logger.i('documentId not found in notification payload.');
+      logger.i(
+          '[Local Notifications] documentId not found in notification payload.');
       return;
     }
     final deepLinkData = DeepLinkData.feed(documentId: documentId);

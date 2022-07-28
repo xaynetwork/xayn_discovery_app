@@ -31,6 +31,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   late final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final GetLocalMarketsUseCase _getLocalMarketsUseCase;
   late final SetIdentityParamUseCase _setIdentityParamUseCase;
+  late final String? _applicationDocumentsPathDirectory;
   late DiscoveryEngine _engine;
 
   static int get searchPageSize => _kSearchPageSize;
@@ -52,10 +53,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required GetLocalMarketsUseCase getLocalMarketsUseCase,
     required SetIdentityParamUseCase setIdentityParamUseCase,
     bool initialized = true,
+    String? applicationDocumentsPathDirectory,
   })  : _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
         _sendAnalyticsUseCase = sendAnalyticsUseCase,
         _getLocalMarketsUseCase = getLocalMarketsUseCase,
-        _setIdentityParamUseCase = setIdentityParamUseCase {
+        _setIdentityParamUseCase = setIdentityParamUseCase,
+        _applicationDocumentsPathDirectory = applicationDocumentsPathDirectory {
     if (!initialized) {
       startInitializing();
     }
@@ -76,16 +79,16 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
         getLocalMarketsUseCase: getLocalMarketsUseCase,
         setIdentityParamUseCase: setIdentityParamUseCase,
         initialized: false,
+        applicationDocumentsPathDirectory: null,
       );
 
   @override
   Future<void> init() async {
-    // TODO use this as dependency
-    final applicationDocumentsDirectory =
-        await getApplicationDocumentsDirectory();
     final manifest = await FlutterManifestReader().read();
+    final appDir = _applicationDocumentsPathDirectory ??
+        (await getApplicationDocumentsDirectory()).path;
     final copier = FlutterBundleAssetCopier(
-      appDir: applicationDocumentsDirectory.path,
+      appDir: appDir,
       bundleAssetsPath: 'assets/ai',
     );
     await copier.copyAssets(manifest);
@@ -97,7 +100,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
       assetsUrl: Env.aiAssetsUrl,
-      applicationDirectoryPath: applicationDocumentsDirectory.path,
+      applicationDirectoryPath: appDir,
       maxItemsPerFeedBatch: _kFeedBatchSize,
       maxItemsPerSearchBatch: _kSearchPageSize,
       feedMarkets: feedMarkets,

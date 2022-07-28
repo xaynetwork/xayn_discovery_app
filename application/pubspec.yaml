@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  airship_flutter: 6.0.1
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   awesome_notifications: 0.6.21

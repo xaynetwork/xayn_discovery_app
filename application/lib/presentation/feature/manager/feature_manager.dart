@@ -35,8 +35,11 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
 
-  bool get arePushNotificationDeepLinksEnabled =>
-      isEnabled(Feature.pushNotificationDeepLinks);
+  bool get areLocalNotificationsEnabled =>
+      isEnabled(Feature.localNotifications);
+
+  bool get areRemoteNotificationsEnabled =>
+      isEnabled(Feature.remoteNotifications);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);

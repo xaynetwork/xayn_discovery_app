@@ -34,10 +34,12 @@ class Keys {
       Key('settingsToggleTextToSpeechPreference');
   static const Key settingsCountriesOption = Key('settings_countries_option');
   static const Key settingsSourcesOption = Key('settings_sources_option');
-  static const Key settingsRequestNotificationBtn =
-      Key('settings_request_notification');
-  static const Key settingsSendNotificationBtn =
-      Key('settings_send_notification');
+  static const Key settingsRequestLocalNotificationBtn =
+      Key('settings_request_local_notification');
+  static const Key settingsRequestRemoteNotificationBtn =
+      Key('settings_request_remote_notification');
+  static const Key settingsSendLocalNotificationBtn =
+      Key('settings_send_local_notification');
   static const Key settingsResetAIOption = Key('settings_reset_ai_option');
 
   static const Key navBarItemBackBtn = Key('nav_bar_item_back_btn');
