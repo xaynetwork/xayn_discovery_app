@@ -76,6 +76,21 @@ before_all do |lane, options|
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
+
+desc "Checks properties required for automated execution"
+private_lane :check_automation_config do |options|
+  askAndSetProperties("../automation/src/main/resources/config.properties",
+                      {
+    "driver.exec" => "driver.exec",
+    "appium.js" => "appium.js",
+    "android.version" => "android.version",
+    "android.id" => "android.id",
+    "ios.version" => "ios.version",
+    "ios.id" => "ios.id"
+  
+  }, Config::ENV_DEFAULTS)
+end
+
 desc "Flutter build"
 private_lane :build_with_flutter do |options|
   if options[Options::CLEAN]
@@ -145,6 +160,13 @@ end
 ####
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
+
+desc "Run automation"
+lane :run_automation do |options|
+  check_automation_config(options)
+  suite = options[Options::TEST_SUITE]
+  shell("cd automation && mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
+end
 
 desc "Update strings\n" \
      "The first time the command fastlane update_strings is run, the POEditor Key will be asked to input\n" \
