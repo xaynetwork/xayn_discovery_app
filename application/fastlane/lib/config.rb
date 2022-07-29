@@ -97,6 +97,10 @@ module Config
         " - #{Options.const_get(o).to_s} #{doc}\n"
       }.reduce("", :+)
     end
+
+    def self.doc_TEST_SUITE() "regression, sanity, debug" end
+      TEST_SUITE = :test_suite
+
   end
 
   # Options not passed by the user to a lane

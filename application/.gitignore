@@ -65,3 +65,9 @@ app.*.map.json
 # ai 
 assets/ai/
 /fastlane/README.md
+
+#automation
+/automation/*.iml
+/automation/target/*
+/automation/allure-results/*
+!categories.json
