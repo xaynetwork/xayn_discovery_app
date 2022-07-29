@@ -86,7 +86,9 @@ private_lane :check_automation_config do |options|
     "android.version" => "android.version",
     "android.id" => "android.id",
     "ios.version" => "ios.version",
-    "ios.id" => "ios.id"
+    "ios.id" => "ios.id",
+    "app.ios" => "app.ios",
+    "app.android" => "app.android"
   
   }, Config::ENV_DEFAULTS)
 end
