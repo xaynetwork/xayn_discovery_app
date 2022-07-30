@@ -93,6 +93,15 @@ private_lane :check_automation_config do |options|
   }, Config::ENV_DEFAULTS)
 end
 
+desc "Set up environment flag for automation"
+private_lane :set_up_automation_flag do |options|
+  remote = options[Options::TEST_ENV] == "prod"
+  if !remote 
+    check_automation_config(options)
+  end
+  setProperties("../automation/src/main/resources/config.properties", {"remote" => remote.to_s})
+end
+
 desc "Flutter build"
 private_lane :build_with_flutter do |options|
   if options[Options::CLEAN]
@@ -165,7 +174,7 @@ end
 
 desc "Run automation"
 lane :run_automation do |options|
-  check_automation_config(options)
+  set_up_automation_flag(options)
   suite = options[Options::TEST_SUITE]
   shell("cd automation && mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
 end

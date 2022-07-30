@@ -21,7 +21,6 @@ public class  Configuration {
     public static final String XCODE_ORG_ID;
     public static final String APP_IOS;
     public static final String APP_ANDROID;
-    public static final boolean DEVICE_PERSONAL;
 //    public static final String TESTRAIL_ENDPOINT;
 //    public static final String TESTRAIL_USER;
 //    public static final String TESTRAIL_PASSWORD;
@@ -31,6 +30,7 @@ public class  Configuration {
     public static final int RETRY_COUNT;
 
     public static final boolean IS_REGRESSION;
+    public static final boolean IS_REMOTE;
 
     static {
         try (FileInputStream file = new FileInputStream("./src/main/resources/config.properties")) {
@@ -38,21 +38,21 @@ public class  Configuration {
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+        IS_REMOTE = Boolean.parseBoolean(props.getProperty("remote"));
         SCREENSHOT_DIRECTORY = props.getProperty("screenshot.directory");
-        DRIVER_EXEC = props.getProperty("driver.exec");
-        APPIUM_URL = props.getProperty("appium.url");
-        APPIUM_JS = props.getProperty("appium.js");
-        DEVICE_PERSONAL = Boolean.parseBoolean(props.getProperty("device.personal"));
-        IOS_DEVICE_ID = DEVICE_PERSONAL ? System.getenv("IOS_PERSONAL") : props.getProperty("ios.id");
-        ANDROID_DEVICE_ID = DEVICE_PERSONAL ? System.getenv("ANDROID_PERSONAL") : props.getProperty("android.id");
-        APP_IOS = getResource(props.getProperty("app.ios"));
-        APP_ANDROID = getResource(props.getProperty("app.android"));
+        DRIVER_EXEC = getEnvProperty("driver.exec");
+        APPIUM_URL = getEnvProperty("appium.url");
+        APPIUM_JS = getEnvProperty("appium.js");
+        IOS_DEVICE_ID = getEnvProperty("ios.id");
+        ANDROID_DEVICE_ID = getEnvProperty("android.id");
+        APP_IOS = getEnvProperty("app.ios");
+        APP_ANDROID = getEnvProperty("app.android");
         WDA_BUNDLE_ID = props.getProperty("wda.bundle.id");
-        XCODE_ORG_ID = System.getenv("XCODE_ORG_ID");
+        XCODE_ORG_ID = props.getProperty("xcode.id");
         IS_REGRESSION = Boolean.parseBoolean(props.getProperty("tms.regression"));
-        ANDROID_VERSION = props.getProperty("android.version");
-        IOS_VERSION = props.getProperty("ios.version");
-        IOS_DEVICE = props.getProperty("ios.device");
+        ANDROID_VERSION = getEnvProperty("android.version");
+        IOS_VERSION = getEnvProperty("ios.version");
+        IOS_DEVICE = getEnvProperty("ios.device");
         //todo enable for automatic regression results
 //        TESTRAIL_ENDPOINT = System.getenv("TESTRAIL_ENDPOINT");
 //        TESTRAIL_USER = System.getenv("TESTRAIL_USER");
@@ -65,6 +65,10 @@ public class  Configuration {
 
     private static String getResource(String path) {
         return Objects.requireNonNull(Configuration.class.getResource(path)).getPath();
+    }
+    private static String getEnvProperty(String property) {
+        String prefix = IS_REMOTE ? "remote." : "";
+        return Configuration.props.getProperty(prefix + property);
     }
 
 }

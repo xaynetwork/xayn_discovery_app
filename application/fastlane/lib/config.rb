@@ -101,6 +101,9 @@ module Config
     def self.doc_TEST_SUITE() "regression, sanity, debug" end
       TEST_SUITE = :test_suite
 
+    def self.doc_TEST_ENV() "dev, prod" end 
+      TEST_ENV = :test_env
+
   end
 
   # Options not passed by the user to a lane
