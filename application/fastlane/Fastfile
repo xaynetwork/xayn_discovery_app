@@ -77,8 +77,9 @@ end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
 
-desc "Checks properties required for automated execution"
+desc "Checks properties required for automated execution locally"
 private_lane :check_automation_config do |options|
+  # set up config params
   askAndSetProperties("../automation/src/main/resources/config.properties",
                       {
     "driver.exec" => "driver.exec",
@@ -89,11 +90,12 @@ private_lane :check_automation_config do |options|
     "ios.id" => "ios.id",
     "app.ios" => "app.ios",
     "app.android" => "app.android"
-  
-  }, Config::ENV_DEFAULTS)
+  },
+   # there cannot be any defaults since this config created for personal execution on local machine
+  {})
 end
 
-desc "Set up environment flag for automation"
+desc "Set up environment flag for automation and check config"
 private_lane :set_up_automation_flag do |options|
   remote = options[Options::TEST_ENV] == "prod"
   if !remote 
