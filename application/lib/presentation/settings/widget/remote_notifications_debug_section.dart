@@ -28,7 +28,7 @@ class RemoteNotificationsDebugSection extends StatelessWidget {
         'Request',
         key: Keys.settingsRequestRemoteNotificationBtn,
         onPressed: onRequestRemoteNotificationPermissionPressed,
-        backgroundColor: R.colors.iconBackground,
-        textColor: R.colors.quaternaryText,
+        backgroundColor: R.colors.settingsCardBackground,
+        textColor: R.colors.primaryText,
       );
 }

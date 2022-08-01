@@ -21,6 +21,7 @@ class LocalNotificationsDebugSection extends StatelessWidget {
           child: Row(
             children: [
               _buildRequestLocalNotificationBtn(),
+              SizedBox(width: R.dimen.unit),
               _buildSendLocalNotificationBtn(),
             ],
           ),
@@ -31,15 +32,15 @@ class LocalNotificationsDebugSection extends StatelessWidget {
         'Request',
         key: Keys.settingsRequestLocalNotificationBtn,
         onPressed: onRequestLocalNotificationPermissionPressed,
-        backgroundColor: R.colors.iconBackground,
-        textColor: R.colors.quaternaryText,
+        backgroundColor: R.colors.settingsCardBackground,
+        textColor: R.colors.primaryText,
       );
 
   AppGhostButton _buildSendLocalNotificationBtn() => AppGhostButton.text(
         'Send',
         key: Keys.settingsSendLocalNotificationBtn,
         onPressed: onSendTestLocalNotificationPressed,
-        backgroundColor: R.colors.iconBackground,
-        textColor: R.colors.quaternaryText,
+        backgroundColor: R.colors.settingsCardBackground,
+        textColor: R.colors.primaryText,
       );
 }
