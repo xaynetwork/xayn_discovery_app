@@ -58,6 +58,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
 
+  bool get isOnBoardingSheetsEnabled => isEnabled(Feature.onBoardingSheets);
+
   @override
   Future<FeatureManagerState?> computeState() async {
     return FeatureManagerState(
