@@ -1,5 +1,4 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
-import 'package:dart_remote_config/utils/extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';

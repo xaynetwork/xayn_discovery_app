@@ -56,6 +56,7 @@ import 'package:xayn_discovery_app/infrastructure/service/payment/payment_servic
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_marketing_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_collection_and_bookmark_changes_identity_param_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_experiments_identity_params_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_identity_param_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_initial_identity_params_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/app_session/get_app_session_use_case.dart';
@@ -105,6 +106,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_style_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/remote_config/fetch_experiments_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
@@ -276,6 +278,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   LocalNotificationsService,
   RemoteNotificationsService,
   DiscoveryFeedManager,
+  FetchExperimentsUseCase,
+  SetExperimentsIdentityParamsUseCase,
 ])
 class Mocks {
   Mocks._();
