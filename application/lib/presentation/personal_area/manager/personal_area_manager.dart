@@ -187,6 +187,8 @@ class PersonalAreaManager extends Cubit<PersonalAreaState>
   void onSettingsNavPressed() => _navActions.onSettingsNavPressed();
 
   void checkIfNeedToShowOnboarding() async {
+    if (!_featureManager.isOnBoardingSheetsEnabled) return;
+
     const type = OnboardingType.collectionsManage;
     final show = await _needToShowOnboardingUseCase.singleOutput(type);
     if (!show) return;
