@@ -13,6 +13,7 @@ void main() {
     manager = MockFeatureManager();
     di.registerLazySingleton<FeatureManager>(() => manager);
     when(manager.showFeaturesScreen).thenReturn(true);
+    when(manager.isOnBoardingSheetsEnabled).thenReturn(true);
   });
   tearDown(() async {
     await tearDownWidgetTest();
