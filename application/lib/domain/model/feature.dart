@@ -17,6 +17,8 @@ enum Feature {
   /// Keep flag for remote config
   altPromoCode(Owner.Simon, true, 'PromoCodes are handled inApp'),
 
+  onBoardingSheets(Owner.Michael, false, 'Showing onboarding bottom sheets'),
+
   pushNotificationDeepLinks(
     Owner.Peter,
     EnvironmentHelper.kIsDebug,
