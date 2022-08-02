@@ -29,6 +29,7 @@ void main() {
   late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
   late MockMarkOnboardingTypeCompletedUseCase
       markOnboardingTypeCompletedUseCase;
+  late MockFeatureManager featureManager;
   late BookmarksScreenState populatedState;
   final timestamp = DateTime.now();
   final collectionId = UniqueId();
@@ -61,6 +62,7 @@ void main() {
       needToShowOnboardingUseCase,
       markOnboardingTypeCompletedUseCase,
       sendAnalyticsUseCase,
+      featureManager,
     );
     if (setMockOverlayManager) {
       manager.setOverlayManager(overlayManager);
@@ -77,6 +79,8 @@ void main() {
     bookmarkErrorsEnumMapper = MockBookmarkErrorsEnumMapper();
     bookmarksScreenNavActions = MockBookmarksScreenNavActions();
     needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
+    featureManager = MockFeatureManager();
+
     markOnboardingTypeCompletedUseCase =
         MockMarkOnboardingTypeCompletedUseCase();
     dateTimeHandler = MockDateTimeHandler();
@@ -100,6 +104,8 @@ void main() {
             ),
           )
         ]);
+    when(featureManager.isOnBoardingSheetsEnabled)
+        .thenAnswer((realInvocation) => true);
   });
 
   group(
@@ -220,6 +226,7 @@ void main() {
     act: (manager) => manager.checkIfNeedToShowOnboarding(),
     verify: (manager) {
       verifyInOrder([
+        featureManager.isOnBoardingSheetsEnabled,
         needToShowOnboardingUseCase
             .singleOutput(OnboardingType.bookmarksManage),
         overlayManager.show(any),
