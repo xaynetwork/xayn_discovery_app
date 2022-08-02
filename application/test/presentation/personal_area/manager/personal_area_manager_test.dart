@@ -101,6 +101,8 @@ void main() {
     when(listenSubscriptionStatusUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
     when(featureManager.isPaymentEnabled).thenReturn(false);
+    when(featureManager.isOnBoardingSheetsEnabled)
+        .thenAnswer((realInvocation) => true);
   }
 
   setUp(
@@ -214,6 +216,7 @@ void main() {
     act: (manager) => manager.checkIfNeedToShowOnboarding(),
     verify: (manager) {
       verifyInOrder([
+        featureManager.isOnBoardingSheetsEnabled,
         needToShowOnboardingUseCase
             .singleOutput(OnboardingType.collectionsManage),
         overlayManager.show(any),
@@ -234,8 +237,11 @@ void main() {
     },
     act: (manager) => manager.checkIfNeedToShowOnboarding(),
     verify: (manager) {
-      verify(needToShowOnboardingUseCase
-          .singleOutput(OnboardingType.collectionsManage));
+      verifyInOrder([
+        featureManager.isOnBoardingSheetsEnabled,
+        needToShowOnboardingUseCase
+            .singleOutput(OnboardingType.collectionsManage),
+      ]);
       verifyNoMoreInteractions(needToShowOnboardingUseCase);
       verifyZeroInteractions(manager.overlayManager);
     },
