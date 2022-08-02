@@ -1,16 +1,32 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
 
+import '../../../test_utils/utils.dart';
+
 void main() {
   late FeatureManager featureManager;
   late FeatureManagerState initialState;
+  late MockFetchExperimentsUseCase fetchExperimentsUseCase;
+  late MockSetExperimentsIdentityParamsUseCase
+      setExperimentsIdentityParamsUseCase;
 
   setUp(() {
     initialState = FeatureManagerState.initial(kInitialFeatureMap);
-    featureManager = FeatureManager();
+    fetchExperimentsUseCase = MockFetchExperimentsUseCase();
+    setExperimentsIdentityParamsUseCase =
+        MockSetExperimentsIdentityParamsUseCase();
+    featureManager = FeatureManager(
+      fetchExperimentsUseCase,
+      setExperimentsIdentityParamsUseCase,
+    );
+    when(fetchExperimentsUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(fetchExperimentsUseCase.transaction(any))
+        .thenAnswer((invocation) => const Stream.empty());
   });
 
   blocTest<FeatureManager, FeatureManagerState>(
