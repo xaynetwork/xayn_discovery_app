@@ -293,6 +293,7 @@ lane :publish do |options|
 
   if platform == Platforms::IOS
     secrets_unpack_ios(options)
+    airship_config_unpack_ios(options)
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -385,6 +386,14 @@ private_lane :secrets_unpack_ios do |options|
   UI.user_error!("No PROFILES provided!") unless ENV.key?("PROFILES")
   Dir.chdir("../ios/") do
     sh("echo $PROFILES | base64 -d | tar -xzv -C .")
+  end
+end
+
+desc "Unpacks the AirshipConfig.plist based on the $AIRSHIP_PLIST env var"
+private_lane :airship_config_unpack_ios do |options|
+  UI.user_error!("No AIRSHIP_PLIST provided!") unless ENV.key?("AIRSHIP_PLIST")
+  Dir.chdir("../ios/Runner") do
+    sh("echo $AIRSHIP_PLIST > AirshipConfig.plist")
   end
 end
 
