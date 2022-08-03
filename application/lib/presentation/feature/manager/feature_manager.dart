@@ -67,7 +67,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
     );
   }
 
-  void alterFeatureMapAccordingToExperiments(
+  void _alterFeatureMapAccordingToExperiments(
     FetchedExperimentsOut experiments,
   ) =>
       experiments.subscribedFeatures

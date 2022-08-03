@@ -33,7 +33,7 @@ class FetchExperimentsUseCase extends UseCase<None, FetchedExperimentsOut> {
   @override
   Stream<FetchedExperimentsOut> transaction(None param) async* {
     final result = await module.fetchThenCompute(
-      fetcher: _fetcher as S3RemoteConfigFetcher,
+      fetcher: _fetcher,
       versionString: _packageInfo.version,
     );
 
