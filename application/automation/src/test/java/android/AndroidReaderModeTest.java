@@ -1,7 +1,7 @@
 package android;
 
 import base.AndroidTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.ReaderModeScreen;
 import com.xayn.screens.components.OnboardingComponent;
@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 public class AndroidReaderModeTest extends AndroidTestBase {
     @Test(description = "Liking an article in reader mode")
-    @TMS(id = 220)
+    @TestCase(id = 220)
     public void checkingLikeInReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -21,7 +21,7 @@ public class AndroidReaderModeTest extends AndroidTestBase {
     }
 
     @Test(description = "Disliking an article in reader mode")
-    @TMS(id = 221)
+    @TestCase(id = 221)
     public void checkingDislikeInReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

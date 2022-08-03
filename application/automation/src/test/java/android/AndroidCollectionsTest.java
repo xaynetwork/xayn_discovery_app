@@ -1,7 +1,7 @@
 package android;
 
 import base.AndroidTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.YourSpaceScreen;
 import com.xayn.screens.components.CreateNewCollectionComponent;
@@ -13,14 +13,14 @@ import org.testng.annotations.Test;
 public class AndroidCollectionsTest extends AndroidTestBase {
 
     @Test(description = "Creating new collection")
-    @TMS(id = 299)
+    @TestCase(id = 299)
     public void checkingCreatingNewCollection() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
         HomeScreen homeScreen = new HomeScreen().open();
         YourSpaceScreen yourSpaceScreen = homeScreen.clickOnYourSpace().open();
         CreateNewCollectionComponent component = yourSpaceScreen.clickPlusIcon().open();
-        String name =  RandomStringUtils.random(20, true, true);
+        String name = RandomStringUtils.random(20, true, true);
         component
                 .typeCollectionName(name)
                 .clickCreateButton();
@@ -29,7 +29,7 @@ public class AndroidCollectionsTest extends AndroidTestBase {
     }
 
     @Test(description = "Giving new collection the name that exceeds character limit of 20")
-    @TMS()
+    @TestCase()
     public void checkingGivingCollectionLongName() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

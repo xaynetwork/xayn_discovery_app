@@ -1,7 +1,7 @@
 package android;
 
 import base.AndroidTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.ReaderModeScreen;
 import com.xayn.screens.YourSpaceScreen;
@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class AndroidBookmarkingTest extends AndroidTestBase {
     @Test(description = "Adding a bookmark to Read Later collection")
-    @TMS(id = 41)
+    @TestCase(id = 41)
     public void checkingBookmarking() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -31,7 +31,7 @@ public class AndroidBookmarkingTest extends AndroidTestBase {
     }
 
     @Test(description = "Adding a bookmark to Read Later collection from reading mode")
-    @TMS(id = 42)
+    @TestCase(id = 42)
     public void checkingBookmarkingFromReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

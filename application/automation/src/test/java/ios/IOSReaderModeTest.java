@@ -1,7 +1,7 @@
 package ios;
 
 import base.IOSTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.ReaderModeScreen;
 import com.xayn.screens.components.OnboardingComponent;
@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 public class IOSReaderModeTest extends IOSTestBase {
     @Test(description = "Liking an article in reader mode")
-    @TMS(id = 22)
+    @TestCase(id = 22)
     public void checkingLikeInReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -22,7 +22,7 @@ public class IOSReaderModeTest extends IOSTestBase {
     }
 
     @Test(description = "Disliking an article in reader mode")
-    @TMS(id = 23)
+    @TestCase(id = 23)
     public void checkingDislikeInReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -34,7 +34,7 @@ public class IOSReaderModeTest extends IOSTestBase {
     }
 
     @Test(description = "Navigating back from reader mode")
-    @TMS(id = 26)
+    @TestCase(id = 26)
     public void checkingNavigatingBackFromReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

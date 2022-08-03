@@ -1,7 +1,7 @@
 package android;
 
 import base.AndroidTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.constants.Directions;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.components.OnboardingComponent;
@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 public class AndroidNewsfeedTest extends AndroidTestBase {
 
     @Test(description = "Liking an article by swiping it to the right")
-    @TMS(id = 202)
+    @TestCase(id = 202)
     public void checkingLikeBySwipe() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -21,7 +21,7 @@ public class AndroidNewsfeedTest extends AndroidTestBase {
     }
 
     @Test(description = "Disliking an article by swiping it to the left")
-    @TMS(id = 203)
+    @TestCase(id = 203)
     public void checkingDislikeBySwipe() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -31,7 +31,7 @@ public class AndroidNewsfeedTest extends AndroidTestBase {
     }
 
     @Test(description = "Liking an article by clicking on the like button")
-    @TMS(id = 204)
+    @TestCase(id = 204)
     public void checkingLikeByButton() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -41,7 +41,7 @@ public class AndroidNewsfeedTest extends AndroidTestBase {
     }
 
     @Test(description = "Disliking an article by clicking on the dislike button")
-    @TMS(id = 205)
+    @TestCase(id = 205)
     public void checkingDislikeByButton() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

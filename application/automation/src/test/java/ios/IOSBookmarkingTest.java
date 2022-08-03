@@ -1,7 +1,7 @@
 package ios;
 
 import base.IOSTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.YourSpaceScreen;
 import com.xayn.screens.components.OnboardingComponent;
@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 public class IOSBookmarkingTest extends IOSTestBase {
     @Test(description = "Adding a bookmark to Read Later collection")
-    @TMS(id = 41)
+    @TestCase(id = 41)
     public void checkingBookmarking() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

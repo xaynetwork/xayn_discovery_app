@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Objects;
+import static java.util.Objects.*;
 import java.util.Properties;
 
 @Log4j2
@@ -21,9 +21,6 @@ public class  Configuration {
     public static final String XCODE_ORG_ID;
     public static final String APP_IOS;
     public static final String APP_ANDROID;
-//    public static final String TESTRAIL_ENDPOINT;
-//    public static final String TESTRAIL_USER;
-//    public static final String TESTRAIL_PASSWORD;
     public static final String ANDROID_VERSION;
     public static final String IOS_VERSION;
     public static final String IOS_DEVICE;
@@ -53,10 +50,6 @@ public class  Configuration {
         ANDROID_VERSION = getEnvProperty("android.version");
         IOS_VERSION = getEnvProperty("ios.version");
         IOS_DEVICE = getEnvProperty("ios.device");
-        //todo enable for automatic regression results
-//        TESTRAIL_ENDPOINT = System.getenv("TESTRAIL_ENDPOINT");
-//        TESTRAIL_USER = System.getenv("TESTRAIL_USER");
-//        TESTRAIL_PASSWORD = System.getenv("TESTRAIL_PASSWORD");
         RETRY_COUNT = Integer.parseInt(props.getProperty("retry.count"));
     }
 
@@ -64,7 +57,7 @@ public class  Configuration {
     }
 
     private static String getResource(String path) {
-        return Objects.requireNonNull(Configuration.class.getResource(path)).getPath();
+        return requireNonNull(Configuration.class.getResource(path)).getPath();
     }
     private static String getEnvProperty(String property) {
         String prefix = IS_REMOTE ? "remote." : "";

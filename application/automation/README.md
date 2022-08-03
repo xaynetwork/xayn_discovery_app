@@ -4,12 +4,12 @@
 
 ### Required components  🛠
 
-1. _**JDK8**_
-2. _**Node**_
-3. _**Maven 3.8.5**_
-4. _**Appium >=1.22.0**_
-5. _**Android SDK**_
-6. _**Xcode**_
+1. `brew install openjdk@8`
+2. `brew install maven`
+3. `npm install -g appium`
+4. Install **_Node.js_**
+6. Install **Android SDK** and add **ANDROID_HOME**, **ANDROID_SDK_ROOT**, **ANDROID_AVD_HOME** to environment profile.
+7. Download _**Xcode**_ (for IOS execution)
 
 ### Execution
 

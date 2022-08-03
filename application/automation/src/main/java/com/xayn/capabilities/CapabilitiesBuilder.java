@@ -4,29 +4,30 @@ package com.xayn.capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.lang.reflect.Field;
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.AbstractMap.SimpleEntry;
+
 
 public class CapabilitiesBuilder {
-    private AbstractMap.SimpleEntry<String, String> platformName;
-    private AbstractMap.SimpleEntry<String, String> platformVersion;
-    private AbstractMap.SimpleEntry<String, String> deviceName;
-    private AbstractMap.SimpleEntry<String, String> automationName;
-    private AbstractMap.SimpleEntry<String,String>  chromeDriverExec;
-    private AbstractMap.SimpleEntry<String,Integer> chromeDriverport;
-    private AbstractMap.SimpleEntry<String,Integer> webViewTimeout;
-    private AbstractMap.SimpleEntry<String,Boolean> webViewDetailsCollection;
-    private AbstractMap.SimpleEntry<String,String> app;
-    private AbstractMap.SimpleEntry<String,String> browser;
+    private SimpleEntry<String, String> platformName;
+    private SimpleEntry<String, String> platformVersion;
+    private SimpleEntry<String, String> deviceName;
+    private SimpleEntry<String, String> automationName;
+    private SimpleEntry<String, String> chromeDriverExec;
+    private SimpleEntry<String, Integer> chromeDriverport;
+    private SimpleEntry<String, Integer> webViewTimeout;
+    private SimpleEntry<String, Boolean> webViewDetailsCollection;
+    private SimpleEntry<String, String> app;
+    private SimpleEntry<String, String> browser;
 
-    private AbstractMap.SimpleEntry<String, String> fullResetValue;
-    private AbstractMap.SimpleEntry<String, String> udid;
+    private SimpleEntry<String, String> fullResetValue;
+    private SimpleEntry<String, String> udid;
     //IOS
-    private AbstractMap.SimpleEntry<String, String> xcodeOrgId;
-    private AbstractMap.SimpleEntry<String, String> xcodeSigningId;
-    private AbstractMap.SimpleEntry<String, String> updatedWDABundleId;
+    private SimpleEntry<String, String> xcodeOrgId;
+    private SimpleEntry<String, String> xcodeSigningId;
+    private SimpleEntry<String, String> updatedWDABundleId;
 
     public CapabilitiesBuilder() {
     }
@@ -34,77 +35,77 @@ public class CapabilitiesBuilder {
     ;
 
     public CapabilitiesBuilder setPlatformName(String platformName) {
-        this.platformName = new AbstractMap.SimpleEntry<>("platformName", platformName);
+        this.platformName = new SimpleEntry<>("platformName", platformName);
         return this;
     }
 
     public CapabilitiesBuilder setPlatformVersion(String platformVersion) {
-        this.platformVersion = new AbstractMap.SimpleEntry<>("platformVersion", platformVersion);
+        this.platformVersion = new SimpleEntry<>("platformVersion", platformVersion);
         return this;
     }
 
     public CapabilitiesBuilder setDeviceName(String deviceName) {
-        this.deviceName = new AbstractMap.SimpleEntry<>("deviceName", deviceName);
+        this.deviceName = new SimpleEntry<>("deviceName", deviceName);
         return this;
     }
 
     public CapabilitiesBuilder setAutomationName(String automationName) {
-        this.automationName = new AbstractMap.SimpleEntry<>("automationName", automationName);
+        this.automationName = new SimpleEntry<>("automationName", automationName);
         return this;
     }
 
     public CapabilitiesBuilder setChromeDriverExec(String exec) {
-        this.chromeDriverExec = new AbstractMap.SimpleEntry<>("chromedriverExecutableDir", exec);
+        this.chromeDriverExec = new SimpleEntry<>("chromedriverExecutableDir", exec);
         return this;
     }
 
-    public CapabilitiesBuilder setChromeDriverPort (int port) {
-        this.chromeDriverport = new AbstractMap.SimpleEntry<>("chromedriverPort", port);
+    public CapabilitiesBuilder setChromeDriverPort(int port) {
+        this.chromeDriverport = new SimpleEntry<>("chromedriverPort", port);
         return this;
     }
 
-    public CapabilitiesBuilder setWebViewTimeOut (int timeOut) {
-        this.webViewTimeout = new AbstractMap.SimpleEntry<>("autoWebviewTimeout", timeOut);
+    public CapabilitiesBuilder setWebViewTimeOut(int timeOut) {
+        this.webViewTimeout = new SimpleEntry<>("autoWebviewTimeout", timeOut);
         return this;
     }
 
-    public CapabilitiesBuilder setEnableWebviewDetailsCollection (boolean value) {
-        this.webViewDetailsCollection = new AbstractMap.SimpleEntry<>("enableWebviewDetailsCollection", value);
+    public CapabilitiesBuilder setEnableWebviewDetailsCollection(boolean value) {
+        this.webViewDetailsCollection = new SimpleEntry<>("enableWebviewDetailsCollection", value);
         return this;
     }
 
     public CapabilitiesBuilder setApp(String app) {
-        this.app = new AbstractMap.SimpleEntry<>("app", app);
+        this.app = new SimpleEntry<>("app", app);
         return this;
     }
 
     public CapabilitiesBuilder setBrowser(String browser) {
-        this.browser = new AbstractMap.SimpleEntry<>("browser", browser);
+        this.browser = new SimpleEntry<>("browser", browser);
         return this;
     }
 
     public CapabilitiesBuilder setFullResetValue(boolean value) {
-        this.fullResetValue = new AbstractMap.SimpleEntry<>("fullReset", Boolean.toString(value));
+        this.fullResetValue = new SimpleEntry<>("fullReset", Boolean.toString(value));
         return this;
     }
 
     public CapabilitiesBuilder setUdid(String udid) {
-        this.udid = new AbstractMap.SimpleEntry<>("udid", udid);
+        this.udid = new SimpleEntry<>("udid", udid);
         return this;
     }
 
     public CapabilitiesBuilder setXcodeOrgId(String xcodeOrgId) {
-        this.xcodeOrgId = new AbstractMap.SimpleEntry<>("xcodeOrgId", xcodeOrgId);
+        this.xcodeOrgId = new SimpleEntry<>("xcodeOrgId", xcodeOrgId);
         return this;
     }
 
     public CapabilitiesBuilder setXcodeSigningId(String xcodeSigningId) {
-        this.xcodeSigningId = new AbstractMap.SimpleEntry<>("xcodeSigningId", xcodeSigningId);
+        this.xcodeSigningId = new SimpleEntry<>("xcodeSigningId", xcodeSigningId);
         return this;
     }
 
     public CapabilitiesBuilder setUpdatedWDABundleId(String updatedWDABundleId) {
-        this.updatedWDABundleId = new AbstractMap.SimpleEntry<>("updatedWDABundleId", updatedWDABundleId);
+        this.updatedWDABundleId = new SimpleEntry<>("updatedWDABundleId", updatedWDABundleId);
         return this;
     }
 
@@ -114,7 +115,7 @@ public class CapabilitiesBuilder {
         for (Field field : fields) {
             Object value = field.get(this);
             if (value != null) {
-                AbstractMap.SimpleEntry<String, String> entry = (AbstractMap.SimpleEntry) value;
+                SimpleEntry<String, String> entry = (SimpleEntry) value;
                 caps.put(entry.getKey(), entry.getValue());
             }
         }

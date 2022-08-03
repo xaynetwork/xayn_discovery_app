@@ -67,6 +67,7 @@ assets/ai/
 /fastlane/README.md
 
 #automation
+/automation/src/main/resources/config.properties
 /automation/*.iml
 /automation/target/*
 /automation/allure-results/*

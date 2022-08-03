@@ -1,7 +1,7 @@
 package ios;
 
 import base.IOSTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.constants.Directions;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.components.OnboardingComponent;
@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 public class IOSNewsFeedTest extends IOSTestBase {
     @Test(description = "Liking an article by swiping it to the right")
-    @TMS(id = 2)
+    @TestCase(id = 2)
     public void checkingLikeBySwipe() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -20,7 +20,7 @@ public class IOSNewsFeedTest extends IOSTestBase {
     }
 
     @Test(description = "Disliking an article by swiping it to the left")
-    @TMS(id = 3)
+    @TestCase(id = 3)
     public void checkingDislikeBySwipe() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -30,7 +30,7 @@ public class IOSNewsFeedTest extends IOSTestBase {
     }
 
     @Test(description = "Liking an article by clicking on the like button")
-    @TMS(id = 4)
+    @TestCase(id = 4)
     public void checkingLikeByButton() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
@@ -40,7 +40,7 @@ public class IOSNewsFeedTest extends IOSTestBase {
     }
 
     @Test(description = "Disliking an article by clicking on the dislike button")
-    @TMS(id = 5)
+    @TestCase(id = 5)
     public void checkingDislikeByButton() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

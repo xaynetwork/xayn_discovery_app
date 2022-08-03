@@ -1,6 +1,6 @@
 package com.xayn.listeners;
 
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.configuration.Configuration;
 import com.xayn.constants.TestStatus;
 import com.xayn.handlers.AppiumHandler;
@@ -66,10 +66,10 @@ public class ITestListenerImp implements ITestListener {
     private int getTmsId(ITestResult result) {
         String methodName = result.getMethod().getMethodName();
         try {
-            TMS anno = result.getTestClass()
+            TestCase anno = result.getTestClass()
                     .getRealClass()
                     .getMethod(methodName, null)
-                    .getAnnotation(TMS.class);
+                    .getAnnotation(TestCase.class);
             return anno.id();
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);

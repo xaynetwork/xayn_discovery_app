@@ -1,7 +1,7 @@
 package ios;
 
 import base.IOSTestBase;
-import com.xayn.annotations.TMS;
+import com.xayn.annotations.TestCase;
 import com.xayn.screens.HomeScreen;
 import com.xayn.screens.ReaderModeScreen;
 import com.xayn.screens.YourSpaceScreen;
@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 public class IOSCollectionsTest extends IOSTestBase {
 
     @Test(description = "Adding a bookmark to Read Later collection from reading mode")
-    @TMS(id = 42)
+    @TestCase(id = 42)
     public void checkingBookmarkingFromReaderMode() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();
