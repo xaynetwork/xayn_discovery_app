@@ -283,6 +283,9 @@ lane :publish do |options|
   appcenter_token = config[Keys::APPCENTER_TOKEN]
   output = options[Options::ANDROID_OUTPUT]
 
+  if platform == Platforms::IOS
+    airship_config_unpack_ios(options)
+  end
   if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
     secrets_unpack_android(options)
@@ -293,7 +296,6 @@ lane :publish do |options|
 
   if platform == Platforms::IOS
     secrets_unpack_ios(options)
-    airship_config_unpack_ios(options)
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
