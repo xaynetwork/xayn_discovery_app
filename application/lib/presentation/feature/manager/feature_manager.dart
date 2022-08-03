@@ -60,7 +60,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
   Future<FeatureManagerState?> computeState() async =>
       fold(_experimentsHandler).foldAll((experimentationResult, errorReport) {
         if (experimentationResult != null) {
-          alterFeatureMapAccordingToExperiments(experimentationResult);
+          _alterFeatureMapAccordingToExperiments(experimentationResult);
           _setExperimentsIdentityParamsUseCase(experimentationResult);
         }
         return FeatureManagerState(
@@ -68,7 +68,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
         );
       });
 
-  void alterFeatureMapAccordingToExperiments(
+  void _alterFeatureMapAccordingToExperiments(
     FetchedExperimentsOut experiments,
   ) =>
       experiments.subscribedFeatures
