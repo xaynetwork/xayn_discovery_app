@@ -122,3 +122,4 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 
 key.properties
+/application/assets/default_remote_config.yaml
