@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -32,7 +33,9 @@ class RevenueCatPaymentService implements PaymentService {
 
   void _init({required String userId}) async {
     Purchases.setDebugLogsEnabled(!EnvironmentHelper.kIsProductionFlavor);
-    await Purchases.configure(PurchasesConfiguration(Env.revenueCatSdkKey));
+    await Purchases.configure(PurchasesConfiguration(Platform.isIOS
+        ? Env.revenueCatSdkKeyIos
+        : Env.revenueCatSdkKeyAndroid));
     Purchases.addCustomerInfoUpdateListener((customerInfo) {
       _controller.sink.add(customerInfo);
     });
