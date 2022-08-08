@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 3.45.0
 
 environment:
-  sdk: '>=2.17.3 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
   flutter: '>=3.0.0'
 
 # Please list dependencies alphabetically!
@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  airship_flutter: 6.0.1
+  airship_flutter: 6.0.0
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   awesome_notifications: 0.6.21
