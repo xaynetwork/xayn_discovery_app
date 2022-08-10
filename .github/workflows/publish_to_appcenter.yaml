@@ -116,7 +116,10 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
-          AIRSHIP_PLIST: ${{ secrets.AIRSHIP_PLIST }}
+          AIRSHIP_DEV_KEY: ${{ secrets.AIRSHIP_DEV_KEY }}
+          AIRSHIP_DEV_SECRET: ${{ secrets.AIRSHIP_DEV_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
@@ -197,7 +200,10 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
-          AIRSHIP_PLIST: ${{ secrets.AIRSHIP_PLIST }}
+          AIRSHIP_DEV_KEY: ${{ secrets.AIRSHIP_DEV_KEY }}
+          AIRSHIP_DEV_SECRET: ${{ secrets.AIRSHIP_DEV_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
@@ -264,6 +270,10 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          AIRSHIP_DEV_KEY: ${{ secrets.AIRSHIP_DEV_KEY }}
+          AIRSHIP_DEV_SECRET: ${{ secrets.AIRSHIP_DEV_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
@@ -331,6 +341,10 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          AIRSHIP_DEV_KEY: ${{ secrets.AIRSHIP_DEV_KEY }}
+          AIRSHIP_DEV_SECRET: ${{ secrets.AIRSHIP_DEV_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
         working-directory: ./application
