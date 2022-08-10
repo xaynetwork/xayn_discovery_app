@@ -25,7 +25,7 @@ class DeepLinkData with _$DeepLinkData {
         return const DeepLinkData.none();
       case DeepLinkValue.activeSearch:
         return const DeepLinkData.activeSearch();
-      case DeepLinkValue.cardDetails:
+      case DeepLinkValue.cardDetailsFromDocument:
         if (document != null) {
           return DeepLinkData.cardDetails(document: document);
         } else {

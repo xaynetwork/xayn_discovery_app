@@ -18,20 +18,23 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
 class DiscoveryCardScreen extends StatefulWidget {
-  const DiscoveryCardScreen({
-    Key? key,
-    this.documentId,
-    this.document,
-    this.feedType,
-  })  : assert(
-          documentId != null || document != null,
-          'Please provide either a document or a document id',
-        ),
-        super(key: key);
-
   final UniqueId? documentId;
   final Document? document;
   final FeedType? feedType;
+
+  const DiscoveryCardScreen.fromDocumentId({
+    Key? key,
+    required this.documentId,
+    this.feedType,
+  })  : document = null,
+        super(key: key);
+
+  const DiscoveryCardScreen.fromDocument({
+    Key? key,
+    required this.document,
+    this.feedType,
+  })  : documentId = null,
+        super(key: key);
 
   @override
   State<DiscoveryCardScreen> createState() => _DiscoveryCardScreenState();
@@ -45,10 +48,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         NavBarConfigMixin,
         OverlayMixin<DiscoveryCardScreen>,
         OverlayStateMixin<DiscoveryCardScreen> {
-  late final DiscoveryCardScreenManager _discoveryCardScreenManager = di.get(
-    param1: widget.documentId,
-    param2: widget.document,
-  );
+  late final DiscoveryCardScreenManager _discoveryCardScreenManager = di.get();
   late final CardManagersCache _cardManagersCache = di.get();
 
   TtsData ttsData = TtsData.disabled();
@@ -104,6 +104,17 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       ],
       isWidthExpanded: false,
     );
+  }
+
+  @override
+  void initState() {
+    if (widget.documentId != null) {
+      _discoveryCardScreenManager.initWithDocumentId(
+          documentId: widget.documentId!);
+    } else {
+      _discoveryCardScreenManager.initWithDocument(document: widget.document!);
+    }
+    super.initState();
   }
 
   @override

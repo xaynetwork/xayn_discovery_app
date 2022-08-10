@@ -85,6 +85,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_col
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/deep_link/retrieve_deep_link_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
@@ -254,6 +255,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RenameDefaultCollectionUseCase,
   RequestCodeRedemptionSheetUseCase,
   RestoreSubscriptionUseCase,
+  RetrieveDeepLinkDataUseCase,
   SaveAppThemeUseCase,
   SaveCurrentAppVersion,
   SaveReaderModeBackgroundColorUseCase,

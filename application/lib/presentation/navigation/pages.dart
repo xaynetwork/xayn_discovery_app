@@ -82,17 +82,28 @@ class PageRegistry {
     ),
   );
 
-  static cardDetails({
-    UniqueId? documentId,
-    engine.Document? document,
+  static cardDetailsFromDocumentId({
+    required UniqueId documentId,
     FeedType? feedType,
   }) =>
       xayn.PageData(
         name: PageName.cardDetails.name,
         arguments: documentId,
-        builder: (_, UniqueId? args) => DiscoveryCardScreen(
+        builder: (_, UniqueId? args) => DiscoveryCardScreen.fromDocumentId(
           documentId: args,
-          document: document,
+          feedType: feedType,
+        ),
+      );
+
+  static cardDetailsFromDocument({
+    required engine.Document document,
+    FeedType? feedType,
+  }) =>
+      xayn.PageData(
+        name: PageName.cardDetails.name,
+        arguments: document,
+        builder: (_, engine.Document? args) => DiscoveryCardScreen.fromDocument(
+          document: args,
           feedType: feedType,
         ),
       );

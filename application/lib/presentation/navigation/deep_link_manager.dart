@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 enum DeepLinkValue {
   none,
   activeSearch,
-  cardDetails,
+  cardDetailsFromDocument,
 }
 
 abstract class DeepLinkManager {
@@ -54,9 +54,10 @@ extension on DeepLinkData {
     return when(
       none: () => null,
       activeSearch: () => PageRegistry.search,
-      feed: (documentId) => PageRegistry.cardDetails(documentId: documentId),
-      // feed: (documentId) => PageRegistry.discovery(documentId: documentId),
-      cardDetails: (document) => PageRegistry.cardDetails(document: document),
+      feed: (documentId) =>
+          PageRegistry.cardDetailsFromDocumentId(documentId: documentId),
+      cardDetails: (document) =>
+          PageRegistry.cardDetailsFromDocument(document: document),
     );
   }
 }
