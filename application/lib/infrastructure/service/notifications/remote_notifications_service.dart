@@ -10,6 +10,7 @@ abstract class RemoteNotificationsService {
   Future<void> enableNotifications();
   Future<void> disableNotifications();
   Future<void> clearNotifications();
+  Future<String?> get channelId;
 }
 
 @LazySingleton(as: RemoteNotificationsService)
@@ -52,4 +53,7 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
 
   @override
   Future<void> clearNotifications() => Airship.clearNotifications();
+
+  @override
+  Future<String?> get channelId => Airship.channelId;
 }

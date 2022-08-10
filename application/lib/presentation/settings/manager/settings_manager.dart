@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -293,4 +294,10 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
   void requestRemoteNotificationPermission() =>
       _remoteNotificationsService.enableNotifications();
+
+  void copyChannelId() async {
+    final channelId = await _remoteNotificationsService.channelId;
+    if (channelId == null) return;
+    Clipboard.setData(ClipboardData(text: channelId));
+  }
 }
