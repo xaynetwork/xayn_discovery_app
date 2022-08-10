@@ -26,30 +26,22 @@ class DiscoveryCardScreenManager extends Cubit<DiscoveryCardScreenState>
         CheckValidDocumentMixin<DiscoveryCardScreenState>
     implements DiscoveryCardScreenManagerNavActions {
   DiscoveryCardScreenManager(
-    @factoryParam UniqueId? documentId,
-    @factoryParam Document? document,
     this._getDocumentUseCase,
     this._navActions,
     this._sendAnalyticsUseCase,
-  )   : assert(
-          documentId != null || document != null,
-          'Please provide either a document or a document id',
-        ),
-        super(DiscoveryCardScreenState.initial()) {
-    _init(documentId, document);
-  }
+  ) : super(DiscoveryCardScreenState.initial());
 
-  void _init(UniqueId? documentId, Document? document) {
-    if (document != null) {
+  void initWithDocumentId({
+    required UniqueId documentId,
+  }) =>
+      _getDocumentHandler(documentId);
+
+  void initWithDocument({
+    required Document document,
+  }) =>
       scheduleComputeState(
         () => _document = document,
       );
-    } else if (documentId != null) {
-      _getDocumentHandler(
-        documentId,
-      );
-    }
-  }
 
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
   final GetDocumentUseCase _getDocumentUseCase;
