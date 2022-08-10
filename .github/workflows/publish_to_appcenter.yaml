@@ -101,7 +101,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 25
+        timeout-minutes: 30
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -182,7 +182,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 25
+        timeout-minutes: 30
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -250,7 +250,7 @@ jobs:
         run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
-        timeout-minutes: 25
+        timeout-minutes: 30
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
@@ -317,7 +317,7 @@ jobs:
         run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
-        timeout-minutes: 25
+        timeout-minutes: 30
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_BETA_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}

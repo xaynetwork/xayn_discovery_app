@@ -218,6 +218,16 @@ lane :check_config_files do |options|
   else
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   end
+
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    askAndSetProperties(".env", { "AIRSHIP_DEV_KEY" => "AIRSHIP_DEV_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_DEV_SECRET" => "AIRSHIP_DEV_SECRET" }, Config::ENV_DEFAULTS)
+  else
+    askAndSetProperties(".env", { "AIRSHIP_PROD_KEY" => "AIRSHIP_PROD_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_PROD_SECRET" => "AIRSHIP_PROD_SECRET" }, Config::ENV_DEFAULTS)
+  end
+  generate_airship_plist(options)
+  generate_airship_properties(options)
 end
 
 desc "Flutter pub get"
@@ -293,7 +303,6 @@ lane :publish do |options|
 
   if platform == Platforms::IOS
     secrets_unpack_ios(options)
-    airship_config_unpack_ios(options)
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -389,19 +398,65 @@ private_lane :secrets_unpack_ios do |options|
   end
 end
 
-desc "Unpacks the AirshipConfig.plist based on the $AIRSHIP_PLIST env var"
-private_lane :airship_config_unpack_ios do |options|
-  UI.user_error!("No AIRSHIP_PLIST provided!") unless ENV.key?("AIRSHIP_PLIST")
-  Dir.chdir("../ios/Runner") do
-    sh("echo $AIRSHIP_PLIST > ios/Runner/AirshipConfig.plist")
-  end
-end
-
 desc "Unpacks the release keystore"
 private_lane :secrets_unpack_android do |options|
   UI.user_error!("No ANDROID_RELEASE_KEYSTORE provided!") unless ENV.key?("ANDROID_RELEASE_KEYSTORE")
   Dir.chdir("../android/") do
       sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
+  end
+end
+
+desc "Generate Airship plist file"
+private_lane :generate_airship_plist do |options|
+    update_plist(
+      plist_path: "ios/Runner/AirshipConfig.plist",
+      block: proc do |plist|
+        if options[Options::FLAVOR] == Flavors::INTERNAL
+          plist[:developmentAppKey] = ENV["AIRSHIP_DEV_KEY"]
+          plist[:developmentAppSecret] = ENV["AIRSHIP_DEV_SECRET"]
+          plist[:productionAppKey] = ENV["AIRSHIP_DEV_KEY"]
+          plist[:productionAppSecret] = ENV["AIRSHIP_DEV_SECRET"]
+        else
+          plist[:developmentAppKey] = ENV["AIRSHIP_PROD_KEY"]
+          plist[:developmentAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+          plist[:productionAppKey] = ENV["AIRSHIP_PROD_KEY"]
+          plist[:productionAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+        end
+        plist[:site] = "EU"
+      end
+    )
+end
+
+desc "Generate Airship properties file"
+private_lane :generate_airship_properties do |options|
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    setProperties("../android/app/src/main/assets/airshipconfig.properties", {
+      "developmentAppKey" => ENV["AIRSHIP_DEV_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_DEV_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_DEV_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_DEV_SECRET"],
+      "inProduction" => false,
+      "developmentLogLevel" => "DEBUG",
+      "productionLogLevel" => "ERROR",
+      "notificationIcon" => "ic_notification",
+      "notificationLargeIcon" => "ic_large_notification",
+      "notificationAccentColor" => "#ff0000",
+      "site" => "EU",
+    })
+  else
+    setProperties("../android/app/src/main/assets/airshipconfig.properties", {
+      "developmentAppKey" => ENV["AIRSHIP_PROD_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_PROD_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_PROD_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_PROD_SECRET"],
+      "inProduction" => true,
+      "developmentLogLevel" => "DEBUG",
+      "productionLogLevel" => "ERROR",
+      "notificationIcon" => "ic_notification",
+      "notificationLargeIcon" => "ic_large_notification",
+      "notificationAccentColor" => "#ff0000",
+      "site" => "EU",
+    })
   end
 end
 

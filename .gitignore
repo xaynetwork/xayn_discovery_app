@@ -71,6 +71,8 @@ unlinked_spec.ds
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
+**/android/app/src/main/assets/airshipconfig.properties
+**/android/app/google-services.json
 *.jks
 
 # iOS/XCode related
