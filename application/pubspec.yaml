@@ -100,10 +100,8 @@ dependencies:
       url: git@github.com:xaynetwork/xayn_design.git
       ref: a20fd18491d6799e8ec4394646c8f8dad1becc60
   xayn_discovery_engine_flutter:
-    git:
-      url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: 090c6bef3a1e04a2985bcba015d43209adb2298b
-      path: discovery_engine_flutter
+    hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
+    version: ^0.1.0+TO-3259-fix-dart-upload-order.220822134917
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
