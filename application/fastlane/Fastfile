@@ -26,6 +26,7 @@ Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
 BuildTypes = Config::BuildTypes
+TestSuites = Config::TestSuites
 IS_CI = is_ci
 
 # Common checks before running a lane
@@ -54,6 +55,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, IS_CI)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
   setIfNotSet.call(Options::TEST, lane == :check)
+  setIfNotSet.call(Options::TEST_SUITE, TestSuites::SANITY)
 
   version_name = gitVersionName()
 
@@ -117,9 +119,6 @@ lane :check_automation_config do |options|
     shell("flutter build ios --simulator")
     app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
     raise ".app file isn't found" unless File.exist?app 
-    #building the app
-    android_prepare_key_properties(options)
-    secrets_unpack_android(options)
   end
   setProperties("../automation/src/main/resources/config.properties",
                       {
