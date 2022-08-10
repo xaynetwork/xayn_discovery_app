@@ -89,7 +89,7 @@ class BookmarksScreenNavActionsImpl extends BookmarksScreenNavActions {
     required UniqueId bookmarkId,
     FeedType? feedType,
   }) =>
-      changeStack((stack) => stack.push(PageRegistry.cardDetails(
+      changeStack((stack) => stack.push(PageRegistry.cardDetailsFromDocumentId(
             documentId: bookmarkId,
             feedType: feedType,
           )));

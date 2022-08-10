@@ -9,7 +9,7 @@ void main() async {
   late MockAppsflyerSdk appsFlyer;
   late MockDeepLinkManager deepLinkManager;
   late MarketingAnalyticsService marketingAnalyticsService;
-  late MockDecodeDocumentUseCase decodeDocumentUseCase;
+  late MockRetrieveDeepLinkDataUseCase retrieveDeepLinkData;
 
   const mockUID = '123';
   const mockLanguage = 'en';
@@ -18,11 +18,11 @@ void main() async {
   setUp(() {
     appsFlyer = MockAppsflyerSdk();
     deepLinkManager = MockDeepLinkManager();
-    decodeDocumentUseCase = MockDecodeDocumentUseCase();
+    retrieveDeepLinkData = MockRetrieveDeepLinkDataUseCase();
     marketingAnalyticsService = AppsFlyerMarketingAnalyticsService(
       appsFlyer,
       deepLinkManager,
-      decodeDocumentUseCase,
+      retrieveDeepLinkData,
     );
   });
 
