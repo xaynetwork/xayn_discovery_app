@@ -13,4 +13,4 @@
 
 ### Execution
 
-`fastlane run_automation test_suite:[regression, sanity, debug] test_env:[dev,prod]`
+`fastlane run_automation test_suite:[regression, sanity, debug] platform:[android,ios]`

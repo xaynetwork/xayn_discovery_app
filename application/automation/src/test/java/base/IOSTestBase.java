@@ -21,15 +21,15 @@ public abstract class IOSTestBase extends TestBase {
     public void startDriver(Method method) throws IllegalAccessException {
         DesiredCapabilities desiredCapabilities = new CapabilitiesBuilder()
                 .setPlatformName("iOS")
-                .setPlatformVersion(IOS_VERSION)
-                .setDeviceName(IOS_DEVICE)
-                .setUdid(IOS_DEVICE_ID)
+                .setPlatformVersion(DEVICE_VERSION)
+                .setDeviceName(DEVICE_NAME)
+                .setUdid(DEVICE_ID)
                 .setAutomationName("XCUITest")
                 .setXcodeOrgId(XCODE_ORG_ID)
                 .setXcodeSigningId("Iphone Developer")
                 .setUpdatedWDABundleId(WDA_BUNDLE_ID)
                 .setFullResetValue(false)
-                .setApp(APP_IOS)
+                .setApp(APP)
                 .build();
         AppiumHandler.createDriver(PlatformType.IOS, desiredCapabilities);
         getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);

@@ -13,6 +13,7 @@
 import("../ios/fastlane/Fastfile")
 import("./lib/properties.rb")
 import("./lib/download_utils.rb")
+import("./lib/automation_utils.rb")
 require "./lib/git.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
@@ -78,30 +79,63 @@ end
 # Private lanes, that we only call internally, they are nice because they have an own description
 
 desc "Checks properties required for automated execution locally"
-private_lane :check_automation_config do |options|
-  # set up config params
-  askAndSetProperties("../automation/src/main/resources/config.properties",
-                      {
-    "driver.exec" => "driver.exec",
-    "appium.js" => "appium.js",
-    "android.version" => "android.version",
-    "android.id" => "android.id",
-    "ios.version" => "ios.version",
-    "ios.id" => "ios.id",
-    "app.ios" => "app.ios",
-    "app.android" => "app.android"
-  },
-   # there cannot be any defaults since this config created for personal execution on local machine
-  {})
-end
-
-desc "Set up environment flag for automation and check config"
-private_lane :set_up_automation_flag do |options|
-  remote = options[Options::TEST_ENV] == "prod"
-  if !remote 
-    check_automation_config(options)
+lane :check_automation_config do |options|
+  hash = checkIfComponentsInstalled(["appium","node","adb"])
+  deviceName, deviceId, deviceVersion, app = ""
+  platform = options[Options::PLATFORM]
+  devicesJson = JSON.parse(shell("flutter devices --machine"))
+  #setting up android properties
+  if platform == Platforms::ANDROID 
+    devicesJson.each do |key, value|
+      if key["targetPlatform"].include?"android"
+        deviceName = key["name"]
+        deviceId = key["id"]
+        deviceVersion = /\d+/.match(key["sdk"])
+      end
+    end
+    if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
+      raise "Android device not found, have you enabled debug mode?"
+    end
+    #building the app
+    android_prepare_key_properties(options)
+    secrets_unpack_android(options)
+    build_with_flutter(options)
+    app = File.expand_path("../build/app/outputs/flutter-apk/app.apk");
+    raise ".apk file isn't found" unless File.exist?app 
   end
-  setProperties("../automation/src/main/resources/config.properties", {"remote" => remote.to_s})
+  if platform == Platforms::IOS
+    devicesJson.each do |key, value|
+      if key["targetPlatform"] == "ios"
+        deviceName = key["name"]
+        deviceVersion = /\d+-\d/.match(key["sdk"]).to_s.sub! '-', '.'
+        deviceId = key["id"]
+      end
+    end
+    if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
+      raise "IOS device not found"
+    end
+    shell("flutter build ios --simulator")
+    app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
+    raise ".app file isn't found" unless File.exist?app 
+    #building the app
+    android_prepare_key_properties(options)
+    secrets_unpack_android(options)
+  end
+  setProperties("../automation/src/main/resources/config.properties",
+                      {
+    "driver.exec" => hash["node"],
+    "appium.js" => hash["appium"],
+    "appium.url" => "http://localhost:4723/wd/hub",
+    "screenshot.directory" => "target/screenshots",
+    "wda.bundle.id" => "com.xayn.discovery.internal.wda",
+    "retry.count" => "3",
+    "testrail.app" => "Discovery App",
+    "tms.regression" => "false",
+    "device.id" => deviceId,
+    "device.version" => deviceVersion,
+    "device.name" => deviceName,
+    "app" => app
+  })   
 end
 
 desc "Flutter build"
@@ -174,9 +208,10 @@ end
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
 
+# :test_suite and :test_env are required params for this lane
 desc "Run automation"
 lane :run_automation do |options|
-  set_up_automation_flag(options)
+  check_automation_config(options)
   suite = options[Options::TEST_SUITE]
   shell("cd automation && mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
 end

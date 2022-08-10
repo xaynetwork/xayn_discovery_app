@@ -20,11 +20,11 @@ public abstract class AndroidTestBase extends TestBase {
     public void startDriver(Method method) throws IllegalAccessException {
         DesiredCapabilities desiredCapabilities = new CapabilitiesBuilder()
                 .setPlatformName("Android")
-                .setPlatformVersion(ANDROID_VERSION)
-                .setDeviceName(ANDROID_DEVICE_ID)
+                .setPlatformVersion(DEVICE_VERSION)
+                .setDeviceName(DEVICE_ID)
                 .setAutomationName("UiAutomator2")
                 .setFullResetValue(false)
-                .setApp(APP_ANDROID)
+                .setApp(APP)
                 .build();
         createDriver(PlatformType.ANDROID, desiredCapabilities);
         getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
