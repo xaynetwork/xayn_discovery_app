@@ -1,6 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+// This allows to use this file from outside like bin/
+// ignore: implementation_imports
+import 'package:flutter/src/foundation/constants.dart';
 
 class EnvironmentHelper {
   EnvironmentHelper._();

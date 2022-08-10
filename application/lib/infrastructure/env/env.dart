@@ -1,7 +1,7 @@
-import 'dart:io';
-
 import 'package:envify/envify.dart';
-import 'package:flutter/foundation.dart';
+// This allows to use this file from outside like bin/
+// ignore: implementation_imports
+import 'package:flutter/src/foundation/constants.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 
 part 'env.g.dart';
@@ -28,13 +28,15 @@ abstract class Env {
   static const String aiAssetsUrl = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.aiAssetsUrl
       : _EnvProd.aiAssetsUrl;
-  static final String revenueCatSdkKey = EnvironmentHelper.kIsInternalFlavor
-      ? (Platform.isIOS
-          ? _EnvDev.revenueCatSdkKeyIos
-          : _EnvDev.revenueCatSdkKeyAndroid)
-      : (Platform.isIOS
-          ? _EnvProd.revenueCatSdkKeyIos
-          : _EnvProd.revenueCatSdkKeyAndroid);
+  static const String revenueCatSdkKeyIos = EnvironmentHelper.kIsInternalFlavor
+      ? _EnvDev.revenueCatSdkKeyIos
+      : _EnvProd.revenueCatSdkKeyIos;
+
+  static const String revenueCatSdkKeyAndroid =
+      EnvironmentHelper.kIsInternalFlavor
+          ? _EnvDev.revenueCatSdkKeyAndroid
+          : _EnvProd.revenueCatSdkKeyAndroid;
+
   static const String mixpanelServerUrl = EnvironmentHelper.kIsInternalFlavor
       ? _EnvDev.mixpanelServerUrl
       : _EnvProd.mixpanelServerUrl;
