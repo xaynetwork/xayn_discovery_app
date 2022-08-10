@@ -33,6 +33,8 @@ def setProperties(path, hash, separator = "=")
     hash = loadedProperties.merge(hash)
   end
   File.delete(path) if File.exist?(path)
+  dir = File.dirname(path)
+  Dir.mkdir(dir) unless Dir.exists?(dir)
   File.open(path, "w") do |fo|
     hash.each do |key, value|
       fo.write("#{key}#{separator}#{value}\n")
