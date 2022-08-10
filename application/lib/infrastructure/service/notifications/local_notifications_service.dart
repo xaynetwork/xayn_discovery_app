@@ -13,10 +13,10 @@ const String _kChannelKey = 'basic_channel';
 abstract class LocalNotificationsService {
   void requestPermission();
   Future<bool> sendNotification({
-    required String title,
     required String body,
     required UniqueId documentId,
     required Duration delay,
+    Uri? image,
   });
 }
 
@@ -75,19 +75,22 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
 
   @override
   Future<bool> sendNotification({
-    required String title,
     required String body,
     required UniqueId documentId,
     required Duration delay,
+    Uri? image,
   }) {
     final scheduleTime = DateTime.now().add(delay);
     return AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 1,
         channelKey: _kChannelKey,
-        title: title,
+        title: R.strings.notificationTitle,
         body: body,
         payload: _documentIdToPayloadMapper.map(documentId),
+        bigPicture: image?.toString(),
+        notificationLayout:
+            image != null ? NotificationLayout.BigPicture : null,
       ),
       schedule: NotificationCalendar.fromDate(date: scheduleTime),
     );
