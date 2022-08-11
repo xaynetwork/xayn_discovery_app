@@ -228,6 +228,7 @@ lane :check_config_files do |options|
   end
   generate_airship_plist(options)
   generate_airship_properties(options)
+  google_services_unpack(options)
 end
 
 desc "Flutter pub get"
@@ -457,6 +458,21 @@ private_lane :generate_airship_properties do |options|
       "notificationAccentColor" => "#ff0000",
       "site" => "EU",
     })
+  end
+end
+
+desc "Unpacks the google-services.json based on the $GOOGLE_SERVICES_INTERNAL_JSON and $GOOGLE_SERVICES_PROD_JSON env vars"
+private_lane :google_services_unpack do |options|
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    UI.user_error!("No GOOGLE_SERVICES_INTERNAL_JSON provided!") unless ENV.key?("GOOGLE_SERVICES_INTERNAL_JSON")
+    Dir.chdir("../android/app") do
+      sh("echo $GOOGLE_SERVICES_INTERNAL_JSON > android/app/google-services.json")
+    end
+  else
+    UI.user_error!("No GOOGLE_SERVICES_PROD_JSON provided!") unless ENV.key?("GOOGLE_SERVICES_PROD_JSON")
+    Dir.chdir("../android/app") do
+      sh("echo $GOOGLE_SERVICES_PROD_JSON > android/app/google-services.json")
+    end
   end
 end
 
