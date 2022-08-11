@@ -220,8 +220,8 @@ lane :check_config_files do |options|
   end
 
   if options[Options::FLAVOR] == Flavors::INTERNAL
-    askAndSetProperties(".env", { "AIRSHIP_DEV_KEY" => "AIRSHIP_DEV_KEY" }, Config::ENV_DEFAULTS)
-    askAndSetProperties(".env", { "AIRSHIP_DEV_SECRET" => "AIRSHIP_DEV_SECRET" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_INTERNAL_KEY" => "AIRSHIP_INTERNAL_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_INTERNAL_SECRET" => "AIRSHIP_INTERNAL_SECRET" }, Config::ENV_DEFAULTS)
   else
     askAndSetProperties(".env", { "AIRSHIP_PROD_KEY" => "AIRSHIP_PROD_KEY" }, Config::ENV_DEFAULTS)
     askAndSetProperties(".env", { "AIRSHIP_PROD_SECRET" => "AIRSHIP_PROD_SECRET" }, Config::ENV_DEFAULTS)
@@ -412,10 +412,10 @@ private_lane :generate_airship_plist do |options|
       plist_path: "ios/Runner/AirshipConfig.plist",
       block: proc do |plist|
         if options[Options::FLAVOR] == Flavors::INTERNAL
-          plist[:developmentAppKey] = ENV["AIRSHIP_DEV_KEY"]
-          plist[:developmentAppSecret] = ENV["AIRSHIP_DEV_SECRET"]
-          plist[:productionAppKey] = ENV["AIRSHIP_DEV_KEY"]
-          plist[:productionAppSecret] = ENV["AIRSHIP_DEV_SECRET"]
+          plist[:developmentAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+          plist[:developmentAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+          plist[:productionAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+          plist[:productionAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
         else
           plist[:developmentAppKey] = ENV["AIRSHIP_PROD_KEY"]
           plist[:developmentAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
@@ -431,10 +431,10 @@ desc "Generate Airship properties file"
 private_lane :generate_airship_properties do |options|
   if options[Options::FLAVOR] == Flavors::INTERNAL
     setProperties("../android/app/src/main/assets/airshipconfig.properties", {
-      "developmentAppKey" => ENV["AIRSHIP_DEV_KEY"],
-      "developmentAppSecret" => ENV["AIRSHIP_DEV_SECRET"],
-      "productionAppKey" => ENV["AIRSHIP_DEV_KEY"],
-      "productionAppSecret" => ENV["AIRSHIP_DEV_SECRET"],
+      "developmentAppKey" => ENV["AIRSHIP_INTERNAL_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_INTERNAL_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_INTERNAL_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_INTERNAL_SECRET"],
       "inProduction" => false,
       "developmentLogLevel" => "DEBUG",
       "productionLogLevel" => "ERROR",
