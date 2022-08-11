@@ -90,7 +90,7 @@ private_lane :build_with_flutter do |options|
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
-  shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  # shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
 
   defines = {
     "GIT_TAG" => options[Options::VERSION_NAME],
