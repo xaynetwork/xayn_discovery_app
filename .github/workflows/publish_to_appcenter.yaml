@@ -122,6 +122,8 @@ jobs:
           AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -206,6 +208,8 @@ jobs:
           AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
