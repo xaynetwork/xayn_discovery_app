@@ -465,14 +465,10 @@ desc "Unpacks the google-services.json based on the $GOOGLE_SERVICES_INTERNAL_JS
 private_lane :google_services_unpack do |options|
   if options[Options::FLAVOR] == Flavors::INTERNAL
     UI.user_error!("No GOOGLE_SERVICES_INTERNAL_JSON provided!") unless ENV.key?("GOOGLE_SERVICES_INTERNAL_JSON")
-    Dir.chdir("../android/app") do
-      sh("echo $GOOGLE_SERVICES_INTERNAL_JSON > android/app/google-services.json")
-    end
+    sh("echo $GOOGLE_SERVICES_INTERNAL_JSON > ../android/app/google-services.json")
   else
     UI.user_error!("No GOOGLE_SERVICES_PROD_JSON provided!") unless ENV.key?("GOOGLE_SERVICES_PROD_JSON")
-    Dir.chdir("../android/app") do
-      sh("echo $GOOGLE_SERVICES_PROD_JSON > android/app/google-services.json")
-    end
+    sh("echo $GOOGLE_SERVICES_PROD_JSON > ../android/app/google-services.json")
   end
 end
 
