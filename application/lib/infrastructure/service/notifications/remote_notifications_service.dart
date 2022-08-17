@@ -40,6 +40,10 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
   void _pushMessageHandler(PushReceivedEvent event) {
     logger.i('[Remote notifications] Notification received: $event');
     final notification = RemoteNotification(event.payload);
+
+    // Return if we receive a local notification to not emit notifications in a loop.
+    if (notification.isLocalNotification) return;
+
     _controller.add(notification);
   }
 
