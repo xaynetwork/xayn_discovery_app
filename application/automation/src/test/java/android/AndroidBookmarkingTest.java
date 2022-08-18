@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 
 public class AndroidBookmarkingTest extends AndroidTestBase {
     @Test(description = "Adding a bookmark to Read Later collection")
-    @TestCase(id = 41)
+    @TestCase(id = 732)
     public void checkingBookmarking() {
         OnboardingComponent onboarding = new OnboardingComponent().open();
         onboarding.gotItButtonClick();

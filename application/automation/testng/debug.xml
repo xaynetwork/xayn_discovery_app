@@ -7,7 +7,7 @@
     </listeners>
     <test name="Debug">
         <classes>
-            <class name="android.AndroidNewsfeedTest"/>
+            <class name="ios.IOSBookmarkingTest"/>
         </classes>
     </test>
 </suite>

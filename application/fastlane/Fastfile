@@ -66,6 +66,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::VERSION_NAME, version_name)
   setIfNotSet.call(Options::STORE, flavor == Flavors::BETA)
   options[_Options::ENV] = Config::ENV_DEFAULTS.to_h
+  options[_Options::BUILD_FOR_SIMULATOR] = true
   UI.success "Params:\n#{JSON.pretty_generate(options)}"
   options[_Options::ENV].merge!(ENV.to_h)
   if IS_CI
@@ -82,7 +83,7 @@ end
 
 desc "Checks properties required for automated execution locally"
 lane :check_automation_config do |options|
-  hash = checkIfComponentsInstalled(["appium","node","adb"])
+  hash = checkIfComponentsInstalled(["appium","node","adb","mvn"])
   deviceName, deviceId, deviceVersion, app = ""
   platform = options[Options::PLATFORM]
   devicesJson = JSON.parse(shell("flutter devices --machine"))
@@ -96,14 +97,13 @@ lane :check_automation_config do |options|
       end
     end
     if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
-      raise "Android device not found, have you enabled debug mode?"
+      Ui.user_error! "Android device not found, have you enabled debug mode?"
     end
     #building the app
     android_prepare_key_properties(options)
-    secrets_unpack_android(options)
     build_with_flutter(options)
     app = File.expand_path("../build/app/outputs/flutter-apk/app.apk");
-    raise ".apk file isn't found" unless File.exist?app 
+    Ui.user_error! ".apk file isn't found" unless File.exist?[app] 
   end
   if platform == Platforms::IOS
     devicesJson.each do |key, value|
@@ -114,11 +114,12 @@ lane :check_automation_config do |options|
       end
     end
     if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
-      raise "IOS device not found"
+      UI.user_error! "IOS device not found"
     end
-    shell("flutter build ios --simulator")
+    build_with_flutter(options)
+    #shell("flutter build ios --simulator")
     app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
-    raise ".app file isn't found" unless File.exist?app 
+    Ui.user_error! ".app file isn't found" unless File.exist?[app]
   end
   setProperties("../automation/src/main/resources/config.properties",
                       {
@@ -152,6 +153,7 @@ private_lane :build_with_flutter do |options|
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
   shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
     "GIT_TAG" => options[Options::VERSION_NAME],
@@ -170,6 +172,9 @@ private_lane :build_with_flutter do |options|
   end
   if not shaders.empty?
     dartDefines += shaders
+  end
+  if not buildForSimulator.empty?
+    dartDefines << buildForSimulator
   end
 
   shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
@@ -213,7 +218,9 @@ desc "Run automation"
 lane :run_automation do |options|
   check_automation_config(options)
   suite = options[Options::TEST_SUITE]
-  shell("cd automation && mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
+  Dir.chdir("../automation/") do
+    sh("mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
+  end 
 end
 
 desc "Update strings\n" \

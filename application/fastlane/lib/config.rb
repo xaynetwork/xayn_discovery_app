@@ -92,6 +92,9 @@ module Config
     def self.doc_TEST() "true, false" end
     TEST = :test
 
+    # def self.doc_BUILD_FOR_SIMULATOR() "true, false" end
+    #   BUILD_FOR_SIMULATOR = :build_for_simulator
+
     def self.help()
       Options.constants.map { |o|
         doc = ""
@@ -112,6 +115,7 @@ module Config
   # Options not passed by the user to a lane
   module InternalOptions
     ENV = :env
+    BUILD_FOR_SIMULATOR = :build_for_simulator
   end
 
   # env defaults that will be used when no ENV variables are provided
