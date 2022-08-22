@@ -21,6 +21,7 @@ class PushNotificationDebugSection extends StatelessWidget {
           child: Row(
             children: [
               _buildRequestNotificationBtn(),
+              SizedBox(width: R.dimen.unit),
               _buildSendNotificationBtn(),
             ],
           ),
@@ -31,15 +32,15 @@ class PushNotificationDebugSection extends StatelessWidget {
         'Request',
         key: Keys.settingsRequestNotificationBtn,
         onPressed: onRequestNotificationPermissionPressed,
-        backgroundColor: R.colors.iconBackground,
-        textColor: R.colors.quaternaryText,
+        backgroundColor: R.colors.settingsCardBackground,
+        textColor: R.colors.primaryText,
       );
 
   AppGhostButton _buildSendNotificationBtn() => AppGhostButton.text(
         'Send',
         key: Keys.settingsSendNotificationBtn,
         onPressed: onSendTestPushNotificationPressed,
-        backgroundColor: R.colors.iconBackground,
-        textColor: R.colors.quaternaryText,
+        backgroundColor: R.colors.settingsCardBackground,
+        textColor: R.colors.primaryText,
       );
 }
