@@ -29,6 +29,7 @@ dependencies:
   flat: ^0.4.1
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
+  flutter_isolate: 2.0.2
   flutter_localized_countries:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
