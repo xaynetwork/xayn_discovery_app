@@ -104,7 +104,6 @@ class EngineBackgroundNewsService {
         .i('[Engine Background News] Latest news: ${document.resource.title}');
 
     await _localNotificationsService.sendNotification(
-      title: document.resource.title,
       body: document.resource.snippet,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
       delay: const Duration(seconds: 1),
