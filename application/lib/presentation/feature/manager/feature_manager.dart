@@ -1,6 +1,7 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -60,10 +61,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
         _featureMap = modifiedFeatureMap;
       });
 
-  void flipFlopFeature(Feature feature) => overrideFeature(
-        feature,
-        isDisabled(feature),
-      );
+  void flipFlopFeature(Feature feature) =>
+      overrideFeature(feature, isDisabled(feature));
 
   void resetFirstAppStartupDate() {
     final appStatusRepo = di.get<AppStatusRepository>();
@@ -75,7 +74,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
   void setTrialDurationToZero() {
     final appStatusRepo = di.get<AppStatusRepository>();
     final newStatus = appStatusRepo.appStatus.copyWith(
-      firstAppLaunchDate: DateTime.now().subtract(const Duration(days: 7)),
+      firstAppLaunchDate: DateTime.now().subtract(freeTrialDuration),
       extraTrialEndDate: null,
       usedPromoCodes: {},
     );
