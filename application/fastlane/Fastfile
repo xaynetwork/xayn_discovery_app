@@ -117,7 +117,6 @@ lane :check_automation_config do |options|
       UI.user_error! "IOS device not found"
     end
     build_with_flutter(options)
-    #shell("flutter build ios --simulator")
     app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
     Ui.user_error! ".app file isn't found" unless File.exist?[app]
   end
