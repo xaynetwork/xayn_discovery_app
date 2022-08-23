@@ -124,6 +124,7 @@ jobs:
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
           GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
           GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -210,6 +211,7 @@ jobs:
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
           GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
           GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
@@ -282,6 +284,7 @@ jobs:
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
           GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
           GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -355,6 +358,7 @@ jobs:
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
           GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
           GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta store:true
