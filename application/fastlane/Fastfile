@@ -118,7 +118,7 @@ lane :check_automation_config do |options|
     options[_Options::BUILD_FOR_SIMULATOR] = true
     build_with_flutter(options)
     app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
-    Ui.user_error! ".app file isn't found" unless File.exist?[app]
+    UI.user_error! ".app file isn't found" unless File.exist?[app]
   end
   setProperties("../automation/src/main/resources/config.properties",
                       {
