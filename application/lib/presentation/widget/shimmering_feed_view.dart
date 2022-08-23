@@ -32,7 +32,6 @@ class ShimmeringFeedView extends StatelessWidget {
   late final Document document = Document(
     documentId: DocumentId(),
     resource: _resource,
-    batchIndex: -1,
     userReaction: UserReaction.neutral,
 
     /// StackId.nil() is supposed to be used only for testing but in this case we
