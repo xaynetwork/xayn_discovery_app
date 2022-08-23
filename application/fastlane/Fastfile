@@ -13,7 +13,7 @@
 import("../ios/fastlane/Fastfile")
 import("./lib/properties.rb")
 import("./lib/download_utils.rb")
-import("./lib/automation_utils.rb")
+import("./lib/utils.rb")
 require "./lib/git.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
@@ -96,13 +96,13 @@ lane :check_automation_config do |options|
       end
     end
     if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
-      Ui.user_error! "Android device not found, have you enabled debug mode?"
+      UI.user_error! "Android device not found, have you enabled debug mode?"
     end
     #building the app
-    android_prepare_key_properties(options)
+    #android_prepare_key_properties(options)
     build_with_flutter(options)
     app = File.expand_path("../build/app/outputs/flutter-apk/app.apk");
-    Ui.user_error! ".apk file isn't found" unless File.exist?[app] 
+    Ui.user_error! ".apk file isn't found" unless File.exist?app
   end
   if platform == Platforms::IOS
     devicesJson.each do |key, value|
