@@ -67,6 +67,7 @@ jobs:
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
           GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
           GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
           sudo chmod -R a+w /var/lib/gems/

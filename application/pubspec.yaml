@@ -101,7 +101,7 @@ dependencies:
       ref: a20fd18491d6799e8ec4394646c8f8dad1becc60
   xayn_discovery_engine_flutter:
     hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
-    version: ^0.1.0+TO-3259-fix-dart-upload-order.220822134917
+    version: 0.1.0+main.220823142042
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git

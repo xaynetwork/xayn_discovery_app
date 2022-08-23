@@ -309,6 +309,9 @@ end
 
 desc "Flutter pub get"
 lane :pub_get do |options|
+  env = askAndSetProperties(".env", { "JFROG_TOKEN" => "JFROG_TOKEN" }, Config::ENV_DEFAULTS)
+  token = env['JFROG_TOKEN']
+  shell("echo \"#{token}\" | dart pub token add \"https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private\"")
   flutter(args: %W(pub get))
 end
 
