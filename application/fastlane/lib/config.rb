@@ -92,9 +92,6 @@ module Config
     def self.doc_TEST() "true, false" end
     TEST = :test
 
-    # def self.doc_BUILD_FOR_SIMULATOR() "true, false" end
-    #   BUILD_FOR_SIMULATOR = :build_for_simulator
-
     def self.help()
       Options.constants.map { |o|
         doc = ""
