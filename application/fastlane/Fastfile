@@ -99,7 +99,7 @@ lane :check_automation_config do |options|
       UI.user_error! "Android device not found, have you enabled debug mode?"
     end
     #building the app
-    #android_prepare_key_properties(options)
+    android_prepare_key_properties(options)
     build_with_flutter(options)
     app = File.expand_path("../build/app/outputs/flutter-apk/app.apk");
     Ui.user_error! ".apk file isn't found" unless File.exist?app
