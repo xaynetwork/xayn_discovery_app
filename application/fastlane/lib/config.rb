@@ -36,6 +36,12 @@ module Config
     RELEASE = "release"
   end
 
+  module TestSuites
+    SANITY = "sanity"
+    REGRESSION = "regression"
+    DEBUG = "debug"
+  end
+
   ###
   ### All possible options should be described in this module
   ###
@@ -97,11 +103,16 @@ module Config
         " - #{Options.const_get(o).to_s} #{doc}\n"
       }.reduce("", :+)
     end
+
+    def self.doc_TEST_SUITE() "regression, sanity, debug" end
+      TEST_SUITE = :test_suite
+
   end
 
   # Options not passed by the user to a lane
   module InternalOptions
     ENV = :env
+    BUILD_FOR_SIMULATOR = :build_for_simulator
   end
 
   # env defaults that will be used when no ENV variables are provided
