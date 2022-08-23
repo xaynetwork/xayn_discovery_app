@@ -25,7 +25,7 @@ void main() {
   });
 
   tearDown(() async {
-    tearDownWidgetTest();
+    await tearDownWidgetTest();
   });
 
   test('Creating a non existing bookmark yields a non null object.', () async {
