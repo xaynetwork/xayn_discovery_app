@@ -20,6 +20,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/local_notificati
 import 'package:xayn_discovery_app/presentation/settings/widget/remote_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
+import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
@@ -99,9 +100,11 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildGeneralSection(state.isPaymentEnabled),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
-      if (state.areLocalNotificationsEnabled)
+      if (state.areLocalNotificationsEnabled &&
+          !EnvironmentHelper.kIsProductionFlavor)
         _buildLocalNotificationDebugSection(),
-      if (state.areRemoteNotificationsEnabled)
+      if (state.areRemoteNotificationsEnabled &&
+          !EnvironmentHelper.kIsProductionFlavor)
         _buildRemoteNotificationDebugSection(),
       _buildAppVersion(state.appVersion),
       _buildBottomSpace(),
