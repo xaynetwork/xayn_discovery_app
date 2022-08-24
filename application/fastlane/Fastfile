@@ -411,23 +411,33 @@ end
 
 desc "Generate Airship plist file"
 private_lane :generate_airship_plist do |options|
-    update_plist(
-      plist_path: "ios/Runner/AirshipConfig.plist",
-      block: proc do |plist|
-        if options[Options::FLAVOR] == Flavors::INTERNAL
-          plist[:developmentAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
-          plist[:developmentAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
-          plist[:productionAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
-          plist[:productionAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
-        else
-          plist[:developmentAppKey] = ENV["AIRSHIP_PROD_KEY"]
-          plist[:developmentAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
-          plist[:productionAppKey] = ENV["AIRSHIP_PROD_KEY"]
-          plist[:productionAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
-        end
-        plist[:site] = "EU"
+  airshipPlist = <<~EOF
+  <?xml version="1.0" encoding="UTF-8"?> 
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+    <dict>
+    </dict>
+  </plist>
+  EOF
+  File.write('../ios/Runner/AirshipConfig.plist', airshipPlist)
+
+  update_plist(
+    plist_path: "ios/Runner/AirshipConfig.plist",
+    block: proc do |plist|
+      if options[Options::FLAVOR] == Flavors::INTERNAL
+        plist[:developmentAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+        plist[:developmentAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+        plist[:productionAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+        plist[:productionAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+      else
+        plist[:developmentAppKey] = ENV["AIRSHIP_PROD_KEY"]
+        plist[:developmentAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+        plist[:productionAppKey] = ENV["AIRSHIP_PROD_KEY"]
+        plist[:productionAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
       end
-    )
+      plist[:site] = "EU"
+    end
+  )
 end
 
 desc "Generate Airship properties file"
