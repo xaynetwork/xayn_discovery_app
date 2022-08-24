@@ -26,7 +26,13 @@ class DeepLinkManagerImpl extends DeepLinkManager {
   void onDeepLink(DeepLinkData deepLinkData) {
     final page = deepLinkData.toPage;
     if (page == null) return;
-    changeStack((stack) => stack.replace(page));
+    changeStack(
+      (stack) => deepLinkData.when(
+        none: () => stack.replace(page),
+        activeSearch: () => stack.replace(page),
+        feed: (_) => stack.push(page),
+      ),
+    );
   }
 }
 
@@ -35,7 +41,7 @@ extension on DeepLinkData {
     return when(
       none: () => null,
       activeSearch: () => PageRegistry.search,
-      feed: (documentId) => PageRegistry.discovery(documentId: documentId),
+      feed: (documentId) => PageRegistry.cardDetails(documentId: documentId),
     );
   }
 }
