@@ -81,10 +81,12 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
 
   @override
   Future<void> init() async {
+    // TODO use this as dependency
+    final applicationDocumentsDirectory =
+        await getApplicationDocumentsDirectory();
     final manifest = await FlutterManifestReader().read();
-    final appDir = await getApplicationDocumentsDirectory();
     final copier = FlutterBundleAssetCopier(
-      appDir: appDir.path,
+      appDir: applicationDocumentsDirectory.path,
       bundleAssetsPath: 'assets/ai',
     );
     await copier.copyAssets(manifest);
@@ -96,7 +98,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
       apiKey: Env.searchApiSecretKey,
       apiBaseUrl: Env.searchApiBaseUrl,
       assetsUrl: Env.aiAssetsUrl,
-      applicationDirectoryPath: appDir.path,
+      applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: _kFeedBatchSize,
       maxItemsPerSearchBatch: _kSearchPageSize,
       feedMarkets: feedMarkets,
