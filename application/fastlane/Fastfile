@@ -13,6 +13,7 @@
 import("../ios/fastlane/Fastfile")
 import("./lib/properties.rb")
 import("./lib/download_utils.rb")
+import("./lib/utils.rb")
 require "./lib/git.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
@@ -25,6 +26,7 @@ Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
 BuildTypes = Config::BuildTypes
+TestSuites = Config::TestSuites
 IS_CI = is_ci
 
 # Common checks before running a lane
@@ -53,6 +55,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, IS_CI)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
   setIfNotSet.call(Options::TEST, lane == :check)
+  setIfNotSet.call(Options::TEST_SUITE, TestSuites::SANITY)
 
   version_name = gitVersionName()
 
@@ -76,6 +79,64 @@ before_all do |lane, options|
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
+
+desc "Checks properties required for automated execution locally"
+lane :check_automation_config do |options|
+  hash = checkIfComponentsInstalled(["appium","node","adb","mvn"])
+  deviceName, deviceId, deviceVersion, app = ""
+  platform = options[Options::PLATFORM]
+  devicesJson = JSON.parse(shell("flutter devices --machine"))
+  #setting up android properties
+  if platform == Platforms::ANDROID 
+    devicesJson.each do |key, value|
+      if key["targetPlatform"].include?"android"
+        deviceName = key["name"]
+        deviceId = key["id"]
+        deviceVersion = /\d+/.match(key["sdk"])
+      end
+    end
+    if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
+      UI.user_error! "Android device not found, have you enabled debug mode?"
+    end
+    #building the app
+    android_prepare_key_properties(options)
+    build_with_flutter(options)
+    app = File.expand_path("../build/app/outputs/flutter-apk/app.apk");
+    UI.user_error! ".apk file isn't found" unless File.exist?app
+  end
+  if platform == Platforms::IOS
+    devicesJson.each do |key, value|
+      if key["targetPlatform"] == "ios"
+        deviceName = key["name"]
+        deviceVersion = /\d+-\d/.match(key["sdk"]).to_s.sub! '-', '.'
+        deviceId = key["id"]
+      end
+    end
+    if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
+      UI.user_error! "IOS device not found"
+    end
+    options[_Options::BUILD_FOR_SIMULATOR] = true
+    build_with_flutter(options)
+    app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
+    UI.user_error! ".app file isn't found" unless File.exist?[app]
+  end
+  setProperties("../automation/src/main/resources/config.properties",
+                      {
+    "driver.exec" => hash["node"],
+    "appium.js" => hash["appium"],
+    "appium.url" => "http://localhost:4723/wd/hub",
+    "screenshot.directory" => "target/screenshots",
+    "wda.bundle.id" => "com.xayn.discovery.internal.wda",
+    "retry.count" => "3",
+    "testrail.app" => "Discovery App",
+    "tms.regression" => "false",
+    "device.id" => deviceId,
+    "device.version" => deviceVersion,
+    "device.name" => deviceName,
+    "app" => app
+  })   
+end
+
 desc "Flutter build"
 private_lane :build_with_flutter do |options|
   if options[Options::CLEAN]
@@ -91,6 +152,7 @@ private_lane :build_with_flutter do |options|
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
   shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
     "GIT_TAG" => options[Options::VERSION_NAME],
@@ -109,6 +171,9 @@ private_lane :build_with_flutter do |options|
   end
   if not shaders.empty?
     dartDefines += shaders
+  end
+  if not buildForSimulator.empty?
+    dartDefines << buildForSimulator
   end
 
   shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
@@ -146,6 +211,16 @@ end
 ####
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
+
+# :test_suite and :test_env are required params for this lane
+desc "Run automation"
+lane :run_automation do |options|
+  check_automation_config(options)
+  suite = options[Options::TEST_SUITE]
+  Dir.chdir("../automation/") do
+    sh("mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
+  end 
+end
 
 desc "Update strings\n" \
      "The first time the command fastlane update_strings is run, the POEditor Key will be asked to input\n" \
