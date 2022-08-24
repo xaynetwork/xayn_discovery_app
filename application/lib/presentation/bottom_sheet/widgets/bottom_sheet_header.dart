@@ -5,7 +5,7 @@ class BottomSheetHeader extends StatelessWidget {
   const BottomSheetHeader({
     Key? key,
     this.actionWidget,
-    this.align = TextAlign.center,
+    this.align = TextAlign.left,
     required this.headerText,
   }) : super(key: key);
 
