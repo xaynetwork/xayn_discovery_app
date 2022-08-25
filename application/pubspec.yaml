@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 3.45.0
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.17.3 <3.0.0'
   flutter: '>=3.0.0'
 
 # Please list dependencies alphabetically!
@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  airship_flutter: 6.1.0
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   awesome_notifications: 0.6.21
@@ -28,6 +29,7 @@ dependencies:
   flat: ^0.4.1
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
+  flutter_isolate: 2.0.2
   flutter_localized_countries:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries

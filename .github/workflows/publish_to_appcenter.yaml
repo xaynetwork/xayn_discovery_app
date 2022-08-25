@@ -35,7 +35,7 @@ concurrency:
 
 env:
   flutter_channel: 'stable'
-  flutter_version: '3.0.0'
+  flutter_version: '3.0.2'
   java_version: '12.x'
   ios_device: 'iPhone 11 Pro (14.5)'
   # Common environment variables used inside ./build_scripts files
@@ -101,7 +101,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 35
+        timeout-minutes: 60
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -116,8 +116,14 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
+          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:true flavor:internal
@@ -181,7 +187,7 @@ jobs:
           xcode-version: latest-stable
 
       - name: Build and submit new internal iOS version to app center
-        timeout-minutes: 35
+        timeout-minutes: 60
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -196,8 +202,14 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           PROFILES: ${{ secrets.PROFILES }}
+          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           fastlane publish platform:ios build_type:release download_profile:false flavor:beta store:true
@@ -234,21 +246,21 @@ jobs:
       - name: Cache pubspec dependencies
         uses: actions/cache@v2
         with:
-         path: |
-           ${{ env.PUB_CACHE }}
-           **/.packages
-           **/.flutter-plugins
-           **/.flutter-plugin-dependencies
-           **/.dart_tool/package_config.json
-         key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
-         restore-keys: |
-           build-pubspec-
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
 
       - name: Fix fastlane permissions
         run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
-        timeout-minutes: 35
+        timeout-minutes: 60
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
@@ -262,8 +274,14 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:internal
@@ -315,7 +333,7 @@ jobs:
         run: sudo chmod -R a+w /var/lib/gems/
 
       - name: Build and submit new internal Android version to app center
-        timeout-minutes: 35
+        timeout-minutes: 60
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_BETA_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}
@@ -329,8 +347,14 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
-          RCONFIG_ACCESS_KEY : ${{ secrets.RCONFIG_ACCESS_KEY }}
-          RCONFIG_SECRET_KEY : ${{ secrets.RCONFIG_SECRET_KEY }}
+          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           fastlane publish platform:android build_type:release flavor:beta store:true
@@ -344,7 +368,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       message: ${{ needs.publish_android_beta.outputs.message }}
-      status:  ${{ needs.publish_android_beta.outputs.status }}
+      status: ${{ needs.publish_android_beta.outputs.status }}
 
   slack-notification-ios-beta:
     needs: publish_ios_beta
@@ -353,4 +377,4 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       message: ${{ needs.publish_ios_beta.outputs.message  }}
-      status:  ${{ needs.publish_ios_beta.outputs.status }}
+      status: ${{ needs.publish_ios_beta.outputs.status }}

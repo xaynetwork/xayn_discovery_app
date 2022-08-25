@@ -13,7 +13,8 @@ class SettingsScreenState with _$SettingsScreenState {
     required AppTheme theme,
     required AppVersion appVersion,
     required bool isPaymentEnabled,
-    required bool arePushNotificationDeepLinksEnabled,
+    required bool areLocalNotificationsEnabled,
+    required bool areRemoteNotificationsEnabled,
     required SubscriptionStatus subscriptionStatus,
   }) = SettingsScreenStateReady;
 }

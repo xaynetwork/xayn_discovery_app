@@ -52,6 +52,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     required GetLocalMarketsUseCase getLocalMarketsUseCase,
     required SetIdentityParamUseCase setIdentityParamUseCase,
     bool initialized = true,
+    String? applicationDocumentsPathDirectory,
   })  : _saveInitialFeedMarketUseCase = saveInitialFeedMarketUseCase,
         _sendAnalyticsUseCase = sendAnalyticsUseCase,
         _getLocalMarketsUseCase = getLocalMarketsUseCase,

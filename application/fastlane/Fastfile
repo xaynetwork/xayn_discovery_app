@@ -151,7 +151,7 @@ private_lane :build_with_flutter do |options|
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
-  shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  # shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
   buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
@@ -169,9 +169,9 @@ private_lane :build_with_flutter do |options|
   if not codesign.empty?
     dartDefines << codesign
   end
-  if not shaders.empty?
-    dartDefines += shaders
-  end
+  # if not shaders.empty?
+  # dartDefines += shaders
+  # end
   if not buildForSimulator.empty?
     dartDefines << buildForSimulator
   end
@@ -294,6 +294,17 @@ lane :check_config_files do |options|
   else
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   end
+
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    askAndSetProperties(".env", { "AIRSHIP_INTERNAL_KEY" => "AIRSHIP_INTERNAL_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_INTERNAL_SECRET" => "AIRSHIP_INTERNAL_SECRET" }, Config::ENV_DEFAULTS)
+  else
+    askAndSetProperties(".env", { "AIRSHIP_PROD_KEY" => "AIRSHIP_PROD_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_PROD_SECRET" => "AIRSHIP_PROD_SECRET" }, Config::ENV_DEFAULTS)
+  end
+  generate_airship_plist(options)
+  generate_airship_properties(options)
+  google_services_unpack(options)
 end
 
 desc "Flutter pub get"
@@ -470,6 +481,81 @@ private_lane :secrets_unpack_android do |options|
   UI.user_error!("No ANDROID_RELEASE_KEYSTORE provided!") unless ENV.key?("ANDROID_RELEASE_KEYSTORE")
   Dir.chdir("../android/") do
       sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
+  end
+end
+
+desc "Generate Airship plist file"
+private_lane :generate_airship_plist do |options|
+  airshipPlist = <<~EOF
+  <?xml version="1.0" encoding="UTF-8"?> 
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+    <dict>
+    </dict>
+  </plist>
+  EOF
+  File.write('../ios/Runner/AirshipConfig.plist', airshipPlist)
+
+  update_plist(
+    plist_path: "ios/Runner/AirshipConfig.plist",
+    block: proc do |plist|
+      if options[Options::FLAVOR] == Flavors::INTERNAL
+        plist[:developmentAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+        plist[:developmentAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+        plist[:productionAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+        plist[:productionAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+      else
+        plist[:developmentAppKey] = ENV["AIRSHIP_PROD_KEY"]
+        plist[:developmentAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+        plist[:productionAppKey] = ENV["AIRSHIP_PROD_KEY"]
+        plist[:productionAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+      end
+      plist[:site] = "EU"
+    end
+  )
+end
+
+desc "Generate Airship properties file"
+private_lane :generate_airship_properties do |options|
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    setProperties("../android/app/src/main/assets/airshipconfig.properties", {
+      "developmentAppKey" => ENV["AIRSHIP_INTERNAL_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_INTERNAL_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_INTERNAL_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_INTERNAL_SECRET"],
+      "inProduction" => false,
+      "developmentLogLevel" => "DEBUG",
+      "productionLogLevel" => "ERROR",
+      "notificationIcon" => "ic_notification",
+      "notificationLargeIcon" => "ic_large_notification",
+      "notificationAccentColor" => "#ff0000",
+      "site" => "EU",
+    })
+  else
+    setProperties("../android/app/src/main/assets/airshipconfig.properties", {
+      "developmentAppKey" => ENV["AIRSHIP_PROD_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_PROD_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_PROD_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_PROD_SECRET"],
+      "inProduction" => true,
+      "developmentLogLevel" => "DEBUG",
+      "productionLogLevel" => "ERROR",
+      "notificationIcon" => "ic_notification",
+      "notificationLargeIcon" => "ic_large_notification",
+      "notificationAccentColor" => "#ff0000",
+      "site" => "EU",
+    })
+  end
+end
+
+desc "Unpacks the google-services.json based on the $GOOGLE_SERVICES_INTERNAL_JSON and $GOOGLE_SERVICES_PROD_JSON env vars"
+private_lane :google_services_unpack do |options|
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    UI.user_error!("No GOOGLE_SERVICES_INTERNAL_JSON provided!") unless ENV.key?("GOOGLE_SERVICES_INTERNAL_JSON")
+    sh("echo $GOOGLE_SERVICES_INTERNAL_JSON > ../android/app/google-services.json")
+  else
+    UI.user_error!("No GOOGLE_SERVICES_PROD_JSON provided!") unless ENV.key?("GOOGLE_SERVICES_PROD_JSON")
+    sh("echo $GOOGLE_SERVICES_PROD_JSON > ../android/app/google-services.json")
   end
 end
 

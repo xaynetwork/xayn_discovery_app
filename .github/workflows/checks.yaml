@@ -1,7 +1,7 @@
 name: Code Quality
 
 env:
-  FLUTTER_VERSION: '3.0.0'
+  FLUTTER_VERSION: '3.0.2'
 
 on:
   push:
@@ -59,8 +59,14 @@ jobs:
           REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
           REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
           FASTLANE_SKIP_UPDATE_CHECK: '1'
+          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
           RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
           RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
         working-directory: ./application
         run: |
           sudo chmod -R a+w /var/lib/gems/

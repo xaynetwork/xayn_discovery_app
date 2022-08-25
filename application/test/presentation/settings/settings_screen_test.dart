@@ -35,7 +35,8 @@ void main() {
       build: '321',
     ),
     isPaymentEnabled: false,
-    arePushNotificationDeepLinksEnabled: false,
+    areLocalNotificationsEnabled: false,
+    areRemoteNotificationsEnabled: false,
     subscriptionStatus: SubscriptionStatus.initial(),
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
@@ -99,7 +100,8 @@ void main() {
           build: '321',
         ),
         isPaymentEnabled: false,
-        arePushNotificationDeepLinksEnabled: false,
+        areLocalNotificationsEnabled: false,
+        areRemoteNotificationsEnabled: false,
         subscriptionStatus: SubscriptionStatus.initial().copyWith(
           isBetaUser: true,
         ),
@@ -123,7 +125,8 @@ void main() {
           build: '321',
         ),
         isPaymentEnabled: true,
-        arePushNotificationDeepLinksEnabled: false,
+        areLocalNotificationsEnabled: false,
+        areRemoteNotificationsEnabled: false,
         subscriptionStatus: SubscriptionStatus.initial().copyWith(
           trialEndDate: DateTime.now().add(const Duration(days: 1)),
           isBetaUser: false,

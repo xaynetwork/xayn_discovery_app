@@ -8,7 +8,7 @@ import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dar
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-const String _kChannelKey = 'basic_channel';
+const String kChannelKey = 'basic_channel';
 
 abstract class LocalNotificationsService {
   void requestPermission();
@@ -39,7 +39,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
         null,
         [
           NotificationChannel(
-            channelKey: _kChannelKey,
+            channelKey: kChannelKey,
             channelName: R.strings.notificationsChannelName,
             channelDescription: R.strings.notificationsChannelDescription,
           )
@@ -52,12 +52,13 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   void _deepLinkHandler(ReceivedNotification receivedNotification) {
     final payload = receivedNotification.payload;
     if (payload == null) {
-      logger.i('Notification payload not set.');
+      logger.i('[Local Notifications] Payload not set.');
       return;
     }
     final documentId = _payloadToDocumentIdMapper.map(payload);
     if (documentId == null) {
-      logger.i('documentId not found in notification payload.');
+      logger.i(
+          '[Local Notifications] documentId not found in notification payload.');
       return;
     }
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
@@ -84,7 +85,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     return AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 1,
-        channelKey: _kChannelKey,
+        channelKey: kChannelKey,
         title: R.strings.notificationTitle,
         body: body,
         payload: _documentIdToPayloadMapper.map(documentId),
