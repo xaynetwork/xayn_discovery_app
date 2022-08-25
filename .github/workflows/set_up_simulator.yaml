@@ -1,0 +1,59 @@
+name: Set up simulator
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    runs-on: macos-12
+    steps:
+      - name: Install Appium
+        run: npm install -g appium
+
+      - name: Install Flutter
+        uses: britannio/action-install-flutter@v1
+        with:
+          version: 3.0.0
+
+      - name: Set up a Simulator
+        uses: futureware-tech/simulator-action@v1
+        with:
+          model: 'iPhone 11'
+          os_version: '>=13.0'
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: set up environment variables and running tests
+        timeout-minutes: 35
+        env:
+          PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
+          APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
+          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
+          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
+          INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
+          MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
+          MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
+          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
+          PROFILES: ${{ secrets.PROFILES }}
+          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
+          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
+        working-directory: ./application
+        run:
+          fastlane run_automation platform:ios
