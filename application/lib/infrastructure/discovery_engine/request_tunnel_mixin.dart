@@ -83,25 +83,48 @@ mixin RequestTunnelMixin {
 
   Future<String> Function(Request) _fetchLatestHeadlines(Uri uri) =>
       (Request request) {
+        final betaUri = uri.replace(
+            host: 'c8tuq9oow3.execute-api.eu-west-1.amazonaws.com',
+            path: '/dev/v2');
         final queryParameters =
             Map<String, String>.from(request.url.queryParameters);
+        queryParameters['is_headline'] = '1';
 
-        final actualRequest = _buildActualRequest(
+        final actualRequest = _buildActualRequest2(
           request,
-          uri,
+          betaUri,
           queryParameters,
         );
 
         return _performActualApiCall(
-          _buildActualRequest(
-            request,
-            uri,
-            queryParameters,
-          ),
+          actualRequest,
           const HtmlEscape().convert(actualRequest.uri.toString()),
           request.url.path,
         );
       };
+
+  http.Request _buildActualRequest2(
+      Request request, Uri uri, Map<String, dynamic> queryParameters) {
+    final actualUri = request.url.replace(
+      scheme: uri.scheme,
+      host: uri.host,
+      port: uri.port,
+      path: '${uri.path}/latest_headlines',
+      queryParameters: queryParameters,
+    );
+    final headers = Map<String, String>.from(request.headers)
+      ..remove('authorization');
+
+    headers['host'] = uri.host;
+    headers['x-api-key'] = Env.searchApiSecretKeyAlternate;
+
+    return http.Request(
+      request.method,
+      actualUri,
+      headers: headers,
+      encoding: request.encoding,
+    );
+  }
 
   Future<String> Function(Request) _fetchPersonalized(Uri uri) =>
       (Request request) async {
@@ -257,7 +280,7 @@ mixin RequestTunnelMixin {
 
   Future<String> _performActualApiCall(
       http.Request request, String query, String path) async {
-    logger.i('make call');
+    logger.i('make call ${request.uri}');
     final response = await client.send(request);
     logger.i('success!');
     final body = await response.readAsString();
