@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_feedback_context.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
@@ -28,6 +29,7 @@ void main() {
   late MockMarketingAnalyticsService marketingAnalyticsService;
   late MockCrudExplicitDocumentFeedbackUseCase
       crudExplicitDocumentFeedbackUseCase;
+  late MockDocumentRepository documentRepository;
   final controller = StreamController<EngineEvent>.broadcast();
 
   setUp(() async {
@@ -36,13 +38,14 @@ void main() {
     marketingAnalyticsService = MockMarketingAnalyticsService();
     crudExplicitDocumentFeedbackUseCase =
         MockCrudExplicitDocumentFeedbackUseCase();
+    documentRepository = MockDocumentRepository();
 
     di.allowReassignment = true;
 
     di.registerSingletonAsync<EngineEventsUseCase>(
         () => Future.value(EngineEventsUseCase(engine)));
-    di.registerSingletonAsync<ChangeDocumentFeedbackUseCase>(
-        () => Future.value(ChangeDocumentFeedbackUseCase(engine)));
+    di.registerSingletonAsync<ChangeDocumentFeedbackUseCase>(() => Future.value(
+        ChangeDocumentFeedbackUseCase(engine, documentRepository)));
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
           analyticsService,
           marketingAnalyticsService,
@@ -78,6 +81,9 @@ void main() {
   blocTest<_TestBloc, bool>(
     'WHEN changing feedback THEN this is passed to the engine and finally the engine emits an engine event ',
     build: () => _TestBloc(di.get<EngineEventsUseCase>()),
+    setUp: () =>
+        when(documentRepository.getByDocumentId(fakeDocument.documentId))
+            .thenAnswer((_) => DocumentWrapper(fakeDocument)),
     act: (bloc) => bloc.changeUserReaction(
       document: fakeDocument,
       userReaction: UserReaction.positive,

@@ -18,6 +18,7 @@ void main() {
   late MockAppDiscoveryEngine engine;
   late MockAnalyticsService analyticsService;
   late MockMarketingAnalyticsService marketingAnalyticsService;
+  late MockDocumentRepository documentRepository;
   final document = Document(
     documentId: DocumentId(),
     userReaction: UserReaction.neutral,
@@ -42,6 +43,7 @@ void main() {
     engine = MockAppDiscoveryEngine();
     analyticsService = MockAnalyticsService();
     marketingAnalyticsService = MockMarketingAnalyticsService();
+    documentRepository = MockDocumentRepository();
 
     di.registerSingletonAsync<LogDocumentTimeUseCase>(
         () => Future.value(LogDocumentTimeUseCase(engine)));
@@ -54,7 +56,7 @@ void main() {
           marketingAnalyticsService,
         ));
     di.registerLazySingleton<ChangeDocumentFeedbackUseCase>(
-        () => ChangeDocumentFeedbackUseCase(engine));
+        () => ChangeDocumentFeedbackUseCase(engine, documentRepository));
 
     when(analyticsService.send(any)).thenAnswer((_) => Future.value());
 

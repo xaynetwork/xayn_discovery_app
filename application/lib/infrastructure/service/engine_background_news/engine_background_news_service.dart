@@ -107,7 +107,12 @@ class EngineBackgroundNewsService {
     logger
         .i('[Engine Background News] Latest news: ${document.resource.title}');
 
-    _documentRepository.save(DocumentWrapper(document));
+    _documentRepository.save(
+      DocumentWrapper(
+        document,
+        isEngineDocument: false,
+      ),
+    );
 
     await _localNotificationsService.sendNotification(
       body: document.resource.snippet,
