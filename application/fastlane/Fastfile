@@ -309,6 +309,9 @@ end
 
 desc "Flutter pub get"
 lane :pub_get do |options|
+  env = askAndSetProperties(".env", { "JFROG_TOKEN" => "JFROG_TOKEN" }, Config::ENV_DEFAULTS)
+  token = env['JFROG_TOKEN']
+  shell("echo \"#{token}\" | dart pub token add \"https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private\"")
   flutter(args: %W(pub get))
 end
 
@@ -420,6 +423,7 @@ desc "Update the assets folder based on the Assets Manifest from xayn_discovery_
 lane :update_assets do |options|
   isUnderTest = options[Options::TEST]
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
+  manifestPath = manifestPath.gsub('%25', '%')
   if not manifestPath.include?("file://")
     # if manifestPath does not include file:// it means that it is define as a relative path in the pubspec.yaml.
     # since the relative path is from 'application' we add '../' to adjust it w.r.t. the current file.

@@ -47,7 +47,7 @@ class CreateBookmarkFromDocumentUseCase
       ),
     );
 
-    _saveUserInteractionUseCase
+    await _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.bookmarkedArticle);
 
     yield bookmark;

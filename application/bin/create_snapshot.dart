@@ -142,7 +142,6 @@ void _createDocuments() {
   final document = Document(
     documentId: DocumentId(),
     userReaction: UserReaction.neutral,
-    batchIndex: -1,
     resource: NewsResource(
       title: '',
       snippet: '',
