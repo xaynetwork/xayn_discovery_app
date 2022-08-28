@@ -118,6 +118,7 @@ class EngineBackgroundNewsService {
       body: document.resource.snippet,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
       delay: const Duration(seconds: 1),
+      image: document.resource.image,
     );
   }
 
