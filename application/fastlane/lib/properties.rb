@@ -1,3 +1,5 @@
+require "base64"
+
 # Checks for a map of {envKey : propertyKey} if either of those is set and then tries to read it from the user
 def askAndSetProperties(propertiesPath, hash, defaults)
   resultingProps = {}
@@ -60,4 +62,28 @@ def loadProperties(propertiesFilename, separator = "=")
     end
   end
   properties
+end
+
+def askMultilineAndSetFile(fileName, envKey)
+  cachedProps = loadProperties(".env")
+
+  if ENV.key?(envKey)
+    prop = ENV[envKey] != cachedProps[envKey] ? ENV[envKey] : Base64.decode64(ENV[envKey])
+  end
+
+  if !prop
+    UI.message "Enter #{envKey} File, and end the input with an extra new line."
+    prop = multi_gets
+  end
+  UI.user_error!("No valid value for #{envKey} provided") if !prop || prop == ""
+  setProperties(".env", {
+    envKey => Base64.strict_encode64(prop),
+  })
+  File.write(fileName, prop)
+end
+
+def multi_gets(all_text = "")
+  UI.user_error!("Can not input because the console is not interactive!\nDid you forgot to provide some Env variable on the CI?") unless UI.interactive?
+  UI.message "Stop the input by pressing <TAB> and then <ENTER>"
+  return STDIN.readline(sep = "\t\n").sub(/.*\K\t\n/, "")
 end
