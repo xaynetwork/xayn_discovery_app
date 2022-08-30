@@ -19,10 +19,10 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// needs to be public, used elsewhere
 const int _kSearchPageSize = 20;
-const int _kFeedBatchSize = 2;
+const int _kFeedBatchSize = 20;
 
 const String _kHeadlinesProviderPath = '/newscatcher/v1/latest-headlines';
-const String _kNewsProviderPath = '/newscatcher/v1/search-news';
+const String _kNewsProviderPath = '/newscatcher/v1/search';
 
 /// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)

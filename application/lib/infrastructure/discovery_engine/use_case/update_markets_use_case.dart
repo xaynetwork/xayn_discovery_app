@@ -32,6 +32,9 @@ class UpdateMarketsUseCase extends UseCase<FeedType, EngineEvent> {
       case FeedType.search:
         id = FeedTypeMarkets.searchId;
         break;
+      case FeedType.deepSearch:
+        // FIXME handle deep search
+        throw UnimplementedError();
     }
 
     await _saveFeedTypeMarketsUseCase.singleOutput(

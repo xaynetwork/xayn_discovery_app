@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/presentation/constants/poc_translations.dart';
 import 'package:xayn_discovery_app/presentation/constants/strings.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
 
@@ -11,6 +12,8 @@ class R {
   static Linden _linden = Linden();
 
   static Linden get linden => _linden;
+
+  static PocTranslations get pocStrings => Strings.pocTranslation;
 
   static Translations get strings => Strings.translation;
 

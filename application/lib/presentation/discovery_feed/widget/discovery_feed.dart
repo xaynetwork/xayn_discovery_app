@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -14,10 +15,38 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
   final UniqueId? selectedDocumentId;
 
-  const DiscoveryFeed({
+  DiscoveryFeed({
     Key? key,
     this.selectedDocumentId,
-  }) : super(key: key);
+  }) : super(
+          key: key,
+          // in `DiscoveryFeedManager` the `didReachEnd` getter is set always
+          // to false so the `loadingItemBuilder` will be used to build
+          // the widget under documents list
+          loadingItemBuilder: (
+            BuildContext context,
+            double? width,
+            double? height,
+          ) {
+            final state =
+                context.findAncestorStateOfType<_DiscoveryFeedState>();
+
+            // return button only if carousel mode is enabled
+            if (state?.manager.isCarouselEnabled ?? false) {
+              return SizedBox(
+                width: width,
+                height: height,
+                child: Center(
+                  child: AppRaisedButton.text(
+                    text: R.pocStrings.loadMoreButtonLabel,
+                    onPressed: () => state?._manager.onLoadMorePressed(),
+                  ),
+                ),
+              );
+            }
+            return Container();
+          },
+        );
 
   @override
   State<StatefulWidget> createState() => _DiscoveryFeedState();

@@ -21,6 +21,10 @@ class UpdateCardIndexUseCase extends UseCase<FeedTypeAndIndex, int> {
       case FeedType.search:
         feed = feedRepository.get().copyWith(cardIndexSearch: param.cardIndex);
         break;
+      case FeedType.deepSearch:
+        throw StateError(
+          'card index for deep search screen is not stored and shouldn\'t be accessed',
+        );
     }
 
     feedRepository.save(feed);

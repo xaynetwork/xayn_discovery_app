@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:xayn_discovery_app/presentation/constants/app_language.dart';
+import 'package:xayn_discovery_app/presentation/constants/poc_translations.dart';
 import 'package:xayn_discovery_app/presentation/constants/translations/translations.i18n.dart';
 import 'package:xayn_discovery_app/presentation/utils/country_names.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -19,12 +20,16 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 class Strings {
   static Translations? _translation;
   static const Translations _defaultTranslation = Translations();
+  static PocTranslations? _pocTranslation;
+  static const PocTranslations _defaultPocTranslation = PocTranslations();
   static Future<CountryNames>? _countryNames;
 
   static final Future<CountryNames> _defaultCountryNames =
       AppLanguage.english.countryNames;
 
   static Translations get translation => _translation ?? _defaultTranslation;
+  static PocTranslations get pocTranslation =>
+      _pocTranslation ?? _defaultPocTranslation;
 
   static Future<CountryNames> get countryNames =>
       _countryNames ?? _defaultCountryNames;
@@ -42,11 +47,13 @@ class Strings {
     }
 
     _translation = appLanguage.translations;
+    _pocTranslation = appLanguage.pocTranslations;
   }
 
   @visibleForTesting
   static void reset() {
     _translation = null;
+    _pocTranslation = null;
     _countryNames = null;
   }
 

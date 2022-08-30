@@ -284,6 +284,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                         onTtsData: (it) => setState(() => ttsData =
                             ttsData.enabled ? TtsData.disabled() : it),
                         feedType: manager.feedType,
+                        onDeepSearch: manager.onDeepSearchPressed,
                       )
                     : SurveyCard(
                         cardType: card.type,

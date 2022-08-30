@@ -208,6 +208,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
   void handleLoadMore();
 
+  void onLoadMorePressed();
+
+  void onDeepSearchPressed(DocumentId documentId);
+
   void handleShowPaywallIfNeeded(SubscriptionStatus subscriptionStatus);
 
   /// Trigger this handler whenever the primary card changes.
@@ -228,6 +232,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         nextCardIndex = await updateCardIndexUseCase
             .singleOutput(FeedTypeAndIndex.search(cardIndex: index));
         break;
+      case FeedType.deepSearch:
+        // FIXME handle deep search
+        throw UnimplementedError();
     }
 
     final didSwipeBefore = _cardIndex != null && _observedDocument != null;

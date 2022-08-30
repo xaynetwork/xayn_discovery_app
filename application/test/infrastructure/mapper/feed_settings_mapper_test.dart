@@ -49,7 +49,7 @@ void main() {
       'GIVEN map with markets THEN return correct feedSettings',
       () {
         expect(
-          mapper.fromMap({0: marketsMap}),
+          mapper.fromMap({0: marketsMap, 1: 0}),
           equals(feedSettings),
         );
       },
@@ -60,7 +60,7 @@ void main() {
     test(
       'GIVEN feedSettings THEN return correct map',
       () {
-        expect(mapper.toMap(feedSettings), {0: marketsMap});
+        expect(mapper.toMap(feedSettings), {0: marketsMap, 1: 0});
       },
     );
   });
