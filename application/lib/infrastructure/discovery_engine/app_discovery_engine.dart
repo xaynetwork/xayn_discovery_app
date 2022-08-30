@@ -22,7 +22,7 @@ const int _kSearchPageSize = 20;
 const int _kFeedBatchSize = 20;
 
 const String _kHeadlinesProviderPath = '/newscatcher/v1/latest-headlines';
-const String _kNewsProviderPath = '/newscatcher/v1/search_mlt';
+const String _kNewsProviderPath = '/newscatcher/v1/search';
 
 /// A wrapper for the [DiscoveryEngine].
 @LazySingleton(as: DiscoveryEngine)
@@ -96,7 +96,8 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final feedMarkets = await _getLocalMarketsUseCase.singleOutput(none);
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
-      apiBaseUrl: Env.searchApiBaseUrl,
+      // apiBaseUrl: Env.searchApiBaseUrl,
+      apiBaseUrl: "http://localhost:8080",
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: _kFeedBatchSize,
