@@ -96,8 +96,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final feedMarkets = await _getLocalMarketsUseCase.singleOutput(none);
     final configuration = Configuration(
       apiKey: Env.searchApiSecretKey,
-      // apiBaseUrl: Env.searchApiBaseUrl,
-      apiBaseUrl: "http://localhost:8080",
+      apiBaseUrl: Env.searchApiBaseUrl,
       assetsUrl: Env.aiAssetsUrl,
       applicationDirectoryPath: applicationDocumentsDirectory.path,
       maxItemsPerFeedBatch: _kFeedBatchSize,
