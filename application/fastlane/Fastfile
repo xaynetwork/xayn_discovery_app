@@ -372,6 +372,7 @@ lane :publish do |options|
   appcenter_target = config[Keys::APPCENTER_TARGET]
   appcenter_token = config[Keys::APPCENTER_TOKEN]
   output = options[Options::ANDROID_OUTPUT]
+  shouldDownloadProfile = options[Options::DOWNLOAD_PROFILE]
 
   if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
@@ -383,6 +384,11 @@ lane :publish do |options|
 
   if platform == Platforms::IOS
     secrets_unpack_ios(options)
+    # This ensures that provisioning profiles are uptodate with the latest registered devices
+    if shouldDownloadProfile
+      UI.user_error!("No APPSTORE_API_KEY provided (you can run create_appstore_api_key)!") unless ENV.key?("APPSTORE_API_KEY")
+      download_profiles(options)
+    end
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -470,6 +476,39 @@ end
 desc "Packs the secrets of android release keystore and exports them to the clipboard"
 lane :secrets_jks_pack do |options|
   sh("cat ../android/releases.jks | base64 | pbcopy")
+end
+
+lane :download_profiles do |options|
+  config = Config::PROFILES
+
+  api_key = JSON.parse(ENV["APPSTORE_API_KEY"])
+  token = Spaceship::ConnectAPI::Token.from(hash: api_key).text
+
+  uri = URI.parse("https://api.appstoreconnect.apple.com/v1/profiles")
+  request = Net::HTTP::Get.new(uri, { "Authorization" => "Bearer #{token}" })
+  req_options = {
+    use_ssl: uri.scheme == "https",
+  }
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+  end
+
+  if response.code != "200"
+    UI.user_error!("Error can not fetch #{uri} :\n#{response.body}")
+  end
+
+  profiles = JSON.parse(response.body)
+
+  profiles["data"].each do |v|
+    name = v["attributes"]["name"]
+    content = v["attributes"]["profileContent"]
+    filePath = "../ios/profiles/#{name.gsub(" ", "_")}.mobileprovision"
+
+    if config.include?(name)
+      UI.success "Will update #{name} profile to #{filePath}"
+      File.write(filePath, Base64.strict_decode64(content))
+    end
+  end
 end
 
 desc "Unpacks the profile based on the $PROFILES env var"
