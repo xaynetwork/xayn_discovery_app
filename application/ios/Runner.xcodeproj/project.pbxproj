@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CBACF4DA0C81F2FF02180B4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C13312C7EDE1A3C6075A55AD /* Pods_Runner.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		B3E3C84EC0F46E1B2D0FA57F /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B691A0996DDC8D15F354AB87 /* Pods_Runner.framework */; };
+		B3E3C84EC0F46E1B2D0FA57F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		B5A6BC9027BFAA3C002AB21E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A6BC8F27BFAA3C002AB21E /* StoreKit.framework */; };
 		D039CD392892687E00D38234 /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = D039CD382892687E00D38234 /* AirshipConfig.plist */; };
 /* End PBXBuildFile section */
@@ -50,9 +51,8 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CBD060A2807207300A841FB /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		B5A6BC8F27BFAA3C002AB21E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		C13312C7EDE1A3C6075A55AD /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D039CD382892687E00D38234 /* AirshipConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AirshipConfig.plist; sourceTree = "<group>"; };
-		D1D5D88EDC40FFF500443493 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		DC9B70C0497D79A2F46FDEAC /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5A6BC9027BFAA3C002AB21E /* StoreKit.framework in Frameworks */,
-				B3E3C84EC0F46E1B2D0FA57F /* Pods_Runner.framework in Frameworks */,
+				B3E3C84EC0F46E1B2D0FA57F /* BuildFile in Frameworks */,
+				0CBACF4DA0C81F2FF02180B4 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				B5A6BC8F27BFAA3C002AB21E /* StoreKit.framework */,
-				B691A0996DDC8D15F354AB87 /* Pods_Runner.framework */,
+				C13312C7EDE1A3C6075A55AD /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

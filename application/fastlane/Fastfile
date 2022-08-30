@@ -82,14 +82,14 @@ end
 
 desc "Checks properties required for automated execution locally"
 lane :check_automation_config do |options|
-  hash = checkIfComponentsInstalled(["appium","node","adb","mvn"])
+  hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn"])
   deviceName, deviceId, deviceVersion, app = ""
   platform = options[Options::PLATFORM]
   devicesJson = JSON.parse(shell("flutter devices --machine"))
   #setting up android properties
-  if platform == Platforms::ANDROID 
+  if platform == Platforms::ANDROID
     devicesJson.each do |key, value|
-      if key["targetPlatform"].include?"android"
+      if key["targetPlatform"].include? "android"
         deviceName = key["name"]
         deviceId = key["id"]
         deviceVersion = /\d+/.match(key["sdk"])
@@ -101,14 +101,14 @@ lane :check_automation_config do |options|
     #building the app
     android_prepare_key_properties(options)
     build_with_flutter(options)
-    app = File.expand_path("../build/app/outputs/flutter-apk/app.apk");
-    UI.user_error! ".apk file isn't found" unless File.exist?app
+    app = File.expand_path("../build/app/outputs/flutter-apk/app.apk")
+    UI.user_error! ".apk file isn't found" unless File.exist? app
   end
   if platform == Platforms::IOS
     devicesJson.each do |key, value|
       if key["targetPlatform"] == "ios"
         deviceName = key["name"]
-        deviceVersion = /\d+-\d/.match(key["sdk"]).to_s.sub! '-', '.'
+        deviceVersion = /\d+-\d/.match(key["sdk"]).to_s.sub! "-", "."
         deviceId = key["id"]
       end
     end
@@ -117,11 +117,11 @@ lane :check_automation_config do |options|
     end
     options[_Options::BUILD_FOR_SIMULATOR] = true
     build_with_flutter(options)
-    app = File.expand_path("../build/ios/iphonesimulator/Runner.app");
+    app = File.expand_path("../build/ios/iphonesimulator/Runner.app")
     UI.user_error! ".app file isn't found" unless File.exist?[app]
   end
   setProperties("../automation/src/main/resources/config.properties",
-                      {
+                {
     "driver.exec" => hash["node"],
     "appium.js" => hash["appium"],
     "appium.url" => "http://localhost:4723/wd/hub",
@@ -133,8 +133,8 @@ lane :check_automation_config do |options|
     "device.id" => deviceId,
     "device.version" => deviceVersion,
     "device.name" => deviceName,
-    "app" => app
-  })   
+    "app" => app,
+  })
 end
 
 desc "Flutter build"
@@ -219,7 +219,7 @@ lane :run_automation do |options|
   suite = options[Options::TEST_SUITE]
   Dir.chdir("../automation/") do
     sh("mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
-  end 
+  end
 end
 
 desc "Update strings\n" \
@@ -267,7 +267,7 @@ lane :check_config_files do |options|
     "RCONFIG_ENDPOINT_URL" => "RCONFIG_ENDPOINT_URL",
     "RCONFIG_S3_REGION" => "RCONFIG_REGION",
     "RCONFIG_ACCESS_KEY" => "RCONFIG_ACCESS_KEY",
-    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY"
+    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -286,7 +286,7 @@ lane :check_config_files do |options|
     "RCONFIG_ENDPOINT_URL" => "RCONFIG_ENDPOINT_URL",
     "RCONFIG_S3_REGION" => "RCONFIG_REGION",
     "RCONFIG_ACCESS_KEY" => "RCONFIG_ACCESS_KEY",
-    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY"
+    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY",
   }, Config::ENV_DEFAULTS)
 
   if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
@@ -310,7 +310,7 @@ end
 desc "Flutter pub get"
 lane :pub_get do |options|
   env = askAndSetProperties(".env", { "JFROG_TOKEN" => "JFROG_TOKEN" }, Config::ENV_DEFAULTS)
-  token = env['JFROG_TOKEN']
+  token = env["JFROG_TOKEN"]
   shell("echo \"#{token}\" | dart pub token add \"https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private\"")
   flutter(args: %W(pub get))
 end
@@ -331,13 +331,13 @@ desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "Available options:\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
-  shell('gitleaks detect -c ../.gitleaks.toml')
+  shell("gitleaks detect -c ../.gitleaks.toml")
   maybe_pub_get(options)
   build_runner(options)
 
   flutter(args: %W(analyze lib test))
   if IS_CI
-     flutter(args: %W(format ./ --set-exit-if-changed))
+    flutter(args: %W(format ./ --set-exit-if-changed))
   else
     flutter(args: %W(format ./))
   end
@@ -352,7 +352,7 @@ lane :check do |options|
     shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
     shell("genhtml coverage/lcov.info -o coverage/html")
   else
-      shell("flutter test --reporter=json > machine.log || echo 'Tests failed'")
+    shell("flutter test --reporter=json > machine.log || echo 'Tests failed'")
   end
 
   begin
@@ -372,6 +372,7 @@ lane :publish do |options|
   appcenter_target = config[Keys::APPCENTER_TARGET]
   appcenter_token = config[Keys::APPCENTER_TOKEN]
   output = options[Options::ANDROID_OUTPUT]
+  shouldDownloadProfile = options[Options::DOWNLOAD_PROFILE]
 
   if platform == Platforms::ANDROID
     android_prepare_key_properties(options)
@@ -383,6 +384,11 @@ lane :publish do |options|
 
   if platform == Platforms::IOS
     secrets_unpack_ios(options)
+    # This ensures that provisioning profiles are uptodate with the latest registered devices
+    if shouldDownloadProfile
+      UI.user_error!("No APPSTORE_API_KEY provided (you can run create_appstore_api_key)!") unless ENV.key?("APPSTORE_API_KEY")
+      download_profiles(options)
+    end
     Dir.chdir("../ios/fastlane") do
       ios_create_ipa(options)
       appcenter_buildfile = options[:ios_create_ipa]
@@ -423,7 +429,7 @@ desc "Update the assets folder based on the Assets Manifest from xayn_discovery_
 lane :update_assets do |options|
   isUnderTest = options[Options::TEST]
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
-  manifestPath = manifestPath.gsub('%25', '%')
+  manifestPath = manifestPath.gsub("%25", "%")
   if not manifestPath.include?("file://")
     # if manifestPath does not include file:// it means that it is define as a relative path in the pubspec.yaml.
     # since the relative path is from 'application' we add '../' to adjust it w.r.t. the current file.
@@ -435,7 +441,7 @@ lane :update_assets do |options|
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
   downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
-  shell('touch assets/default_remote_config.yaml')
+  shell("touch assets/default_remote_config.yaml")
 end
 
 desc "Takes the current tag and increments the version on the minor position and creates a new Tag.\n" \
@@ -469,7 +475,40 @@ end
 
 desc "Packs the secrets of android release keystore and exports them to the clipboard"
 lane :secrets_jks_pack do |options|
-    sh("cat ../android/releases.jks | base64 | pbcopy")
+  sh("cat ../android/releases.jks | base64 | pbcopy")
+end
+
+lane :download_profiles do |options|
+  config = Config::PROFILES
+
+  api_key = JSON.parse(ENV["APPSTORE_API_KEY"])
+  token = Spaceship::ConnectAPI::Token.from(hash: api_key).text
+
+  uri = URI.parse("https://api.appstoreconnect.apple.com/v1/profiles")
+  request = Net::HTTP::Get.new(uri, { "Authorization" => "Bearer #{token}" })
+  req_options = {
+    use_ssl: uri.scheme == "https",
+  }
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+  end
+
+  if response.code != "200"
+    UI.user_error!("Error can not fetch #{uri} :\n#{response.body}")
+  end
+
+  profiles = JSON.parse(response.body)
+
+  profiles["data"].each do |v|
+    name = v["attributes"]["name"]
+    content = v["attributes"]["profileContent"]
+    filePath = "../ios/profiles/#{name.gsub(" ", "_")}.mobileprovision"
+
+    if config.include?(name)
+      UI.success "Will update #{name} profile to #{filePath}"
+      File.write(filePath, Base64.strict_decode64(content))
+    end
+  end
 end
 
 desc "Unpacks the profile based on the $PROFILES env var"
@@ -484,21 +523,21 @@ desc "Unpacks the release keystore"
 private_lane :secrets_unpack_android do |options|
   UI.user_error!("No ANDROID_RELEASE_KEYSTORE provided!") unless ENV.key?("ANDROID_RELEASE_KEYSTORE")
   Dir.chdir("../android/") do
-      sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
+    sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
   end
 end
 
 desc "Generate Airship plist file"
 private_lane :generate_airship_plist do |options|
   airshipPlist = <<~EOF
-  <?xml version="1.0" encoding="UTF-8"?> 
-  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-  <plist version="1.0">
-    <dict>
-    </dict>
-  </plist>
+    <?xml version="1.0" encoding="UTF-8"?> 
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+      <dict>
+      </dict>
+    </plist>
   EOF
-  File.write('../ios/Runner/AirshipConfig.plist', airshipPlist)
+  File.write("../ios/Runner/AirshipConfig.plist", airshipPlist)
 
   update_plist(
     plist_path: "ios/Runner/AirshipConfig.plist",
@@ -515,7 +554,7 @@ private_lane :generate_airship_plist do |options|
         plist[:productionAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
       end
       plist[:site] = "EU"
-    end
+    end,
   )
 end
 
