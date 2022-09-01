@@ -9,20 +9,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/manager/
 
 import '../../../../test_utils/widget_test_utils.dart';
 
-class StringRemoteConfigFetcher
-    with RemoteConfigFetcherBase
-    implements RemoteConfigFetcher {
-  final RemoteConfigParser parser = const RemoteConfigParser();
-  final String input;
-
-  StringRemoteConfigFetcher(this.input);
-
-  @override
-  Future<RemoteConfigResponse> fetch() async {
-    return fromYamlStringContent(input, parser);
-  }
-}
-
 void main() {
   setUp(() async {
     await setupWidgetTest();

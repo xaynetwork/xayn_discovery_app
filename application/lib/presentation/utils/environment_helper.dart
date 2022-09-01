@@ -36,11 +36,11 @@ class EnvironmentHelper {
       String.fromEnvironment('USER_APP_NAME', defaultValue: "Discovery");
 
   /// The git tag set during publish
-  /// defaults to HEAD
+  /// defaults to 3.45.0
   ///
   /// @see [kAppId]
   static const String kGitTag =
-      String.fromEnvironment('GIT_TAG', defaultValue: 'HEAD');
+      String.fromEnvironment('GIT_TAG', defaultValue: '3.45.0');
 
   static bool get kIsInTest => Platform.environment.containsKey('FLUTTER_TEST');
 
