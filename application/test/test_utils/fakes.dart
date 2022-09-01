@@ -29,7 +29,6 @@ final fakeDocument = Document(
         "https://www.msn.com/en-gb/finance/other/german-finance-watchdog-fines-deutsche-bank-for-euribor-controls/ar-AASeh7h"),
     datePublished: DateTime.parse("2021-12-29 07:59:49.000Z"),
   ),
-  batchIndex: -1,
   stackId: StackId.nil(),
 );
 

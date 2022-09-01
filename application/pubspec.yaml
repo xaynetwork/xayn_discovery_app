@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 3.45.0
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.17.3 <3.0.0'
   flutter: '>=3.0.0'
 
 # Please list dependencies alphabetically!
@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  airship_flutter: 6.1.0
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
   awesome_notifications: 0.6.21
@@ -28,6 +29,7 @@ dependencies:
   flat: ^0.4.1
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
+  flutter_isolate: 2.0.2
   flutter_localized_countries:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
@@ -98,10 +100,8 @@ dependencies:
       url: git@github.com:xaynetwork/xayn_design.git
       ref: a20fd18491d6799e8ec4394646c8f8dad1becc60
   xayn_discovery_engine_flutter:
-    git:
-      url: https://gitlab.com/xayn/xayn_discovery_engine_release
-      ref: 090c6bef3a1e04a2985bcba015d43209adb2298b
-      path: discovery_engine_flutter
+    hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
+    version: 0.1.0+main.220823142042
   xayn_readability:
     git:
       url: git@github.com:xaynetwork/xayn_readability.git
@@ -157,6 +157,7 @@ flutter:
     - assets/ai/kpe_v0001/
     - assets/ai/smbert_v0001/
     - assets/ai/sources_v0000/
+    - assets/default_remote_config.yaml
 
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved

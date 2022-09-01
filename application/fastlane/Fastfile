@@ -13,6 +13,7 @@
 import("../ios/fastlane/Fastfile")
 import("./lib/properties.rb")
 import("./lib/download_utils.rb")
+import("./lib/utils.rb")
 require "./lib/git.rb"
 
 ### All the configs are in this file, eventually all project specific parts will move there
@@ -25,6 +26,7 @@ Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
 BuildTypes = Config::BuildTypes
+TestSuites = Config::TestSuites
 IS_CI = is_ci
 
 # Common checks before running a lane
@@ -53,6 +55,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, IS_CI)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
   setIfNotSet.call(Options::TEST, lane == :check)
+  setIfNotSet.call(Options::TEST_SUITE, TestSuites::SANITY)
 
   version_name = gitVersionName()
 
@@ -76,6 +79,64 @@ before_all do |lane, options|
 end
 
 # Private lanes, that we only call internally, they are nice because they have an own description
+
+desc "Checks properties required for automated execution locally"
+lane :check_automation_config do |options|
+  hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn"])
+  deviceName, deviceId, deviceVersion, app = ""
+  platform = options[Options::PLATFORM]
+  devicesJson = JSON.parse(shell("flutter devices --machine"))
+  #setting up android properties
+  if platform == Platforms::ANDROID
+    devicesJson.each do |key, value|
+      if key["targetPlatform"].include? "android"
+        deviceName = key["name"]
+        deviceId = key["id"]
+        deviceVersion = /\d+/.match(key["sdk"])
+      end
+    end
+    if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
+      UI.user_error! "Android device not found, have you enabled debug mode?"
+    end
+    #building the app
+    android_prepare_key_properties(options)
+    build_with_flutter(options)
+    app = File.expand_path("../build/app/outputs/flutter-apk/app.apk")
+    UI.user_error! ".apk file isn't found" unless File.exist? app
+  end
+  if platform == Platforms::IOS
+    devicesJson.each do |key, value|
+      if key["targetPlatform"] == "ios"
+        deviceName = key["name"]
+        deviceVersion = /\d+-\d/.match(key["sdk"]).to_s.sub! "-", "."
+        deviceId = key["id"]
+      end
+    end
+    if (deviceId.to_s.empty? || deviceVersion.to_s.empty?)
+      UI.user_error! "IOS device not found"
+    end
+    options[_Options::BUILD_FOR_SIMULATOR] = true
+    build_with_flutter(options)
+    app = File.expand_path("../build/ios/iphonesimulator/Runner.app")
+    UI.user_error! ".app file isn't found" unless File.exist?[app]
+  end
+  setProperties("../automation/src/main/resources/config.properties",
+                {
+    "driver.exec" => hash["node"],
+    "appium.js" => hash["appium"],
+    "appium.url" => "http://localhost:4723/wd/hub",
+    "screenshot.directory" => "target/screenshots",
+    "wda.bundle.id" => "com.xayn.discovery.internal.wda",
+    "retry.count" => "3",
+    "testrail.app" => "Discovery App",
+    "tms.regression" => "false",
+    "device.id" => deviceId,
+    "device.version" => deviceVersion,
+    "device.name" => deviceName,
+    "app" => app,
+  })
+end
+
 desc "Flutter build"
 private_lane :build_with_flutter do |options|
   if options[Options::CLEAN]
@@ -90,7 +151,8 @@ private_lane :build_with_flutter do |options|
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
-  shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  # shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
     "GIT_TAG" => options[Options::VERSION_NAME],
@@ -107,10 +169,14 @@ private_lane :build_with_flutter do |options|
   if not codesign.empty?
     dartDefines << codesign
   end
-  if not shaders.empty?
-    dartDefines += shaders
+  # if not shaders.empty?
+  # dartDefines += shaders
+  # end
+  if not buildForSimulator.empty?
+    dartDefines << buildForSimulator
   end
 
+  shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
   flutter(args: %W(build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]}) + dartDefines, capture_stdout: true)
 end
 
@@ -145,6 +211,16 @@ end
 ####
 #### Public lanes, can also be used via tab completion: `fastlane enable_auto_complete`
 ####
+
+# :test_suite and :test_env are required params for this lane
+desc "Run automation"
+lane :run_automation do |options|
+  check_automation_config(options)
+  suite = options[Options::TEST_SUITE]
+  Dir.chdir("../automation/") do
+    sh("mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
+  end
+end
 
 desc "Update strings\n" \
      "The first time the command fastlane update_strings is run, the POEditor Key will be asked to input\n" \
@@ -191,7 +267,7 @@ lane :check_config_files do |options|
     "RCONFIG_ENDPOINT_URL" => "RCONFIG_ENDPOINT_URL",
     "RCONFIG_S3_REGION" => "RCONFIG_REGION",
     "RCONFIG_ACCESS_KEY" => "RCONFIG_ACCESS_KEY",
-    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY"
+    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY",
   }, Config::ENV_DEFAULTS)
 
   askAndSetProperties("../.env.prod",
@@ -210,7 +286,7 @@ lane :check_config_files do |options|
     "RCONFIG_ENDPOINT_URL" => "RCONFIG_ENDPOINT_URL",
     "RCONFIG_S3_REGION" => "RCONFIG_REGION",
     "RCONFIG_ACCESS_KEY" => "RCONFIG_ACCESS_KEY",
-    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY"
+    "RCONFIG_SECRET_KEY" => "RCONFIG_SECRET_KEY",
   }, Config::ENV_DEFAULTS)
 
   if options[Options::FLAVOR] != Flavors::INTERNAL && options[Options::BUILD_TYPE] == BuildTypes::RELEASE
@@ -218,10 +294,24 @@ lane :check_config_files do |options|
   else
     askAndSetProperties("../android/custom.properties", { "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN" }, Config::ENV_DEFAULTS)
   end
+
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    askAndSetProperties(".env", { "AIRSHIP_INTERNAL_KEY" => "AIRSHIP_INTERNAL_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_INTERNAL_SECRET" => "AIRSHIP_INTERNAL_SECRET" }, Config::ENV_DEFAULTS)
+  else
+    askAndSetProperties(".env", { "AIRSHIP_PROD_KEY" => "AIRSHIP_PROD_KEY" }, Config::ENV_DEFAULTS)
+    askAndSetProperties(".env", { "AIRSHIP_PROD_SECRET" => "AIRSHIP_PROD_SECRET" }, Config::ENV_DEFAULTS)
+  end
+  generate_airship_plist(options)
+  generate_airship_properties(options)
+  google_services_unpack(options)
 end
 
 desc "Flutter pub get"
 lane :pub_get do |options|
+  env = askAndSetProperties(".env", { "JFROG_TOKEN" => "JFROG_TOKEN" }, Config::ENV_DEFAULTS)
+  token = env["JFROG_TOKEN"]
+  shell("echo \"#{token}\" | dart pub token add \"https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private\"")
   flutter(args: %W(pub get))
 end
 
@@ -241,13 +331,13 @@ desc "Sanity checks (options: coverage:[true/FALSE])\n" \
      "Available options:\n" \
      "   - #{Options::COVERAGE}"
 lane :check do |options|
-  shell('gitleaks detect -c ../.gitleaks.toml')
+  shell("gitleaks detect -c ../.gitleaks.toml")
   maybe_pub_get(options)
   build_runner(options)
 
   flutter(args: %W(analyze lib test))
   if IS_CI
-     flutter(args: %W(format ./ --set-exit-if-changed))
+    flutter(args: %W(format ./ --set-exit-if-changed))
   else
     flutter(args: %W(format ./))
   end
@@ -262,7 +352,7 @@ lane :check do |options|
     shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
     shell("genhtml coverage/lcov.info -o coverage/html")
   else
-      shell("flutter test --reporter=json > machine.log || echo 'Tests failed'")
+    shell("flutter test --reporter=json > machine.log || echo 'Tests failed'")
   end
 
   begin
@@ -333,6 +423,7 @@ desc "Update the assets folder based on the Assets Manifest from xayn_discovery_
 lane :update_assets do |options|
   isUnderTest = options[Options::TEST]
   manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
+  manifestPath = manifestPath.gsub("%25", "%")
   if not manifestPath.include?("file://")
     # if manifestPath does not include file:// it means that it is define as a relative path in the pubspec.yaml.
     # since the relative path is from 'application' we add '../' to adjust it w.r.t. the current file.
@@ -344,6 +435,7 @@ lane :update_assets do |options|
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
   downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
+  shell("touch assets/default_remote_config.yaml")
 end
 
 desc "Takes the current tag and increments the version on the minor position and creates a new Tag.\n" \
@@ -377,7 +469,7 @@ end
 
 desc "Packs the secrets of android release keystore and exports them to the clipboard"
 lane :secrets_jks_pack do |options|
-    sh("cat ../android/releases.jks | base64 | pbcopy")
+  sh("cat ../android/releases.jks | base64 | pbcopy")
 end
 
 desc "Unpacks the profile based on the $PROFILES env var"
@@ -392,8 +484,77 @@ desc "Unpacks the release keystore"
 private_lane :secrets_unpack_android do |options|
   UI.user_error!("No ANDROID_RELEASE_KEYSTORE provided!") unless ENV.key?("ANDROID_RELEASE_KEYSTORE")
   Dir.chdir("../android/") do
-      sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
+    sh("echo $ANDROID_RELEASE_KEYSTORE | base64 -d > releases.jks")
   end
+end
+
+desc "Generate Airship plist file"
+private_lane :generate_airship_plist do |options|
+  airshipPlist = <<~EOF
+    <?xml version="1.0" encoding="UTF-8"?> 
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+      <dict>
+      </dict>
+    </plist>
+  EOF
+  File.write("../ios/Runner/AirshipConfig.plist", airshipPlist)
+
+  update_plist(
+    plist_path: "ios/Runner/AirshipConfig.plist",
+    block: proc do |plist|
+      if options[Options::FLAVOR] == Flavors::INTERNAL
+        plist[:developmentAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+        plist[:developmentAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+        plist[:productionAppKey] = ENV["AIRSHIP_INTERNAL_KEY"]
+        plist[:productionAppSecret] = ENV["AIRSHIP_INTERNAL_SECRET"]
+      else
+        plist[:developmentAppKey] = ENV["AIRSHIP_PROD_KEY"]
+        plist[:developmentAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+        plist[:productionAppKey] = ENV["AIRSHIP_PROD_KEY"]
+        plist[:productionAppSecret] = ENV["AIRSHIP_PROD_SECRET"]
+      end
+      plist[:site] = "EU"
+    end,
+  )
+end
+
+desc "Generate Airship properties file"
+private_lane :generate_airship_properties do |options|
+  if options[Options::FLAVOR] == Flavors::INTERNAL
+    setProperties("../android/app/src/main/assets/airshipconfig.properties", {
+      "developmentAppKey" => ENV["AIRSHIP_INTERNAL_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_INTERNAL_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_INTERNAL_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_INTERNAL_SECRET"],
+      "inProduction" => false,
+      "developmentLogLevel" => "DEBUG",
+      "productionLogLevel" => "ERROR",
+      "notificationIcon" => "ic_notification",
+      "notificationLargeIcon" => "ic_large_notification",
+      "notificationAccentColor" => "#ff0000",
+      "site" => "EU",
+    })
+  else
+    setProperties("../android/app/src/main/assets/airshipconfig.properties", {
+      "developmentAppKey" => ENV["AIRSHIP_PROD_KEY"],
+      "developmentAppSecret" => ENV["AIRSHIP_PROD_SECRET"],
+      "productionAppKey" => ENV["AIRSHIP_PROD_KEY"],
+      "productionAppSecret" => ENV["AIRSHIP_PROD_SECRET"],
+      "inProduction" => true,
+      "developmentLogLevel" => "DEBUG",
+      "productionLogLevel" => "ERROR",
+      "notificationIcon" => "ic_notification",
+      "notificationLargeIcon" => "ic_large_notification",
+      "notificationAccentColor" => "#ff0000",
+      "site" => "EU",
+    })
+  end
+end
+
+desc "Unpacks the google-services.json based on the $GOOGLE_SERVICES_INTERNAL_JSON and $GOOGLE_SERVICES_PROD_JSON env vars"
+private_lane :google_services_unpack do |options|
+  askMultilineAndSetFile("../android/app/google-services.json", options[Options::FLAVOR] == Flavors::INTERNAL ? "GOOGLE_SERVICES_INTERNAL_JSON" : "GOOGLE_SERVICES_PROD_JSON")
 end
 
 def clean_folder(folder)

@@ -1,6 +1,8 @@
 import 'package:dart_remote_config/model/feature.dart' as experimentation;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
@@ -48,8 +50,11 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isPromptSurveyEnabled => isEnabled(Feature.promptSurvey);
 
-  bool get arePushNotificationDeepLinksEnabled =>
-      isEnabled(Feature.pushNotificationDeepLinks);
+  bool get areLocalNotificationsEnabled =>
+      isEnabled(Feature.localNotifications);
+
+  bool get areRemoteNotificationsEnabled =>
+      isEnabled(Feature.remoteNotifications);
 
   bool get showDiscoveryEngineReportOverlay =>
       isEnabled(Feature.discoveryEngineReportOverlay);
@@ -92,10 +97,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
         () => _overrideFeature(feature, isEnabled),
       );
 
-  void flipFlopFeature(Feature feature) => overrideFeature(
-        feature,
-        isDisabled(feature),
-      );
+  void flipFlopFeature(Feature feature) =>
+      overrideFeature(feature, isDisabled(feature));
 
   void resetFirstAppStartupDate() {
     final appStatusRepo = di.get<AppStatusRepository>();
@@ -107,7 +110,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
   void setTrialDurationToZero() {
     final appStatusRepo = di.get<AppStatusRepository>();
     final newStatus = appStatusRepo.appStatus.copyWith(
-      firstAppLaunchDate: DateTime.now().subtract(const Duration(days: 7)),
+      firstAppLaunchDate: DateTime.now().subtract(freeTrialDuration),
       extraTrialEndDate: null,
       usedPromoCodes: {},
     );

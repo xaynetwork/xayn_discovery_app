@@ -19,10 +19,16 @@ enum Feature {
 
   onBoardingSheets(Owner.Michael, false, 'Showing onboarding bottom sheets'),
 
-  pushNotificationDeepLinks(
+  localNotifications(
     Owner.Peter,
     EnvironmentHelper.kIsDebug,
-    'Allows to deep link to an article when tapping on push notification',
+    'Allows to deep link to an article when tapping on local push notification',
+  ),
+
+  remoteNotifications(
+    Owner.Peter,
+    EnvironmentHelper.kIsDebug,
+    'Listen for silent push notification from Airship to trigger news fetch',
   );
 
   final Owner owner;

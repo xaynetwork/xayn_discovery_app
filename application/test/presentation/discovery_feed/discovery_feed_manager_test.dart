@@ -67,7 +67,6 @@ void main() async {
           url: Uri.parse('https://url.test.xayn.com'),
           datePublished: DateTime.parse("2021-01-01 00:00:00.000Z"),
         ),
-        batchIndex: -1,
         userReaction: UserReaction.neutral,
         stackId: StackId.nil(),
       );

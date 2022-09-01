@@ -133,18 +133,22 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
       ),
     );
 
-    final footer = BottomSheetFooter(
-      onCancelPressed: () {
-        _manager.onCancelPressed(screenDuration: getWidgetDuration);
-        closeBottomSheet(context);
-      },
-      setup: BottomSheetFooterSetup.row(
-        buttonData: BottomSheetFooterButton(
-          text: R.strings.bottomSheetApply,
-          onPressed: () => _manager.onApplyToDocumentPressed(
-            document: widget.document,
-            provider: widget.provider,
-            feedType: widget.feedType,
+    final footer = BlocBuilder<MoveToCollectionManager, MoveToCollectionState>(
+      bloc: _manager,
+      builder: (_, state) => BottomSheetFooter(
+        onCancelPressed: () {
+          _manager.onCancelPressed(screenDuration: getWidgetDuration);
+          closeBottomSheet(context);
+        },
+        setup: BottomSheetFooterSetup.row(
+          buttonData: BottomSheetFooterButton(
+            text: R.strings.bottomSheetApply,
+            isDisabled: state.selectedCollectionId == null,
+            onPressed: () => _manager.onApplyToDocumentPressed(
+              document: widget.document,
+              provider: widget.provider,
+              feedType: widget.feedType,
+            ),
           ),
         ),
       ),
