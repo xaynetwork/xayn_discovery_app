@@ -1,3 +1,4 @@
+import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:platform/platform.dart' as google;
@@ -44,13 +45,15 @@ bool get _isProdPayment =>
   preferRelativeImports: true, // default
   asExtension: false, // default
 )
-Future<void> configureDependencies({
+Future<void> configureDependencies(
+  DartRemoteConfigState remoteConfigState, {
   Environment environment = releaseEnvironment,
 }) async {
   await $initGetIt(
     di,
     environment: environment.name,
   );
+  di.registerSingleton<DartRemoteConfigState>(remoteConfigState);
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
   di.registerLazySingleton<AppSettingsRepository>(

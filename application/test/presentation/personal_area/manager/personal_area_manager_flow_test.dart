@@ -18,9 +18,7 @@ import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart'
 
 import '../../../test_utils/utils.dart';
 import '../../../test_utils/widget_test_utils.dart';
-import '../../bottom_sheet/promo_code/manager/promo_code_manager_test.dart';
 
-/// A flow test actually verifies that all of the components that the manager relies
 /// on were exercised on real live conditions and not just mock responses. This way a
 /// we can avoid to write integration tests, and gaining more stable and better covered
 /// unit tests. Also they are more readable.

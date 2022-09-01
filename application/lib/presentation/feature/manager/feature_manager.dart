@@ -1,4 +1,5 @@
-import 'package:dart_remote_config/model/experimentation_engine_result.dart';
+import 'package:dart_remote_config/dart_remote_config.dart';
+import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -6,9 +7,8 @@ import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/experiment_feature_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_experiments_identity_params_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/remote_config/fetch_experiments_use_case.dart';
+import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'feature_manager_state.dart';
 
@@ -20,15 +20,17 @@ FeatureMap kInitialFeatureMap = {
 class FeatureManager extends Cubit<FeatureManagerState>
     with UseCaseBlocHelper<FeatureManagerState> {
   FeatureManager(
-    this._experiments,
+    this._remoteConfigState,
     this._setExperimentsIdentityParamsUseCase,
-  ) : super(FeatureManagerState.initial(kInitialFeatureMap)) {
-    _init()
-    alterFeatureMapAccordingToExperiments(experimentationResult);
-    _setExperimentsIdentityParamsUseCase(_experiments);
+  ) : super(FeatureManagerState.initial(_alterFeatureMapAccordingToExperiments(
+            kInitialFeatureMap, _remoteConfigState))) {
+    _init();
+    _remoteConfigState.mapOrNull(success: (s) {
+      _setExperimentsIdentityParamsUseCase(s);
+    });
   }
 
-  final ExperimentationEngineResult _experiments;
+  final DartRemoteConfigState _remoteConfigState;
   final SetExperimentsIdentityParamsUseCase
       _setExperimentsIdentityParamsUseCase;
 
@@ -67,15 +69,35 @@ class FeatureManager extends Cubit<FeatureManagerState>
     );
   }
 
-  void _alterFeatureMapAccordingToExperiments(
-    FetchedExperimentsOut experiments,
-  ) =>
-      experiments.subscribedFeatures
-          .map((it) => it.toAppFeature)
-          .where((feature) => feature != null)
-          .forEach(
-            (feature) => _overrideFeature(feature!, true),
-          );
+  static FeatureMap _alterFeatureMapAccordingToExperiments(
+    FeatureMap initialMap,
+    DartRemoteConfigState state,
+  ) {
+    if (state is! DartRemoteConfigStateSuccess) {
+      return initialMap;
+    }
+
+    final featureMap = Map<Feature, bool>.from(initialMap);
+    for (var it in state.experiments.enabledFeatures) {
+      final feature = Feature.values
+          .firstWhereOrNull((element) => element.remoteKey == it.id);
+      if (feature != null) {
+        it.value.map(nothing: (_) {
+          /// We assume that being part of an experiment and no value is provided that this means it is active
+          logger.i(
+              'RemoteConfig: Flipped $feature from ${featureMap[feature]} -> true');
+          featureMap[feature] = true;
+        }, string: (s) {
+          /// Not used yet
+        }, boolean: (b) {
+          logger.i(
+              'RemoteConfig: Flipped $feature from ${featureMap[feature]} -> ${b.boolValue}');
+          featureMap[feature] = b.boolValue;
+        });
+      }
+    }
+    return featureMap;
+  }
 
   bool isEnabled(Feature feature) => _featureMap[feature] ?? false;
 

@@ -1,3 +1,4 @@
+import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:flutter_test/flutter_test.dart' hide test;
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -20,6 +21,9 @@ import 'test_dependencies.config.dart';
 Future<void> configureTestDependencies() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
-  await configureDependencies(environment: testEnvironment);
+  await configureDependencies(
+      const DartRemoteConfigState.failed(
+          status: DartRemoteConfigStatus.failedFetching),
+      environment: testEnvironment);
   $initTestGetIt(di);
 }
