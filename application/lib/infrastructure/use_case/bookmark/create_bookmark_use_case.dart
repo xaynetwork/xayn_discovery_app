@@ -38,7 +38,14 @@ class CreateBookmarkFromDocumentUseCase
       CreateBookmarkFromDocumentUseCaseIn param) async* {
     final createBookmarkParam = await _mapper.singleOutput(param);
     final bookmark = await _createBookmark.singleOutput(createBookmarkParam);
-    _documentRepository.save(DocumentWrapper(param.document));
+    final document =
+        _documentRepository.getByDocumentId(param.document.documentId);
+    _documentRepository.save(
+      DocumentWrapper(
+        param.document,
+        isEngineDocument: document?.isEngineDocument ?? true,
+      ),
+    );
 
     await _saveUserInteractionUseCase
         .singleOutput(UserInteractionsEvents.bookmarkedArticle);

@@ -2,7 +2,9 @@ import 'dart:isolate';
 
 import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/repository/document_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/get_local_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
@@ -84,10 +86,12 @@ Future<void> _fetchNews(SendPort sendPort) async {
 class EngineBackgroundNewsService {
   final RemoteNotificationsService _remoteNotificationsService;
   final LocalNotificationsService _localNotificationsService;
+  final DocumentRepository _documentRepository;
 
   EngineBackgroundNewsService(
     this._remoteNotificationsService,
     this._localNotificationsService,
+    this._documentRepository,
   ) {
     _init();
   }
@@ -103,10 +107,18 @@ class EngineBackgroundNewsService {
     logger
         .i('[Engine Background News] Latest news: ${document.resource.title}');
 
+    _documentRepository.save(
+      DocumentWrapper(
+        document,
+        isEngineDocument: false,
+      ),
+    );
+
     await _localNotificationsService.sendNotification(
       body: document.resource.snippet,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
       delay: const Duration(seconds: 1),
+      image: document.resource.image,
     );
   }
 
