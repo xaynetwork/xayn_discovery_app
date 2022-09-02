@@ -105,8 +105,7 @@ module Config
     end
 
     def self.doc_TEST_SUITE() "regression, sanity, debug" end
-      TEST_SUITE = :test_suite
-
+    TEST_SUITE = :test_suite
   end
 
   # Options not passed by the user to a lane
@@ -125,7 +124,7 @@ module Config
                    "AI_ASSETS_URL" => "https://ai-assets.xaynet.dev",
                    "MIXPANEL_SERVER_URL" => "https://api-eu.mixpanel.com",
                    "RCONFIG_S3_REGION" => "s3-de-central",
-                   "RCONFIG_ENDPOINT_URL" => "https://s3-de-central.profitbricks.com"}
+                   "RCONFIG_ENDPOINT_URL" => "https://s3-de-central.profitbricks.com" }
 
   # Careful to change those offsets, they are defining the beta process:
   # production:       1,     2,     3,  ..., 479, ... |  10480...
@@ -193,6 +192,8 @@ module Config
     },
   }
 
+  # TODO rework the profiles and IOS_BUILD_CONFIG section to avoid duplication
+  PROFILES = ["Xayn Discovery Internal Adhoc Profile", "Xayn Discovery AppStore Profile", "Xayn Discovery Internal Develop Profile"]
   IOS_BUILD_CONFIG = {
     Flavors::INTERNAL => {
       Keys::PROVISIONING_PROFILE_PATH => "profiles/Xayn_Discovery_Internal_Adhoc_Profile.mobileprovision",
