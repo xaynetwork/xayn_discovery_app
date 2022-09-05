@@ -80,7 +80,7 @@ dependencies:
   shimmer: 2.0.0
   super_rich_text:
     git:
-      url: git@github.com:Bestfastfire/super_rich_text.git
+      url: https://github.com/Bestfastfire/super_rich_text.git
       ref: f9d3963421682e2e0dd99c1ab553b99e38766ea1
   system_info2: 2.0.3
   quiver: 3.0.1+1
@@ -89,22 +89,22 @@ dependencies:
   version: 2.0.0
   xayn_architecture:
     git:
-      url: git@github.com:xaynetwork/xayn_architecture.git
+      url: https://github.com/xaynetwork/xayn_architecture.git
       ref: 5398c3f075dfdbdbdcf51356223f942793d21a48
   xayn_card_view:
     git:
-      url: git@github.com:xaynetwork/xayn_card_view.git
+      url: https://github.com/xaynetwork/xayn_card_view.git
       ref: 1665c64af48058f116ffa0e71296c7748c3c6c1e
   xayn_design:
     git:
-      url: git@github.com:xaynetwork/xayn_design.git
+      url: https://github.com/xaynetwork/xayn_design.git
       ref: a20fd18491d6799e8ec4394646c8f8dad1becc60
   xayn_discovery_engine_flutter:
     hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
     version: 0.1.0+main.220823142042
   xayn_readability:
     git:
-      url: git@github.com:xaynetwork/xayn_readability.git
+      url: https://github.com/xaynetwork/xayn_readability.git
       ref: e37cd9d4b33ddfb30469f260e11b6692beac1c88
   xayn_swipe_it: 1.0.4
 
