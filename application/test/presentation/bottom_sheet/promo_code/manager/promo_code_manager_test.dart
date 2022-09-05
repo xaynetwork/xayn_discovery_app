@@ -1,5 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dart_remote_config/dart_remote_config.dart';
+import 'package:dart_remote_config/model/dart_remote_config_state.dart';
+import 'package:dart_remote_config/model/experimentation_engine_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
@@ -25,8 +27,11 @@ void main() {
       grantedSku: "extended_test_period"
       grantedDuration: 7776000
 """]) {
-    di.registerFactory<RemoteConfigFetcher>(
-        () => StringRemoteConfigFetcher(input));
+    final configs = const RemoteConfigParser().parse(input);
+    di.registerFactory<DartRemoteConfigState>(() =>
+        DartRemoteConfigState.success(
+            experiments: const ExperimentationEngineResult({}, []),
+            config: configs.configs.first));
     di.registerFactory<PackageInfo>(() => PackageInfo(
         appName: '', packageName: '', version: '3.47.0', buildNumber: ''));
     return di.get();
