@@ -1,3 +1,4 @@
+import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:flutter/src/semantics/debug.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -11,10 +12,13 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 import '../test_utils/utils.dart';
 
 /// common setup for widget tests
-Future<void> setupWidgetTest() async {
+Future<void> setupWidgetTest([
+  DartRemoteConfigState remoteConfigState = const DartRemoteConfigState.failed(
+      status: DartRemoteConfigStatus.failedFetching),
+]) async {
   debugSemanticsDisableAnimations = true;
   HiveDB.init(null);
-  await configureTestDependencies();
+  await configureTestDependencies(remoteConfigState);
 }
 
 /// common teardown for widget tests
