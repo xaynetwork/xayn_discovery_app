@@ -18,8 +18,10 @@ import 'test_dependencies.config.dart';
     preferRelativeImports: true,
     asExtension: false,
     generateForDir: ['test'])
-Future<void> configureTestDependencies(
-    DartRemoteConfigState remoteConfigState) async {
+Future<void> configureTestDependencies([
+  DartRemoteConfigState remoteConfigState = const DartRemoteConfigState.failed(
+      status: DartRemoteConfigStatus.failedFetching),
+]) async {
   TestWidgetsFlutterBinding.ensureInitialized();
   di.allowReassignment = true;
   di.registerSingleton<DartRemoteConfigState>(remoteConfigState);
