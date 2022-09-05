@@ -11,14 +11,20 @@ class DocumentMapper extends BaseDbEntityMapper<DocumentWrapper> {
 
     final json =
         map[DocumentBookmarkMapperFields.json] as Map<dynamic, dynamic>;
+    final isEngineDocument =
+        map[DocumentBookmarkMapperFields.isEngineDocument] as bool?;
 
-    return DocumentWrapper(Document.fromJson(json.cast()));
+    return DocumentWrapper(
+      Document.fromJson(json.cast()),
+      isEngineDocument: isEngineDocument ?? true,
+    );
   }
 
   @override
   DbEntityMap toMap(DocumentWrapper entity) => {
         DocumentBookmarkMapperFields.id: entity.id.value,
         DocumentBookmarkMapperFields.json: entity.document.toJson(),
+        DocumentBookmarkMapperFields.isEngineDocument: entity.isEngineDocument,
       };
 
   @override
@@ -34,4 +40,5 @@ abstract class DocumentBookmarkMapperFields {
 
   static const int id = 0;
   static const int json = 1;
+  static const int isEngineDocument = 2;
 }

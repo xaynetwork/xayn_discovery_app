@@ -64,7 +64,7 @@ app.*.map.json
 
 # ai 
 assets/ai/
-/fastlane/README.md
+fastlane/README.md
 
 #automation
 /automation/src/main/resources/config.properties

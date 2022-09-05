@@ -26,7 +26,7 @@ class PageRegistry {
   /// Always also add a page to this pages set
   static final Set<xayn.UntypedPageData> pages = {
     splashScreen,
-    discovery(),
+    discovery,
     search,
     personalArea,
     settings,
@@ -46,17 +46,12 @@ class PageRegistry {
   /// when device orientation changes. This also fixes an issue
   /// with playing videos in full screen mode.
   static final discoveryFeedKey = GlobalKey();
-  static discovery({
-    UniqueId? documentId,
-  }) =>
-      xayn.PageData(
-        name: "discovery",
-        arguments: documentId,
-        builder: (_, UniqueId? args) => DiscoveryFeed(
-          key: discoveryFeedKey,
-          selectedDocumentId: args,
-        ),
-      );
+  static final discovery = xayn.PageData(
+    name: "discovery",
+    builder: (_, args) => DiscoveryFeed(
+      key: discoveryFeedKey,
+    ),
+  );
 
   /// Using a global key prevents rebuilding the [ActiveSearch]
   /// when device orientation changes. This also fixes an issue
