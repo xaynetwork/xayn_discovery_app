@@ -1,9 +1,8 @@
 import 'package:dart_remote_config/model/feature.dart' as experimentation;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_architecture/concepts/use_case/use_case_bloc_helper.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -67,9 +66,14 @@ class FeatureManager extends Cubit<FeatureManagerState>
         if (experimentationResult != null) {
           _alterFeatureMapAccordingToExperiments(experimentationResult);
           _setExperimentsIdentityParamsUseCase(experimentationResult);
+          return FeatureManagerState(
+            featureMap: Map.from(_featureMap),
+            subscribedVariantIds: experimentationResult.subscribedVariantIds,
+          );
         }
         return FeatureManagerState(
           featureMap: Map.from(_featureMap),
+          subscribedVariantIds: state.subscribedVariantIds,
         );
       });
 

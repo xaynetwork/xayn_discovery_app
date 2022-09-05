@@ -27,21 +27,25 @@ class FetchExperimentsUseCase extends UseCase<None, FetchedExperimentsOut> {
   );
 
   final PackageInfo _packageInfo;
-  late final ExperimentationModule module = ExperimentsFetcherImpl();
   final RemoteConfigFetcher _fetcher;
 
   @override
   Stream<FetchedExperimentsOut> transaction(None param) async* {
-    final result = await module.fetchThenCompute(
+    final configFactory = DartRemoteConfig(
       fetcher: _fetcher,
-      versionString: _packageInfo.version,
+      versionProvider: () => _packageInfo.version,
     );
-
-    yield result != null
-        ? FetchedExperimentsOut(
-            result.subscribedVariantIds.where((it) => it.isSubscribed).toSet(),
-            result.enabledFeatures,
-          )
-        : const FetchedExperimentsOut({}, {});
+    final config = await configFactory.create();
+    yield config.map(
+      success: (success) {
+        return FetchedExperimentsOut(
+          success.experiments.subscribedVariantIds,
+          success.experiments.enabledFeatures,
+        );
+      },
+      failed: (failed) {
+        return const FetchedExperimentsOut({}, {});
+      },
+    );
   }
 }

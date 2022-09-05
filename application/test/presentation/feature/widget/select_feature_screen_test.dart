@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager_state.dart';
 
 import '../../../test_utils/utils.dart';
 import '../../../test_utils/widget_test_utils.dart';
@@ -14,6 +15,9 @@ void main() {
     di.registerLazySingleton<FeatureManager>(() => manager);
     when(manager.showFeaturesScreen).thenReturn(true);
     when(manager.isOnBoardingSheetsEnabled).thenReturn(true);
+    when(manager.state).thenReturn(const FeatureManagerState());
+    when(manager.stream)
+        .thenAnswer((_) => Stream.value(const FeatureManagerState()));
   });
   tearDown(() async {
     await tearDownWidgetTest();

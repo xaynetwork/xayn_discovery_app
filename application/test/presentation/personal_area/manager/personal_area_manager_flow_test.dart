@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dart_remote_config/dart_remote_config.dart';
+import 'package:dart_remote_config/dart_remote_config.dart'
+    show RemoteConfigFetcher, PromoCode;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';

@@ -1,10 +1,14 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+
+Future<String> _getFallbackRemoteConfig() =>
+    rootBundle.loadString('assets/default_remote_config.yaml');
 
 @Injectable(as: RemoteConfigFetcher)
 class S3Fetcher extends S3RemoteConfigFetcher {
@@ -21,6 +25,7 @@ class S3Fetcher extends S3RemoteConfigFetcher {
             appId: EnvironmentHelper.kAppId,
             flavor: EnvironmentHelper.kFlavor,
           ),
+          fallbackRemoteConfig: _getFallbackRemoteConfig,
         );
 }
 

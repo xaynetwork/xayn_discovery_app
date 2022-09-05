@@ -23,7 +23,7 @@ dependencies:
   dart_remote_config:
     git:
       url: https://github.com/xaynetwork/dart_remote_config
-      ref: 29f042bbf0f196c9bcee08ed251bf4c92f7893e3
+      ref: 56cb0565c935aac5d3a3bd4b7afbda144607819a
   equatable: 2.0.3
   envify: 2.0.2
   flat: ^0.4.1
@@ -150,6 +150,8 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/default_remote_config.yaml
+
     # This must be the real toplevel directories for the AI assets.
     # Whenever the manifest changes this must be updated to contain the correct folders.
     # In order to determine the real folder structure run:
