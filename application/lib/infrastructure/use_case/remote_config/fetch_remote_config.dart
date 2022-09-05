@@ -1,5 +1,4 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
-import 'package:dart_remote_config/fetcher/cache_strategy.dart';
 import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:dart_remote_config/repository/remote_config_repository.dart';
 import 'package:flutter/services.dart';
