@@ -1,5 +1,6 @@
 import 'package:dart_remote_config/dart_remote_config.dart';
 import 'package:dart_remote_config/model/dart_remote_config_state.dart';
+import 'package:dart_remote_config/model/known_experiment_variant.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -25,12 +26,18 @@ class FeatureManager extends Cubit<FeatureManagerState>
   ) : super(FeatureManagerState.initial(_alterFeatureMapAccordingToExperiments(
             kInitialFeatureMap, _remoteConfigState))) {
     _init();
-    _remoteConfigState.mapOrNull(success: (s) {
-      _setExperimentsIdentityParamsUseCase(s);
+    _remoteConfigState.whenOrNull(success: (_, result) {
+      _setExperimentsIdentityParamsUseCase(result);
+      _subscribedVariantIds = result.subscribedVariantIds;
+    }, failed: (_, __) {
+      _subscribedVariantIds = {};
     });
   }
 
   final DartRemoteConfigState _remoteConfigState;
+
+  late final Set<KnownVariantId> _subscribedVariantIds;
+
   final SetExperimentsIdentityParamsUseCase
       _setExperimentsIdentityParamsUseCase;
 
@@ -63,11 +70,10 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get isOnBoardingSheetsEnabled => isEnabled(Feature.onBoardingSheets);
 
   @override
-  Future<FeatureManagerState?> computeState() async {
-    return FeatureManagerState(
-      featureMap: Map.from(_featureMap),
-    );
-  }
+  Future<FeatureManagerState?> computeState() async => FeatureManagerState(
+        featureMap: Map.from(_featureMap),
+        subscribedVariantIds: _subscribedVariantIds,
+      );
 
   static FeatureMap _alterFeatureMapAccordingToExperiments(
     FeatureMap initialMap,

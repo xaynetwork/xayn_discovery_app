@@ -1,4 +1,4 @@
-import 'package:dart_remote_config/model/dart_remote_config_state.dart';
+import 'package:dart_remote_config/model/experimentation_engine_result.dart';
 import 'package:dart_remote_config/utils/extensions.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
@@ -9,7 +9,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/sub
 
 @injectable
 class SetExperimentsIdentityParamsUseCase
-    extends UseCase<DartRemoteConfigStateSuccess, None> {
+    extends UseCase<ExperimentationEngineResult, None> {
   final AnalyticsService _analyticsService;
 
   SetExperimentsIdentityParamsUseCase(
@@ -17,15 +17,15 @@ class SetExperimentsIdentityParamsUseCase
   );
 
   @override
-  Stream<None> transaction(DartRemoteConfigStateSuccess param) async* {
+  Stream<None> transaction(ExperimentationEngineResult param) async* {
     final variants = SubscribedExperimentVariantIdentityParam(
-      param.experiments.subscribedVariantIds
+      param.subscribedVariantIds
           .map((it) => '${it.experimentId}__${it.variantId!}')
           .toSet(),
     );
 
     final features = SubscribedExperimentFeatureIdentityParam(
-      param.experiments.enabledFeatures.map((it) => it.id).toSet(),
+      param.enabledFeatures.map((it) => it.id).toSet(),
     );
 
     await _analyticsService.updateIdentityParams({variants, features});

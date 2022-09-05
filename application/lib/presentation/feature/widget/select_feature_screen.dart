@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_remote_config/model/known_experiment_variant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feature.dart';
@@ -84,13 +85,14 @@ class _SelectFeatureScreenState extends State<SelectFeatureScreen> {
   Widget _overrideList({required Function() onContinue}) =>
       BlocBuilder<FeatureManager, FeatureManagerState>(
         bloc: _featureManager,
-        builder: (context, state) {
-          return _FeaturesList(
+        builder: (context, state) => MaterialApp(
+          home: _FeaturesList(
             featureManager: _featureManager,
             featureMap: state.featureMap,
+            subscribedVariantIds: state.subscribedVariantIds,
             onContinue: onContinue,
-          );
-        },
+          ),
+        ),
       );
 
   void onTimerEnd() =>
@@ -107,25 +109,24 @@ class _FeaturesList extends StatelessWidget {
     required this.onContinue,
     required this.featureMap,
     required this.featureManager,
+    required this.subscribedVariantIds,
   }) : super(key: key);
 
   final Function() onContinue;
   final FeatureMap featureMap;
+  final Set<KnownVariantId> subscribedVariantIds;
   final FeatureManager featureManager;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Column(
+  Widget build(BuildContext context) => Column(
         children: [
           Expanded(child: _buildFeaturesList(featureMap)),
           resetFirstStartupButton(),
           setTrialDurationToZero(),
+          showSubscribedExperiments(context),
           continueButton(),
         ],
-      ),
-    );
-  }
+      );
 
   Widget _buildFeaturesList(FeatureMap features) => ListView.builder(
         itemBuilder: (_, i) {
@@ -167,6 +168,22 @@ class _FeaturesList extends StatelessWidget {
     );
   }
 
+  void onShowSubscribedExperiments(BuildContext context) {
+    final closeButton = IconButton(
+      icon: const Icon(Icons.close),
+      onPressed: () => Navigator.pop(context),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Subscribed experiments'),
+        content: Text(subscribedVariantIds.join('\n')),
+        actions: [closeButton],
+      ),
+    );
+  }
+
   Widget resetFirstStartupButton() => MaterialButton(
         color: Colors.white,
         onPressed: featureManager.resetFirstAppStartupDate,
@@ -177,6 +194,12 @@ class _FeaturesList extends StatelessWidget {
         color: Colors.white,
         onPressed: featureManager.setTrialDurationToZero,
         child: const Text('Set trial duration to 0'),
+      );
+
+  Widget showSubscribedExperiments(BuildContext context) => MaterialButton(
+        color: Colors.white,
+        onPressed: () => onShowSubscribedExperiments(context),
+        child: const Text('Show subscribed experiments'),
       );
 
   Widget continueButton() => MaterialButton(
