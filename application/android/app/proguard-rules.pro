@@ -1,1 +1,2 @@
 -keep class com.instabug.library.util.**
+-keep class com.airship.flutter.**
