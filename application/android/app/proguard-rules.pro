@@ -1,2 +1,2 @@
 -keep class com.instabug.library.util.**
--dontobfuscate
+-keep class com.airship.**
