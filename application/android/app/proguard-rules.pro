@@ -1,3 +1,3 @@
 -keep class com.instabug.library.util.**
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*,!code/allocation/variable
--keepattributes *Annotation*
+-keep class me.carda.awesome_notifications.** { *; }
+-keep class com.airship.** { *; }
