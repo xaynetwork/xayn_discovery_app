@@ -165,7 +165,7 @@ private_lane :build_with_flutter do |options|
     defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::PROVISIONING_PROFILE_NAME]
     defines["USER_CERTIFICATE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::CERTIFICATE_NAME]
   end
-  dartDefines = defines.map { |k, v| "--dart-define=#{k}=#{v}" }
+  dartDefines = defines.map { |k, v| "--dart-define=#{k}=\"#{v}\"" }
   if not codesign.empty?
     dartDefines << codesign
   end
@@ -177,7 +177,7 @@ private_lane :build_with_flutter do |options|
   end
 
   shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
-  flutter(args: %W(build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]}) + dartDefines, capture_stdout: true)
+  shell((%W(flutter build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
 end
 
 desc "Prepare internal key.properties"
