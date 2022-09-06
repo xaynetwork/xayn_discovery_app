@@ -1,2 +1,3 @@
 -keep class com.instabug.library.util.**
--keep class com.airship.**
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*,!code/allocation/variable
+-keepattributes *Annotation*
