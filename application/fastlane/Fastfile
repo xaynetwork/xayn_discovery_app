@@ -676,6 +676,11 @@ def maybe_pub_get(options)
 
   if lastLock == nil || lastPackages == nil || lastLock < lastPubGet
     pub_get(options)
+    if options[Options::PLATFORM] == Platforms::IOS && !File.file?('../ios/Podfile.lock')
+        Dir.chdir("../ios") do
+            sh("pod install")
+        end
+    end
   end
 end
 
