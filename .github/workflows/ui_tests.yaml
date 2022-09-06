@@ -68,5 +68,6 @@ jobs:
           GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
           JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
-        run:
+        run: |
+          flutter --version
           fastlane run_automation platform:ios
