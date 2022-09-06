@@ -24,6 +24,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_sh
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../../test_utils/dependency_overrides.dart';
@@ -37,6 +38,7 @@ import '../../test_utils/widget_test_utils.dart';
 void main() async {
   late AppDiscoveryEngine engine;
   late MockOverlayManager<DiscoveryState> overlayManager;
+  late MockFeatureManager featureManager;
   late MockAppDiscoveryEngine mockDiscoveryEngine;
   late MockFeedRepository feedRepository;
   late MockAreMarketsOutdatedUseCase areMarketsOutdatedUseCase;
@@ -77,6 +79,7 @@ void main() async {
   setUp(() async {
     eventsController = StreamController<EngineEvent>();
     overlayManager = MockOverlayManager();
+    featureManager = MockFeatureManager();
     areMarketsOutdatedUseCase = MockAreMarketsOutdatedUseCase();
     getSubscriptionStatusUseCase = MockGetSubscriptionStatusUseCase();
     fetchSessionUseCase = MockFetchSessionUseCase();
@@ -135,12 +138,16 @@ void main() async {
         (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
             .map(item_renderer.Card.document));
 
+    when(featureManager.isOnBoardingSheetsEnabled)
+        .thenAnswer((realInvocation) => true);
+
     di.reset();
 
     await configureTestDependencies();
 
     di.registerSingleton<DiscoveryEngine>(mockDiscoveryEngine);
     di.registerSingleton<FeedRepository>(feedRepository);
+    di.registerSingleton<FeatureManager>(featureManager);
     di.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
     di.registerLazySingleton<GetSubscriptionStatusUseCase>(
         () => getSubscriptionStatusUseCase);
@@ -355,6 +362,7 @@ void main() async {
       verify: (manager) {
         // return;
         verifyInOrder([
+          featureManager.isOnBoardingSheetsEnabled,
           needToShowOnboardingUseCase
               .singleOutput(OnboardingType.homeVerticalSwipe),
           overlayManager.show(any),
@@ -440,8 +448,8 @@ void main() async {
       },
       act: (manager) => manager.checkIfNeedToShowOnboarding(),
       verify: (manager) {
-        // return;
         verifyInOrder([
+          featureManager.isOnBoardingSheetsEnabled,
           needToShowOnboardingUseCase
               .singleOutput(OnboardingType.homeVerticalSwipe),
           needToShowOnboardingUseCase

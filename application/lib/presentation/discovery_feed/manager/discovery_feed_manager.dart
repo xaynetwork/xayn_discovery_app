@@ -371,6 +371,8 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
   }
 
   void checkIfNeedToShowOnboarding() async {
+    if (!featureManager.isOnBoardingSheetsEnabled) return;
+
     Future<bool> needShow(OnboardingType type) =>
         _needToShowOnboardingUseCase.singleOutput(type);
 

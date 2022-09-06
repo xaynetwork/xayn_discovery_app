@@ -1,5 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dart_remote_config/dart_remote_config.dart';
+import 'package:dart_remote_config/model/dart_remote_config_state.dart';
+import 'package:dart_remote_config/model/experimentation_engine_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
@@ -8,20 +10,6 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/manager/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/manager/redeem_promo_code_state.dart';
 
 import '../../../../test_utils/widget_test_utils.dart';
-
-class StringRemoteConfigFetcher
-    with RemoteConfigFetcherBase
-    implements RemoteConfigFetcher {
-  final RemoteConfigParser parser = const RemoteConfigParser();
-  final String input;
-
-  StringRemoteConfigFetcher(this.input);
-
-  @override
-  Future<RemoteConfigResponse> fetch() async {
-    return fromYamlStringContent(input, parser);
-  }
-}
 
 void main() {
   setUp(() async {
@@ -39,8 +27,11 @@ void main() {
       grantedSku: "extended_test_period"
       grantedDuration: 7776000
 """]) {
-    di.registerFactory<RemoteConfigFetcher>(
-        () => StringRemoteConfigFetcher(input));
+    final configs = const RemoteConfigParser().parse(input);
+    di.registerFactory<DartRemoteConfigState>(() =>
+        DartRemoteConfigState.success(
+            experiments: const ExperimentationEngineResult({}, []),
+            config: configs.configs.first));
     di.registerFactory<PackageInfo>(() => PackageInfo(
         appName: '', packageName: '', version: '3.47.0', buildNumber: ''));
     return di.get();
