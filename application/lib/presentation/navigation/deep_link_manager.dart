@@ -33,19 +33,15 @@ class DeepLinkManagerImpl extends DeepLinkManager {
         none: () => stack.replace(page),
         activeSearch: () => stack.replace(page),
         feed: (_) => stack.push(page),
-        cardDetails: (_) => stack.push(page),
+        cardDetails: (_) {
+          /// If the app is being opened, first replace the splash screen with the feed screen
+          if (manager.state.pages.last.name == PageName.splashScreen.name) {
+            changeStack((stack) => stack.replace(PageRegistry.discovery));
+          }
+          stack.push(page);
+        },
       ),
     );
-
-    // if (page.name == PageName.cardDetails.name) {
-    //   /// If the app is being opened, first replace the splash screen with the feed screen
-    //   if (manager.state.pages.last.name == PageName.splashScreen.name) {
-    //     changeStack((stack) => stack.replace(PageRegistry.discovery()));
-    //   }
-    //   changeStack((stack) => stack.push(page));
-    // } else {
-    //   changeStack((stack) => stack.replace(page));
-    // }
   }
 }
 
