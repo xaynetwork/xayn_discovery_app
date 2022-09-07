@@ -66,9 +66,13 @@ app.*.map.json
 assets/ai/
 fastlane/README.md
 
+
+
 #automation
 /automation/src/main/resources/config.properties
 /automation/*.iml
 /automation/target/*
 /automation/allure-results/*
 !categories.json
+
+assets/remote_config/*
