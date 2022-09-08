@@ -204,3 +204,5 @@ bottomSheetResettingAIBody: Zurücksetzen...
 notificationsChannelName: Benachrichtigungen
 notificationsChannelDescription: Benachrichtigungskanal für Tests
 notificationTitle: Here is an article you may like
+settingsSectionTitleNotifications: Notifications
+activatePushNotifications: Activate push notifications

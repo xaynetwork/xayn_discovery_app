@@ -18,6 +18,7 @@ abstract class LocalNotificationsService {
     required Duration delay,
     Uri? image,
   });
+  Future<bool> get isNotificationAllowed;
 }
 
 @LazySingleton(as: LocalNotificationsService)
@@ -64,6 +65,10 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
     _deepLinkManager.onDeepLink(deepLinkData);
   }
+
+  @override
+  Future<bool> get isNotificationAllowed =>
+      AwesomeNotifications().isNotificationAllowed();
 
   @override
   void requestPermission() {

@@ -184,16 +184,25 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   Future<SettingsScreenState?> computeState() async {
     if (!_initDone) return null;
-    SettingsScreenState buildReady() => SettingsScreenState.ready(
-          theme: _theme,
-          appVersion: _appVersion,
-          isPaymentEnabled: _featureManager.isPaymentEnabled,
-          areLocalNotificationsEnabled:
-              _featureManager.areLocalNotificationsEnabled,
-          areRemoteNotificationsEnabled:
-              _featureManager.areRemoteNotificationsEnabled,
-          subscriptionStatus: _subscriptionStatus,
-        );
+    Future<SettingsScreenState> buildReady() async {
+      final userNotificationsEnabled =
+          await _remoteNotificationsService.userNotificationsEnabled ?? false;
+      final isNotificationAllowed =
+          await _localNotificationsService.isNotificationAllowed;
+      return SettingsScreenState.ready(
+        theme: _theme,
+        appVersion: _appVersion,
+        isPaymentEnabled: _featureManager.isPaymentEnabled,
+        arePushNotificationsActive:
+            userNotificationsEnabled && isNotificationAllowed,
+        areLocalNotificationsEnabled:
+            _featureManager.areLocalNotificationsEnabled,
+        areRemoteNotificationsEnabled:
+            _featureManager.areRemoteNotificationsEnabled,
+        subscriptionStatus: _subscriptionStatus,
+      );
+    }
+
     return fold2(
       _appThemeHandler,
       _subscriptionStatusHandler,
@@ -206,7 +215,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         _subscriptionStatus = subscriptionStatus;
       }
 
-      return buildReady();
+      return await buildReady();
     });
   }
 
@@ -293,11 +302,23 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   }
 
   void requestRemoteNotificationPermission() =>
-      _remoteNotificationsService.enableNotifications();
+      scheduleComputeState(_remoteNotificationsService.enableNotifications);
 
   void copyChannelId() async {
     final channelId = await _remoteNotificationsService.channelId;
     if (channelId == null) return;
     Clipboard.setData(ClipboardData(text: channelId));
+  }
+
+  void togglePushNotificationsState() async {
+    scheduleComputeState(() async {
+      final arePushNotificationsActive =
+          await _remoteNotificationsService.userNotificationsEnabled ?? false;
+      if (arePushNotificationsActive) {
+        await _remoteNotificationsService.disableNotifications();
+      } else {
+        await _remoteNotificationsService.enableNotifications();
+      }
+    });
   }
 }

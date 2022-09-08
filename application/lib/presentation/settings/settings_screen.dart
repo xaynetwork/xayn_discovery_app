@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/local_notifications_debug_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/notifications_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/remote_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
@@ -94,6 +95,10 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
       ),
+      if (state.areRemoteNotificationsEnabled)
+        _buildNotificationsSection(
+          arePushNotificationsActive: state.arePushNotificationsActive,
+        ),
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
@@ -135,6 +140,14 @@ class _SettingsScreenState extends State<SettingsScreen>
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
+      );
+
+  Widget _buildNotificationsSection({
+    required bool arePushNotificationsActive,
+  }) =>
+      NotificationsSection(
+        togglePushNotificationsState: _manager.togglePushNotificationsState,
+        arePushNotificationsActive: arePushNotificationsActive,
       );
 
   Widget _buildAppThemeSection({

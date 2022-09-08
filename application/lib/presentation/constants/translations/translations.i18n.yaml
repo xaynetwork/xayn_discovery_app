@@ -212,3 +212,5 @@ bottomSheetResettingAIBody: Resetting...
 notificationsChannelName: Basic notifications
 notificationsChannelDescription: Notification channel for basic tests
 notificationTitle: Here is an article you may like
+settingsSectionTitleNotifications: Notifications
+activatePushNotifications: Activate push notifications

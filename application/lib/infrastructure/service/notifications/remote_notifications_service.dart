@@ -7,9 +7,9 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 abstract class RemoteNotificationsService {
   Stream<RemoteNotification> get notificationStream;
-  Future<void> enableNotifications();
-  Future<void> disableNotifications();
-  Future<void> clearNotifications();
+  Future<bool?> get userNotificationsEnabled;
+  Future<bool?> enableNotifications();
+  Future<bool?> disableNotifications();
   Future<String?> get channelId;
 }
 
@@ -48,15 +48,16 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
   }
 
   @override
-  Future<void> enableNotifications() =>
+  Future<bool?> get userNotificationsEnabled =>
+      Airship.userNotificationsEnabled;
+
+  @override
+  Future<bool?> enableNotifications() =>
       Airship.setUserNotificationsEnabled(true);
 
   @override
-  Future<void> disableNotifications() =>
+  Future<bool?> disableNotifications() =>
       Airship.setUserNotificationsEnabled(false);
-
-  @override
-  Future<void> clearNotifications() => Airship.clearNotifications();
 
   @override
   Future<String?> get channelId => Airship.channelId;

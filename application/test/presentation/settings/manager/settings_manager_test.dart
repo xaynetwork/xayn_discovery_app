@@ -31,6 +31,7 @@ void main() {
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
+    arePushNotificationsActive: false,
     areLocalNotificationsEnabled: false,
     areRemoteNotificationsEnabled: false,
     subscriptionStatus: subscriptionStatus,

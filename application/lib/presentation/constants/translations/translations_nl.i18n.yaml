@@ -204,3 +204,5 @@ bottomSheetResettingAIBody: Resetten...
 notificationsChannelName: Basismeldingen
 notificationsChannelDescription: Meldingskanaal voor testen
 notificationTitle: Here is an article you may like
+settingsSectionTitleNotifications: Notifications
+activatePushNotifications: Activate push notifications
