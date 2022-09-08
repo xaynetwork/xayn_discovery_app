@@ -82,6 +82,12 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - run: java -version
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
