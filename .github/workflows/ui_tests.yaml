@@ -97,4 +97,4 @@ jobs:
         timeout-minutes: 60
         working-directory: ./application
         run:
-          fastlane run_automation platform:ios
+          fastlane run_automation platform:android
