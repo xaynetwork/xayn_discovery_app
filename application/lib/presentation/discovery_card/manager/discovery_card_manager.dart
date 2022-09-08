@@ -20,7 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/create_bookm
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_is_bookmarked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/toggle_bookmark_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_document_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_article_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/gibberish_detection_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode/inject_reader_meta_data_use_case.dart';
@@ -78,7 +78,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   final AppManager _appManager;
   final SaveUserInteractionUseCase _saveUserInteractionUseCase;
   final SourcesManager _sourcesManager;
-  final ShareDocumentUseCase _shareDocumentUseCase;
+  final ShareArticleUseCase _shareArticleUseCase;
 
   /// html reader mode elements:
   ///
@@ -150,7 +150,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     this._saveUserInteractionUseCase,
     this._gibberishDetectionUseCase,
     this._sourcesManager,
-    this._shareDocumentUseCase,
+    this._shareArticleUseCase,
   ) : super(DiscoveryCardState.initial());
 
   void updateDocument(Document document) {
@@ -191,7 +191,14 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
     required Document document,
     required FeedType? feedType,
   }) async {
-    _shareDocumentUseCase.call(document).then((value) {
+    _shareArticleUseCase
+        .call(
+      ShareArticleUseCaseIn(
+        document: document,
+        processedDocument: state.processedDocument,
+      ),
+    )
+        .then((value) {
       _appManager.registerStateTransitionCallback(
           AppTransitionConditions.returnToApp, () {
         /// the app returned after being in background maybe show the rating dialog.

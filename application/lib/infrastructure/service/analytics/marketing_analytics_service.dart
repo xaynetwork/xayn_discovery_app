@@ -27,8 +27,8 @@ abstract class MarketingAnalyticsService {
   /// TODO: call this function in language change
   void setCurrentDeviceLanguage(String language);
 
-  Future<GenerateInviteLinkResult> generateLinkForSharingDocument({
-    required String encodedDocument,
+  Future<GenerateInviteLinkResult> generateLinkForSharingArticle({
+    required String encodedArticleData,
   });
 
   Future<String?> getUID();
@@ -130,8 +130,8 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   }
 
   @override
-  Future<GenerateInviteLinkResult> generateLinkForSharingDocument({
-    required String encodedDocument,
+  Future<GenerateInviteLinkResult> generateLinkForSharingArticle({
+    required String encodedArticleData,
   }) async {
     _appsflyer.setAppInviteOneLinkID(
         AnalyticsConstants.appInviteOneLinkID, (_) {});
@@ -141,7 +141,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     _appsflyer.generateInviteLink(
       _buildAppsFlyerInviteLinkParams(
         deepLinkName: AnalyticsConstants.deepLinkNameForSharingDocument,
-        encodedDocument: encodedDocument,
+        encodedArticleData: encodedArticleData,
       ),
       (map) {
         completer.complete(GenerateInviteLinkSuccess.fromMap(map));
@@ -155,11 +155,11 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
 
   AppsFlyerInviteLinkParams _buildAppsFlyerInviteLinkParams({
     required String deepLinkName,
-    required String encodedDocument,
+    required String encodedArticleData,
   }) =>
       AppsFlyerInviteLinkParams(
         customParams: {
-          AnalyticsConstants.documentLinkParamName: encodedDocument,
+          AnalyticsConstants.articleLinkParamName: encodedArticleData,
           AnalyticsConstants.deepLinkNameParamName: deepLinkName,
         },
       );
@@ -188,8 +188,8 @@ class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
   Future<String?> getUID() async => null;
 
   @override
-  Future<GenerateInviteLinkResult> generateLinkForSharingDocument({
-    required String encodedDocument,
+  Future<GenerateInviteLinkResult> generateLinkForSharingArticle({
+    required String encodedArticleData,
   }) async =>
       GenerateInviteLinkError();
 }
