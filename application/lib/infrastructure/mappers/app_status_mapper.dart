@@ -44,6 +44,8 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
     final cta = _mapToCTAMapper.map(map[AppStatusFields.cta]);
     final extraTrialDate = map[AppStatusFields.extraTrialDate] as DateTime?;
     final usedPromoCodes = map[AppStatusFields.usedPromoCodes] as List<String>?;
+    final userDidChangePushNotificationsStatus =
+        map[AppStatusFields.userDidChangePushNotificationsStatus] as bool?;
 
     return AppStatus(
       numberOfSessions: numberOfSessions ?? 0,
@@ -57,6 +59,8 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
       ratingDialogAlreadyVisible: ratingDialogAlreadyVisible ?? false,
       isBetaUser: isBetaUser ?? false,
       cta: cta,
+      userDidChangePushNotificationsStatus:
+          userDidChangePushNotificationsStatus ?? false,
     );
   }
 
@@ -76,6 +80,8 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         AppStatusFields.cta: _ctaMapToDbEntityMapper.map(entity.cta),
         AppStatusFields.extraTrialDate: entity.extraTrialEndDate,
         AppStatusFields.usedPromoCodes: entity.usedPromoCodes.toList(),
+        AppStatusFields.userDidChangePushNotificationsStatus:
+            entity.userDidChangePushNotificationsStatus,
       };
 }
 
@@ -93,4 +99,5 @@ abstract class AppStatusFields {
   static const int cta = 8;
   static const int extraTrialDate = 9;
   static const int usedPromoCodes = 10;
+  static const int userDidChangePushNotificationsStatus = 11;
 }

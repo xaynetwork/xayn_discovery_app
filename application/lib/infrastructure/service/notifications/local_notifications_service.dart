@@ -12,6 +12,7 @@ const String kChannelKey = 'basic_channel';
 
 abstract class LocalNotificationsService {
   void requestPermission();
+  void openNotificationsPage();
   Future<bool> sendNotification({
     required String body,
     required UniqueId documentId,
@@ -78,6 +79,10 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
       }
     });
   }
+
+  @override
+  void openNotificationsPage() => AwesomeNotifications()
+      .showNotificationConfigPage(channelKey: kChannelKey);
 
   @override
   Future<bool> sendNotification({
