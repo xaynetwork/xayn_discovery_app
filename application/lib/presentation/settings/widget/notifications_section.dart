@@ -24,6 +24,7 @@ class NotificationsSection extends StatelessWidget {
         SettingsTileData(
           title: R.strings.activatePushNotifications,
           svgIconPath: R.assets.icons.notification,
+          // ignore: deprecated_member_use
           action: SettingsTileActionSwitch(
             key: Keys.settingsNotifications,
             value: arePushNotificationsActive,
