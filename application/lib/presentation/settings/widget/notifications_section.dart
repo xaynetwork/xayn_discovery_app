@@ -23,9 +23,9 @@ class NotificationsSection extends StatelessWidget {
       SettingsCardData.fromTile(
         SettingsTileData(
           title: R.strings.activatePushNotifications,
-          svgIconPath: R.assets.icons.info,
+          svgIconPath: R.assets.icons.notification,
           action: SettingsTileActionSwitch(
-            key: Keys.settingsAboutXayn,
+            key: Keys.settingsNotifications,
             value: arePushNotificationsActive,
             onPressed: togglePushNotificationsState,
           ),
