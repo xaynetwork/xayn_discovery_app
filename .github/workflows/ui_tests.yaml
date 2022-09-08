@@ -82,19 +82,23 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
-      - name: Set up an Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: echo "starting emulator"
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Run UI Tests
+      - name: Set up an Emulator
         timeout-minutes: 60
         working-directory: ./application
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: echo "starting emulator"
         run:
           fastlane run_automation platform:android
+
+#      - name: Run UI Tests
+#        timeout-minutes: 60
+#        working-directory: ./application
+#        run:
+#          fastlane run_automation platform:android
