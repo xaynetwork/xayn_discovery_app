@@ -52,6 +52,9 @@ void main() {
   late MockGetSubscriptionManagementUrlUseCase
       getSubscriptionManagementUrlUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
+  late MockGetPushNotificationsStatusUseCase getPushNotificationsStatusUseCase;
+  late MockSavePushNotificationsStatusUseCase
+      savePushNotificationsStatusUseCase;
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
   late MockLocalNotificationsService localNotificationsService;
@@ -74,6 +77,9 @@ void main() {
     getSubscriptionManagementUrlUseCase =
         MockGetSubscriptionManagementUrlUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
+    getPushNotificationsStatusUseCase = MockGetPushNotificationsStatusUseCase();
+    savePushNotificationsStatusUseCase =
+        MockSavePushNotificationsStatusUseCase();
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
     localNotificationsService = MockLocalNotificationsService();
@@ -116,6 +122,12 @@ void main() {
       (_) => Future.value(
           GetSubscriptionManagementUrlOutput(subscriptionManagementURL)),
     );
+
+    when(localNotificationsService.isNotificationAllowed)
+        .thenAnswer((_) => Future.value(false));
+
+    when(remoteNotificationsService.userNotificationsEnabled)
+        .thenAnswer((_) => Future.value(false));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -133,6 +145,8 @@ void main() {
         listenSubscriptionStatusUseCase,
         getSubscriptionManagementUrlUseCase,
         sendAnalyticsUseCase,
+        getPushNotificationsStatusUseCase,
+        savePushNotificationsStatusUseCase,
         appManager,
         ratingDialogManager,
         localNotificationsService,
