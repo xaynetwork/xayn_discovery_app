@@ -108,6 +108,7 @@ void main() {
           cta: ctaValue,
           extraTrialEndDate: null,
           usedPromoCodes: {},
+          userDidChangePushNotificationsStatus: false,
         ),
       );
     });
@@ -132,6 +133,7 @@ void main() {
         cta: ctaValue,
         usedPromoCodes: {},
         extraTrialEndDate: null,
+        userDidChangePushNotificationsStatus: false,
       );
 
       final map = mapper.toMap(appStatus);
@@ -147,6 +149,7 @@ void main() {
         AppStatusFields.cta: ctaMap,
         AppStatusFields.extraTrialDate: null,
         AppStatusFields.usedPromoCodes: [],
+        AppStatusFields.userDidChangePushNotificationsStatus: false,
       };
       expect(map, expectedMap);
     });
