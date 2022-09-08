@@ -89,13 +89,11 @@ jobs:
 
       - name: Set up an Emulator
         timeout-minutes: 60
-        working-directory: ./application
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: echo "starting emulator"
-        run:
-          fastlane run_automation platform:android
+          script: cd application && fastlane run_automation platform:android
+
 
 #      - name: Run UI Tests
 #        timeout-minutes: 60
