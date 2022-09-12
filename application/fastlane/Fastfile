@@ -51,7 +51,6 @@ before_all do |lane, options|
   setIfNotSet.call(Options::BUILD_TYPE, BuildTypes::DEBUG)
   setIfNotSet.call(Options::UPLOAD_TO_APPCENTER, IS_CI)
   setIfNotSet.call(Options::COVERAGE, false)
-  setIfNotSet.call(Options::SKSL_PATH, "flutter_01.sksl.json")
   ## downloading the iOS adhoc profile
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, IS_CI)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
