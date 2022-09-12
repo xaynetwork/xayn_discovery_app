@@ -20,6 +20,9 @@ class CountrySelectionCard extends _CustomFeedCardBase {
               ? R.strings.countrySelectionCardSubtitle
               : '${R.strings.countrySelectionCardSelectedCountry.format(countryName)}\n${R.strings.countrySelectionCardSubtitle}',
           cTAString: R.strings.changeCountryRegionsCTA,
+          highlightedSubtitleText: countryName,
+          highlightedSubtitleTextStyle:
+              R.styles.mBoldStyle.copyWith(color: R.colors.brightText),
           onPressed: onPressed,
           animationAsset: R.assets.lottie.countrySelection,
           primaryCardShader: primaryCardShader,
@@ -65,6 +68,8 @@ class _CustomFeedCardBase extends StatelessWidget {
   final String title;
   final String subtitle;
   final String cTAString;
+  final String? highlightedSubtitleText;
+  final TextStyle? highlightedSubtitleTextStyle;
 
   _CustomFeedCardBase({
     Key? key,
@@ -74,6 +79,8 @@ class _CustomFeedCardBase extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.cTAString,
+    this.highlightedSubtitleText,
+    this.highlightedSubtitleTextStyle,
   })  : primaryCardShader =
             primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
         super(key: key);
@@ -90,11 +97,20 @@ class _CustomFeedCardBase extends StatelessWidget {
         style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
       ),
       SizedBox(height: R.dimen.unit2),
-      Text(
-        subtitle,
-        textAlign: TextAlign.center,
-        style: R.styles.mStyle.copyWith(color: R.colors.brightText),
-      ),
+      if (highlightedSubtitleText == null)
+        Text(
+          subtitle,
+          textAlign: TextAlign.center,
+          style: R.styles.mStyle.copyWith(color: R.colors.brightText),
+        )
+      else
+        getHighlightedText(
+          text: subtitle,
+          highlight: highlightedSubtitleText!,
+          textAlign: TextAlign.center,
+          labelTextStyle: R.styles.mStyle.copyWith(color: R.colors.brightText),
+          highlightTextStyle: highlightedSubtitleTextStyle,
+        ),
       SizedBox(height: R.dimen.unit2_5),
       _buildCTABtn(),
     ];
