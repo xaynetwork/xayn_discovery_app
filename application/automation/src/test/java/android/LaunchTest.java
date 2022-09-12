@@ -8,5 +8,6 @@ public class LaunchTest extends AndroidTestBase {
     @Test(description = "Simple test to launch the app")
     @TestCase()
     public void LaunchingApp() {
+        System.out.println("LAUNCHING THE APP");
     }
 }
