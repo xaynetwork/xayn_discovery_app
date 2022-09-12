@@ -60,7 +60,7 @@ jobs:
           os_version: ${{ env.ios_os_version }}
 
       - name: Open Simulator
-       run:  "open -a Simulator.app"
+        run:  "open -a Simulator.app"
 
       - name: Checkout
         uses: actions/checkout@v2
