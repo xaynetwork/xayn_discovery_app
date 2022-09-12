@@ -42,7 +42,7 @@ concurrency:
 
 jobs:
   ui-tests-ios:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - name: Install Appium
         run: npm install -g appium
