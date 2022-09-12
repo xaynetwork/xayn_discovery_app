@@ -58,6 +58,7 @@ jobs:
         with:
           model: ${{ env.ios_device }}
           os_version: ${{ env.ios_os_version }}
+        run: "open -a Simulator.app"
 
       - name: Checkout
         uses: actions/checkout@v2
