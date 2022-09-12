@@ -41,36 +41,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-#  ui-tests-ios:
-#    runs-on: macos-latest
-#    steps:
-#      - name: Install Appium
-#        run: npm install -g appium
-#
-#      - name: Install Flutter
-#        uses: subosito/flutter-action@v2
-#        with:
-#          channel: ${{ env.flutter_channel }}
-#          flutter-version: ${{ env.flutter_version }}
-#
-#      - name: Set up a Simulator
-#        uses: futureware-tech/simulator-action@v1
-#        with:
-#          model: ${{ env.ios_device }}
-#          os_version: ${{ env.ios_os_version }}
-#
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 0
-#
-#      - name: Run UI Tests
-#        timeout-minutes: 60
-#        working-directory: ./application
-#        run:
-#          fastlane run_automation platform:ios
-
-  ui-tests-android:
+  ui-tests-ios:
     runs-on: macos-latest
     steps:
       - name: Install Appium
@@ -82,23 +53,52 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
-      - uses: actions/setup-java@v3
+      - name: Set up a Simulator
+        uses: futureware-tech/simulator-action@v1
         with:
-          distribution: 'temurin'
-          java-version: '11'
-      - run: java -version
+          model: ${{ env.ios_device }}
+          os_version: ${{ env.ios_os_version }}
 
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Set up an Emulator
+      - name: Run UI Tests
         timeout-minutes: 60
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: cd application && fastlane run_automation platform:android test_suite:debug
+        working-directory: ./application
+        run:
+          fastlane run_automation platform:ios test_suite:debug
+
+#  ui-tests-android:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Install Appium
+#        run: npm install -g appium
+#
+#      - name: Install Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: ${{ env.flutter_channel }}
+#          flutter-version: ${{ env.flutter_version }}
+#
+#      - uses: actions/setup-java@v3
+#        with:
+#          distribution: 'temurin'
+#          java-version: '11'
+#      - run: java -version
+#
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Set up an Emulator
+#        timeout-minutes: 60
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 29
+#          script: cd application && fastlane run_automation platform:android test_suite:debug
 
 
 #      - name: Run UI Tests
