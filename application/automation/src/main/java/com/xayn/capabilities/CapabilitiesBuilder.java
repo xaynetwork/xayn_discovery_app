@@ -29,6 +29,12 @@ public class CapabilitiesBuilder {
     private SimpleEntry<String, String> xcodeSigningId;
     private SimpleEntry<String, String> updatedWDABundleId;
 
+    private SimpleEntry<String, Integer> wdaRetries;
+
+    private SimpleEntry<String, Integer> wdaLaunchTimeout;
+
+    private SimpleEntry<String, Integer> wdaConnectionTimeout;
+
     public CapabilitiesBuilder() {
     }
 
@@ -86,6 +92,21 @@ public class CapabilitiesBuilder {
 
     public CapabilitiesBuilder setFullResetValue(boolean value) {
         this.fullResetValue = new SimpleEntry<>("fullReset", Boolean.toString(value));
+        return this;
+    }
+
+    public CapabilitiesBuilder setWdaStartupRetries(int value) {
+        this.wdaRetries = new SimpleEntry<>("wdaStartupRetries", value);
+        return this;
+    }
+
+    public CapabilitiesBuilder setWdaLaunchTimeout(int value) {
+        this.wdaLaunchTimeout = new SimpleEntry<>("wdaLaunchTimeout", value);
+        return this;
+    }
+
+    public CapabilitiesBuilder setWdaConnectionTimeout(int value) {
+        this.wdaConnectionTimeout = new SimpleEntry<>("wdaConnectionTimeout", value);
         return this;
     }
 

@@ -29,6 +29,9 @@ public abstract class IOSTestBase extends TestBase {
                 .setXcodeSigningId("Iphone Developer")
                 .setUpdatedWDABundleId(WDA_BUNDLE_ID)
                 .setFullResetValue(false)
+                .setWdaStartupRetries(5)
+                .setWdaConnectionTimeout(1000)
+                .setWdaLaunchTimeout(30000)
                 .setApp(APP)
                 .build();
         AppiumHandler.createDriver(PlatformType.IOS, desiredCapabilities);
