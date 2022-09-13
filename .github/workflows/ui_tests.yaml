@@ -74,13 +74,17 @@ jobs:
         with:
           name: screenshot
           path: screenshot.png
+      - name: Download Screenshots
+        uses: actions/download-artifact@v3
+        with:
+          name: screenshot
         
 
-      - name: Run UI Tests
-        timeout-minutes: 60
-        working-directory: ./application
-        run:
-          fastlane run_automation platform:ios test_suite:debug
+#      - name: Run UI Tests
+#        timeout-minutes: 60
+#        working-directory: ./application
+#        run:
+#          fastlane run_automation platform:ios test_suite:debug
 
 #  ui-tests-android:
 #    runs-on: macos-latest
