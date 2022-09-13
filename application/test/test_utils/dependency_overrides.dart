@@ -220,9 +220,6 @@ class TestDiscoveryEngine with AsyncInitMixin implements AppDiscoveryEngine {
     // TODO: implement overrideSources
     throw UnimplementedError();
   }
-
-  @override
-  String? get lastDbOverrideError => throw UnimplementedError();
 }
 
 @LazySingleton(as: AnalyticsService)
