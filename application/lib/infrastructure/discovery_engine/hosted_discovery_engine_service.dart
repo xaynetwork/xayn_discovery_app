@@ -32,7 +32,6 @@ class HostedDiscoveryEngineService {
       StreamController<ClientEventSucceeded>();
   final StreamController<RequestFeedType> _onNextFeedBatchRequest =
       StreamController<RequestFeedType>.broadcast();
-  final StreamController<void> _onChangeUserReaction = StreamController<void>();
   late final StreamSubscription<List<Document>> _feedSubscription;
   late final Uri _endPoint = Uri.parse(Env.searchApiBaseUrl)
       .replace(pathSegments: [_kUserApiPath, const Uuid().v4()]);
@@ -43,10 +42,8 @@ class HostedDiscoveryEngineService {
 
   Stream<EngineEvent> get events => Rx.merge([_onSuccess.stream, _feedEvents]);
 
-  Stream<EngineEvent> get _feedEvents => _onChangeUserReaction.stream
-      .startWith(null)
-      .switchMap((_) => _onNextFeedBatchRequest.stream)
-      .asyncExpand(
+  Stream<EngineEvent> get _feedEvents => _onNextFeedBatchRequest.stream
+      .switchMap(
         (requestFeedType) => Stream.fromFuture(_requestPersonalizedFeed())
             .asyncMap(_onFeedUpdate)
             .map(
@@ -72,7 +69,6 @@ class HostedDiscoveryEngineService {
   @mustCallSuper
   void close() {
     _onNextFeedBatchRequest.close();
-    _onChangeUserReaction.close();
     _feedSubscription.cancel();
   }
 
@@ -99,7 +95,6 @@ class HostedDiscoveryEngineService {
       );
     }
 
-    _onChangeUserReaction.add(null);
     _onSuccess.add(ok);
     _interactionCount++;
 
