@@ -67,6 +67,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - shell: bash
+        run: xcrun simctl io booted screenshot screenshot.png
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshot
+          path: screenshot.png
+        
+
       - name: Run UI Tests
         timeout-minutes: 60
         working-directory: ./application
