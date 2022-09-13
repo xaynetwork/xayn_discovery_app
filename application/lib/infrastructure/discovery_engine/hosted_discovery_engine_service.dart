@@ -8,11 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 const ok = ClientEventSucceeded();
 
-const _kAuthority = 'discovery-web-zdf.xaynet.dev';
 const _kUserApiPath = 'user';
 const _kPostHeaders = {
   'Content-Type': 'application/json',
@@ -24,6 +25,7 @@ enum RequestFeedType { restore, nextBatch }
 class HostedDiscoveryEngineService {
   final int batchSize = 2;
   final AppStatusRepository appStatusRepository;
+  final HiveExplicitDocumentFeedbackRepository feedbackRepository;
 
   final JsonCodec _codec = const JsonCodec();
   final StreamController<ClientEventSucceeded> _onSuccess =
@@ -32,11 +34,10 @@ class HostedDiscoveryEngineService {
       StreamController<RequestFeedType>.broadcast();
   final StreamController<void> _onChangeUserReaction = StreamController<void>();
   late final StreamSubscription<List<Document>> _feedSubscription;
-  late final Uri _endPoint = Uri.https(
-    _kAuthority,
-    '$_kUserApiPath/${const Uuid().v4()}',
-  );
+  late final Uri _endPoint = Uri.parse(Env.searchApiBaseUrl)
+      .replace(pathSegments: [_kUserApiPath, const Uuid().v4()]);
   final Set<Uri> _observedUrls = {};
+  int _interactionCount = 0;
 
   String get userId => appStatusRepository.appStatus.userId.value;
 
@@ -53,7 +54,6 @@ class HostedDiscoveryEngineService {
                   ? RestoreFeedSucceeded(it)
                   : NextFeedBatchRequestSucceeded(it),
             )
-            .doOnError((p0, p1) => print('$p0 -> $p1'))
             .onErrorReturn(
               requestFeedType == RequestFeedType.restore
                   ? const RestoreFeedFailed(FeedFailureReason.dbError)
@@ -62,14 +62,19 @@ class HostedDiscoveryEngineService {
       )
       .cast<EngineEvent>();
 
+  HostedDiscoveryEngineService({
+    required this.appStatusRepository,
+    required this.feedbackRepository,
+  }) {
+    feedbackRepository.clear();
+  }
+
   @mustCallSuper
   void close() {
     _onNextFeedBatchRequest.close();
     _onChangeUserReaction.close();
     _feedSubscription.cancel();
   }
-
-  HostedDiscoveryEngineService({required this.appStatusRepository});
 
   Future<EngineEvent> changeUserReaction({
     required DocumentId documentId,
@@ -96,6 +101,11 @@ class HostedDiscoveryEngineService {
 
     _onChangeUserReaction.add(null);
     _onSuccess.add(ok);
+    _interactionCount++;
+
+    if (_interactionCount == 2) {
+      _observedUrls.clear();
+    }
 
     return ok;
   }
