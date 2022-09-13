@@ -68,7 +68,7 @@ jobs:
           fetch-depth: 0
 
       - shell: bash
-        run: sleep 2m
+        run: sleep 120
 
       - shell: bash
         run: xcrun simctl io booted screenshot screenshot.png
