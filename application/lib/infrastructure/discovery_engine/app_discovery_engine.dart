@@ -339,4 +339,7 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
     final param = NumberOfActiveSelectedCountriesIdentityParam(markets.length);
     _setIdentityParamUseCase.call(param);
   }
+
+  @override
+  String? get lastDbOverrideError => _engine.lastDbOverrideError;
 }
