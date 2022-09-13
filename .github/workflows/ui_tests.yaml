@@ -68,6 +68,9 @@ jobs:
           fetch-depth: 0
 
       - shell: bash
+        run: sleep 30
+
+      - shell: bash
         run: xcrun simctl io booted screenshot screenshot.png
       - name: Upload screenshot
         uses: actions/upload-artifact@v3
