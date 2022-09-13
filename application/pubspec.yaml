@@ -115,6 +115,7 @@ dependency_overrides:
   provider: 6.0.2
   dart_style: 2.2.2
   json_serializable: 6.1.4
+  crypto: ^3.0.2
 
 # Please list dependencies alphabetically!
 dev_dependencies:
@@ -127,6 +128,8 @@ dev_dependencies:
   freezed: 2.0.5
   injectable_generator: 1.5.3
   mockito: 5.1.0
+  integration_test:
+    sdk: flutter
 
 flutter:
   fonts:
