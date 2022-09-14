@@ -21,6 +21,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -85,6 +86,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
+  final PushNotificationsCardInjectionUseCase
+      pushNotificationsCardInjectionUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -112,6 +115,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.handleSurveyBannerClickedUseCase,
     this.handleSurveyBannerShownUseCase,
     this.surveyCardInjectionUseCase,
+    this.pushNotificationsCardInjectionUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
@@ -368,13 +372,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final cards = await surveyCardInjectionUseCase.singleOutput(
+        var cards = await surveyCardInjectionUseCase.singleOutput(
           SurveyCardInjectionData(
             currentCards: state.cards,
             nextDocuments: documents,
             status: surveyConditionStatus,
           ),
         );
+
+        cards = await pushNotificationsCardInjectionUseCase.singleOutput(
+          PushNotificationsCardInjectionData(
+            currentCards: state.cards,
+          ),
+        );
+
         final sets = await maybeReduceCardCount(cards);
         final nextCardIndex = sets.nextCardIndex;
 

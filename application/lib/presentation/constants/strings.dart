@@ -18,7 +18,7 @@ import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 /// field, which is done by the [switchTranslations(appLanguage)] method.
 class Strings {
   static Translations? _translation;
-  static const Translations _defaultTranslation = Translations();
+  static const Translations _defaultTranslation = const Translations();
   static Future<CountryNames>? _countryNames;
 
   static final Future<CountryNames> _defaultCountryNames =

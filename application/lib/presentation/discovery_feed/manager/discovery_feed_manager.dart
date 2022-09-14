@@ -15,6 +15,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/next_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/restore_feed_failed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
@@ -94,6 +95,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
     HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
     SurveyCardInjectionUseCase customCardInjectionUseCase,
+    PushNotificationsCardInjectionUseCase pushNotificationsCardInjectionUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -113,6 +115,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           customCardInjectionUseCase,
+          pushNotificationsCardInjectionUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
