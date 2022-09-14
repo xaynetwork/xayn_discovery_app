@@ -40,7 +40,7 @@ dependencies:
     git:
       url: https://github.com/svonidze/francd
       ref: 170e633af9a7b8b31769eb232f99e105e1359692
-  freezed_annotation: 2.0.3
+  freezed_annotation: 2.1.0
   fwfh_chewie: 0.7.0+1
   get_it: 7.2.0
   gibberish:
@@ -119,12 +119,12 @@ dependency_overrides:
 # Please list dependencies alphabetically!
 dev_dependencies:
   bloc_test: 8.5.0
-  build_runner: 2.2.0
+  build_runner: 2.2.1
   envify_generator: 2.0.2
   flutter_lints: 2.0.1
   flutter_test:
     sdk: flutter
-  freezed: 2.0.5
+  freezed: 2.1.0+1
   injectable_generator: 1.5.3
   mockito: 5.1.0
 
