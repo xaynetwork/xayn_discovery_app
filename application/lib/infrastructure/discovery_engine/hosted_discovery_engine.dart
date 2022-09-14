@@ -44,10 +44,8 @@ class HostedDiscoveryEngine implements DiscoveryEngine {
   }
 
   @override
-  Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) {
-    // TODO: implement closeFeedDocuments
-    throw UnimplementedError();
-  }
+  Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) =>
+      _service.closeFeedDocuments(documentIds);
 
   @override
   Future<void> dispose() {
