@@ -39,6 +39,7 @@ class HostedDiscoveryEngineService {
       .replace(pathSegments: [_kUserApiPath, const Uuid().v4()]);
   final Set<Uri> _observedUrls = {};
   int _interactionCount = 0;
+  Future<http.Response>? _activeRequest;
 
   String get userId => appStatusRepository.appStatus.userId.value;
 
@@ -51,7 +52,7 @@ class HostedDiscoveryEngineService {
   Stream<EngineEvent> get _feedEvents => _onNextFeedBatchRequest.stream
       .switchMap(
         (requestFeedType) => Stream.fromFuture(_requestPersonalizedFeed())
-            .asyncMap(_onFeedUpdate)
+            .map(_onFeedUpdate)
             .map(
               (it) => requestFeedType == RequestFeedType.restore
                   ? RestoreFeedSucceeded(it)
@@ -63,7 +64,7 @@ class HostedDiscoveryEngineService {
                   : const NextFeedBatchRequestFailed(FeedFailureReason.dbError),
             ),
       )
-      .cast<EngineEvent>();
+      .doOnData(_onFeedEvent);
 
   Stream<EngineEvent> get _updateEvents => _onDocumentUpdate.stream
       .map((it) => [it])
@@ -126,21 +127,27 @@ class HostedDiscoveryEngineService {
     return ok;
   }
 
-  Future<List<Document>> _onFeedUpdate(List<Document> documents) async {
-    final batch = documents.take(batchSize).toList(growable: false);
+  List<Document> _onFeedUpdate(List<Document> documents) =>
+      documents.take(batchSize).toList(growable: false);
 
-    _observedUrls.addAll(batch.map((it) => it.resource.url));
-
-    return batch;
+  void _onFeedEvent(EngineEvent event) {
+    if (event is NextFeedBatchRequestSucceeded) {
+      _observedUrls.addAll(event.items.map((it) => it.resource.url));
+    }
   }
 
   Future<List<Document>> _requestPersonalizedFeed() async {
     final endPoint = _endPoint
         .replace(pathSegments: [..._endPoint.pathSegments, 'documents']);
-    final response = await http.get(
+
+    final req = _activeRequest ??= http.get(
       endPoint,
       headers: _kPostHeaders,
     );
+
+    final response = await req;
+
+    _activeRequest = null;
 
     if (!response.statusCode.is2xx) {
       throw response.body;
