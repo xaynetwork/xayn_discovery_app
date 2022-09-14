@@ -32,6 +32,8 @@ class HostedDiscoveryEngineService {
       StreamController<ClientEventSucceeded>();
   final StreamController<RequestFeedType> _onNextFeedBatchRequest =
       StreamController<RequestFeedType>.broadcast();
+  final StreamController<Document> _onDocumentUpdate =
+      StreamController<Document>();
   late final StreamSubscription<List<Document>> _feedSubscription;
   late final Uri _endPoint = Uri.parse(Env.searchApiBaseUrl)
       .replace(pathSegments: [_kUserApiPath, const Uuid().v4()]);
@@ -40,7 +42,11 @@ class HostedDiscoveryEngineService {
 
   String get userId => appStatusRepository.appStatus.userId.value;
 
-  Stream<EngineEvent> get events => Rx.merge([_onSuccess.stream, _feedEvents]);
+  Stream<EngineEvent> get events => Rx.merge([
+        _onSuccess.stream,
+        _feedEvents,
+        _updateEvents,
+      ]);
 
   Stream<EngineEvent> get _feedEvents => _onNextFeedBatchRequest.stream
       .switchMap(
@@ -58,6 +64,10 @@ class HostedDiscoveryEngineService {
             ),
       )
       .cast<EngineEvent>();
+
+  Stream<EngineEvent> get _updateEvents => _onDocumentUpdate.stream
+      .map((it) => [it])
+      .map(EngineEvent.documentsUpdated);
 
   HostedDiscoveryEngineService({
     required this.appStatusRepository,
@@ -109,6 +119,10 @@ class HostedDiscoveryEngineService {
       RequestFeedType requestFeedType) async {
     _onNextFeedBatchRequest.add(requestFeedType);
 
+    return ok;
+  }
+
+  Future<EngineEvent> closeFeedDocuments(Set<DocumentId> documentIds) async {
     return ok;
   }
 
