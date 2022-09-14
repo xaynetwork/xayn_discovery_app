@@ -101,7 +101,7 @@ dependencies:
       ref: 86d51742f619b8619e891bb3746056e70ad0279a
   xayn_discovery_engine_flutter:
     hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
-    version: 0.1.0+main.220908121713
+    version: 0.1.0+main.220914085310
   xayn_readability:
     git:
       url: https://github.com/xaynetwork/xayn_readability.git
