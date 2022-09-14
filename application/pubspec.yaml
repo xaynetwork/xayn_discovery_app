@@ -116,6 +116,7 @@ dependency_overrides:
   dart_style: 2.2.2
   json_serializable: 6.1.4
   fwfh_text_style: 2.22.8+1
+  build_resolvers: 2.0.9
 
 # Please list dependencies alphabetically!
 dev_dependencies:
