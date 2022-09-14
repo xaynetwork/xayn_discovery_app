@@ -206,3 +206,10 @@ notificationsChannelDescription: Meldingskanaal voor testen
 notificationTitle: Here is an article you may like
 settingsSectionTitleNotifications: Notifications
 activatePushNotifications: Activate push notifications
+countrySelectionCardTitle: Are we in the right region?
+countrySelectionCardSubtitle: You can change and select up to 3 countries to receive news from
+countrySelectionCardSelectedCountry: You're currently receiving news from %s.
+sourceSelectionCardTitle: Did you know you can directly follow news outlets?
+sourceSelectionCardSubtitle: You can also hide news outlets you don't like to see at all
+changeCountryRegionsCTA: Change region now
+manageNewsSourcesCTA: Manage news sources now
