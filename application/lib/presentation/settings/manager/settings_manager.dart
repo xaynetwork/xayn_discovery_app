@@ -30,8 +30,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/get_push_notifications_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -77,8 +76,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetSubscriptionManagementUrlUseCase
       _getSubscriptionManagementUrlUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
-  final GetPushNotificationsStatusUseCase _getPushNotificationsStatusUseCase;
-  final SavePushNotificationsStatusUseCase _savePushNotificationsStatusUseCase;
+  final TogglePushNotificationsStatusUseCase
+      _togglePushNotificationsStatusUseCase;
   final AppManager _appManager;
   final RatingDialogManager _ratingDialogManager;
   final LocalNotificationsService _localNotificationsService;
@@ -100,8 +99,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._listenSubscriptionStatusUseCase,
     this._getSubscriptionManagementUrlUseCase,
     this._sendAnalyticsUseCase,
-    this._getPushNotificationsStatusUseCase,
-    this._savePushNotificationsStatusUseCase,
+    this._togglePushNotificationsStatusUseCase,
     this._appManager,
     this._ratingDialogManager,
     this._localNotificationsService,
@@ -316,29 +314,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     Clipboard.setData(ClipboardData(text: channelId));
   }
 
-  void togglePushNotificationsState() async {
-    final userDidChangePushNotifications =
-        await _getPushNotificationsStatusUseCase.singleOutput(none);
-    final isNotificationAllowed =
-        await _localNotificationsService.isNotificationAllowed;
-
-    // If the user tapped on the don't allow button on the native dialog,
-    // and tries to toggle push notifications, redirect them to Settings
-    if (userDidChangePushNotifications && !isNotificationAllowed) {
-      _localNotificationsService.openNotificationsPage();
-      return;
-    } else if (!userDidChangePushNotifications) {
-      await _savePushNotificationsStatusUseCase.call(none);
-    }
-
-    final arePushNotificationsActive =
-        await _remoteNotificationsService.userNotificationsEnabled ?? false;
-    if (arePushNotificationsActive) {
-      await _remoteNotificationsService.disableNotifications();
-    } else {
-      await _remoteNotificationsService.enableNotifications();
-    }
-
-    scheduleComputeState(() {});
-  }
+  void togglePushNotificationsState() =>
+      scheduleComputeState(() => _togglePushNotificationsStatusUseCase(none));
 }

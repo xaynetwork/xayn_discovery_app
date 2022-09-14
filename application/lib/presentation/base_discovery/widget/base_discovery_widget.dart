@@ -15,8 +15,7 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/push_notifications_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/survey_card.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/custom_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
@@ -287,7 +286,13 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                             ttsData.enabled ? TtsData.disabled() : it),
                         feedType: manager.feedType,
                       )
-                    : _cardFromType(card.type),
+                    : CustomFeedCard(
+                        cardType: card.type,
+                        onPressed: () =>
+                            manager.handleCustomCardTapped(card.type),
+                        primaryCardShader:
+                            ShaderFactory.fromType(ShaderType.static),
+                      ),
               );
 
         return Semantics(
@@ -311,27 +316,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                   )
                 : cardWidget);
       };
-
-  StatelessWidget _cardFromType(CardType cardType) {
-    switch (cardType) {
-      case CardType.survey:
-        return SurveyCard(
-          cardType: cardType,
-          onPressed: manager.handleSurveyTapped,
-          primaryCardShader: ShaderFactory.fromType(ShaderType.static),
-        );
-
-      case CardType.pushNotifications:
-        return PushNotificationsCard(
-          cardType: cardType,
-          onPressed: () {},
-          primaryCardShader: ShaderFactory.fromType(ShaderType.static),
-        );
-
-      case CardType.document:
-        return Container();
-    }
-  }
 
   ShaderType _getShaderType(NewsResource newsResource) {
     // A document doesn't have a unique 'index',
@@ -358,6 +342,13 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         final normalizedIndex = index.clamp(0, results.length - 1);
         final card = results.elementAt(normalizedIndex);
+        if (card.type == CardType.pushNotifications) {
+          return Border.all(
+            color: R.colors.searchResultSkeletonHighlight,
+            width: R.dimen.sentimentBorderSize,
+          );
+        }
+
         final document = card.document;
         final managers =
             document != null ? cardManagersCache.managersOf(document) : null;

@@ -44,6 +44,10 @@ void main() {
   late MockHandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   late MockHandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
+  late MockPushNotificationsCardInjectionUseCase
+      pushNotificationsCardInjectionUseCase;
+  late MockTogglePushNotificationsStatusUseCase
+      togglePushNotificationsStatusUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
@@ -60,6 +64,10 @@ void main() {
     handleSurveyBannerClickedUseCase = MockHandleSurveyBannerClickedUseCase();
     handleSurveyBannerShownUseCase = MockHandleSurveyBannerShownUseCase();
     surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
+    pushNotificationsCardInjectionUseCase =
+        MockPushNotificationsCardInjectionUseCase();
+    togglePushNotificationsStatusUseCase =
+        MockTogglePushNotificationsStatusUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
@@ -125,6 +133,8 @@ void main() {
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           surveyCardInjectionUseCase,
+          pushNotificationsCardInjectionUseCase,
+          togglePushNotificationsStatusUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(

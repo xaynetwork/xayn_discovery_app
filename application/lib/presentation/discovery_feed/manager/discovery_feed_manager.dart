@@ -23,6 +23,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
@@ -96,6 +97,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
     SurveyCardInjectionUseCase customCardInjectionUseCase,
     PushNotificationsCardInjectionUseCase pushNotificationsCardInjectionUseCase,
+    TogglePushNotificationsStatusUseCase togglePushNotificationsStatusUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -116,6 +118,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           handleSurveyBannerShownUseCase,
           customCardInjectionUseCase,
           pushNotificationsCardInjectionUseCase,
+          togglePushNotificationsStatusUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,

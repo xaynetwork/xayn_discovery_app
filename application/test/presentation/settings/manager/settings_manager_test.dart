@@ -52,9 +52,8 @@ void main() {
   late MockGetSubscriptionManagementUrlUseCase
       getSubscriptionManagementUrlUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
-  late MockGetPushNotificationsStatusUseCase getPushNotificationsStatusUseCase;
-  late MockSavePushNotificationsStatusUseCase
-      savePushNotificationsStatusUseCase;
+  late MockTogglePushNotificationsStatusUseCase
+      togglePushNotificationsStatusUseCase;
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
   late MockLocalNotificationsService localNotificationsService;
@@ -77,9 +76,8 @@ void main() {
     getSubscriptionManagementUrlUseCase =
         MockGetSubscriptionManagementUrlUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
-    getPushNotificationsStatusUseCase = MockGetPushNotificationsStatusUseCase();
-    savePushNotificationsStatusUseCase =
-        MockSavePushNotificationsStatusUseCase();
+    togglePushNotificationsStatusUseCase =
+        MockTogglePushNotificationsStatusUseCase();
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
     localNotificationsService = MockLocalNotificationsService();
@@ -145,8 +143,7 @@ void main() {
         listenSubscriptionStatusUseCase,
         getSubscriptionManagementUrlUseCase,
         sendAnalyticsUseCase,
-        getPushNotificationsStatusUseCase,
-        savePushNotificationsStatusUseCase,
+        togglePushNotificationsStatusUseCase,
         appManager,
         ratingDialogManager,
         localNotificationsService,

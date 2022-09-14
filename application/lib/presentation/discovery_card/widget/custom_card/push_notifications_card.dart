@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 class PushNotificationsCard extends StatelessWidget {
@@ -30,41 +30,30 @@ class PushNotificationsCard extends StatelessWidget {
       Text(
         R.strings.activatePushNotifications,
         textAlign: TextAlign.center,
-        style: R.styles.lBoldStyle.copyWith(color: R.colors.brightText),
+        style: R.styles.lBoldStyle.copyWith(color: R.colors.primaryText),
       ),
       SizedBox(height: R.dimen.unit2),
       Text(
         R.strings.pushNotificationsCardSubtitle,
         textAlign: TextAlign.center,
-        style: R.styles.mStyle.copyWith(color: R.colors.brightText),
+        style: R.styles.mStyle.copyWith(color: R.colors.primaryText),
       ),
-      SizedBox(height: R.dimen.unit2),
+      SizedBox(height: R.dimen.unit),
       _buildPerks(),
       SizedBox(height: R.dimen.unit2_5),
       _buildAllowNotificationsBtn(),
     ];
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: CustomPaint(
-            painter: StaticPainter(
-              shadowColor: R.colors.shadow,
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: R.dimen.unit4,
-            vertical: R.dimen.unit6,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          ),
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: R.dimen.unit2_25,
+        vertical: R.dimen.unit8,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: children,
+      ),
     );
   }
 
@@ -74,9 +63,9 @@ class PushNotificationsCard extends StatelessWidget {
   Widget _buildPerks() => SettingsSection(
       topPadding: .0,
       items: [
-        'R.strings.pushNotificationsCardPerk1',
-        'R.strings.pushNotificationsCardPerk2',
-        'R.strings.pushNotificationsCardPerk3',
+        R.strings.pushNotificationsCardPerk1,
+        R.strings.pushNotificationsCardPerk2,
+        R.strings.pushNotificationsCardPerk3,
       ]
           .map(
             (it) => SettingsTileData(

@@ -27,6 +27,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
@@ -88,6 +89,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
   final PushNotificationsCardInjectionUseCase
       pushNotificationsCardInjectionUseCase;
+  final TogglePushNotificationsStatusUseCase
+      togglePushNotificationsStatusUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -116,6 +119,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.handleSurveyBannerShownUseCase,
     this.surveyCardInjectionUseCase,
     this.pushNotificationsCardInjectionUseCase,
+    this.togglePushNotificationsStatusUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
@@ -208,7 +212,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     ));
   }
 
-  void handleSurveyTapped() => handleSurveyBannerClickedUseCase(none);
+  void handleCustomCardTapped(CardType cardType) {
+    switch (cardType) {
+      case CardType.survey:
+        handleSurveyBannerClickedUseCase(none);
+        break;
+
+      case CardType.pushNotifications:
+        togglePushNotificationsStatusUseCase(none);
+        break;
+
+      default:
+        break;
+    }
+  }
 
   void handleLoadMore();
 
