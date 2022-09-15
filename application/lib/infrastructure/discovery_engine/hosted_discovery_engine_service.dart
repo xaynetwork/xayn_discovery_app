@@ -90,6 +90,8 @@ class HostedDiscoveryEngineService {
     // as we can only support a `like` for now, ignore all other reaction types.
     if (!userReaction.supportsChangeUserReaction) return ok;
 
+    _activeRequest = null;
+
     final endPoint = _endPoint
         .replace(pathSegments: [..._endPoint.pathSegments, 'interaction']);
     final response = await http.post(
@@ -147,8 +149,6 @@ class HostedDiscoveryEngineService {
 
     final response = await req;
 
-    _activeRequest = null;
-
     if (!response.statusCode.is2xx) {
       throw response.body;
     }
@@ -189,10 +189,27 @@ extension _DocumentExtension on Map<String, dynamic> {
           score: this['_score'] as double?,
           language: this['language'] as String,
           country: this['country'] as String,
-          datePublished: DateFormat('yyyy-MM-dd hh:mm:ss')
-              .parse(this['published_date'] as String),
+          datePublished: _parseDateTime(),
           snippet: this['description'] as String,
           sourceDomain: Source(this['clean_url'] as String),
         ),
       );
+
+  DateTime _parseDateTime() {
+    final value = this['published_date'] as String?;
+    var date = DateTime.now();
+
+    if (value == null) return date;
+
+    final formatterA = DateFormat('yyyy-MM-dd hh:mm:ss'),
+        formatterB = DateFormat('yyyy-MM-dd');
+
+    try {
+      date = formatterA.parse(value);
+    } catch (e) {
+      date = formatterB.parse(value);
+    }
+
+    return date;
+  }
 }
