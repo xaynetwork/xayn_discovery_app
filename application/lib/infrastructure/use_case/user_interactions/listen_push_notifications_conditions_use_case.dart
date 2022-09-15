@@ -21,8 +21,8 @@ class ListenPushNotificationsConditionsStatusUseCase
   );
 
   @override
-  Stream<PushNotificationsConditionsStatus> transaction(None param) async* {
-    yield* userInteractionsRepository.watch().map(
+  Stream<PushNotificationsConditionsStatus> transaction(None param) {
+    return userInteractionsRepository.watch().map(
       (_) {
         final numberOfSessions = appStatusRepository.appStatus.numberOfSessions;
         final userInteractions = userInteractionsRepository.userInteractions;

@@ -51,9 +51,6 @@ class PushNotificationsCardInjectionUseCase
   bool shouldMarkInjectionPoint(PushNotificationsCardInjectionData data) =>
       nextDocumentSibling == null &&
       data.status == PushNotificationsConditionsStatus.reached;
-  //  &&
-  // data.nextDocumentsCount > data.currentDocumentsCount &&
-  // data.nextDocumentsCount > 2;
 
   @visibleForTesting
   Iterable<Card> toCards(Set<Document> documents) sync* {
@@ -72,11 +69,6 @@ class PushNotificationsCardInjectionData {
   final Set<Card> currentCards;
   final Set<Document>? nextDocuments;
   final PushNotificationsConditionsStatus? status;
-
-  int get currentDocumentsCount =>
-      currentCards.where((it) => it.document != null).length;
-
-  int get nextDocumentsCount => nextDocuments?.length ?? 0;
 
   const PushNotificationsCardInjectionData({
     required this.currentCards,
