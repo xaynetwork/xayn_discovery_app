@@ -389,10 +389,6 @@ extension on SwipeOption {
     switch (this) {
       case SwipeOption.like:
         return UserReaction.positive;
-      case SwipeOption.neutral:
-        return UserReaction.neutral;
-      case SwipeOption.dislike:
-        return UserReaction.negative;
     }
   }
 }

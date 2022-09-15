@@ -15,7 +15,6 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/local_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/remote_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
@@ -91,9 +90,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         _buildSubscriptionSection(
           subscriptionStatus: state.subscriptionStatus,
         ),
-      _buildHomeFeedSection(
-        isPaymentEnabled: state.isPaymentEnabled,
-      ),
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
@@ -127,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       );
 
-  Widget _buildHomeFeedSection({
+  /*Widget _buildHomeFeedSection({
     required bool isPaymentEnabled,
   }) =>
       SettingsHomeFeedSection(
@@ -135,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
-      );
+      );*/
 
   Widget _buildAppThemeSection({
     required AppTheme appTheme,
