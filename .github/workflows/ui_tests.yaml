@@ -87,7 +87,7 @@ jobs:
         timeout-minutes: 60
         working-directory: ./application
         run:
-          fastlane run_automation platform:ios test_suite:debug
+          flutter test integration_test
 
 #  ui-tests-android:
 #    runs-on: macos-latest
