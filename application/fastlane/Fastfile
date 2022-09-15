@@ -82,6 +82,7 @@ end
 
 desc "Checks properties required for automated execution locally"
 lane :check_automation_config do |options|
+  maybe_pub_get(options)
   hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn"])
   deviceName, deviceId, deviceVersion, app = ""
   platform = options[Options::PLATFORM]
@@ -118,7 +119,7 @@ lane :check_automation_config do |options|
     options[_Options::BUILD_FOR_SIMULATOR] = true
     build_with_flutter(options)
     app = File.expand_path("../build/ios/iphonesimulator/Runner.app")
-    UI.user_error! ".app file isn't found" unless File.exist?[app]
+    UI.user_error! ".app file isn't found" unless File.exist?(app)
   end
   setProperties("../automation/src/main/resources/config.properties",
                 {
@@ -151,7 +152,8 @@ private_lane :build_with_flutter do |options|
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
-  # shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  sksl_path = options[Options::SKSL_PATH]
+  shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path #{sksl_path}) : []
   buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
@@ -165,19 +167,19 @@ private_lane :build_with_flutter do |options|
     defines["USER_PROVISIONING_PROFILE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::PROVISIONING_PROFILE_NAME]
     defines["USER_CERTIFICATE"] = Config::IOS_BUILD_CONFIG[flavor][Keys::CERTIFICATE_NAME]
   end
-  dartDefines = defines.map { |k, v| "--dart-define=#{k}=#{v}" }
+  dartDefines = defines.map { |k, v| "--dart-define=#{k}=\"#{v}\"" }
   if not codesign.empty?
     dartDefines << codesign
   end
-  # if not shaders.empty?
-  # dartDefines += shaders
-  # end
+  if not shaders.empty?
+    dartDefines += shaders
+  end
   if not buildForSimulator.empty?
     dartDefines << buildForSimulator
   end
 
   shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
-  flutter(args: %W(build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name=#{options[Options::VERSION_NAME]}) + dartDefines, capture_stdout: true)
+  shell((%W(flutter build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
 end
 
 desc "Prepare internal key.properties"
@@ -676,6 +678,11 @@ def maybe_pub_get(options)
 
   if lastLock == nil || lastPackages == nil || lastLock < lastPubGet
     pub_get(options)
+    if options[Options::PLATFORM] == Platforms::IOS && !File.file?('../ios/Podfile.lock')
+        Dir.chdir("../ios") do
+            sh("pod install")
+        end
+    end
   end
 end
 

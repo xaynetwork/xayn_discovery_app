@@ -31,8 +31,8 @@ enum Feature {
         'When enabled, collects the user interactions in order to prompt the survey card',
   ),
 
-  /// Keep flag for remote config
-  altPromoCode(Owner.Simon, true, description: 'PromoCodes are handled inApp'),
+  altPromoCode(Owner.Simon, false,
+      description: 'PromoCodes are handled inApp', remoteKey: 'alt-promo-code'),
   onBoardingSheets(
     Owner.Michael,
     false,
