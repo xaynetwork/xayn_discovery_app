@@ -27,10 +27,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
@@ -84,6 +86,10 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
+  final ListenPushNotificationsConditionsStatusUseCase
+      listenPushNotificationsConditionsStatusUseCase;
+  final ListenPushNotificationsStatusUseCase
+      listenPushNotificationsStatusUseCase;
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
@@ -115,6 +121,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
     this.listenSurveyConditionsStatusUseCase,
+    this.listenPushNotificationsConditionsStatusUseCase,
+    this.listenPushNotificationsStatusUseCase,
     this.handleSurveyBannerClickedUseCase,
     this.handleSurveyBannerShownUseCase,
     this.surveyCardInjectionUseCase,
@@ -129,6 +137,17 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   late final UseCaseValueStream<SurveyConditionsStatus>
       surveyConditionStatusStream = consume(
     listenSurveyConditionsStatusUseCase,
+    initialData: none,
+  );
+
+  late final UseCaseValueStream<PushNotificationsConditionsStatus>
+      pushNotificationsConditionStatusStream = consume(
+    listenPushNotificationsConditionsStatusUseCase,
+    initialData: none,
+  );
+
+  late final UseCaseValueStream<bool> pushNotificationsStatusStream = consume(
+    listenPushNotificationsStatusUseCase,
     initialData: none,
   );
 
@@ -369,11 +388,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold6(
+  Future<DiscoveryState?> computeState() async => fold8(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         cardStream,
         surveyConditionStatusStream,
+        pushNotificationsConditionStatusStream,
+        pushNotificationsStatusStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
       ).foldAll((
@@ -381,6 +402,8 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         explicitDocumentFeedback,
         documents,
         surveyConditionStatus,
+        pushNotificationsConditionStatus,
+        pushNotificationsStatus,
         subscriptionStatus,
         readerModeSettings,
         errorReport,
@@ -399,7 +422,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         cards = await pushNotificationsCardInjectionUseCase.singleOutput(
           PushNotificationsCardInjectionData(
-            currentCards: state.cards,
+            currentCards: cards,
+            nextDocuments: documents,
+            status: pushNotificationsConditionStatus,
           ),
         );
 

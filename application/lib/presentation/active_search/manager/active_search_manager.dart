@@ -20,10 +20,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
@@ -76,6 +78,9 @@ class ActiveSearchManager extends BaseDiscoveryManager
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
     ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase,
+    ListenPushNotificationsConditionsStatusUseCase
+        listenPushNotificationsConditionsStatusUseCase,
+    ListenPushNotificationsStatusUseCase listenPushNotificationsStatusUseCase,
     HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
     HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
     SurveyCardInjectionUseCase customCardInjectionUseCase,
@@ -96,6 +101,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
           listenSurveyConditionsStatusUseCase,
+          listenPushNotificationsConditionsStatusUseCase,
+          listenPushNotificationsStatusUseCase,
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           customCardInjectionUseCase,

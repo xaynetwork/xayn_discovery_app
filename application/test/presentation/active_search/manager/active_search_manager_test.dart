@@ -41,6 +41,10 @@ void main() {
   late MockListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   late MockListenSurveyConditionsStatusUseCase
       listenSurveyConditionsStatusUseCase;
+  late MockListenPushNotificationsConditionsStatusUseCase
+      listenPushNotificationsConditionsStatusUseCase;
+  late MockListenPushNotificationsStatusUseCase
+      listenPushNotificationsStatusUseCase;
   late MockHandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   late MockHandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
@@ -61,6 +65,10 @@ void main() {
     listenReaderModeSettingsUseCase = MockListenReaderModeSettingsUseCase();
     listenSurveyConditionsStatusUseCase =
         MockListenSurveyConditionsStatusUseCase();
+    listenPushNotificationsConditionsStatusUseCase =
+        MockListenPushNotificationsConditionsStatusUseCase();
+    listenPushNotificationsStatusUseCase =
+        MockListenPushNotificationsStatusUseCase();
     handleSurveyBannerClickedUseCase = MockHandleSurveyBannerClickedUseCase();
     handleSurveyBannerShownUseCase = MockHandleSurveyBannerShownUseCase();
     surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
@@ -130,6 +138,8 @@ void main() {
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
           listenSurveyConditionsStatusUseCase,
+          listenPushNotificationsConditionsStatusUseCase,
+          listenPushNotificationsStatusUseCase,
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           surveyCardInjectionUseCase,
