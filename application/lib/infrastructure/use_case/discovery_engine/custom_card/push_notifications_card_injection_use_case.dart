@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/get_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/can_display_push_notifications_card_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @lazySingleton
@@ -18,25 +15,21 @@ class PushNotificationsCardInjectionUseCase
   /// is not static, older cards are removed as you keep swiping down,
   /// thus a logical index is not kept.
   Document? nextDocumentSibling;
-  final FeatureManager featureManager;
-  final GetPushNotificationsStatusUseCase getPushNotificationsStatusUseCase;
+  final CanDisplayPushNotificationsCardUseCase
+      _canDisplayPushNotificationsCardUseCase;
 
   PushNotificationsCardInjectionUseCase(
-    this.featureManager,
-    this.getPushNotificationsStatusUseCase,
+    this._canDisplayPushNotificationsCardUseCase,
   );
 
   @override
   Stream<Set<Card>> transaction(
       PushNotificationsCardInjectionData param) async* {
     final nextDocuments = param.nextDocuments;
-    final userDidChangePushNotifications =
-        await getPushNotificationsStatusUseCase.singleOutput(none);
+    final canDisplay =
+        await _canDisplayPushNotificationsCardUseCase.singleOutput(none);
 
-    if (Platform.isAndroid ||
-        nextDocuments == null ||
-        userDidChangePushNotifications ||
-        !featureManager.areRemoteNotificationsEnabled) {
+    if (nextDocuments == null || canDisplay == false) {
       yield param.currentCards;
     } else {
       if (shouldMarkInjectionPoint(param)) {

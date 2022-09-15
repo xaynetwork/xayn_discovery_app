@@ -103,6 +103,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/can_display_push_notifications_card_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/get_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_push_notifications_status_use_case.dart';
@@ -290,6 +291,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   TogglePushNotificationsStatusUseCase,
   ListenPushNotificationsConditionsStatusUseCase,
   ListenPushNotificationsStatusUseCase,
+  CanDisplayPushNotificationsCardUseCase,
 ])
 class Mocks {
   Mocks._();

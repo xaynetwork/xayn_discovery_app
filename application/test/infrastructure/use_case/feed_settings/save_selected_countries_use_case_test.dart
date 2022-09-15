@@ -17,6 +17,8 @@ void main() {
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockFeatureManager featureManager;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
+  late MockCanDisplayPushNotificationsCardUseCase
+      canDisplayPushNotificationsCardUseCase;
 
   const uaMarket = InternalFeedMarket(countryCode: 'UA', languageCode: 'uk');
   const usMarket = InternalFeedMarket(countryCode: 'US', languageCode: 'en');
@@ -41,9 +43,12 @@ void main() {
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
+    canDisplayPushNotificationsCardUseCase =
+        MockCanDisplayPushNotificationsCardUseCase();
     saveUserInteractionUseCase = SaveUserInteractionUseCase(
       userInteractionsRepository,
       canDisplaySurveyBannerUseCase,
+      canDisplayPushNotificationsCardUseCase,
     );
     useCase = SaveSelectedCountriesUseCase(
       repository,

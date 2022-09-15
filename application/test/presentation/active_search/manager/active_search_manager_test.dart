@@ -55,6 +55,8 @@ void main() {
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
+  late MockCanDisplayPushNotificationsCardUseCase
+      canDisplayPushNotificationsCardUseCase;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -79,6 +81,8 @@ void main() {
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
+    canDisplayPushNotificationsCardUseCase =
+        MockCanDisplayPushNotificationsCardUseCase();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -150,6 +154,7 @@ void main() {
           SaveUserInteractionUseCase(
             userInteractionsRepository,
             canDisplaySurveyBannerUseCase,
+            canDisplayPushNotificationsCardUseCase,
           ),
         );
   });

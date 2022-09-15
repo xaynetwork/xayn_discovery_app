@@ -11,13 +11,18 @@ import '../../../test_utils/utils.dart';
 void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
+  late MockCanDisplayPushNotificationsCardUseCase
+      canDisplayPushNotificationsCardUseCase;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
 
   userInteractionsRepository = MockUserInteractionsRepository();
   canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
+  canDisplayPushNotificationsCardUseCase =
+      MockCanDisplayPushNotificationsCardUseCase();
   saveUserInteractionUseCase = SaveUserInteractionUseCase(
     userInteractionsRepository,
     canDisplaySurveyBannerUseCase,
+    canDisplayPushNotificationsCardUseCase,
   );
 
   final initialUserInteractions = UserInteractions.initial();
