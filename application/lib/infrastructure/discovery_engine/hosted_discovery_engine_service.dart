@@ -37,7 +37,8 @@ class HostedDiscoveryEngineService {
   late final StreamSubscription<List<Document>> _feedSubscription;
   late final Uri _endPoint = Uri.parse(Env.searchApiBaseUrl)
       .replace(pathSegments: [_kUserApiPath, const Uuid().v4()]);
-  final Set<Uri> _observedUrls = {};
+  final Map<Uri, bool> _observedUrls = <Uri, bool>{};
+  final Map<Uri, Document> _cache = <Uri, Document>{};
   int _interactionCount = 0;
   Future<http.Response>? _activeRequest;
 
@@ -134,7 +135,9 @@ class HostedDiscoveryEngineService {
 
   void _onFeedEvent(EngineEvent event) {
     if (event is NextFeedBatchRequestSucceeded) {
-      _observedUrls.addAll(event.items.map((it) => it.resource.url));
+      for (final it in event.items) {
+        _observedUrls[it.resource.url] = true;
+      }
     }
   }
 
@@ -158,8 +161,9 @@ class HostedDiscoveryEngineService {
 
     return documents
         .cast<Map<String, Object?>>()
-        .map((it) => it.toDocument)
-        .where((it) => !_observedUrls.contains(it.resource.url))
+        .map((it) => _cache.putIfAbsent(
+            Uri.parse(it['link'] as String), () => it.toDocument))
+        .where((it) => !_observedUrls.containsKey(it.resource.url))
         .toList(growable: false);
   }
 }
