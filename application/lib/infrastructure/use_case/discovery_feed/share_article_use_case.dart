@@ -6,19 +6,17 @@ import 'package:xayn_discovery_app/domain/model/remote_content/processed_documen
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/generate_invite_link_result.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/document/encode_article_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/util/article_data_utils.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 @injectable
 class ShareArticleUseCase extends UseCase<ShareArticleUseCaseIn, ArticleData> {
   final MarketingAnalyticsService _marketingAnalyticsService;
-  final EncodeArticleUseCase _encodeArticleUseCase;
   final ShareUriUseCase _shareUriUseCase;
 
   ShareArticleUseCase(
     this._marketingAnalyticsService,
-    this._encodeArticleUseCase,
     this._shareUriUseCase,
   );
 
@@ -39,8 +37,7 @@ class ShareArticleUseCase extends UseCase<ShareArticleUseCaseIn, ArticleData> {
       providerFavIcon: documentProvider?.favicon,
     );
 
-    final encodedArticleData =
-        await _encodeArticleUseCase.singleOutput(articleData);
+    final encodedArticleData = ArticleDataUtils.encodeArticleData(articleData);
     final generateInviteLinkResult = await _marketingAnalyticsService
         .generateLinkForSharingArticle(encodedArticleData: encodedArticleData);
 

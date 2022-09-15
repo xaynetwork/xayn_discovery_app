@@ -89,8 +89,6 @@ import 'package:xayn_discovery_app/infrastructure/use_case/deep_link/retrieve_de
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/document/decode_article_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/document/encode_article_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_supported_countries_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_selected_countries_use_case.dart';
@@ -189,11 +187,9 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DbEntityMapToCountrySelectionInLineCardMapper,
   DbEntityMapToSourceSelectionInLineCardMapper,
   DiscoveryCardManager,
-  DecodeArticleUseCase,
   Document,
   DocumentRepository,
   EditReaderModeSettingsManager,
-  EncodeArticleUseCase,
   EngineEventsUseCase,
   ExtractLogUseCase,
   FeatureManager,
