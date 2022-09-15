@@ -62,6 +62,8 @@ void main() {
     when(featureManager.isPromptSurveyEnabled).thenReturn(true);
     when(canDisplaySurveyBannerUseCase.singleOutput(none))
         .thenAnswer((_) => Future.value(true));
+    when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+        .thenAnswer((_) => Future.value(true));
   });
 
   test(
