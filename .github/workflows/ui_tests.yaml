@@ -84,7 +84,7 @@ jobs:
         
 
       - name: Run UI Tests
-        timeout-minutes: 60
+        timeout-minutes: 10
         working-directory: ./application
         run:
           flutter test integration_test
