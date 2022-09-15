@@ -153,7 +153,7 @@ private_lane :build_with_flutter do |options|
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
   sksl_path = options[Options::SKSL_PATH]
-  shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path #{sksl_path}) : []
+  shaders =  Platforms::IOS && ! sksl_path.nil? && ! sksl_path.empty? ? %W(--bundle-sksl-path #{sksl_path}) : []
   buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
