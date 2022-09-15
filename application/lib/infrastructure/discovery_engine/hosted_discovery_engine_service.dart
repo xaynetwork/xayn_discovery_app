@@ -40,7 +40,7 @@ class HostedDiscoveryEngineService {
   final Map<Uri, bool> _observedUrls = <Uri, bool>{};
   final Map<Uri, Document> _cache = <Uri, Document>{};
   int _interactionCount = 0;
-  Future<http.Response>? _activeRequest;
+  Future<List<Document>>? _activeRequest;
 
   String get userId => appStatusRepository.appStatus.userId.value;
 
@@ -91,8 +91,6 @@ class HostedDiscoveryEngineService {
     // as we can only support a `like` for now, ignore all other reaction types.
     if (!userReaction.supportsChangeUserReaction) return ok;
 
-    _activeRequest = null;
-
     final endPoint = _endPoint
         .replace(pathSegments: [..._endPoint.pathSegments, 'interaction']);
     final response = await http.post(
@@ -111,6 +109,8 @@ class HostedDiscoveryEngineService {
 
     _onSuccess.add(ok);
     _interactionCount++;
+
+    if (_interactionCount >= 2) _activeRequest = null;
 
     if (_interactionCount == 2) {
       _observedUrls.clear();
@@ -145,24 +145,29 @@ class HostedDiscoveryEngineService {
     final endPoint = _endPoint
         .replace(pathSegments: [..._endPoint.pathSegments, 'documents']);
 
-    final req = _activeRequest ??= http.get(
+    final req = _activeRequest ??= http
+        .get(
       endPoint,
       headers: _kPostHeaders,
-    );
+    )
+        .then((response) {
+      if (!response.statusCode.is2xx) {
+        throw response.body;
+      }
 
-    final response = await req;
+      final documents = _codec
+          .decode(const Utf8Decoder().convert(response.bodyBytes)) as List;
 
-    if (!response.statusCode.is2xx) {
-      throw response.body;
-    }
+      return documents
+          .cast<Map<String, Object?>>()
+          .map((it) => _cache.putIfAbsent(
+              Uri.parse(it['link'] as String), () => it.toDocument))
+          .toList(growable: false);
+    });
 
-    final documents =
-        _codec.decode(const Utf8Decoder().convert(response.bodyBytes)) as List;
+    final documents = await req;
 
     return documents
-        .cast<Map<String, Object?>>()
-        .map((it) => _cache.putIfAbsent(
-            Uri.parse(it['link'] as String), () => it.toDocument))
         .where((it) => !_observedUrls.containsKey(it.resource.url))
         .toList(growable: false);
   }
