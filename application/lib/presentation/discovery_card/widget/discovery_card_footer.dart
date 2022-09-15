@@ -59,14 +59,14 @@ class DiscoveryCardFooter extends StatelessWidget {
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(Keys.navBarItemShare.valueKey);
 
-    final dislikeButton = AppGhostButton.icon(
+    /*final dislikeButton = AppGhostButton.icon(
       explicitDocumentUserReaction.isIrrelevant
           ? R.assets.icons.thumbsDownActive
           : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,
       iconColor: R.colors.brightIcon,
     ).withSemanticsLabel(
-        '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isIrrelevant}');
+        '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isIrrelevant}');*/
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +74,6 @@ class DiscoveryCardFooter extends StatelessWidget {
         likeButton,
         bookmarkButton,
         shareButton,
-        dislikeButton,
       ],
     );
   }

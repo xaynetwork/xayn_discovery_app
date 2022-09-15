@@ -138,18 +138,6 @@ class _ActiveSearchState
           buildNavBarItemEditFont(
             onPressed: onEditReaderModeSettingsPressed,
           ),
-          buildNavBarItemDisLike(
-            isDisLiked: managers.discoveryCardManager.state
-                .explicitDocumentUserReaction.isIrrelevant,
-            onPressed: () => managers.discoveryCardManager.onFeedback(
-              document: document,
-              userReaction: managers.discoveryCardManager.state
-                      .explicitDocumentUserReaction.isIrrelevant
-                  ? UserReaction.neutral
-                  : UserReaction.negative,
-              feedType: FeedType.search,
-            ),
-          ),
         ],
         isWidthExpanded: true,
         showAboveKeyboard: true,

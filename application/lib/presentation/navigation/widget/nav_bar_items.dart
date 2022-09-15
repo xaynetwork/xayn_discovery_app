@@ -37,20 +37,6 @@ NavBarItemIconButton buildNavBarItemLike({
       semanticsLabel: '${Keys.navBarItemLike.valueKey} = $isLiked',
     );
 
-NavBarItemIconButton buildNavBarItemDisLike({
-  required VoidCallback onPressed,
-  required bool isDisLiked,
-}) =>
-    NavBarItemIconButton(
-      svgIconPath: isDisLiked
-          ? R.linden.assets.icons.thumbsDownActive
-          : R.linden.assets.icons.thumbsDown,
-      isHighlighted: false,
-      onPressed: onPressed,
-      key: Keys.navBarItemDisLike,
-      semanticsLabel: '${Keys.navBarItemDisLike.valueKey} = $isDisLiked',
-    );
-
 NavBarItemIconButton buildNavBarItemShare({
   required VoidCallback onPressed,
 }) =>

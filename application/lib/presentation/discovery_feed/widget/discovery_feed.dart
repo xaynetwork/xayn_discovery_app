@@ -37,10 +37,6 @@ class _DiscoveryFeedState
                   hideTooltip();
                   _manager.onHomeNavPressed();
                 }),
-            buildNavBarItemSearch(onPressed: () {
-              hideTooltip();
-              _manager.onSearchNavPressed();
-            }),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
@@ -109,18 +105,6 @@ class _DiscoveryFeedState
                   )),
           buildNavBarItemEditFont(
             onPressed: onEditReaderModeSettingsPressed,
-          ),
-          buildNavBarItemDisLike(
-            isDisLiked: managers.discoveryCardManager.state
-                .explicitDocumentUserReaction.isIrrelevant,
-            onPressed: () => managers.discoveryCardManager.onFeedback(
-              document: document,
-              userReaction: managers.discoveryCardManager.state
-                      .explicitDocumentUserReaction.isIrrelevant
-                  ? UserReaction.neutral
-                  : UserReaction.negative,
-              feedType: FeedType.feed,
-            ),
           ),
         ],
         isWidthExpanded: true,
