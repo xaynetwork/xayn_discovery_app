@@ -22,7 +22,8 @@ class PushNotificationsCardInjectionUseCase
     final userDidChangePushNotifications =
         await getPushNotificationsStatusUseCase.singleOutput(none);
 
-    if (userDidChangePushNotifications) {
+    if (userDidChangePushNotifications ||
+        !featureManager.areRemoteNotificationsEnabled) {
       yield param.currentCards;
       return;
     }
