@@ -152,7 +152,8 @@ private_lane :build_with_flutter do |options|
   flavor = options[Options::FLAVOR]
   appName = Config::FLAVOR_MATRIX[flavor][platform][Keys::NAME]
   appId = Config::FLAVOR_MATRIX[flavor][platform][Keys::ID]
-  # shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path flutter_01.sksl.json) : []
+  sksl_path = options[Options::SKSL_PATH]
+  shaders = platform == Platforms::IOS ? %W(--bundle-sksl-path #{sksl_path}) : []
   buildForSimulator = options[_Options::BUILD_FOR_SIMULATOR] ? "--simulator" : ""
 
   defines = {
@@ -170,9 +171,9 @@ private_lane :build_with_flutter do |options|
   if not codesign.empty?
     dartDefines << codesign
   end
-  # if not shaders.empty?
-  # dartDefines += shaders
-  # end
+  if not shaders.empty?
+    dartDefines += shaders
+  end
   if not buildForSimulator.empty?
     dartDefines << buildForSimulator
   end
