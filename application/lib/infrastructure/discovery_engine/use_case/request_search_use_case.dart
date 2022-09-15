@@ -28,6 +28,7 @@ class RequestSearchUseCase extends UseCase<String, EngineEvent> {
     // because 1+ request counts could have been made during connection downtime,
     // we only allow the most recent one to actually pass, once the connection restores.
     if (_requestCount == localRequestCount) {
+      await _engine.closeActiveSearch();
       yield await _engine.requestQuerySearch(param);
     }
   }

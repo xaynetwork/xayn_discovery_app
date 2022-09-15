@@ -69,6 +69,8 @@ module Config
 
     KEY_ID = :keyId
 
+    SKSL_PATH = :skslPath
+
     def self.doc_PLATFORM() "ios, android" end
     PLATFORM = :platform
 
