@@ -12,6 +12,8 @@ env:
   java_version: '12.x'
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
+  android_api_level: '29'
+  test_suite: 'sanity'
   FASTLANE_SKIP_UPDATE_CHECK: '1'
   PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
   APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
@@ -115,9 +117,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up an Emulator
-        timeout-minutes: 60
+      - name: Set Up Emulator And Run Tests
+        timeout-minutes: 30
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          script: cd application && fastlane run_automation platform:android test_suite:debug
+          api-level: ${{ env.android_api_level }}
+          script: cd application && fastlane run_automation platform:android test_suite:${{ env.test_suite }}

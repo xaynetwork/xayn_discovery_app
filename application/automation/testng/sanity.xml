@@ -5,13 +5,13 @@
         <listener class-name="com.xayn.listeners.ITestListenerImp"/>
         <listener class-name="com.xayn.listeners.AnnotationTransformerImp"/>
     </listeners>
-    <test name="IOS">
-        <classes>
-            <class name="ios.IOSBookmarkingTest"/>
-            <class name="ios.IOSNewsFeedTest"/>
-            <class name="ios.IOSReaderModeTest"/>
-        </classes>
-    </test>
+<!--    <test name="IOS">-->
+<!--        <classes>-->
+<!--            <class name="ios.IOSBookmarkingTest"/>-->
+<!--            <class name="ios.IOSNewsFeedTest"/>-->
+<!--            <class name="ios.IOSReaderModeTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
     <test name="Android">
         <classes>
             <class name="android.AndroidBookmarkingTest"/>
