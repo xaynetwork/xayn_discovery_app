@@ -118,7 +118,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Up Emulator And Run Tests
-        timeout-minutes: 30
+        timeout-minutes: 60
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.android_api_level }}
