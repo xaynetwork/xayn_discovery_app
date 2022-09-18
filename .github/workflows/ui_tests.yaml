@@ -77,8 +77,8 @@ jobs:
 #      - name: Upload screenshot
 #        uses: actions/upload-artifact@v3
 #        with:
-#          name: screenshot
-#          path: screenshot.png
+#          name: screenshots
+#          path: src/main/resources/screenshots
 #      - name: Download Screenshots
 #        uses: actions/download-artifact@v3
 #        with:
@@ -123,3 +123,13 @@ jobs:
         with:
           api-level: ${{ env.android_api_level }}
           script: cd application && fastlane run_automation platform:android test_suite:${{ env.test_suite }}
+
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots
+          path: ./application/automation/src/main/resources/screenshots
+      - name: Download Screenshots
+        uses: actions/download-artifact@v3
+        with:
+          name: screenshots
