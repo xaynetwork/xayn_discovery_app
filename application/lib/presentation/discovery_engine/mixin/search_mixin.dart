@@ -68,7 +68,7 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
   void _startConsuming() async {
     _didStartConsuming = true;
 
-    final requestSearchUseCase = di.get<RestoreSearchUseCase>();
+    final restoreSearchUseCase = di.get<RestoreSearchUseCase>();
     final closeSearchUseCase = di.get<CloseSearchUseCase>();
     final changeMarketsUseCase = di.get<UpdateMarketsUseCase>();
 
@@ -88,7 +88,7 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
       if (searchTerm != null) search(searchTerm);
     }
 
-    consume(requestSearchUseCase, initialData: none)
+    consume(restoreSearchUseCase, initialData: none)
         .transform(
           (out) => out
               .whereMarketsChanged()
