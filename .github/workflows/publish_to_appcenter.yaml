@@ -214,7 +214,7 @@ jobs:
           JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
-          fastlane publish platform:ios build_type:release download_profile:true flavor:beta store:true skslPath:flutter_01.sksl.json
+          fastlane publish platform:ios build_type:release download_profile:true flavor:beta skslPath:flutter_01.sksl.json
           echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
           echo "SLACK_STATUS=success" >> $GITHUB_ENV
 
@@ -361,7 +361,7 @@ jobs:
           JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
         working-directory: ./application
         run: |
-          fastlane publish platform:android build_type:release flavor:beta store:true
+          fastlane publish platform:android build_type:release flavor:beta
           echo "SLACK_MESSAGE=$( cat report.log )" >> $GITHUB_ENV
           echo "SLACK_STATUS=success" >> $GITHUB_ENV
 
