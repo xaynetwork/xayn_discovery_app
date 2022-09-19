@@ -144,9 +144,8 @@ void main() {
             .toSet());
     when(pushNotificationsCardInjectionUseCase.toCards(any)).thenAnswer(
         (realInvocation) =>
-            (realInvocation.positionalArguments.first as Set<Document>? ??
-                    const {})
-                .map(Card.document));
+            (realInvocation.positionalArguments.first as Iterable<Card>? ??
+                const {}));
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),

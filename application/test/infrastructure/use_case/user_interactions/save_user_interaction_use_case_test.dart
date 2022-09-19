@@ -71,6 +71,8 @@ void main() {
               .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfScrolls: initialUserInteractions.numberOfScrolls + 1,
+            numberOfScrollsPerSession:
+                initialUserInteractions.numberOfScrollsPerSession + 1,
           );
         },
         build: () => saveUserInteractionUseCase,
