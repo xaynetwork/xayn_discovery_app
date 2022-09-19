@@ -8,6 +8,8 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
   UserInteractions? fromMap(Map? map) {
     if (map == null) return null;
     final numberOfScrolls = map[UserInteractionsFields.numberOfScrolls] as int?;
+    final numberOfScrollsPerSession =
+        map[UserInteractionsFields.numberOfScrollsPerSession] as int?;
     final numberOfArticlesRead =
         map[UserInteractionsFields.numberOfArticlesRead] as int?;
     final numberOfArticlesBookmarked =
@@ -23,6 +25,7 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
 
     return UserInteractions(
       numberOfScrolls: numberOfScrolls ?? 0,
+      numberOfScrollsPerSession: numberOfScrollsPerSession ?? 0,
       numberOfArticlesRead: numberOfArticlesRead ?? 0,
       numberOfArticlesBookmarked: numberOfArticlesBookmarked ?? 0,
       numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked ?? 0,
@@ -35,6 +38,8 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
   @override
   DbEntityMap toMap(UserInteractions entity) => {
         UserInteractionsFields.numberOfScrolls: entity.numberOfScrolls,
+        UserInteractionsFields.numberOfScrollsPerSession:
+            entity.numberOfScrollsPerSession,
         UserInteractionsFields.numberOfArticlesRead:
             entity.numberOfArticlesRead,
         UserInteractionsFields.numberOfArticlesBookmarked:
@@ -58,4 +63,5 @@ abstract class UserInteractionsFields {
   static const int numberOfSourcesExcluded = 4;
   static const int numberOfCountriesChanged = 5;
   static const int numberOfSearches = 6;
+  static const int numberOfScrollsPerSession = 7;
 }

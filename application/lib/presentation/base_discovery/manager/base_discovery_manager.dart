@@ -423,7 +423,6 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         cards = await pushNotificationsCardInjectionUseCase.singleOutput(
           PushNotificationsCardInjectionData(
             currentCards: cards,
-            nextDocuments: documents,
             status: pushNotificationsConditionStatus,
           ),
         );

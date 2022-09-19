@@ -62,8 +62,12 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
 
   void _onScrollingEvent() {
     final updatedNumberOfScrolls = _userInteractions.numberOfScrolls + 1;
-    final updatedUserInteractions =
-        _userInteractions.copyWith(numberOfScrolls: updatedNumberOfScrolls);
+    final updatedNumberOfScrollsPerSession =
+        _userInteractions.numberOfScrollsPerSession + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
+      numberOfScrolls: updatedNumberOfScrolls,
+      numberOfScrollsPerSession: updatedNumberOfScrollsPerSession,
+    );
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 

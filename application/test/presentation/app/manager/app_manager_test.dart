@@ -41,6 +41,7 @@ void main() {
       di.get(),
       di.get(),
       di.get(),
+      di.get(),
       appSettingsRepository,
       brightnessProvider,
     );

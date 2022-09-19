@@ -140,7 +140,7 @@ void main() {
         (realInvocation) async => pushNotificationsCardInjectionUseCase
             .toCards((realInvocation.positionalArguments.first
                     as PushNotificationsCardInjectionData)
-                .nextDocuments)
+                .currentCards)
             .toSet());
     when(pushNotificationsCardInjectionUseCase.toCards(any)).thenAnswer(
         (realInvocation) =>

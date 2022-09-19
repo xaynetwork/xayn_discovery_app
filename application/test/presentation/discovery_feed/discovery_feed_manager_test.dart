@@ -18,10 +18,13 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -48,6 +51,10 @@ void main() async {
   late MockMarkOnboardingTypeCompletedUseCase
       markOnboardingTypeCompletedUseCase;
   late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
+  late MockPushNotificationsCardInjectionUseCase
+      pushNotificationsCardInjectionUseCase;
+  late MockListenPushNotificationsStatusUseCase
+      listenPushNotificationsStatusUseCase;
   late DiscoveryFeedManager manager;
   late StreamController<EngineEvent> eventsController;
   final subscriptionStatusInitial = SubscriptionStatus.initial();
@@ -86,6 +93,10 @@ void main() async {
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
     surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
+    pushNotificationsCardInjectionUseCase =
+        MockPushNotificationsCardInjectionUseCase();
+    listenPushNotificationsStatusUseCase =
+        MockListenPushNotificationsStatusUseCase();
     markOnboardingTypeCompletedUseCase =
         MockMarkOnboardingTypeCompletedUseCase();
     engine = AppDiscoveryEngine.test(TestDiscoveryEngine());
@@ -137,9 +148,22 @@ void main() async {
     when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
         (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
             .map(item_renderer.Card.document));
+    when(pushNotificationsCardInjectionUseCase.singleOutput(any))
+        .thenAnswer((realInvocation) async {
+      final cards = (realInvocation.positionalArguments.first
+              as PushNotificationsCardInjectionData)
+          .currentCards;
+      return cards;
+    });
+
+    when(listenPushNotificationsStatusUseCase.transform(any))
+        .thenAnswer((invocation) => invocation.positionalArguments.first);
+    when(listenPushNotificationsStatusUseCase.transaction(any))
+        .thenAnswer((_) => Stream.value(false));
 
     when(featureManager.isOnBoardingSheetsEnabled)
         .thenAnswer((realInvocation) => true);
+    when(featureManager.isPaymentEnabled).thenAnswer((realInvocation) => false);
 
     di.reset();
 
@@ -158,6 +182,12 @@ void main() async {
         markOnboardingTypeCompletedUseCase);
     di.registerSingleton<SurveyCardInjectionUseCase>(
         surveyCardInjectionUseCase);
+    di.registerSingleton<PushNotificationsCardInjectionUseCase>(
+        pushNotificationsCardInjectionUseCase);
+    di.registerLazySingleton<TogglePushNotificationsStatusUseCase>(
+        () => MockTogglePushNotificationsStatusUseCase());
+    di.registerLazySingleton<ListenPushNotificationsStatusUseCase>(
+        () => listenPushNotificationsStatusUseCase);
 
     manager = di.get<DiscoveryFeedManager>();
   });
@@ -325,7 +355,7 @@ void main() async {
           isFullScreen: true,
           shouldUpdateNavBar: false,
           didReachEnd: false,
-          subscriptionStatus: null,
+          subscriptionStatus: subscriptionStatusInitial,
           readerModeBackgroundColor: ReaderModeBackgroundColor(
             dark: ReaderModeBackgroundDarkColor.dark,
             light: ReaderModeBackgroundLightColor.white,

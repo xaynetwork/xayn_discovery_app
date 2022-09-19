@@ -6,6 +6,7 @@ void main() {
   late UserInteractionsMapper mapper;
 
   const int numberOfScrolls = 2;
+  const int numberOfScrollsPerSession = 1;
   const int numberOfArticlesRead = 1;
   const int numberOfArticlesBookmarked = 0;
   const int numberOfArticlesLikedOrDisliked = 1;
@@ -25,6 +26,8 @@ void main() {
           () {
         final map = {
           UserInteractionsFields.numberOfScrolls: numberOfScrolls,
+          UserInteractionsFields.numberOfScrollsPerSession:
+              numberOfScrollsPerSession,
           UserInteractionsFields.numberOfArticlesRead: numberOfArticlesRead,
           UserInteractionsFields.numberOfArticlesBookmarked:
               numberOfArticlesBookmarked,
@@ -43,6 +46,7 @@ void main() {
           userInteractions,
           UserInteractions(
             numberOfScrolls: numberOfScrolls,
+            numberOfScrollsPerSession: numberOfScrollsPerSession,
             numberOfArticlesRead: numberOfArticlesRead,
             numberOfArticlesBookmarked: numberOfArticlesBookmarked,
             numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
@@ -58,6 +62,7 @@ void main() {
         () {
           final map = {
             UserInteractionsFields.numberOfScrolls: null,
+            UserInteractionsFields.numberOfScrollsPerSession: null,
             UserInteractionsFields.numberOfArticlesRead: null,
             UserInteractionsFields.numberOfArticlesBookmarked: null,
             UserInteractionsFields.numberOfArticlesLikedOrDisliked: null,
@@ -72,6 +77,7 @@ void main() {
             userInteractions,
             UserInteractions(
               numberOfScrolls: 0,
+              numberOfScrollsPerSession: 0,
               numberOfArticlesRead: 0,
               numberOfArticlesBookmarked: 0,
               numberOfArticlesLikedOrDisliked: 0,
@@ -93,6 +99,7 @@ void main() {
         () {
           final userInteractions = UserInteractions(
             numberOfScrolls: numberOfScrolls,
+            numberOfScrollsPerSession: numberOfScrollsPerSession,
             numberOfArticlesRead: numberOfArticlesRead,
             numberOfArticlesBookmarked: numberOfArticlesBookmarked,
             numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
@@ -107,6 +114,8 @@ void main() {
             map,
             {
               UserInteractionsFields.numberOfScrolls: numberOfScrolls,
+              UserInteractionsFields.numberOfScrollsPerSession:
+                  numberOfScrollsPerSession,
               UserInteractionsFields.numberOfArticlesRead: numberOfArticlesRead,
               UserInteractionsFields.numberOfArticlesBookmarked:
                   numberOfArticlesBookmarked,

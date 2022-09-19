@@ -25,18 +25,20 @@ class PushNotificationsCardInjectionUseCase
   @override
   Stream<Set<Card>> transaction(
       PushNotificationsCardInjectionData param) async* {
-    final nextDocuments = param.nextDocuments;
+    final nextDocuments = param.currentCards
+        .where((element) => element.document != null)
+        .map((e) => e.document!);
     final canDisplay =
         await _canDisplayPushNotificationsCardUseCase.singleOutput(none);
 
-    if (nextDocuments == null || canDisplay == false) {
+    if (nextDocuments.isEmpty || canDisplay == false) {
       yield param.currentCards;
     } else {
       if (shouldMarkInjectionPoint(param)) {
         nextDocumentSibling = nextDocuments.last;
       }
 
-      yield toCards(nextDocuments).toSet();
+      yield toCards(param.currentCards).toSet();
     }
   }
 
@@ -46,13 +48,13 @@ class PushNotificationsCardInjectionUseCase
       data.status == PushNotificationsConditionsStatus.reached;
 
   @visibleForTesting
-  Iterable<Card> toCards(Set<Document> documents) sync* {
-    for (final document in documents) {
-      if (document == nextDocumentSibling) {
+  Iterable<Card> toCards(Iterable<Card> cards) sync* {
+    for (final card in cards) {
+      if (card.document == nextDocumentSibling) {
         yield const Card.other(CardType.pushNotifications);
       }
 
-      yield Card.document(document);
+      yield card;
     }
   }
 }
@@ -60,12 +62,10 @@ class PushNotificationsCardInjectionUseCase
 @immutable
 class PushNotificationsCardInjectionData {
   final Set<Card> currentCards;
-  final Set<Document>? nextDocuments;
   final PushNotificationsConditionsStatus? status;
 
   const PushNotificationsCardInjectionData({
     required this.currentCards,
-    this.nextDocuments,
     PushNotificationsConditionsStatus? status,
   }) : status = status ?? PushNotificationsConditionsStatus.notReached;
 }

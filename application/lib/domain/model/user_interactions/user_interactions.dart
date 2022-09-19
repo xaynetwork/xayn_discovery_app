@@ -12,6 +12,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
   factory UserInteractions._({
     required UniqueId id,
     required int numberOfScrolls,
+    required int numberOfScrollsPerSession,
     required int numberOfArticlesRead,
     required int numberOfArticlesBookmarked,
     required int numberOfArticlesLikedOrDisliked,
@@ -22,6 +23,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
 
   factory UserInteractions({
     required int numberOfScrolls,
+    required int numberOfScrollsPerSession,
     required int numberOfArticlesRead,
     required int numberOfArticlesBookmarked,
     required int numberOfArticlesLikedOrDisliked,
@@ -32,6 +34,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
       UserInteractions._(
         id: UserInteractions.globalId,
         numberOfScrolls: numberOfScrolls,
+        numberOfScrollsPerSession: numberOfScrollsPerSession,
         numberOfArticlesRead: numberOfArticlesRead,
         numberOfArticlesBookmarked: numberOfArticlesBookmarked,
         numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
@@ -43,6 +46,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
   factory UserInteractions.initial() => UserInteractions._(
         id: UserInteractions.globalId,
         numberOfScrolls: 0,
+        numberOfScrollsPerSession: 0,
         numberOfArticlesRead: 0,
         numberOfArticlesBookmarked: 0,
         numberOfArticlesLikedOrDisliked: 0,

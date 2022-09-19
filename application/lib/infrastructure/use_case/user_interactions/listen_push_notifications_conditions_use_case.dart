@@ -44,7 +44,7 @@ class ListenPushNotificationsConditionsStatusUseCase
     // The conditions are listed in the description of the following story
     // https://xainag.atlassian.net/browse/TB-4088
     final reached = numberOfSessions >= _kNumOfSessionsThreshold &&
-        userInteractions.numberOfScrolls >= _kNumOfScrollsThreshold;
+        userInteractions.numberOfScrollsPerSession >= _kNumOfScrollsThreshold;
     return reached
         ? PushNotificationsConditionsStatus.reached
         : PushNotificationsConditionsStatus.notReached;
