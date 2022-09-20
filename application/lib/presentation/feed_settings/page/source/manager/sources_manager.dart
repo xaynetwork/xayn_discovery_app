@@ -7,7 +7,6 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_single_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
@@ -44,7 +43,9 @@ const Duration _kSearchInputDebounceTime = Duration(seconds: 1);
 
 abstract class SourcesScreenNavActions {
   void onDismissSourcesSelection();
+
   void onLoadExcludedSourcesInterface();
+
   void onLoadTrustedSourcesInterface();
 }
 
@@ -215,8 +216,6 @@ class SourcesManager extends Cubit<SourcesState>
   void _applyBatchedChanges() {
     final trustedSources = state.trustedSources.toSet();
     final excludedSources = state.excludedSources.toSet();
-    final oldTrustedCount = state.trustedSources.length;
-    final oldExcludedCount = state.excludedSources.length;
 
     for (final operation in sourcesPendingOperations.toSet()) {
       sourcesPendingOperations.removeOperation(operation);
@@ -224,30 +223,49 @@ class SourcesManager extends Cubit<SourcesState>
       switch (operation.task) {
         case SourcesManagementTask.removeFromExcludedSources:
           excludedSources.remove(operation.source);
+          _sendAnalyticsUseCase(
+            SourcesManagementSingleChangedEvent(
+              operation: SourcesManagementSingleChangedEventOperation.removal,
+              sourceType: SourceType.excluded,
+              isBatched: true,
+            ),
+          );
           break;
         case SourcesManagementTask.addToExcludedSources:
           excludedSources.add(operation.source);
+          _sendAnalyticsUseCase(
+            SourcesManagementSingleChangedEvent(
+              operation: SourcesManagementSingleChangedEventOperation.addition,
+              sourceType: SourceType.excluded,
+              isBatched: true,
+            ),
+          );
           break;
         case SourcesManagementTask.removeFromTrustedSources:
           trustedSources.remove(operation.source);
+          _sendAnalyticsUseCase(
+            SourcesManagementSingleChangedEvent(
+              operation: SourcesManagementSingleChangedEventOperation.removal,
+              sourceType: SourceType.trusted,
+              isBatched: true,
+            ),
+          );
           break;
         case SourcesManagementTask.addToTrustedSources:
           trustedSources.add(operation.source);
+          _sendAnalyticsUseCase(
+            SourcesManagementSingleChangedEvent(
+              operation: SourcesManagementSingleChangedEventOperation.addition,
+              sourceType: SourceType.trusted,
+              isBatched: true,
+            ),
+          );
           break;
       }
     }
 
     overrideSources(
         trustedSources: trustedSources, excludedSources: excludedSources);
-
-    _sendAnalyticsUseCase(
-      SourcesManagementChangedEvent(
-        newTrustedCount: trustedSources.length,
-        oldTrustedCount: oldTrustedCount,
-        newExcludedCount: excludedSources.length,
-        oldExcludedCount: oldExcludedCount,
-      ),
-    );
   }
 
   void _applySingleChange() {

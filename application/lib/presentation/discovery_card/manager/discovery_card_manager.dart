@@ -279,6 +279,7 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
   void onExcludeSource({required Document document}) {
     final source = Source.fromJson(document.resource.url.host);
     _sourcesManager
+      ..removeSourceFromTrustedList(source)
       ..addSourceToExcludedList(source)
       ..applyChanges(
         isBatchedProcess: false,

@@ -160,7 +160,7 @@ flutter:
     - assets/ai/kpe_v0001/
     - assets/ai/smbert_v0001/
     - assets/ai/sources_v0000/
-    - assets/default_remote_config.yaml
+    - assets/remote_config/
 
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
