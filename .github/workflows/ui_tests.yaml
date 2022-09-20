@@ -95,9 +95,32 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            /Users/runner/hostedtoolcache/flutter
+            ~/application/ios/Pods
+          key: ios-flutter-${{ env.flutter_version }}
+          restore-keys: |
+            ios-flutter-cache-
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
 
       - name: Install Appium
         run: npm install -g appium
@@ -122,7 +145,13 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.android_api_level }}
-          script: cd application && fastlane run_automation platform:android test_suite:${{ env.test_suite }}
+          script: adb shell screenrecord /mnt/sdcard/Download/test.mp4 && cd application && fastlane run_automation platform:android test_suite:${{ env.test_suite }} ; adb pull /mnt/sdcard/Download/test.mp4
+
+      - name: Upload video
+        uses: actions/upload-artifact@v3
+        with:
+          name: video
+          path: ./test.mp4
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v3
@@ -130,7 +159,3 @@ jobs:
           name: screenshots
           path: ./application/automation/target/screenshots/
           if-no-files-found: error
-      - name: Download Screenshots
-        uses: actions/download-artifact@v3
-        with:
-          name: screenshots
