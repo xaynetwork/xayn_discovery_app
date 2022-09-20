@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:airship_flutter/airship_flutter.dart';
 import 'package:injectable/injectable.dart';
@@ -31,6 +32,8 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
 
     Airship.onChannelRegistration.listen(_channelCreatedHandler);
     Airship.onPushReceived.listen(_pushMessageHandler);
+
+    if (Platform.isAndroid) enableNotifications();
   }
 
   void _channelCreatedHandler(ChannelEvent event) {

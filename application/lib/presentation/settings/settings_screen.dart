@@ -38,7 +38,10 @@ class SettingsScreen extends StatefulWidget {
 const _settingsNavBarConfigId = NavBarConfigId('settingsNavBarConfigId');
 
 class _SettingsScreenState extends State<SettingsScreen>
-    with NavBarConfigMixin, OverlayMixin<SettingsScreen> {
+    with
+        NavBarConfigMixin,
+        OverlayMixin<SettingsScreen>,
+        WidgetsBindingObserver {
   late final SettingsScreenManager _manager = di.get();
 
   @override
@@ -51,6 +54,22 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Linden get linden => UnterDenLinden.getLinden(context);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) =>
+      _manager.onChangeAppLifecycleState(state);
 
   @override
   Widget build(BuildContext context) => AppScaffold(
