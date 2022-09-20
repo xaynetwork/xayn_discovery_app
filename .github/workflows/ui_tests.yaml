@@ -94,6 +94,11 @@ jobs:
   ui-tests-android:
     runs-on: macos-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Install Appium
         run: npm install -g appium
 
@@ -111,11 +116,6 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - run: java -version
-
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Set Up Emulator And Run Tests
         timeout-minutes: 60
