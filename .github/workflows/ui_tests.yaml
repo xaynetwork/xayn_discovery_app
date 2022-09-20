@@ -12,7 +12,8 @@ env:
   java_version: '12.x'
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
-  android_api_level: '29'
+  android_api_level: '30'
+  android_arch: 'x86_64'
   test_suite: 'sanity'
   FASTLANE_SKIP_UPDATE_CHECK: '1'
   PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -143,9 +144,21 @@ jobs:
       - name: Set Up Emulator And Run Tests
         timeout-minutes: 60
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          TEST_SUITE: ${{ env.test_suite }}
         with:
           api-level: ${{ env.android_api_level }}
-          script: adb shell screenrecord /mnt/sdcard/Download/test.mp4 && cd application && fastlane run_automation platform:android test_suite:${{ env.test_suite }} ; adb pull /mnt/sdcard/Download/test.mp4
+          arch: ${{ env.android_arch }}
+          script: |
+            adb root
+            adb shell screenrecord --bugreport --bit-rate 4M /sdcard/test.mp4 &
+            VIDEO_PID=$!
+            pushd application || exit
+            fastlane run_automation platform:android test_suite:"$TEST_SUITE"
+            popd || exit
+            kill $VIDEO_PID
+            sleep 3
+            adb pull /sdcard/test.mp4
 
       - name: Upload video
         uses: actions/upload-artifact@v3
