@@ -24,6 +24,11 @@ public class ITestListenerImp implements ITestListener {
 
     @Override
     public void onStart(ITestContext context) {
+        try {
+            saveScreenshot(Configuration.SCREENSHOT_DIRECTORY + "/" + context.getName() + "_onStart" + ".png");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         log.info("starting test : " + context.getName());
     }
 
