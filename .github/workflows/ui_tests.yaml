@@ -128,7 +128,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: screenshots
-          path: ./application/automation/src/main/resources/screenshots/
+          path: ./application/automation/target/screenshots/
           if-no-files-found: error
       - name: Download Screenshots
         uses: actions/download-artifact@v3
