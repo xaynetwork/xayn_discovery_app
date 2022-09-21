@@ -15,6 +15,8 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/custom_feed_card_cta_clicked.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/custom_feed_card_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -197,8 +199,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     ));
   }
 
-  void handleCustomCardTapped(CardType cardType) =>
-      inLineCardManager.handleInLineCardTapped(cardType);
+  void handleCustomCardTapped(CardType cardType) {
+    inLineCardManager.handleInLineCardTapped(cardType);
+    sendAnalyticsUseCase(
+      CustomFeedCardCTAClickedEvent(cardType: cardType),
+    );
+  }
 
   String? getSelectedCountryName() =>
       inLineCardManager.state.selectedCountryName;
@@ -255,6 +261,11 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     } else {
       inLineCardManager.handleInLineCardShown(documentType);
       observeDocument();
+      sendAnalyticsUseCase(
+        CustomFeedCardDisplayedEvent(
+          cardType: nextCard.type,
+        ),
+      );
     }
 
     scheduleComputeState(() {
