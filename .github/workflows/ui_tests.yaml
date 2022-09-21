@@ -14,6 +14,7 @@ env:
   ios_os_version: '>=13.0'
   android_api_level: '30'
   android_arch: 'x86_64'
+  android_profile: 'Nexus 6'
   test_suite: 'sanity'
   FASTLANE_SKIP_UPDATE_CHECK: '1'
   PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -147,6 +148,7 @@ jobs:
         with:
           api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
+          profile: ${{ env.android_profile }}
           working-directory: application/
           script:
             ../.github/scripts/run_android_uitest.sh
