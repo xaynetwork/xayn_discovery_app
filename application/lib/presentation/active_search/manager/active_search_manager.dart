@@ -45,6 +45,7 @@ typedef OnNextSearchBatchRequestFailed = Set<Document> Function(
     NextActiveSearchBatchRequestFailed event);
 typedef OnRestoreSearchFailed = Set<Document> Function(
     RestoreActiveSearchFailed event);
+typedef OnResetAiSucceeded = Set<Document> Function(ResetAiSucceeded event);
 
 abstract class ActiveSearchNavActions {
   void onHomeNavPressed();
@@ -155,6 +156,11 @@ class ActiveSearchManager extends BaseDiscoveryManager
   @override
   void onTrialExpired() => _activeSearchNavActions.onTrialExpired();
 
+  void onResetAISucceeded() {
+    resetParameters();
+    handleIndexChanged(0);
+  }
+
   @override
   void handleLoadMore() {
     if (_didReachEnd) return;
@@ -187,6 +193,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
         required OnEngineExceptionRaised engineExceptionRaised,
         required OnNextSearchBatchRequestFailed nextSearchBatchRequestFailed,
         required OnRestoreSearchFailed restoreSearchFailed,
+        required OnResetAiSucceeded resetAiSucceeded,
         required OnNonMatchedEngineEvent orElse,
       }) =>
           (EngineEvent? event) {
@@ -216,6 +223,11 @@ class ActiveSearchManager extends BaseDiscoveryManager
             } else if (event is RestoreActiveSearchFailed) {
               self._isLoading = false;
               lastResults = restoreSearchFailed(event);
+            } else if (event is ResetAiSucceeded) {
+              self._isLoading = false;
+              self._didReachEnd = false;
+              self.onResetAISucceeded();
+              lastResults = resetAiSucceeded(event);
             } else {
               lastResults = orElse();
             }
@@ -293,6 +305,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
 
           return lastResults;
         },
+        resetAiSucceeded: (event) => const <Document>{},
         orElse: () => lastResults,
       );
     };
