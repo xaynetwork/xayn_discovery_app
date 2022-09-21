@@ -20,6 +20,7 @@ class CanDisplayPushNotificationsCardUseCase extends UseCase<None, bool> {
   Stream<bool> transaction(None param) async* {
     if (Platform.isAndroid || !_featureManager.areRemoteNotificationsEnabled) {
       yield false;
+      return;
     }
 
     final userDidChangePushNotifications =
