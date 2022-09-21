@@ -117,8 +117,8 @@ module Config
   end
 
   # env defaults that will be used when no ENV variables are provided
-  ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "https://discovery-web-zdf-large.xaynet.dev",
-                   "SEARCH_API_URL_PRODUCTION" => "https://discovery-web-zdf-large.xaynet.dev",
+  ENV_DEFAULTS = { "SEARCH_API_URL_DEBUG" => "https://discovery-web-general.xaynet.dev",
+                   "SEARCH_API_URL_PRODUCTION" => "https://discovery-general.xaynet.dev",
                    "IMAGE_FETCHER_URL_DEBUG" => "https://img-fetcher.xaynet.dev",
                    "IMAGE_FETCHER_URL_PRODUCTION" => "https://img-fetcher.xayn.com",
                    "APP_STORE_NUMERICAL_ID_DEBUG" => "1593410545",
