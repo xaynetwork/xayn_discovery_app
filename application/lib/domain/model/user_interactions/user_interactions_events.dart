@@ -6,4 +6,7 @@ enum UserInteractionsEvents {
   excludedSource,
   changedCountry,
   searchExecuted,
+  removeExcludedSource,
+  trustedSource,
+  removeTrustedSource,
 }

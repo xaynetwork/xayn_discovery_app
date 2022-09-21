@@ -3,8 +3,8 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 
 import '../../../test_utils/utils.dart';
 

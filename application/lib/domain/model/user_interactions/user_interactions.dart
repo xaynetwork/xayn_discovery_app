@@ -47,7 +47,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
       );
 
   factory UserInteractions.initial() => UserInteractions._(
-    id: UserInteractions.globalId,
+        id: UserInteractions.globalId,
         numberOfScrolls: 0,
         numberOfScrollsPerSession: 0,
         numberOfArticlesRead: 0,
