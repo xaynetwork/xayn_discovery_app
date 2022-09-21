@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String kChannelKey = 'basic_channel';
+const String kAndroidIconPath = 'resource://drawable/res_app_icon';
 
 abstract class LocalNotificationsService {
   void requestPermission();
@@ -38,7 +39,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
 
   void _init() {
     AwesomeNotifications().initialize(
-        null,
+        kAndroidIconPath,
         [
           NotificationChannel(
             channelKey: kChannelKey,
