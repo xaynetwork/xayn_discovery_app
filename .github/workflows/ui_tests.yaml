@@ -148,27 +148,19 @@ jobs:
           api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
           working-directory: application/
-          script: |
-            adb root
-            fastlane build_runner
-            fastlane build apk
-            adb shell screenrecord --bugreport --bit-rate 4M /sdcard/test.mp4 &
-            VIDEO_PID=$!
-            flutter test integration_test
-            kill $VIDEO_PID || true
-            sleep 3
-            adb pull /sdcard/test.mp4
+          script:
+            ../.github/scripts/run_android_uitest.sh
 
       - name: Upload video
         uses: actions/upload-artifact@v3
+        if: always()
         with:
-          working-directory: application/
           name: video
-          path: ./test.mp4
+          path: ./application/test.mp4
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: screenshots
           path: ./application/automation/target/screenshots/
-          if-no-files-found: error
