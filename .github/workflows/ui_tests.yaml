@@ -148,6 +148,16 @@ jobs:
           api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
           working-directory: application/
+          script:
+            ../.github/scripts/run_android_uitest.sh
+
+      - name: Upload video
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: video
+          path: ./application/test.mp4
+          working-directory: application/
           script: |
             fastlane run_automation platform:android test_suite:"${{ env.test_suite }}"
 
@@ -157,4 +167,3 @@ jobs:
         with:
           name: screenshots
           path: ./application/automation/target/screenshots/
-          if-no-files-found: error
