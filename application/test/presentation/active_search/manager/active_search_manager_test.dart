@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -21,9 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/listen_push_notifications_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/push_notifications_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -47,18 +44,11 @@ void main() {
       listenPushNotificationsConditionsStatusUseCase;
   late MockListenPushNotificationsStatusUseCase
       listenPushNotificationsStatusUseCase;
-  late MockHandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
-  late MockHandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
-  late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
-  late MockPushNotificationsCardInjectionUseCase
-      pushNotificationsCardInjectionUseCase;
-  late MockTogglePushNotificationsStatusUseCase
-      togglePushNotificationsStatusUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
-  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
-  late MockCanDisplayPushNotificationsCardUseCase
-      canDisplayPushNotificationsCardUseCase;
+  late MockCanDisplayInLineCardsUseCase canDisplayInLineCards;
+  late MockInLineCardManager inLineCardManager;
+
   final subscriptionStatusInitial = SubscriptionStatus.initial();
 
   setUp(() async {
@@ -73,18 +63,10 @@ void main() {
         MockListenPushNotificationsConditionsStatusUseCase();
     listenPushNotificationsStatusUseCase =
         MockListenPushNotificationsStatusUseCase();
-    handleSurveyBannerClickedUseCase = MockHandleSurveyBannerClickedUseCase();
-    handleSurveyBannerShownUseCase = MockHandleSurveyBannerShownUseCase();
-    surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
-    pushNotificationsCardInjectionUseCase =
-        MockPushNotificationsCardInjectionUseCase();
-    togglePushNotificationsStatusUseCase =
-        MockTogglePushNotificationsStatusUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
-    canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
-    canDisplayPushNotificationsCardUseCase =
-        MockCanDisplayPushNotificationsCardUseCase();
+    canDisplayInLineCards = MockCanDisplayInLineCardsUseCase();
+    inLineCardManager = MockInLineCardManager();
 
     di
       ..unregister<DiscoveryEngine>()
@@ -103,14 +85,7 @@ void main() {
     when(listenReaderModeSettingsUseCase.transform(any)).thenAnswer(
       (_) => const Stream.empty(),
     );
-    when(surveyCardInjectionUseCase.transform(any))
-        .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(surveyCardInjectionUseCase.transaction(any))
-        .thenAnswer((realInvocation) {
-      final Set<Document> documents = realInvocation.positionalArguments.first;
 
-      return Stream.value(documents.map(Card.document).toSet());
-    });
     when(listenSurveyConditionsStatusUseCase.transaction(any)).thenAnswer(
         (realInvocation) => Stream.value(SurveyConditionsStatus.notReached));
     when(listenSurveyConditionsStatusUseCase.transform(any)).thenAnswer(
@@ -127,25 +102,6 @@ void main() {
     when(listenPushNotificationsStatusUseCase.transform(any)).thenAnswer(
         (realInvocation) =>
             realInvocation.positionalArguments.first as Stream<None>);
-    when(surveyCardInjectionUseCase.singleOutput(any)).thenAnswer(
-        (realInvocation) async => surveyCardInjectionUseCase
-            .toCards((realInvocation.positionalArguments.first
-                    as SurveyCardInjectionData)
-                .nextDocuments)
-            .toSet());
-    when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
-        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
-            .map(Card.document));
-    when(pushNotificationsCardInjectionUseCase.singleOutput(any)).thenAnswer(
-        (realInvocation) async => pushNotificationsCardInjectionUseCase
-            .toCards((realInvocation.positionalArguments.first
-                    as PushNotificationsCardInjectionData)
-                .currentCards)
-            .toSet());
-    when(pushNotificationsCardInjectionUseCase.toCards(any)).thenAnswer(
-        (realInvocation) =>
-            (realInvocation.positionalArguments.first as Iterable<Card>? ??
-                const {}));
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),
@@ -164,21 +120,13 @@ void main() {
           HapticFeedbackMediumUseCase(),
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
-          listenSurveyConditionsStatusUseCase,
-          listenPushNotificationsConditionsStatusUseCase,
-          listenPushNotificationsStatusUseCase,
-          handleSurveyBannerClickedUseCase,
-          handleSurveyBannerShownUseCase,
-          surveyCardInjectionUseCase,
-          pushNotificationsCardInjectionUseCase,
-          togglePushNotificationsStatusUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(
             userInteractionsRepository,
-            canDisplaySurveyBannerUseCase,
-            canDisplayPushNotificationsCardUseCase,
+            canDisplayInLineCards,
           ),
+          inLineCardManager,
         );
   });
 

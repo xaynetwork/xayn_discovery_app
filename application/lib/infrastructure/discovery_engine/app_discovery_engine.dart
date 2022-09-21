@@ -341,5 +341,5 @@ class AppDiscoveryEngine with AsyncInitMixin implements DiscoveryEngine {
   }
 
   @override
-  String? get lastDbOverrideError => null; //_engine.lastDbOverrideError;
+  String? get lastDbOverrideError => _engine.lastDbOverrideError;
 }

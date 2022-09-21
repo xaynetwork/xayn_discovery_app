@@ -10,19 +10,14 @@ import '../../../test_utils/utils.dart';
 
 void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
-  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
-  late MockCanDisplayPushNotificationsCardUseCase
-      canDisplayPushNotificationsCardUseCase;
+  late MockCanDisplayInLineCardsUseCase canDisplayInLineCardsUseCase;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
 
   userInteractionsRepository = MockUserInteractionsRepository();
-  canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
-  canDisplayPushNotificationsCardUseCase =
-      MockCanDisplayPushNotificationsCardUseCase();
+  canDisplayInLineCardsUseCase = MockCanDisplayInLineCardsUseCase();
   saveUserInteractionUseCase = SaveUserInteractionUseCase(
     userInteractionsRepository,
-    canDisplaySurveyBannerUseCase,
-    canDisplayPushNotificationsCardUseCase,
+    canDisplayInLineCardsUseCase,
   );
 
   final initialUserInteractions = UserInteractions.initial();
@@ -42,9 +37,7 @@ void main() {
       useCaseTest(
         'WHEN use case called THEN dont expect any interactions with userInteractions repository',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => false);
         },
         build: () => saveUserInteractionUseCase,
@@ -65,10 +58,8 @@ void main() {
       useCaseTest(
         'WHEN a card has been scrolled THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfScrolls: initialUserInteractions.numberOfScrolls + 1,
             numberOfScrollsPerSession:
