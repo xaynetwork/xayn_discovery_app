@@ -213,7 +213,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) async {
-    if (index >= state.cards.length || _cardIndex == index) return;
+    if (index >= state.cards.length) {
+      return;
+    }
 
     final nextCard = state.cards.elementAt(index);
     final document = nextCard.document;
