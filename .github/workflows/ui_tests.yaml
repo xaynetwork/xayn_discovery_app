@@ -13,7 +13,8 @@ env:
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
   android_api_level: '30'
-  android_arch: 'x86'
+  android_arch: 'x86_64'
+  target: 'x86_64'
   android_profile: 'pixel_xl'
   test_suite: 'sanity'
   FASTLANE_SKIP_UPDATE_CHECK: '1'
@@ -148,6 +149,7 @@ jobs:
         with:
           api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
+          target: ${{ env.target }}
           profile: ${{ env.android_profile }}
           working-directory: application/
           script: |
