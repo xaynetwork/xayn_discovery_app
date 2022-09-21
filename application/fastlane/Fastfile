@@ -220,7 +220,7 @@ lane :run_automation do |options|
   check_automation_config(options)
   suite = options[Options::TEST_SUITE]
   Dir.chdir("../automation/") do
-    sh("mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml -Dmaven.test.failure.ignore")
+    sh("mvn clean test -DsuiteXmlFile=testng/" + suite + ".xml")
   end
 end
 

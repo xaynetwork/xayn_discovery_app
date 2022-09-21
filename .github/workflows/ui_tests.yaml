@@ -152,6 +152,7 @@ jobs:
             fastlane run_automation platform:android test_suite:"${{ env.test_suite }}"
 
       - name: Upload screenshot
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: screenshots
