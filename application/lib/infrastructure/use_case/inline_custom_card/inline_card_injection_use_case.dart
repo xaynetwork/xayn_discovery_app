@@ -41,9 +41,9 @@ class InLineCardInjectionUseCase
       data.nextDocumentsCount > 2;
 
   @visibleForTesting
-  Iterable<Card> toCards(Set<Document> documents, CardType cardType) sync* {
+  Iterable<Card> toCards(Set<Document> documents, CardType? cardType) sync* {
     for (final document in documents) {
-      if (document == nextDocumentSibling) {
+      if (document == nextDocumentSibling && cardType != null) {
         yield Card.other(cardType);
       }
 
@@ -56,7 +56,7 @@ class InLineCardInjectionUseCase
 class InLineCardInjectionData {
   final Set<Card> currentCards;
   final Set<Document>? nextDocuments;
-  final CardType cardType;
+  final CardType? cardType;
 
   int get currentDocumentsCount =>
       currentCards.where((it) => it.document != null).length;

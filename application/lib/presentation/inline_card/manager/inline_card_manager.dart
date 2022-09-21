@@ -11,12 +11,15 @@ import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/co
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/handle_country_selection_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/listen_country_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/handle_source_selection_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/handle_source_selection_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/listen_source_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -36,6 +39,10 @@ class InLineCardManager extends Cubit<InLineCardState>
   final ListenCountryConditionsStatusUseCase
       listenCountryConditionsStatusUseCase;
   final ListenSourceConditionsStatusUseCase listenSourceConditionsStatusUseCase;
+  final ListenPushNotificationsConditionsStatusUseCase
+      listenPushNotificationsConditionsStatusUseCase;
+  final ListenPushNotificationsStatusUseCase
+      listenPushNotificationsStatusUseCase;
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSourceSelectionClickedUseCase handleSourceSelectionClickedUseCase;
   final HandleCountrySelectionClickedUseCase
@@ -43,11 +50,13 @@ class InLineCardManager extends Cubit<InLineCardState>
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final HandleSourceSelectionShownUseCase handleSourceSelectionShownUseCase;
   final HandleCountrySelectionShownUseCase handleCountrySelectionShownUseCase;
+  final TogglePushNotificationsStatusUseCase
+      togglePushNotificationsStatusUseCase;
   final InLineCardInjectionUseCase inLineCardInjectionUseCase;
   final FeatureManager featureManager;
   final InLineNavActions inLineNavActions;
   final GetSelectedCountriesListUseCase getSelectedCountriesListUseCase;
-  late final UseCaseValueStream<Set<Country>> _getSelectedCountriesListHandler;
+  late final UseCaseValueStream<Set<Country>> getSelectedCountriesListHandler;
 
   InLineCardManager(
     this.listenSurveyConditionsStatusUseCase,
@@ -63,6 +72,9 @@ class InLineCardManager extends Cubit<InLineCardState>
     this.featureManager,
     this.inLineNavActions,
     this.getSelectedCountriesListUseCase,
+    this.listenPushNotificationsConditionsStatusUseCase,
+    this.listenPushNotificationsStatusUseCase,
+    this.togglePushNotificationsStatusUseCase,
   ) : super(InLineCardState.initial()) {
     init();
   }
@@ -70,6 +82,17 @@ class InLineCardManager extends Cubit<InLineCardState>
   late final UseCaseValueStream<SurveyConditionsStatus>
       surveyConditionStatusStream = consume(
     listenSurveyConditionsStatusUseCase,
+    initialData: none,
+  );
+
+  late final UseCaseValueStream<PushNotificationsConditionsStatus>
+      pushNotificationsConditionStatusStream = consume(
+    listenPushNotificationsConditionsStatusUseCase,
+    initialData: none,
+  );
+
+  late final UseCaseValueStream<bool> pushNotificationsStatusStream = consume(
+    listenPushNotificationsStatusUseCase,
     initialData: none,
   );
 
@@ -86,7 +109,7 @@ class InLineCardManager extends Cubit<InLineCardState>
   );
 
   void init() {
-    _getSelectedCountriesListHandler =
+    getSelectedCountriesListHandler =
         consume(getSelectedCountriesListUseCase, initialData: none);
   }
 
@@ -106,7 +129,7 @@ class InLineCardManager extends Cubit<InLineCardState>
         onManageCountriesPressed();
         break;
       case CardType.pushNotifications:
-        // TODO: Handle this case.
+        togglePushNotificationsStatusUseCase(none);
         break;
     }
   }
@@ -125,7 +148,6 @@ class InLineCardManager extends Cubit<InLineCardState>
         handleCountrySelectionShownUseCase(none);
         break;
       case CardType.pushNotifications:
-        // TODO: Handle this case.
         break;
     }
   }
@@ -133,23 +155,14 @@ class InLineCardManager extends Cubit<InLineCardState>
   Future<Set<Card>> maybeAddInLineCard({
     required Set<Card> currentCards,
     required Set<Document>? nextDocuments,
-  }) async {
-    if (nextDocuments == null) {
-      return currentCards;
-    }
-
-    if (state.cardType != CardType.document) {
-      return inLineCardInjectionUseCase.singleOutput(
+  }) async =>
+      inLineCardInjectionUseCase.singleOutput(
         InLineCardInjectionData(
           currentCards: currentCards,
           nextDocuments: nextDocuments,
-          cardType: state.cardType!,
+          cardType: state.cardType,
         ),
       );
-    }
-
-    return currentCards;
-  }
 
   Future<String?> getCountryName() async {
     final selectedCountries =
@@ -158,23 +171,29 @@ class InLineCardManager extends Cubit<InLineCardState>
   }
 
   @override
-  Future<InLineCardState?> computeState() async => fold4(
+  Future<InLineCardState?> computeState() async => fold6(
         surveyConditionStatusStream,
         countrySelectionConditionStatusStream,
         sourceSelectionConditionStatusStream,
-        _getSelectedCountriesListHandler,
+        getSelectedCountriesListHandler,
+        pushNotificationsConditionStatusStream,
+        pushNotificationsStatusStream,
       ).foldAll(
         (
           surveyConditionsStatus,
           countrySelectionConditionStatus,
           sourceSelectionConditionStatus,
           selectedCountries,
+          pushNotificationsConditionStatusStream,
+          pushNotificationsStatusStream,
           errorReport,
         ) async =>
             InLineCardState.populated(
           surveyConditionsStatus: surveyConditionsStatus,
           countrySelectionConditionsStatus: countrySelectionConditionStatus,
           sourceSelectionConditionsStatus: sourceSelectionConditionStatus,
+          pushNotificationsConditionsStatus:
+              pushNotificationsConditionStatusStream,
           selectedCountryName: state.selectedCountryName ??
               selectedCountries?.singleOrNull?.name,
         ),

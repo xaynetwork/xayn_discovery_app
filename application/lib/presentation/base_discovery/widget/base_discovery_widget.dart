@@ -292,6 +292,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                             manager.handleCustomCardTapped(card.type),
                         primaryCardShader:
                             ShaderFactory.fromType(ShaderType.static),
+                        selectedCountryName: manager.getSelectedCountryName(),
                       ),
               );
 

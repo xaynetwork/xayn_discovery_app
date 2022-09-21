@@ -8,12 +8,14 @@ class CustomFeedCard extends StatelessWidget {
   final VoidCallback onPressed;
   final ShaderBuilder? primaryCardShader;
   final CardType cardType;
+  final String? selectedCountryName;
 
   const CustomFeedCard({
     Key? key,
     required this.cardType,
     required this.onPressed,
     this.primaryCardShader,
+    required this.selectedCountryName,
   }) : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class CustomFeedCard extends StatelessWidget {
         return CountrySelectionCard(
           onPressed: onPressed,
           primaryCardShader: primaryCardShader,
+          countryName: selectedCountryName,
         );
       case CardType.pushNotifications:
         return PushNotificationsCard(

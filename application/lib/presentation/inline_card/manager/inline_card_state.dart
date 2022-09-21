@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/listen_country_selection_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/listen_source_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
 
@@ -18,6 +19,8 @@ class InLineCardState with _$InLineCardState {
         CountrySelectionConditionsStatus countrySelectionConditionsStatus,
     @Default(SourceSelectionConditionsStatus.notReached)
         SourceSelectionConditionsStatus sourceSelectionConditionsStatus,
+    @Default(PushNotificationsConditionsStatus.notReached)
+        PushNotificationsConditionsStatus pushNotificationsConditionsStatus,
     String? selectedCountryName,
   }) = _InLineCardState;
 
@@ -27,6 +30,7 @@ class InLineCardState with _$InLineCardState {
     SurveyConditionsStatus? surveyConditionsStatus,
     CountrySelectionConditionsStatus? countrySelectionConditionsStatus,
     SourceSelectionConditionsStatus? sourceSelectionConditionsStatus,
+    PushNotificationsConditionsStatus? pushNotificationsConditionsStatus,
     String? selectedCountryName,
   }) =>
       InLineCardState(
@@ -36,15 +40,10 @@ class InLineCardState with _$InLineCardState {
             CountrySelectionConditionsStatus.notReached,
         sourceSelectionConditionsStatus: sourceSelectionConditionsStatus ??
             SourceSelectionConditionsStatus.notReached,
+        pushNotificationsConditionsStatus: pushNotificationsConditionsStatus ??
+            PushNotificationsConditionsStatus.notReached,
         selectedCountryName: selectedCountryName,
       );
-
-  bool get isAnyConditionReached =>
-      surveyConditionsStatus == SurveyConditionsStatus.reached ||
-      countrySelectionConditionsStatus ==
-          CountrySelectionConditionsStatus.reached ||
-      sourceSelectionConditionsStatus ==
-          SourceSelectionConditionsStatus.reached;
 }
 
 extension InLineCardStateExtension on InLineCardState {
@@ -59,6 +58,10 @@ extension InLineCardStateExtension on InLineCardState {
     if (sourceSelectionConditionsStatus ==
         SourceSelectionConditionsStatus.reached) {
       return CardType.sourceSelection;
+    }
+    if (pushNotificationsConditionsStatus ==
+        PushNotificationsConditionsStatus.reached) {
+      return CardType.pushNotifications;
     }
     return null;
   }

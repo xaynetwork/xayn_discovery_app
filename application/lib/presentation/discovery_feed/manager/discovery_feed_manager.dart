@@ -18,17 +18,9 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/listen_push_notifications_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/push_notifications_card_injection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_clicked_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_shown_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
@@ -38,6 +30,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_mana
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/close_feed_documents_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/request_feed_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -94,15 +87,7 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
-    ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase,
-    ListenPushNotificationsConditionsStatusUseCase
-        listenPushNotificationsConditionsStatusUseCase,
-    ListenPushNotificationsStatusUseCase listenPushNotificationsStatusUseCase,
-    HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
-    HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
-    SurveyCardInjectionUseCase customCardInjectionUseCase,
-    PushNotificationsCardInjectionUseCase pushNotificationsCardInjectionUseCase,
-    TogglePushNotificationsStatusUseCase togglePushNotificationsStatusUseCase,
+    InLineCardManager inLineCardManager,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
@@ -118,18 +103,11 @@ class DiscoveryFeedManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
-          listenSurveyConditionsStatusUseCase,
-          listenPushNotificationsConditionsStatusUseCase,
-          listenPushNotificationsStatusUseCase,
-          handleSurveyBannerClickedUseCase,
-          handleSurveyBannerShownUseCase,
-          customCardInjectionUseCase,
-          pushNotificationsCardInjectionUseCase,
-          togglePushNotificationsStatusUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
           CurrentView.story,
+          inLineCardManager,
         );
 
   late final FetchSessionUseCase _fetchSessionUseCase;
