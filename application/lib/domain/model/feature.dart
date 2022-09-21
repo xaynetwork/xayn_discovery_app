@@ -30,7 +30,6 @@ enum Feature {
     description:
         'When enabled, collects the user interactions in order to prompt the survey card',
   ),
-
   altPromoCode(Owner.Simon, false,
       description: 'PromoCodes are handled inApp', remoteKey: 'alt-promo-code'),
   onBoardingSheets(
@@ -50,6 +49,18 @@ enum Feature {
     EnvironmentHelper.kIsDebug,
     description:
         'Listen for silent push notification from Airship to trigger news fetch',
+  ),
+  sourceSelectionInLineCard(
+    Owner.Michael,
+    false,
+    description: 'Showing source selection inline Card',
+    remoteKey: 'source_selection_inline_card',
+  ),
+  countrySelectionInLineCard(
+    Owner.Michael,
+    false,
+    description: 'Showing country selection inline Card',
+    remoteKey: 'country_selection_inline_card',
   );
 
   final Owner owner;
