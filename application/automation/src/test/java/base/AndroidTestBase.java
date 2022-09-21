@@ -2,11 +2,19 @@ package base;
 
 import com.xayn.capabilities.CapabilitiesBuilder;
 import com.xayn.constants.PlatformType;
+import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 import static com.xayn.configuration.Configuration.*;
@@ -17,7 +25,7 @@ import static com.xayn.handlers.AppiumHandler.getDriver;
 public abstract class AndroidTestBase extends TestBase {
 
     @BeforeMethod(alwaysRun = true)
-    public void startDriver(Method method) throws IllegalAccessException {
+    public void onStart(Method method) throws IllegalAccessException {
         DesiredCapabilities desiredCapabilities = new CapabilitiesBuilder()
                 .setPlatformName("Android")
                 .setPlatformVersion(DEVICE_VERSION)
@@ -28,6 +36,20 @@ public abstract class AndroidTestBase extends TestBase {
                 .build();
         createDriver(PlatformType.ANDROID, desiredCapabilities);
         getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+        ((AndroidDriver<?>) getDriver()).startRecordingScreen();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void onFinish() {
+        byte[] data = Base64.decodeBase64(((AndroidDriver<?>) getDriver()).stopRecordingScreen());
+        String path = SCREENSHOT_DIRECTORY + "/" + RandomStringUtils.randomAlphabetic(5) + ".mp4";
+        try (OutputStream stream = Files.newOutputStream(
+                Paths.get(path))) {
+            stream.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
