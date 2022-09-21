@@ -150,15 +150,15 @@ jobs:
           api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
           script: |
-            adb root
-            adb shell screenrecord --bugreport --bit-rate 4M /sdcard/test.mp4 &
-            VIDEO_PID=$!
+#            adb root
+#            adb shell screenrecord --bugreport --bit-rate 4M /sdcard/test.mp4 &
+#            VIDEO_PID=$!
             pushd application || exit
             fastlane run_automation platform:android test_suite:"$TEST_SUITE"
             popd || exit
-            kill $VIDEO_PID
-            sleep 3
-            adb pull /sdcard/test.mp4
+#            kill $VIDEO_PID
+#            sleep 3
+#            adb pull /sdcard/test.mp4
 
       - name: Upload video
         uses: actions/upload-artifact@v3
