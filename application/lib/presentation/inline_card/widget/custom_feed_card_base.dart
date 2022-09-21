@@ -4,7 +4,6 @@ import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_painter.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 class CountrySelectionCard extends _CustomFeedCardBase {
@@ -118,11 +117,21 @@ class _CustomFeedCardBase extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: CustomPaint(
-            painter: StaticPainter(
-              shadowColor: R.colors.shadow,
+          child: Container(
+              decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: <Color>[
+                R.colors.videoBackground,
+                R.colors.snippetBackground,
+                R.colors.snippetBackground,
+                R.colors.videoBackground,
+                R.colors.videoBackground,
+              ],
+              stops: const <double>[0.0, 0.18, 0.45, 0.6, 1.0],
             ),
-          ),
+          )),
         ),
         Padding(
           padding: EdgeInsets.symmetric(

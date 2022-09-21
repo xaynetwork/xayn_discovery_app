@@ -37,6 +37,7 @@ class InLineCardInjectionUseCase
   @visibleForTesting
   bool shouldMarkInjectionPoint(InLineCardInjectionData data) =>
       nextDocumentSibling == null &&
+      data.cardType != null &&
       data.nextDocumentsCount > data.currentDocumentsCount &&
       data.nextDocumentsCount > 2;
 
