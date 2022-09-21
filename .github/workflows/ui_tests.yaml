@@ -144,27 +144,12 @@ jobs:
       - name: Set Up Emulator And Run Tests
         timeout-minutes: 60
         uses: reactivecircus/android-emulator-runner@v2
-        env:
-          TEST_SUITE: ${{ env.test_suite }}
         with:
           api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
+          working-directory: application/
           script: |
-            adb root
-            adb shell screenrecord --bugreport --bit-rate 4M /sdcard/test.mp4 &
-            VIDEO_PID=$!
-            pushd application || exit
-            fastlane run_automation platform:android test_suite:"$TEST_SUITE"
-            popd || exit
-            kill $VIDEO_PID
-            sleep 3
-            adb pull /sdcard/test.mp4
-
-      - name: Upload video
-        uses: actions/upload-artifact@v3
-        with:
-          name: video
-          path: ./test.mp4
+            fastlane run_automation platform:android test_suite:"${{ env.test_suite }}"
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v3
