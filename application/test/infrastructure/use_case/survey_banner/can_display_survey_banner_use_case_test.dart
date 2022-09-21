@@ -2,10 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
+import 'package:xayn_discovery_app/domain/model/inline_card/inline_card.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 
 import '../../../test_utils/utils.dart';
@@ -31,7 +32,7 @@ void main() {
 
   final appStatusSecondSession = initialAppStatus.copyWith(numberOfSessions: 2);
 
-  const initialSurveyBanner = SurveyBanner.initial();
+  const initialSurveyBanner = InLineCard.initial(CardType.survey);
 
   final surveyBannerShownOnce =
       initialSurveyBanner.copyWith(numberOfTimesShown: 1);

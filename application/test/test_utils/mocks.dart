@@ -38,12 +38,12 @@ import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart'
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/inline_card_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/payment_flow_error_mapper_to_error_msg_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchasable_product_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/purchase_event_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/survey_banner_data_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
@@ -178,7 +178,9 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DateTimeHandler,
   DbEntityMapToFeedMarketMapper,
   DbEntityMapToOnboardingStatusMapper,
-  DbEntityMapToSurveyBannerMapper,
+  DbEntityMapToSurveyInLineCardMapper,
+  DbEntityMapToCountrySelectionInLineCardMapper,
+  DbEntityMapToSourceSelectionInLineCardMapper,
   DiscoveryCardManager,
   Document,
   DocumentRepository,
@@ -273,7 +275,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   ShareHandler,
   ShareUriUseCase,
   SourcesScreenNavActions,
-  SurveyBannerMapper,
+  InLineCardMapper,
   UniqueIdHandler,
   UpdateSessionUseCase,
   UrlOpener,

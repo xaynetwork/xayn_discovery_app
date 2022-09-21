@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
+import 'package:xayn_discovery_app/domain/model/inline_card/inline_card.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
@@ -18,8 +19,13 @@ void main() {
   late MockAppVersionToMapMapper mockAppVersionToMapMapper;
   late MockOnboardingStatusToDbEntityMapMapper mockOnboardingToMapMapper;
   late MockDbEntityMapToOnboardingStatusMapper mockMapToOnboardingMapper;
-  late MockSurveyBannerMapper mockSurveyBannerMapper;
-  late MockDbEntityMapToSurveyBannerMapper mockDbEntityMapToSurveyBannerMapper;
+  late MockInLineCardMapper mockInLineCardMapper;
+  late MockDbEntityMapToSurveyInLineCardMapper
+      mockDbEntityMapToSurveyBannerMapper;
+  late MockDbEntityMapToCountrySelectionInLineCardMapper
+      mockDbEntityMapToCountrySelectionInLineCardMapper;
+  late MockDbEntityMapToSourceSelectionInLineCardMapper
+      mockDbEntityMapToSourceSelectionInLineCardMapper;
   late CTAMapToDbEntityMapper ctaMapToDbEntityMapper;
   late DbEntityMapToCTAMapper dbEntityMapToCTAMapper;
   late final now = DateTime.now();
@@ -41,9 +47,15 @@ void main() {
     1: false,
   };
 
-  const surveyBannerValue = SurveyBanner.initial();
+  const surveyBannerValue = InLineCard.initial(CardType.survey);
+  const countrySelectionValue = InLineCard.initial(CardType.countrySelection);
+  const sourceSelectionValue = InLineCard.initial(CardType.sourceSelection);
 
-  const ctaValue = CTA(surveyBanner: surveyBannerValue);
+  const ctaValue = CTA(
+    surveyBanner: surveyBannerValue,
+    countrySelection: countrySelectionValue,
+    sourceSelection: sourceSelectionValue,
+  );
 
   const ctaMap = {
     0: surveyBannerMap,
@@ -54,15 +66,23 @@ void main() {
     mockAppVersionToMapMapper = MockAppVersionToMapMapper();
     mockOnboardingToMapMapper = MockOnboardingStatusToDbEntityMapMapper();
     mockMapToOnboardingMapper = MockDbEntityMapToOnboardingStatusMapper();
-    mockSurveyBannerMapper = MockSurveyBannerMapper();
-    mockDbEntityMapToSurveyBannerMapper = MockDbEntityMapToSurveyBannerMapper();
+    mockInLineCardMapper = MockInLineCardMapper();
+    mockDbEntityMapToSurveyBannerMapper =
+        MockDbEntityMapToSurveyInLineCardMapper();
+    mockDbEntityMapToCountrySelectionInLineCardMapper =
+        MockDbEntityMapToCountrySelectionInLineCardMapper();
+    mockDbEntityMapToSourceSelectionInLineCardMapper =
+        MockDbEntityMapToSourceSelectionInLineCardMapper();
 
     ctaMapToDbEntityMapper = CTAMapToDbEntityMapper(
-      mockSurveyBannerMapper,
+      mockInLineCardMapper,
     );
 
-    dbEntityMapToCTAMapper =
-        DbEntityMapToCTAMapper(mockDbEntityMapToSurveyBannerMapper);
+    dbEntityMapToCTAMapper = DbEntityMapToCTAMapper(
+      mockDbEntityMapToSurveyBannerMapper,
+      mockDbEntityMapToCountrySelectionInLineCardMapper,
+      mockDbEntityMapToSourceSelectionInLineCardMapper,
+    );
 
     mapper = AppStatusMapper(
       mockMapToAppVersionMapper,
@@ -118,7 +138,7 @@ void main() {
           .thenReturn(appVersionMap);
       when(mockOnboardingToMapMapper.map(onboardingValue))
           .thenReturn(onboardingMap);
-      when(mockSurveyBannerMapper.map(surveyBannerValue))
+      when(mockInLineCardMapper.map(surveyBannerValue))
           .thenReturn(surveyBannerMap);
 
       final appStatus = AppStatus(

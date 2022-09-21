@@ -33,10 +33,10 @@ import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feed
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_type_markets_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/inline_card_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/survey_banner_data_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/migration_info.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_status_repository.dart';
@@ -163,8 +163,12 @@ void _createDocuments() {
 }
 
 void _createAppStatus(int version) {
-  const surveyBannerMapper = SurveyBannerMapper();
-  const dbEntityMapToSurveyBannerMapper = DbEntityMapToSurveyBannerMapper();
+  const surveyBannerMapper = InLineCardMapper();
+  const dbEntityMapToSurveyBannerMapper = DbEntityMapToSurveyInLineCardMapper();
+  const dbEntityMapToCountrySelectionMapper =
+      DbEntityMapToCountrySelectionInLineCardMapper();
+  const dbEntityMapToSourceSelectionMapper =
+      DbEntityMapToSourceSelectionInLineCardMapper();
 
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
@@ -172,7 +176,11 @@ void _createAppStatus(int version) {
     OnboardingStatusToDbEntityMapMapper(),
     DbEntityMapToOnboardingStatusMapper(),
     CTAMapToDbEntityMapper(surveyBannerMapper),
-    DbEntityMapToCTAMapper(dbEntityMapToSurveyBannerMapper),
+    DbEntityMapToCTAMapper(
+      dbEntityMapToSurveyBannerMapper,
+      dbEntityMapToCountrySelectionMapper,
+      dbEntityMapToSourceSelectionMapper,
+    ),
   );
   final repository = HiveAppStatusRepository(mapper);
 

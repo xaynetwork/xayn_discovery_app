@@ -3,7 +3,7 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
+import 'package:xayn_discovery_app/domain/model/inline_card/inline_card.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
@@ -69,7 +69,7 @@ class CanDisplaySurveyBannerUseCase extends UseCase<None, bool> {
     return true;
   }
 
-  bool performCheckForNotSubscribedUser(SurveyBanner surveyBanner) =>
+  bool performCheckForNotSubscribedUser(InLineCard surveyBanner) =>
       // for non-subscribers, we only show the banner to them 1x
       surveyBanner.numberOfTimesShown == 0;
 }
