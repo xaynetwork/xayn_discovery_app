@@ -13,7 +13,7 @@ env:
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
   android_api_level: '30'
-  android_arch: 'arm64-v8a'
+  android_arch: 'x86'
   android_profile: 'pixel_xl'
   test_suite: 'sanity'
   FASTLANE_SKIP_UPDATE_CHECK: '1'
