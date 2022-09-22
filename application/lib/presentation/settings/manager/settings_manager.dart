@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -331,7 +333,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
 
     // If the user tapped on the don't allow button on the native dialog,
     // and tries to toggle push notifications, redirect them to Settings
-    if (userDidChangePushNotifications && !isNotificationAllowed) {
+    if ((userDidChangePushNotifications || Platform.isAndroid) &&
+        !isNotificationAllowed) {
       _localNotificationsService.openNotificationsPage();
       return;
     } else if (!userDidChangePushNotifications) {
