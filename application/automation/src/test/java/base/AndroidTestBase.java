@@ -6,6 +6,8 @@ import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -15,7 +17,10 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.xayn.configuration.Configuration.*;
 import static com.xayn.handlers.AppiumHandler.createDriver;
@@ -40,11 +45,15 @@ public abstract class AndroidTestBase extends TestBase {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void onFinish() {
+    public void onFinish() throws IOException {
+        String path = SCREENSHOT_DIRECTORY + "/" + RandomStringUtils.randomAlphabetic(5);
+        LogEntries logs =  ((AndroidDriver<?>) getDriver()).manage().logs().get("logcat");
+        List<String> lines = logs.getAll().stream().map(LogEntry::toString).collect(Collectors.toList());
+        Files.write(Paths.get(path + ".txt"), lines);
         byte[] data = Base64.decodeBase64(((AndroidDriver<?>) getDriver()).stopRecordingScreen());
-        String path = SCREENSHOT_DIRECTORY + "/" + RandomStringUtils.randomAlphabetic(5) + ".mp4";
+
         try (OutputStream stream = Files.newOutputStream(
-                Paths.get(path))) {
+                Paths.get(path + ".mp4"))) {
             stream.write(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
