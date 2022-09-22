@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
@@ -30,6 +33,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/get_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -75,6 +80,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final GetSubscriptionManagementUrlUseCase
       _getSubscriptionManagementUrlUseCase;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final GetPushNotificationsStatusUseCase _getPushNotificationsStatusUseCase;
+  final SavePushNotificationsStatusUseCase _savePushNotificationsStatusUseCase;
   final AppManager _appManager;
   final RatingDialogManager _ratingDialogManager;
   final LocalNotificationsService _localNotificationsService;
@@ -96,6 +103,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._listenSubscriptionStatusUseCase,
     this._getSubscriptionManagementUrlUseCase,
     this._sendAnalyticsUseCase,
+    this._getPushNotificationsStatusUseCase,
+    this._savePushNotificationsStatusUseCase,
     this._appManager,
     this._ratingDialogManager,
     this._localNotificationsService,
@@ -184,16 +193,25 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   Future<SettingsScreenState?> computeState() async {
     if (!_initDone) return null;
-    SettingsScreenState buildReady() => SettingsScreenState.ready(
-          theme: _theme,
-          appVersion: _appVersion,
-          isPaymentEnabled: _featureManager.isPaymentEnabled,
-          areLocalNotificationsEnabled:
-              _featureManager.areLocalNotificationsEnabled,
-          areRemoteNotificationsEnabled:
-              _featureManager.areRemoteNotificationsEnabled,
-          subscriptionStatus: _subscriptionStatus,
-        );
+    Future<SettingsScreenState> buildReady() async {
+      final userNotificationsEnabled =
+          await _remoteNotificationsService.userNotificationsEnabled ?? false;
+      final isNotificationAllowed =
+          await _localNotificationsService.isNotificationAllowed;
+      return SettingsScreenState.ready(
+        theme: _theme,
+        appVersion: _appVersion,
+        isPaymentEnabled: _featureManager.isPaymentEnabled,
+        arePushNotificationsActive:
+            userNotificationsEnabled && isNotificationAllowed,
+        areLocalNotificationsEnabled:
+            _featureManager.areLocalNotificationsEnabled,
+        areRemoteNotificationsEnabled:
+            _featureManager.areRemoteNotificationsEnabled,
+        subscriptionStatus: _subscriptionStatus,
+      );
+    }
+
     return fold2(
       _appThemeHandler,
       _subscriptionStatusHandler,
@@ -206,7 +224,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         _subscriptionStatus = subscriptionStatus;
       }
 
-      return buildReady();
+      return await buildReady();
     });
   }
 
@@ -275,6 +293,12 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     }
   }
 
+  void onChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      scheduleComputeState(() {});
+    }
+  }
+
   void requestLocalNotificationPermission() =>
       _localNotificationsService.requestPermission();
 
@@ -293,11 +317,38 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   }
 
   void requestRemoteNotificationPermission() =>
-      _remoteNotificationsService.enableNotifications();
+      scheduleComputeState(_remoteNotificationsService.enableNotifications);
 
   void copyChannelId() async {
     final channelId = await _remoteNotificationsService.channelId;
     if (channelId == null) return;
     Clipboard.setData(ClipboardData(text: channelId));
+  }
+
+  void togglePushNotificationsState() async {
+    final userDidChangePushNotifications =
+        await _getPushNotificationsStatusUseCase.singleOutput(none);
+    final isNotificationAllowed =
+        await _localNotificationsService.isNotificationAllowed;
+
+    // If the user tapped on the don't allow button on the native dialog,
+    // and tries to toggle push notifications, redirect them to Settings
+    if ((userDidChangePushNotifications || Platform.isAndroid) &&
+        !isNotificationAllowed) {
+      _localNotificationsService.openNotificationsPage();
+      return;
+    } else if (!userDidChangePushNotifications) {
+      await _savePushNotificationsStatusUseCase.call(none);
+    }
+
+    final arePushNotificationsActive =
+        await _remoteNotificationsService.userNotificationsEnabled ?? false;
+    if (arePushNotificationsActive) {
+      await _remoteNotificationsService.disableNotifications();
+    } else {
+      await _remoteNotificationsService.enableNotifications();
+    }
+
+    scheduleComputeState(() {});
   }
 }

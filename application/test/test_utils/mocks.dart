@@ -102,6 +102,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/get_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
@@ -278,6 +280,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RemoteNotificationsService,
   DiscoveryFeedManager,
   SetExperimentsIdentityParamsUseCase,
+  GetPushNotificationsStatusUseCase,
+  SavePushNotificationsStatusUseCase,
 ])
 class Mocks {
   Mocks._();
