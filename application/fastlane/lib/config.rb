@@ -36,12 +36,6 @@ module Config
     RELEASE = "release"
   end
 
-  module TestSuites
-    SANITY = "sanity"
-    REGRESSION = "regression"
-    DEBUG = "debug"
-  end
-
   ###
   ### All possible options should be described in this module
   ###

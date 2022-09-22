@@ -26,7 +26,6 @@ Platforms = Config::Platforms
 Flavors = Config::Flavors
 AndroidOutputs = Config::AndroidOutputs
 BuildTypes = Config::BuildTypes
-TestSuites = Config::TestSuites
 IS_CI = is_ci
 
 # Common checks before running a lane
@@ -55,7 +54,7 @@ before_all do |lane, options|
   setIfNotSet.call(Options::DOWNLOAD_PROFILE, IS_CI)
   setIfNotSet.call(Options::UPDATE_ASSETS, true)
   setIfNotSet.call(Options::TEST, lane == :check)
-  setIfNotSet.call(Options::TEST_SUITE, TestSuites::SANITY)
+  setIfNotSet.call(Options::TEST_SUITE, "sanity")
 
   version_name = gitVersionName()
 

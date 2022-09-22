@@ -117,8 +117,8 @@ jobs:
         timeout-minutes: 30
         working-directory: ./application
         run:
-#          fastlane run_automation platform:ios test_suite:"${{ env.test_suite }}"
-          flutter test integration_test
+          fastlane run_automation platform:ios test_suite:sanity_ios
+#          flutter test integration_test
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
