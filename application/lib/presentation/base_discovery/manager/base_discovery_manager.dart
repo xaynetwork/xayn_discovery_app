@@ -213,9 +213,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   /// Trigger this handler whenever the primary card changes.
   /// The [index] correlates with the index of the current primary card.
   void handleIndexChanged(int index) async {
-    if (index >= state.cards.length) {
-      return;
-    }
+    if (index >= state.cards.length) return;
 
     final nextCard = state.cards.elementAt(index);
     final document = nextCard.document;
@@ -244,23 +242,21 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
           .singleOutput(UserInteractionsEvents.cardScrolled);
     }
 
-    if (_observedDocument != null) {
-      if (document != null) {
-        observeDocument(
-          document: document,
-          mode: _currentViewMode(document.documentId),
-        );
+    if (document != null) {
+      observeDocument(
+        document: document,
+        mode: _currentViewMode(document.documentId),
+      );
 
-        sendAnalyticsUseCase(DocumentIndexChangedEvent(
-          cardType: nextCard.type,
-          next: document,
-          direction: direction,
-          feedType: feedType,
-        ));
-      } else {
-        handleSurveyBannerShownUseCase(none);
-        observeDocument();
-      }
+      sendAnalyticsUseCase(DocumentIndexChangedEvent(
+        cardType: nextCard.type,
+        next: document,
+        direction: direction,
+        feedType: feedType,
+      ));
+    } else {
+      handleSurveyBannerShownUseCase(none);
+      observeDocument();
     }
 
     scheduleComputeState(() {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -29,5 +30,16 @@ mixin SingletonSubscriptionObserver<T> on UseCaseBlocHelper<T> {
   void onListen() => resumeAllSubscriptions();
 
   @mustCallSuper
-  void onCancel() => pauseAllSubscriptions();
+  void onCancel() {
+    const timeout = Duration(seconds: 3);
+
+    /// todo: make this less flaky
+    /// The problem: we should pause _after_ any pending use cases are
+    /// done, before we were pausing in the middle of a use cases's job (sometimes)
+    /// This timeout fixes the issue, but is of course not a clean solution...
+    Rx.race([
+      Stream.fromFuture(Future.delayed(timeout * 1.5)),
+      super.stream.debounceTime(const Duration(seconds: 3)).take(1)
+    ]).first.whenComplete(pauseAllSubscriptions);
+  }
 }

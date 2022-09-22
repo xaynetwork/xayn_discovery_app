@@ -157,8 +157,8 @@ class ActiveSearchManager extends BaseDiscoveryManager
   void onTrialExpired() => _activeSearchNavActions.onTrialExpired();
 
   void onResetAISucceeded() {
-    resetParameters();
-    handleIndexChanged(0);
+    resetCardIndex();
+    resetObservedDocument();
   }
 
   @override
