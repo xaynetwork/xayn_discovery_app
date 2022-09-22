@@ -13,7 +13,7 @@ env:
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
   android_api_level: '30'
-  android_arch: 'x86'
+  android_arch: 'x86_64'
   target: 'default'
   android_profile: 'Galaxy Nexus'
   test_suite: 'sanity'
