@@ -94,8 +94,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/save_se
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/can_display_inline_cards.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_injection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/can_display_push_notifications_card_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/listen_push_notifications_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/can_display_push_notifications_card_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_shown_use_case.dart';

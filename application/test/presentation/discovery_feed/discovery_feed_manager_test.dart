@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-// import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
@@ -300,9 +299,6 @@ void main() async {
         verifyNoMoreInteractions(mockDiscoveryEngine);
       });
 
-/*
-TODO: Enable this test once the inline card manager is ready
-
   blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
     build: () => manager,
@@ -314,22 +310,7 @@ TODO: Enable this test once the inline card manager is ready
     verify: (manager) {
       expect(
         manager.state,
-        DiscoveryState(
-          cards: {
-            item_renderer.Card.document(fakeDocumentA),
-            item_renderer.Card.document(fakeDocumentB),
-          },
-          cardIndex: 0,
-          isComplete: false,
-          isFullScreen: true,
-          shouldUpdateNavBar: false,
-          didReachEnd: false,
-          subscriptionStatus: subscriptionStatusInitial,
-          readerModeBackgroundColor: ReaderModeBackgroundColor(
-            dark: ReaderModeBackgroundDarkColor.dark,
-            light: ReaderModeBackgroundLightColor.white,
-          ),
-        ),
+        manager.state.copyWith(isFullScreen: true),
       );
       verifyInOrder([
         mockDiscoveryEngine.restoreFeed(),
@@ -341,7 +322,6 @@ TODO: Enable this test once the inline card manager is ready
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );
-  */
 
   group('test onboarding', () {
     setUp(() {

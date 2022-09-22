@@ -4,12 +4,11 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/test/use_case_test.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
-import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
 import 'package:xayn_discovery_app/domain/model/inline_card/inline_card.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/can_display_survey_banner_use_case.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/mocks.mocks.dart';
 
 void main() {
   late MockGetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
@@ -62,7 +61,8 @@ void main() {
                           .copyWith(isBetaUser: true));
                   when(appStatusRepository.appStatus).thenReturn(
                     initialAppStatus.copyWith(
-                      cta: CTA(surveyBanner: surveyBannerShownTwice),
+                      cta: initialAppStatus.cta
+                          .copyWith(surveyBanner: surveyBannerShownTwice),
                     ),
                   );
                 },
@@ -82,7 +82,7 @@ void main() {
                           .copyWith(isBetaUser: true));
                   when(appStatusRepository.appStatus).thenReturn(
                     initialAppStatus.copyWith(
-                      cta: CTA(
+                      cta: initialAppStatus.cta.copyWith(
                         surveyBanner: surveyBannerClicked,
                       ),
                     ),
@@ -104,7 +104,7 @@ void main() {
                           .copyWith(isBetaUser: true));
                   when(appStatusRepository.appStatus).thenReturn(
                     appStatusFirstSession.copyWith(
-                      cta: CTA(
+                      cta: initialAppStatus.cta.copyWith(
                         surveyBanner: surveyBannerShownOnce,
                       ),
                     ),
@@ -126,7 +126,7 @@ void main() {
                           .copyWith(isBetaUser: true));
                   when(appStatusRepository.appStatus).thenReturn(
                     appStatusSecondSession.copyWith(
-                      cta: CTA(
+                      cta: initialAppStatus.cta.copyWith(
                         surveyBanner: surveyBannerShownOnce,
                       ),
                     ),
@@ -171,7 +171,8 @@ void main() {
                   when(featureManager.isPromptSurveyEnabled).thenReturn(true);
                   when(getSubscriptionStatusUseCase.singleOutput(none))
                       .thenAnswer((_) async => SubscriptionStatus.initial());
-                  final cta = CTA(surveyBanner: surveyBannerShownOnce);
+                  final cta = initialAppStatus.cta
+                      .copyWith(surveyBanner: surveyBannerShownOnce);
                   when(appStatusRepository.appStatus).thenReturn(
                     initialAppStatus.copyWith(
                       cta: cta,

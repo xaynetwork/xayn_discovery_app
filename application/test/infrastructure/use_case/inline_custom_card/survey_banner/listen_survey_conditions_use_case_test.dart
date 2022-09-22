@@ -6,17 +6,24 @@ import 'package:xayn_discovery_app/domain/model/repository_event.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
 
-import '../../../test_utils/mocks.mocks.dart';
+import '../../../../test_utils/mocks.mocks.dart';
 
 void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockAppStatusRepository appStatusRepository;
+  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBanner;
   late ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
 
+  canDisplaySurveyBanner = MockCanDisplaySurveyBannerUseCase();
   userInteractionsRepository = MockUserInteractionsRepository();
   appStatusRepository = MockAppStatusRepository();
   listenSurveyConditionsStatusUseCase = ListenSurveyConditionsStatusUseCase(
-      userInteractionsRepository, appStatusRepository);
+    userInteractionsRepository,
+    appStatusRepository,
+    canDisplaySurveyBanner,
+  );
+
+  when(canDisplaySurveyBanner.singleOutput(none)).thenAnswer((_) async => true);
 
   final initialUserInteractions = UserInteractions.initial();
 

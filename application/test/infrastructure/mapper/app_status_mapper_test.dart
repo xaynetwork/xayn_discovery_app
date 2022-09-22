@@ -45,11 +45,38 @@ void main() {
   const surveyBannerMap = {
     0: 0,
     1: false,
+    2: 2,
   };
 
-  const surveyBannerValue = InLineCard.initial(CardType.survey);
-  const countrySelectionValue = InLineCard.initial(CardType.countrySelection);
-  const sourceSelectionValue = InLineCard.initial(CardType.sourceSelection);
+  const sourceSelectionMap = {
+    0: 2,
+    1: true,
+    2: 5,
+  };
+
+  const countrySelectionMap = {
+    0: 1,
+    1: false,
+    2: 3,
+  };
+  const surveyBannerValue = InLineCard(
+    cardType: CardType.survey,
+    lastSessionNumberWhenShown: 2,
+    hasSurveyBannerBeenClicked: false,
+    numberOfTimesShown: 0,
+  );
+  const countrySelectionValue = InLineCard(
+    cardType: CardType.countrySelection,
+    lastSessionNumberWhenShown: 3,
+    hasSurveyBannerBeenClicked: false,
+    numberOfTimesShown: 1,
+  );
+  const sourceSelectionValue = InLineCard(
+    cardType: CardType.sourceSelection,
+    lastSessionNumberWhenShown: 5,
+    hasSurveyBannerBeenClicked: true,
+    numberOfTimesShown: 2,
+  );
 
   const ctaValue = CTA(
     surveyBanner: surveyBannerValue,
@@ -59,6 +86,8 @@ void main() {
 
   const ctaMap = {
     0: surveyBannerMap,
+    1: sourceSelectionMap,
+    2: countrySelectionMap,
   };
 
   setUp(() async {
@@ -94,7 +123,7 @@ void main() {
     );
   });
 
-  group('AppSettingsMapper tests: ', () {
+  group('AppStatusMapper tests: ', () {
     test('fromMap', () {
       when(mockMapToAppVersionMapper.map(appVersionMap))
           .thenReturn(appVersionValue);
@@ -102,6 +131,12 @@ void main() {
           .thenReturn(onboardingValue);
       when(mockDbEntityMapToSurveyBannerMapper.map(surveyBannerMap))
           .thenReturn(surveyBannerValue);
+      when(mockDbEntityMapToSourceSelectionInLineCardMapper
+              .map(sourceSelectionMap))
+          .thenReturn(sourceSelectionValue);
+      when(mockDbEntityMapToCountrySelectionInLineCardMapper
+              .map(countrySelectionMap))
+          .thenReturn(countrySelectionValue);
 
       final map = {
         AppStatusFields.numberOfSessions: numberOfSessions,
@@ -138,8 +173,13 @@ void main() {
           .thenReturn(appVersionMap);
       when(mockOnboardingToMapMapper.map(onboardingValue))
           .thenReturn(onboardingMap);
-      when(mockInLineCardMapper.map(surveyBannerValue))
-          .thenReturn(surveyBannerMap);
+
+      when(mockInLineCardMapper.map(ctaValue.surveyBanner))
+          .thenAnswer((realInvocation) => surveyBannerMap);
+      when(mockInLineCardMapper.map(ctaValue.countrySelection))
+          .thenAnswer((realInvocation) => countrySelectionMap);
+      when(mockInLineCardMapper.map(ctaValue.sourceSelection))
+          .thenAnswer((realInvocation) => sourceSelectionMap);
 
       final appStatus = AppStatus(
         numberOfSessions: numberOfSessions,

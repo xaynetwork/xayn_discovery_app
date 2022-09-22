@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -19,7 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analyt
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notification/listen_push_notifications_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
@@ -102,6 +103,25 @@ void main() {
     when(listenPushNotificationsStatusUseCase.transform(any)).thenAnswer(
         (realInvocation) =>
             realInvocation.positionalArguments.first as Stream<None>);
+    when(inLineCardManager.stream).thenAnswer((_) => const Stream.empty());
+    when(
+      inLineCardManager.maybeAddInLineCard(
+        currentCards: {},
+        nextDocuments: null,
+      ),
+    ).thenAnswer((_) async => {});
+    when(
+      inLineCardManager.maybeAddInLineCard(
+        currentCards: {},
+        nextDocuments: {fakeDocument},
+      ),
+    ).thenAnswer((_) async => {Card.document(fakeDocument)});
+    when(
+      inLineCardManager.maybeAddInLineCard(
+        currentCards: {Card.document(fakeDocument)},
+        nextDocuments: {fakeDocument},
+      ),
+    ).thenAnswer((_) async => {Card.document(fakeDocument)});
 
     buildManager = () => ActiveSearchManager(
           MockActiveSearchNavActions(),

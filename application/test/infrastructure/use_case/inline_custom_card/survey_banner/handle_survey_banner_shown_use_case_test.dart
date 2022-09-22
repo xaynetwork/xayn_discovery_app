@@ -3,11 +3,10 @@ import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
-import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
 import 'package:xayn_discovery_app/domain/model/inline_card/inline_card.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_shown_use_case.dart';
 
-import '../../../test_utils/utils.dart';
+import '../../../../test_utils/mocks.mocks.dart';
 
 void main() {
   late MockAppStatusRepository appStatusRepository;
@@ -32,7 +31,7 @@ void main() {
           numberOfTimesShown: initialSurveyBanner.numberOfTimesShown + 1);
 
       updatedAppStatus = initialAppStatus.copyWith(
-          cta: CTA(
+          cta: initialAppStatus.cta.copyWith(
         surveyBanner: updatedSurveyBanner,
       ));
     },
