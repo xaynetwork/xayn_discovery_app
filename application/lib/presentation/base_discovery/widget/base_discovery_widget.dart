@@ -67,7 +67,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   double _dragDistance = .0;
   bool _trialBannerShown = false;
-  bool _isInitialBuild = true;
   T get manager;
 
   CardViewController get cardViewController => _cardViewController;
@@ -167,12 +166,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       }
 
       onIndexChanged(int index) {
-        if (_isInitialBuild) {
-          _isInitialBuild = false;
-        } else {
-          manager.handleIndexChanged(index);
-        }
-
+        manager.handleIndexChanged(index);
         ttsData = TtsData.disabled();
       }
 
