@@ -82,8 +82,8 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   }
 
   @override
-  void openNotificationsPage() => AwesomeNotifications()
-      .showNotificationConfigPage(channelKey: kChannelKey);
+  void openNotificationsPage() =>
+      AwesomeNotifications().showNotificationConfigPage();
 
   @override
   Future<bool> sendNotification({
