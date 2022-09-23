@@ -136,11 +136,13 @@ public class CapabilitiesBuilder {
         for (Field field : fields) {
             Object value = field.get(this);
             if (value != null) {
-                SimpleEntry<String, String> entry = (SimpleEntry) value;
-                caps.put(entry.getKey(), entry.getValue());
+                SimpleEntry<String, ?> entry = (SimpleEntry) value;
+                if (entry.getValue() == null) {
+                    throw new RuntimeException("Declared field " +  entry.getKey() + ", is null!");
+                }
+                caps.put(entry.getKey(), entry.getValue().toString());
             }
         }
         return new DesiredCapabilities(caps);
-
     }
 }

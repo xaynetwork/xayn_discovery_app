@@ -30,11 +30,11 @@ public abstract class IOSTestBase extends TestBase {
                 .setUpdatedWDABundleId(WDA_BUNDLE_ID)
                 .setFullResetValue(false)
                 .setWdaStartupRetries(5)
-                .setWdaConnectionTimeout(1000)
-                .setWdaLaunchTimeout(30000)
+                .setWdaConnectionTimeout(10*1000)
+                .setWdaLaunchTimeout(180*1000)
                 .setApp(APP)
                 .build();
         AppiumHandler.createDriver(PlatformType.IOS, desiredCapabilities);
-        getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+        getDriver().manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
     }
 }

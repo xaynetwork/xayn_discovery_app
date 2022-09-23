@@ -85,7 +85,7 @@ lane :check_automation_config do |options|
   hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn"])
   deviceName, deviceId, deviceVersion, app = ""
   platform = options[Options::PLATFORM]
-  devicesJson = JSON.parse(shell("flutter devices --machine"))
+  devicesJson = JSON.parse(shell("flutter --no-version-check devices --machine"))
   #setting up android properties
   if platform == Platforms::ANDROID
     devicesJson.each do |key, value|
@@ -122,6 +122,7 @@ lane :check_automation_config do |options|
   end
   setProperties("../automation/src/main/resources/config.properties",
                 {
+    "xcode.id" => "586TQ875ST",
     "driver.exec" => hash["node"],
     "appium.js" => hash["appium"],
     "appium.url" => "http://localhost:4723/wd/hub",
@@ -178,7 +179,7 @@ private_lane :build_with_flutter do |options|
   end
 
   shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
-  shell((%W(flutter build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
+  shell((%W(flutter --no-version-check build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
 end
 
 desc "Prepare internal key.properties"
@@ -247,7 +248,7 @@ lane :build_runner do |options|
   update_assets(options)
 
   mode = options[Options::WATCH] ? "watch" : "build"
-  flutter(args: %W(pub run build_runner #{mode} --delete-conflicting-outputs))
+  flutter(args: %W(--no-version-check pub run build_runner #{mode} --delete-conflicting-outputs))
 end
 
 desc "Checks alle the config (env, properties, etc) if they are correctly set"
@@ -313,7 +314,7 @@ lane :pub_get do |options|
   env = askAndSetProperties(".env", { "JFROG_TOKEN" => "JFROG_TOKEN" }, Config::ENV_DEFAULTS)
   token = env["JFROG_TOKEN"]
   shell("echo \"#{token}\" | dart pub token add \"https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private\"")
-  flutter(args: %W(pub get))
+  flutter(args: %W(--no-version-check pub get))
 end
 
 desc "Watch changes for rerunning the build_runner"
@@ -324,7 +325,7 @@ end
 
 desc "Flutter clean"
 lane :clean do |options|
-  flutter(args: %W(clean))
+  flutter(args: %W(--no-version-check clean))
   clean_folder("assets/ai/")
 end
 
@@ -336,28 +337,28 @@ lane :check do |options|
   maybe_pub_get(options)
   build_runner(options)
 
-  flutter(args: %W(analyze lib test))
+  flutter(args: %W(--no-version-check analyze lib test))
   if IS_CI
-    flutter(args: %W(format ./ --set-exit-if-changed))
+    flutter(args: %W(--no-version-check format ./ --set-exit-if-changed))
   else
-    flutter(args: %W(format ./))
+    flutter(args: %W(--no-version-check format ./))
   end
-  flutter(args: %W(pub global activate dart_dot_reporter))
+  flutter(args: %W(--no-version-check pub global activate dart_dot_reporter))
   if options[Options::COVERAGE]
     # Creates a fake test that imports all files so that lcov calculates the correct coverage
     shell('find lib ! -name "*.freezed.dart" ! -name "*.config.dart" ! -name "*.g.dart" ! -name "generated_plugin_registrant.dart"  -name *.dart  | sed \'s/lib\///\' | sed  \'s/.*/import "package:xayn_discovery_app\/&";/\' > test/all_imports_test.dart')
     shell("cat test/test_stub.dart >> test/all_imports_test.dart")
-    shell("flutter test --coverage --reporter=json > machine.log || echo 'Tests failed'")
+    shell("flutter --no-version-check test --coverage --reporter=json > machine.log || echo 'Tests failed'")
     lcov_ignore_rules = shell("cat lcov_ignore | grep -v \\# | tr '\n' ' '")
     shell("mv coverage/lcov.info coverage/original_lcov.info")
     shell("lcov --remove coverage/original_lcov.info #{lcov_ignore_rules} -o coverage/lcov.info")
     shell("genhtml coverage/lcov.info -o coverage/html")
   else
-    shell("flutter test --reporter=json > machine.log || echo 'Tests failed'")
+    shell("flutter --no-version-check test --reporter=json > machine.log || echo 'Tests failed'")
   end
 
   begin
-    shell("flutter pub global run dart_dot_reporter machine.log --show-message")
+    shell("flutter --no-version-check pub global run dart_dot_reporter machine.log --show-message")
   rescue
     UI.user_error!("Checks failed!")
   end
