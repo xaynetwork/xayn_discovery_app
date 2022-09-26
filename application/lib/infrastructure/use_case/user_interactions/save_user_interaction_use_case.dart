@@ -1,36 +1,26 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/can_display_push_notifications_card_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/can_display_inline_cards.dart';
 
 import '../../../domain/model/user_interactions/user_interactions.dart';
 
 @injectable
 class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
   final UserInteractionsRepository _userInteractionsRepository;
-  final CanDisplaySurveyBannerUseCase _canDisplaySurveyBannerUseCase;
-  final CanDisplayPushNotificationsCardUseCase
-      _canDisplayPushNotificationsCardUseCase;
+  final CanDisplayInLineCardsUseCase _canDisplayInLineCardsUseCase;
   late UserInteractions _userInteractions;
 
   SaveUserInteractionUseCase(
-    this._userInteractionsRepository,
-    this._canDisplaySurveyBannerUseCase,
-    this._canDisplayPushNotificationsCardUseCase,
-  );
+      this._userInteractionsRepository, this._canDisplayInLineCardsUseCase);
 
   @override
   Stream<None> transaction(UserInteractionsEvents param) async* {
-    final canDisplaySurveyBanner =
-        await _canDisplaySurveyBannerUseCase.singleOutput(none);
-    final canDisplayPushNotificationsCard =
-        await _canDisplayPushNotificationsCardUseCase.singleOutput(none);
+    final canDisplayInLineCardsUseCase =
+        await _canDisplayInLineCardsUseCase.singleOutput(none);
 
-    if (canDisplaySurveyBanner ||
-        (canDisplayPushNotificationsCard &&
-            param == UserInteractionsEvents.cardScrolled)) {
+    if (canDisplayInLineCardsUseCase) {
       _userInteractions = _userInteractionsRepository.userInteractions;
       switch (param) {
         case UserInteractionsEvents.cardScrolled:
@@ -53,6 +43,15 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
           break;
         case UserInteractionsEvents.searchExecuted:
           _onSearchExecutedEvent();
+          break;
+        case UserInteractionsEvents.removeExcludedSource:
+          _onRemoveExcludedSource();
+          break;
+        case UserInteractionsEvents.removeTrustedSource:
+          _onRemoveTrustedSource();
+          break;
+        case UserInteractionsEvents.trustedSource:
+          _onTrustedSource();
           break;
       }
     }
@@ -116,6 +115,30 @@ class SaveUserInteractionUseCase extends UseCase<UserInteractionsEvents, None> {
     final updatedNumberOfSearches = _userInteractions.numberOfSearches + 1;
     final updatedUserInteractions =
         _userInteractions.copyWith(numberOfSearches: updatedNumberOfSearches);
+    _userInteractionsRepository.save(updatedUserInteractions);
+  }
+
+  void _onRemoveExcludedSource() {
+    final updatedNumberOfSourcesExcluded =
+        _userInteractions.numberOfSourcesExcluded - 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
+        numberOfSourcesExcluded: updatedNumberOfSourcesExcluded);
+    _userInteractionsRepository.save(updatedUserInteractions);
+  }
+
+  void _onTrustedSource() {
+    final updatedNumberOfSourcesTrusted =
+        _userInteractions.numberOfSourcesTrusted + 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
+        numberOfSourcesTrusted: updatedNumberOfSourcesTrusted);
+    _userInteractionsRepository.save(updatedUserInteractions);
+  }
+
+  void _onRemoveTrustedSource() {
+    final updatedNumberOfSourcesTrusted =
+        _userInteractions.numberOfSourcesTrusted - 1;
+    final updatedUserInteractions = _userInteractions.copyWith(
+        numberOfSourcesTrusted: updatedNumberOfSourcesTrusted);
     _userInteractionsRepository.save(updatedUserInteractions);
   }
 }
