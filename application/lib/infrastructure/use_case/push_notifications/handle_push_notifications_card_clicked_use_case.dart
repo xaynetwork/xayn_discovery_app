@@ -32,6 +32,9 @@ class HandlePushNotificationsCardClickedUseCase extends UseCase<None, bool> {
       _localNotificationsService.openNotificationsPage();
       yield false;
       return;
+    } else if (isNotificationAllowed) {
+      yield true;
+      return;
     }
 
     final result = await _remoteNotificationsService.enableNotifications();
