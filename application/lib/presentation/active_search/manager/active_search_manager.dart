@@ -3,6 +3,7 @@ import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_e
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_type.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
@@ -14,26 +15,19 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/searc
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_next_batch_query_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/search_query_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/handle_push_notifications_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/utils/engine_error_messages.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/search_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
@@ -76,18 +70,10 @@ class ActiveSearchManager extends BaseDiscoveryManager
     HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase,
     GetSubscriptionStatusUseCase getSubscriptionStatusUseCase,
     ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase,
-    ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase,
-    ListenPushNotificationsConditionsStatusUseCase
-        listenPushNotificationsConditionsStatusUseCase,
-    HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase,
-    HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase,
-    SurveyCardInjectionUseCase customCardInjectionUseCase,
-    PushNotificationsCardInjectionUseCase pushNotificationsCardInjectionUseCase,
-    HandlePushNotificationsCardClickedUseCase
-        handlePushNotificationsCardClickedUseCase,
     FeatureManager featureManager,
     CardManagersCache cardManagersCache,
     SaveUserInteractionUseCase saveUserInteractionUseCase,
+    InLineCardManager inLineCardManager,
   ) : super(
           FeedType.search,
           engineEventsUseCase,
@@ -99,17 +85,11 @@ class ActiveSearchManager extends BaseDiscoveryManager
           hapticFeedbackMediumUseCase,
           getSubscriptionStatusUseCase,
           listenReaderModeSettingsUseCase,
-          listenSurveyConditionsStatusUseCase,
-          listenPushNotificationsConditionsStatusUseCase,
-          handleSurveyBannerClickedUseCase,
-          handleSurveyBannerShownUseCase,
-          customCardInjectionUseCase,
-          pushNotificationsCardInjectionUseCase,
-          handlePushNotificationsCardClickedUseCase,
           featureManager,
           cardManagersCache,
           saveUserInteractionUseCase,
           CurrentView.search,
+          inLineCardManager,
         );
 
   final ActiveSearchNavActions _activeSearchNavActions;

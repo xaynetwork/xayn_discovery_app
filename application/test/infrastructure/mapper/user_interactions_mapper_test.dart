@@ -13,6 +13,7 @@ void main() {
   const int numberOfSourcesExcluded = 3;
   const int numberOfCountriesChanged = 2;
   const int numberOfSearches = 1;
+  const int numberOfSourcesTrusted = 2;
 
   setUp(() async {
     mapper = UserInteractionsMapper();
@@ -38,6 +39,7 @@ void main() {
           UserInteractionsFields.numberOfCountriesChanged:
               numberOfCountriesChanged,
           UserInteractionsFields.numberOfSearches: numberOfSearches,
+          UserInteractionsFields.numberOfSourcesTrusted: numberOfSourcesTrusted,
         };
 
         final userInteractions = mapper.fromMap(map);
@@ -53,6 +55,7 @@ void main() {
             numberOfSourcesExcluded: numberOfSourcesExcluded,
             numberOfCountriesChanged: numberOfCountriesChanged,
             numberOfSearches: numberOfSearches,
+            numberOfSourcesTrusted: numberOfSourcesTrusted,
           ),
         );
       });
@@ -69,6 +72,7 @@ void main() {
             UserInteractionsFields.numberOfSourcesExcluded: null,
             UserInteractionsFields.numberOfCountriesChanged: null,
             UserInteractionsFields.numberOfSearches: null,
+            UserInteractionsFields.numberOfSourcesTrusted: null,
           };
 
           final userInteractions = mapper.fromMap(map);
@@ -84,6 +88,7 @@ void main() {
               numberOfSourcesExcluded: 0,
               numberOfCountriesChanged: 0,
               numberOfSearches: 0,
+              numberOfSourcesTrusted: 0,
             ),
           );
         },
@@ -106,6 +111,7 @@ void main() {
             numberOfSourcesExcluded: numberOfSourcesExcluded,
             numberOfCountriesChanged: numberOfCountriesChanged,
             numberOfSearches: numberOfSearches,
+            numberOfSourcesTrusted: numberOfSourcesTrusted,
           );
 
           final map = mapper.toMap(userInteractions);
@@ -125,6 +131,8 @@ void main() {
                   numberOfSourcesExcluded,
               UserInteractionsFields.numberOfCountriesChanged:
                   numberOfCountriesChanged,
+              UserInteractionsFields.numberOfSourcesTrusted:
+                  numberOfSourcesTrusted,
             },
           );
         },
