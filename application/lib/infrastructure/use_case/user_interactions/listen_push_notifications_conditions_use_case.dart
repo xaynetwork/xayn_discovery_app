@@ -7,7 +7,7 @@ import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart'
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
 
 const int _kNumOfSessionsThreshold = 2;
-const int _kNumOfScrollsThreshold = 5;
+const int _kNumOfScrollsThreshold = 4;
 
 @injectable
 class ListenPushNotificationsConditionsStatusUseCase

@@ -45,15 +45,13 @@ void main() {
       listenSurveyConditionsStatusUseCase;
   late MockListenPushNotificationsConditionsStatusUseCase
       listenPushNotificationsConditionsStatusUseCase;
-  late MockListenPushNotificationsStatusUseCase
-      listenPushNotificationsStatusUseCase;
   late MockHandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   late MockHandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
   late MockPushNotificationsCardInjectionUseCase
       pushNotificationsCardInjectionUseCase;
-  late MockTogglePushNotificationsStatusUseCase
-      togglePushNotificationsStatusUseCase;
+  late MockHandlePushNotificationsCardClickedUseCase
+      handlePushNotificationsCardClickedUseCase;
   late MockFeatureManager featureManager;
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
@@ -71,15 +69,13 @@ void main() {
         MockListenSurveyConditionsStatusUseCase();
     listenPushNotificationsConditionsStatusUseCase =
         MockListenPushNotificationsConditionsStatusUseCase();
-    listenPushNotificationsStatusUseCase =
-        MockListenPushNotificationsStatusUseCase();
     handleSurveyBannerClickedUseCase = MockHandleSurveyBannerClickedUseCase();
     handleSurveyBannerShownUseCase = MockHandleSurveyBannerShownUseCase();
     surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
     pushNotificationsCardInjectionUseCase =
         MockPushNotificationsCardInjectionUseCase();
-    togglePushNotificationsStatusUseCase =
-        MockTogglePushNotificationsStatusUseCase();
+    handlePushNotificationsCardClickedUseCase =
+        MockHandlePushNotificationsCardClickedUseCase();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
     canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
@@ -122,11 +118,6 @@ void main() {
     when(listenPushNotificationsConditionsStatusUseCase.transform(any))
         .thenAnswer((realInvocation) =>
             realInvocation.positionalArguments.first as Stream<None>);
-    when(listenPushNotificationsStatusUseCase.transaction(any))
-        .thenAnswer((realInvocation) => Stream.value(false));
-    when(listenPushNotificationsStatusUseCase.transform(any)).thenAnswer(
-        (realInvocation) =>
-            realInvocation.positionalArguments.first as Stream<None>);
     when(surveyCardInjectionUseCase.singleOutput(any)).thenAnswer(
         (realInvocation) async => surveyCardInjectionUseCase
             .toCards((realInvocation.positionalArguments.first
@@ -166,12 +157,11 @@ void main() {
           listenReaderModeSettingsUseCase,
           listenSurveyConditionsStatusUseCase,
           listenPushNotificationsConditionsStatusUseCase,
-          listenPushNotificationsStatusUseCase,
           handleSurveyBannerClickedUseCase,
           handleSurveyBannerShownUseCase,
           surveyCardInjectionUseCase,
           pushNotificationsCardInjectionUseCase,
-          togglePushNotificationsStatusUseCase,
+          handlePushNotificationsCardClickedUseCase,
           featureManager,
           CardManagersCache(),
           SaveUserInteractionUseCase(
