@@ -141,7 +141,10 @@ jobs:
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ env.android_api_level }}
+          ram-size: 4096M
+          arch: ${{ env.android_arch }}
+          target: ${{ env.target }}
+          profile: ${{ env.android_profile }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
