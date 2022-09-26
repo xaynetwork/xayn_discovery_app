@@ -4,13 +4,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
-import 'package:xayn_discovery_app/domain/item_renderer/card.dart'
-    as item_renderer;
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
-// import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/repository/feed_repository.dart';
@@ -18,8 +15,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
@@ -50,9 +45,6 @@ void main() async {
   late MockNeedToShowOnboardingUseCase needToShowOnboardingUseCase;
   late MockMarkOnboardingTypeCompletedUseCase
       markOnboardingTypeCompletedUseCase;
-  late MockSurveyCardInjectionUseCase surveyCardInjectionUseCase;
-  late MockPushNotificationsCardInjectionUseCase
-      pushNotificationsCardInjectionUseCase;
   late MockListenPushNotificationsStatusUseCase
       listenPushNotificationsStatusUseCase;
   late DiscoveryFeedManager manager;
@@ -92,9 +84,6 @@ void main() async {
     fetchSessionUseCase = MockFetchSessionUseCase();
     mockDiscoveryEngine = MockAppDiscoveryEngine();
     needToShowOnboardingUseCase = MockNeedToShowOnboardingUseCase();
-    surveyCardInjectionUseCase = MockSurveyCardInjectionUseCase();
-    pushNotificationsCardInjectionUseCase =
-        MockPushNotificationsCardInjectionUseCase();
     listenPushNotificationsStatusUseCase =
         MockListenPushNotificationsStatusUseCase();
     markOnboardingTypeCompletedUseCase =
@@ -131,30 +120,6 @@ void main() async {
               fakeDocumentC,
               fakeDocumentD,
             ]));
-    when(surveyCardInjectionUseCase.transform(any))
-        .thenAnswer((invocation) => invocation.positionalArguments.first);
-    when(surveyCardInjectionUseCase.transaction(any))
-        .thenAnswer((realInvocation) {
-      final Set<Document> documents = realInvocation.positionalArguments.first;
-
-      return Stream.value(documents.map(item_renderer.Card.document).toSet());
-    });
-    when(surveyCardInjectionUseCase.singleOutput(any)).thenAnswer(
-        (realInvocation) async => surveyCardInjectionUseCase
-            .toCards((realInvocation.positionalArguments.first
-                    as SurveyCardInjectionData)
-                .nextDocuments)
-            .toSet());
-    when(surveyCardInjectionUseCase.toCards(any)).thenAnswer((realInvocation) =>
-        (realInvocation.positionalArguments.first as Set<Document>? ?? const {})
-            .map(item_renderer.Card.document));
-    when(pushNotificationsCardInjectionUseCase.singleOutput(any))
-        .thenAnswer((realInvocation) async {
-      final cards = (realInvocation.positionalArguments.first
-              as PushNotificationsCardInjectionData)
-          .currentCards;
-      return cards;
-    });
 
     when(listenPushNotificationsStatusUseCase.transform(any))
         .thenAnswer((invocation) => invocation.positionalArguments.first);
@@ -180,10 +145,6 @@ void main() async {
         needToShowOnboardingUseCase);
     di.registerSingleton<MarkOnboardingTypeCompletedUseCase>(
         markOnboardingTypeCompletedUseCase);
-    di.registerSingleton<SurveyCardInjectionUseCase>(
-        surveyCardInjectionUseCase);
-    di.registerSingleton<PushNotificationsCardInjectionUseCase>(
-        pushNotificationsCardInjectionUseCase);
     di.registerLazySingleton<TogglePushNotificationsStatusUseCase>(
         () => MockTogglePushNotificationsStatusUseCase());
     di.registerLazySingleton<ListenPushNotificationsStatusUseCase>(
@@ -219,7 +180,7 @@ void main() async {
     },
   );
 
-/* 
+/*
   TODO: Enable this test once the inline card manager is ready
 
   blocTest<DiscoveryFeedManager, DiscoveryState>(
@@ -338,9 +299,6 @@ void main() async {
         verifyNoMoreInteractions(mockDiscoveryEngine);
       });
 
-/*
-TODO: Enable this test once the inline card manager is ready
-
   blocTest<DiscoveryFeedManager, DiscoveryState>(
     'WHEN toggling navigate into card or out of card THEN expect isFullScreen to be updated ',
     build: () => manager,
@@ -352,22 +310,7 @@ TODO: Enable this test once the inline card manager is ready
     verify: (manager) {
       expect(
         manager.state,
-        DiscoveryState(
-          cards: {
-            item_renderer.Card.document(fakeDocumentA),
-            item_renderer.Card.document(fakeDocumentB),
-          },
-          cardIndex: 0,
-          isComplete: false,
-          isFullScreen: true,
-          shouldUpdateNavBar: false,
-          didReachEnd: false,
-          subscriptionStatus: subscriptionStatusInitial,
-          readerModeBackgroundColor: ReaderModeBackgroundColor(
-            dark: ReaderModeBackgroundDarkColor.dark,
-            light: ReaderModeBackgroundLightColor.white,
-          ),
-        ),
+        manager.state.copyWith(isFullScreen: true),
       );
       verifyInOrder([
         mockDiscoveryEngine.restoreFeed(),
@@ -379,7 +322,6 @@ TODO: Enable this test once the inline card manager is ready
       verifyNoMoreInteractions(mockDiscoveryEngine);
     },
   );
-  */
 
   group('test onboarding', () {
     setUp(() {

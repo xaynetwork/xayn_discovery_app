@@ -3,26 +3,21 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/xayn_architecture_test.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 
 import '../../../test_utils/utils.dart';
 
 void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
-  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
-  late MockCanDisplayPushNotificationsCardUseCase
-      canDisplayPushNotificationsCardUseCase;
+  late MockCanDisplayInLineCardsUseCase canDisplayInLineCardsUseCase;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
 
   userInteractionsRepository = MockUserInteractionsRepository();
-  canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
-  canDisplayPushNotificationsCardUseCase =
-      MockCanDisplayPushNotificationsCardUseCase();
+  canDisplayInLineCardsUseCase = MockCanDisplayInLineCardsUseCase();
   saveUserInteractionUseCase = SaveUserInteractionUseCase(
     userInteractionsRepository,
-    canDisplaySurveyBannerUseCase,
-    canDisplayPushNotificationsCardUseCase,
+    canDisplayInLineCardsUseCase,
   );
 
   final initialUserInteractions = UserInteractions.initial();
@@ -42,9 +37,7 @@ void main() {
       useCaseTest(
         'WHEN use case called THEN dont expect any interactions with userInteractions repository',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => false);
         },
         build: () => saveUserInteractionUseCase,
@@ -65,10 +58,8 @@ void main() {
       useCaseTest(
         'WHEN a card has been scrolled THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfScrolls: initialUserInteractions.numberOfScrolls + 1,
             numberOfScrollsPerSession:
@@ -93,10 +84,8 @@ void main() {
       useCaseTest(
         'WHEN an article has been bookmarked THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfArticlesBookmarked:
                 initialUserInteractions.numberOfArticlesBookmarked + 1,
@@ -120,10 +109,8 @@ void main() {
       useCaseTest(
         'WHEN an article has been liked/disliked THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfArticlesLikedOrDisliked:
                 initialUserInteractions.numberOfArticlesLikedOrDisliked + 1,
@@ -147,10 +134,8 @@ void main() {
       useCaseTest(
         'WHEN an article has been read THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfArticlesRead:
                 initialUserInteractions.numberOfArticlesRead + 1,
@@ -174,10 +159,8 @@ void main() {
       useCaseTest(
         'WHEN a search has been executed THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfSearches: initialUserInteractions.numberOfSearches + 1,
           );
@@ -200,10 +183,8 @@ void main() {
       useCaseTest(
         'WHEN a country has been changed THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfCountriesChanged:
                 initialUserInteractions.numberOfCountriesChanged + 1,
@@ -227,10 +208,8 @@ void main() {
       useCaseTest(
         'WHEN a source has been excluded THEN increment the related value in the user interactions object',
         setUp: () {
-          when(canDisplaySurveyBannerUseCase.singleOutput(none))
+          when(canDisplayInLineCardsUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
-          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
-              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfSourcesExcluded:
                 initialUserInteractions.numberOfSourcesExcluded + 1,
