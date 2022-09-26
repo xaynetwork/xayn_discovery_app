@@ -11,13 +11,18 @@ import '../../../test_utils/utils.dart';
 void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
   late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
+  late MockCanDisplayPushNotificationsCardUseCase
+      canDisplayPushNotificationsCardUseCase;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
 
   userInteractionsRepository = MockUserInteractionsRepository();
   canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
+  canDisplayPushNotificationsCardUseCase =
+      MockCanDisplayPushNotificationsCardUseCase();
   saveUserInteractionUseCase = SaveUserInteractionUseCase(
     userInteractionsRepository,
     canDisplaySurveyBannerUseCase,
+    canDisplayPushNotificationsCardUseCase,
   );
 
   final initialUserInteractions = UserInteractions.initial();
@@ -38,6 +43,8 @@ void main() {
         'WHEN use case called THEN dont expect any interactions with userInteractions repository',
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
               .thenAnswer((_) async => false);
         },
         build: () => saveUserInteractionUseCase,
@@ -60,8 +67,12 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfScrolls: initialUserInteractions.numberOfScrolls + 1,
+            numberOfScrollsPerSession:
+                initialUserInteractions.numberOfScrollsPerSession + 1,
           );
         },
         build: () => saveUserInteractionUseCase,
@@ -84,6 +95,8 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfArticlesBookmarked:
                 initialUserInteractions.numberOfArticlesBookmarked + 1,
@@ -109,6 +122,8 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfArticlesLikedOrDisliked:
                 initialUserInteractions.numberOfArticlesLikedOrDisliked + 1,
@@ -134,6 +149,8 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfArticlesRead:
                 initialUserInteractions.numberOfArticlesRead + 1,
@@ -159,6 +176,8 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfSearches: initialUserInteractions.numberOfSearches + 1,
           );
@@ -183,6 +202,8 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfCountriesChanged:
                 initialUserInteractions.numberOfCountriesChanged + 1,
@@ -208,6 +229,8 @@ void main() {
         setUp: () {
           when(canDisplaySurveyBannerUseCase.singleOutput(none))
               .thenAnswer((_) async => true);
+          when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+              .thenAnswer((_) async => false);
           updatedUserInteractions = initialUserInteractions.copyWith(
             numberOfSourcesExcluded:
                 initialUserInteractions.numberOfSourcesExcluded + 1,

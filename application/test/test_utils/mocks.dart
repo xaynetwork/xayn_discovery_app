@@ -87,6 +87,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_def
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_use_case.dart';
@@ -102,8 +103,12 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscr
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/purchase_subscription_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/request_code_redemption_sheet_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/restore_subscription_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/can_display_push_notifications_card_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/get_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/handle_push_notifications_card_clicked_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/listen_push_notifications_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_push_notifications_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
@@ -111,6 +116,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/can_display_survey_banner_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
@@ -282,6 +288,12 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   SetExperimentsIdentityParamsUseCase,
   GetPushNotificationsStatusUseCase,
   SavePushNotificationsStatusUseCase,
+  PushNotificationsCardInjectionUseCase,
+  TogglePushNotificationsStatusUseCase,
+  ListenPushNotificationsConditionsStatusUseCase,
+  ListenPushNotificationsStatusUseCase,
+  CanDisplayPushNotificationsCardUseCase,
+  HandlePushNotificationsCardClickedUseCase,
 ])
 class Mocks {
   Mocks._();

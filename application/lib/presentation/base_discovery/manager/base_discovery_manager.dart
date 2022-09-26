@@ -21,14 +21,17 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/handle_push_notifications_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
@@ -82,9 +85,15 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
   final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
+  final ListenPushNotificationsConditionsStatusUseCase
+      listenPushNotificationsConditionsStatusUseCase;
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
+  final PushNotificationsCardInjectionUseCase
+      pushNotificationsCardInjectionUseCase;
+  final HandlePushNotificationsCardClickedUseCase
+      handlePushNotificationsCardClickedUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
@@ -109,9 +118,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
     this.listenSurveyConditionsStatusUseCase,
+    this.listenPushNotificationsConditionsStatusUseCase,
     this.handleSurveyBannerClickedUseCase,
     this.handleSurveyBannerShownUseCase,
     this.surveyCardInjectionUseCase,
+    this.pushNotificationsCardInjectionUseCase,
+    this.handlePushNotificationsCardClickedUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
@@ -121,6 +133,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   late final UseCaseValueStream<SurveyConditionsStatus>
       surveyConditionStatusStream = consume(
     listenSurveyConditionsStatusUseCase,
+    initialData: none,
+  );
+
+  late final UseCaseValueStream<PushNotificationsConditionsStatus>
+      pushNotificationsConditionStatusStream = consume(
+    listenPushNotificationsConditionsStatusUseCase,
     initialData: none,
   );
 
@@ -204,7 +222,23 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     ));
   }
 
-  void handleSurveyTapped() => handleSurveyBannerClickedUseCase(none);
+  void handleCustomCardTapped(CardType cardType) async {
+    switch (cardType) {
+      case CardType.survey:
+        handleSurveyBannerClickedUseCase(none);
+        break;
+
+      case CardType.pushNotifications:
+        final result =
+            await handlePushNotificationsCardClickedUseCase.singleOutput(none);
+        // If the user enabled notifications, dismiss the card
+        if (result) scheduleComputeState(() {});
+        break;
+
+      default:
+        break;
+    }
+  }
 
   void handleLoadMore();
 
@@ -348,11 +382,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold6(
+  Future<DiscoveryState?> computeState() async => fold7(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         cardStream,
         surveyConditionStatusStream,
+        pushNotificationsConditionStatusStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
       ).foldAll((
@@ -360,6 +395,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         explicitDocumentFeedback,
         documents,
         surveyConditionStatus,
+        pushNotificationsConditionStatus,
         subscriptionStatus,
         readerModeSettings,
         errorReport,
@@ -368,13 +404,21 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final cards = await surveyCardInjectionUseCase.singleOutput(
+        var cards = await surveyCardInjectionUseCase.singleOutput(
           SurveyCardInjectionData(
             currentCards: state.cards,
             nextDocuments: documents,
             status: surveyConditionStatus,
           ),
         );
+
+        cards = await pushNotificationsCardInjectionUseCase.singleOutput(
+          PushNotificationsCardInjectionData(
+            currentCards: cards,
+            status: pushNotificationsConditionStatus,
+          ),
+        );
+
         final sets = await maybeReduceCardCount(cards);
         final nextCardIndex = sets.nextCardIndex;
 

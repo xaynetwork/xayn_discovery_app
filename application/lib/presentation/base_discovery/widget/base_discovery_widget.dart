@@ -4,6 +4,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart'
     as item_renderer;
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -287,7 +288,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                       )
                     : CustomFeedCard(
                         cardType: card.type,
-                        onPressed: manager.handleSurveyTapped,
+                        onPressed: () =>
+                            manager.handleCustomCardTapped(card.type),
                         primaryCardShader:
                             ShaderFactory.fromType(ShaderType.static),
                       ),
@@ -340,6 +342,13 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         final normalizedIndex = index.clamp(0, results.length - 1);
         final card = results.elementAt(normalizedIndex);
+        if (card.type == CardType.pushNotifications) {
+          return Border.all(
+            color: R.colors.searchResultSkeletonHighlight,
+            width: R.dimen.sentimentBorderSize,
+          );
+        }
+
         final document = card.document;
         final managers =
             document != null ? cardManagersCache.managersOf(document) : null;

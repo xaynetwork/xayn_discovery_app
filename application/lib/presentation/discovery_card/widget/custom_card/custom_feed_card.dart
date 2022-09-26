@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/custom_feed_card_base.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/push_notifications_card.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 
 class CustomFeedCard extends StatelessWidget {
@@ -32,6 +33,12 @@ class CustomFeedCard extends StatelessWidget {
         );
       case CardType.countrySelection:
         return CountrySelectionCard(
+          onPressed: onPressed,
+          primaryCardShader: primaryCardShader,
+        );
+      case CardType.pushNotifications:
+        return PushNotificationsCard(
+          cardType: cardType,
           onPressed: onPressed,
           primaryCardShader: primaryCardShader,
         );

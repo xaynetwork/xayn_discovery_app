@@ -7,11 +7,15 @@ import 'package:logger/logger.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/request_client/client.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/base/identity_param.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/local_notifications_service.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/remote_notification.dart';
+import 'package:xayn_discovery_app/infrastructure/service/notifications/remote_notifications_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
@@ -336,4 +340,57 @@ class FakeBugReportingService implements BugReportingService {
   void reportHandledCrash(dynamic exception, [StackTrace? stack]) {
     logger.e('FakeBugReportingService: reportHandledCrash', exception, stack);
   }
+}
+
+@LazySingleton(as: LocalNotificationsService)
+class FakeLocalNotificationsService implements LocalNotificationsService {
+  @override
+  Future<bool> get isNotificationAllowed => Future.value(false);
+
+  @override
+  void openNotificationsPage() {
+    // TODO: implement openNotificationsPage
+  }
+
+  @override
+  void requestPermission() {
+    // TODO: implement requestPermission
+  }
+
+  @override
+  Future<bool> sendNotification(
+      {required String body,
+      required UniqueId documentId,
+      required Duration delay,
+      Uri? image}) {
+    // TODO: implement sendNotification
+    return Future.value(false);
+  }
+}
+
+@LazySingleton(as: RemoteNotificationsService)
+class FakeRemoteNotificationsService implements RemoteNotificationsService {
+  @override
+  Future<String?> get channelId => Future.value();
+
+  @override
+  Future<bool?> disableNotifications() {
+    // TODO: implement disableNotifications
+    return Future.value();
+  }
+
+  @override
+  Future<bool?> enableNotifications() {
+    // TODO: implement enableNotifications
+    return Future.value();
+  }
+
+  @override
+  // TODO: implement notificationStream
+  Stream<RemoteNotification> get notificationStream =>
+      throw UnimplementedError();
+
+  @override
+  // TODO: implement userNotificationsEnabled
+  Future<bool?> get userNotificationsEnabled => Future.value();
 }

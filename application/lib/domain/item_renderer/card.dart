@@ -1,7 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
-enum CardType { document, survey, sourceSelection, countrySelection }
+enum CardType {
+  document,
+  survey,
+  sourceSelection,
+  countrySelection,
+  pushNotifications,
+}
 
 class Card extends Equatable {
   final CardType type;
