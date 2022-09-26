@@ -12,8 +12,8 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sourc
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_pending_operations.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_state.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';

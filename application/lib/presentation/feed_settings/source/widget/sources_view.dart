@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/widget/source_list_item.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/source_list_item.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class SourcesView extends StatelessWidget {

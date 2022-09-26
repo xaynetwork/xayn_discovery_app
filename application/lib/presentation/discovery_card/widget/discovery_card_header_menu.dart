@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
-
-import '../../feed_settings/page/source/manager/sources_state.dart';
 
 enum DiscoveryCardHeaderMenuItemEnum {
   openInBrowser,
