@@ -142,6 +142,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           ram-size: 4096M
+          api-level: ${{ env.android_api_level }}
           arch: ${{ env.android_arch }}
           target: ${{ env.target }}
           profile: ${{ env.android_profile }}
