@@ -88,7 +88,7 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
 
       - name: Install Ffmpeg for screen recording
-      - uses: FedericoCarboni/setup-ffmpeg@v1
+        uses: FedericoCarboni/setup-ffmpeg@v1
         id: setup-ffmpeg
 
       - name: Set up a Simulator
