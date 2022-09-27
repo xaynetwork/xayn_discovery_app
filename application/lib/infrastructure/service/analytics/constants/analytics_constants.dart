@@ -15,6 +15,5 @@ class AnalyticsConstants {
   static const String afWebDp = "af_web_dp";
   static const String afDp = "af_dp";
 
-  static const String webArticleViewerEndpoint =
-      "https://xayn.webflow.io/article";
+  static const String webArticleViewerEndpoint = "https://xayn.com/article";
 }
