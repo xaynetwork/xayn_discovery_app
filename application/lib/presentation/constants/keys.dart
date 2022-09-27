@@ -21,6 +21,7 @@ class Keys {
       Key('settings_subscription_premium');
 
   static const Key settingsContactUs = Key('settings_contact_us');
+  static const Key settingsNotifications = Key('settings_notifications');
   static const Key settingsAboutXayn = Key('settings_about_xayn');
   static const Key settingsCarbonNeutral = Key('settings_carbon_neutral');
   static const Key settingsImprint = Key('settings_imprint');

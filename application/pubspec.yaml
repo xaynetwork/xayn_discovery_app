@@ -196,6 +196,8 @@ flutter:
     - packages/xayn_design/assets/lottie/splash_screen.json
     - packages/xayn_design/assets/lottie/splash_screen_dark.json
     - packages/xayn_design/assets/lottie/survey.json
+    - packages/xayn_design/assets/lottie/source_selection.json
+    - packages/xayn_design/assets/lottie/country_selection.json
 
     # lottie contextual illustrations
     - packages/xayn_design/assets/lottie/contextual/create_collection.json

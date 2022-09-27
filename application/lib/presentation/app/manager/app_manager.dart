@@ -20,6 +20,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_def
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/reset_number_of_scrolls_per_session_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_state.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/app_theme_extension.dart';
@@ -46,6 +47,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
     this._setIdentityParamUseCase,
     this._getSubscriptionStatusUseCase,
     this._listenSubscriptionStatusUseCase,
+    this._resetNumberOfScrollsPerSessionUseCase,
     this._setCollectionAndBookmarksChangesIdentityParam,
     AppSettingsRepository appSettingsRepository,
     this._platformBrightnessProvider,
@@ -68,6 +70,8 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   final RenameDefaultCollectionUseCase _renameDefaultCollectionUseCase;
   final GetSubscriptionStatusUseCase _getSubscriptionStatusUseCase;
   final ListenSubscriptionStatusUseCase _listenSubscriptionStatusUseCase;
+  final ResetNumberOfScrollsPerSessionUseCase
+      _resetNumberOfScrollsPerSessionUseCase;
   final SetCollectionAndBookmarksChangesIdentityParam
       _setCollectionAndBookmarksChangesIdentityParam;
   late final UseCaseValueStream<AppTheme> _appThemeHandler;
@@ -84,6 +88,7 @@ class AppManager extends Cubit<AppState> with UseCaseBlocHelper<AppState> {
   void _init() async {
     scheduleComputeState(() async {
       await _incrementAppSessionUseCase.call(none);
+      await _resetNumberOfScrollsPerSessionUseCase.call(none);
       await _createOrGetDefaultCollectionUseCase
           .call(R.strings.defaultCollectionNameReadLater);
       _appThemeHandler = consume(_listenAppThemeUseCase, initialData: none);

@@ -22,6 +22,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required bool ratingDialogAlreadyVisible,
     required bool isBetaUser,
     required CTA cta,
+    required bool userDidChangePushNotificationsStatus,
   }) = _AppStatus;
 
   factory AppStatus({
@@ -36,6 +37,7 @@ class AppStatus extends DbEntity with _$AppStatus {
     required bool ratingDialogAlreadyVisible,
     required bool isBetaUser,
     required CTA cta,
+    required bool userDidChangePushNotificationsStatus,
   }) =>
       AppStatus._(
         numberOfSessions: numberOfSessions,
@@ -50,6 +52,8 @@ class AppStatus extends DbEntity with _$AppStatus {
         ratingDialogAlreadyVisible: ratingDialogAlreadyVisible,
         isBetaUser: isBetaUser,
         cta: cta,
+        userDidChangePushNotificationsStatus:
+            userDidChangePushNotificationsStatus,
       );
 
   factory AppStatus.initial() => AppStatus._(
@@ -65,6 +69,7 @@ class AppStatus extends DbEntity with _$AppStatus {
         ratingDialogAlreadyVisible: false,
         isBetaUser: false,
         cta: const CTA.initial(),
+        userDidChangePushNotificationsStatus: false,
       );
 
   static UniqueId globalId = const UniqueId.fromTrustedString('app_status_id');

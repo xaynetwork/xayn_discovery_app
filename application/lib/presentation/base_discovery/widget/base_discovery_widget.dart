@@ -4,6 +4,7 @@ import 'package:xayn_card_view/xayn_card_view.dart';
 import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart'
     as item_renderer;
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
@@ -14,13 +15,13 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/custom_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/widget/custom_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
@@ -280,9 +281,11 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                       )
                     : CustomFeedCard(
                         cardType: card.type,
-                        onPressed: manager.handleSurveyTapped,
+                        onPressed: () =>
+                            manager.handleCustomCardTapped(card.type),
                         primaryCardShader:
                             ShaderFactory.fromType(ShaderType.static),
+                        selectedCountryName: manager.getSelectedCountryName(),
                       ),
               );
 
@@ -333,6 +336,13 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
         final normalizedIndex = index.clamp(0, results.length - 1);
         final card = results.elementAt(normalizedIndex);
+        if (card.type == CardType.pushNotifications) {
+          return Border.all(
+            color: R.colors.searchResultSkeletonHighlight,
+            width: R.dimen.sentimentBorderSize,
+          );
+        }
+
         final document = card.document;
         final managers =
             document != null ? cardManagersCache.managersOf(document) : null;

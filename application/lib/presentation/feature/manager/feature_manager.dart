@@ -69,6 +69,12 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isOnBoardingSheetsEnabled => isEnabled(Feature.onBoardingSheets);
 
+  bool get isCountrySelectionInLineCardEnabled =>
+      isEnabled(Feature.countrySelectionInLineCard);
+
+  bool get isSourceSelectionInLineCardEnabled =>
+      isEnabled(Feature.sourceSelectionInLineCard);
+
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
         featureMap: Map.from(_featureMap),
