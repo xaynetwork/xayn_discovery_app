@@ -283,6 +283,6 @@ class TopicsScreenNavActionsImpl implements TopicsScreenNavActions {
   void onDismissTopicsScreen() => changeStack((stack) => stack.pop());
 
   @override
-  void onAddTopic() =>
-      changeStack((stack) => stack.push(PageRegistry.excludedSourceSelection));
+  void onAddTopicButtonClicked() =>
+      changeStack((stack) => stack.push(PageRegistry.addTopic));
 }

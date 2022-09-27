@@ -8,5 +8,6 @@ class TopicsState with _$TopicsState {
 
   const factory TopicsState({
     @Default(<String>{}) Set<String> selectedTopics,
+    @Default(<String>{}) Set<String> suggestedTopics,
   }) = _TopicsState;
 }

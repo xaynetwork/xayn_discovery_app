@@ -16,6 +16,7 @@ class SettingsScreenState with _$SettingsScreenState {
     required bool arePushNotificationsActive,
     required bool areLocalNotificationsEnabled,
     required bool areRemoteNotificationsEnabled,
+    required bool isTopicsEnabled,
     required SubscriptionStatus subscriptionStatus,
   }) = SettingsScreenStateReady;
 }

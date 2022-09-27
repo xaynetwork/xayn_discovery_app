@@ -203,6 +203,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         theme: _theme,
         appVersion: _appVersion,
         isPaymentEnabled: _featureManager.isPaymentEnabled,
+        isTopicsEnabled: _featureManager.isTopicsEnabled,
         arePushNotificationsActive:
             userNotificationsEnabled && isNotificationAllowed,
         areLocalNotificationsEnabled:
