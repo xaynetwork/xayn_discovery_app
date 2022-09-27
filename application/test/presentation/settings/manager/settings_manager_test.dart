@@ -334,4 +334,20 @@ void main() {
       verifyNoMoreInteractions(urlOpener);
     },
   );
+
+  test(
+    'GIVEN push notification switch is tapped THEN call togglePushNotificationsStatusUseCase',
+    () async {
+      when(togglePushNotificationsStatusUseCase.call(any)).thenAnswer(
+        (_) async => [const UseCaseResult.success(none)],
+      );
+      final manager = create();
+      manager.togglePushNotificationsState();
+
+      verify([
+        togglePushNotificationsStatusUseCase.call(any),
+      ]);
+      verifyNoMoreInteractions(togglePushNotificationsStatusUseCase);
+    },
+  );
 }
