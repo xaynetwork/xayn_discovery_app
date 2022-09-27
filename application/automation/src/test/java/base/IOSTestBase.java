@@ -51,7 +51,7 @@ public abstract class IOSTestBase extends TestBase {
     @AfterMethod(alwaysRun = true)
     public void onFinish() {
         String path = ARTIFACTS_DIRECTORY + "/ios/ios_test_" + RandomStringUtils.randomAlphabetic(5);
-        byte[] data = Base64.decodeBase64(((AndroidDriver<?>) getDriver()).stopRecordingScreen());
+        byte[] data = Base64.decodeBase64(((IOSDriver<?>) getDriver()).stopRecordingScreen());
         try (OutputStream stream = Files.newOutputStream(
                 Paths.get(path + ".mp4"))) {
             stream.write(data);
