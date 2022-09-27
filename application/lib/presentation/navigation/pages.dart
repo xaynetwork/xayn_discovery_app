@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/country/widget/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/add_source_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/sources_screen.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/topics_screen.dart';
 import 'package:xayn_discovery_app/presentation/payment/paywall_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
@@ -135,6 +136,12 @@ class PageRegistry {
           openOnHiddenSourcesTab: args!,
         ),
       );
+
+  static final topicsFeedSettings = xayn.PageData(
+    name: "topicsFeedSettings",
+    //ignore: prefer_const_constructors
+    builder: (_, args) => TopicsScreen(),
+  );
 
   static final countryFeedSettings = xayn.PageData(
     name: PageName.countryFeedSettings.name,

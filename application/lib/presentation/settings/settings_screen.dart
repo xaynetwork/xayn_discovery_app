@@ -159,6 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
+        onTopicsPressed: _manager.onTopicsOptionsPressed,
       );
 
   Widget _buildNotificationsSection({
