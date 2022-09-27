@@ -15,13 +15,13 @@ import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/custom_card/custom_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/widget/custom_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
@@ -292,6 +292,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                             manager.handleCustomCardTapped(card.type),
                         primaryCardShader:
                             ShaderFactory.fromType(ShaderType.static),
+                        selectedCountryName: manager.getSelectedCountryName(),
                       ),
               );
 

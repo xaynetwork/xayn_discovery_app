@@ -16,9 +16,7 @@ void main() {
   late MockUserInteractionsRepository userInteractionsRepository;
   late SaveUserInteractionUseCase saveUserInteractionUseCase;
   late MockFeatureManager featureManager;
-  late MockCanDisplaySurveyBannerUseCase canDisplaySurveyBannerUseCase;
-  late MockCanDisplayPushNotificationsCardUseCase
-      canDisplayPushNotificationsCardUseCase;
+  late MockCanDisplayInLineCardsUseCase canDisplayInLineCard;
 
   const uaMarket = InternalFeedMarket(countryCode: 'UA', languageCode: 'uk');
   const usMarket = InternalFeedMarket(countryCode: 'US', languageCode: 'en');
@@ -42,13 +40,10 @@ void main() {
     repository = MockFeedSettingsRepository();
     userInteractionsRepository = MockUserInteractionsRepository();
     featureManager = MockFeatureManager();
-    canDisplaySurveyBannerUseCase = MockCanDisplaySurveyBannerUseCase();
-    canDisplayPushNotificationsCardUseCase =
-        MockCanDisplayPushNotificationsCardUseCase();
+    canDisplayInLineCard = MockCanDisplayInLineCardsUseCase();
     saveUserInteractionUseCase = SaveUserInteractionUseCase(
       userInteractionsRepository,
-      canDisplaySurveyBannerUseCase,
-      canDisplayPushNotificationsCardUseCase,
+      canDisplayInLineCard,
     );
     useCase = SaveSelectedCountriesUseCase(
       repository,
@@ -60,9 +55,7 @@ void main() {
       UserInteractions.initial(),
     );
     when(featureManager.isPromptSurveyEnabled).thenReturn(true);
-    when(canDisplaySurveyBannerUseCase.singleOutput(none))
-        .thenAnswer((_) => Future.value(true));
-    when(canDisplayPushNotificationsCardUseCase.singleOutput(none))
+    when(canDisplayInLineCard.singleOutput(none))
         .thenAnswer((_) => Future.value(true));
   });
 

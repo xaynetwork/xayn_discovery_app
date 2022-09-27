@@ -19,6 +19,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
     required int numberOfSourcesExcluded,
     required int numberOfCountriesChanged,
     required int numberOfSearches,
+    required int numberOfSourcesTrusted,
   }) = _UserInteractions;
 
   factory UserInteractions({
@@ -30,6 +31,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
     required int numberOfSourcesExcluded,
     required int numberOfCountriesChanged,
     required int numberOfSearches,
+    required int numberOfSourcesTrusted,
   }) =>
       UserInteractions._(
         id: UserInteractions.globalId,
@@ -41,6 +43,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
         numberOfSourcesExcluded: numberOfSourcesExcluded,
         numberOfCountriesChanged: numberOfCountriesChanged,
         numberOfSearches: numberOfSearches,
+        numberOfSourcesTrusted: numberOfSourcesTrusted,
       );
 
   factory UserInteractions.initial() => UserInteractions._(
@@ -53,6 +56,7 @@ class UserInteractions extends DbEntity with _$UserInteractions {
         numberOfSourcesExcluded: 0,
         numberOfCountriesChanged: 0,
         numberOfSearches: 0,
+        numberOfSourcesTrusted: 0,
       );
 
   static const UniqueId globalId =
@@ -66,6 +70,7 @@ extension UserInteractionsExtension on UserInteractions {
       numberOfArticlesBookmarked +
       numberOfArticlesLikedOrDisliked +
       numberOfSourcesExcluded +
+      numberOfSourcesTrusted +
       numberOfCountriesChanged +
       numberOfSearches;
 }

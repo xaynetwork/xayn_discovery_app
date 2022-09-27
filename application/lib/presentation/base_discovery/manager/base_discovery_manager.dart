@@ -12,8 +12,11 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/custom_feed_card_cta_clicked.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/custom_feed_card_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_index_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_view_mode_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
@@ -21,20 +24,12 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reader_mode_settings_menu_displayed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/push_notifications_card_injection_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/custom_card/survey_card_injection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/update_card_index_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/handle_push_notifications_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/listen_reader_mode_settings_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_clicked_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/survey_banner/handle_survey_banner_shown_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_push_notifications_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/check_valid_document_mixin.dart';
@@ -42,6 +37,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_do
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_document_mixin.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/payment/redeem_promo_code_mixin.dart';
 import 'package:xayn_discovery_app/presentation/payment/util/observe_subscription_window_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -84,21 +80,12 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
   final HapticFeedbackMediumUseCase hapticFeedbackMediumUseCase;
   final GetSubscriptionStatusUseCase getSubscriptionStatusUseCase;
   final ListenReaderModeSettingsUseCase listenReaderModeSettingsUseCase;
-  final ListenSurveyConditionsStatusUseCase listenSurveyConditionsStatusUseCase;
-  final ListenPushNotificationsConditionsStatusUseCase
-      listenPushNotificationsConditionsStatusUseCase;
-  final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
-  final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
-  final SurveyCardInjectionUseCase surveyCardInjectionUseCase;
-  final PushNotificationsCardInjectionUseCase
-      pushNotificationsCardInjectionUseCase;
-  final HandlePushNotificationsCardClickedUseCase
-      handlePushNotificationsCardClickedUseCase;
   final FeatureManager featureManager;
   final FeedType feedType;
   final CardManagersCache cardManagersCache;
   final SaveUserInteractionUseCase saveUserInteractionUseCase;
   final CurrentView currentView;
+  final InLineCardManager inLineCardManager;
 
   /// A weak-reference map which tracks the current [DocumentViewMode] of documents.
   final _documentCurrentViewMode = Expando<DocumentViewMode>();
@@ -117,30 +104,20 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     this.hapticFeedbackMediumUseCase,
     this.getSubscriptionStatusUseCase,
     this.listenReaderModeSettingsUseCase,
-    this.listenSurveyConditionsStatusUseCase,
-    this.listenPushNotificationsConditionsStatusUseCase,
-    this.handleSurveyBannerClickedUseCase,
-    this.handleSurveyBannerShownUseCase,
-    this.surveyCardInjectionUseCase,
-    this.pushNotificationsCardInjectionUseCase,
-    this.handlePushNotificationsCardClickedUseCase,
     this.featureManager,
     this.cardManagersCache,
     this.saveUserInteractionUseCase,
     this.currentView,
-  ) : super(DiscoveryState.initial());
+    this.inLineCardManager,
+  ) : super(DiscoveryState.initial()) {
+    _init();
+  }
 
-  late final UseCaseValueStream<SurveyConditionsStatus>
-      surveyConditionStatusStream = consume(
-    listenSurveyConditionsStatusUseCase,
-    initialData: none,
-  );
-
-  late final UseCaseValueStream<PushNotificationsConditionsStatus>
-      pushNotificationsConditionStatusStream = consume(
-    listenPushNotificationsConditionsStatusUseCase,
-    initialData: none,
-  );
+  void _init() {
+    inLineCardManager.stream.distinct().doOnData((_) {
+      scheduleComputeState(() {});
+    });
+  }
 
   late final UseCaseValueStream<Set<Document>> cardStream = consume(
     engineEventsUseCase,
@@ -222,23 +199,15 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
     ));
   }
 
-  void handleCustomCardTapped(CardType cardType) async {
-    switch (cardType) {
-      case CardType.survey:
-        handleSurveyBannerClickedUseCase(none);
-        break;
-
-      case CardType.pushNotifications:
-        final result =
-            await handlePushNotificationsCardClickedUseCase.singleOutput(none);
-        // If the user enabled notifications, dismiss the card
-        if (result) scheduleComputeState(() {});
-        break;
-
-      default:
-        break;
-    }
+  void handleCustomCardTapped(CardType cardType) {
+    inLineCardManager.handleInLineCardTapped(cardType);
+    sendAnalyticsUseCase(
+      CustomFeedCardCTAClickedEvent(cardType: cardType),
+    );
   }
+
+  String? getSelectedCountryName() =>
+      inLineCardManager.state.selectedCountryName;
 
   void handleLoadMore();
 
@@ -251,6 +220,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
     final nextCard = state.cards.elementAt(index);
     final document = nextCard.document;
+    final documentType = nextCard.type;
     late final int nextCardIndex;
 
     switch (feedType) {
@@ -289,8 +259,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         feedType: feedType,
       ));
     } else {
-      handleSurveyBannerShownUseCase(none);
+      inLineCardManager.handleInLineCardShown(documentType);
       observeDocument();
+      sendAnalyticsUseCase(
+        CustomFeedCardDisplayedEvent(
+          cardType: nextCard.type,
+        ),
+      );
     }
 
     scheduleComputeState(() {
@@ -382,20 +357,16 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
       );
 
   @override
-  Future<DiscoveryState?> computeState() async => fold7(
+  Future<DiscoveryState?> computeState() async => fold5(
         cardIndexConsumer,
         crudExplicitDocumentFeedbackConsumer,
         cardStream,
-        surveyConditionStatusStream,
-        pushNotificationsConditionStatusStream,
         subscriptionStatusHandler,
         _readerModeSettingsHandler,
       ).foldAll((
         cardIndex,
         explicitDocumentFeedback,
         documents,
-        surveyConditionStatus,
-        pushNotificationsConditionStatus,
         subscriptionStatus,
         readerModeSettings,
         errorReport,
@@ -404,19 +375,9 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        var cards = await surveyCardInjectionUseCase.singleOutput(
-          SurveyCardInjectionData(
-            currentCards: state.cards,
-            nextDocuments: documents,
-            status: surveyConditionStatus,
-          ),
-        );
-
-        cards = await pushNotificationsCardInjectionUseCase.singleOutput(
-          PushNotificationsCardInjectionData(
-            currentCards: cards,
-            status: pushNotificationsConditionStatus,
-          ),
+        final cards = await inLineCardManager.maybeAddInLineCard(
+          currentCards: state.cards,
+          nextDocuments: documents,
         );
 
         final sets = await maybeReduceCardCount(cards);
