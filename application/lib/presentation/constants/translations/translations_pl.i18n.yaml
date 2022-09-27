@@ -218,3 +218,7 @@ pushNotificationsCardCTA: Zezwalaj na powiadomienia
 pushNotificationsCardPerk1: Najważniejsze wiadomości z wybranego regionu
 pushNotificationsCardPerk2: Osobiste zalecenia dotyczące czytania
 pushNotificationsCardPerk3: Odkryj nowe obszary zainteresowań
+feedSettingsScreenTabTopics: Topics
+addTopicBtn: Add a topic
+topicsScreenDescription: We are going to use your topics to find stories and articles that might be interesting for you.
+noTopicsYet: No topics yet

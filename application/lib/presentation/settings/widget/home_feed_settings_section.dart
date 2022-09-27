@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class SettingsHomeFeedSection extends StatelessWidget {
+  final VoidCallback onTopicsPressed;
   final VoidCallback onSourcesPressed;
   final VoidCallback onCountriesPressed;
   final VoidCallback onResetAIPressed;
@@ -11,6 +12,7 @@ class SettingsHomeFeedSection extends StatelessWidget {
 
   const SettingsHomeFeedSection({
     Key? key,
+    required this.onTopicsPressed,
     required this.onSourcesPressed,
     required this.onCountriesPressed,
     required this.onResetAIPressed,
@@ -22,16 +24,29 @@ class SettingsHomeFeedSection extends StatelessWidget {
         title: R.strings.settingsSectionHomeFeed,
         topPadding: isFirstSection ? 0 : R.dimen.unit3,
         items: [
+          _buildTopicsOption(),
           _buildSourcesOption(),
           _buildCountriesOption(),
           _buildResetAIOption(),
         ],
       );
 
+  SettingsCardData _buildTopicsOption() => SettingsCardData.fromTile(
+        SettingsTileData(
+          title: R.strings.feedSettingsScreenTabTopics,
+          svgIconPath: R.assets.icons.readerMode,
+          action: SettingsTileActionIcon(
+            key: Keys.settingsTopicsOption,
+            svgIconPath: R.assets.icons.arrowRight,
+            onPressed: onTopicsPressed,
+          ),
+        ),
+      );
+
   SettingsCardData _buildSourcesOption() => SettingsCardData.fromTile(
         SettingsTileData(
           title: R.strings.feedSettingsScreenTabSources,
-          svgIconPath: R.assets.icons.readerMode,
+          svgIconPath: R.assets.icons.news,
           action: SettingsTileActionIcon(
             key: Keys.settingsSourcesOption,
             svgIconPath: R.assets.icons.arrowRight,
