@@ -90,7 +90,6 @@ jobs:
       - name: Install Ffmpeg for screen recording
       - uses: FedericoCarboni/setup-ffmpeg@v1
         id: setup-ffmpeg
-      - run: ffmpeg -version
 
       - name: Set up a Simulator
         uses: futureware-tech/simulator-action@v1
