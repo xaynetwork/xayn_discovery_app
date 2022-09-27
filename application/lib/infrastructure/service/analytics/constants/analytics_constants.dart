@@ -13,7 +13,8 @@ class AnalyticsConstants {
   /// Default parameters names provided by appsFlyer used for redirecting the user
   /// to a certain endpoint in case the app is not installed
   static const String afWebDp = "af_web_dp";
-  static const String afDp = "af_dp";
+  static const String afAndroidUrl = "af_android_url";
+  static const String afIOSUrl = "af_ios_url";
 
   static const String webArticleViewerEndpoint = "https://xayn.com/article";
 }
