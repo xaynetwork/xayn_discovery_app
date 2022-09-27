@@ -30,9 +30,10 @@ class TogglePushNotificationsStatusUseCase extends UseCase<None, None> {
     // and tries to toggle push notifications, redirect them to Settings
     if (userDidChangePushNotifications && !isNotificationAllowed) {
       _localNotificationsService.openNotificationsPage();
+      yield none;
       return;
     } else if (!userDidChangePushNotifications) {
-      await _savePushNotificationsStatusUseCase.call(none);
+      await _savePushNotificationsStatusUseCase(none);
     }
 
     final arePushNotificationsActive =
