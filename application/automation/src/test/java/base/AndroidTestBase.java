@@ -46,19 +46,21 @@ public abstract class AndroidTestBase extends TestBase {
 
     @AfterMethod(alwaysRun = true)
     public void onFinish() throws IOException {
+        AndroidDriver driver = ((AndroidDriver<?>) getDriver());
         String path = SCREENSHOT_DIRECTORY + "/" + RandomStringUtils.randomAlphabetic(5);
-        LogEntries logs =  ((AndroidDriver<?>) getDriver()).manage().logs().get("logcat");
-        List<String> lines = logs.getAll().stream().map(LogEntry::toString).collect(Collectors.toList());
-        Files.write(Paths.get(path + ".txt"), lines);
+        Set availableLogTypes = driver.manage().logs().getAvailableLogTypes();
+        System.out.println(availableLogTypes);
+        if (availableLogTypes.contains("logcat")) {
+            List<String> lines = driver.manage().logs().get("logcat").getAll().stream()
+                    .map(LogEntry::toString).collect(Collectors.toList());
+            Files.write(Paths.get(path + ".txt"), lines);
+        }
         byte[] data = Base64.decodeBase64(((AndroidDriver<?>) getDriver()).stopRecordingScreen());
-
         try (OutputStream stream = Files.newOutputStream(
                 Paths.get(path + ".mp4"))) {
             stream.write(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }
