@@ -35,6 +35,6 @@ public abstract class IOSTestBase extends TestBase {
                 .setApp(APP)
                 .build();
         AppiumHandler.createDriver(PlatformType.IOS, desiredCapabilities);
-        getDriver().manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+        getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
 }
