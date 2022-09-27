@@ -38,6 +38,7 @@ void main() {
     arePushNotificationsActive: false,
     areLocalNotificationsEnabled: false,
     areRemoteNotificationsEnabled: false,
+    isTopicsEnabled: false,
     subscriptionStatus: SubscriptionStatus.initial(),
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
@@ -104,6 +105,7 @@ void main() {
         arePushNotificationsActive: false,
         areLocalNotificationsEnabled: false,
         areRemoteNotificationsEnabled: false,
+        isTopicsEnabled: false,
         subscriptionStatus: SubscriptionStatus.initial().copyWith(
           isBetaUser: true,
         ),
@@ -130,6 +132,7 @@ void main() {
         arePushNotificationsActive: false,
         areLocalNotificationsEnabled: false,
         areRemoteNotificationsEnabled: false,
+        isTopicsEnabled: false,
         subscriptionStatus: SubscriptionStatus.initial().copyWith(
           trialEndDate: DateTime.now().add(const Duration(days: 1)),
           isBetaUser: false,

@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/topic_list_item.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
@@ -42,25 +43,34 @@ class _TopicsScreenState extends State<TopicsScreen> with NavBarConfigMixin {
 
   Widget _buildBody() => BlocBuilder<TopicsManager, TopicsState>(
         bloc: manager,
-        builder: (context, state) => Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(R.strings.topicsScreenDescription),
-            SizedBox(height: R.dimen.unit2),
-            if (state.selectedTopics.isEmpty) ..._buildEmpty(),
-            _buildAddSourceButton(context),
-            SizedBox(height: R.dimen.unit2_5),
-            ..._buildTopicsList(context, state),
-          ],
+        builder: (context, state) => SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(R.strings.topicsScreenDescription),
+              SizedBox(height: R.dimen.unit2),
+              if (state.selectedTopics.isEmpty) ..._buildEmpty(),
+              _buildAddTopicsButton(context),
+              SizedBox(height: R.dimen.unit2_5),
+              ..._buildTopicsList(context, state),
+            ],
+          ),
         ),
       );
 
   List<Widget> _buildTopicsList(
     BuildContext context,
     TopicsState state,
-  ) {
-    return [];
-  }
+  ) =>
+      state.selectedTopics
+          .map(
+            (it) => TopicListItem(
+              topic: it,
+              onRemoveTapped: () => manager.onRemoveTopic(it),
+            ),
+          )
+          .toList();
 
   List<Widget> _buildEmpty() {
     final animation = AnimationPlayer.asset(
@@ -77,8 +87,8 @@ class _TopicsScreenState extends State<TopicsScreen> with NavBarConfigMixin {
     return [animation, emptyInfo];
   }
 
-  Widget _buildAddSourceButton(BuildContext context) => AppRaisedButton.text(
-        onPressed: manager.onAddTopic,
+  Widget _buildAddTopicsButton(BuildContext context) => AppRaisedButton.text(
+        onPressed: manager.onAddTopicButtonClicked,
         text: R.strings.addTopicBtn,
       );
 }

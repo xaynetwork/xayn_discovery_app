@@ -8,6 +8,7 @@ class SettingsHomeFeedSection extends StatelessWidget {
   final VoidCallback onSourcesPressed;
   final VoidCallback onCountriesPressed;
   final VoidCallback onResetAIPressed;
+  final bool isTopicsEnabled;
   final bool isFirstSection;
 
   const SettingsHomeFeedSection({
@@ -16,6 +17,7 @@ class SettingsHomeFeedSection extends StatelessWidget {
     required this.onSourcesPressed,
     required this.onCountriesPressed,
     required this.onResetAIPressed,
+    required this.isTopicsEnabled,
     this.isFirstSection = false,
   }) : super(key: key);
 
@@ -24,7 +26,7 @@ class SettingsHomeFeedSection extends StatelessWidget {
         title: R.strings.settingsSectionHomeFeed,
         topPadding: isFirstSection ? 0 : R.dimen.unit3,
         items: [
-          _buildTopicsOption(),
+          if (isTopicsEnabled) _buildTopicsOption(),
           _buildSourcesOption(),
           _buildCountriesOption(),
           _buildResetAIOption(),

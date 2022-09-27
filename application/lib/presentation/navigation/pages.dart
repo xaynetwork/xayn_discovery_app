@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/country/widget/country_feed_settings_page.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/add_source_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/sources_screen.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/add_topic_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/topics_screen.dart';
 import 'package:xayn_discovery_app/presentation/payment/paywall_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
@@ -168,6 +169,12 @@ class PageRegistry {
     name: PageName.excludedSourceSelection.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => AddSourceScreen.excluded(),
+  );
+
+  static final addTopic = xayn.PageData(
+    name: "addTopic",
+    //ignore: prefer_const_constructors
+    builder: (_, args) => AddTopicScreen(),
   );
 
   static final trustedSourceSelection = xayn.PageData(

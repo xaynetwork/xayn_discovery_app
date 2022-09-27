@@ -61,6 +61,12 @@ enum Feature {
     false,
     description: 'Showing country selection inline Card',
     remoteKey: 'country_selection_inline_card',
+  ),
+  topics(
+    Owner.Michael,
+    EnvironmentHelper.kIsDebug,
+    description: 'Showing topics in settings and topic selection inline Card',
+    remoteKey: 'topics_settings_and_inline_card',
   );
 
   final Owner owner;

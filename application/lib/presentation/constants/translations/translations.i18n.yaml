@@ -230,3 +230,7 @@ feedSettingsScreenTabTopics: Topics
 addTopicBtn: Add a topic
 topicsScreenDescription: We are going to use your topics to find stories and articles that might be interesting for you.
 noTopicsYet: No topics yet
+addTopicScreenTitle: Looking for specific content?
+addedTopicsSubHeader: Added
+suggestedTopicsSubHeader: Suggested
+addTopicHintText: Please enter your topics and separate each with a comma
