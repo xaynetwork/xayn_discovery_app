@@ -47,9 +47,8 @@ public abstract class AndroidTestBase extends TestBase {
     @AfterMethod(alwaysRun = true)
     public void onFinish() throws IOException {
         AndroidDriver driver = ((AndroidDriver<?>) getDriver());
-        String path = SCREENSHOT_DIRECTORY + "/" + RandomStringUtils.randomAlphabetic(5);
+        String path = SCREENSHOT_DIRECTORY + "/android_" + RandomStringUtils.randomAlphabetic(5);
         Set availableLogTypes = driver.manage().logs().getAvailableLogTypes();
-        System.out.println(availableLogTypes);
         if (availableLogTypes.contains("logcat")) {
             List<String> lines = driver.manage().logs().get("logcat").getAll().stream()
                     .map(LogEntry::toString).collect(Collectors.toList());
