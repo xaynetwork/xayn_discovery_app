@@ -128,7 +128,7 @@ jobs:
         if: always()
         with:
           name: artifacts
-          path: ./application/automation/target/screenshots
+          path: ./application/automation/target/artifacts
 
   ui-tests-android:
     if: false
@@ -227,7 +227,7 @@ jobs:
         if: always()
         with:
           name: artifacts
-          path: ./application/automation/target/screenshots
+          path: ./application/automation/target/artifacts
           working-directory: application/
           script: |
             fastlane run_automation platform:android test_suite:sanity_android
