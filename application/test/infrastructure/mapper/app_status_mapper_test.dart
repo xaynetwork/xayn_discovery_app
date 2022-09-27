@@ -26,6 +26,8 @@ void main() {
       mockDbEntityMapToCountrySelectionInLineCardMapper;
   late MockDbEntityMapToSourceSelectionInLineCardMapper
       mockDbEntityMapToSourceSelectionInLineCardMapper;
+  late MockDbEntityMapToPushNotificationsInLineCardMapper
+      mockDbEntityMapToPushNotificationsInLineCardMapper;
   late CTAMapToDbEntityMapper ctaMapToDbEntityMapper;
   late DbEntityMapToCTAMapper dbEntityMapToCTAMapper;
   late final now = DateTime.now();
@@ -59,6 +61,13 @@ void main() {
     1: false,
     2: 3,
   };
+
+  const pushNotificationsMap = {
+    0: 2,
+    1: false,
+    2: 1,
+  };
+
   const surveyBannerValue = InLineCard(
     cardType: CardType.survey,
     lastSessionNumberWhenShown: 2,
@@ -77,17 +86,25 @@ void main() {
     hasBeenClicked: true,
     numberOfTimesShown: 2,
   );
+  const pushNotificationsValue = InLineCard(
+    cardType: CardType.sourceSelection,
+    lastSessionNumberWhenShown: 2,
+    hasBeenClicked: false,
+    numberOfTimesShown: 1,
+  );
 
   const ctaValue = CTA(
     surveyBanner: surveyBannerValue,
     countrySelection: countrySelectionValue,
     sourceSelection: sourceSelectionValue,
+    pushNotifications: pushNotificationsValue,
   );
 
   const ctaMap = {
     0: surveyBannerMap,
     1: sourceSelectionMap,
     2: countrySelectionMap,
+    3: pushNotificationsMap,
   };
 
   setUp(() async {
@@ -102,6 +119,8 @@ void main() {
         MockDbEntityMapToCountrySelectionInLineCardMapper();
     mockDbEntityMapToSourceSelectionInLineCardMapper =
         MockDbEntityMapToSourceSelectionInLineCardMapper();
+    mockDbEntityMapToPushNotificationsInLineCardMapper =
+        MockDbEntityMapToPushNotificationsInLineCardMapper();
 
     ctaMapToDbEntityMapper = CTAMapToDbEntityMapper(
       mockInLineCardMapper,
@@ -111,6 +130,7 @@ void main() {
       mockDbEntityMapToSurveyBannerMapper,
       mockDbEntityMapToCountrySelectionInLineCardMapper,
       mockDbEntityMapToSourceSelectionInLineCardMapper,
+      mockDbEntityMapToPushNotificationsInLineCardMapper,
     );
 
     mapper = AppStatusMapper(
@@ -137,6 +157,9 @@ void main() {
       when(mockDbEntityMapToCountrySelectionInLineCardMapper
               .map(countrySelectionMap))
           .thenReturn(countrySelectionValue);
+      when(mockDbEntityMapToPushNotificationsInLineCardMapper
+              .map(pushNotificationsMap))
+          .thenReturn(pushNotificationsValue);
 
       final map = {
         AppStatusFields.numberOfSessions: numberOfSessions,
@@ -180,6 +203,8 @@ void main() {
           .thenAnswer((realInvocation) => countrySelectionMap);
       when(mockInLineCardMapper.map(ctaValue.sourceSelection))
           .thenAnswer((realInvocation) => sourceSelectionMap);
+      when(mockInLineCardMapper.map(ctaValue.pushNotifications))
+          .thenAnswer((realInvocation) => pushNotificationsMap);
 
       final appStatus = AppStatus(
         numberOfSessions: numberOfSessions,
