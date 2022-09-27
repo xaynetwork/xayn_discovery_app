@@ -345,7 +345,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         final card = results.elementAt(normalizedIndex);
         if (card.type == CardType.pushNotifications) {
           return Border.all(
-            color: R.colors.searchResultSkeletonHighlight,
+            color: R.colors.menuDividerColor,
             width: R.dimen.sentimentBorderSize,
           );
         }
