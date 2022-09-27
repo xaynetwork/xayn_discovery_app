@@ -50,11 +50,12 @@ public abstract class IOSTestBase extends TestBase {
 
     @AfterMethod(alwaysRun = true)
     public void onFinish() {
-        String path = ARTIFACTS_DIRECTORY + "/ios/ios_test_" + RandomStringUtils.randomAlphabetic(5);
+        String path = ARTIFACTS_DIRECTORY + "/ios/ios_test_" + RandomStringUtils.randomAlphabetic(5) + ".mp4";
         byte[] data = Base64.decodeBase64(((IOSDriver<?>) getDriver()).stopRecordingScreen());
         try (OutputStream stream = Files.newOutputStream(
-                Paths.get(path + ".mp4"))) {
+                Paths.get(path ))) {
             stream.write(data);
+            log.info("screen recording saved as " + path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

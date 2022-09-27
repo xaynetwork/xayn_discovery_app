@@ -54,9 +54,11 @@ public abstract class AndroidTestBase extends TestBase {
             Files.write(Paths.get(path + ".txt"), lines);
         }
         byte[] data = Base64.decodeBase64(((AndroidDriver<?>) getDriver()).stopRecordingScreen());
+        path = path + ".mp4";
         try (OutputStream stream = Files.newOutputStream(
-                Paths.get(path + ".mp4"))) {
+                Paths.get(path))) {
             stream.write(data);
+            log.info("screen recording saved as " + path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
