@@ -6,7 +6,6 @@ import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterMethod;
@@ -30,7 +29,7 @@ import static com.xayn.handlers.AppiumHandler.getDriver;
 public abstract class AndroidTestBase extends TestBase {
 
     @BeforeMethod(alwaysRun = true)
-    public void onStart(Method method) throws IllegalAccessException {
+    public void onStart(Method method) {
         DesiredCapabilities desiredCapabilities = new CapabilitiesBuilder()
                 .setPlatformName("Android")
                 .setPlatformVersion(DEVICE_VERSION)
@@ -47,7 +46,7 @@ public abstract class AndroidTestBase extends TestBase {
     @AfterMethod(alwaysRun = true)
     public void onFinish() throws IOException {
         AndroidDriver driver = ((AndroidDriver<?>) getDriver());
-        String path = SCREENSHOT_DIRECTORY + "/android_" + RandomStringUtils.randomAlphabetic(5);
+        String path = ARTIFACTS_DIRECTORY + "/android/android_test_" + RandomStringUtils.randomAlphabetic(5);
         Set availableLogTypes = driver.manage().logs().getAvailableLogTypes();
         if (availableLogTypes.contains("logcat")) {
             List<String> lines = driver.manage().logs().get("logcat").getAll().stream()

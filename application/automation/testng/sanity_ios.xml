@@ -7,9 +7,9 @@
     </listeners>
     <test name="IOS">
         <classes>
-            <class name="ios.IOSBookmarkingTest"/>
+<!--            <class name="ios.IOSBookmarkingTest"/>-->
             <class name="ios.IOSNewsFeedTest"/>
-            <class name="ios.IOSReaderModeTest"/>
+<!--            <class name="ios.IOSReaderModeTest"/>-->
         </classes>
     </test>
 </suite>

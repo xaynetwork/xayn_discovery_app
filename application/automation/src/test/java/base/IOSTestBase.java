@@ -50,7 +50,7 @@ public abstract class IOSTestBase extends TestBase {
 
     @AfterMethod(alwaysRun = true)
     public void onFinish() {
-        String path = SCREENSHOT_DIRECTORY + "/ios_" + RandomStringUtils.randomAlphabetic(5);
+        String path = ARTIFACTS_DIRECTORY + "/ios/ios_test_" + RandomStringUtils.randomAlphabetic(5);
         byte[] data = Base64.decodeBase64(((AndroidDriver<?>) getDriver()).stopRecordingScreen());
         try (OutputStream stream = Files.newOutputStream(
                 Paths.get(path + ".mp4"))) {
