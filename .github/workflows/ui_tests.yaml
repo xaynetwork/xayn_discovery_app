@@ -46,6 +46,7 @@ concurrency:
 
 jobs:
   ui-tests-ios:
+    if: false
     runs-on: macos-12
     steps:
       - name: Checkout
@@ -87,6 +88,10 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
+
+      - shell: bash
+        run: brew install ffmpeg
+
       - name: Set up a Simulator
         uses: futureware-tech/simulator-action@v1
         with:
@@ -124,10 +129,9 @@ jobs:
         if: always()
         with:
           name: artifacts
-          path: ./application/automation/target/screenshots
+          path: ./application/automation/target/artifacts
 
   ui-tests-android:
-    if: false
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -216,14 +220,12 @@ jobs:
           profile: ${{ env.android_profile }}
           working-directory: application/
           script: |
-            fastlane run_automation platform:android test_suite:"${{ env.test_suite }}"
+            fastlane run_automation platform:android test_suite:sanity_android
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: artifacts
-          path: ./application/automation/target/screenshots
-          working-directory: application/
-          script: |
-            fastlane run_automation platform:android test_suite:sanity_android
+          path: ./application/automation/target/artifacts
+

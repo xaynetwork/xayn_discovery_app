@@ -126,7 +126,7 @@ lane :check_automation_config do |options|
     "driver.exec" => hash["node"],
     "appium.js" => hash["appium"],
     "appium.url" => "http://localhost:4723/wd/hub",
-    "screenshot.directory" => "target/screenshots",
+    "artifacts.directory" => "target/artifacts",
     "wda.bundle.id" => "com.xayn.discovery.internal.wda",
     "retry.count" => "3",
     "testrail.app" => "Discovery App",
