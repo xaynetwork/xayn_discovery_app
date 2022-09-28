@@ -53,6 +53,7 @@ class AddedTopicChip extends StatelessWidget {
         ),
       ),
     );
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: R.dimen.unit0_75),
       child: chip,

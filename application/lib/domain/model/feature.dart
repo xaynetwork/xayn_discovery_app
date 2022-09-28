@@ -64,8 +64,8 @@ enum Feature {
   ),
   topics(
     Owner.Michael,
-    false,
-    description: 'Showing topics in settings and topic selection inline Card',
+    EnvironmentHelper.kIsDebug,
+    description: 'Showing topic in settings and topic selection inline Card',
     remoteKey: 'topics_settings_and_inline_card',
   );
 
