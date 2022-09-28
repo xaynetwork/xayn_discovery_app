@@ -23,7 +23,8 @@ import java.io.IOException;
 public class ITestListenerImp implements ITestListener {
 
     @Override
-    public void onStart(ITestContext context) {log.info("starting test : " + context.getName());
+    public void onStart(ITestContext context) {
+        log.info("starting test : " + context.getName());
     }
 
     @Override
