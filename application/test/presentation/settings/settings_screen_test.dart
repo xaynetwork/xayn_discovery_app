@@ -35,6 +35,7 @@ void main() {
       build: '321',
     ),
     isPaymentEnabled: false,
+    arePushNotificationsActive: false,
     areLocalNotificationsEnabled: false,
     areRemoteNotificationsEnabled: false,
     subscriptionStatus: SubscriptionStatus.initial(),
@@ -100,6 +101,7 @@ void main() {
           build: '321',
         ),
         isPaymentEnabled: false,
+        arePushNotificationsActive: false,
         areLocalNotificationsEnabled: false,
         areRemoteNotificationsEnabled: false,
         subscriptionStatus: SubscriptionStatus.initial().copyWith(
@@ -125,6 +127,7 @@ void main() {
           build: '321',
         ),
         isPaymentEnabled: true,
+        arePushNotificationsActive: false,
         areLocalNotificationsEnabled: false,
         areRemoteNotificationsEnabled: false,
         subscriptionStatus: SubscriptionStatus.initial().copyWith(

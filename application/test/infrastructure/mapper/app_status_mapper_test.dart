@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
 import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
+import 'package:xayn_discovery_app/domain/model/inline_card/inline_card.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
-import 'package:xayn_discovery_app/domain/model/survey_banner/survey_banner.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
@@ -18,8 +19,13 @@ void main() {
   late MockAppVersionToMapMapper mockAppVersionToMapMapper;
   late MockOnboardingStatusToDbEntityMapMapper mockOnboardingToMapMapper;
   late MockDbEntityMapToOnboardingStatusMapper mockMapToOnboardingMapper;
-  late MockSurveyBannerMapper mockSurveyBannerMapper;
-  late MockDbEntityMapToSurveyBannerMapper mockDbEntityMapToSurveyBannerMapper;
+  late MockInLineCardMapper mockInLineCardMapper;
+  late MockDbEntityMapToSurveyInLineCardMapper
+      mockDbEntityMapToSurveyBannerMapper;
+  late MockDbEntityMapToCountrySelectionInLineCardMapper
+      mockDbEntityMapToCountrySelectionInLineCardMapper;
+  late MockDbEntityMapToSourceSelectionInLineCardMapper
+      mockDbEntityMapToSourceSelectionInLineCardMapper;
   late CTAMapToDbEntityMapper ctaMapToDbEntityMapper;
   late DbEntityMapToCTAMapper dbEntityMapToCTAMapper;
   late final now = DateTime.now();
@@ -39,14 +45,49 @@ void main() {
   const surveyBannerMap = {
     0: 0,
     1: false,
+    2: 2,
   };
 
-  const surveyBannerValue = SurveyBanner.initial();
+  const sourceSelectionMap = {
+    0: 2,
+    1: true,
+    2: 5,
+  };
 
-  const ctaValue = CTA(surveyBanner: surveyBannerValue);
+  const countrySelectionMap = {
+    0: 1,
+    1: false,
+    2: 3,
+  };
+  const surveyBannerValue = InLineCard(
+    cardType: CardType.survey,
+    lastSessionNumberWhenShown: 2,
+    hasBeenClicked: false,
+    numberOfTimesShown: 0,
+  );
+  const countrySelectionValue = InLineCard(
+    cardType: CardType.countrySelection,
+    lastSessionNumberWhenShown: 3,
+    hasBeenClicked: false,
+    numberOfTimesShown: 1,
+  );
+  const sourceSelectionValue = InLineCard(
+    cardType: CardType.sourceSelection,
+    lastSessionNumberWhenShown: 5,
+    hasBeenClicked: true,
+    numberOfTimesShown: 2,
+  );
+
+  const ctaValue = CTA(
+    surveyBanner: surveyBannerValue,
+    countrySelection: countrySelectionValue,
+    sourceSelection: sourceSelectionValue,
+  );
 
   const ctaMap = {
     0: surveyBannerMap,
+    1: sourceSelectionMap,
+    2: countrySelectionMap,
   };
 
   setUp(() async {
@@ -54,15 +95,23 @@ void main() {
     mockAppVersionToMapMapper = MockAppVersionToMapMapper();
     mockOnboardingToMapMapper = MockOnboardingStatusToDbEntityMapMapper();
     mockMapToOnboardingMapper = MockDbEntityMapToOnboardingStatusMapper();
-    mockSurveyBannerMapper = MockSurveyBannerMapper();
-    mockDbEntityMapToSurveyBannerMapper = MockDbEntityMapToSurveyBannerMapper();
+    mockInLineCardMapper = MockInLineCardMapper();
+    mockDbEntityMapToSurveyBannerMapper =
+        MockDbEntityMapToSurveyInLineCardMapper();
+    mockDbEntityMapToCountrySelectionInLineCardMapper =
+        MockDbEntityMapToCountrySelectionInLineCardMapper();
+    mockDbEntityMapToSourceSelectionInLineCardMapper =
+        MockDbEntityMapToSourceSelectionInLineCardMapper();
 
     ctaMapToDbEntityMapper = CTAMapToDbEntityMapper(
-      mockSurveyBannerMapper,
+      mockInLineCardMapper,
     );
 
-    dbEntityMapToCTAMapper =
-        DbEntityMapToCTAMapper(mockDbEntityMapToSurveyBannerMapper);
+    dbEntityMapToCTAMapper = DbEntityMapToCTAMapper(
+      mockDbEntityMapToSurveyBannerMapper,
+      mockDbEntityMapToCountrySelectionInLineCardMapper,
+      mockDbEntityMapToSourceSelectionInLineCardMapper,
+    );
 
     mapper = AppStatusMapper(
       mockMapToAppVersionMapper,
@@ -74,7 +123,7 @@ void main() {
     );
   });
 
-  group('AppSettingsMapper tests: ', () {
+  group('AppStatusMapper tests: ', () {
     test('fromMap', () {
       when(mockMapToAppVersionMapper.map(appVersionMap))
           .thenReturn(appVersionValue);
@@ -82,6 +131,12 @@ void main() {
           .thenReturn(onboardingValue);
       when(mockDbEntityMapToSurveyBannerMapper.map(surveyBannerMap))
           .thenReturn(surveyBannerValue);
+      when(mockDbEntityMapToSourceSelectionInLineCardMapper
+              .map(sourceSelectionMap))
+          .thenReturn(sourceSelectionValue);
+      when(mockDbEntityMapToCountrySelectionInLineCardMapper
+              .map(countrySelectionMap))
+          .thenReturn(countrySelectionValue);
 
       final map = {
         AppStatusFields.numberOfSessions: numberOfSessions,
@@ -108,6 +163,7 @@ void main() {
           cta: ctaValue,
           extraTrialEndDate: null,
           usedPromoCodes: {},
+          userDidChangePushNotificationsStatus: false,
         ),
       );
     });
@@ -117,8 +173,13 @@ void main() {
           .thenReturn(appVersionMap);
       when(mockOnboardingToMapMapper.map(onboardingValue))
           .thenReturn(onboardingMap);
-      when(mockSurveyBannerMapper.map(surveyBannerValue))
-          .thenReturn(surveyBannerMap);
+
+      when(mockInLineCardMapper.map(ctaValue.surveyBanner))
+          .thenAnswer((realInvocation) => surveyBannerMap);
+      when(mockInLineCardMapper.map(ctaValue.countrySelection))
+          .thenAnswer((realInvocation) => countrySelectionMap);
+      when(mockInLineCardMapper.map(ctaValue.sourceSelection))
+          .thenAnswer((realInvocation) => sourceSelectionMap);
 
       final appStatus = AppStatus(
         numberOfSessions: numberOfSessions,
@@ -132,6 +193,7 @@ void main() {
         cta: ctaValue,
         usedPromoCodes: {},
         extraTrialEndDate: null,
+        userDidChangePushNotificationsStatus: false,
       );
 
       final map = mapper.toMap(appStatus);
@@ -147,6 +209,7 @@ void main() {
         AppStatusFields.cta: ctaMap,
         AppStatusFields.extraTrialDate: null,
         AppStatusFields.usedPromoCodes: [],
+        AppStatusFields.userDidChangePushNotificationsStatus: false,
       };
       expect(map, expectedMap);
     });

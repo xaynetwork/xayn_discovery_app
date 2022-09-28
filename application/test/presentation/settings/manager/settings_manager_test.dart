@@ -31,6 +31,7 @@ void main() {
     theme: appTheme,
     appVersion: appVersion,
     isPaymentEnabled: false,
+    arePushNotificationsActive: false,
     areLocalNotificationsEnabled: false,
     areRemoteNotificationsEnabled: false,
     subscriptionStatus: subscriptionStatus,
@@ -51,6 +52,8 @@ void main() {
   late MockGetSubscriptionManagementUrlUseCase
       getSubscriptionManagementUrlUseCase;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
+  late MockTogglePushNotificationsStatusUseCase
+      togglePushNotificationsStatusUseCase;
   late MockRatingDialogManager ratingDialogManager;
   late MockAppManager appManager;
   late MockLocalNotificationsService localNotificationsService;
@@ -73,6 +76,8 @@ void main() {
     getSubscriptionManagementUrlUseCase =
         MockGetSubscriptionManagementUrlUseCase();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
+    togglePushNotificationsStatusUseCase =
+        MockTogglePushNotificationsStatusUseCase();
     ratingDialogManager = MockRatingDialogManager();
     appManager = MockAppManager();
     localNotificationsService = MockLocalNotificationsService();
@@ -115,6 +120,12 @@ void main() {
       (_) => Future.value(
           GetSubscriptionManagementUrlOutput(subscriptionManagementURL)),
     );
+
+    when(localNotificationsService.isNotificationAllowed)
+        .thenAnswer((_) => Future.value(false));
+
+    when(remoteNotificationsService.userNotificationsEnabled)
+        .thenAnswer((_) => Future.value(false));
   });
 
   SettingsScreenManager create() => SettingsScreenManager(
@@ -132,6 +143,7 @@ void main() {
         listenSubscriptionStatusUseCase,
         getSubscriptionManagementUrlUseCase,
         sendAnalyticsUseCase,
+        togglePushNotificationsStatusUseCase,
         appManager,
         ratingDialogManager,
         localNotificationsService,
@@ -320,6 +332,22 @@ void main() {
       ]);
       verifyNoMoreInteractions(sendAnalyticsUseCase);
       verifyNoMoreInteractions(urlOpener);
+    },
+  );
+
+  test(
+    'GIVEN push notification switch is tapped THEN call togglePushNotificationsStatusUseCase',
+    () async {
+      when(togglePushNotificationsStatusUseCase.call(any)).thenAnswer(
+        (_) async => [const UseCaseResult.success(none)],
+      );
+      final manager = create();
+      manager.togglePushNotificationsState();
+
+      verify([
+        togglePushNotificationsStatusUseCase.call(any),
+      ]);
+      verifyNoMoreInteractions(togglePushNotificationsStatusUseCase);
     },
   );
 }

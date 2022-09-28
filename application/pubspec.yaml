@@ -98,10 +98,10 @@ dependencies:
   xayn_design:
     git:
       url: https://github.com/xaynetwork/xayn_design.git
-      ref: 86d51742f619b8619e891bb3746056e70ad0279a
+      ref: e7dea421a5d725313fbcf0f8e45867fc42064861
   xayn_discovery_engine_flutter:
     hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
-    version: 0.1.0+main.220908121713
+    version: 0.1.0+main.220914085310
   xayn_readability:
     git:
       url: https://github.com/xaynetwork/xayn_readability.git
@@ -162,7 +162,7 @@ flutter:
     - assets/ai/kpe_v0001/
     - assets/ai/smbert_v0001/
     - assets/ai/sources_v0000/
-    - assets/default_remote_config.yaml
+    - assets/remote_config/
 
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
@@ -198,6 +198,8 @@ flutter:
     - packages/xayn_design/assets/lottie/splash_screen.json
     - packages/xayn_design/assets/lottie/splash_screen_dark.json
     - packages/xayn_design/assets/lottie/survey.json
+    - packages/xayn_design/assets/lottie/source_selection.json
+    - packages/xayn_design/assets/lottie/country_selection.json
 
     # lottie contextual illustrations
     - packages/xayn_design/assets/lottie/contextual/create_collection.json

@@ -6,12 +6,14 @@ void main() {
   late UserInteractionsMapper mapper;
 
   const int numberOfScrolls = 2;
+  const int numberOfScrollsPerSession = 1;
   const int numberOfArticlesRead = 1;
   const int numberOfArticlesBookmarked = 0;
   const int numberOfArticlesLikedOrDisliked = 1;
   const int numberOfSourcesExcluded = 3;
   const int numberOfCountriesChanged = 2;
   const int numberOfSearches = 1;
+  const int numberOfSourcesTrusted = 2;
 
   setUp(() async {
     mapper = UserInteractionsMapper();
@@ -25,6 +27,8 @@ void main() {
           () {
         final map = {
           UserInteractionsFields.numberOfScrolls: numberOfScrolls,
+          UserInteractionsFields.numberOfScrollsPerSession:
+              numberOfScrollsPerSession,
           UserInteractionsFields.numberOfArticlesRead: numberOfArticlesRead,
           UserInteractionsFields.numberOfArticlesBookmarked:
               numberOfArticlesBookmarked,
@@ -35,6 +39,7 @@ void main() {
           UserInteractionsFields.numberOfCountriesChanged:
               numberOfCountriesChanged,
           UserInteractionsFields.numberOfSearches: numberOfSearches,
+          UserInteractionsFields.numberOfSourcesTrusted: numberOfSourcesTrusted,
         };
 
         final userInteractions = mapper.fromMap(map);
@@ -43,12 +48,14 @@ void main() {
           userInteractions,
           UserInteractions(
             numberOfScrolls: numberOfScrolls,
+            numberOfScrollsPerSession: numberOfScrollsPerSession,
             numberOfArticlesRead: numberOfArticlesRead,
             numberOfArticlesBookmarked: numberOfArticlesBookmarked,
             numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
             numberOfSourcesExcluded: numberOfSourcesExcluded,
             numberOfCountriesChanged: numberOfCountriesChanged,
             numberOfSearches: numberOfSearches,
+            numberOfSourcesTrusted: numberOfSourcesTrusted,
           ),
         );
       });
@@ -58,12 +65,14 @@ void main() {
         () {
           final map = {
             UserInteractionsFields.numberOfScrolls: null,
+            UserInteractionsFields.numberOfScrollsPerSession: null,
             UserInteractionsFields.numberOfArticlesRead: null,
             UserInteractionsFields.numberOfArticlesBookmarked: null,
             UserInteractionsFields.numberOfArticlesLikedOrDisliked: null,
             UserInteractionsFields.numberOfSourcesExcluded: null,
             UserInteractionsFields.numberOfCountriesChanged: null,
             UserInteractionsFields.numberOfSearches: null,
+            UserInteractionsFields.numberOfSourcesTrusted: null,
           };
 
           final userInteractions = mapper.fromMap(map);
@@ -72,12 +81,14 @@ void main() {
             userInteractions,
             UserInteractions(
               numberOfScrolls: 0,
+              numberOfScrollsPerSession: 0,
               numberOfArticlesRead: 0,
               numberOfArticlesBookmarked: 0,
               numberOfArticlesLikedOrDisliked: 0,
               numberOfSourcesExcluded: 0,
               numberOfCountriesChanged: 0,
               numberOfSearches: 0,
+              numberOfSourcesTrusted: 0,
             ),
           );
         },
@@ -93,12 +104,14 @@ void main() {
         () {
           final userInteractions = UserInteractions(
             numberOfScrolls: numberOfScrolls,
+            numberOfScrollsPerSession: numberOfScrollsPerSession,
             numberOfArticlesRead: numberOfArticlesRead,
             numberOfArticlesBookmarked: numberOfArticlesBookmarked,
             numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
             numberOfSourcesExcluded: numberOfSourcesExcluded,
             numberOfCountriesChanged: numberOfCountriesChanged,
             numberOfSearches: numberOfSearches,
+            numberOfSourcesTrusted: numberOfSourcesTrusted,
           );
 
           final map = mapper.toMap(userInteractions);
@@ -107,6 +120,8 @@ void main() {
             map,
             {
               UserInteractionsFields.numberOfScrolls: numberOfScrolls,
+              UserInteractionsFields.numberOfScrollsPerSession:
+                  numberOfScrollsPerSession,
               UserInteractionsFields.numberOfArticlesRead: numberOfArticlesRead,
               UserInteractionsFields.numberOfArticlesBookmarked:
                   numberOfArticlesBookmarked,
@@ -116,6 +131,8 @@ void main() {
                   numberOfSourcesExcluded,
               UserInteractionsFields.numberOfCountriesChanged:
                   numberOfCountriesChanged,
+              UserInteractionsFields.numberOfSourcesTrusted:
+                  numberOfSourcesTrusted,
             },
           );
         },

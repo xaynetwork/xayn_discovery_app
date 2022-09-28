@@ -178,8 +178,10 @@ private_lane :build_with_flutter do |options|
     dartDefines << buildForSimulator
   end
 
+
   shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
   shell((%W(flutter --no-version-check build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
+
 end
 
 desc "Prepare internal key.properties"
@@ -443,7 +445,8 @@ lane :update_assets do |options|
   UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
   UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
   downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
-  shell("touch assets/default_remote_config.yaml")
+  shell("mkdir -p assets/remote_config ")
+  shell("touch assets/remote_config/default.yaml")
 end
 
 desc "Takes the current tag and increments the version on the minor position and creates a new Tag.\n" \

@@ -9,15 +9,18 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String kChannelKey = 'basic_channel';
+const String kAndroidIconPath = 'resource://drawable/res_app_icon';
 
 abstract class LocalNotificationsService {
   void requestPermission();
+  void openNotificationsPage();
   Future<bool> sendNotification({
     required String body,
     required UniqueId documentId,
     required Duration delay,
     Uri? image,
   });
+  Future<bool> get isNotificationAllowed;
 }
 
 @LazySingleton(as: LocalNotificationsService)
@@ -36,7 +39,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
 
   void _init() {
     AwesomeNotifications().initialize(
-        null,
+        kAndroidIconPath,
         [
           NotificationChannel(
             channelKey: kChannelKey,
@@ -66,6 +69,10 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   }
 
   @override
+  Future<bool> get isNotificationAllowed =>
+      AwesomeNotifications().isNotificationAllowed();
+
+  @override
   void requestPermission() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -73,6 +80,10 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
       }
     });
   }
+
+  @override
+  void openNotificationsPage() =>
+      AwesomeNotifications().showNotificationConfigPage();
 
   @override
   Future<bool> sendNotification({

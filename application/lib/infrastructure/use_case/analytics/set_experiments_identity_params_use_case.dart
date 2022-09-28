@@ -21,11 +21,11 @@ class SetExperimentsIdentityParamsUseCase
     final variants = SubscribedExperimentVariantIdentityParam(
       param.subscribedVariantIds
           .map((it) => '${it.experimentId}__${it.variantId!}')
-          .toSet(),
+          .toList(),
     );
 
     final features = SubscribedExperimentFeatureIdentityParam(
-      param.enabledFeatures.map((it) => it.id).toSet(),
+      param.enabledFeatures.map((it) => it.id).toList(),
     );
 
     await _analyticsService.updateIdentityParams({variants, features});

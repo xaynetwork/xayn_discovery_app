@@ -12,43 +12,51 @@ class UserInteractions extends DbEntity with _$UserInteractions {
   factory UserInteractions._({
     required UniqueId id,
     required int numberOfScrolls,
+    required int numberOfScrollsPerSession,
     required int numberOfArticlesRead,
     required int numberOfArticlesBookmarked,
     required int numberOfArticlesLikedOrDisliked,
     required int numberOfSourcesExcluded,
     required int numberOfCountriesChanged,
     required int numberOfSearches,
+    required int numberOfSourcesTrusted,
   }) = _UserInteractions;
 
   factory UserInteractions({
     required int numberOfScrolls,
+    required int numberOfScrollsPerSession,
     required int numberOfArticlesRead,
     required int numberOfArticlesBookmarked,
     required int numberOfArticlesLikedOrDisliked,
     required int numberOfSourcesExcluded,
     required int numberOfCountriesChanged,
     required int numberOfSearches,
+    required int numberOfSourcesTrusted,
   }) =>
       UserInteractions._(
         id: UserInteractions.globalId,
         numberOfScrolls: numberOfScrolls,
+        numberOfScrollsPerSession: numberOfScrollsPerSession,
         numberOfArticlesRead: numberOfArticlesRead,
         numberOfArticlesBookmarked: numberOfArticlesBookmarked,
         numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked,
         numberOfSourcesExcluded: numberOfSourcesExcluded,
         numberOfCountriesChanged: numberOfCountriesChanged,
         numberOfSearches: numberOfSearches,
+        numberOfSourcesTrusted: numberOfSourcesTrusted,
       );
 
   factory UserInteractions.initial() => UserInteractions._(
         id: UserInteractions.globalId,
         numberOfScrolls: 0,
+        numberOfScrollsPerSession: 0,
         numberOfArticlesRead: 0,
         numberOfArticlesBookmarked: 0,
         numberOfArticlesLikedOrDisliked: 0,
         numberOfSourcesExcluded: 0,
         numberOfCountriesChanged: 0,
         numberOfSearches: 0,
+        numberOfSourcesTrusted: 0,
       );
 
   static const UniqueId globalId =
@@ -62,6 +70,7 @@ extension UserInteractionsExtension on UserInteractions {
       numberOfArticlesBookmarked +
       numberOfArticlesLikedOrDisliked +
       numberOfSourcesExcluded +
+      numberOfSourcesTrusted +
       numberOfCountriesChanged +
       numberOfSearches;
 }

@@ -8,6 +8,8 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
   UserInteractions? fromMap(Map? map) {
     if (map == null) return null;
     final numberOfScrolls = map[UserInteractionsFields.numberOfScrolls] as int?;
+    final numberOfScrollsPerSession =
+        map[UserInteractionsFields.numberOfScrollsPerSession] as int?;
     final numberOfArticlesRead =
         map[UserInteractionsFields.numberOfArticlesRead] as int?;
     final numberOfArticlesBookmarked =
@@ -20,21 +22,27 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
         map[UserInteractionsFields.numberOfCountriesChanged] as int?;
     final numberOfSearches =
         map[UserInteractionsFields.numberOfSearches] as int?;
+    final numberOfSourcesTrusted =
+        map[UserInteractionsFields.numberOfSourcesTrusted] as int?;
 
     return UserInteractions(
       numberOfScrolls: numberOfScrolls ?? 0,
+      numberOfScrollsPerSession: numberOfScrollsPerSession ?? 0,
       numberOfArticlesRead: numberOfArticlesRead ?? 0,
       numberOfArticlesBookmarked: numberOfArticlesBookmarked ?? 0,
       numberOfArticlesLikedOrDisliked: numberOfArticlesLikedOrDisliked ?? 0,
       numberOfSourcesExcluded: numberOfSourcesExcluded ?? 0,
       numberOfCountriesChanged: numberOfCountriesChanged ?? 0,
       numberOfSearches: numberOfSearches ?? 0,
+      numberOfSourcesTrusted: numberOfSourcesTrusted ?? 0,
     );
   }
 
   @override
   DbEntityMap toMap(UserInteractions entity) => {
         UserInteractionsFields.numberOfScrolls: entity.numberOfScrolls,
+        UserInteractionsFields.numberOfScrollsPerSession:
+            entity.numberOfScrollsPerSession,
         UserInteractionsFields.numberOfArticlesRead:
             entity.numberOfArticlesRead,
         UserInteractionsFields.numberOfArticlesBookmarked:
@@ -45,6 +53,8 @@ class UserInteractionsMapper extends BaseDbEntityMapper<UserInteractions> {
             entity.numberOfSourcesExcluded,
         UserInteractionsFields.numberOfCountriesChanged:
             entity.numberOfCountriesChanged,
+        UserInteractionsFields.numberOfSourcesTrusted:
+            entity.numberOfSourcesTrusted,
       };
 }
 
@@ -58,4 +68,6 @@ abstract class UserInteractionsFields {
   static const int numberOfSourcesExcluded = 4;
   static const int numberOfCountriesChanged = 5;
   static const int numberOfSearches = 6;
+  static const int numberOfScrollsPerSession = 7;
+  static const int numberOfSourcesTrusted = 8;
 }

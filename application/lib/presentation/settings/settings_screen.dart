@@ -17,6 +17,7 @@ import 'package:xayn_discovery_app/presentation/settings/widget/general_info_sec
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/local_notifications_debug_section.dart';
+import 'package:xayn_discovery_app/presentation/settings/widget/notifications_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/remote_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
@@ -37,7 +38,10 @@ class SettingsScreen extends StatefulWidget {
 const _settingsNavBarConfigId = NavBarConfigId('settingsNavBarConfigId');
 
 class _SettingsScreenState extends State<SettingsScreen>
-    with NavBarConfigMixin, OverlayMixin<SettingsScreen> {
+    with
+        NavBarConfigMixin,
+        OverlayMixin<SettingsScreen>,
+        WidgetsBindingObserver {
   late final SettingsScreenManager _manager = di.get();
 
   @override
@@ -50,6 +54,22 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Linden get linden => UnterDenLinden.getLinden(context);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) =>
+      _manager.onChangeAppLifecycleState(state);
 
   @override
   Widget build(BuildContext context) => AppScaffold(
@@ -94,6 +114,10 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
       ),
+      if (state.areRemoteNotificationsEnabled)
+        _buildNotificationsSection(
+          arePushNotificationsActive: state.arePushNotificationsActive,
+        ),
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
@@ -135,6 +159,14 @@ class _SettingsScreenState extends State<SettingsScreen>
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
+      );
+
+  Widget _buildNotificationsSection({
+    required bool arePushNotificationsActive,
+  }) =>
+      NotificationsSection(
+        togglePushNotificationsState: _manager.togglePushNotificationsState,
+        arePushNotificationsActive: arePushNotificationsActive,
       );
 
   Widget _buildAppThemeSection({

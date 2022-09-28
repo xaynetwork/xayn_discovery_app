@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -245,4 +246,21 @@ class SourcesScreenNavActionsImpl implements SourcesScreenNavActions {
   @override
   void onLoadTrustedSourcesInterface() =>
       changeStack((stack) => stack.push(PageRegistry.trustedSourceSelection));
+}
+
+@Injectable(as: InLineNavActions)
+class InLineNavActionsImpl extends InLineNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  InLineNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onManageCountriesPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.countryFeedSettings));
+
+  @override
+  void onManageSourcesPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.sourceFeedSettings()));
 }
