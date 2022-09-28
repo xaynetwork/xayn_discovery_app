@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class TopicListItem extends StatelessWidget {
-  final String topic;
+  final Topic topic;
   final VoidCallback onRemoveTapped;
 
   const TopicListItem({
@@ -50,7 +51,7 @@ class TopicListItem extends StatelessWidget {
   }
 
   Widget _buildName() => Text(
-        topic,
+        topic.name,
         style: R.styles.mBoldStyle,
         overflow: TextOverflow.ellipsis,
       );

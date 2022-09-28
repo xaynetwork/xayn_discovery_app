@@ -10,13 +10,13 @@ class SuggestedTopicChip extends StatelessWidget {
     required this.onPressed,
   }) : super(key: key);
 
-  final String topic;
+  final Topic topic;
   final OnTopicPressed onPressed;
 
   @override
   Widget build(BuildContext context) {
     final topicText = Text(
-      topic,
+      topic.name,
       style: R.styles.topicChipTextStyle,
     );
     final icon = SvgPicture.asset(
