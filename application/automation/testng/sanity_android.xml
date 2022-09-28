@@ -7,9 +7,7 @@
     </listeners>
     <test name="Android">
         <classes>
-<!--            <class name="android.AndroidBookmarkingTest"/>-->
             <class name="android.AndroidNewsfeedTest"/>
-<!--            <class name="android.AndroidReaderModeTest"/>-->
         </classes>
     </test>
 </suite>
