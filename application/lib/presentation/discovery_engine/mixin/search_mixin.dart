@@ -55,6 +55,10 @@ mixin SearchMixin<T> on SingletonSubscriptionObserver<T> {
     return super.stream;
   }
 
+  void resetSearch() {
+    _lastUsedSearchTerm = null;
+  }
+
   UseCaseSink<None, EngineEvent> _getNextBatchUseCaseSink() {
     return pipe(requestNextSearchBatchUseCase)
       ..autoSubscribe(onError: (e, s) => onError(e, s ?? StackTrace.current));

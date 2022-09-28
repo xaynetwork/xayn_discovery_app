@@ -150,6 +150,7 @@ class ActiveSearchManager extends BaseDiscoveryManager
   void onResetAISucceeded() {
     resetCardIndex();
     resetObservedDocument();
+    resetSearch();
   }
 
   @override
