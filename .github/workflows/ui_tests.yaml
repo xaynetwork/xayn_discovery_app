@@ -5,6 +5,17 @@ on:
     branches:
       - '*'
   workflow_dispatch:
+    inputs:
+      ios_ui_tests:
+        description: 'IOS UI Tests'
+        required: false
+        default: false
+        type: boolean
+      android_ui_tests:
+        description: 'Android UI Tests'
+        required: false
+        default: false
+        type: boolean
 
 env:
   flutter_channel: 'stable'
@@ -46,7 +57,7 @@ concurrency:
 
 jobs:
   ui-tests-ios:
-    if: false
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.ios_ui_tests == 'true')
     runs-on: macos-12
     steps:
       - name: Checkout
@@ -132,6 +143,7 @@ jobs:
           path: ./application/automation/target/artifacts
 
   ui-tests-android:
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.android_ui_tests == 'true')
     runs-on: macos-latest
     steps:
       - name: Checkout
