@@ -220,7 +220,7 @@ jobs:
           profile: ${{ env.android_profile }}
           working-directory: application/
           script: |
-            fastlane run_automation platform:android test_suite:"${{ env.test_suite }}"
+            fastlane run_automation platform:android test_suite:sanity_android
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -228,6 +228,4 @@ jobs:
         with:
           name: artifacts
           path: ./application/automation/target/artifacts
-          working-directory: application/
-          script: |
-            fastlane run_automation platform:android test_suite:sanity_android
+
