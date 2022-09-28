@@ -49,7 +49,10 @@ class _AddTopicScreenState extends State<AddTopicScreen>
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
           child: BlocBuilder<TopicsManager, TopicsState>(
             bloc: manager,
-            builder: (_, state) => _buildBody(state),
+            builder: (_, state) {
+              if (state.newTopic.isEmpty) _textEditingController.text = '';
+              return _buildBody(state);
+            },
           ),
         ),
       );
@@ -58,7 +61,7 @@ class _AddTopicScreenState extends State<AddTopicScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: _buildTopicsSections(state)),
-          _buildInputField(),
+          _buildInputField(state),
         ],
       );
 
@@ -129,7 +132,7 @@ class _AddTopicScreenState extends State<AddTopicScreen>
             .toList(),
       );
 
-  Widget _buildInputField() {
+  Widget _buildInputField(TopicsState state) {
     final divider = Padding(
       padding: EdgeInsets.only(bottom: R.dimen.unit1_5),
       child: Divider(
@@ -141,7 +144,10 @@ class _AddTopicScreenState extends State<AddTopicScreen>
     final textField = AppTextField(
       autofocus: true,
       controller: _textEditingController,
+      onChanged: manager.onUpdateTopic,
+      onSubmitted: (_) => manager.onAddCustomTopic,
       hintText: manager.state.suggestedTopics.join(', '),
+      errorText: state.error.errorMsgIfHasOrNull,
       autocorrect: false,
     );
     final actionButtons = BottomSheetFooter(
@@ -149,7 +155,8 @@ class _AddTopicScreenState extends State<AddTopicScreen>
       setup: BottomSheetFooterSetup.row(
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
-          onPressed: () {},
+          onPressed: manager.onAddCustomTopic,
+          isDisabled: !manager.canAddTopic,
         ),
       ),
     );
