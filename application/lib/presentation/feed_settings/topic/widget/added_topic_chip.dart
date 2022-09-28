@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/add_topic_screen.dart';
 
@@ -10,14 +11,14 @@ class AddedTopicChip extends StatelessWidget {
     required this.onPressed,
   }) : super(key: key);
 
-  final String topic;
+  final Topic topic;
   final OnTopicPressed onPressed;
 
   @override
   Widget build(BuildContext context) {
     final topicText = Text(
-      topic,
-      style: R.styles.topicChipTextStyle,
+      topic.name,
+      style: R.styles.mStyle,
     );
     final icon = SvgPicture.asset(
       R.assets.icons.cross,
