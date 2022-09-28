@@ -42,9 +42,10 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
 
   void _pushMessageHandler(PushReceivedEvent event) async {
     final userNotificationsEnabled = await Airship.userNotificationsEnabled;
-    logger.i('[Remote notifications] Notifications disabled.');
-
-    if (userNotificationsEnabled == false) return;
+    if (userNotificationsEnabled == false) {
+      logger.i('[Remote notifications] Notifications disabled.');
+      return;
+    }
 
     logger.i('[Remote notifications] Notification received: $event');
     final notification = RemoteNotification(event.payload);
