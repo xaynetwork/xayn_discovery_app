@@ -226,3 +226,4 @@ addTopicScreenTitle: Looking for specific content?
 addedTopicsSubHeader: Added
 suggestedTopicsSubHeader: Suggested
 addTopicHintText: Please enter your topics and separate each with a comma
+feedSettingsScreenMaxTopicsError: Topic max length is 48 characters
