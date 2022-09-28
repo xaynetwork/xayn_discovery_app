@@ -34,10 +34,7 @@ class InLineCardInjectionUseCase
 
   @visibleForTesting
   bool shouldMarkInjectionPoint(InLineCardInjectionData data) =>
-      nextDocumentSibling == null &&
-      data.cardType != null &&
-      data.nextDocumentsCount > data.currentDocumentsCount &&
-      data.nextDocumentsCount > 2;
+      nextDocumentSibling == null && data.cardType != null;
 
   @visibleForTesting
   Iterable<Card> toCards(Set<Document> documents, CardType? cardType) sync* {

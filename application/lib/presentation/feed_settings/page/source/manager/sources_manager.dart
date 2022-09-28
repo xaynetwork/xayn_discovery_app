@@ -6,9 +6,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
+import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions_events.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/engine_events_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/sources_management_single_changed_event.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/sources_management_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
@@ -60,6 +62,7 @@ class SourcesManager extends Cubit<SourcesState>
   final SourcesPendingOperations sourcesPendingOperations;
   final SourcesScreenNavActions _sourcesScreenNavActions;
   final SendAnalyticsUseCase _sendAnalyticsUseCase;
+  final SaveUserInteractionUseCase _saveUserInteractionUseCase;
   late final FoldEngineEvent foldEngineEvent = _foldEngineEvent();
   late final UseCaseValueStream<SourcesState> nextStateValueStream = consume(
     engineEventsUseCase,
@@ -76,6 +79,7 @@ class SourcesManager extends Cubit<SourcesState>
     this._sendAnalyticsUseCase,
     this._sourcesScreenNavActions,
     this.engineEventsUseCase,
+    this._saveUserInteractionUseCase,
     this.sourcesPendingOperations,
   ) : super(const SourcesState());
 
@@ -230,6 +234,8 @@ class SourcesManager extends Cubit<SourcesState>
               isBatched: true,
             ),
           );
+          _saveUserInteractionUseCase(
+              UserInteractionsEvents.removeExcludedSource);
           break;
         case SourcesManagementTask.addToExcludedSources:
           excludedSources.add(operation.source);
@@ -240,6 +246,7 @@ class SourcesManager extends Cubit<SourcesState>
               isBatched: true,
             ),
           );
+          _saveUserInteractionUseCase(UserInteractionsEvents.excludedSource);
           break;
         case SourcesManagementTask.removeFromTrustedSources:
           trustedSources.remove(operation.source);
@@ -250,6 +257,8 @@ class SourcesManager extends Cubit<SourcesState>
               isBatched: true,
             ),
           );
+          _saveUserInteractionUseCase(
+              UserInteractionsEvents.removeTrustedSource);
           break;
         case SourcesManagementTask.addToTrustedSources:
           trustedSources.add(operation.source);
@@ -260,6 +269,7 @@ class SourcesManager extends Cubit<SourcesState>
               isBatched: true,
             ),
           );
+          _saveUserInteractionUseCase(UserInteractionsEvents.trustedSource);
           break;
       }
     }
@@ -282,7 +292,8 @@ class SourcesManager extends Cubit<SourcesState>
           sourceType = SourceType.excluded;
           sourceOperation =
               SourcesManagementSingleChangedEventOperation.removal;
-
+          _saveUserInteractionUseCase(
+              UserInteractionsEvents.removeExcludedSource);
           break;
         case SourcesManagementTask.addToExcludedSources:
           super.addSourceToExcludedList(operation.source);
@@ -290,7 +301,7 @@ class SourcesManager extends Cubit<SourcesState>
           sourceType = SourceType.excluded;
           sourceOperation =
               SourcesManagementSingleChangedEventOperation.addition;
-
+          _saveUserInteractionUseCase(UserInteractionsEvents.excludedSource);
           break;
         case SourcesManagementTask.removeFromTrustedSources:
           super.removeSourceFromTrustedList(operation.source);
@@ -298,7 +309,8 @@ class SourcesManager extends Cubit<SourcesState>
           sourceType = SourceType.trusted;
           sourceOperation =
               SourcesManagementSingleChangedEventOperation.removal;
-
+          _saveUserInteractionUseCase(
+              UserInteractionsEvents.removeTrustedSource);
           break;
         case SourcesManagementTask.addToTrustedSources:
           super.addSourceToTrustedList(operation.source);
@@ -306,7 +318,7 @@ class SourcesManager extends Cubit<SourcesState>
           sourceType = SourceType.trusted;
           sourceOperation =
               SourcesManagementSingleChangedEventOperation.addition;
-
+          _saveUserInteractionUseCase(UserInteractionsEvents.trustedSource);
           break;
       }
     }
