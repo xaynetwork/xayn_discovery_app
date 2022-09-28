@@ -22,6 +22,7 @@ void main() {
   late MockAppDiscoveryEngine engine;
   late SourcesScreenNavActions navActions;
   late MockSendAnalyticsUseCase sendAnalyticsUseCase;
+  late MockSaveUserInteractionUseCase saveUserInteractionUseCase;
 
   final defaultExcludedSources = {
     Source('https://www.a.com'),
@@ -78,6 +79,7 @@ void main() {
     engine = MockAppDiscoveryEngine();
     navActions = MockSourcesScreenNavActions();
     sendAnalyticsUseCase = MockSendAnalyticsUseCase();
+    saveUserInteractionUseCase = MockSaveUserInteractionUseCase();
     eventsController = StreamController<EngineEvent>();
 
     when(engineEventsUseCase.transaction(any))
@@ -159,6 +161,7 @@ void main() {
       sendAnalyticsUseCase,
       navActions,
       engineEventsUseCase,
+      saveUserInteractionUseCase,
       sourcesPendingOperations,
     );
   });

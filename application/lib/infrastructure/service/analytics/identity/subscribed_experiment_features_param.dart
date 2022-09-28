@@ -2,7 +2,7 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/identity/bas
 
 class SubscribedExperimentFeatureIdentityParam extends IdentityParam {
   const SubscribedExperimentFeatureIdentityParam(
-    Set<String> experimentFeatureIds,
+    List<String> experimentFeatureIds,
   ) : super(
           IdentityKeys.subscribedExperimentFeatureVariantIds,
           experimentFeatureIds,
