@@ -1,9 +1,6 @@
 name: UI Tests
 
 on:
-  push:
-    branches:
-      - '*'
   workflow_dispatch:
     inputs:
       ios_ui_tests:
