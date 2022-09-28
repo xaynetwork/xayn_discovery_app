@@ -11,13 +11,14 @@ class Topic extends Equatable {
     this.isCustom = true,
   });
 
-  const Topic.suggested({
-    required this.name,
-  }) : isCustom = false;
+  const Topic.suggested(this.name) : isCustom = false;
 
   @override
   List<Object?> get props => [
         name,
         isCustom,
       ];
+
+  @override
+  String toString() => name;
 }

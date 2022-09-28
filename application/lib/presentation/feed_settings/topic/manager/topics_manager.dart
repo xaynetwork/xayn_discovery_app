@@ -2,23 +2,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
+import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/topic/add_custom_topic_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/topic/topic_use_cases_errors.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/util/topic_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-const _suggestedTopics = <String>{
-  'Sports',
-  'LifeStyle',
-  'Science',
-  'Technology',
-  'Entertainment',
-  'Politics',
-  'Health',
-  'World',
-  'Sustainability',
-  'Business',
+Set<Topic> _suggestedTopics = <Topic>{
+  const Topic.suggested('Sports'),
+  const Topic.suggested('LifeStyle'),
+  const Topic.suggested('Science'),
+  const Topic.suggested('Technology'),
+  const Topic.suggested('Entertainment'),
+  const Topic.suggested('Politics'),
+  const Topic.suggested('Health'),
+  const Topic.suggested('World'),
+  const Topic.suggested('Sustainability'),
+  const Topic.suggested('Business'),
 };
 
 abstract class TopicsScreenNavActions {
@@ -35,11 +36,11 @@ class TopicsManager extends Cubit<TopicsState>
   final AddCustomTopicUseCase _addCustomTopicUseCase;
   final TopicErrorsEnumMapper _topicErrorsEnumMapper;
 
-  late final UseCaseSink<String, String> _addCustomTopicHandler =
+  late final UseCaseSink<String, Topic> _addCustomTopicHandler =
       pipe(_addCustomTopicUseCase);
 
-  final _selectedTopics = <String>{};
-  String _newTopic = '';
+  final _selectedTopics = <Topic>{};
+  String _newTopicName = '';
   bool _checkForError = false;
 
   TopicsManager(
@@ -47,7 +48,7 @@ class TopicsManager extends Cubit<TopicsState>
     this._addCustomTopicUseCase,
     this._topicErrorsEnumMapper,
   ) : super(
-          const TopicsState(
+          TopicsState(
             selectedTopics: {},
             suggestedTopics: _suggestedTopics,
           ),
@@ -61,31 +62,40 @@ class TopicsManager extends Cubit<TopicsState>
   void onAddTopicButtonClicked() =>
       _topicsScreenNavActions.onAddTopicButtonClicked();
 
-  void onRemoveTopic(String topic) {
+  void onRemoveTopic(Topic topic) {
     scheduleComputeState(
       () => _selectedTopics.remove(topic),
     );
   }
 
-  void onAddTopic(String topic) {
+  void onRemoveOrUpdateTopic(Topic topic) {
+    scheduleComputeState(
+      () {
+        _selectedTopics.remove(topic);
+        if (topic.isCustom) _newTopicName = topic.name;
+      },
+    );
+  }
+
+  void onAddTopic(Topic topic) {
     scheduleComputeState(
       () => _selectedTopics.add(topic),
     );
   }
 
   void onUpdateTopic(String name) =>
-      scheduleComputeState(() => _newTopic = name);
+      scheduleComputeState(() => _newTopicName = name);
 
   bool get canAddTopic {
-    final isEmpty = state.newTopic.isEmpty;
+    final isEmpty = state.newTopicName.isEmpty;
     final doesTopicExist =
-        state.selectedTopics.any((it) => it == state.newTopic);
+        state.selectedTopics.any((it) => it.name == state.newTopicName);
     return !isEmpty && !doesTopicExist;
   }
 
   void onAddCustomTopic() {
     _checkForError = true;
-    _addCustomTopicHandler(state.newTopic);
+    _addCustomTopicHandler(state.newTopicName);
   }
 
   @override
@@ -103,7 +113,7 @@ class TopicsManager extends Cubit<TopicsState>
               _checkForError &&
               newCustomTopic != null) {
             _selectedTopics.add(newCustomTopic);
-            _newTopic = '';
+            _newTopicName = '';
           }
 
           _checkForError = false;
@@ -111,7 +121,7 @@ class TopicsManager extends Cubit<TopicsState>
           return TopicsState(
             suggestedTopics: _suggestedTopics,
             selectedTopics: {..._selectedTopics},
-            newTopic: _newTopic,
+            newTopicName: _newTopicName,
           );
         },
       );

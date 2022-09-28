@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
@@ -13,7 +14,7 @@ import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/sugge
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
-typedef OnTopicPressed = Function(String);
+typedef OnTopicPressed = Function(Topic);
 
 class AddTopicScreen extends StatefulWidget {
   const AddTopicScreen({Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class _AddTopicScreenState extends State<AddTopicScreen>
           child: BlocBuilder<TopicsManager, TopicsState>(
             bloc: manager,
             builder: (_, state) {
-              if (state.newTopic.isEmpty) _textEditingController.text = '';
+              if (state.newTopicName.isEmpty) _textEditingController.text = '';
               return _buildBody(state);
             },
           ),
@@ -83,7 +84,7 @@ class _AddTopicScreenState extends State<AddTopicScreen>
     );
   }
 
-  List<Widget> addedTopicsSection(Set<String> selectedTopics) {
+  List<Widget> addedTopicsSection(Set<Topic> selectedTopics) {
     final addedSectionHeader = Text(
       R.strings.addedTopicsSubHeader,
       style: R.styles.mBoldStyle,
@@ -96,7 +97,7 @@ class _AddTopicScreenState extends State<AddTopicScreen>
     ];
   }
 
-  List<Widget> suggestedTopicsSection(Set<String> suggestedTopics) {
+  List<Widget> suggestedTopicsSection(Set<Topic> suggestedTopics) {
     final suggestedSectionHeader = Text(
       R.strings.suggestedTopicsSubHeader,
       style: R.styles.mBoldStyle,
@@ -108,19 +109,19 @@ class _AddTopicScreenState extends State<AddTopicScreen>
     ];
   }
 
-  Widget buildAddedTopics(Set<String> topics) => Wrap(
+  Widget buildAddedTopics(Set<Topic> topics) => Wrap(
         spacing: R.dimen.unit,
         children: topics
             .map(
               (it) => AddedTopicChip(
                 topic: it,
-                onPressed: manager.onRemoveTopic,
+                onPressed: manager.onRemoveOrUpdateTopic,
               ),
             )
             .toList(),
       );
 
-  Widget buildSuggestedTopics(Set<String> topics) => Wrap(
+  Widget buildSuggestedTopics(Set<Topic> topics) => Wrap(
         spacing: R.dimen.unit,
         children: topics
             .map(
