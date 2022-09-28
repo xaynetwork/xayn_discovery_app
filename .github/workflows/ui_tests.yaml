@@ -45,90 +45,90 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ui-tests-ios:
-    runs-on: macos-12
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            /Users/runner/hostedtoolcache/flutter
-            ~/application/ios/Pods
-          key: ios-flutter-${{ env.flutter_version }}
-          restore-keys: |
-            ios-flutter-cache-
-
-      - name: Cache pubspec dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ env.PUB_CACHE }}
-            **/.packages
-            **/.flutter-plugins
-            **/.flutter-plugin-dependencies
-            **/.dart_tool/package_config.json
-          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            build-pubspec-
-
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: Install Appium
-        run: npm install -g appium
-
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: ${{ env.flutter_channel }}
-          flutter-version: ${{ env.flutter_version }}
-
-
-      - shell: bash
-        run: brew install ffmpeg
-
-      - name: Set up a Simulator
-        uses: futureware-tech/simulator-action@v1
-        with:
-          model: ${{ env.ios_device }}
-          os_version: ${{ env.ios_os_version }}
-          erase_before_boot: false
-          shutdown_after_job: false
-
-      # Hard coded for now
-      - shell: bash
-        run: xcrun simctl bootstatus B7E7086A-60F8-48F2-BF82-AF153D7AF925
-
-      - shell: bash
-        run: xcrun simctl io booted screenshot screenshot.png
-      - name: Upload screenshot
-        uses: actions/upload-artifact@v3
-        with:
-          name: boot_screenshot
-          path: screenshot.png
-
-      - name: Run build runner
-        working-directory: ./application
-        run:
-          fastlane build_runner
-
-      - name: Run UI Tests
-        timeout-minutes: 30
-        working-directory: ./application
-        run:
-          fastlane run_automation platform:ios test_suite:sanity_ios
-#          flutter test integration_test
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: artifacts
-          path: ./application/automation/target/artifacts
+#  ui-tests-ios:
+#    runs-on: macos-12
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Cache Flutter dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: |
+#            /Users/runner/hostedtoolcache/flutter
+#            ~/application/ios/Pods
+#          key: ios-flutter-${{ env.flutter_version }}
+#          restore-keys: |
+#            ios-flutter-cache-
+#
+#      - name: Cache pubspec dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: |
+#            ${{ env.PUB_CACHE }}
+#            **/.packages
+#            **/.flutter-plugins
+#            **/.flutter-plugin-dependencies
+#            **/.dart_tool/package_config.json
+#          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+#          restore-keys: |
+#            build-pubspec-
+#
+#      - name: Gradle cache
+#        uses: gradle/gradle-build-action@v2
+#      - name: Install Appium
+#        run: npm install -g appium
+#
+#      - name: Install Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: ${{ env.flutter_channel }}
+#          flutter-version: ${{ env.flutter_version }}
+#
+#
+#      - shell: bash
+#        run: brew install ffmpeg
+#
+#      - name: Set up a Simulator
+#        uses: futureware-tech/simulator-action@v1
+#        with:
+#          model: ${{ env.ios_device }}
+#          os_version: ${{ env.ios_os_version }}
+#          erase_before_boot: false
+#          shutdown_after_job: false
+#
+#      # Hard coded for now
+#      - shell: bash
+#        run: xcrun simctl bootstatus B7E7086A-60F8-48F2-BF82-AF153D7AF925
+#
+#      - shell: bash
+#        run: xcrun simctl io booted screenshot screenshot.png
+#      - name: Upload screenshot
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: boot_screenshot
+#          path: screenshot.png
+#
+#      - name: Run build runner
+#        working-directory: ./application
+#        run:
+#          fastlane build_runner
+#
+#      - name: Run UI Tests
+#        timeout-minutes: 30
+#        working-directory: ./application
+#        run:
+#          fastlane run_automation platform:ios test_suite:sanity_ios
+##          flutter test integration_test
+#
+#      - name: Upload artifacts
+#        uses: actions/upload-artifact@v3
+#        if: always()
+#        with:
+#          name: artifacts
+#          path: ./application/automation/target/artifacts
 
   ui-tests-android:
     if: false
