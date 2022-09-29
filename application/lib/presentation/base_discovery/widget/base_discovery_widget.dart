@@ -67,9 +67,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   DiscoveryCardController? currentCardController;
 
   double _dragDistance = .0;
-
   bool _trialBannerShown = false;
-
   T get manager;
 
   CardViewController get cardViewController => _cardViewController;
@@ -137,11 +135,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
     featureManager.close();
 
     WidgetsBinding.instance.removeObserver(this);
-
-    // on dispose, no longer observe any documents
-    // this Function's argument is nullable Document, by not passing anything,
-    // it stops the observer buffer.
-    manager.observeDocument();
 
     super.dispose();
   }

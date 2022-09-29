@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
@@ -20,14 +21,25 @@ import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 mixin SingletonSubscriptionObserver<T> on UseCaseBlocHelper<T> {
   /// todo: since managers where not singletons before, we should update our tests
   /// for now, disabling the listeners is sufficient to make them pass.
+
+  /// Indicates that this observer will pause/resume in its [onListen] and [onCancel] handlers.
+  /// If false, then the observer remains open, even if nothing is consuming the parent manager.
+  /// This is useful if a certain observer has operations that may outlast the typical UI lifetime
+  /// of a BlocConsumer.
+  bool get allowSuspension => true;
+
   @override
   Stream<T> get stream => EnvironmentHelper.kIsInTest
       ? super.stream
       : super.stream.doOnListen(onListen).doOnCancel(onCancel);
 
   @mustCallSuper
-  void onListen() => resumeAllSubscriptions();
+  void onListen() {
+    if (allowSuspension) resumeAllSubscriptions();
+  }
 
   @mustCallSuper
-  void onCancel() => pauseAllSubscriptions();
+  void onCancel() {
+    if (allowSuspension) pauseAllSubscriptions();
+  }
 }
