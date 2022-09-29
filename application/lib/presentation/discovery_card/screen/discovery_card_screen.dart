@@ -18,14 +18,23 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
 class DiscoveryCardScreen extends StatefulWidget {
-  const DiscoveryCardScreen({
+  final UniqueId? documentId;
+  final Document? document;
+  final FeedType? feedType;
+
+  const DiscoveryCardScreen.fromDocumentId({
     Key? key,
     required this.documentId,
     this.feedType,
-  }) : super(key: key);
+  })  : document = null,
+        super(key: key);
 
-  final UniqueId documentId;
-  final FeedType? feedType;
+  const DiscoveryCardScreen.fromDocument({
+    Key? key,
+    required this.document,
+    this.feedType,
+  })  : documentId = null,
+        super(key: key);
 
   @override
   State<DiscoveryCardScreen> createState() => _DiscoveryCardScreenState();
@@ -39,8 +48,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         NavBarConfigMixin,
         OverlayMixin<DiscoveryCardScreen>,
         OverlayStateMixin<DiscoveryCardScreen> {
-  late final DiscoveryCardScreenManager _discoveryCardScreenManager =
-      di.get(param1: widget.documentId);
+  late final DiscoveryCardScreenManager _discoveryCardScreenManager = di.get();
   late final CardManagersCache _cardManagersCache = di.get();
 
   TtsData ttsData = TtsData.disabled();
@@ -84,7 +92,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
 
         /// Like and dislike can not be called because the Document is not related to the feed anymore and will not be updated
         buildNavBarItemShare(
-          onPressed: () => discoveryCardManager.shareUri(
+          onPressed: () => discoveryCardManager.shareDocument(
             document: document,
             feedType: widget.feedType,
           ),
@@ -96,6 +104,17 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       ],
       isWidthExpanded: false,
     );
+  }
+
+  @override
+  void initState() {
+    if (widget.documentId != null) {
+      _discoveryCardScreenManager.initWithDocumentId(
+          documentId: widget.documentId!);
+    } else {
+      _discoveryCardScreenManager.initWithDocument(document: widget.document!);
+    }
+    super.initState();
   }
 
   @override

@@ -39,7 +39,7 @@ public class ITestListenerImp implements ITestListener {
         log.warn("test failed : " + result.getName());
         log.info("duration : " + (result.getEndMillis() - result.getStartMillis()) + " ms");
         try {
-            saveScreenshot(Configuration.SCREENSHOT_DIRECTORY + "/" + result.getName() + ".png");
+            saveScreenshot(Configuration.ARTIFACTS_DIRECTORY + "/" + result.getName() + ".png");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

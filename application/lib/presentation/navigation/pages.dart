@@ -14,6 +14,23 @@ import 'package:xayn_discovery_app/presentation/payment/paywall_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
+import 'package:xayn_discovery_engine_flutter/discovery_engine.dart' as engine;
+
+enum PageName {
+  splashScreen,
+  discovery,
+  search,
+  personalArea,
+  settings,
+  countryFeedSettings,
+  cardDetails,
+  bookmarks,
+  sourceFeedSettings,
+  error,
+  paywall,
+  excludedSourceSelection,
+  trustedSourceSelection,
+}
 
 /// IMPORTANT NOTE: do not use `const` keyword with the ScreenWidgets
 /// Reason: the `const` word prevent screen from the reloading
@@ -36,7 +53,7 @@ class PageRegistry {
 
   // Make sure to add the page names in camel case
   static final splashScreen = xayn.PageData(
-    name: "splashScreen",
+    name: PageName.splashScreen.name,
     isInitial: true,
     //ignore: prefer_const_constructors
     builder: (_, args) => SplashScreen(),
@@ -47,7 +64,7 @@ class PageRegistry {
   /// with playing videos in full screen mode.
   static final discoveryFeedKey = GlobalKey();
   static final discovery = xayn.PageData(
-    name: "discovery",
+    name: PageName.discovery.name,
     builder: (_, args) => DiscoveryFeed(
       key: discoveryFeedKey,
     ),
@@ -58,28 +75,41 @@ class PageRegistry {
   /// with playing videos in full screen mode.
   static final searchKey = GlobalKey();
   static final search = xayn.PageData(
-    name: "search",
+    name: PageName.search.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => ActiveSearch(
       key: searchKey,
     ),
   );
 
-  static cardDetails({
+  static cardDetailsFromDocumentId({
     required UniqueId documentId,
     FeedType? feedType,
   }) =>
       xayn.PageData(
-        name: "cardDetails",
+        name: PageName.cardDetails.name,
         arguments: documentId,
-        builder: (_, UniqueId? args) => DiscoveryCardScreen(
-          documentId: args!,
+        builder: (_, UniqueId? args) => DiscoveryCardScreen.fromDocumentId(
+          documentId: args,
+          feedType: feedType,
+        ),
+      );
+
+  static cardDetailsFromDocument({
+    required engine.Document document,
+    FeedType? feedType,
+  }) =>
+      xayn.PageData(
+        name: PageName.cardDetails.name,
+        arguments: document,
+        builder: (_, engine.Document? args) => DiscoveryCardScreen.fromDocument(
+          document: args,
           feedType: feedType,
         ),
       );
 
   static bookmarks(UniqueId collectionId) => xayn.PageData(
-        name: "bookmarks",
+        name: PageName.bookmarks.name,
         arguments: collectionId,
         builder: (_, UniqueId? args) => BookmarksScreen(
           collectionId: args!,
@@ -87,19 +117,19 @@ class PageRegistry {
       );
 
   static final personalArea = xayn.PageData(
-    name: "personalArea",
+    name: PageName.personalArea.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => PersonalAreaScreen(),
   );
   static final settings = xayn.PageData(
-    name: "settings",
+    name: PageName.settings.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => SettingsScreen(),
   );
 
   static sourceFeedSettings({bool openOnHiddenSourcesTab = false}) =>
       xayn.PageData(
-        name: "sourceFeedSettings",
+        name: PageName.sourceFeedSettings.name,
         arguments: openOnHiddenSourcesTab,
         builder: (_, bool? args) => SourcesScreen(
           openOnHiddenSourcesTab: args!,
@@ -107,13 +137,13 @@ class PageRegistry {
       );
 
   static final countryFeedSettings = xayn.PageData(
-    name: "countryFeedSettings",
+    name: PageName.countryFeedSettings.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => CountryFeedSettingsPage(),
   );
 
   static error(String? errorCode) => xayn.PageData(
-        name: "error",
+        name: PageName.error.name,
         arguments: errorCode,
         //ignore: prefer_const_constructors
         builder: (_, String? args) => SomethingWentWrongErrorScreen(
@@ -122,19 +152,19 @@ class PageRegistry {
       );
 
   static final payment = xayn.PageData(
-    name: "paywall",
+    name: PageName.paywall.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => PaywallScreen(),
   );
 
   static final excludedSourceSelection = xayn.PageData(
-    name: "excludedSourceSelection",
+    name: PageName.excludedSourceSelection.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => AddSourceScreen.excluded(),
   );
 
   static final trustedSourceSelection = xayn.PageData(
-    name: "trustedSourceSelection",
+    name: PageName.trustedSourceSelection.name,
     //ignore: prefer_const_constructors
     builder: (_, args) => AddSourceScreen.trusted(),
   );

@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 enum DeepLinkValue {
   none,
   activeSearch,
+  cardDetailsFromDocument,
 }
 
 abstract class DeepLinkManager {
@@ -16,14 +17,15 @@ abstract class DeepLinkManager {
 
 @LazySingleton(as: DeepLinkManager)
 class DeepLinkManagerImpl extends DeepLinkManager {
-  final xayn.StackManipulationFunction changeStack;
+  final AppNavigationManager manager;
 
-  DeepLinkManagerImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
+  DeepLinkManagerImpl(this.manager);
 
   @override
   void onDeepLink(DeepLinkData deepLinkData) {
+    // ignore: invalid_use_of_protected_member
+    final xayn.StackManipulationFunction changeStack = manager.manipulateStack;
+
     final page = deepLinkData.toPage;
     if (page == null) return;
     changeStack(
@@ -31,6 +33,13 @@ class DeepLinkManagerImpl extends DeepLinkManager {
         none: () => stack.replace(page),
         activeSearch: () => stack.replace(page),
         feed: (_) => stack.push(page),
+        cardDetails: (_) {
+          /// If the app is being opened, first replace the splash screen with the feed screen
+          if (manager.state.pages.last.name == PageName.splashScreen.name) {
+            changeStack((stack) => stack.replace(PageRegistry.discovery));
+          }
+          stack.push(page);
+        },
       ),
     );
   }
@@ -41,7 +50,10 @@ extension on DeepLinkData {
     return when(
       none: () => null,
       activeSearch: () => PageRegistry.search,
-      feed: (documentId) => PageRegistry.cardDetails(documentId: documentId),
+      feed: (documentId) =>
+          PageRegistry.cardDetailsFromDocumentId(documentId: documentId),
+      cardDetails: (document) =>
+          PageRegistry.cardDetailsFromDocument(document: document),
     );
   }
 }

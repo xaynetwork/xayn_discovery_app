@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
@@ -7,10 +8,13 @@ import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
-import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/deep_link/retrieve_deep_link_data_use_case.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+
+import 'constants/analytics_constants.dart';
+import '../../../domain/model/analytics/generate_invite_link_result.dart';
 
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
@@ -23,6 +27,10 @@ abstract class MarketingAnalyticsService {
   /// TODO: call this function in language change
   void setCurrentDeviceLanguage(String language);
 
+  Future<GenerateInviteLinkResult> generateLinkForSharingArticle({
+    required String encodedArticleData,
+  });
+
   Future<String?> getUID();
 }
 
@@ -31,11 +39,13 @@ abstract class MarketingAnalyticsService {
 class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   final DeepLinkManager _deepLinkManager;
   final AppsflyerSdk _appsflyer;
+  final RetrieveDeepLinkDataUseCase _retrieveDeepLinkDataUseCase;
 
   @visibleForTesting
   AppsFlyerMarketingAnalyticsService(
     this._appsflyer,
     this._deepLinkManager,
+    this._retrieveDeepLinkDataUseCase,
   ) {
     _appsflyer.onDeepLinking(_onDeepLinking);
     _appsflyer.setMinTimeBetweenSessions(60);
@@ -46,6 +56,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   static MarketingAnalyticsService initialized(
     AppStatusRepository appStatusRepository,
     DeepLinkManager deepLinkManager,
+    RetrieveDeepLinkDataUseCase retrieveDeepLinkDataUseCase,
   ) {
     final options = Platform.isIOS
         ? AppsFlyerOptions(
@@ -68,6 +79,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
     return AppsFlyerMarketingAnalyticsService(
       appsFlyer,
       deepLinkManager,
+      retrieveDeepLinkDataUseCase,
     );
   }
 
@@ -110,17 +122,53 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
   ///
   /// It handles Deferred & Direct Deep link in a single callback
   ///
-  _onDeepLinking(dynamic res) {
+  _onDeepLinking(dynamic res) async {
     if (res is DeepLinkResult && res.status == Status.FOUND) {
-      final deepLinkString = res.deepLink?.deepLinkValue;
-      final deepLinkValue = DeepLinkValue.values.firstWhere(
-        (it) => it.name == deepLinkString,
-        orElse: () => DeepLinkValue.none,
-      );
-      final deepLinkData = DeepLinkData.fromValue(deepLinkValue);
+      final deepLinkData = await _retrieveDeepLinkDataUseCase.singleOutput(res);
       _deepLinkManager.onDeepLink(deepLinkData);
     }
   }
+
+  @override
+  Future<GenerateInviteLinkResult> generateLinkForSharingArticle({
+    required String encodedArticleData,
+  }) async {
+    _appsflyer.setAppInviteOneLinkID(
+        AnalyticsConstants.appInviteOneLinkID, (_) {});
+
+    final completer = Completer<GenerateInviteLinkResult>();
+
+    _appsflyer.generateInviteLink(
+      _buildAppsFlyerInviteLinkParams(
+        deepLinkName: AnalyticsConstants.deepLinkNameForSharingDocument,
+        encodedArticleData: encodedArticleData,
+      ),
+      (map) {
+        completer.complete(GenerateInviteLinkSuccess.fromMap(map));
+      },
+      (error) {
+        completer.complete(GenerateInviteLinkError(message: error));
+      },
+    );
+    return completer.future;
+  }
+
+  AppsFlyerInviteLinkParams _buildAppsFlyerInviteLinkParams({
+    required String deepLinkName,
+    required String encodedArticleData,
+  }) =>
+      AppsFlyerInviteLinkParams(
+        customParams: {
+          AnalyticsConstants.articleLinkParamName: encodedArticleData,
+          AnalyticsConstants.deepLinkNameParamName: deepLinkName,
+          AnalyticsConstants.afWebDp:
+              AnalyticsConstants.webArticleViewerEndpoint,
+          AnalyticsConstants.afAndroidUrl:
+              AnalyticsConstants.webArticleViewerEndpoint,
+          AnalyticsConstants.afIOSUrl:
+              AnalyticsConstants.webArticleViewerEndpoint,
+        },
+      );
 }
 
 /// Appsflyer is disabled in debug mode
@@ -144,4 +192,10 @@ class MarketingAnalyticsServiceDebugMode implements MarketingAnalyticsService {
 
   @override
   Future<String?> getUID() async => null;
+
+  @override
+  Future<GenerateInviteLinkResult> generateLinkForSharingArticle({
+    required String encodedArticleData,
+  }) async =>
+      GenerateInviteLinkError();
 }
