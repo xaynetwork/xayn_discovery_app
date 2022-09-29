@@ -9,8 +9,7 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_shee
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_manager.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_state.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/added_topic_chip.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/suggested_topic_chip.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/topic_chip.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/app_toolbar/app_toolbar_data.dart';
 
@@ -116,9 +115,10 @@ class _AddTopicScreenState extends State<AddTopicScreen>
         spacing: R.dimen.unit,
         children: topics
             .map(
-              (it) => AddedTopicChip(
+              (it) => TopicChip.selected(
                 topic: it,
                 onPressed: manager.onRemoveOrUpdateTopic,
+                showIcon: true,
               ),
             )
             .toList(),
@@ -128,9 +128,10 @@ class _AddTopicScreenState extends State<AddTopicScreen>
         spacing: R.dimen.unit,
         children: topics
             .map(
-              (it) => SuggestedTopicChip(
+              (it) => TopicChip.suggested(
                 topic: it,
                 onPressed: manager.onAddTopic,
+                showIcon: true,
               ),
             )
             .toList(),
