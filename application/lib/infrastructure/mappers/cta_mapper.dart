@@ -32,12 +32,14 @@ class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
       _mapToSourceSelectionMapper;
   final DbEntityMapToPushNotificationsInLineCardMapper
       _mapToPushNotificationsMapper;
+  final DbEntityMapToTopicsInLineCardMapper _mapToTopicsMapper;
 
   const DbEntityMapToCTAMapper(
     this._mapToSurveyBannerMapper,
     this._mapToCountrySelectionMapper,
     this._mapToSourceSelectionMapper,
     this._mapToPushNotificationsMapper,
+    this._mapToTopicsMapper,
   );
 
   @override
@@ -52,6 +54,7 @@ class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
           _mapToCountrySelectionMapper.map(input[CTAFields.countrySelection]),
       pushNotifications:
           _mapToPushNotificationsMapper.map(input[CTAFields.pushNotifications]),
+      topics: _mapToTopicsMapper.map(input[CTAFields.topics]),
     );
   }
 }
@@ -63,4 +66,5 @@ abstract class CTAFields {
   static const sourceSelection = 1;
   static const countrySelection = 2;
   static const pushNotifications = 3;
+  static const topics = 4;
 }

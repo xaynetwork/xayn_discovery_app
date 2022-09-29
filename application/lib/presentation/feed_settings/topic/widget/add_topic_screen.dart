@@ -166,19 +166,18 @@ class _AddTopicScreenState extends State<AddTopicScreen>
       ),
     );
     final hintText = Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         top: R.dimen.unit0_5,
+        start: R.dimen.unit,
       ),
-      child: Center(
-        child: Text(
-          R.strings.addTopicHintText,
-          style: R.styles.sStyle,
-        ),
+      child: Text(
+        R.strings.addTopicHintText,
+        style: R.styles.sStyle,
       ),
     );
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         divider,
         textField,
