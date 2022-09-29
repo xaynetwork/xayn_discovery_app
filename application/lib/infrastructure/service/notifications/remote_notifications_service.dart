@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:airship_flutter/airship_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/notifications/remote_notification.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
@@ -22,16 +23,18 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
   @override
   Stream<RemoteNotification> get notificationStream => _controller.stream;
 
-  RemoteNotificationsServiceImpl() {
-    _init();
+  RemoteNotificationsServiceImpl(AppStatusRepository appStatusRepository) {
+    _init(userId: appStatusRepository.appStatus.userId.value);
   }
 
-  void _init() async {
+  void _init({required String userId}) async {
     final channelId = await Airship.channelId;
     logger.i('[Remote notifications] Current channel ID: $channelId');
+    logger.i('[Remote notifications] Current user ID: $userId');
 
     Airship.onChannelRegistration.listen(_channelCreatedHandler);
     Airship.onPushReceived.listen(_pushMessageHandler);
+    Airship.setNamedUser(userId);
 
     if (Platform.isAndroid) enableNotifications();
   }
