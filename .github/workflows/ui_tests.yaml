@@ -1,10 +1,18 @@
 name: UI Tests
 
 on:
-  push:
-    branches:
-      - 'main'
   workflow_dispatch:
+    inputs:
+      ios_ui_tests:
+        description: 'IOS UI Tests'
+        required: false
+        default: false
+        type: boolean
+      android_ui_tests:
+        description: 'Android UI Tests'
+        required: false
+        default: false
+        type: boolean
 
 env:
   flutter_channel: 'stable'
@@ -12,16 +20,73 @@ env:
   java_version: '12.x'
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
+  android_api_level: '30'
+  android_arch: 'x86_64'
+  target: 'default'
+  android_profile: 'Galaxy Nexus'
   FASTLANE_SKIP_UPDATE_CHECK: '1'
+  PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+  APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
+  APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
+  SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
+  SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+  INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
+  INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
+  MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
+  MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
+  APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
+  REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
+  REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
+  PROFILES: ${{ secrets.PROFILES }}
+  RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
+  RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
+  AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
+  AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
+  AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
+  AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
+  GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
+  GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
+  JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}-${{  github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  ui-test:
-    runs-on: macos-latest
+  ui-tests-ios:
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.ios_ui_tests == 'true')
+    runs-on: macos-12
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            /Users/runner/hostedtoolcache/flutter
+            ~/application/ios/Pods
+          key: ios-flutter-${{ env.flutter_version }}
+          restore-keys: |
+            ios-flutter-cache-
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
       - name: Install Appium
         run: npm install -g appium
 
@@ -31,42 +96,145 @@ jobs:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
 
+
+      - shell: bash
+        run: brew install ffmpeg
+
       - name: Set up a Simulator
         uses: futureware-tech/simulator-action@v1
         with:
           model: ${{ env.ios_device }}
           os_version: ${{ env.ios_os_version }}
+          erase_before_boot: false
+          shutdown_after_job: false
 
+      # Hard coded for now
+      - shell: bash
+        run: xcrun simctl bootstatus B7E7086A-60F8-48F2-BF82-AF153D7AF925
+
+      - shell: bash
+        run: xcrun simctl io booted screenshot screenshot.png
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v3
+        with:
+          name: boot_screenshot
+          path: screenshot.png
+
+      - name: Run build runner
+        working-directory: ./application
+        run:
+          fastlane build_runner
+
+      - name: Run UI Tests
+        timeout-minutes: 30
+        working-directory: ./application
+        run:
+          fastlane run_automation platform:ios test_suite:sanity_ios
+#          flutter test integration_test
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: artifacts
+          path: ./application/automation/target/artifacts
+
+  ui-tests-android:
+    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.android_ui_tests == 'true')
+    runs-on: macos-latest
+    steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Run UI Tests
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            /Users/runner/hostedtoolcache/flutter
+            ~/application/ios/Pods
+          key: ios-flutter-${{ env.flutter_version }}
+          restore-keys: |
+            ios-flutter-cache-
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            build-pubspec-
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ env.android_api_level }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          ram-size: 4096M
+          api-level: ${{ env.android_api_level }}
+          arch: ${{ env.android_arch }}
+          target: ${{ env.target }}
+          profile: ${{ env.android_profile }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Install Appium
+        run: npm install -g appium
+
+      - name: Install Allure Report
+        run: brew install allure
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.flutter_channel }}
+          flutter-version: ${{ env.flutter_version }}
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - run: java -version
+
+      - name: Set Up Emulator And Run Tests
         timeout-minutes: 60
-        env:
-          PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
-          APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
-          INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
-          INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
-          MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
-          MIXPANEL_TOKEN_PRODUCTION: ${{ secrets.MIXPANEL_TOKEN_PRODUCTION }}
-          APPSFLYER_DEV_KEY: ${{ secrets.APPSFLYER_DEV_KEY }}
-          REVENUE_CAT_SDK_KEY_ANDROID: ${{ secrets.REVENUE_CAT_SDK_KEY_ANDROID }}
-          REVENUE_CAT_SDK_KEY_IOS: ${{ secrets.REVENUE_CAT_SDK_KEY_IOS }}
-          PROFILES: ${{ secrets.PROFILES }}
-          RCONFIG_ACCESS_KEY: ${{ secrets.RCONFIG_ACCESS_KEY }}
-          RCONFIG_SECRET_KEY: ${{ secrets.RCONFIG_SECRET_KEY }}
-          AIRSHIP_INTERNAL_KEY: ${{ secrets.AIRSHIP_INTERNAL_KEY }}
-          AIRSHIP_INTERNAL_SECRET: ${{ secrets.AIRSHIP_INTERNAL_SECRET }}
-          AIRSHIP_PROD_KEY: ${{ secrets.AIRSHIP_PROD_KEY }}
-          AIRSHIP_PROD_SECRET: ${{ secrets.AIRSHIP_PROD_SECRET }}
-          GOOGLE_SERVICES_INTERNAL_JSON: ${{ secrets.GOOGLE_SERVICES_INTERNAL_JSON }}
-          GOOGLE_SERVICES_PROD_JSON: ${{ secrets.GOOGLE_SERVICES_PROD_JSON }}
-          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
-        working-directory: ./application
-        run:
-          fastlane run_automation platform:ios
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.android_api_level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          ram-size: 4096M
+          arch: ${{ env.android_arch }}
+          target: ${{ env.target }}
+          profile: ${{ env.android_profile }}
+          working-directory: application/
+          script: |
+            fastlane run_automation platform:android test_suite:sanity_android
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: artifacts
+          path: ./application/automation/target/artifacts
+

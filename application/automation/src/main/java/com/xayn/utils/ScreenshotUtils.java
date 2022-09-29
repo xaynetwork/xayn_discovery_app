@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.xayn.configuration.Configuration.SCREENSHOT_DIRECTORY;
+import static com.xayn.configuration.Configuration.ARTIFACTS_DIRECTORY;
 
 @Log4j2
 public class ScreenshotUtils {
@@ -59,7 +59,7 @@ public class ScreenshotUtils {
     }
 
     public static String takeScreenshot(MobileElement element) {
-        String screenshotAbsolutePath = SCREENSHOT_DIRECTORY + File.separator + System.currentTimeMillis() + ".png";
+        String screenshotAbsolutePath = ARTIFACTS_DIRECTORY + File.separator + System.currentTimeMillis() + ".png";
         return saveScreenshot(screenshotAbsolutePath, element);
     }
 
