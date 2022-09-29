@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:airship_flutter/airship_flutter.dart';
 import 'package:injectable/injectable.dart';
-import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
+import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/infrastructure/service/notifications/remote_notification.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_id/get_user_id_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 abstract class RemoteNotificationsService {
@@ -17,19 +18,22 @@ abstract class RemoteNotificationsService {
 
 @LazySingleton(as: RemoteNotificationsService)
 class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
+  final GetUserIdUseCase _getUserIdUseCase;
   final StreamController<RemoteNotification> _controller =
       StreamController<RemoteNotification>.broadcast();
 
   @override
   Stream<RemoteNotification> get notificationStream => _controller.stream;
 
-  RemoteNotificationsServiceImpl(AppStatusRepository appStatusRepository) {
-    _init(userId: appStatusRepository.appStatus.userId.value);
+  RemoteNotificationsServiceImpl(this._getUserIdUseCase) {
+    _init();
   }
 
-  void _init({required String userId}) async {
+  void _init() async {
     final channelId = await Airship.channelId;
     logger.i('[Remote notifications] Current channel ID: $channelId');
+
+    final userId = await _getUserIdUseCase.singleOutput(none);
     logger.i('[Remote notifications] Current user ID: $userId');
 
     Airship.onChannelRegistration.listen(_channelCreatedHandler);
