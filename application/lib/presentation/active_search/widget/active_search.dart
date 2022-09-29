@@ -131,7 +131,7 @@ class _ActiveSearchState
             onLongPressed: onBookmarkLongPressed,
           ),
           buildNavBarItemShare(
-              onPressed: () => managers.discoveryCardManager.shareUri(
+              onPressed: () => managers.discoveryCardManager.shareDocument(
                     document: document,
                     feedType: FeedType.search,
                   )),

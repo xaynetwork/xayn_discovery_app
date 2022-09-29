@@ -103,10 +103,11 @@ class _DiscoveryFeedState
             onLongPressed: onBookmarkLongPressed,
           ),
           buildNavBarItemShare(
-              onPressed: () => managers.discoveryCardManager.shareUri(
-                    document: document,
-                    feedType: FeedType.feed,
-                  )),
+            onPressed: () => managers.discoveryCardManager.shareDocument(
+              document: document,
+              feedType: FeedType.feed,
+            ),
+          ),
           buildNavBarItemEditFont(
             onPressed: onEditReaderModeSettingsPressed,
           ),

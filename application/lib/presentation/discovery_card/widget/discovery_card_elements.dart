@@ -93,7 +93,7 @@ class DiscoveryCardElements extends StatelessWidget {
         vertical: R.dimen.unit3,
       ),
       child: DiscoveryCardFooter(
-        onSharePressed: () => manager.shareUri(
+        onSharePressed: () => manager.shareDocument(
           document: document,
           feedType: feedType,
         ),
