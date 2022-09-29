@@ -17,7 +17,7 @@ class AddedTopicChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final topicText = Text(
       topic,
-      style: R.styles.mStyle,
+      style: R.styles.topicChipTextStyle,
     );
     final icon = SvgPicture.asset(
       R.assets.icons.cross,
