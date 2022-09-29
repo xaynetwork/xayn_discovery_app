@@ -44,16 +44,23 @@ class PushNotificationsCard extends StatelessWidget {
       _buildAllowNotificationsBtn(),
     ];
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: R.dimen.unit2_25,
-        vertical: R.dimen.unit8,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
-      ),
+    return Stack(
+      children: [
+        Container(
+          color: R.colors.pageBackground,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: R.dimen.unit2_25,
+            vertical: R.dimen.unit8,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          ),
+        ),
+      ],
     );
   }
 

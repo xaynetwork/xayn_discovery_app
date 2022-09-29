@@ -85,6 +85,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_col
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_default_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/deep_link/retrieve_deep_link_data_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
@@ -120,6 +121,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_style_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
@@ -262,6 +264,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   RenameDefaultCollectionUseCase,
   RequestCodeRedemptionSheetUseCase,
   RestoreSubscriptionUseCase,
+  RetrieveDeepLinkDataUseCase,
   SaveAppThemeUseCase,
   SaveCurrentAppVersion,
   SaveReaderModeBackgroundColorUseCase,
@@ -303,6 +306,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   InLineCardManager,
   HandlePushNotificationsCardClickedUseCase,
   DbEntityMapToPushNotificationsInLineCardMapper,
+  SaveUserInteractionUseCase,
 ])
 class Mocks {
   Mocks._();
