@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
+import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/add_topic_screen.dart';
 
@@ -18,6 +19,7 @@ class SuggestedTopicChip extends StatelessWidget {
     final topicText = Text(
       topic.name,
       style: R.styles.topicChipTextStyle,
+      maxLines: 2,
     );
     final icon = SvgPicture.asset(
       R.assets.icons.plus,
@@ -42,7 +44,7 @@ class SuggestedTopicChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            topicText,
+            Flexible(child: topicText),
             SizedBox(width: R.dimen.unit1_25),
             icon,
           ],

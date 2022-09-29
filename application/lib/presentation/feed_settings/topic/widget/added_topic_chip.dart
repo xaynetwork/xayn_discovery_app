@@ -19,6 +19,7 @@ class AddedTopicChip extends StatelessWidget {
     final topicText = Text(
       topic.name,
       style: R.styles.mStyle,
+      maxLines: 2,
     );
     final icon = SvgPicture.asset(
       R.assets.icons.cross,
@@ -47,7 +48,7 @@ class AddedTopicChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            topicText,
+            Flexible(child: topicText),
             SizedBox(width: R.dimen.unit1_25),
             icon,
           ],
