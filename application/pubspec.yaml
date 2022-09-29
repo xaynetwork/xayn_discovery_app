@@ -98,7 +98,7 @@ dependencies:
   xayn_design:
     git:
       url: https://github.com/xaynetwork/xayn_design.git
-      ref: 1da78d41c2b5c507ba6e5796792d40c4feaedf03
+      ref: e1a7bbf36ab2b7c6ed32193134c2c8fc02d642a8
   xayn_discovery_engine_flutter:
     hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
     version: 0.1.0+main.220914085310

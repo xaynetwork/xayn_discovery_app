@@ -141,8 +141,6 @@ class _AddTopicScreenState extends State<AddTopicScreen>
     final textField = AppTextField(
       autofocus: true,
       controller: _textEditingController,
-      // onChanged: (searchTerm) =>
-      //     manager.getAvailableSourcesList(searchTerm.trim()),
       hintText: manager.state.suggestedTopics.join(', '),
       autocorrect: false,
     );
@@ -152,10 +150,6 @@ class _AddTopicScreenState extends State<AddTopicScreen>
         buttonData: BottomSheetFooterButton(
           text: R.strings.bottomSheetApply,
           onPressed: () {},
-          // isDisabled: state.collectionName.trim().isEmpty,
-          /// Disable when name.length = 0
-          /// || length > 48
-          /// || it already exists
         ),
       ),
     );
