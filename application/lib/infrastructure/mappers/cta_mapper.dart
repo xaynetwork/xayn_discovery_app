@@ -18,6 +18,8 @@ class CTAMapToDbEntityMapper extends Mapper<CTA, DbEntityMap> {
         CTAFields.sourceSelection: _inlineCardMapper.map(input.sourceSelection),
         CTAFields.countrySelection:
             _inlineCardMapper.map(input.countrySelection),
+        CTAFields.pushNotifications:
+            _inlineCardMapper.map(input.pushNotifications),
       };
 }
 
@@ -28,11 +30,14 @@ class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
       _mapToCountrySelectionMapper;
   final DbEntityMapToSourceSelectionInLineCardMapper
       _mapToSourceSelectionMapper;
+  final DbEntityMapToPushNotificationsInLineCardMapper
+      _mapToPushNotificationsMapper;
 
   const DbEntityMapToCTAMapper(
     this._mapToSurveyBannerMapper,
     this._mapToCountrySelectionMapper,
     this._mapToSourceSelectionMapper,
+    this._mapToPushNotificationsMapper,
   );
 
   @override
@@ -45,6 +50,8 @@ class DbEntityMapToCTAMapper extends Mapper<DbEntityMap?, CTA> {
           _mapToSourceSelectionMapper.map(input[CTAFields.sourceSelection]),
       countrySelection:
           _mapToCountrySelectionMapper.map(input[CTAFields.countrySelection]),
+      pushNotifications:
+          _mapToPushNotificationsMapper.map(input[CTAFields.pushNotifications]),
     );
   }
 }
@@ -55,4 +62,5 @@ abstract class CTAFields {
   static const surveyBanner = 0;
   static const sourceSelection = 1;
   static const countrySelection = 2;
+  static const pushNotifications = 3;
 }
