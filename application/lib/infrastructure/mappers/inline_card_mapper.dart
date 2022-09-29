@@ -44,6 +44,12 @@ class DbEntityMapToPushNotificationsInLineCardMapper
       : super(CardType.pushNotifications);
 }
 
+@singleton
+class DbEntityMapToTopicsInLineCardMapper
+    extends _DbEntityMapToInLineCardMapper {
+  const DbEntityMapToTopicsInLineCardMapper() : super(CardType.topics);
+}
+
 class _DbEntityMapToInLineCardMapper extends Mapper<DbEntityMap?, InLineCard> {
   final CardType cardType;
 

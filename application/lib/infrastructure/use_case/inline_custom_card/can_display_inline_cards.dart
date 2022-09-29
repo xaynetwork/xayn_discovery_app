@@ -5,6 +5,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/co
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/can_display_push_notifications_card_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/can_display_source_selection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/can_display_survey_banner_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/topic/can_display_topic_use_case.dart';
 
 @injectable
 class CanDisplayInLineCardsUseCase extends UseCase<None, bool> {
@@ -13,12 +14,14 @@ class CanDisplayInLineCardsUseCase extends UseCase<None, bool> {
   final CanDisplaySurveyBannerUseCase _canDisplaySurveyBannerUseCase;
   final CanDisplayPushNotificationsCardUseCase
       _canDisplayPushNotificationsCardUseCase;
+  final CanDisplayTopicsUseCase _canDisplayTopicsUseCase;
 
   CanDisplayInLineCardsUseCase(
     this._canDisplayCountrySelectionUseCase,
     this._canDisplaySourceSelectionUseCase,
     this._canDisplaySurveyBannerUseCase,
     this._canDisplayPushNotificationsCardUseCase,
+    this._canDisplayTopicsUseCase,
   );
 
   @override
@@ -35,9 +38,12 @@ class CanDisplayInLineCardsUseCase extends UseCase<None, bool> {
     final canDisplayPushNotifications =
         await _canDisplayPushNotificationsCardUseCase.singleOutput(none);
 
+    final canDisplayTopics = await _canDisplayTopicsUseCase.singleOutput(none);
+
     yield canDisplayCountrySelection ||
         canDisplaySourceSelection ||
         canDisplaySurveyBanner ||
-        canDisplayPushNotifications;
+        canDisplayPushNotifications ||
+        canDisplayTopics;
   }
 }
