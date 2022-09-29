@@ -10,9 +10,9 @@ class InLineCardMapper extends Mapper<InLineCard, DbEntityMap> {
 
   @override
   DbEntityMap map(InLineCard input) => {
-        SurveyBannerFields.numberOfTimesShown: input.numberOfTimesShown,
-        SurveyBannerFields.hasSurveyBannerBeenClicked: input.hasBeenClicked,
-        SurveyBannerFields.lastSessionNumberWhenShown:
+        InLineCardFields.numberOfTimesShown: input.numberOfTimesShown,
+        InLineCardFields.hasBeenClicked: input.hasBeenClicked,
+        InLineCardFields.lastSessionNumberWhenShown:
             input.lastSessionNumberWhenShown,
       };
 }
@@ -37,6 +37,13 @@ class DbEntityMapToCountrySelectionInLineCardMapper
       : super(CardType.countrySelection);
 }
 
+@singleton
+class DbEntityMapToPushNotificationsInLineCardMapper
+    extends _DbEntityMapToInLineCardMapper {
+  const DbEntityMapToPushNotificationsInLineCardMapper()
+      : super(CardType.pushNotifications);
+}
+
 class _DbEntityMapToInLineCardMapper extends Mapper<DbEntityMap?, InLineCard> {
   final CardType cardType;
 
@@ -46,12 +53,11 @@ class _DbEntityMapToInLineCardMapper extends Mapper<DbEntityMap?, InLineCard> {
   InLineCard map(Map? input) {
     if (input == null) return InLineCard.initial(cardType);
 
-    final numberOfTimesShown =
-        input[SurveyBannerFields.numberOfTimesShown] ?? 0;
+    final numberOfTimesShown = input[InLineCardFields.numberOfTimesShown] ?? 0;
     final hasSurveyBannerBeenClicked =
-        input[SurveyBannerFields.hasSurveyBannerBeenClicked] ?? false;
+        input[InLineCardFields.hasBeenClicked] ?? false;
     final lastSessionNumberWhenShown =
-        input[SurveyBannerFields.lastSessionNumberWhenShown] ?? 0;
+        input[InLineCardFields.lastSessionNumberWhenShown] ?? 0;
 
     return InLineCard(
       numberOfTimesShown: numberOfTimesShown,
@@ -62,10 +68,10 @@ class _DbEntityMapToInLineCardMapper extends Mapper<DbEntityMap?, InLineCard> {
   }
 }
 
-abstract class SurveyBannerFields {
-  SurveyBannerFields._();
+abstract class InLineCardFields {
+  InLineCardFields._();
 
   static const numberOfTimesShown = 0;
-  static const hasSurveyBannerBeenClicked = 1;
+  static const hasBeenClicked = 1;
   static const lastSessionNumberWhenShown = 2;
 }
