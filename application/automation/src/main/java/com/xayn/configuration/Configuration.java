@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 public class Configuration {
 
     private static final Properties props = new Properties();
-    public static final String SCREENSHOT_DIRECTORY;
+    public static final String ARTIFACTS_DIRECTORY;
     public static final String DRIVER_EXEC;
     public static final String APPIUM_URL;
     public static final String APPIUM_JS;
@@ -34,7 +34,7 @@ public class Configuration {
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-        SCREENSHOT_DIRECTORY = props.getProperty("screenshot.directory");
+        ARTIFACTS_DIRECTORY = props.getProperty("artifacts.directory");
         DRIVER_EXEC = props.getProperty("driver.exec");
         APPIUM_URL = props.getProperty("appium.url");
         APPIUM_JS = props.getProperty("appium.js");

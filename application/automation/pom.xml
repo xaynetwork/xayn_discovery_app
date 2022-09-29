@@ -92,9 +92,8 @@
                             -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                         </argLine>
                         <suiteXmlFiles>
-                            <suiteXmlFile>testng/debug.xml</suiteXmlFile>
-                            <suiteXmlFile>testng/regression.xml</suiteXmlFile>
-                            <suiteXmlFile>testng/sanity.xml</suiteXmlFile>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                         </suiteXmlFiles>
                     </configuration>
                 </plugin>
