@@ -7,25 +7,24 @@ import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.
 const int _kNumberOfTimesShownThreshold = 1;
 
 @injectable
-class CanDisplayCountrySelectionUseCase extends UseCase<None, bool> {
+class CanDisplayTopicsUseCase extends UseCase<None, bool> {
   final AppStatusRepository _appStatusRepository;
   final FeatureManager _featureManager;
 
-  CanDisplayCountrySelectionUseCase(
+  CanDisplayTopicsUseCase(
     this._appStatusRepository,
     this._featureManager,
   );
 
   @override
   Stream<bool> transaction(None param) async* {
-    if (!_featureManager.isCountrySelectionInLineCardEnabled) {
+    if (!_featureManager.isTopicsEnabled) {
       yield false;
       return;
     }
 
     final appStatus = _appStatusRepository.appStatus;
-    final numberOfTimesShown =
-        appStatus.cta.countrySelection.numberOfTimesShown;
+    final numberOfTimesShown = appStatus.cta.topics.numberOfTimesShown;
 
     final canBeShown = numberOfTimesShown < _kNumberOfTimesShownThreshold;
 

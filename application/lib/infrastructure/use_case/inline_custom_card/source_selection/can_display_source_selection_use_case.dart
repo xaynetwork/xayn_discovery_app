@@ -26,7 +26,7 @@ class CanDisplaySourceSelectionUseCase extends UseCase<None, bool> {
     final appStatus = _appStatusRepository.appStatus;
     final numberOfTimesShown = appStatus.cta.sourceSelection.numberOfTimesShown;
 
-    final canBeShown = numberOfTimesShown <= _kNumberOfTimesShownThreshold;
+    final canBeShown = numberOfTimesShown < _kNumberOfTimesShownThreshold;
 
     yield canBeShown;
   }
