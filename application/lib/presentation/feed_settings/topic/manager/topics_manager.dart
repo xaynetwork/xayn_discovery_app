@@ -42,6 +42,7 @@ class TopicsManager extends Cubit<TopicsState>
   final _selectedTopics = <Topic>{};
   String _newTopicName = '';
   bool _checkForError = false;
+  bool _isEditingMode = false;
 
   TopicsManager(
     this._topicsScreenNavActions,
@@ -72,7 +73,10 @@ class TopicsManager extends Cubit<TopicsState>
     scheduleComputeState(
       () {
         _selectedTopics.remove(topic);
-        if (topic.isCustom) _newTopicName = topic.name;
+        if (topic.isCustom) {
+          _newTopicName = topic.name;
+          _isEditingMode = true;
+        }
       },
     );
   }
@@ -118,10 +122,13 @@ class TopicsManager extends Cubit<TopicsState>
 
           _checkForError = false;
 
+          if (state.isEditingMode) _isEditingMode = false;
+
           return TopicsState(
             suggestedTopics: _suggestedTopics,
             selectedTopics: {..._selectedTopics},
             newTopicName: _newTopicName,
+            isEditingMode: _isEditingMode,
           );
         },
       );

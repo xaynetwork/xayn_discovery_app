@@ -13,5 +13,6 @@ class TopicsState with _$TopicsState {
     @Default(<Topic>{}) Set<Topic> suggestedTopics,
     @Default(ErrorObject()) ErrorObject error,
     @Default('') String newTopicName,
+    @Default(false) bool isEditingMode,
   }) = _TopicsState;
 }

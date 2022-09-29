@@ -52,6 +52,9 @@ class _AddTopicScreenState extends State<AddTopicScreen>
             bloc: manager,
             builder: (_, state) {
               if (state.newTopicName.isEmpty) _textEditingController.text = '';
+              if (state.isEditingMode) {
+                _textEditingController.text = state.newTopicName;
+              }
               return _buildBody(state);
             },
           ),
