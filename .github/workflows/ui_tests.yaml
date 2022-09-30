@@ -133,6 +133,7 @@ jobs:
 #          flutter test integration_test
 
       - name: Generate Report
+        if: always()
         working-directory: ./application/automation/target/artifacts
         run: allure generate --clean
 
