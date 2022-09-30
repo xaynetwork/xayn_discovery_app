@@ -239,6 +239,11 @@ jobs:
           script: |
             fastlane run_automation platform:android test_suite:sanity_android
 
+      - name: Generate Report
+        if: always()
+        working-directory: ./application/automation/target/artifacts
+        run: allure generate --clean
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         if: always()
