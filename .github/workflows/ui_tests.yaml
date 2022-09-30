@@ -132,6 +132,10 @@ jobs:
           fastlane run_automation platform:ios test_suite:sanity_ios
 #          flutter test integration_test
 
+      - name: Generate Report
+        working-directory: ./application/automation/target/artifacts
+        run: allure generate --clean
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         if: always()
