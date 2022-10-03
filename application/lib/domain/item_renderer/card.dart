@@ -7,6 +7,7 @@ enum CardType {
   sourceSelection,
   countrySelection,
   pushNotifications,
+  topics,
 }
 
 class Card extends Equatable {
