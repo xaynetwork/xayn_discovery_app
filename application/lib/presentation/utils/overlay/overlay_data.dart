@@ -124,6 +124,16 @@ class OverlayData {
   static _wrapTooltip(design.TooltipData data, {VoidCallback? onClosed}) =>
       _TooltipOverlayData.tooltip(data: data, onClosed: onClosed);
 
+  static tooltipTopicAdded({required VoidCallback onTap}) => _wrapTooltip(
+        design.TooltipData.customized(
+          key: 'topicAdded',
+          label: R.strings.topicAddedTooltipMessage,
+          highlightText: R.strings.manageTopicsTooltipMessage,
+          onTap: onTap,
+          highlightTextStyle: R.styles.tooltipHighlightMainTextStyle,
+        ),
+      );
+
   /// BottomSheets
   ///
   static BottomSheetData bottomSheetDocumentFilter(Document document) =>
@@ -358,6 +368,7 @@ class OverlayData {
           onResetAIPressed: onResetAIPressed,
         ),
       );
+
   static BottomSheetData bottomSheetResettingAI({
     VoidCallback? onSystemPop,
     bool isDismissible = false,

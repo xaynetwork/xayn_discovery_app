@@ -8,6 +8,8 @@ import 'package:xayn_discovery_app/infrastructure/use_case/topic/topic_use_cases
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_state.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/util/topic_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
+import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
 
 Set<Topic> _suggestedTopics = <Topic>{
   const Topic.suggested('Science'),
@@ -26,11 +28,13 @@ abstract class TopicsScreenNavActions {
   void onDismissTopicsScreen();
 
   void onAddTopicButtonClicked();
+
+  void onManageTopicsPressed();
 }
 
 @lazySingleton
 class TopicsManager extends Cubit<TopicsState>
-    with UseCaseBlocHelper<TopicsState>
+    with UseCaseBlocHelper<TopicsState>, OverlayManagerMixin<TopicsState>
     implements TopicsScreenNavActions {
   final TopicsScreenNavActions _topicsScreenNavActions;
   final AddCustomTopicUseCase _addCustomTopicUseCase;
@@ -63,6 +67,10 @@ class TopicsManager extends Cubit<TopicsState>
   void onAddTopicButtonClicked() =>
       _topicsScreenNavActions.onAddTopicButtonClicked();
 
+  @override
+  void onManageTopicsPressed() =>
+      _topicsScreenNavActions.onManageTopicsPressed();
+
   void onRemoveTopic(Topic topic) {
     scheduleComputeState(
       () => _selectedTopics.remove(topic),
@@ -81,14 +89,24 @@ class TopicsManager extends Cubit<TopicsState>
     );
   }
 
-  void onAddTopic(Topic topic) {
+  void onAddTopic(Topic topic, [bool showToolTip = false]) {
     scheduleComputeState(
       () => _selectedTopics.add(topic),
     );
+
+    if (showToolTip) {
+      showOverlay(
+        OverlayData.tooltipTopicAdded(
+          onTap: onManageTopicsPressed,
+        ),
+      );
+    }
   }
 
-  void onAddOrRemoveTopic(Topic topic) =>
-      isSelected(topic) ? onRemoveOrUpdateTopic(topic) : onAddTopic(topic);
+  void onAddOrRemoveTopic(Topic topic, [bool showToolTip = true]) =>
+      isSelected(topic)
+          ? onRemoveOrUpdateTopic(topic)
+          : onAddTopic(topic, showToolTip);
 
   void onUpdateTopic(String name) =>
       scheduleComputeState(() => _newTopicName = name);
