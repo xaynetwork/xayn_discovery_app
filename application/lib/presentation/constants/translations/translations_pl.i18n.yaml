@@ -232,3 +232,14 @@ manageTopicsTooltipMessage: Manage topics
 topicsCardCTA: or enter your own topics
 topicsCardCTACustomTopics: +%s custom topics
 topicsCardSubtitle: Please select the topics that may interest you
+suggestedTopics:
+  science: Science
+  technology: Technology
+  entertainment: Entertainment
+  politics: Politics
+  sports: Sports
+  health: Health
+  world: World
+  sustainability: Sustainability
+  business: Business
+  lifestyle: LifeStyle
