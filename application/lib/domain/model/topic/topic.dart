@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 
 @immutable
 class Topic extends Equatable {
+  final Key? key;
   final String name;
   final bool isCustom;
 
-  const Topic(
+  Topic(
     this.name, {
     this.isCustom = true,
-  });
+  }) : key = Key(name);
 
-  const Topic.suggested(this.name) : isCustom = false;
+  const Topic.suggested(this.key, this.name) : isCustom = false;
 
   @override
   List<Object?> get props => [
-        name,
+        key,
         isCustom,
       ];
 

@@ -1,8 +1,9 @@
-import 'package:async/async.dart' show StreamGroup;
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
+import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
@@ -32,10 +33,11 @@ class ListenTopicsStatusUseCase extends UseCase<None, TopicsConditionsStatus> {
       return;
     }
 
-    yield* StreamGroup.merge([
-      userInteractionsRepository.watch(),
-      appStatusRepository.watch(),
-    ]).map(
+    yield* userInteractionsRepository
+        .watch()
+        .map((e) => e.id)
+        .startWith(UniqueId())
+        .map(
       (_) {
         final appStatus = appStatusRepository.appStatus;
         final userInteractions = userInteractionsRepository.userInteractions;
