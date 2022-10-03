@@ -10,16 +10,16 @@ import 'package:xayn_discovery_app/presentation/feed_settings/topic/util/topic_e
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 Set<Topic> _suggestedTopics = <Topic>{
-  const Topic.suggested('Sports'),
-  const Topic.suggested('LifeStyle'),
   const Topic.suggested('Science'),
   const Topic.suggested('Technology'),
   const Topic.suggested('Entertainment'),
   const Topic.suggested('Politics'),
+  const Topic.suggested('Sports'),
   const Topic.suggested('Health'),
   const Topic.suggested('World'),
   const Topic.suggested('Sustainability'),
   const Topic.suggested('Business'),
+  const Topic.suggested('LifeStyle'),
 };
 
 abstract class TopicsScreenNavActions {
@@ -87,6 +87,9 @@ class TopicsManager extends Cubit<TopicsState>
     );
   }
 
+  void onAddOrRemoveTopic(Topic topic) =>
+      isSelected(topic) ? onRemoveOrUpdateTopic(topic) : onAddTopic(topic);
+
   void onUpdateTopic(String name) =>
       scheduleComputeState(() => _newTopicName = name);
 
@@ -101,6 +104,11 @@ class TopicsManager extends Cubit<TopicsState>
     _checkForError = true;
     _addCustomTopicHandler(state.newTopicName);
   }
+
+  bool isSelected(Topic topic) => state.selectedTopics.contains(topic);
+
+  int get customSelectedTopicsCount =>
+      state.selectedTopics.difference(state.suggestedTopics).length;
 
   @override
   Future<TopicsState?> computeState() async =>

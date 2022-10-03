@@ -5,57 +5,83 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/add_topic_screen.dart';
 
 class TopicChip extends StatelessWidget {
-  const TopicChip.selected({
+  factory TopicChip({
+    required Topic topic,
+    required OnTopicPressed onPressed,
+    required bool isSelected,
+    bool showIcon = false,
+  }) =>
+      isSelected
+          ? TopicChip.selected(
+              topic: topic,
+              onPressed: onPressed,
+              showIcon: showIcon,
+            )
+          : TopicChip.suggested(
+              topic: topic,
+              onPressed: onPressed,
+              showIcon: showIcon,
+            );
+
+  TopicChip.selected({
     Key? key,
     required this.topic,
     required this.onPressed,
     this.showIcon = false,
-  })  : isSelected = true,
+  })  : iconAsset = R.assets.icons.cross,
+        padding = EdgeInsets.symmetric(
+          horizontal: R.dimen.unit1_25,
+          vertical: R.dimen.unit0_75,
+        ),
+        backgroundColor = R.colors.addedTopicsBackgroundColor,
+        border = Border.all(
+          width: R.dimen.unit0_25,
+          color: R.colors.addedTopicsBorderColor,
+        ),
         super(key: key);
 
-  const TopicChip.suggested({
+  TopicChip.suggested({
     Key? key,
     required this.topic,
     required this.onPressed,
     this.showIcon = false,
-  })  : isSelected = false,
+  })  : iconAsset = R.assets.icons.plus,
+        padding = EdgeInsets.symmetric(
+          horizontal: R.dimen.unit1_5,
+          vertical: R.dimen.unit,
+        ),
+        backgroundColor = R.colors.suggestedTopicsBackgroundColor,
+        border = null,
         super(key: key);
 
   final Topic topic;
   final OnTopicPressed onPressed;
   final bool showIcon;
-  final bool isSelected;
+  final String iconAsset;
+  final EdgeInsets padding;
+  final Color backgroundColor;
+  final Border? border;
 
   @override
   Widget build(BuildContext context) {
     final topicText = Text(
       topic.name,
-      style: R.styles.mStyle,
+      style: R.styles.topicChipTextStyle,
       maxLines: 2,
     );
+
     final icon = SvgPicture.asset(
-      isSelected ? R.assets.icons.cross : R.assets.icons.plus,
+      iconAsset,
       height: R.dimen.unit2,
       width: R.dimen.unit2,
     );
-    final padding = EdgeInsets.symmetric(
-      horizontal: R.dimen.unit1_5,
-      vertical: R.dimen.unit,
-    );
-    final backgroundColor = isSelected
-        ? R.colors.addedTopicsBackgroundColor
-        : R.colors.suggestedTopicsBackgroundColor;
-    final border = isSelected
-        ? Border.all(
-            width: R.dimen.unit0_25,
-            color: R.colors.addedTopicsBorderColor,
-          )
-        : null;
+
     final decoration = BoxDecoration(
       border: border,
       borderRadius: BorderRadius.circular(R.dimen.unit),
       color: backgroundColor,
     );
+
     final row = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,6 +95,7 @@ class TopicChip extends StatelessWidget {
     );
 
     final chip = Material(
+      borderRadius: decoration.borderRadius,
       child: Ink(
         decoration: decoration,
         child: InkWell(

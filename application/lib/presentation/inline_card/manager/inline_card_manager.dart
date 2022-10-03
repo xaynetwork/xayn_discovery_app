@@ -144,7 +144,6 @@ class InLineCardManager extends Cubit<InLineCardState>
         if (result) scheduleComputeState(() {});
         break;
       case CardType.topics:
-        handleCountrySelectionClickedUseCase(none);
         break;
     }
   }
@@ -213,6 +212,7 @@ class InLineCardManager extends Cubit<InLineCardState>
           sourceSelectionConditionsStatus: sourceSelectionConditionStatus,
           pushNotificationsConditionsStatus:
               pushNotificationsConditionStatusStream,
+          topicsConditionsStatus: topicsConditionStatusStream,
           selectedCountryName: state.selectedCountryName ??
               selectedCountries?.singleOrNull?.name,
         ),

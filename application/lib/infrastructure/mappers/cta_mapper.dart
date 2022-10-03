@@ -20,6 +20,7 @@ class CTAMapToDbEntityMapper extends Mapper<CTA, DbEntityMap> {
             _inlineCardMapper.map(input.countrySelection),
         CTAFields.pushNotifications:
             _inlineCardMapper.map(input.pushNotifications),
+        CTAFields.topics: _inlineCardMapper.map(input.topics),
       };
 }
 
