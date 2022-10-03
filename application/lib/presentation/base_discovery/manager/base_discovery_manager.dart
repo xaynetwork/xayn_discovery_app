@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:dart_remote_config/utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -462,6 +463,13 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         context: FeedbackContext.implicit,
         feedType: feedType,
       );
+    }
+  }
+
+  void onChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      inLineCardManager.scheduleComputeState(() {});
+      scheduleComputeState(() {});
     }
   }
 }

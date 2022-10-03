@@ -6,11 +6,13 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
+import 'package:xayn_discovery_app/domain/model/push_notifications/push_notifications_conditions_status.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/feed_settings/get_selected_countries_list_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/handle_country_selection_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/handle_country_selection_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/listen_country_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/get_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/handle_push_notifications_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/handle_source_selection_card_clicked_use_case.dart';
@@ -41,6 +43,8 @@ class InLineCardManager extends Cubit<InLineCardState>
   final ListenSourceConditionsStatusUseCase listenSourceConditionsStatusUseCase;
   final ListenPushNotificationsConditionsStatusUseCase
       listenPushNotificationsConditionsStatusUseCase;
+  final GetPushNotificationsConditionsStatusUseCase
+      getPushNotificationsConditionsStatusUseCase;
   final HandleSurveyBannerClickedUseCase handleSurveyBannerClickedUseCase;
   final HandleSourceSelectionClickedUseCase handleSourceSelectionClickedUseCase;
   final HandleCountrySelectionClickedUseCase
@@ -73,6 +77,7 @@ class InLineCardManager extends Cubit<InLineCardState>
     this.inLineNavActions,
     this.getSelectedCountriesListUseCase,
     this.listenPushNotificationsConditionsStatusUseCase,
+    this.getPushNotificationsConditionsStatusUseCase,
     this.handlePushNotificationsCardClickedUseCase,
   ) : super(InLineCardState.initial()) {
     init();
@@ -181,18 +186,21 @@ class InLineCardManager extends Cubit<InLineCardState>
           countrySelectionConditionStatus,
           sourceSelectionConditionStatus,
           selectedCountries,
-          pushNotificationsConditionStatusStream,
+          _,
           errorReport,
-        ) async =>
-            InLineCardState.populated(
-          surveyConditionsStatus: surveyConditionsStatus,
-          countrySelectionConditionsStatus: countrySelectionConditionStatus,
-          sourceSelectionConditionsStatus: sourceSelectionConditionStatus,
-          pushNotificationsConditionsStatus:
-              pushNotificationsConditionStatusStream,
-          selectedCountryName: state.selectedCountryName ??
-              selectedCountries?.singleOrNull?.name,
-        ),
+        ) async {
+          final pushNotificationsConditionStatus =
+              await getPushNotificationsConditionsStatusUseCase
+                  .singleOutput(none);
+          return InLineCardState.populated(
+            surveyConditionsStatus: surveyConditionsStatus,
+            countrySelectionConditionsStatus: countrySelectionConditionStatus,
+            sourceSelectionConditionsStatus: sourceSelectionConditionStatus,
+            pushNotificationsConditionsStatus: pushNotificationsConditionStatus,
+            selectedCountryName: state.selectedCountryName ??
+                selectedCountries?.singleOrNull?.name,
+          );
+        },
       );
 
   @override
