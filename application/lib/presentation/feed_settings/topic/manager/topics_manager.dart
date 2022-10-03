@@ -6,23 +6,11 @@ import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/topic/add_custom_topic_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/topic/topic_use_cases_errors.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/topic/util/default_suggested_topics.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/util/topic_errors_enum_mapper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
-
-Set<Topic> _suggestedTopics = <Topic>{
-  const Topic.suggested('Science'),
-  const Topic.suggested('Technology'),
-  const Topic.suggested('Entertainment'),
-  const Topic.suggested('Politics'),
-  const Topic.suggested('Sports'),
-  const Topic.suggested('Health'),
-  const Topic.suggested('World'),
-  const Topic.suggested('Sustainability'),
-  const Topic.suggested('Business'),
-  const Topic.suggested('LifeStyle'),
-};
 
 abstract class TopicsScreenNavActions {
   void onDismissTopicsScreen();
@@ -53,10 +41,7 @@ class TopicsManager extends Cubit<TopicsState>
     this._addCustomTopicUseCase,
     this._topicErrorsEnumMapper,
   ) : super(
-          TopicsState(
-            selectedTopics: {},
-            suggestedTopics: _suggestedTopics,
-          ),
+          TopicsState(suggestedTopics: suggestedTopics),
         );
 
   @override
@@ -151,7 +136,7 @@ class TopicsManager extends Cubit<TopicsState>
           if (state.isEditingMode) _isEditingMode = false;
 
           return TopicsState(
-            suggestedTopics: _suggestedTopics,
+            suggestedTopics: suggestedTopics,
             selectedTopics: {..._selectedTopics},
             newTopicName: _newTopicName,
             isEditingMode: _isEditingMode,
