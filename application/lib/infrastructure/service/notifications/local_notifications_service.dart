@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -96,7 +98,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     final scheduleTime = DateTime.now().add(const Duration(seconds: 1));
     return AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: 1,
+        id: Random().nextInt(1000),
         channelKey: kChannelKey,
         title: R.strings.notificationTitle,
         body: body,
