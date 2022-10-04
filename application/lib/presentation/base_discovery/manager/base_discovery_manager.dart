@@ -375,16 +375,16 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
 
         if (_cardIndex == null) return null;
 
-        final currentDocument = (documents != null &&
+        final nextDocument = (documents != null &&
                 documents.isNotEmpty &&
-                documents.length > _cardIndex!)
-            ? documents.elementAt(_cardIndex!)
+                documents.length > _cardIndex! + 1)
+            ? documents.elementAt(_cardIndex! + 1)
             : null;
 
         final cards = await inLineCardManager.maybeAddInLineCard(
           currentCards: state.cards,
           nextDocuments: documents,
-          currentDocument: currentDocument,
+          nextDocument: nextDocument,
         );
 
         /// override card index to start from the first card in case of having

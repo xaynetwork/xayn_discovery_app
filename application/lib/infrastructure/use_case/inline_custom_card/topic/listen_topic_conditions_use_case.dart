@@ -7,6 +7,7 @@ import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_utils.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/topic/can_display_topic_use_case.dart';
 
 const int _kNumOfSessionsThreshold = 1;
@@ -63,7 +64,10 @@ class ListenTopicsStatusUseCase extends UseCase<None, TopicsConditionsStatus> {
         return TopicsConditionsStatus.reached;
       }
     } else {
-      if (numberOfScrolls == _kNumOfScrollsExistingUserThreshold) {
+      final hasExceededSwipeCount = InLineCardUtils.hasExceededSwipeCount(
+          numberOfScrolls, _kNumOfScrollsExistingUserThreshold);
+
+      if (hasExceededSwipeCount) {
         return TopicsConditionsStatus.reached;
       }
     }

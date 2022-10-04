@@ -7,7 +7,8 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 @lazySingleton
 class InLineCardInjectionUseCase
     extends UseCase<InLineCardInjectionData, Set<Card>> {
-  /// The [Document] which is a reference point in rebuilds, if not null,
+  /// Set of reference [Document]s with the corresponding [CardType]
+  /// The [Document] is a reference point in rebuilds, if not null,
   /// then we show the custom card always before this document.
   /// Note that we need to use a document as reference, because an index
   /// is not static, older cards are removed as you keep swiping down,
@@ -24,7 +25,7 @@ class InLineCardInjectionUseCase
       yield param.currentCards;
     } else {
       if (shouldMarkInjectionPoint(param)) {
-        final document = param.currentDocument ?? nextDocuments.first;
+        final document = param.nextDocument ?? nextDocuments.first;
         final referenceDocument =
             DocumentReferenceWithCardType(document, cardType!);
         referenceDocuments.add(referenceDocument);
@@ -63,7 +64,7 @@ class InLineCardInjectionData {
   final Set<Card> currentCards;
   final Set<Document>? nextDocuments;
   final CardType? cardType;
-  final Document? currentDocument;
+  final Document? nextDocument;
 
   int get currentDocumentsCount =>
       currentCards.where((it) => it.document != null).length;
@@ -74,7 +75,7 @@ class InLineCardInjectionData {
     required this.currentCards,
     this.nextDocuments,
     required this.cardType,
-    required this.currentDocument,
+    required this.nextDocument,
   });
 }
 
