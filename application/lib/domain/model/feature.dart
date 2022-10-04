@@ -46,7 +46,7 @@ enum Feature {
   ),
   remoteNotifications(
     Owner.Peter,
-    EnvironmentHelper.kIsDebug,
+    true,
     description:
         'Listen for silent push notification from Airship to trigger news fetch',
   ),
