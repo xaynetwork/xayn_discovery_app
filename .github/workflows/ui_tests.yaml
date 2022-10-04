@@ -100,6 +100,9 @@ jobs:
       - shell: bash
         run: brew install ffmpeg
 
+      - shell: bash
+        run: brew install allure
+
       - name: Set up a Simulator
         uses: futureware-tech/simulator-action@v1
         with:
@@ -131,6 +134,11 @@ jobs:
         run:
           fastlane run_automation platform:ios test_suite:sanity_ios
 #          flutter test integration_test
+
+      - name: Generate Report
+        if: always()
+        working-directory: ./application/automation/target/artifacts
+        run: allure generate --output ios/allure-report
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -230,6 +238,11 @@ jobs:
           working-directory: application/
           script: |
             fastlane run_automation platform:android test_suite:sanity_android
+
+      - name: Generate Report
+        if: always()
+        working-directory: ./application/automation/target/artifacts
+        run: allure generate --output android/allure-report
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
