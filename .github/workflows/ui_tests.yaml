@@ -138,7 +138,7 @@ jobs:
       - name: Generate Report
         if: always()
         working-directory: ./application/automation/target/artifacts
-        run: allure generate --clean
+        run: allure generate --output ios/allure-report
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -242,7 +242,7 @@ jobs:
       - name: Generate Report
         if: always()
         working-directory: ./application/automation/target/artifacts
-        run: allure generate --clean
+        run: allure generate --output android/allure-report
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
