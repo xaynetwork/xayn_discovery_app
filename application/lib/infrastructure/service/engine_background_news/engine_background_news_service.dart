@@ -117,7 +117,7 @@ class EngineBackgroundNewsService {
     await _localNotificationsService.sendNotification(
       body: document.resource.snippet,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
-      delay: const Duration(seconds: 1),
+      delay: const Duration(seconds: 3),
       image: document.resource.image,
     );
   }
