@@ -5,6 +5,7 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_utils.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/can_display_source_selection_use_case.dart';
 
 const int _kNumOfSessionsThreshold = 1;
@@ -57,8 +58,10 @@ class ListenSourceConditionsStatusUseCase
     if (numberOfSessions <= _kNumOfSessionsThreshold) {
       final numberOfScrolls = userInteractions.numberOfScrollsPerSession;
       final numberOfSourcesTrusted = userInteractions.numberOfSourcesTrusted;
+      final hasExceededSwipeCount = InLineCardUtils.hasExceededSwipeCount(
+          numberOfScrolls, _kNumOfScrollsThreshold);
 
-      if (numberOfScrolls >= _kNumOfScrollsThreshold &&
+      if (hasExceededSwipeCount &&
           numberOfSourcesTrusted <= _kNumberOfSourcesTrustedThreshold) {
         return SourceSelectionConditionsStatus.reached;
       }
