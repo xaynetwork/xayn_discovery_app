@@ -1,5 +1,5 @@
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
 
 const String _kEventType = 'sourceChanged';
 const String _kParamSourceType = 'type';

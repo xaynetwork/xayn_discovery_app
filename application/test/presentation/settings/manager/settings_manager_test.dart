@@ -27,6 +27,7 @@ void main() {
   const appTheme = AppTheme.dark;
   final subscriptionStatus = SubscriptionStatus.initial();
   const subscriptionManagementURL = 'https://example.com';
+  const userId = 'user_id';
   final stateReady = SettingsScreenState.ready(
     theme: appTheme,
     appVersion: appVersion,
@@ -34,6 +35,7 @@ void main() {
     arePushNotificationsActive: false,
     areLocalNotificationsEnabled: false,
     areRemoteNotificationsEnabled: false,
+    isTopicsEnabled: false,
     subscriptionStatus: subscriptionStatus,
   );
 
@@ -59,6 +61,7 @@ void main() {
   late MockLocalNotificationsService localNotificationsService;
   late MockRemoteNotificationsService remoteNotificationsService;
   late MockDiscoveryFeedManager discoveryFeedManager;
+  late MockGetUserIdUseCase getUserIdUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -83,6 +86,7 @@ void main() {
     localNotificationsService = MockLocalNotificationsService();
     remoteNotificationsService = MockRemoteNotificationsService();
     discoveryFeedManager = MockDiscoveryFeedManager();
+    getUserIdUseCase = MockGetUserIdUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
@@ -104,6 +108,9 @@ void main() {
     when(getSubscriptionStatusUseCase.singleOutput(any))
         .thenAnswer((_) => Future.value(subscriptionStatus));
 
+    when(getUserIdUseCase.singleOutput(any))
+        .thenAnswer((_) => Future.value(userId));
+
     when(listenSubscriptionStatusUseCase.transaction(any))
         .thenAnswer((_) => Stream.value(subscriptionStatus));
 
@@ -111,6 +118,8 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
+
+    when(featureManager.isTopicsEnabled).thenReturn(false);
 
     when(featureManager.areLocalNotificationsEnabled).thenReturn(false);
 
@@ -149,6 +158,7 @@ void main() {
         localNotificationsService,
         remoteNotificationsService,
         discoveryFeedManager,
+        getUserIdUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

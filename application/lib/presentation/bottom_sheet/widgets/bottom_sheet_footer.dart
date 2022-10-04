@@ -21,6 +21,7 @@ class BottomSheetFooter extends StatelessWidget {
     final cancelButton = AppGhostButton.text(
       cancelBtnText ?? R.strings.bottomSheetCancel,
       onPressed: onCancelPressed,
+      backgroundColor: R.colors.bottomSheetCancelBackgroundColor,
     );
 
     final buttonsDisposal = setup.map(
@@ -48,7 +49,7 @@ class BottomSheetFooter extends StatelessWidget {
             child: cancelButton,
           ),
           SizedBox(
-            width: R.dimen.unit0_5,
+            width: R.dimen.unit2,
           ),
           Expanded(
             child: _buildRaisedButton(buttonData),

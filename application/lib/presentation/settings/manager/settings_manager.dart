@@ -13,8 +13,8 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_t
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/feedback_given_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_reset_ai_window_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reset_ai_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
@@ -32,6 +32,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_id/get_user_id_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -51,6 +52,8 @@ abstract class SettingsNavActions {
   void onCountriesOptionsPressed();
 
   void onSourcesOptionsPressed();
+
+  void onTopicsOptionsPressed();
 }
 
 @lazySingleton
@@ -84,6 +87,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final LocalNotificationsService _localNotificationsService;
   final RemoteNotificationsService _remoteNotificationsService;
   final DiscoveryFeedManager _discoveryFeedManager;
+  final GetUserIdUseCase _getUserIdUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -106,6 +110,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._localNotificationsService,
     this._remoteNotificationsService,
     this._discoveryFeedManager,
+    this._getUserIdUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -198,6 +203,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         theme: _theme,
         appVersion: _appVersion,
         isPaymentEnabled: _featureManager.isPaymentEnabled,
+        isTopicsEnabled: _featureManager.isTopicsEnabled,
         arePushNotificationsActive:
             userNotificationsEnabled && isNotificationAllowed,
         areLocalNotificationsEnabled:
@@ -234,6 +240,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   void onSourcesOptionsPressed() =>
       _settingsNavActions.onSourcesOptionsPressed();
+
+  @override
+  void onTopicsOptionsPressed() => _settingsNavActions.onTopicsOptionsPressed();
 
   void onResetAIPressed() {
     _sendAnalyticsUseCase(OpenResetAIWindowEvent());
@@ -312,13 +321,15 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     );
   }
 
-  void requestRemoteNotificationPermission() =>
-      scheduleComputeState(_remoteNotificationsService.enableNotifications);
-
   void copyChannelId() async {
     final channelId = await _remoteNotificationsService.channelId;
     if (channelId == null) return;
     Clipboard.setData(ClipboardData(text: channelId));
+  }
+
+  void copyUserId() async {
+    final userId = await _getUserIdUseCase.singleOutput(none);
+    Clipboard.setData(ClipboardData(text: userId));
   }
 
   void togglePushNotificationsState() =>

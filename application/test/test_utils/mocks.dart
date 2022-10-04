@@ -121,6 +121,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_background_color_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_size_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/reader_mode_settings/save_reader_mode_font_style_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_id/get_user_id_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_interactions/save_user_interaction_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/app_image_cache_manager.dart';
 import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
@@ -131,8 +132,8 @@ import 'package:xayn_discovery_app/presentation/collection_card/util/collection_
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/country/manager/country_feed_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/manager/edit_reader_mode_settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
@@ -307,6 +308,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   HandlePushNotificationsCardClickedUseCase,
   DbEntityMapToPushNotificationsInLineCardMapper,
   SaveUserInteractionUseCase,
+  GetUserIdUseCase,
 ])
 class Mocks {
   Mocks._();

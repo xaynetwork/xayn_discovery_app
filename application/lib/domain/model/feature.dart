@@ -46,7 +46,7 @@ enum Feature {
   ),
   remoteNotifications(
     Owner.Peter,
-    EnvironmentHelper.kIsDebug,
+    true,
     description:
         'Listen for silent push notification from Airship to trigger news fetch',
   ),
@@ -61,6 +61,12 @@ enum Feature {
     false,
     description: 'Showing country selection inline Card',
     remoteKey: 'country_selection_inline_card',
+  ),
+  topics(
+    Owner.Michael,
+    false,
+    description: 'Showing topics in settings and topic selection inline Card',
+    remoteKey: 'topics_settings_and_inline_card',
   );
 
   final Owner owner;
