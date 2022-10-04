@@ -173,11 +173,13 @@ class InLineCardManager extends Cubit<InLineCardState>
   Future<Set<Card>> maybeAddInLineCard({
     required Set<Card> currentCards,
     required Set<Document>? nextDocuments,
+    required Document? currentDocument,
   }) async =>
       inLineCardInjectionUseCase.singleOutput(
         InLineCardInjectionData(
           currentCards: currentCards,
           nextDocuments: nextDocuments,
+          currentDocument: currentDocument,
           cardType: state.cardType,
         ),
       );

@@ -114,12 +114,14 @@ void main() {
       inLineCardManager.maybeAddInLineCard(
         currentCards: {},
         nextDocuments: {fakeDocument},
+        currentDocument: fakeDocument,
       ),
     ).thenAnswer((_) async => {Card.document(fakeDocument)});
     when(
       inLineCardManager.maybeAddInLineCard(
         currentCards: {Card.document(fakeDocument)},
         nextDocuments: {fakeDocument},
+        currentDocument: fakeDocument,
       ),
     ).thenAnswer((_) async => {Card.document(fakeDocument)});
 
