@@ -58,12 +58,12 @@ class ListenTopicsStatusUseCase extends UseCase<None, TopicsConditionsStatus> {
     // The conditions are listed in the description of the following task
     // https://xainag.atlassian.net/browse/TB-4050
     final numberOfScrolls = userInteractions.numberOfScrollsPerSession;
-    if (numberOfSessions <= _kNumOfSessionsThreshold) {
-      if (numberOfScrolls >= _kNumOfScrollsNewUserThreshold) {
+    if (numberOfSessions == _kNumOfSessionsThreshold) {
+      if (numberOfScrolls == _kNumOfScrollsNewUserThreshold) {
         return TopicsConditionsStatus.reached;
       }
     } else {
-      if (numberOfScrolls >= _kNumOfScrollsExistingUserThreshold) {
+      if (numberOfScrolls == _kNumOfScrollsExistingUserThreshold) {
         return TopicsConditionsStatus.reached;
       }
     }
