@@ -41,6 +41,7 @@ class Keys {
   static const Key settingsRequestRemoteNotificationBtn =
       Key('settings_request_remote_notification');
   static const Key settingsCopyChannelIdBtn = Key('settings_copy_channel_id');
+  static const Key settingsCopyUserIdBtn = Key('settings_copy_user_id');
   static const Key settingsSendLocalNotificationBtn =
       Key('settings_send_local_notification');
   static const Key settingsResetAIOption = Key('settings_reset_ai_option');

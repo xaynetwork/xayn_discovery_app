@@ -32,6 +32,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscript
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/toggle_push_notifications_state_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/user_id/get_user_id_use_case.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -86,6 +87,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final LocalNotificationsService _localNotificationsService;
   final RemoteNotificationsService _remoteNotificationsService;
   final DiscoveryFeedManager _discoveryFeedManager;
+  final GetUserIdUseCase _getUserIdUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -108,6 +110,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._localNotificationsService,
     this._remoteNotificationsService,
     this._discoveryFeedManager,
+    this._getUserIdUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -318,13 +321,15 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     );
   }
 
-  void requestRemoteNotificationPermission() =>
-      scheduleComputeState(_remoteNotificationsService.enableNotifications);
-
   void copyChannelId() async {
     final channelId = await _remoteNotificationsService.channelId;
     if (channelId == null) return;
     Clipboard.setData(ClipboardData(text: channelId));
+  }
+
+  void copyUserId() async {
+    final userId = await _getUserIdUseCase.singleOutput(none);
+    Clipboard.setData(ClipboardData(text: userId));
   }
 
   void togglePushNotificationsState() =>

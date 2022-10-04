@@ -4,13 +4,13 @@ import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 class RemoteNotificationsDebugSection extends StatelessWidget {
-  final VoidCallback onRequestRemoteNotificationPermissionPressed;
   final VoidCallback onCopyChannelIdPressed;
+  final VoidCallback onCopyUserIdPressed;
 
   const RemoteNotificationsDebugSection({
     Key? key,
-    required this.onRequestRemoteNotificationPermissionPressed,
     required this.onCopyChannelIdPressed,
+    required this.onCopyUserIdPressed,
   }) : super(key: key);
 
   @override
@@ -20,26 +20,26 @@ class RemoteNotificationsDebugSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           child: Row(
             children: [
-              _buildRequestRemoteNotificationBtn(),
-              SizedBox(width: R.dimen.unit),
               _buildCopyChannelIdBtn(),
+              SizedBox(width: R.dimen.unit),
+              _buildCopyUserIdBtn(),
             ],
           ),
         ),
-      );
-
-  AppGhostButton _buildRequestRemoteNotificationBtn() => AppGhostButton.text(
-        'Request',
-        key: Keys.settingsRequestRemoteNotificationBtn,
-        onPressed: onRequestRemoteNotificationPermissionPressed,
-        backgroundColor: R.colors.settingsCardBackground,
-        textColor: R.colors.primaryText,
       );
 
   AppGhostButton _buildCopyChannelIdBtn() => AppGhostButton.text(
         'Copy channel ID',
         key: Keys.settingsCopyChannelIdBtn,
         onPressed: onCopyChannelIdPressed,
+        backgroundColor: R.colors.settingsCardBackground,
+        textColor: R.colors.primaryText,
+      );
+
+  AppGhostButton _buildCopyUserIdBtn() => AppGhostButton.text(
+        'Copy user ID',
+        key: Keys.settingsCopyUserIdBtn,
+        onPressed: onCopyUserIdPressed,
         backgroundColor: R.colors.settingsCardBackground,
         textColor: R.colors.primaryText,
       );

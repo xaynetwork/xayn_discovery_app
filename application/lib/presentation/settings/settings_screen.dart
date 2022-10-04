@@ -221,9 +221,8 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildRemoteNotificationDebugSection() =>
       RemoteNotificationsDebugSection(
-        onRequestRemoteNotificationPermissionPressed:
-            _manager.requestRemoteNotificationPermission,
         onCopyChannelIdPressed: _manager.copyChannelId,
+        onCopyUserIdPressed: _manager.copyUserId,
       );
 
   Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(
