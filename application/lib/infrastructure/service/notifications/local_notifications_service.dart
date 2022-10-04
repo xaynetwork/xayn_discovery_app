@@ -92,23 +92,21 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     required String body,
     required UniqueId documentId,
     Uri? image,
-  }) async =>
-      AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: 1,
-          channelKey: kChannelKey,
-          title: R.strings.notificationTitle,
-          body: body,
-          payload: _documentIdToPayloadMapper.map(documentId),
-          bigPicture: image?.toString(),
-          notificationLayout: image != null
-              ? NotificationLayout.BigPicture
-              : NotificationLayout.Default,
-        ),
-        schedule: NotificationInterval(
-          interval: 5,
-          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
-          preciseAlarm: true,
-        ),
-      );
+  }) async {
+    final scheduleTime = DateTime.now().add(const Duration(seconds: 1));
+    return AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1,
+        channelKey: kChannelKey,
+        title: R.strings.notificationTitle,
+        body: body,
+        payload: _documentIdToPayloadMapper.map(documentId),
+        bigPicture: image?.toString(),
+        notificationLayout: image != null
+            ? NotificationLayout.BigPicture
+            : NotificationLayout.Default,
+      ),
+      schedule: NotificationCalendar.fromDate(date: scheduleTime),
+    );
+  }
 }
