@@ -110,18 +110,19 @@ void main() {
         nextDocuments: null,
       ),
     ).thenAnswer((_) async => {});
+
     when(
       inLineCardManager.maybeAddInLineCard(
         currentCards: {},
         nextDocuments: {fakeDocument},
-        nextDocument: fakeDocument,
+        nextDocument: null,
       ),
     ).thenAnswer((_) async => {Card.document(fakeDocument)});
     when(
       inLineCardManager.maybeAddInLineCard(
         currentCards: {Card.document(fakeDocument)},
         nextDocuments: {fakeDocument},
-        nextDocument: fakeDocument,
+        nextDocument: null,
       ),
     ).thenAnswer((_) async => {Card.document(fakeDocument)});
 
