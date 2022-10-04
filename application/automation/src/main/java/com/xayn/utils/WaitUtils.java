@@ -150,4 +150,8 @@ public class WaitUtils {
         wait.until(ExpectedConditions.textToBePresentInElement(elements.get(index), textToAppear));
     }
 
+    public MobileElement waitElementFromTheListToExist (List<MobileElement>list, int index) {
+        return wait.until(XaynExpectedConditions.elementOfListToExist(list,index));
+    }
+
 }

@@ -19,6 +19,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/so
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/handle_push_notifications_shown_use_case.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -47,6 +48,7 @@ class InLineCardManager extends Cubit<InLineCardState>
   final HandleSurveyBannerShownUseCase handleSurveyBannerShownUseCase;
   final HandleSourceSelectionShownUseCase handleSourceSelectionShownUseCase;
   final HandleCountrySelectionShownUseCase handleCountrySelectionShownUseCase;
+  final HandlePushNotificationsShownUseCase handlePushNotificationsShownUseCase;
   final HandlePushNotificationsCardClickedUseCase
       handlePushNotificationsCardClickedUseCase;
   final InLineCardInjectionUseCase inLineCardInjectionUseCase;
@@ -65,6 +67,7 @@ class InLineCardManager extends Cubit<InLineCardState>
     this.handleSurveyBannerShownUseCase,
     this.handleSourceSelectionShownUseCase,
     this.handleCountrySelectionShownUseCase,
+    this.handlePushNotificationsShownUseCase,
     this.inLineCardInjectionUseCase,
     this.featureManager,
     this.inLineNavActions,
@@ -142,6 +145,7 @@ class InLineCardManager extends Cubit<InLineCardState>
         handleCountrySelectionShownUseCase(none);
         break;
       case CardType.pushNotifications:
+        handlePushNotificationsShownUseCase(none);
         break;
     }
   }

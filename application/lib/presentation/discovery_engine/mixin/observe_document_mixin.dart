@@ -21,6 +21,9 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
   UseCaseSink<DiscoveryCardObservation, EngineEvent>? _useCaseSink;
 
   @override
+  bool get allowSuspension => false;
+
+  @override
   Future<void> close() {
     _useCaseSink = null;
 
