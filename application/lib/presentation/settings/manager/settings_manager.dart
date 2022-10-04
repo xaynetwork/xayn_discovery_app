@@ -310,7 +310,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     _localNotificationsService.sendNotification(
       body: document.resource.title,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
-      delay: const Duration(seconds: 5),
       image: document.resource.image,
     );
   }

@@ -359,10 +359,7 @@ class FakeLocalNotificationsService implements LocalNotificationsService {
 
   @override
   Future<bool> sendNotification(
-      {required String body,
-      required UniqueId documentId,
-      required Duration delay,
-      Uri? image}) {
+      {required String body, required UniqueId documentId, Uri? image}) {
     // TODO: implement sendNotification
     return Future.value(false);
   }

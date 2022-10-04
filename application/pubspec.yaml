@@ -16,7 +16,7 @@ dependencies:
   airship_flutter: 6.1.0
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
-  awesome_notifications: 0.6.21
+  awesome_notifications: 0.7.0-beta.6+1
   connectivity_plus: 2.2.1
   country_code: 1.0.0
   collection: ^1.16.0

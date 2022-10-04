@@ -17,7 +17,6 @@ abstract class LocalNotificationsService {
   Future<bool> sendNotification({
     required String body,
     required UniqueId documentId,
-    required Duration delay,
     Uri? image,
   });
   Future<bool> get isNotificationAllowed;
@@ -49,10 +48,12 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
         ],
         debug: EnvironmentHelper.kIsDebug);
 
-    AwesomeNotifications().actionStream.listen(_deepLinkHandler);
+    AwesomeNotifications()
+        .setListeners(onActionReceivedMethod: _deepLinkHandler);
   }
 
-  void _deepLinkHandler(ReceivedNotification receivedNotification) {
+  Future<void> _deepLinkHandler(
+      ReceivedNotification receivedNotification) async {
     final payload = receivedNotification.payload;
     if (payload == null) {
       logger.i('[Local Notifications] Payload not set.');
@@ -66,6 +67,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     }
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
     _deepLinkManager.onDeepLink(deepLinkData);
+    return;
   }
 
   @override
@@ -89,22 +91,24 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   Future<bool> sendNotification({
     required String body,
     required UniqueId documentId,
-    required Duration delay,
     Uri? image,
-  }) {
-    final scheduleTime = DateTime.now().add(delay);
-    return AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 1,
-        channelKey: kChannelKey,
-        title: R.strings.notificationTitle,
-        body: body,
-        payload: _documentIdToPayloadMapper.map(documentId),
-        bigPicture: image?.toString(),
-        notificationLayout:
-            image != null ? NotificationLayout.BigPicture : null,
-      ),
-      schedule: NotificationCalendar.fromDate(date: scheduleTime),
-    );
-  }
+  }) async =>
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 1,
+          channelKey: kChannelKey,
+          title: R.strings.notificationTitle,
+          body: body,
+          payload: _documentIdToPayloadMapper.map(documentId),
+          bigPicture: image?.toString(),
+          notificationLayout: image != null
+              ? NotificationLayout.BigPicture
+              : NotificationLayout.Default,
+        ),
+        schedule: NotificationInterval(
+          interval: 5,
+          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+          preciseAlarm: true,
+        ),
+      );
 }
