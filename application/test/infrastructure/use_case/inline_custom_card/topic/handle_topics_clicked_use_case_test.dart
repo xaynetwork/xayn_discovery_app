@@ -33,27 +33,10 @@ void main() {
   when(appStatusRepository.appStatus).thenReturn(initialAppStatus);
 
   group(
-    'WHEN user is subscribed',
+    'handleTopicsClickedUseCase',
     () {
       useCaseTest(
         'WHEN use case is called THEN update the topics object into the db with clicked flag set to true',
-        build: () => handleTopicsClickedUseCase,
-        input: [none],
-        verify: (_) {
-          verify(appStatusRepository.save(appStatusTopicsClicked)).called(1);
-        },
-        expect: [
-          useCaseSuccess(none),
-        ],
-      );
-    },
-  );
-
-  group(
-    'WHEN user is NOT subscribed',
-    () {
-      useCaseTest(
-        'WHEN use case is called THEN update the topics into the db with clicked flag set to true',
         build: () => handleTopicsClickedUseCase,
         input: [none],
         verify: (_) {

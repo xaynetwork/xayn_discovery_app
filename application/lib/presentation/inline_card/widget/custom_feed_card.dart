@@ -47,7 +47,9 @@ class CustomFeedCard extends StatelessWidget {
           primaryCardShader: primaryCardShader,
         );
       case CardType.topics:
-        return const TopicsInLineCard();
+        return TopicsInLineCard(
+          onCtaPressed: onPressed,
+        );
     }
   }
 }
