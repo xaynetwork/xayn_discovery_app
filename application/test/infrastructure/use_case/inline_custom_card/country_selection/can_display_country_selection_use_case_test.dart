@@ -59,7 +59,7 @@ void main() {
           );
 
           useCaseTest(
-            'WHEN countrySelection has been shown once THEN return true',
+            'WHEN countrySelection has been shown once THEN return false',
             setUp: () {
               when(featureManager.isCountrySelectionInLineCardEnabled)
                   .thenReturn(true);
@@ -69,6 +69,22 @@ void main() {
                     countrySelection: countrySelectionShownOnce,
                   ),
                 ),
+              );
+            },
+            build: () => canDisplayCountrySelectionUseCase,
+            input: [none],
+            expect: [
+              useCaseSuccess(false),
+            ],
+          );
+
+          useCaseTest(
+            'WHEN countrySelection has not been shown THEN return true',
+            setUp: () {
+              when(featureManager.isCountrySelectionInLineCardEnabled)
+                  .thenReturn(true);
+              when(appStatusRepository.appStatus).thenReturn(
+                initialAppStatus,
               );
             },
             build: () => canDisplayCountrySelectionUseCase,

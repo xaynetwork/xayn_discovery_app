@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart'
 import 'package:xayn_discovery_app/domain/repository/feed_settings_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/can_display_country_selection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_utils.dart';
 
 const int _kNumOfSessionsThreshold = 1;
 const int _kNumOfScrollsThreshold = 5;
@@ -61,8 +62,11 @@ class ListenCountryConditionsStatusUseCase
   }) {
     // The conditions are listed in the description of the following task
     // https://xainag.atlassian.net/browse/TB-4049
+    final hasExceededSwipeCount = InLineCardUtils.hasExceededSwipeCount(
+        numberOfScrolls, _kNumOfScrollsThreshold);
+
     if (numberOfSessions <= _kNumOfSessionsThreshold &&
-        numberOfScrolls >= _kNumOfScrollsThreshold &&
+        hasExceededSwipeCount &&
         numberOfSelectedCountries <= _kNumberOfSelectedCountriesThreshold) {
       return CountrySelectionConditionsStatus.reached;
     }
