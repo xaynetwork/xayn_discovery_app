@@ -5,6 +5,7 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/user_interactions/user_interactions.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/domain/repository/user_interactions_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_utils.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/can_display_push_notifications_card_use_case.dart';
 
 const int _kNumOfSessionsThreshold = 2;
@@ -52,8 +53,12 @@ class ListenPushNotificationsConditionsStatusUseCase
   }) {
     // The conditions are listed in the description of the following story
     // https://xainag.atlassian.net/browse/TB-4088
-    final reached = numberOfSessions >= _kNumOfSessionsThreshold &&
-        userInteractions.numberOfScrollsPerSession >= _kNumOfScrollsThreshold;
+    final hasExceededSwipeCount = InLineCardUtils.hasExceededSwipeCount(
+        userInteractions.numberOfScrollsPerSession, _kNumOfScrollsThreshold);
+
+    final reached =
+        numberOfSessions >= _kNumOfSessionsThreshold && hasExceededSwipeCount;
+
     return reached
         ? PushNotificationsConditionsStatus.reached
         : PushNotificationsConditionsStatus.notReached;

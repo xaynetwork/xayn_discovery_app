@@ -167,6 +167,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
       }
 
       onIndexChanged(int index) {
+        hideTooltip();
         manager.handleIndexChanged(index);
         ttsData = TtsData.disabled();
       }

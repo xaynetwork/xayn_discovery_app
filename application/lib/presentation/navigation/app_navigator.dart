@@ -285,4 +285,8 @@ class TopicsScreenNavActionsImpl implements TopicsScreenNavActions {
   @override
   void onAddTopicButtonClicked() =>
       changeStack((stack) => stack.push(PageRegistry.addTopic));
+
+  @override
+  void onManageTopicsPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.topicsFeedSettings));
 }

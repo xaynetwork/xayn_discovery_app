@@ -309,6 +309,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DbEntityMapToPushNotificationsInLineCardMapper,
   SaveUserInteractionUseCase,
   GetUserIdUseCase,
+  DbEntityMapToTopicsInLineCardMapper,
 ])
 class Mocks {
   Mocks._();
