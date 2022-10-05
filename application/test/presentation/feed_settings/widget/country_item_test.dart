@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xayn_design/src/utils/design_testing_utils.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/widget/country_item.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/country/widget/country_item.dart';
 
 void main() {
   const iconPathCross = 'packages/xayn_design/assets/icons/cross.svg';

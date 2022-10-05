@@ -113,6 +113,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
+        isTopicsEnabled: state.isTopicsEnabled,
       ),
       if (state.areRemoteNotificationsEnabled)
         _buildNotificationsSection(
@@ -121,7 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
-      _buildGeneralSection(state.isPaymentEnabled),
+      _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
       if (state.areLocalNotificationsEnabled &&
@@ -153,12 +154,15 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildHomeFeedSection({
     required bool isPaymentEnabled,
+    required bool isTopicsEnabled,
   }) =>
       SettingsHomeFeedSection(
         isFirstSection: !isPaymentEnabled,
+        isTopicsEnabled: isTopicsEnabled,
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
+        onTopicsPressed: _manager.onTopicsOptionsPressed,
       );
 
   Widget _buildNotificationsSection({
@@ -177,8 +181,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         onSelected: _manager.saveTheme,
       );
 
-  Widget _buildGeneralSection(bool isPaymentEnabled) =>
-      SettingsGeneralInfoSection(
+  Widget _buildGeneralSection() => SettingsGeneralInfoSection(
         onAboutPressed: () => _manager.openExternalUrl(
           url: Constants.aboutXaynUrl,
           currentView: CurrentView.settings,
