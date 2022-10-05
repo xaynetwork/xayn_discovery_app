@@ -60,6 +60,8 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   void _onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse,
   ) async {
+    logger.i('[Local Notifications] Did receive notification response.');
+
     final String? payload = notificationResponse.payload;
     if (payload == null) {
       logger.i('[Local Notifications] Payload not set.');
@@ -103,6 +105,8 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
     required UniqueId documentId,
     Uri? image,
   }) async {
+    logger.i('[Local Notifications] Sending notification.');
+
     final androidNotificationDetails = AndroidNotificationDetails(
       kChannelKey,
       R.strings.notificationsChannelName,
