@@ -1,13 +1,13 @@
-import 'dart:math';
+import 'dart:async';
+import 'dart:io';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
+import 'package:notification_permissions/notification_permissions.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/document_id_payload_mapper.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String kChannelKey = 'basic_channel';
@@ -16,7 +16,7 @@ const String kAndroidIconPath = 'resource://drawable/res_app_icon';
 abstract class LocalNotificationsService {
   void requestPermission();
   void openNotificationsPage();
-  Future<bool> sendNotification({
+  Future<void> sendNotification({
     required String body,
     required UniqueId documentId,
     Uri? image,
@@ -27,88 +27,103 @@ abstract class LocalNotificationsService {
 @LazySingleton(as: LocalNotificationsService)
 class LocalNotificationsServiceImpl implements LocalNotificationsService {
   final DeepLinkManager _deepLinkManager;
-  final DocumentIdToPayloadMapper _documentIdToPayloadMapper;
-  final PayloadToDocumentIdMapper _payloadToDocumentIdMapper;
 
-  LocalNotificationsServiceImpl(
-    this._deepLinkManager,
-    this._documentIdToPayloadMapper,
-    this._payloadToDocumentIdMapper,
-  ) {
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  LocalNotificationsServiceImpl(this._deepLinkManager) {
     _init();
   }
 
-  void _init() {
-    AwesomeNotifications().initialize(
-        kAndroidIconPath,
-        [
-          NotificationChannel(
-            channelKey: kChannelKey,
-            channelName: R.strings.notificationsChannelName,
-            channelDescription: R.strings.notificationsChannelDescription,
-          )
-        ],
-        debug: EnvironmentHelper.kIsDebug);
+  void _init() async {
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings(kAndroidIconPath);
 
-    AwesomeNotifications()
-        .setListeners(onActionReceivedMethod: _deepLinkHandler);
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+    );
+
+    const initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+    );
   }
 
-  Future<void> _deepLinkHandler(
-      ReceivedNotification receivedNotification) async {
-    final payload = receivedNotification.payload;
+  void _onDidReceiveNotificationResponse(
+    NotificationResponse notificationResponse,
+  ) async {
+    final String? payload = notificationResponse.payload;
     if (payload == null) {
       logger.i('[Local Notifications] Payload not set.');
       return;
     }
-    final documentId = _payloadToDocumentIdMapper.map(payload);
-    if (documentId == null) {
-      logger.i(
-          '[Local Notifications] documentId not found in notification payload.');
-      return;
-    }
+    final documentId = UniqueId.fromTrustedString(payload);
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
     _deepLinkManager.onDeepLink(deepLinkData);
-    return;
   }
 
   @override
-  Future<bool> get isNotificationAllowed =>
-      AwesomeNotifications().isNotificationAllowed();
-
-  @override
-  void requestPermission() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+  Future<bool> get isNotificationAllowed async {
+    final permissionStatus =
+        await NotificationPermissions.getNotificationPermissionStatus();
+    return permissionStatus == PermissionStatus.granted;
   }
 
   @override
-  void openNotificationsPage() =>
-      AwesomeNotifications().showNotificationConfigPage();
+  void requestPermission() async {
+    if (Platform.isIOS) {
+      await _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  IOSFlutterLocalNotificationsPlugin>()
+              ?.requestPermissions(
+                alert: true,
+                badge: true,
+                sound: true,
+              ) ??
+          false;
+    }
+  }
 
   @override
-  Future<bool> sendNotification({
+  void openNotificationsPage() {
+    //TODO: implement this
+  }
+
+  @override
+  Future<void> sendNotification({
     required String body,
     required UniqueId documentId,
     Uri? image,
   }) async {
-    final scheduleTime = DateTime.now().add(const Duration(seconds: 1));
-    return AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: Random().nextInt(1000),
-        channelKey: kChannelKey,
-        title: R.strings.notificationTitle,
-        body: body,
-        payload: _documentIdToPayloadMapper.map(documentId),
-        bigPicture: image?.toString(),
-        notificationLayout: image != null
-            ? NotificationLayout.BigPicture
-            : NotificationLayout.Default,
-      ),
-      schedule: NotificationCalendar.fromDate(date: scheduleTime),
+    final androidNotificationDetails = AndroidNotificationDetails(
+      kChannelKey,
+      R.strings.notificationsChannelName,
+      channelDescription: R.strings.notificationsChannelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const iOS = DarwinNotificationDetails();
+
+    final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: iOS,
+    );
+
+    return _flutterLocalNotificationsPlugin.show(
+      0,
+      R.strings.notificationTitle,
+      body,
+      notificationDetails,
+      payload: documentId.value,
     );
   }
 }
