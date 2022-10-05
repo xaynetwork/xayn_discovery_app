@@ -82,7 +82,7 @@ end
 desc "Checks properties required for automated execution locally"
 lane :check_automation_config do |options|
   maybe_pub_get(options)
-  hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn", "allure"])
+  hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn"])
   deviceName, deviceId, deviceVersion, app = ""
   platform = options[Options::PLATFORM]
   devicesJson = JSON.parse(shell("flutter --no-version-check devices --machine"))

@@ -107,8 +107,7 @@
                 <artifactId>allure-testng</artifactId>
                 <version>${allure.version}</version>
                 <configuration>
-                    <outputDirectory>./target/artifacts/allure-reports/</outputDirectory>
-                    <allureResultsDirectory>./target/artifacts/allure-results</allureResultsDirectory>
+                    <reportVersion>${allure.version}</reportVersion>
                 </configuration>
             </plugin>
         </plugins>

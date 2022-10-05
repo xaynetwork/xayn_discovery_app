@@ -4,11 +4,12 @@ package base;
 import com.xayn.capabilities.CapabilitiesBuilder;
 import com.xayn.constants.PlatformType;
 import com.xayn.handlers.AppiumHandler;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -26,7 +27,7 @@ import static com.xayn.handlers.AppiumHandler.getDriver;
 public abstract class IOSTestBase extends TestBase {
 
     @BeforeMethod(alwaysRun = true)
-    public void startDriver(Method method) {
+    public void startDriver(Method method) throws IllegalAccessException {
         DesiredCapabilities desiredCapabilities = new CapabilitiesBuilder()
                 .setPlatformName("iOS")
                 .setPlatformVersion(DEVICE_VERSION)
@@ -38,8 +39,8 @@ public abstract class IOSTestBase extends TestBase {
                 .setUpdatedWDABundleId(WDA_BUNDLE_ID)
                 .setFullResetValue(false)
                 .setWdaStartupRetries(5)
-                .setWdaConnectionTimeout(10 * 1000)
-                .setWdaLaunchTimeout(180 * 1000)
+                .setWdaConnectionTimeout(10*1000)
+                .setWdaLaunchTimeout(180*1000)
                 .setApp(APP)
                 .build();
         AppiumHandler.createDriver(PlatformType.IOS, desiredCapabilities);
@@ -48,11 +49,11 @@ public abstract class IOSTestBase extends TestBase {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void onFinish(ITestResult result) {
-        String path = ARTIFACTS_DIRECTORY + "/ios/ios_test_" + result.getMethod().getMethodName() + ".mp4";
+    public void onFinish() {
+        String path = ARTIFACTS_DIRECTORY + "/ios/ios_test_" + RandomStringUtils.randomAlphabetic(5) + ".mp4";
         byte[] data = Base64.decodeBase64(((IOSDriver<?>) getDriver()).stopRecordingScreen());
         try (OutputStream stream = Files.newOutputStream(
-                Paths.get(path))) {
+                Paths.get(path ))) {
             stream.write(data);
             log.info("screen recording saved as " + path);
         } catch (IOException e) {
