@@ -33,6 +33,9 @@ public class HomeScreen extends BaseScreen {
     @iOSXCUITFindBy(accessibility = "nav_bar_item_like = false")
     private List<MobileElement> likeButtonFalse;
 
+    @AndroidFindBy(xpath = " //android.widget.Button")
+    private List<MobileElement> newsCardBodyButton;
+
     @AndroidFindBy(accessibility = "nav_bar_item_like = true")
     @iOSXCUITFindBy(accessibility = "nav_bar_item_like = true")
     private List<MobileElement> likeButtonTrue;
@@ -62,7 +65,7 @@ public class HomeScreen extends BaseScreen {
     public HomeScreen open() {
         super.openScreen();
         log.warn("waiting for news feed to load..");
-        WaitUtils.getLongWaitUtils().waitElementFromTheListToExist(likeButtonFalse,0);
+        WaitUtils.getLongWaitUtils().waitElementFromTheListToExist(newsCardBodyButton,0);
         log.info("news feed loaded...");
         return this;
     }
