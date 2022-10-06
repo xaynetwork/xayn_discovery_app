@@ -61,7 +61,9 @@ public class HomeScreen extends BaseScreen {
     @Step("opening home screen")
     public HomeScreen open() {
         super.openScreen();
+        log.warn("waiting for news feed to load..");
         WaitUtils.getLongWaitUtils().waitElementFromTheListToExist(likeButtonFalse,0);
+        log.info("news feed loaded...");
         return this;
     }
 
