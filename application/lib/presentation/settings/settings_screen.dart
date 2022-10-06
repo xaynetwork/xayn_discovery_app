@@ -55,6 +55,9 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Linden get linden => UnterDenLinden.getLinden(context);
 
+  bool get _showDebugSecions =>
+      EnvironmentHelper.kAppId != EnvironmentHelper.kReleaseAppId;
+
   @override
   void initState() {
     super.initState();
@@ -125,11 +128,9 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
-      if (state.areLocalNotificationsEnabled &&
-          !EnvironmentHelper.kIsProductionFlavor)
+      if (state.areLocalNotificationsEnabled && _showDebugSecions)
         _buildLocalNotificationDebugSection(),
-      if (state.areRemoteNotificationsEnabled &&
-          !EnvironmentHelper.kIsProductionFlavor)
+      if (state.areRemoteNotificationsEnabled && _showDebugSecions)
         _buildRemoteNotificationDebugSection(),
       _buildAppVersion(state.appVersion),
       _buildBottomSpace(),

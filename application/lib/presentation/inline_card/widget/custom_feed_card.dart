@@ -3,6 +3,7 @@ import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/inline_card/widget/custom_feed_card_base.dart';
 import 'package:xayn_discovery_app/presentation/inline_card/widget/push_notifications_card.dart';
+import 'package:xayn_discovery_app/presentation/inline_card/widget/topics_card.dart';
 
 class CustomFeedCard extends StatelessWidget {
   final VoidCallback onPressed;
@@ -44,6 +45,10 @@ class CustomFeedCard extends StatelessWidget {
           cardType: cardType,
           onPressed: onPressed,
           primaryCardShader: primaryCardShader,
+        );
+      case CardType.topics:
+        return TopicsInLineCard(
+          onCtaPressed: onPressed,
         );
     }
   }

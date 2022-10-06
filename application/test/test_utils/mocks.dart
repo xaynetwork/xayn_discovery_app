@@ -104,6 +104,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/su
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/handle_survey_banner_shown_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/topic/can_display_topic_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/mark_onboarding_type_completed.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/onboarding/need_to_show_onboarding_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_details_use_case.dart';
@@ -309,6 +310,8 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   DbEntityMapToPushNotificationsInLineCardMapper,
   SaveUserInteractionUseCase,
   GetUserIdUseCase,
+  DbEntityMapToTopicsInLineCardMapper,
+  CanDisplayTopicsUseCase,
 ])
 class Mocks {
   Mocks._();

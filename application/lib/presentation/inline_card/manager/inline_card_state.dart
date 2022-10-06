@@ -4,6 +4,7 @@ import 'package:xayn_discovery_app/domain/model/push_notifications/push_notifica
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/listen_country_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/listen_source_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/topic/listen_topic_conditions_use_case.dart';
 
 part 'inline_card_state.freezed.dart';
 
@@ -21,6 +22,8 @@ class InLineCardState with _$InLineCardState {
         SourceSelectionConditionsStatus sourceSelectionConditionsStatus,
     @Default(PushNotificationsConditionsStatus.notReached)
         PushNotificationsConditionsStatus pushNotificationsConditionsStatus,
+    @Default(TopicsConditionsStatus.notReached)
+        TopicsConditionsStatus topicsConditionsStatus,
     String? selectedCountryName,
   }) = _InLineCardState;
 
@@ -31,6 +34,7 @@ class InLineCardState with _$InLineCardState {
     CountrySelectionConditionsStatus? countrySelectionConditionsStatus,
     SourceSelectionConditionsStatus? sourceSelectionConditionsStatus,
     PushNotificationsConditionsStatus? pushNotificationsConditionsStatus,
+    TopicsConditionsStatus? topicsConditionsStatus,
     String? selectedCountryName,
   }) =>
       InLineCardState(
@@ -42,6 +46,8 @@ class InLineCardState with _$InLineCardState {
             SourceSelectionConditionsStatus.notReached,
         pushNotificationsConditionsStatus: pushNotificationsConditionsStatus ??
             PushNotificationsConditionsStatus.notReached,
+        topicsConditionsStatus:
+            topicsConditionsStatus ?? TopicsConditionsStatus.notReached,
         selectedCountryName: selectedCountryName,
       );
 }
@@ -62,6 +68,9 @@ extension InLineCardStateExtension on InLineCardState {
     if (pushNotificationsConditionsStatus ==
         PushNotificationsConditionsStatus.reached) {
       return CardType.pushNotifications;
+    }
+    if (topicsConditionsStatus == TopicsConditionsStatus.reached) {
+      return CardType.topics;
     }
     return null;
   }

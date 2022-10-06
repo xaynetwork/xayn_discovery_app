@@ -171,6 +171,7 @@ void _createAppStatus(int version) {
       DbEntityMapToSourceSelectionInLineCardMapper();
   const dbEntityMapToPushNotificationsMapper =
       DbEntityMapToPushNotificationsInLineCardMapper();
+  const dbEntityMapToTopicsMapper = DbEntityMapToTopicsInLineCardMapper();
 
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
@@ -183,6 +184,7 @@ void _createAppStatus(int version) {
       dbEntityMapToCountrySelectionMapper,
       dbEntityMapToSourceSelectionMapper,
       dbEntityMapToPushNotificationsMapper,
+      dbEntityMapToTopicsMapper,
     ),
   );
   final repository = HiveAppStatusRepository(mapper);
