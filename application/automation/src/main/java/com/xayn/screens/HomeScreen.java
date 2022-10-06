@@ -33,7 +33,7 @@ public class HomeScreen extends BaseScreen {
     @iOSXCUITFindBy(accessibility = "nav_bar_item_like = false")
     private List<MobileElement> likeButtonFalse;
 
-    @AndroidFindBy(xpath = " //android.widget.Button")
+    @AndroidFindBy(xpath = "//android.widget.Button")
     private List<MobileElement> newsCardBodyButton;
 
     @AndroidFindBy(accessibility = "nav_bar_item_like = true")
