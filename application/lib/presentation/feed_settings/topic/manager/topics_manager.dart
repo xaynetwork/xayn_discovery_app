@@ -3,6 +3,8 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/topic/topic.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/topic_changed_event.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/topic/add_custom_topic_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/topic/topic_use_cases_errors.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_state.dart';
@@ -27,6 +29,7 @@ class TopicsManager extends Cubit<TopicsState>
   final TopicsScreenNavActions _topicsScreenNavActions;
   final AddCustomTopicUseCase _addCustomTopicUseCase;
   final TopicErrorsEnumMapper _topicErrorsEnumMapper;
+  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final UseCaseSink<String, Topic> _addCustomTopicHandler =
       pipe(_addCustomTopicUseCase);
@@ -40,6 +43,7 @@ class TopicsManager extends Cubit<TopicsState>
     this._topicsScreenNavActions,
     this._addCustomTopicUseCase,
     this._topicErrorsEnumMapper,
+    this._sendAnalyticsUseCase,
   ) : super(
           TopicsState(suggestedTopics: suggestedTopics),
         );
@@ -60,6 +64,12 @@ class TopicsManager extends Cubit<TopicsState>
     scheduleComputeState(
       () => _selectedTopics.remove(topic),
     );
+    _sendAnalyticsUseCase(
+      TopicChangedEvent(
+        operation: TopicChangedEventOperation.removal,
+        isCustom: topic.isCustom,
+      ),
+    );
   }
 
   void onRemoveOrUpdateTopic(Topic topic) {
@@ -71,6 +81,12 @@ class TopicsManager extends Cubit<TopicsState>
           _isEditingMode = true;
         }
       },
+    );
+    _sendAnalyticsUseCase(
+      TopicChangedEvent(
+        operation: TopicChangedEventOperation.removal,
+        isCustom: topic.isCustom,
+      ),
     );
   }
 
@@ -86,6 +102,13 @@ class TopicsManager extends Cubit<TopicsState>
         ),
       );
     }
+
+    _sendAnalyticsUseCase(
+      TopicChangedEvent(
+        operation: TopicChangedEventOperation.addition,
+        isCustom: topic.isCustom,
+      ),
+    );
   }
 
   void onAddOrRemoveTopic(Topic topic, [bool showToolTip = true]) =>
@@ -128,6 +151,12 @@ class TopicsManager extends Cubit<TopicsState>
               _checkForError &&
               newCustomTopic != null) {
             _selectedTopics.add(newCustomTopic);
+            _sendAnalyticsUseCase(
+              TopicChangedEvent(
+                operation: TopicChangedEventOperation.addition,
+                isCustom: true,
+              ),
+            );
             _newTopicName = '';
           }
 

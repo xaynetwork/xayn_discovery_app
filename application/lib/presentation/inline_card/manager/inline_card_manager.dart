@@ -144,6 +144,7 @@ class InLineCardManager extends Cubit<InLineCardState>
         if (result) scheduleComputeState(() {});
         break;
       case CardType.topics:
+        handleTopicsClickedUseCase(none);
         break;
     }
   }

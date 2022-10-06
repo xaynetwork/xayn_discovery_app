@@ -13,8 +13,11 @@ import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import '../../feed_settings/topic/widget/topic_chip.dart';
 
 class TopicsInLineCard extends StatefulWidget {
+  final VoidCallback onCtaPressed;
+
   const TopicsInLineCard({
     Key? key,
+    required this.onCtaPressed,
   }) : super(key: key);
 
   @override
@@ -112,7 +115,10 @@ class _TopicsInLineCardState extends State<TopicsInLineCard>
         : R.strings.topicsCardCTACustomTopics
             .format(manager.customSelectedTopicsCount.toString());
     return AppGhostButton(
-      onPressed: manager.onAddTopicButtonClicked,
+      onPressed: () {
+        manager.onAddTopicButtonClicked();
+        widget.onCtaPressed();
+      },
       child: Text(
         ctaString,
         textAlign: TextAlign.center,
