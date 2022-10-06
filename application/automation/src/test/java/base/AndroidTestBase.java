@@ -40,7 +40,6 @@ public abstract class AndroidTestBase extends TestBase {
                 .build();
         createDriver(PlatformType.ANDROID, desiredCapabilities);
         getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        ((AndroidDriver<?>) getDriver()).startRecordingScreen();
     }
 
     @AfterMethod(alwaysRun = true)

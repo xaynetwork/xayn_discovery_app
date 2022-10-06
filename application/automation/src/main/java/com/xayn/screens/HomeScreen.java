@@ -3,6 +3,7 @@ package com.xayn.screens;
 import com.xayn.screens.base.BaseScreen;
 import com.xayn.utils.WaitUtils;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import io.qameta.allure.Step;
@@ -11,6 +12,8 @@ import org.openqa.selenium.WebDriverException;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.xayn.handlers.AppiumHandler.getDriver;
 
 @Log4j2
 public class HomeScreen extends BaseScreen {
@@ -67,6 +70,7 @@ public class HomeScreen extends BaseScreen {
         log.warn("waiting for news feed to load..");
         WaitUtils.getLongWaitUtils().waitElementFromTheListToExist(newsCardBodyButton,0);
         log.info("news feed loaded...");
+        ((AndroidDriver<?>) getDriver()).startRecordingScreen();
         return this;
     }
 
