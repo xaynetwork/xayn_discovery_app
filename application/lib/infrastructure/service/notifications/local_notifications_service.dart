@@ -13,7 +13,7 @@ import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dar
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String kChannelKey = 'basic_channel';
-const String kAndroidIconPath = 'resource://drawable/res_app_icon';
+const String kAndroidIconPath = 'res_app_icon';
 
 abstract class LocalNotificationsService {
   void requestPermission();
