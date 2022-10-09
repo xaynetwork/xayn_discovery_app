@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_notification_image_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
@@ -27,11 +29,15 @@ abstract class LocalNotificationsService {
 @LazySingleton(as: LocalNotificationsService)
 class LocalNotificationsServiceImpl implements LocalNotificationsService {
   final DeepLinkManager _deepLinkManager;
+  final SaveNotificationImageUseCase _saveNotificationImageUseCase;
 
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  LocalNotificationsServiceImpl(this._deepLinkManager) {
+  LocalNotificationsServiceImpl(
+    this._deepLinkManager,
+    this._saveNotificationImageUseCase,
+  ) {
     _init();
   }
 
@@ -95,9 +101,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   }
 
   @override
-  void openNotificationsPage() {
-    //TODO: implement this
-  }
+  void openNotificationsPage() => AppSettings.openNotificationSettings();
 
   @override
   Future<void> sendNotification({
@@ -107,15 +111,21 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   }) async {
     logger.i('[Local Notifications] Sending notification.');
 
+    final imagePath = await _saveNotificationImageUseCase.singleOutput(image);
+
     final androidNotificationDetails = AndroidNotificationDetails(
       kChannelKey,
       R.strings.notificationsChannelName,
       channelDescription: R.strings.notificationsChannelDescription,
       importance: Importance.max,
       priority: Priority.high,
+      largeIcon: imagePath != null ? FilePathAndroidBitmap(imagePath) : null,
     );
 
-    const iOS = DarwinNotificationDetails();
+    final iOS = DarwinNotificationDetails(
+      attachments:
+          imagePath != null ? [DarwinNotificationAttachment(imagePath)] : null,
+    );
 
     final NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
