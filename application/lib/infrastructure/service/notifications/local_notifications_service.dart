@@ -13,7 +13,7 @@ import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dar
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String kChannelKey = 'basic_channel';
-const String kAndroidIconPath = 'res_app_icon';
+const String kAndroidIconName = 'res_app_icon';
 
 abstract class LocalNotificationsService {
   void requestPermission();
@@ -43,7 +43,7 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
 
   void _init() async {
     const initializationSettingsAndroid =
-        AndroidInitializationSettings(kAndroidIconPath);
+        AndroidInitializationSettings(kAndroidIconName);
 
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
@@ -97,6 +97,11 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
                 sound: true,
               ) ??
           false;
+    } else if (Platform.isAndroid) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestPermission();
     }
   }
 
