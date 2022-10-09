@@ -7,9 +7,9 @@ import 'package:xayn_architecture/concepts/use_case/use_case_base.dart';
 import 'package:xayn_discovery_app/domain/model/analytics/analytics_event.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_operation.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_pending_operations.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_pending_operations.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_state.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 import '../../../../../test_utils/utils.dart';

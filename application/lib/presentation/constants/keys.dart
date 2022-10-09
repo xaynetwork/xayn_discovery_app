@@ -35,6 +35,7 @@ class Keys {
       Key('settingsToggleTextToSpeechPreference');
   static const Key settingsCountriesOption = Key('settings_countries_option');
   static const Key settingsSourcesOption = Key('settings_sources_option');
+  static const Key settingsTopicsOption = Key('settings_topics_option');
   static const Key settingsRequestLocalNotificationBtn =
       Key('settings_request_local_notification');
   static const Key settingsRequestRemoteNotificationBtn =
@@ -59,8 +60,22 @@ class Keys {
   static const Key feedView = Key('feed_view');
 
   static Key collectionItem(String value) => Key('collectionItem$value');
+
   static Key generateCollectionsScreenCardKey(String collectionId) =>
       Key('collections_screen_card$collectionId');
+
+  static const Key suggestedTopicsScience = Key('suggestedTopicsScience');
+  static const Key suggestedTopicsTechnology = Key('suggestedTopicsTechnology');
+  static const Key suggestedTopicsEntertainment =
+      Key('suggestedTopicsEntertainment');
+  static const Key suggestedTopicsPolitics = Key('suggestedTopicsPolitics');
+  static const Key suggestedTopicsSports = Key('suggestedTopicsSports');
+  static const Key suggestedTopicsHealth = Key('suggestedTopicsHealth');
+  static const Key suggestedTopicsWorld = Key('suggestedTopicsWorld');
+  static const Key suggestedTopicsSustainability =
+      Key('suggestedTopicsSustainability');
+  static const Key suggestedTopicsBusiness = Key('suggestedTopicsBusiness');
+  static const Key suggestedTopicsLifestyle = Key('suggestedTopicsLifestyle');
 }
 
 extension ValueKeyExtension on Key {

@@ -226,3 +226,28 @@ pushNotificationsCardCTA: Allow notifications
 pushNotificationsCardPerk1: Top news from your selected region
 pushNotificationsCardPerk2: Personal reading recommendations
 pushNotificationsCardPerk3: Discover new areas of interests
+feedSettingsScreenTabTopics: Topics
+addTopicBtn: Add a topic
+topicsScreenDescription: We are going to use your topics to find stories and articles that might be interesting for you.
+noTopicsYet: No topics yet
+addTopicScreenTitle: Looking for specific content?
+addedTopicsSubHeader: Added
+suggestedTopicsSubHeader: Suggested
+addTopicHintText: Please enter your topics and separate each with a comma
+feedSettingsScreenMaxTopicsError: Topic max length is 48 characters
+topicAddedTooltipMessage: Topic added. Manage topics
+manageTopicsTooltipMessage: Manage topics
+topicsCardCTA: or enter your own topics
+topicsCardCTACustomTopics: +%s custom topics
+topicsCardSubtitle: Please select the topics that may interest you
+suggestedTopics:
+  science: Science
+  technology: Technology
+  entertainment: Entertainment
+  politics: Politics
+  sports: Sports
+  health: Health
+  world: World
+  sustainability: Sustainability
+  business: Business
+  lifestyle: LifeStyle

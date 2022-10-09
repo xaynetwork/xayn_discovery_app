@@ -75,6 +75,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
   bool get isSourceSelectionInLineCardEnabled =>
       isEnabled(Feature.sourceSelectionInLineCard);
 
+  bool get isTopicsEnabled => isEnabled(Feature.topics);
+
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(
         featureMap: Map.from(_featureMap),

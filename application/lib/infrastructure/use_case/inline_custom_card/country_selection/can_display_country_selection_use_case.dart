@@ -27,7 +27,7 @@ class CanDisplayCountrySelectionUseCase extends UseCase<None, bool> {
     final numberOfTimesShown =
         appStatus.cta.countrySelection.numberOfTimesShown;
 
-    final canBeShown = numberOfTimesShown <= _kNumberOfTimesShownThreshold;
+    final canBeShown = numberOfTimesShown < _kNumberOfTimesShownThreshold;
 
     yield canBeShown;
   }

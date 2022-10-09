@@ -8,8 +8,9 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/page/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/country/manager/country_feed_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_manager.dart';
 import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
@@ -118,6 +119,11 @@ class SettingsNavActionsImpl extends SettingsNavActions {
         (stack) => stack.push(
           PageRegistry.sourceFeedSettings(),
         ),
+      );
+
+  @override
+  void onTopicsOptionsPressed() => changeStack(
+        (stack) => stack.push(PageRegistry.topicsFeedSettings),
       );
 }
 
@@ -263,4 +269,24 @@ class InLineNavActionsImpl extends InLineNavActions {
   @override
   void onManageSourcesPressed() =>
       changeStack((stack) => stack.push(PageRegistry.sourceFeedSettings()));
+}
+
+@Injectable(as: TopicsScreenNavActions)
+class TopicsScreenNavActionsImpl implements TopicsScreenNavActions {
+  final xayn.StackManipulationFunction changeStack;
+
+  TopicsScreenNavActionsImpl(AppNavigationManager manager)
+      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
+      : changeStack = manager.manipulateStack;
+
+  @override
+  void onDismissTopicsScreen() => changeStack((stack) => stack.pop());
+
+  @override
+  void onAddTopicButtonClicked() =>
+      changeStack((stack) => stack.push(PageRegistry.addTopic));
+
+  @override
+  void onManageTopicsPressed() =>
+      changeStack((stack) => stack.push(PageRegistry.topicsFeedSettings));
 }

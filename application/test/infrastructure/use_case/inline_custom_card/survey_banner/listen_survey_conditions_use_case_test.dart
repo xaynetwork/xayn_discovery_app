@@ -83,7 +83,7 @@ void main() {
         'WHEN number of scrolls did NOT reach threshold THEN conditions have not been reached',
         () {
           final updatedUserInteractions = initialUserInteractions.copyWith(
-            numberOfScrolls: 4,
+            numberOfScrolls: 3,
             numberOfArticlesBookmarked: 7,
           );
 

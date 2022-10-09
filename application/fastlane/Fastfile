@@ -82,7 +82,7 @@ end
 desc "Checks properties required for automated execution locally"
 lane :check_automation_config do |options|
   maybe_pub_get(options)
-  hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn"])
+  hash = checkIfComponentsInstalled(["appium", "node", "adb", "mvn", "allure"])
   deviceName, deviceId, deviceVersion, app = ""
   platform = options[Options::PLATFORM]
   devicesJson = JSON.parse(shell("flutter --no-version-check devices --machine"))
@@ -179,7 +179,7 @@ private_lane :build_with_flutter do |options|
   end
 
 
-  shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/default_remote_config.yaml")
+  shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/remote_config/default.yaml")
   shell((%W(flutter --no-version-check build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
 
 end

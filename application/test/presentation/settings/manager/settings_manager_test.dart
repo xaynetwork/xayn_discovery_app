@@ -35,6 +35,7 @@ void main() {
     arePushNotificationsActive: false,
     areLocalNotificationsEnabled: false,
     areRemoteNotificationsEnabled: false,
+    isTopicsEnabled: false,
     subscriptionStatus: subscriptionStatus,
   );
 
@@ -117,6 +118,8 @@ void main() {
         .thenAnswer((invocation) => invocation.positionalArguments.first);
 
     when(featureManager.isPaymentEnabled).thenReturn(false);
+
+    when(featureManager.isTopicsEnabled).thenReturn(false);
 
     when(featureManager.areLocalNotificationsEnabled).thenReturn(false);
 

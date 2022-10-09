@@ -13,8 +13,8 @@ import 'package:xayn_discovery_app/infrastructure/service/analytics/events/app_t
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bug_reported_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/feedback_given_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_reset_ai_window_event.dart';
+import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_subscription_window_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/reset_ai_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/subscription_action_event.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
@@ -52,6 +52,8 @@ abstract class SettingsNavActions {
   void onCountriesOptionsPressed();
 
   void onSourcesOptionsPressed();
+
+  void onTopicsOptionsPressed();
 }
 
 @lazySingleton
@@ -201,6 +203,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         theme: _theme,
         appVersion: _appVersion,
         isPaymentEnabled: _featureManager.isPaymentEnabled,
+        isTopicsEnabled: _featureManager.isTopicsEnabled,
         arePushNotificationsActive:
             userNotificationsEnabled && isNotificationAllowed,
         areLocalNotificationsEnabled:
@@ -237,6 +240,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   @override
   void onSourcesOptionsPressed() =>
       _settingsNavActions.onSourcesOptionsPressed();
+
+  @override
+  void onTopicsOptionsPressed() => _settingsNavActions.onTopicsOptionsPressed();
 
   void onResetAIPressed() {
     _sendAnalyticsUseCase(OpenResetAIWindowEvent());

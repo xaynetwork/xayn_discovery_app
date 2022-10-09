@@ -59,7 +59,7 @@ void main() {
           );
 
           useCaseTest(
-            'WHEN sourceSelection has been shown once THEN return true',
+            'WHEN sourceSelection has been shown once THEN return false',
             setUp: () {
               when(featureManager.isSourceSelectionInLineCardEnabled)
                   .thenReturn(true);
@@ -69,6 +69,22 @@ void main() {
                     sourceSelection: sourceSelectionShownOnce,
                   ),
                 ),
+              );
+            },
+            build: () => canDisplaySourceSelectionUseCase,
+            input: [none],
+            expect: [
+              useCaseSuccess(false),
+            ],
+          );
+
+          useCaseTest(
+            'WHEN sourceSelection has not been shown THEN return true',
+            setUp: () {
+              when(featureManager.isSourceSelectionInLineCardEnabled)
+                  .thenReturn(true);
+              when(appStatusRepository.appStatus).thenReturn(
+                initialAppStatus,
               );
             },
             build: () => canDisplaySourceSelectionUseCase,

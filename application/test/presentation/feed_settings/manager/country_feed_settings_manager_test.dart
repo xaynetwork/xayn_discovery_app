@@ -5,8 +5,8 @@ import 'package:mockito/mockito.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/country/country.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/feed_countries_changed_event.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/manager/country_feed_settings_state.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/country/manager/country_feed_settings_manager.dart';
+import 'package:xayn_discovery_app/presentation/feed_settings/country/manager/country_feed_settings_state.dart';
 
 import '../../../test_utils/utils.dart';
 

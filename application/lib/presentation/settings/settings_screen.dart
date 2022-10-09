@@ -55,6 +55,9 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Linden get linden => UnterDenLinden.getLinden(context);
 
+  bool get _showDebugSecions =>
+      EnvironmentHelper.kAppId != EnvironmentHelper.kReleaseAppId;
+
   @override
   void initState() {
     super.initState();
@@ -113,6 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         ),
       _buildHomeFeedSection(
         isPaymentEnabled: state.isPaymentEnabled,
+        isTopicsEnabled: state.isTopicsEnabled,
       ),
       if (state.areRemoteNotificationsEnabled)
         _buildNotificationsSection(
@@ -121,14 +125,12 @@ class _SettingsScreenState extends State<SettingsScreen>
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
-      _buildGeneralSection(state.isPaymentEnabled),
+      _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
-      if (state.areLocalNotificationsEnabled &&
-          !EnvironmentHelper.kIsProductionFlavor)
+      if (state.areLocalNotificationsEnabled && _showDebugSecions)
         _buildLocalNotificationDebugSection(),
-      if (state.areRemoteNotificationsEnabled &&
-          !EnvironmentHelper.kIsProductionFlavor)
+      if (state.areRemoteNotificationsEnabled && _showDebugSecions)
         _buildRemoteNotificationDebugSection(),
       _buildAppVersion(state.appVersion),
       _buildBottomSpace(),
@@ -153,12 +155,15 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildHomeFeedSection({
     required bool isPaymentEnabled,
+    required bool isTopicsEnabled,
   }) =>
       SettingsHomeFeedSection(
         isFirstSection: !isPaymentEnabled,
+        isTopicsEnabled: isTopicsEnabled,
         onCountriesPressed: _manager.onCountriesOptionsPressed,
         onSourcesPressed: _manager.onSourcesOptionsPressed,
         onResetAIPressed: _manager.onResetAIPressed,
+        onTopicsPressed: _manager.onTopicsOptionsPressed,
       );
 
   Widget _buildNotificationsSection({
@@ -177,8 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         onSelected: _manager.saveTheme,
       );
 
-  Widget _buildGeneralSection(bool isPaymentEnabled) =>
-      SettingsGeneralInfoSection(
+  Widget _buildGeneralSection() => SettingsGeneralInfoSection(
         onAboutPressed: () => _manager.openExternalUrl(
           url: Constants.aboutXaynUrl,
           currentView: CurrentView.settings,
