@@ -61,7 +61,7 @@ public class HomeScreen extends BaseScreen {
     @Step("opening home screen")
     public HomeScreen open() {
         super.openScreen();
-        WaitUtils.getLongWaitUtils().waitElementFromTheListToExist(likeButtonFalse,0);
+        WaitUtils.getLongWaitUtils().waitElementFromTheListToExist(discoveryCards,0);
         return this;
     }
 
