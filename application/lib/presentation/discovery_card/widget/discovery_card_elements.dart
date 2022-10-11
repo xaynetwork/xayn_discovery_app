@@ -20,7 +20,7 @@ import 'favicon_bar.dart';
 /// suddenly take up less or more lines for example.
 /// Instead, the title width is static, based on the device's width and not the
 /// card's width.
-const double _kMaxTitleFraction = .75;
+const double _kMaxTitleFraction = .25;
 
 class DiscoveryCardElements extends StatelessWidget {
   const DiscoveryCardElements({
@@ -70,21 +70,14 @@ class DiscoveryCardElements extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final timeToReadWidget = Text(
-      '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.sStyle.copyWith(color: R.colors.primaryText),
-      textAlign: TextAlign.left,
-      maxLines: 5,
-      overflow: TextOverflow.ellipsis,
-    );
     final titleWidgetStyle =
         useLargeTitle ? R.styles.xxlBoldStyle : R.styles.xlBoldStyle;
     final titleWidget = AutoSizeText(
       title,
       style: titleWidgetStyle.copyWith(color: R.colors.primaryText),
-      textAlign: TextAlign.left,
-      minFontSize: titleWidgetStyle.fontSize! * 0.75,
-      maxLines: 5,
+      textAlign: TextAlign.center,
+      minFontSize: titleWidgetStyle.fontSize! * _kMaxTitleFraction,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
 
@@ -107,18 +100,19 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
     );
 
-    final titleAndTimeToRead = Wrap(
-      runAlignment: WrapAlignment.end,
-      runSpacing: R.dimen.unit,
-      children: [
-        if (timeToRead.isNotEmpty) timeToReadWidget,
-        SizedBox(
-          width: mediaQuery.size.width * _kMaxTitleFraction,
-          child: Row(
-            children: [Expanded(child: titleWidget)],
+    final titleAndTimeToRead = ClipRRect(
+      child: Wrap(
+        runAlignment: WrapAlignment.center,
+        runSpacing: R.dimen.unit,
+        children: [
+          SizedBox(
+            width: mediaQuery.size.width,
+            child: Row(
+              children: [Expanded(child: titleWidget)],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
 
     final elements = Padding(
@@ -136,7 +130,7 @@ class DiscoveryCardElements extends StatelessWidget {
               curve: Curves.easeOut,
               child: _buildCardHeader(),
             ),
-            titleAndTimeToRead,
+            Expanded(child: titleAndTimeToRead),
             SizedBox(
               width: double.infinity,
               height: R.dimen.unit12 * fractionSize,
@@ -161,17 +155,23 @@ class DiscoveryCardElements extends StatelessWidget {
       padding: EdgeInsets.all(R.dimen.unit),
       child: Icon(
         Icons.volume_up,
-        color: R.colors.brightIcon,
+        color: R.colors.icon,
       ),
     );
 
-    final openIconColor = R.colors.brightIcon;
     final openUrlIcon = Padding(
       padding: EdgeInsets.all(R.dimen.unit),
       child: SvgPicture.asset(
         R.assets.icons.more,
-        color: openIconColor,
+        color: R.colors.icon,
       ),
+    );
+
+    final timeToReadWidget = Text(
+      '$timeToRead ${R.strings.readingTimeSuffix}',
+      style: R.styles.sStyle.copyWith(color: R.colors.primaryText),
+      textAlign: TextAlign.left,
+      maxLines: 1,
     );
 
     maybeWithTap(Widget child, VoidCallback onTap) => Material(
@@ -188,6 +188,7 @@ class DiscoveryCardElements extends StatelessWidget {
           Expanded(child: maybeWithTap(faviconRow, onProviderSectionTap))
         else
           const Spacer(),
+        if (timeToRead.isNotEmpty) timeToReadWidget,
         if (featureManager.isTtsEnabled) maybeWithTap(ttsIcon, onToggleTts),
         maybeWithTap(
           openUrlIcon,
