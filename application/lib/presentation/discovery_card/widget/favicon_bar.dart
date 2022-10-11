@@ -26,18 +26,18 @@ class FaviconBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerNameAndDatePublished = Column(
+    final providerNameAndDatePublished = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           provider?.name ?? '',
-          style: R.styles.sBoldStyle.copyWith(color: Colors.white),
+          style: R.styles.sBoldStyle.copyWith(color: R.colors.primaryText),
           overflow: TextOverflow.ellipsis,
         ),
         Text(
           timeAgo(datePublished, DateFormat.yMMMMd()),
-          style: R.styles.sStyle.copyWith(color: Colors.white),
+          style: R.styles.sStyle.copyWith(color: R.colors.primaryText),
         ),
       ],
     );

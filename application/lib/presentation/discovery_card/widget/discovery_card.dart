@@ -252,7 +252,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           left: R.dimen.unit3,
           right: R.dimen.unit3,
           bottom: R.dimen.readerModeBottomPadding,
-          top: 3 * size.height / 5 + R.dimen.unit2,
+          top: size.height / 2 + R.dimen.unit6,
         );
 
         final elmsMinPos = constraints.maxHeight / 3;
@@ -290,6 +290,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                       ),
                       Positioned(
                         top: elmsPos - normalizedScrollOffset,
+                        bottom: (1.0 - fractionSize) *
+                                2 *
+                                constraints.maxHeight /
+                                5 +
+                            normalizedScrollOffset,
                         left: 0,
                         right: 0,
                         child: elements,
