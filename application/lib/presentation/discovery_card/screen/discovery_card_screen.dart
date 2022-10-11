@@ -86,7 +86,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         buildNavBarItemArrowLeft(
             onPressed: _discoveryCardScreenManager.onBackPressed),
 
-        if (_featureManager.areCollectionsEnabled)
+        if (!_featureManager.isDemoModeEnabled)
           buildNavBarItemBookmark(
             bookmarkStatus: discoveryCardManager.state.bookmarkStatus,
             onPressed: onBookmarkPressed,

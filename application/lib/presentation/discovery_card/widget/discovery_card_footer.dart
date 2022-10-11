@@ -9,18 +9,19 @@ import 'package:xayn_discovery_app/presentation/utils/semantics_extension.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class DiscoveryCardFooter extends StatelessWidget {
-  const DiscoveryCardFooter({
-    Key? key,
-    required this.onSharePressed,
-    required this.onLikePressed,
-    required this.onDislikePressed,
-    required this.onBookmarkPressed,
-    required this.onBookmarkLongPressed,
-    required this.bookmarkStatus,
-    required this.document,
-    required this.explicitDocumentUserReaction,
-    required this.areCollectionsEnabled,
-  }) : super(key: key);
+  const DiscoveryCardFooter(
+      {Key? key,
+      required this.onSharePressed,
+      required this.onLikePressed,
+      required this.onDislikePressed,
+      required this.onBookmarkPressed,
+      required this.onBookmarkLongPressed,
+      required this.bookmarkStatus,
+      required this.document,
+      required this.explicitDocumentUserReaction,
+      this.isBookmarkButtonVisible = true,
+      this.isDislikeButtonVisible = true})
+      : super(key: key);
 
   final VoidCallback onSharePressed;
   final VoidCallback onLikePressed;
@@ -30,7 +31,8 @@ class DiscoveryCardFooter extends StatelessWidget {
   final BookmarkStatus bookmarkStatus;
   final Document document;
   final UserReaction explicitDocumentUserReaction;
-  final bool areCollectionsEnabled;
+  final bool isBookmarkButtonVisible;
+  final bool isDislikeButtonVisible;
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +76,9 @@ class DiscoveryCardFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         likeButton,
-        if (areCollectionsEnabled) bookmarkButton,
+        if (isBookmarkButtonVisible) bookmarkButton,
         shareButton,
-        dislikeButton,
+        if (isDislikeButtonVisible) dislikeButton,
       ],
     );
   }

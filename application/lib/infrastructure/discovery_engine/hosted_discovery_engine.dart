@@ -89,8 +89,7 @@ class HostedDiscoveryEngine implements DiscoveryEngine {
       {required DocumentId documentId,
       required DocumentViewMode mode,
       required int seconds}) {
-    // TODO: implement logDocumentTime
-    throw UnimplementedError();
+    return Future.value(const EngineEvent.clientEventSucceeded());
   }
 
   @override

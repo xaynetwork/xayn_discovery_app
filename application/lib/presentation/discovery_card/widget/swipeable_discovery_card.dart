@@ -22,6 +22,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     required this.card,
     required this.isPrimary,
     this.isSwipingEnabled = true,
+    this.isDemoModeEnabled = false,
     this.onFling,
   }) : super(key: key);
 
@@ -31,6 +32,7 @@ class SwipeableDiscoveryCard extends StatelessWidget {
   final Widget card;
   final bool isPrimary;
   final bool isSwipingEnabled;
+  final bool isDemoModeEnabled;
   final VoidCallback? onFling;
 
   @override
@@ -38,38 +40,47 @@ class SwipeableDiscoveryCard extends StatelessWidget {
     return isSwipingEnabled ? _buildSwipeWidget(card) : card;
   }
 
-  Widget _buildSwipeWidget(Widget child) => Swipe<SwipeOption>(
-        optionsLeft: isPrimary
-            ? [
-                explicitDocumentUserReaction.isRelevant
-                    ? SwipeOption.neutral
-                    : SwipeOption.like
-              ]
-            : const [],
-        optionsRight: isPrimary
-            ? [
-                explicitDocumentUserReaction.isIrrelevant
-                    ? SwipeOption.neutral
-                    : SwipeOption.dislike
-              ]
-            : const [],
-        minFlingVelocity: _kMinFlingVelocity,
-        minFlingDragDistanceFraction: .222,
-        onFling: isPrimary
-            ? (options) {
-                onFling?.call();
-                return options.first;
-              }
-            : null,
-        opensToPosition: _kSwipeOpenToPosition,
-        onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
-        optionBuilder: optionsBuilder,
-        waitBeforeClosingDuration: Duration.zero,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(R.dimen.unit1_5),
-          child: card,
-        ),
-      );
+  Widget _buildSwipeWidget(Widget child) {
+    Iterable<SwipeOption> optionsLeft = isPrimary
+        ? [
+            explicitDocumentUserReaction.isRelevant
+                ? SwipeOption.neutral
+                : SwipeOption.like
+          ]
+        : const [];
+    Iterable<SwipeOption> optionsLeftDemoMode =
+        isPrimary ? const [SwipeOption.like] : const [];
+
+    Iterable<SwipeOption> optionsRight = isPrimary
+        ? [
+            explicitDocumentUserReaction.isIrrelevant
+                ? SwipeOption.neutral
+                : SwipeOption.dislike
+          ]
+        : const [];
+    Iterable<SwipeOption> optionsRightDemoMode = const [];
+
+    return Swipe<SwipeOption>(
+      optionsLeft: isDemoModeEnabled ? optionsLeftDemoMode : optionsLeft,
+      optionsRight: isDemoModeEnabled ? optionsRightDemoMode : optionsRight,
+      minFlingVelocity: _kMinFlingVelocity,
+      minFlingDragDistanceFraction: .222,
+      onFling: isPrimary
+          ? (options) {
+              onFling?.call();
+              return options.first;
+            }
+          : null,
+      opensToPosition: _kSwipeOpenToPosition,
+      onOptionTap: isPrimary ? (option) => onOptionsTap(option) : null,
+      optionBuilder: optionsBuilder,
+      waitBeforeClosingDuration: Duration.zero,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(R.dimen.unit1_5),
+        child: card,
+      ),
+    );
+  }
 
   void onOptionsTap(SwipeOption option) {
     onSwipe(option);

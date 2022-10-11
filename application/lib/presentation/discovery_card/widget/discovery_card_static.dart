@@ -82,7 +82,8 @@ class _DiscoveryCardStaticState
           provider: provider,
           datePublished: webResource.datePublished,
           isInteractionEnabled: true,
-          areCollectionsEnabled: featureManager.areCollectionsEnabled,
+          isBookmarkButtonVisible: !featureManager.isDemoModeEnabled,
+          isDislikeButtonVisible: !featureManager.isDemoModeEnabled,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
           onOpenHeaderMenu: () {

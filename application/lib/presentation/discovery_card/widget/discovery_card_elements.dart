@@ -45,7 +45,8 @@ class DiscoveryCardElements extends StatelessWidget {
     this.fractionSize = 1.0,
     this.provider,
     this.useLargeTitle = true,
-    this.areCollectionsEnabled = true,
+    this.isBookmarkButtonVisible = true,
+    this.isDislikeButtonVisible = true,
   }) : super(key: key);
   final DiscoveryCardManager manager;
   final Document document;
@@ -66,7 +67,8 @@ class DiscoveryCardElements extends StatelessWidget {
   final double fractionSize;
   final bool useLargeTitle;
   final bool isInteractionEnabled;
-  final bool areCollectionsEnabled;
+  final bool isBookmarkButtonVisible;
+  final bool isDislikeButtonVisible;
   final FeedType? feedType;
 
   @override
@@ -106,7 +108,8 @@ class DiscoveryCardElements extends StatelessWidget {
         bookmarkStatus: bookmarkStatus,
         document: document,
         explicitDocumentUserReaction: explicitDocumentUserReaction,
-        areCollectionsEnabled: areCollectionsEnabled,
+        isBookmarkButtonVisible: isBookmarkButtonVisible,
+        isDislikeButtonVisible: isDislikeButtonVisible,
       ),
     );
 

@@ -39,7 +39,7 @@ class _DiscoveryFeedState
                   hideTooltip();
                   _manager.onHomeNavPressed();
                 }),
-            if (_featureManager.isActiveSearchEnabled)
+            if (!_featureManager.isDemoModeEnabled)
               buildNavBarItemSearch(onPressed: () {
                 hideTooltip();
                 _manager.onSearchNavPressed();
@@ -100,7 +100,7 @@ class _DiscoveryFeedState
               feedType: FeedType.feed,
             ),
           ),
-          if (_featureManager.areCollectionsEnabled)
+          if (!_featureManager.isDemoModeEnabled)
             buildNavBarItemBookmark(
               bookmarkStatus:
                   managers.discoveryCardManager.state.bookmarkStatus,
@@ -116,18 +116,19 @@ class _DiscoveryFeedState
           buildNavBarItemEditFont(
             onPressed: onEditReaderModeSettingsPressed,
           ),
-          buildNavBarItemDisLike(
-            isDisLiked: managers.discoveryCardManager.state
-                .explicitDocumentUserReaction.isIrrelevant,
-            onPressed: () => managers.discoveryCardManager.onFeedback(
-              document: document,
-              userReaction: managers.discoveryCardManager.state
-                      .explicitDocumentUserReaction.isIrrelevant
-                  ? UserReaction.neutral
-                  : UserReaction.negative,
-              feedType: FeedType.feed,
+          if (!_featureManager.isDemoModeEnabled)
+            buildNavBarItemDisLike(
+              isDisLiked: managers.discoveryCardManager.state
+                  .explicitDocumentUserReaction.isIrrelevant,
+              onPressed: () => managers.discoveryCardManager.onFeedback(
+                document: document,
+                userReaction: managers.discoveryCardManager.state
+                        .explicitDocumentUserReaction.isIrrelevant
+                    ? UserReaction.neutral
+                    : UserReaction.negative,
+                feedType: FeedType.feed,
+              ),
             ),
-          ),
         ],
         isWidthExpanded: true,
       );

@@ -306,6 +306,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                         .state.explicitDocumentUserReaction,
                     card: cardWidget,
                     isSwipingEnabled: isSwipingEnabled,
+                    isDemoModeEnabled: featureManager.isDemoModeEnabled,
                     onFling: managers
                         .discoveryCardManager.triggerHapticFeedbackMedium,
                   )

@@ -77,9 +77,7 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isTopicsEnabled => isEnabled(Feature.topics);
 
-  bool get isActiveSearchEnabled => isEnabled(Feature.activeSearch);
-
-  bool get areCollectionsEnabled => isEnabled(Feature.collections);
+  bool get isDemoModeEnabled => isEnabled(Feature.demoMode);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(

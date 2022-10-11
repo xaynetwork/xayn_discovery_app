@@ -63,7 +63,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             hideTooltip();
             _manager.onHomeNavPressed();
           }),
-          if (_featureManager.isActiveSearchEnabled)
+          if (!_featureManager.isDemoModeEnabled)
             buildNavBarItemSearch(onPressed: () {
               hideTooltip();
               _manager.onActiveSearchNavPressed();
@@ -78,8 +78,14 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   @override
   Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appToolbarData: _featureManager.areCollectionsEnabled
-            ? AppToolbarData.withTwoTrailingIcons(
+        appToolbarData: _featureManager.isDemoModeEnabled
+            ? AppToolbarData.withTrailingIcon(
+                title: R.strings.personalAreaTitle,
+                iconPath: R.assets.icons.gear,
+                onPressed: _manager.onSettingsNavPressed,
+                semanticsLabel: SemanticsLabels.personalAreaIconSettings,
+              )
+            : AppToolbarData.withTwoTrailingIcons(
                 title: R.strings.personalAreaTitle,
                 iconModels: [
                   AppToolbarIconModel(
@@ -94,12 +100,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
                     semanticsLabel: SemanticsLabels.personalAreaIconSettings,
                   ),
                 ],
-              )
-            : AppToolbarData.withTrailingIcon(
-                title: R.strings.personalAreaTitle,
-                iconPath: R.assets.icons.gear,
-                onPressed: _manager.onSettingsNavPressed,
-                semanticsLabel: SemanticsLabels.personalAreaIconSettings,
               ),
         body: _buildBody(),
       );
@@ -111,7 +111,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
 
   bool _filterItems(ListItemModel model) {
     return model.map(
-      collection: (_) => _featureManager.areCollectionsEnabled,
+      collection: (_) => !_featureManager.isDemoModeEnabled,
       payment: (_) => true,
       contact: (_) => true,
     );
