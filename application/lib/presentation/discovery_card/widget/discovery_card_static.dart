@@ -5,20 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -50,7 +47,6 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic> with OverlayStateMixin {
   late final _scrollController = ScrollController(keepScrollOffset: false);
-  late final DiscoveryCardShadowManager _shadowManager = di.get();
   double _scrollOffset = .0;
 
   @override
@@ -161,14 +157,8 @@ class _DiscoveryCardStaticState
   }
 
   @override
-  Widget buildImage(Color shadowColor) =>
-      BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
-        bloc: _shadowManager,
-        builder: (_, state) => super.buildImage(
-          R.isDarkMode
-              ? state.readerModeBackgroundColor.color
-              : R.colors.swipeCardBackgroundHome,
-        ),
+  Widget buildImage() => Arc(
+        child: super.buildImage(),
       );
 
   Widget _buildReaderMode({
