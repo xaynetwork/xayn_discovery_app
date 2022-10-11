@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
-import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/env/env.dart';
+import 'package:xayn_discovery_app/infrastructure/mappers/json_to_document_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_explicit_document_feedback_repository.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -41,6 +41,7 @@ class HostedDiscoveryEngineService {
   final Map<Uri, Document> _cache = <Uri, Document>{};
   int _interactionCount = 0;
   Future<List<Document>>? _activeRequest;
+  final _documentMapper = const HostedDocumentMapper();
 
   String get userId => appStatusRepository.appStatus.userId.value;
 
@@ -161,7 +162,7 @@ class HostedDiscoveryEngineService {
       return documents
           .cast<Map<String, Object?>>()
           .map((it) => _cache.putIfAbsent(
-              Uri.parse(it['link'] as String), () => it.toDocument))
+              Uri.parse(it['link'] as String), () => _documentMapper.map(it)))
           .toList(growable: false);
     });
 
@@ -181,44 +182,4 @@ extension _StatusCodeExtension on int {
 extension _UserReactionExtension on UserReaction {
   /// todo: we should soon also have support for [UserReaction.neutral] and [UserReaction.negative].
   bool get supportsChangeUserReaction => this == UserReaction.positive;
-}
-
-extension _DocumentExtension on Map<String, dynamic> {
-  Document get toDocument => Document(
-        documentId: DocumentId.fromString(this['id'] as String),
-        stackId: StackId.nil(),
-        userReaction: UserReaction.neutral,
-        resource: NewsResource(
-          rank: this['rank'] as int,
-          title: this['title'] as String,
-          image:
-              this['media'] != null ? Uri.parse(this['media'] as String) : null,
-          url: Uri.parse(this['link'] as String),
-          topic: this['topic'] as String,
-          score: this['_score'] as double?,
-          language: this['language'] as String,
-          country: this['country'] as String,
-          datePublished: _parseDateTime(),
-          snippet: this['description'] as String,
-          sourceDomain: Source(this['clean_url'] as String),
-        ),
-      );
-
-  DateTime _parseDateTime() {
-    final value = this['published_date'] as String?;
-    var date = DateTime.now();
-
-    if (value == null) return date;
-
-    final formatterA = DateFormat('yyyy-MM-dd hh:mm:ss'),
-        formatterB = DateFormat('yyyy-MM-dd');
-
-    try {
-      date = formatterA.parse(value);
-    } catch (e) {
-      date = formatterB.parse(value);
-    }
-
-    return date;
-  }
 }
