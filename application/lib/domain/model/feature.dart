@@ -67,6 +67,16 @@ enum Feature {
     false,
     description: 'Showing topic in settings and topic selection inline Card',
     remoteKey: 'topics_settings_and_inline_card',
+  ),
+  activeSearch(
+    Owner.Peter,
+    false,
+    description: 'Disabled for demo',
+  ),
+  collections(
+    Owner.Peter,
+    false,
+    description: 'Disabled for demo',
   );
 
   final Owner owner;

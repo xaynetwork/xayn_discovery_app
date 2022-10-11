@@ -19,6 +19,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     required this.bookmarkStatus,
     required this.document,
     required this.explicitDocumentUserReaction,
+    required this.areCollectionsEnabled,
   }) : super(key: key);
 
   final VoidCallback onSharePressed;
@@ -29,6 +30,7 @@ class DiscoveryCardFooter extends StatelessWidget {
   final BookmarkStatus bookmarkStatus;
   final Document document;
   final UserReaction explicitDocumentUserReaction;
+  final bool areCollectionsEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class DiscoveryCardFooter extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         likeButton,
-        bookmarkButton,
+        if (areCollectionsEnabled) bookmarkButton,
         shareButton,
         dislikeButton,
       ],

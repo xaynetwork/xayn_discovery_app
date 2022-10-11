@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/collection_card/swipeable_collec
 import 'package:xayn_discovery_app/presentation/collection_card/util/collection_card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/constants/keys.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
@@ -41,6 +42,7 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         OverlayMixin<PersonalAreaScreen>,
         CardWidgetTransitionMixin {
   late final PersonalAreaManager _manager = di.get();
+  late final FeatureManager _featureManager = di.get();
   late final CollectionCardManagersCache _collectionCardManagersCache =
       di.get();
 
@@ -61,10 +63,11 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             hideTooltip();
             _manager.onHomeNavPressed();
           }),
-          buildNavBarItemSearch(onPressed: () {
-            hideTooltip();
-            _manager.onActiveSearchNavPressed();
-          }),
+          if (_featureManager.isActiveSearchEnabled)
+            buildNavBarItemSearch(onPressed: () {
+              hideTooltip();
+              _manager.onActiveSearchNavPressed();
+            }),
           buildNavBarItemPersonalArea(
             isActive: true,
             onPressed: hideTooltip,
@@ -75,22 +78,29 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
   @override
   Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
-        appToolbarData: AppToolbarData.withTwoTrailingIcons(
-          title: R.strings.personalAreaTitle,
-          iconModels: [
-            AppToolbarIconModel(
-              iconPath: R.assets.icons.plus,
-              onPressed: _manager.onAddCollectionPressed,
-              semanticsLabel: SemanticsLabels.personalAreaIconPlus,
-            ),
-            AppToolbarIconModel(
-              iconPath: R.assets.icons.gear,
-              onPressed: _manager.onSettingsNavPressed,
-              iconKey: Keys.personalAreaIconSettings,
-              semanticsLabel: SemanticsLabels.personalAreaIconSettings,
-            ),
-          ],
-        ),
+        appToolbarData: _featureManager.areCollectionsEnabled
+            ? AppToolbarData.withTwoTrailingIcons(
+                title: R.strings.personalAreaTitle,
+                iconModels: [
+                  AppToolbarIconModel(
+                    iconPath: R.assets.icons.plus,
+                    onPressed: _manager.onAddCollectionPressed,
+                    semanticsLabel: SemanticsLabels.personalAreaIconPlus,
+                  ),
+                  AppToolbarIconModel(
+                    iconPath: R.assets.icons.gear,
+                    onPressed: _manager.onSettingsNavPressed,
+                    iconKey: Keys.personalAreaIconSettings,
+                    semanticsLabel: SemanticsLabels.personalAreaIconSettings,
+                  ),
+                ],
+              )
+            : AppToolbarData.withTrailingIcon(
+                title: R.strings.personalAreaTitle,
+                iconPath: R.assets.icons.gear,
+                onPressed: _manager.onSettingsNavPressed,
+                semanticsLabel: SemanticsLabels.personalAreaIconSettings,
+              ),
         body: _buildBody(),
       );
 
@@ -99,12 +109,20 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         builder: _buildList,
       );
 
+  bool _filterItems(ListItemModel model) {
+    return model.map(
+      collection: (_) => _featureManager.areCollectionsEnabled,
+      payment: (_) => true,
+      contact: (_) => true,
+    );
+  }
+
   Widget _buildList(
     BuildContext context,
     PersonalAreaState screenState,
   ) {
     final list = CustomAnimatedList<ListItemModel>(
-      items: screenState.items,
+      items: screenState.items.where(_filterItems),
       itemBuilder: (_, index, __, item) {
         final child = item.map(
           collection: (itemModel) => _buildCard(

@@ -8,6 +8,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/manager/image_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
@@ -45,6 +46,7 @@ abstract class DiscoveryCardBase extends StatefulWidget {
 abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     extends State<T> with OverlayMixin<T> {
   late final CardManagersCache cardManagersCache = di.get();
+  late final FeatureManager featureManager = di.get();
   late DiscoveryCardManager discoveryCardManager;
   late ImageManager imageManager;
 

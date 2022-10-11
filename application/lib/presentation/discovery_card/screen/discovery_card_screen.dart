@@ -9,6 +9,7 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_mana
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_static.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
@@ -49,6 +50,7 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         OverlayMixin<DiscoveryCardScreen>,
         OverlayStateMixin<DiscoveryCardScreen> {
   late final DiscoveryCardScreenManager _discoveryCardScreenManager = di.get();
+  late final FeatureManager _featureManager = di.get();
   late final CardManagersCache _cardManagersCache = di.get();
 
   TtsData ttsData = TtsData.disabled();
@@ -84,11 +86,12 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
         buildNavBarItemArrowLeft(
             onPressed: _discoveryCardScreenManager.onBackPressed),
 
-        buildNavBarItemBookmark(
-          bookmarkStatus: discoveryCardManager.state.bookmarkStatus,
-          onPressed: onBookmarkPressed,
-          onLongPressed: onBookmarkLongPressed,
-        ),
+        if (_featureManager.areCollectionsEnabled)
+          buildNavBarItemBookmark(
+            bookmarkStatus: discoveryCardManager.state.bookmarkStatus,
+            onPressed: onBookmarkPressed,
+            onLongPressed: onBookmarkLongPressed,
+          ),
 
         /// Like and dislike can not be called because the Document is not related to the feed anymore and will not be updated
         buildNavBarItemShare(

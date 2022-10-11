@@ -45,6 +45,7 @@ class DiscoveryCardElements extends StatelessWidget {
     this.fractionSize = 1.0,
     this.provider,
     this.useLargeTitle = true,
+    this.areCollectionsEnabled = true,
   }) : super(key: key);
   final DiscoveryCardManager manager;
   final Document document;
@@ -65,6 +66,7 @@ class DiscoveryCardElements extends StatelessWidget {
   final double fractionSize;
   final bool useLargeTitle;
   final bool isInteractionEnabled;
+  final bool areCollectionsEnabled;
   final FeedType? feedType;
 
   @override
@@ -104,6 +106,7 @@ class DiscoveryCardElements extends StatelessWidget {
         bookmarkStatus: bookmarkStatus,
         document: document,
         explicitDocumentUserReaction: explicitDocumentUserReaction,
+        areCollectionsEnabled: areCollectionsEnabled,
       ),
     );
 

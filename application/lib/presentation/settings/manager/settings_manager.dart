@@ -127,6 +127,9 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     initialData: none,
   );
 
+  @visibleForTesting
+  FeatureManager get featureManager => _featureManager;
+
   void _init() async {
     scheduleComputeState(() async {
       // read values

@@ -37,6 +37,8 @@ extension WidgetTesterCommonActions on WidgetTester {
   Future<void> initToDiscoveryPage() async {
     await pumpAndSettle();
     di.get<FeatureManager>().overrideFeature(Feature.featuresScreen, false);
+    di.get<FeatureManager>().overrideFeature(Feature.activeSearch, true);
+    di.get<FeatureManager>().overrideFeature(Feature.collections, true);
     await pumpWidget(getApp());
     await pumpAndSettle();
   }

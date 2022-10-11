@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -22,6 +23,7 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
 class _DiscoveryFeedState
     extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed> {
   late final DiscoveryFeedManager _manager = di.get();
+  late final FeatureManager _featureManager = di.get();
 
   @override
   DiscoveryFeedManager get manager => _manager;
@@ -37,10 +39,11 @@ class _DiscoveryFeedState
                   hideTooltip();
                   _manager.onHomeNavPressed();
                 }),
-            buildNavBarItemSearch(onPressed: () {
-              hideTooltip();
-              _manager.onSearchNavPressed();
-            }),
+            if (_featureManager.isActiveSearchEnabled)
+              buildNavBarItemSearch(onPressed: () {
+                hideTooltip();
+                _manager.onSearchNavPressed();
+              }),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
@@ -97,11 +100,13 @@ class _DiscoveryFeedState
               feedType: FeedType.feed,
             ),
           ),
-          buildNavBarItemBookmark(
-            bookmarkStatus: managers.discoveryCardManager.state.bookmarkStatus,
-            onPressed: onBookmarkPressed,
-            onLongPressed: onBookmarkLongPressed,
-          ),
+          if (_featureManager.areCollectionsEnabled)
+            buildNavBarItemBookmark(
+              bookmarkStatus:
+                  managers.discoveryCardManager.state.bookmarkStatus,
+              onPressed: onBookmarkPressed,
+              onLongPressed: onBookmarkLongPressed,
+            ),
           buildNavBarItemShare(
             onPressed: () => managers.discoveryCardManager.shareDocument(
               document: document,

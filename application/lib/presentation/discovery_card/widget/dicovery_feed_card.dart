@@ -55,6 +55,7 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       provider: provider,
       datePublished: webResource.datePublished,
       isInteractionEnabled: widget.isPrimary,
+      areCollectionsEnabled: featureManager.areCollectionsEnabled,
       onLikePressed: () => onFeedbackPressed(UserReaction.positive),
       onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
       onOpenHeaderMenu: () {

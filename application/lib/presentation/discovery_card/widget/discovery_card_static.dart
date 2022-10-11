@@ -82,6 +82,7 @@ class _DiscoveryCardStaticState
           provider: provider,
           datePublished: webResource.datePublished,
           isInteractionEnabled: true,
+          areCollectionsEnabled: featureManager.areCollectionsEnabled,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
           onOpenHeaderMenu: () {
