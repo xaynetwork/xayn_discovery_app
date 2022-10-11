@@ -4,10 +4,10 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
@@ -93,17 +93,21 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       feedType: widget.feedType,
     );
 
-    return Stack(
-      children: [
-        image,
-        elements,
-      ],
-    );
+    return LayoutBuilder(
+        builder: (context, constraints) => Stack(
+              children: [
+                image,
+                Positioned.fill(
+                    top: 2 * constraints.maxHeight / 3 - 50.0, child: elements),
+              ],
+            ));
   }
 
   @override
-  Widget buildImage(Color shadowColor) =>
-      super.buildImage(R.colors.swipeCardBackgroundHome);
+  Widget buildImage() => Arc(
+        fractionSize: .0,
+        child: super.buildImage(),
+      );
 
   Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
       get _buildDiscoveryCardHeaderMenuItems => {

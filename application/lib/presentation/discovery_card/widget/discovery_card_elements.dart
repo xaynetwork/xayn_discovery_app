@@ -72,7 +72,7 @@ class DiscoveryCardElements extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     final timeToReadWidget = Text(
       '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.sStyle.copyWith(color: Colors.white),
+      style: R.styles.sStyle.copyWith(color: R.colors.primaryText),
       textAlign: TextAlign.left,
       maxLines: 5,
       overflow: TextOverflow.ellipsis,
@@ -81,7 +81,7 @@ class DiscoveryCardElements extends StatelessWidget {
         useLargeTitle ? R.styles.xxlBoldStyle : R.styles.xlBoldStyle;
     final titleWidget = AutoSizeText(
       title,
-      style: titleWidgetStyle.copyWith(color: Colors.white),
+      style: titleWidgetStyle.copyWith(color: R.colors.primaryText),
       textAlign: TextAlign.left,
       minFontSize: titleWidgetStyle.fontSize! * 0.75,
       maxLines: 5,
@@ -127,7 +127,7 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
       child: ClipRRect(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AnimatedOpacity(
@@ -136,7 +136,7 @@ class DiscoveryCardElements extends StatelessWidget {
               curve: Curves.easeOut,
               child: _buildCardHeader(),
             ),
-            Expanded(child: titleAndTimeToRead),
+            titleAndTimeToRead,
             SizedBox(
               width: double.infinity,
               height: R.dimen.unit12 * fractionSize,

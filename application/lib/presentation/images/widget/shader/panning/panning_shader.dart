@@ -13,7 +13,6 @@ class PanningShader extends BaseAnimationShader {
     required Uint8List bytes,
     required Uri uri,
     required ImageErrorWidgetBuilder noImageBuilder,
-    Color? shadowColor,
     bool? transitionToIdle,
     Curve? curve,
     double? width,
@@ -26,7 +25,6 @@ class PanningShader extends BaseAnimationShader {
           curve: curve,
           width: width,
           height: height,
-          shadowColor: shadowColor,
           uri: uri,
           transitionToIdle: transitionToIdle ?? false,
           singleFrameOnly: singleFrameOnly ?? false,
@@ -48,7 +46,6 @@ class _PanningShaderState extends BaseAnimationShaderState<PanningShader> {
       painter: PanningPainter(
         image: srcImage,
         animationValue: animationValue,
-        shadowColor: widget.shadowColor,
       ),
     );
 
