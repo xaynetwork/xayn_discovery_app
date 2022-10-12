@@ -20,7 +20,7 @@ class ForegroundPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final fractionHeight = .4 - (fractionSize * .3);
+    final fractionHeight = .4 - (fractionSize * .25);
     final actualHeight = size.height * fractionHeight;
     final diffHeight = size.height - actualHeight;
     const arcRightDelta = 20.0;

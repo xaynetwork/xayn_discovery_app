@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/foreground/foreground_painter.dart';
 
 class Arc extends StatelessWidget {
@@ -21,7 +22,7 @@ class Arc extends StatelessWidget {
     final foreground = CustomPaint(
       painter: ForegroundPainter(
         fractionSize: fractionSize,
-        bezierHeight: 45.0,
+        bezierHeight: R.dimen.unit5,
       ),
     );
 
@@ -29,7 +30,7 @@ class Arc extends StatelessWidget {
         builder: (context, constraints) => Stack(
               children: [
                 Positioned.fill(
-                  bottom: constraints.maxHeight / 3 * (1.0 - fractionSize),
+                  bottom: constraints.maxHeight / 2.5 * (1.0 - fractionSize),
                   child: child,
                 ),
                 Positioned.fill(child: foreground),

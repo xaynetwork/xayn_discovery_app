@@ -4,7 +4,9 @@ import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
+import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
@@ -57,18 +59,6 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       isInteractionEnabled: widget.isPrimary,
       onLikePressed: () => onFeedbackPressed(UserReaction.positive),
       onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-      onOpenHeaderMenu: () {
-        widget.onTtsData?.call(TtsData.disabled());
-
-        toggleOverlay(
-          builder: (_) => DiscoveryCardHeaderMenu(
-            itemsMap: _buildDiscoveryCardHeaderMenuItems,
-            source: Source.fromJson(widget.document.resource.url.host),
-            onClose: removeOverlay,
-          ),
-          useRootOverlay: true,
-        );
-      },
       onProviderSectionTap: () {
         widget.onTtsData?.call(TtsData.disabled());
 
@@ -99,6 +89,26 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
                 image,
                 Positioned.fill(
                     top: 2 * constraints.maxHeight / 3 - 50.0, child: elements),
+                Positioned(
+                  top: R.dimen.unit2,
+                  right: R.dimen.unit2,
+                  child: CardMenuIndicator(
+                    isInteractionEnabled: widget.isPrimary,
+                    onOpenHeaderMenu: () {
+                      widget.onTtsData?.call(TtsData.disabled());
+
+                      toggleOverlay(
+                        builder: (_) => DiscoveryCardHeaderMenu(
+                          itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                          source: Source.fromJson(
+                              widget.document.resource.url.host),
+                          onClose: removeOverlay,
+                        ),
+                        useRootOverlay: true,
+                      );
+                    },
+                  ),
+                ),
               ],
             ));
   }

@@ -1,14 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
@@ -37,7 +34,6 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onBookmarkPressed,
     required this.onBookmarkLongPressed,
     required this.bookmarkStatus,
-    required this.onOpenHeaderMenu,
     required this.onProviderSectionTap,
     required this.onToggleTts,
     required this.feedType,
@@ -57,7 +53,6 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
-  final VoidCallback onOpenHeaderMenu;
   final VoidCallback onProviderSectionTap;
   final VoidCallback onToggleTts;
   final VoidCallback onBookmarkLongPressed;
@@ -145,33 +140,10 @@ class DiscoveryCardElements extends StatelessWidget {
   }
 
   Widget _buildCardHeader() {
-    final featureManager = di.get<FeatureManager>();
     final faviconRow = FaviconBar.fromProvider(
       provider: provider,
       datePublished: datePublished,
-    );
-
-    final ttsIcon = Padding(
-      padding: EdgeInsets.all(R.dimen.unit),
-      child: Icon(
-        Icons.volume_up,
-        color: R.colors.icon,
-      ),
-    );
-
-    final openUrlIcon = Padding(
-      padding: EdgeInsets.all(R.dimen.unit),
-      child: SvgPicture.asset(
-        R.assets.icons.more,
-        color: R.colors.icon,
-      ),
-    );
-
-    final timeToReadWidget = Text(
-      '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.sStyle.copyWith(color: R.colors.primaryText),
-      textAlign: TextAlign.left,
-      maxLines: 1,
+      timeToRead: '$timeToRead ${R.strings.readingTimeSuffix}',
     );
 
     maybeWithTap(Widget child, VoidCallback onTap) => Material(
@@ -182,19 +154,6 @@ class DiscoveryCardElements extends StatelessWidget {
           ),
         );
 
-    return Row(
-      children: [
-        if (provider?.favicon != null)
-          Expanded(child: maybeWithTap(faviconRow, onProviderSectionTap))
-        else
-          const Spacer(),
-        if (timeToRead.isNotEmpty) timeToReadWidget,
-        if (featureManager.isTtsEnabled) maybeWithTap(ttsIcon, onToggleTts),
-        maybeWithTap(
-          openUrlIcon,
-          onOpenHeaderMenu,
-        ),
-      ],
-    );
+    return maybeWithTap(faviconRow, onProviderSectionTap);
   }
 }
