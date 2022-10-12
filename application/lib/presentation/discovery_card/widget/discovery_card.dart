@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
@@ -105,6 +106,8 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       (_openingAnimation.value - _kMinImageFractionSize) /
       (1.0 - _kMinImageFractionSize);
 
+  double get invertedFractionSize => 1.0 - fractionSize;
+
   @override
   void initState() {
     super.initState();
@@ -192,18 +195,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           isInteractionEnabled: widget.isPrimary,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-          onOpenHeaderMenu: () {
-            widget.onTtsData?.call(TtsData.disabled());
-
-            toggleOverlay(
-              builder: (_) => DiscoveryCardHeaderMenu(
-                itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                source: Source.fromJson(widget.document.resource.url.host),
-                onClose: removeOverlay,
-              ),
-              useRootOverlay: true,
-            );
-          },
           onProviderSectionTap: () {
             widget.onTtsData?.call(TtsData.disabled());
 
@@ -255,9 +246,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           top: size.height / 2 + R.dimen.unit6,
         );
 
+        // calculated area values for the elements
         final elmsMinPos = constraints.maxHeight / 3;
-        final elmsMaxPos = 2 * constraints.maxHeight / 3 - 50.0;
+        final elmsMaxPos = 2 * constraints.maxHeight / 3;
         final elmsDelta = elmsMaxPos - elmsMinPos;
+        final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 5;
         final elmsPos = elmsMinPos + elmsDelta * fractionSize;
 
         return AppScrollbar(
@@ -290,14 +283,31 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
                       ),
                       Positioned(
                         top: elmsPos - normalizedScrollOffset,
-                        bottom: (1.0 - fractionSize) *
-                                2 *
-                                constraints.maxHeight /
-                                5 +
+                        bottom: invertedFractionSize * elmsBottom +
                             normalizedScrollOffset,
                         left: 0,
                         right: 0,
                         child: elements,
+                      ),
+                      Positioned(
+                        top: R.dimen.unit2,
+                        right: R.dimen.unit2,
+                        child: CardMenuIndicator(
+                          isInteractionEnabled: widget.isPrimary,
+                          onOpenHeaderMenu: () {
+                            widget.onTtsData?.call(TtsData.disabled());
+
+                            toggleOverlay(
+                              builder: (_) => DiscoveryCardHeaderMenu(
+                                itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                                source: Source.fromJson(
+                                    widget.document.resource.url.host),
+                                onClose: removeOverlay,
+                              ),
+                              useRootOverlay: true,
+                            );
+                          },
+                        ),
                       ),
                     ],
                   )),
@@ -317,7 +327,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
 
   @override
   Widget buildImage() => Arc(
-        fractionSize: 1.0 - fractionSize,
+        fractionSize: invertedFractionSize,
         child: super.buildImage(),
       );
 

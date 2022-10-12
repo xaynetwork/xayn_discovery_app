@@ -10,6 +10,7 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
@@ -80,18 +81,6 @@ class _DiscoveryCardStaticState
           isInteractionEnabled: true,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-          onOpenHeaderMenu: () {
-            widget.onTtsData?.call(TtsData.disabled());
-
-            toggleOverlay(
-              builder: (_) => DiscoveryCardHeaderMenu(
-                itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                source: Source.fromJson(widget.document.resource.url.host),
-                onClose: removeOverlay,
-              ),
-              useRootOverlay: true,
-            );
-          },
           onProviderSectionTap: () {
             widget.onTtsData?.call(TtsData.disabled());
 
@@ -147,6 +136,26 @@ class _DiscoveryCardStaticState
                       elements,
                     ],
                   ),
+                ),
+              ),
+              Positioned(
+                top: R.dimen.unit2,
+                right: R.dimen.unit2,
+                child: CardMenuIndicator(
+                  isInteractionEnabled: widget.isPrimary,
+                  onOpenHeaderMenu: () {
+                    widget.onTtsData?.call(TtsData.disabled());
+
+                    toggleOverlay(
+                      builder: (_) => DiscoveryCardHeaderMenu(
+                        itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                        source:
+                            Source.fromJson(widget.document.resource.url.host),
+                        onClose: removeOverlay,
+                      ),
+                      useRootOverlay: true,
+                    );
+                  },
                 ),
               ),
             ],
