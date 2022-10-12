@@ -15,9 +15,13 @@ import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 const ok = ClientEventSucceeded();
 
 const _kUserApiPath = 'user';
-const _kPostHeaders = {
+const _kCommonHeaders = {
   'Content-Type': 'application/json',
 };
+const _kDocumentId = 'document_id';
+const _kInteraction = 'interaction';
+const _kDocuments = 'documents';
+const _kLink = 'link';
 
 enum RequestFeedType { restore, nextBatch }
 
@@ -26,6 +30,7 @@ class HostedDiscoveryEngineService {
   final int batchSize = 2;
   final AppStatusRepository appStatusRepository;
   final HiveExplicitDocumentFeedbackRepository feedbackRepository;
+  final HostedDocumentMapper documentMapper;
 
   final JsonCodec _codec = const JsonCodec();
   final StreamController<ClientEventSucceeded> _onSuccess =
@@ -41,7 +46,6 @@ class HostedDiscoveryEngineService {
   final Map<Uri, Document> _cache = <Uri, Document>{};
   int _interactionCount = 0;
   Future<List<Document>>? _activeRequest;
-  final _documentMapper = const HostedDocumentMapper();
 
   String get userId => appStatusRepository.appStatus.userId.value;
 
@@ -75,6 +79,7 @@ class HostedDiscoveryEngineService {
   HostedDiscoveryEngineService({
     required this.appStatusRepository,
     required this.feedbackRepository,
+    required this.documentMapper,
   }) {
     feedbackRepository.clear();
   }
@@ -92,12 +97,14 @@ class HostedDiscoveryEngineService {
     // as we can only support a `like` for now, ignore all other reaction types.
     if (!userReaction.supportsChangeUserReaction) return ok;
 
-    final endPoint = _endPoint
-        .replace(pathSegments: [..._endPoint.pathSegments, 'interaction']);
+    final endPoint = _endPoint.replace(pathSegments: [
+      ..._endPoint.pathSegments,
+      _kInteraction,
+    ]);
     final response = await http.post(
       endPoint,
-      headers: _kPostHeaders,
-      body: '{"document_id": "$documentId"}',
+      headers: _kCommonHeaders,
+      body: '{"$_kDocumentId": "$documentId"}',
     );
 
     if (!response.statusCode.is2xx) {
@@ -143,13 +150,15 @@ class HostedDiscoveryEngineService {
   }
 
   Future<List<Document>> _requestPersonalizedFeed() async {
-    final endPoint = _endPoint
-        .replace(pathSegments: [..._endPoint.pathSegments, 'documents']);
+    final endPoint = _endPoint.replace(pathSegments: [
+      ..._endPoint.pathSegments,
+      _kDocuments,
+    ]);
 
     final req = _activeRequest ??= http
         .get(
       endPoint,
-      headers: _kPostHeaders,
+      headers: _kCommonHeaders,
     )
         .then((response) {
       if (!response.statusCode.is2xx) {
@@ -162,7 +171,7 @@ class HostedDiscoveryEngineService {
       return documents
           .cast<Map<String, Object?>>()
           .map((it) => _cache.putIfAbsent(
-              Uri.parse(it['link'] as String), () => _documentMapper.map(it)))
+              Uri.parse(it[_kLink] as String), () => documentMapper.map(it)))
           .toList(growable: false);
     });
 
@@ -175,7 +184,7 @@ class HostedDiscoveryEngineService {
 }
 
 extension _StatusCodeExtension on int {
-  /// Returns `true` when the value is in range of `[200, 300[`.
+  /// Returns `true` when the value is in range of `[200, 300]`.
   bool get is2xx => this == clamp(200, 299);
 }
 

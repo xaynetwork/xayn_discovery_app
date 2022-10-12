@@ -26,8 +26,7 @@ void main() {
       when(manager.showFeaturesScreen).thenReturn(false);
       when(manager.showDiscoveryEngineReportOverlay).thenReturn(false);
       when(manager.isTtsEnabled).thenReturn(false);
-      when(manager.isActiveSearchEnabled).thenReturn(true);
-      when(manager.areCollectionsEnabled).thenReturn(true);
+      when(manager.isDemoModeEnabled).thenReturn(false);
 
       // we swap FeatureScreen with another one
       await tester.initToDiscoveryPage();

@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:platform/platform.dart' as google;
 import 'package:xayn_architecture/concepts/navigation/navigator_delegate.dart';
 import 'package:xayn_discovery_app/domain/repository/app_settings_repository.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/app_discovery_engine.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/hosted_discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/repository/hive_app_settings_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/analytics_navigator_observer.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/marketing_analytics_service.dart';
@@ -11,6 +13,7 @@ import 'package:xayn_discovery_app/infrastructure/service/engine_background_news
 import 'package:xayn_discovery_app/infrastructure/service/payment/fake_payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/payment_service.dart';
 import 'package:xayn_discovery_app/infrastructure/service/payment/revenue_cat_payment_service.dart';
+import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/app_navigator.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
@@ -54,6 +57,11 @@ Future<void> configureDependencies(
     environment: environment.name,
   );
   di.registerSingleton<DartRemoteConfigState>(remoteConfigState);
+  final featureManager = di.get<FeatureManager>();
+  di.registerLazySingleton<DiscoveryEngine>(() =>
+      featureManager.isDemoModeEnabled
+          ? di.get<HostedDiscoveryEngine>()
+          : di.get<AppDiscoveryEngine>());
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
   di.registerLazySingleton<AppSettingsRepository>(
