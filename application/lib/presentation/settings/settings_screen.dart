@@ -9,7 +9,6 @@ import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.dart';
@@ -44,7 +43,6 @@ class _SettingsScreenState extends State<SettingsScreen>
         OverlayMixin<SettingsScreen>,
         WidgetsBindingObserver {
   late final SettingsScreenManager _manager = di.get();
-  late final FeatureManager _featureManager = di.get();
 
   @override
   OverlayManager get overlayManager => _manager.overlayManager;
@@ -116,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         _buildSubscriptionSection(
           subscriptionStatus: state.subscriptionStatus,
         ),
-      if (!_featureManager.isDemoModeEnabled)
+      if (!state.isDemoModeEnabled)
         _buildHomeFeedSection(
           isPaymentEnabled: state.isPaymentEnabled,
           isTopicsEnabled: state.isTopicsEnabled,

@@ -18,5 +18,6 @@ class SettingsScreenState with _$SettingsScreenState {
     required bool areRemoteNotificationsEnabled,
     required bool isTopicsEnabled,
     required SubscriptionStatus subscriptionStatus,
+    required bool isDemoModeEnabled,
   }) = SettingsScreenStateReady;
 }

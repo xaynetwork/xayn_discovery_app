@@ -40,6 +40,7 @@ void main() {
     areRemoteNotificationsEnabled: false,
     isTopicsEnabled: false,
     subscriptionStatus: SubscriptionStatus.initial(),
+    isDemoModeEnabled: false,
   ) as SettingsScreenStateReady;
   late MockSettingsScreenManager manager;
 
@@ -109,6 +110,7 @@ void main() {
         subscriptionStatus: SubscriptionStatus.initial().copyWith(
           isBetaUser: true,
         ),
+        isDemoModeEnabled: false,
       ) as SettingsScreenStateReady;
 
       when(manager.state).thenReturn(state);
@@ -137,6 +139,7 @@ void main() {
           trialEndDate: DateTime.now().add(const Duration(days: 1)),
           isBetaUser: false,
         ),
+        isDemoModeEnabled: false,
       ) as SettingsScreenStateReady;
 
       when(manager.state).thenReturn(state);

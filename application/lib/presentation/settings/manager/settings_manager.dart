@@ -214,6 +214,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
         areRemoteNotificationsEnabled:
             _featureManager.areRemoteNotificationsEnabled,
         subscriptionStatus: _subscriptionStatus,
+        isDemoModeEnabled: _featureManager.isDemoModeEnabled,
       );
     }
 

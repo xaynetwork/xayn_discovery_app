@@ -37,6 +37,7 @@ void main() {
     areRemoteNotificationsEnabled: false,
     isTopicsEnabled: false,
     subscriptionStatus: subscriptionStatus,
+    isDemoModeEnabled: false,
   );
 
   late MockFeatureManager featureManager;
@@ -124,6 +125,8 @@ void main() {
     when(featureManager.areLocalNotificationsEnabled).thenReturn(false);
 
     when(featureManager.areRemoteNotificationsEnabled).thenReturn(false);
+
+    when(featureManager.isDemoModeEnabled).thenReturn(false);
 
     when(getSubscriptionManagementUrlUseCase.singleOutput(none)).thenAnswer(
       (_) => Future.value(
