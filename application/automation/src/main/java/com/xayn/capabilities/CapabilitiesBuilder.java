@@ -67,6 +67,11 @@ public class CapabilitiesBuilder {
         return this;
     }
 
+    public CapabilitiesBuilder setNoResetValue(boolean value) {
+        caps.put("noReset", Boolean.toString(value));
+        return this;
+    }
+
     public CapabilitiesBuilder setWdaStartupRetries(int value) {
         caps.put("wdaStartupRetries", String.valueOf(value));
         return this;

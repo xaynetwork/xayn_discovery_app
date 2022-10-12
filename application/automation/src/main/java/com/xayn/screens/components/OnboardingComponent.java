@@ -31,7 +31,7 @@ public class OnboardingComponent extends BaseComponent {
 
     public void gotItButtonClick() {
         try{
-            WaitUtils.getShortWaitUtils().waitUntilElementAppear(gotItButton);
+            WaitUtils.getWaitUtils().waitUntilElementAppear(gotItButton);
             click(gotItButton);
         }catch (Exception e) {
             log.warn("'Got It' button isn't displayed");

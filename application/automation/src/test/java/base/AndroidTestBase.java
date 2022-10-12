@@ -36,6 +36,7 @@ public abstract class AndroidTestBase extends TestBase {
                 .setDeviceName(DEVICE_ID)
                 .setAutomationName("UiAutomator2")
                 .setFullResetValue(false)
+                .setNoResetValue(true)
                 .setApp(APP)
                 .build();
         createDriver(PlatformType.ANDROID, desiredCapabilities);

@@ -22,10 +22,8 @@ abstract class TestBase {
         if (!ServerHandler.isServerRunning()) {
             throw new RuntimeException("An appium server isn't running");
         }
-        boolean androidDir = new File(Configuration.ARTIFACTS_DIRECTORY + "/android").mkdirs();
-        boolean iosDir = new File(Configuration.ARTIFACTS_DIRECTORY + "/ios").mkdirs();
-        System.out.println(androidDir);
-        System.out.println(iosDir);
+        new File(Configuration.ARTIFACTS_DIRECTORY + "/android").mkdirs();
+        new File(Configuration.ARTIFACTS_DIRECTORY + "/ios").mkdirs();
         WaitUtils.threadSleep(3000);
     }
 
