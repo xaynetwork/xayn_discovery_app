@@ -48,10 +48,12 @@ class InLineCardInjectionUseCase
         (it) => it.document.documentId == document.documentId,
       );
       if (isPreviouslyReferenced) {
-        final cardType = referenceDocuments
+        final referencedCardType = referenceDocuments
             .firstWhere((it) => it.document == document)
             .cardType;
-        yield Card.other(cardType);
+        if (referencedCardType == cardType) {
+          yield Card.other(referencedCardType);
+        }
       }
 
       yield Card.document(document);
