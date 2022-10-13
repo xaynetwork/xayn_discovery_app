@@ -44,6 +44,7 @@ class FaviconBar extends StatelessWidget {
       style: R.styles.sStyle.copyWith(color: R.colors.primaryText),
       textAlign: TextAlign.left,
       maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
 
     buildSpacer() =>
@@ -74,7 +75,7 @@ class FaviconBar extends StatelessWidget {
         addPadding(publishedWidget),
         buildSpacer(),
         if (timeToRead.isNotEmpty)
-          Expanded(child: addPadding(timeToReadWidget)),
+          Flexible(child: addPadding(timeToReadWidget)),
       ],
     );
   }
