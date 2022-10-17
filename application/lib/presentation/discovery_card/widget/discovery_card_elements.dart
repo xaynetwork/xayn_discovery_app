@@ -72,7 +72,7 @@ class DiscoveryCardElements extends StatelessWidget {
       style: titleWidgetStyle.copyWith(color: R.colors.primaryText),
       textAlign: TextAlign.center,
       minFontSize: titleWidgetStyle.fontSize! * _kMaxTitleFraction,
-      maxLines: 2,
+      maxLines: 3,
       overflow: TextOverflow.ellipsis,
     );
 

@@ -13,10 +13,10 @@ import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scroll
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
@@ -253,62 +253,66 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 5;
         final elmsPos = elmsMinPos + elmsDelta * fractionSize;
 
+        final indicator = Positioned(
+          top: R.dimen.unit2,
+          right: R.dimen.unit2,
+          child: CardMenuIndicator(
+            isInteractionEnabled: widget.isPrimary,
+            onOpenHeaderMenu: () {
+              widget.onTtsData?.call(TtsData.disabled());
+
+              toggleOverlay(
+                builder: (_) => DiscoveryCardHeaderMenu(
+                  itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                  source: Source.fromJson(widget.document.resource.url.host),
+                  onClose: removeOverlay,
+                ),
+                useRootOverlay: true,
+              );
+            },
+          ),
+        );
+
+        final title = Positioned(
+          top: elmsPos - normalizedScrollOffset,
+          bottom: invertedFractionSize * elmsBottom + normalizedScrollOffset,
+          left: 0,
+          right: 0,
+          child: elements,
+        );
+
+        final imageWithArc = Positioned(
+          top: -outerScrollOffset - renderArtefactSize,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: constraints.maxHeight * _openingAnimation.value,
+            alignment: Alignment.topCenter,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                image,
+              ],
+            ),
+          ),
+        );
+
+        final readerMode = _buildReaderMode(
+          processHtmlResult: state.processedDocument?.processHtmlResult,
+          width: size.width,
+          padding: readerModePadding,
+        );
+
         return AppScrollbar(
           scrollController: _scrollController,
           child: LayoutBuilder(
               builder: (context, constraints) => Stack(
                     alignment: Alignment.topCenter,
                     children: [
-                      _buildReaderMode(
-                        processHtmlResult:
-                            state.processedDocument?.processHtmlResult,
-                        width: size.width,
-                        padding: readerModePadding,
-                      ),
-                      Positioned(
-                        top: -outerScrollOffset - renderArtefactSize,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height:
-                              constraints.maxHeight * _openingAnimation.value,
-                          alignment: Alignment.topCenter,
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              image,
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: elmsPos - normalizedScrollOffset,
-                        bottom: invertedFractionSize * elmsBottom +
-                            normalizedScrollOffset,
-                        left: 0,
-                        right: 0,
-                        child: elements,
-                      ),
-                      Positioned(
-                        top: R.dimen.unit2,
-                        right: R.dimen.unit2,
-                        child: CardMenuIndicator(
-                          isInteractionEnabled: widget.isPrimary,
-                          onOpenHeaderMenu: () {
-                            widget.onTtsData?.call(TtsData.disabled());
-
-                            toggleOverlay(
-                              builder: (_) => DiscoveryCardHeaderMenu(
-                                itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                                source: Source.fromJson(
-                                    widget.document.resource.url.host),
-                                onClose: removeOverlay,
-                              ),
-                              useRootOverlay: true,
-                            );
-                          },
-                        ),
-                      ),
+                      readerMode,
+                      imageWithArc,
+                      title,
+                      indicator,
                     ],
                   )),
         );
