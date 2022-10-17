@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xayn_discovery_app/presentation/constants/r.dart';
 
 const double kBezierMinHeight = 10.0;
 const double kBezierMaxHeight = 45.0;
@@ -9,10 +8,12 @@ const double kArcBezierSize = 1.0;
 class ForegroundPainter extends CustomPainter {
   final double fractionSize;
   final double bezierHeight;
+  final Color color;
 
   ForegroundPainter({
     required this.fractionSize,
     required this.bezierHeight,
+    required this.color,
   }) {
     assert(bezierHeight >= kBezierMinHeight && bezierHeight <= kBezierMaxHeight,
         'bezierHeight must be with the range of: [$kBezierMinHeight, $kBezierMaxHeight]');
@@ -54,7 +55,7 @@ class ForegroundPainter extends CustomPainter {
 
     canvas.drawPath(
       path,
-      Paint()..color = R.colors.background,
+      Paint()..color = color,
     );
   }
 
