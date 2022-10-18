@@ -13,8 +13,8 @@ import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dar
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
-import 'constants/analytics_constants.dart';
 import '../../../domain/model/analytics/generate_invite_link_result.dart';
+import 'constants/analytics_constants.dart';
 
 abstract class MarketingAnalyticsService {
   /// These in-app events help marketers understand how loyal users
@@ -163,6 +163,7 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
           AnalyticsConstants.deepLinkNameParamName: deepLinkName,
           AnalyticsConstants.afWebDp:
               AnalyticsConstants.webArticleViewerEndpoint,
+          'af_dp': AnalyticsConstants.webArticleViewerEndpoint,
           AnalyticsConstants.afAndroidUrl:
               AnalyticsConstants.webArticleViewerEndpoint,
           AnalyticsConstants.afIOSUrl:
