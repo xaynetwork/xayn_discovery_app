@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
-import 'package:notification_permissions/notification_permissions.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_notification_image_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -16,14 +15,13 @@ const String kChannelKey = 'basic_channel';
 const String kAndroidIconName = 'res_app_icon';
 
 abstract class LocalNotificationsService {
-  void requestPermission();
+  Future<bool?> requestPermission();
   void openNotificationsPage();
   Future<void> sendNotification({
     required String body,
     required UniqueId documentId,
     Uri? image,
   });
-  Future<bool> get isNotificationAllowed;
 }
 
 @LazySingleton(as: LocalNotificationsService)
@@ -79,16 +77,9 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
   }
 
   @override
-  Future<bool> get isNotificationAllowed async {
-    final permissionStatus =
-        await NotificationPermissions.getNotificationPermissionStatus();
-    return permissionStatus == PermissionStatus.granted;
-  }
-
-  @override
-  void requestPermission() async {
+  Future<bool?> requestPermission() async {
     if (Platform.isIOS) {
-      await _flutterLocalNotificationsPlugin
+      return _flutterLocalNotificationsPlugin
               .resolvePlatformSpecificImplementation<
                   IOSFlutterLocalNotificationsPlugin>()
               ?.requestPermissions(
@@ -96,12 +87,14 @@ class LocalNotificationsServiceImpl implements LocalNotificationsService {
                 badge: true,
                 sound: true,
               ) ??
-          false;
+          Future.value(false);
     } else if (Platform.isAndroid) {
-      await _flutterLocalNotificationsPlugin
+      return _flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.requestPermission();
+    } else {
+      return false;
     }
   }
 

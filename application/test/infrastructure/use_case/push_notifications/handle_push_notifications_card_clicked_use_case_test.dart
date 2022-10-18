@@ -12,6 +12,8 @@ void main() {
   late MockGetPushNotificationsStatusUseCase getPushNotificationsStatusUseCase;
   late MockSavePushNotificationsStatusUseCase
       savePushNotificationsStatusUseCase;
+  late MockAreLocalNotificationsAllowedUseCase
+      areLocalNotificationsAllowedUseCase;
   late HandlePushNotificationsCardClickedUseCase
       handlePushNotificationsCardClickedUseCase;
 
@@ -19,12 +21,15 @@ void main() {
   remoteNotificationsService = MockRemoteNotificationsService();
   getPushNotificationsStatusUseCase = MockGetPushNotificationsStatusUseCase();
   savePushNotificationsStatusUseCase = MockSavePushNotificationsStatusUseCase();
+  areLocalNotificationsAllowedUseCase =
+      MockAreLocalNotificationsAllowedUseCase();
   handlePushNotificationsCardClickedUseCase =
       HandlePushNotificationsCardClickedUseCase(
     localNotificationsService,
     remoteNotificationsService,
     getPushNotificationsStatusUseCase,
     savePushNotificationsStatusUseCase,
+    areLocalNotificationsAllowedUseCase,
   );
 
   group(
@@ -38,7 +43,7 @@ void main() {
           when(savePushNotificationsStatusUseCase.call(any)).thenAnswer(
             (_) async => [const UseCaseResult.success(none)],
           );
-          when(localNotificationsService.isNotificationAllowed)
+          when(areLocalNotificationsAllowedUseCase.singleOutput(any))
               .thenAnswer((_) async => true);
           when(remoteNotificationsService.enableNotifications())
               .thenAnswer((_) async => false);
@@ -62,7 +67,7 @@ void main() {
           when(savePushNotificationsStatusUseCase.call(any)).thenAnswer(
             (_) async => [const UseCaseResult.success(none)],
           );
-          when(localNotificationsService.isNotificationAllowed)
+          when(areLocalNotificationsAllowedUseCase.singleOutput(any))
               .thenAnswer((_) async => false);
           when(remoteNotificationsService.enableNotifications())
               .thenAnswer((_) async => false);
@@ -91,7 +96,7 @@ void main() {
           when(savePushNotificationsStatusUseCase.call(any)).thenAnswer(
             (_) async => [const UseCaseResult.success(none)],
           );
-          when(localNotificationsService.isNotificationAllowed)
+          when(areLocalNotificationsAllowedUseCase.singleOutput(any))
               .thenAnswer((_) async => true);
           when(remoteNotificationsService.enableNotifications())
               .thenAnswer((_) async => false);
@@ -115,7 +120,7 @@ void main() {
           when(savePushNotificationsStatusUseCase.call(any)).thenAnswer(
             (_) async => [const UseCaseResult.success(none)],
           );
-          when(localNotificationsService.isNotificationAllowed)
+          when(areLocalNotificationsAllowedUseCase.singleOutput(any))
               .thenAnswer((_) async => false);
           when(remoteNotificationsService.enableNotifications())
               .thenAnswer((_) async => false);
