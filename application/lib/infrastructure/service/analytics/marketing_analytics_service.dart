@@ -164,10 +164,10 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
           // AnalyticsConstants.afWebDp:
           //     AnalyticsConstants.webArticleViewerEndpoint,
           'af_dp': AnalyticsConstants.webArticleViewerEndpoint,
-          // AnalyticsConstants.afAndroidUrl:
-          //     AnalyticsConstants.webArticleViewerEndpoint,
-          // AnalyticsConstants.afIOSUrl:
-          //     AnalyticsConstants.webArticleViewerEndpoint,
+          AnalyticsConstants.afAndroidUrl:
+              AnalyticsConstants.webArticleViewerEndpoint,
+          AnalyticsConstants.afIOSUrl:
+              AnalyticsConstants.webArticleViewerEndpoint,
         },
       );
 }
