@@ -161,9 +161,9 @@ class AppsFlyerMarketingAnalyticsService implements MarketingAnalyticsService {
         customParams: {
           AnalyticsConstants.articleLinkParamName: encodedArticleData,
           AnalyticsConstants.deepLinkNameParamName: deepLinkName,
-          AnalyticsConstants.afWebDp:
-              AnalyticsConstants.webArticleViewerEndpoint,
-          'af_dp': AnalyticsConstants.webArticleViewerEndpoint,
+          // AnalyticsConstants.afWebDp:
+          //     AnalyticsConstants.webArticleViewerEndpoint,
+          // 'af_dp': AnalyticsConstants.webArticleViewerEndpoint,
           // AnalyticsConstants.afAndroidUrl:
           //     AnalyticsConstants.webArticleViewerEndpoint,
           // AnalyticsConstants.afIOSUrl:
