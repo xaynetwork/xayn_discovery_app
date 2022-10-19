@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
+import 'package:xayn_discovery_app/domain/model/push_notifications/push_notifications_conditions_status.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/listen_country_selection_conditions_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/listen_push_notifications_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/source_selection/listen_source_selection_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/survey_banner/listen_survey_conditions_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/topic/listen_topic_conditions_use_case.dart';
