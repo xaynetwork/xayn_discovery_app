@@ -45,7 +45,9 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
     Airship.onPushReceived.listen(_pushMessageHandler);
     Airship.setNamedUser(userId);
 
-    if (await _areLocalNotificationsAllowedUseCase.singleOutput(none)) {
+    final isNotificationAllowed =
+        await _areLocalNotificationsAllowedUseCase.singleOutput(none);
+    if (isNotificationAllowed) {
       enableNotifications();
     }
   }

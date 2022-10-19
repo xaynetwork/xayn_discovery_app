@@ -45,8 +45,6 @@ class TogglePushNotificationsStatusUseCase extends UseCase<None, None> {
     if (arePushNotificationsActive) {
       await _remoteNotificationsService.disableNotifications();
     } else {
-      // final result = await _localNotificationsService.requestPermission();
-      // print(result);
       await _remoteNotificationsService.enableNotifications();
     }
 
