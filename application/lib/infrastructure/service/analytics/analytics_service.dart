@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
@@ -55,7 +57,7 @@ class MixpanelAnalyticsService with AsyncInitMixin implements AnalyticsService {
     _mixpanel.identify(_userId);
     _mixpanel.setUseIpAddressForGeolocation(false);
     _mixpanel.setLoggingEnabled(EnvironmentHelper.kIsInternalFlavor);
-    _preamble();
+    if (Platform.isAndroid) _preambleDeviceCores();
   }
 
   @factoryMethod
@@ -86,7 +88,7 @@ class MixpanelAnalyticsService with AsyncInitMixin implements AnalyticsService {
   }
 
   /// uses setOnce to log info on the device's cores
-  void _preamble() {
+  void _preambleDeviceCores() {
     final deviceCoresProperties = SysInfo.cores
         .map(
           (it) => {

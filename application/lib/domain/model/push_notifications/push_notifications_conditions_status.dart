@@ -1,0 +1,1 @@
+enum PushNotificationsConditionsStatus { notReached, reached }

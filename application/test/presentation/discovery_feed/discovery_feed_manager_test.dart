@@ -129,6 +129,8 @@ void main() async {
     when(featureManager.isOnBoardingSheetsEnabled)
         .thenAnswer((realInvocation) => true);
     when(featureManager.isPaymentEnabled).thenAnswer((realInvocation) => false);
+    when(featureManager.areRemoteNotificationsEnabled)
+        .thenAnswer((realInvocation) => false);
 
     di.reset();
 
