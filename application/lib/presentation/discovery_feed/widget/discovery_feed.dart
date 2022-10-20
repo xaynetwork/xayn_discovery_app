@@ -20,7 +20,8 @@ class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
 }
 
 class _DiscoveryFeedState
-    extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed> {
+    extends BaseDiscoveryFeedState<DiscoveryFeedManager, DiscoveryFeed>
+    with WidgetsBindingObserver {
   late final DiscoveryFeedManager _manager = di.get();
 
   @override
@@ -133,7 +134,18 @@ class _DiscoveryFeedState
 
   @override
   void initState() {
-    manager.checkIfNeedToShowOnboarding();
     super.initState();
+    manager.checkIfNeedToShowOnboarding();
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) =>
+      _manager.onChangeAppLifecycleState(state);
 }
