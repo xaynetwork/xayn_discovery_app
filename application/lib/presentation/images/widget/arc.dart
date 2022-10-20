@@ -9,8 +9,7 @@ import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_exten
 
 class Arc extends StatefulWidget {
   final Widget child;
-
-  // final bool isFullScreen;
+  final ArcVariation arcVariation;
 
   /// value between [.0, 1.0]
   /// this indicates how much the Arc covers:
@@ -21,8 +20,8 @@ class Arc extends StatefulWidget {
   const Arc({
     Key? key,
     required this.child,
+    required this.arcVariation,
     this.fractionSize = 1.0,
-    // required this.isFullScreen,
   }) : super(key: key);
 
   @override
@@ -36,13 +35,18 @@ class _ArcState extends State<Arc> {
   Widget build(BuildContext context) {
     final foreground = BlocBuilder<DiscoveryFeedManager, DiscoveryState>(
       bloc: _manager,
-      builder: (_, state) => CustomPaint(
-        painter: ForegroundPainter(
-          fractionSize: widget.fractionSize,
-          bezierHeight: R.dimen.unit5,
-          color: state.readerModeBackgroundColor?.color ?? R.colors.background,
-        ),
-      ),
+      builder: (_, state) {
+        final arcBackgroundColor =
+            state.readerModeBackgroundColor?.color ?? R.colors.cardBackground;
+        return CustomPaint(
+          painter: ForegroundPainter(
+            fractionSize: widget.fractionSize,
+            bezierHeight: R.dimen.unit5,
+            color: arcBackgroundColor,
+            arcVariations: widget.arcVariation,
+          ),
+        );
+      },
     );
 
     return LayoutBuilder(

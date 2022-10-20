@@ -112,53 +112,62 @@ class _DiscoveryCardStaticState
         final outerScrollOffset =
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
 
+        final readerMode = _buildReaderMode(
+          processHtmlResult: state.processedDocument?.processHtmlResult,
+          size: mediaQuery.size,
+          bookmarkStatus: state.bookmarkStatus,
+        );
+
+        final imageWidget = Container(
+          height: constraints.maxHeight * _kImageFractionSize,
+          alignment: Alignment.topCenter,
+          child: image,
+        );
+
+        final indicator = CardMenuIndicator(
+          isInteractionEnabled: widget.isPrimary,
+          onOpenHeaderMenu: () {
+            widget.onTtsData?.call(TtsData.disabled());
+
+            toggleOverlay(
+              builder: (_) => DiscoveryCardHeaderMenu(
+                itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                source: Source.fromJson(widget.document.resource.url.host),
+                onClose: removeOverlay,
+              ),
+              useRootOverlay: true,
+            );
+          },
+        );
+
         return AppScrollbar(
           scrollController: _scrollController,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: _buildReaderMode(
-                  processHtmlResult: state.processedDocument?.processHtmlResult,
-                  size: mediaQuery.size,
-                  bookmarkStatus: state.bookmarkStatus,
+          child: LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                Positioned.fill(
+                  child: readerMode,
                 ),
-              ),
-              Positioned(
-                top: -outerScrollOffset,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: constraints.maxHeight * _kImageFractionSize,
-                  alignment: Alignment.topCenter,
-                  child: Stack(
-                    children: [
-                      image,
-                      elements,
-                    ],
-                  ),
+                Positioned(
+                  top: constraints.maxHeight / 2.5 - _scrollOffset,
+                  bottom: (constraints.maxHeight / 3.5) + _scrollOffset,
+                  left: 0,
+                  right: 0,
+                  child: elements,
                 ),
-              ),
-              Positioned(
-                top: R.dimen.unit2,
-                right: R.dimen.unit2,
-                child: CardMenuIndicator(
-                  isInteractionEnabled: widget.isPrimary,
-                  onOpenHeaderMenu: () {
-                    widget.onTtsData?.call(TtsData.disabled());
-
-                    toggleOverlay(
-                      builder: (_) => DiscoveryCardHeaderMenu(
-                        itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                        source:
-                            Source.fromJson(widget.document.resource.url.host),
-                        onClose: removeOverlay,
-                      ),
-                      useRootOverlay: true,
-                    );
-                  },
+                Positioned(
+                  top: -outerScrollOffset,
+                  left: 0,
+                  right: 0,
+                  child: imageWidget,
                 ),
-              ),
-            ],
+                Positioned(
+                  top: R.dimen.unit2,
+                  right: R.dimen.unit2,
+                  child: indicator,
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -167,6 +176,7 @@ class _DiscoveryCardStaticState
 
   @override
   Widget buildImage() => Arc(
+        arcVariation: discoveryCardManager.state.arcVariation,
         child: super.buildImage(),
       );
 
@@ -185,7 +195,7 @@ class _DiscoveryCardStaticState
         left: R.dimen.unit3,
         right: R.dimen.unit3,
         bottom: R.dimen.readerModeBottomPadding,
-        top: size.height * _kImageFractionSize,
+        top: size.height / 2 + R.dimen.unit15,
       ),
       onScroll: (position) => setState(() => _scrollOffset = position),
     );
