@@ -36,6 +36,7 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/change_do
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/error/mixin/error_handling_manager_mixin.dart';
 import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/shader/foreground/foreground_painter.dart';
 import 'package:xayn_discovery_app/presentation/rating_dialog/manager/rating_dialog_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/open_external_url_mixin.dart';
@@ -340,6 +341,9 @@ class DiscoveryCardManager extends Cubit<DiscoveryCardState>
 
         nextState = nextState.copyWith(
           bookmarkStatus: bookmarkStatus ?? BookmarkStatus.unknown,
+          arcVariation: state.arcVariation == ArcVariation.v0
+              ? getRandomArcVariation()
+              : state.arcVariation,
         );
 
         if (processedDocument != null) {

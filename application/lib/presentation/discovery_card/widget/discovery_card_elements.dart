@@ -72,8 +72,8 @@ class DiscoveryCardElements extends StatelessWidget {
       style: titleWidgetStyle.copyWith(color: R.colors.primaryText),
       textAlign: TextAlign.center,
       minFontSize: titleWidgetStyle.fontSize! * _kMaxTitleFraction,
-      maxLines: 3,
       overflow: TextOverflow.ellipsis,
+      maxLines: 6,
     );
 
     final actionButtonRow = Padding(
@@ -111,8 +111,11 @@ class DiscoveryCardElements extends StatelessWidget {
     );
 
     final elements = Padding(
-      padding: EdgeInsets.all(
-        R.dimen.unit3,
+      padding: EdgeInsets.only(
+        top: R.dimen.unit2,
+        bottom: R.dimen.unit3,
+        left: R.dimen.unit3,
+        right: R.dimen.unit3,
       ),
       child: ClipRRect(
         child: Column(
@@ -125,7 +128,8 @@ class DiscoveryCardElements extends StatelessWidget {
               curve: Curves.easeOut,
               child: _buildCardHeader(),
             ),
-            Expanded(child: titleAndTimeToRead),
+            SizedBox(height: R.dimen.unit),
+            titleAndTimeToRead,
             SizedBox(
               width: double.infinity,
               height: R.dimen.unit12 * fractionSize,

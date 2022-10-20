@@ -243,14 +243,14 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           left: R.dimen.unit3,
           right: R.dimen.unit3,
           bottom: R.dimen.readerModeBottomPadding,
-          top: size.height / 2 + R.dimen.unit6,
+          top: size.height / 2 + R.dimen.unit8,
         );
 
         // calculated area values for the elements
-        final elmsMinPos = constraints.maxHeight / 3;
+        final elmsMinPos = constraints.maxHeight / 2.7;
         final elmsMaxPos = 2 * constraints.maxHeight / 3;
         final elmsDelta = elmsMaxPos - elmsMinPos;
-        final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 5;
+        final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 9;
         final elmsPos = elmsMinPos + elmsDelta * fractionSize;
 
         final indicator = Positioned(
@@ -288,12 +288,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           child: Container(
             height: constraints.maxHeight * _openingAnimation.value,
             alignment: Alignment.topCenter,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                image,
-              ],
-            ),
+            child: image,
           ),
         );
 
@@ -332,6 +327,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   @override
   Widget buildImage() => Arc(
         fractionSize: invertedFractionSize,
+        arcVariation: discoveryCardManager.state.arcVariation,
         child: super.buildImage(),
       );
 
