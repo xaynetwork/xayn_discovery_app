@@ -9,6 +9,8 @@ import '../../../../test_utils/mocks.mocks.dart';
 
 void main() {
   late MockGetPushNotificationsStatusUseCase getPushNotificationsStatus;
+  late MockAreLocalNotificationsAllowedUseCase
+      areLocalNotificationsAllowedUseCase;
   late MockAppStatusRepository appStatusRepository;
   late MockFeatureManager featureManager;
   late CanDisplayPushNotificationsCardUseCase
@@ -17,16 +19,20 @@ void main() {
   featureManager = MockFeatureManager();
   appStatusRepository = MockAppStatusRepository();
   getPushNotificationsStatus = MockGetPushNotificationsStatusUseCase();
+  areLocalNotificationsAllowedUseCase =
+      MockAreLocalNotificationsAllowedUseCase();
   canDisplayPushNotificationsCardUseCase =
       CanDisplayPushNotificationsCardUseCase(
     getPushNotificationsStatus,
+    areLocalNotificationsAllowedUseCase,
     appStatusRepository,
     featureManager,
   );
 
   final initialAppStatus = AppStatus.initial();
-
   when(appStatusRepository.appStatus).thenReturn(initialAppStatus);
+  when(areLocalNotificationsAllowedUseCase.singleOutput(any))
+      .thenAnswer((_) async => true);
 
   group(
     'CanDisplayPushNotificationsCardUseCase',
@@ -55,6 +61,8 @@ void main() {
               when(featureManager.areRemoteNotificationsEnabled)
                   .thenReturn(true);
               when(getPushNotificationsStatus.singleOutput(none))
+                  .thenAnswer((_) async => false);
+              when(areLocalNotificationsAllowedUseCase.singleOutput(any))
                   .thenAnswer((_) async => false);
             },
             build: () => canDisplayPushNotificationsCardUseCase,

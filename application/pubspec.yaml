@@ -30,7 +30,7 @@ dependencies:
   flutter_bloc: 7.3.3
   flutter_cache_manager: 3.3.0
   flutter_isolate: 2.0.2
-  flutter_local_notifications: 11.0.1
+  flutter_local_notifications: 12.0.2
   flutter_localized_countries:
     git:
       url: https://github.com/xaynetwork/flutter-localized-countries
@@ -71,7 +71,10 @@ dependencies:
   logger: 1.1.0
   lottie: 1.2.2
   mixpanel_flutter: 1.5.0
-  notification_permissions: 0.6.1
+  notification_permissions:
+    git:
+      url: https://github.com/bshvets8/flutter_notification_permissions.git
+      ref: feature/android-13-support
   package_info_plus: 1.4.0
   path_provider: 2.0.9
   purchases_flutter: 4.0.0-beta.1
