@@ -104,6 +104,7 @@ class _DiscoveryCardStaticState
           bookmarkStatus: state.bookmarkStatus,
           fractionSize: .0,
           feedType: widget.feedType,
+          useLargeTitle: false,
         );
 
         // Limits the max scroll-away distance,
@@ -185,6 +186,9 @@ class _DiscoveryCardStaticState
     required Size size,
     required BookmarkStatus bookmarkStatus,
   }) {
+    final imageAndTitleSpace =
+        size.height * _kImageFractionSize + R.dimen.unit21;
+
     final readerMode = ReaderMode(
       scrollController: _scrollController,
       title: title,
@@ -195,7 +199,7 @@ class _DiscoveryCardStaticState
         left: R.dimen.unit3,
         right: R.dimen.unit3,
         bottom: R.dimen.readerModeBottomPadding,
-        top: size.height / 2 + R.dimen.unit15,
+        top: imageAndTitleSpace,
       ),
       onScroll: (position) => setState(() => _scrollOffset = position),
     );

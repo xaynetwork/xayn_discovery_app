@@ -50,15 +50,12 @@ class _ArcState extends State<Arc> {
     );
 
     return LayoutBuilder(
-        builder: (context, constraints) => Stack(
-              children: [
-                Positioned.fill(
-                  bottom:
-                      constraints.maxHeight / 2.5 * (1.0 - widget.fractionSize),
-                  child: widget.child,
-                ),
-                Positioned.fill(child: foreground),
-              ],
-            ));
+      builder: (context, constraints) => Stack(
+        children: [
+          Positioned.fill(child: widget.child),
+          Positioned.fill(child: foreground),
+        ],
+      ),
+    );
   }
 }
