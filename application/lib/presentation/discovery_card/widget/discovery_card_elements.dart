@@ -73,7 +73,7 @@ class DiscoveryCardElements extends StatelessWidget {
       textAlign: TextAlign.center,
       minFontSize: titleWidgetStyle.fontSize! * _kMaxTitleFraction,
       overflow: TextOverflow.ellipsis,
-      maxLines: 6,
+      maxLines: useLargeTitle ? 6 : 4,
     );
 
     final actionButtonRow = Padding(

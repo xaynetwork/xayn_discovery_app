@@ -243,14 +243,14 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           left: R.dimen.unit3,
           right: R.dimen.unit3,
           bottom: R.dimen.readerModeBottomPadding,
-          top: size.height / 2 + R.dimen.unit8,
+          top: size.height / 2 + R.dimen.unit10,
         );
 
         // calculated area values for the elements
-        final elmsMinPos = constraints.maxHeight / 2.7;
+        final elmsMinPos = constraints.maxHeight / 2.55;
         final elmsMaxPos = 2 * constraints.maxHeight / 3;
         final elmsDelta = elmsMaxPos - elmsMinPos;
-        final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 9;
+        final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 6;
         final elmsPos = elmsMinPos + elmsDelta * fractionSize;
 
         final indicator = Positioned(
