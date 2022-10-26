@@ -2,26 +2,23 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart' hide ImageErrorWidgetBuilder;
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/gesture/drag_back_recognizer.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -100,11 +97,16 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   late final DiscoveryCardController _controller;
   late final StreamSubscription<BuildContext> _updateNavBarListener;
   late final _scrollController = ScrollController(keepScrollOffset: false);
-  late final DiscoveryCardShadowManager _shadowManager = di.get();
   double _scrollOffset = .0;
 
   @override
   OverlayManager get overlayManager => discoveryCardManager.overlayManager;
+
+  double get fractionSize =>
+      (_openingAnimation.value - _kMinImageFractionSize) /
+      (1.0 - _kMinImageFractionSize);
+
+  double get invertedFractionSize => 1.0 - fractionSize;
 
   @override
   void initState() {
@@ -167,8 +169,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
     _dragToCloseAnimation.dispose();
     _controller.dispose();
 
-    _shadowManager.close();
-
     super.dispose();
   }
 
@@ -177,8 +177,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       BuildContext context, DiscoveryCardState state, Widget image) {
     final size = MediaQuery.of(context).size;
     // normalize the animation value to [0.0, 1.0]
-    final normalizedValue = (_openingAnimation.value - _kMinImageFractionSize) /
-        (1.0 - _kMinImageFractionSize);
+    final normalizedValue = fractionSize;
     final processedDocument = state.processedDocument;
     final provider = processedDocument?.getProvider(webResource);
 
@@ -198,18 +197,6 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           isDislikeButtonVisible: !featureManager.isDemoModeEnabled,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-          onOpenHeaderMenu: () {
-            widget.onTtsData?.call(TtsData.disabled());
-
-            toggleOverlay(
-              builder: (_) => DiscoveryCardHeaderMenu(
-                itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                source: Source.fromJson(widget.document.resource.url.host),
-                onClose: removeOverlay,
-              ),
-              useRootOverlay: true,
-            );
-          },
           onProviderSectionTap: () {
             widget.onTtsData?.call(TtsData.disabled());
 
@@ -236,10 +223,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
           feedType: widget.feedType,
         );
 
+        final normalizedScrollOffset = _scrollOffset * (1.0 - normalizedValue);
         // Limits the max scroll-away distance,
         // to park the image only just outside the visible range at max, when it finally animates back,
         // then you see it 'falling' back immediately, instead of much, much later if scrolled far away.
-        final outerScrollOffset = min(_scrollOffset * (1.0 - normalizedValue),
+        final outerScrollOffset = min(normalizedScrollOffset,
             _kMinImageFractionSize * constraints.maxHeight);
         // todo: magic number!
         // there is a render issue with Flutter, so while we await a fix here:
@@ -253,35 +241,77 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
         // @See base_painter.dart, in the paint method, where the extra pixel is added
         const renderArtefactSize = 2.0;
 
+        final readerModePadding = EdgeInsets.only(
+          left: R.dimen.unit3,
+          right: R.dimen.unit3,
+          bottom: R.dimen.readerModeBottomPadding,
+          top: size.height / 2 + R.dimen.unit10,
+        );
+
+        // calculated area values for the elements
+        final elmsMinPos = constraints.maxHeight / 2.55;
+        final elmsMaxPos = 2 * constraints.maxHeight / 3;
+        final elmsDelta = elmsMaxPos - elmsMinPos;
+        final elmsBottom = invertedFractionSize * 2 * constraints.maxHeight / 6;
+        final elmsPos = elmsMinPos + elmsDelta * fractionSize;
+
+        final indicator = Positioned(
+          top: R.dimen.unit2,
+          right: R.dimen.unit2,
+          child: CardMenuIndicator(
+            isInteractionEnabled: widget.isPrimary,
+            onOpenHeaderMenu: () {
+              widget.onTtsData?.call(TtsData.disabled());
+
+              toggleOverlay(
+                builder: (_) => DiscoveryCardHeaderMenu(
+                  itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                  source: Source.fromJson(widget.document.resource.url.host),
+                  onClose: removeOverlay,
+                ),
+                useRootOverlay: true,
+              );
+            },
+          ),
+        );
+
+        final title = Positioned(
+          top: elmsPos - normalizedScrollOffset,
+          bottom: invertedFractionSize * elmsBottom + normalizedScrollOffset,
+          left: 0,
+          right: 0,
+          child: elements,
+        );
+
+        final imageWithArc = Positioned(
+          top: -outerScrollOffset - renderArtefactSize,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: constraints.maxHeight * _openingAnimation.value,
+            alignment: Alignment.topCenter,
+            child: image,
+          ),
+        );
+
+        final readerMode = _buildReaderMode(
+          processHtmlResult: state.processedDocument?.processHtmlResult,
+          width: size.width,
+          padding: readerModePadding,
+        );
+
         return AppScrollbar(
           scrollController: _scrollController,
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              _buildReaderMode(
-                processHtmlResult: state.processedDocument?.processHtmlResult,
-                width: size.width,
-                headlineHeight:
-                    size.height * _kMinImageFractionSize + R.dimen.unit2,
-              ),
-              Positioned(
-                top: -outerScrollOffset - renderArtefactSize,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: constraints.maxHeight * _openingAnimation.value,
-                  alignment: Alignment.topCenter,
-                  child: Stack(
+          child: LayoutBuilder(
+              builder: (context, constraints) => Stack(
                     alignment: Alignment.topCenter,
                     children: [
-                      image,
-                      elements,
+                      readerMode,
+                      imageWithArc,
+                      title,
+                      indicator,
                     ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+                  )),
         );
       },
     );
@@ -297,59 +327,11 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   }
 
   @override
-  Widget buildImage(Color shadowColor) {
-    final normalizedValue = 1 -
-        (_openingAnimation.value - _kMinImageFractionSize) /
-            (1.0 - _kMinImageFractionSize);
-
-    return BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
-      bloc: _shadowManager,
-      builder: (_, state) {
-        /// The reader mode might have a different color from the one of the card in the feed.
-        /// Therefore, when animating from the feed to the reader mode, let's calculate
-        /// the color to show while transitioning from one color to the other
-        final color = _calculateAnimatedColor(
-          R.colors.swipeCardBackgroundHome,
-          state.readerModeBackgroundColor.color,
-          normalizedValue,
-        );
-
-        return super.buildImage(
-          R.isDarkMode ? color : R.colors.swipeCardBackgroundHome,
-        );
-      },
-    );
-  }
-
-  /// Calculate the color to show while animating from one color to another
-  Color _calculateAnimatedColor(
-      Color startingColor, Color endingColor, double normalizedValue) {
-    calculateColorInt(int value1, int value2, double animationValue) =>
-        (animationValue + (value2 - value1) * animationValue).toInt();
-
-    return Color.fromARGB(
-      calculateColorInt(
-        startingColor.alpha,
-        endingColor.alpha,
-        normalizedValue,
-      ),
-      calculateColorInt(
-        startingColor.red,
-        endingColor.red,
-        normalizedValue,
-      ),
-      calculateColorInt(
-        startingColor.green,
-        endingColor.green,
-        normalizedValue,
-      ),
-      calculateColorInt(
-        startingColor.blue,
-        endingColor.blue,
-        normalizedValue,
-      ),
-    );
-  }
+  Widget buildImage() => Arc(
+        fractionSize: invertedFractionSize,
+        arcVariation: discoveryCardManager.state.arcVariation,
+        child: super.buildImage(),
+      );
 
   Future<bool> _onWillPopScope() async {
     await _controller.animateToClose();
@@ -362,7 +344,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
   Widget _buildReaderMode({
     required ProcessHtmlResult? processHtmlResult,
     required double width,
-    required double headlineHeight,
+    required EdgeInsets padding,
   }) {
     final readerMode = ReaderMode(
       scrollController: _scrollController,
@@ -370,12 +352,7 @@ class _DiscoveryCardState extends DiscoveryCardBaseState<DiscoveryCard>
       languageCode: widget.document.resource.language,
       uri: widget.document.resource.url,
       processHtmlResult: processHtmlResult,
-      padding: EdgeInsets.only(
-        left: R.dimen.unit3,
-        right: R.dimen.unit3,
-        bottom: R.dimen.readerModeBottomPadding,
-        top: headlineHeight,
-      ),
+      padding: padding,
       onProcessedHtml: () => _openingAnimation.animateTo(
         _kMinImageFractionSize,
         curve: Curves.fastOutSlowIn,

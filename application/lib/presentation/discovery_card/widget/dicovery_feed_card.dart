@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
@@ -59,18 +60,6 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       isDislikeButtonVisible: !featureManager.isDemoModeEnabled,
       onLikePressed: () => onFeedbackPressed(UserReaction.positive),
       onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-      onOpenHeaderMenu: () {
-        widget.onTtsData?.call(TtsData.disabled());
-
-        toggleOverlay(
-          builder: (_) => DiscoveryCardHeaderMenu(
-            itemsMap: _buildDiscoveryCardHeaderMenuItems,
-            source: Source.fromJson(widget.document.resource.url.host),
-            onClose: removeOverlay,
-          ),
-          useRootOverlay: true,
-        );
-      },
       onProviderSectionTap: () {
         widget.onTtsData?.call(TtsData.disabled());
 
@@ -95,17 +84,53 @@ class _DiscoveryFeedCardState extends DiscoveryCardBaseState<DiscoveryFeedCard>
       feedType: widget.feedType,
     );
 
-    return Stack(
+    final imageWithElements = Column(
       children: [
-        image,
+        Expanded(child: image),
         elements,
       ],
+    );
+
+    final indicator = CardMenuIndicator(
+      isInteractionEnabled: widget.isPrimary,
+      onOpenHeaderMenu: () {
+        widget.onTtsData?.call(TtsData.disabled());
+
+        toggleOverlay(
+          builder: (_) => DiscoveryCardHeaderMenu(
+            itemsMap: _buildDiscoveryCardHeaderMenuItems,
+            source: Source.fromJson(widget.document.resource.url.host),
+            onClose: removeOverlay,
+          ),
+          useRootOverlay: true,
+        );
+      },
+    );
+
+    final cardWithIndicator = LayoutBuilder(
+      builder: (context, constraints) => Stack(
+        children: [
+          imageWithElements,
+          Positioned(
+            top: R.dimen.unit2,
+            right: R.dimen.unit2,
+            child: indicator,
+          ),
+        ],
+      ),
+    );
+
+    return Material(
+      color: R.colors.cardBackground,
+      child: cardWithIndicator,
     );
   }
 
   @override
-  Widget buildImage(Color shadowColor) =>
-      super.buildImage(R.colors.swipeCardBackgroundHome);
+  Widget buildImage() => Arc(
+        arcVariation: discoveryCardManager.state.arcVariation,
+        child: super.buildImage(),
+      );
 
   Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
       get _buildDiscoveryCardHeaderMenuItems => {

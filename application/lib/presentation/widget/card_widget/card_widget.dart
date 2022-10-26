@@ -10,7 +10,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/static/static_shader.dart';
-import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_app/presentation/utils/time_ago.dart';
 import 'package:xayn_discovery_app/presentation/widget/card_widget/card_data.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
@@ -79,9 +78,6 @@ class CardWidget extends StatelessWidget {
               width: width,
               height: CardWidgetData.cardHeight,
               bytes: bytes,
-              shadowColor: R.isDarkMode
-                  ? state.readerModeBackgroundColor.color
-                  : R.colors.swipeCardBackgroundHome,
               noImageBuilder: (_) => Align(
                 alignment: Alignment.centerRight,
                 child: empty,

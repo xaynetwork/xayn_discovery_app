@@ -1,14 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_footer.dart';
-import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 import 'favicon_bar.dart';
@@ -20,7 +17,7 @@ import 'favicon_bar.dart';
 /// suddenly take up less or more lines for example.
 /// Instead, the title width is static, based on the device's width and not the
 /// card's width.
-const double _kMaxTitleFraction = .75;
+const double _kMaxTitleFraction = .25;
 
 class DiscoveryCardElements extends StatelessWidget {
   const DiscoveryCardElements({
@@ -37,7 +34,6 @@ class DiscoveryCardElements extends StatelessWidget {
     required this.onBookmarkPressed,
     required this.onBookmarkLongPressed,
     required this.bookmarkStatus,
-    required this.onOpenHeaderMenu,
     required this.onProviderSectionTap,
     required this.onToggleTts,
     required this.feedType,
@@ -59,7 +55,6 @@ class DiscoveryCardElements extends StatelessWidget {
   final VoidCallback onLikePressed;
   final VoidCallback onDislikePressed;
   final VoidCallback onBookmarkPressed;
-  final VoidCallback onOpenHeaderMenu;
   final VoidCallback onProviderSectionTap;
   final VoidCallback onToggleTts;
   final VoidCallback onBookmarkLongPressed;
@@ -74,22 +69,15 @@ class DiscoveryCardElements extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final timeToReadWidget = Text(
-      '$timeToRead ${R.strings.readingTimeSuffix}',
-      style: R.styles.sStyle.copyWith(color: Colors.white),
-      textAlign: TextAlign.left,
-      maxLines: 5,
-      overflow: TextOverflow.ellipsis,
-    );
     final titleWidgetStyle =
         useLargeTitle ? R.styles.xxlBoldStyle : R.styles.xlBoldStyle;
     final titleWidget = AutoSizeText(
       title,
-      style: titleWidgetStyle.copyWith(color: Colors.white),
-      textAlign: TextAlign.left,
-      minFontSize: titleWidgetStyle.fontSize! * 0.75,
-      maxLines: 5,
+      style: titleWidgetStyle.copyWith(color: R.colors.primaryText),
+      textAlign: TextAlign.center,
+      minFontSize: titleWidgetStyle.fontSize! * _kMaxTitleFraction,
       overflow: TextOverflow.ellipsis,
+      maxLines: useLargeTitle ? 6 : 4,
     );
 
     final actionButtonRow = Padding(
@@ -113,27 +101,31 @@ class DiscoveryCardElements extends StatelessWidget {
       ),
     );
 
-    final titleAndTimeToRead = Wrap(
-      runAlignment: WrapAlignment.end,
-      runSpacing: R.dimen.unit,
-      children: [
-        if (timeToRead.isNotEmpty) timeToReadWidget,
-        SizedBox(
-          width: mediaQuery.size.width * _kMaxTitleFraction,
-          child: Row(
-            children: [Expanded(child: titleWidget)],
+    final titleAndTimeToRead = ClipRRect(
+      child: Wrap(
+        runAlignment: WrapAlignment.center,
+        runSpacing: R.dimen.unit,
+        children: [
+          SizedBox(
+            width: mediaQuery.size.width,
+            child: Row(
+              children: [Expanded(child: titleWidget)],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
 
     final elements = Padding(
-      padding: EdgeInsets.all(
-        R.dimen.unit3,
+      padding: EdgeInsets.only(
+        top: R.dimen.unit2,
+        bottom: R.dimen.unit3,
+        left: R.dimen.unit3,
+        right: R.dimen.unit3,
       ),
       child: ClipRRect(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AnimatedOpacity(
@@ -142,7 +134,8 @@ class DiscoveryCardElements extends StatelessWidget {
               curve: Curves.easeOut,
               child: _buildCardHeader(),
             ),
-            Expanded(child: titleAndTimeToRead),
+            SizedBox(height: R.dimen.unit),
+            titleAndTimeToRead,
             SizedBox(
               width: double.infinity,
               height: R.dimen.unit12 * fractionSize,
@@ -157,27 +150,10 @@ class DiscoveryCardElements extends StatelessWidget {
   }
 
   Widget _buildCardHeader() {
-    final featureManager = di.get<FeatureManager>();
     final faviconRow = FaviconBar.fromProvider(
       provider: provider,
       datePublished: datePublished,
-    );
-
-    final ttsIcon = Padding(
-      padding: EdgeInsets.all(R.dimen.unit),
-      child: Icon(
-        Icons.volume_up,
-        color: R.colors.brightIcon,
-      ),
-    );
-
-    final openIconColor = R.colors.brightIcon;
-    final openUrlIcon = Padding(
-      padding: EdgeInsets.all(R.dimen.unit),
-      child: SvgPicture.asset(
-        R.assets.icons.more,
-        color: openIconColor,
-      ),
+      timeToRead: '$timeToRead ${R.strings.readingTimeSuffix}',
     );
 
     maybeWithTap(Widget child, VoidCallback onTap) => Material(
@@ -188,18 +164,6 @@ class DiscoveryCardElements extends StatelessWidget {
           ),
         );
 
-    return Row(
-      children: [
-        if (provider?.favicon != null)
-          Expanded(child: maybeWithTap(faviconRow, onProviderSectionTap))
-        else
-          const Spacer(),
-        if (featureManager.isTtsEnabled) maybeWithTap(ttsIcon, onToggleTts),
-        maybeWithTap(
-          openUrlIcon,
-          onOpenHeaderMenu,
-        ),
-      ],
-    );
+    return maybeWithTap(faviconRow, onProviderSectionTap);
   }
 }
