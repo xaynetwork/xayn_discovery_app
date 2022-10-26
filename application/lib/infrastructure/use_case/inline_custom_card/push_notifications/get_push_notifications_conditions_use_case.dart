@@ -8,13 +8,13 @@ import 'package:xayn_discovery_app/domain/repository/user_interactions_repositor
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/can_display_push_notifications_card_use_case.dart';
 
 @injectable
-class ListenPushNotificationsConditionsStatusUseCase
+class GetPushNotificationsConditionsStatusUseCase
     extends UseCase<None, PushNotificationsConditionsStatus> {
   final UserInteractionsRepository userInteractionsRepository;
   final AppStatusRepository appStatusRepository;
   final CanDisplayPushNotificationsCardUseCase canDisplayPushNotificationsCard;
 
-  ListenPushNotificationsConditionsStatusUseCase(
+  GetPushNotificationsConditionsStatusUseCase(
     this.userInteractionsRepository,
     this.appStatusRepository,
     this.canDisplayPushNotificationsCard,
@@ -28,16 +28,12 @@ class ListenPushNotificationsConditionsStatusUseCase
       return;
     }
 
-    yield* userInteractionsRepository.watch().map(
-      (_) {
-        final numberOfSessions = appStatusRepository.appStatus.numberOfSessions;
-        final userInteractions = userInteractionsRepository.userInteractions;
+    final numberOfSessions = appStatusRepository.appStatus.numberOfSessions;
+    final userInteractions = userInteractionsRepository.userInteractions;
 
-        return PushNotificationsConditionsStatusExtension.performStatusCheck(
-          numberOfSessions: numberOfSessions,
-          userInteractions: userInteractions,
-        );
-      },
+    yield PushNotificationsConditionsStatusExtension.performStatusCheck(
+      numberOfSessions: numberOfSessions,
+      userInteractions: userInteractions,
     );
   }
 }
