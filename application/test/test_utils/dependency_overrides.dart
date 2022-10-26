@@ -21,6 +21,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connecti
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/handlers.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/init_logger_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/image_processing/direct_uri_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/are_local_notifications_allowed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/util/async_init.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/log_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
@@ -345,24 +346,18 @@ class FakeBugReportingService implements BugReportingService {
 @LazySingleton(as: LocalNotificationsService)
 class FakeLocalNotificationsService implements LocalNotificationsService {
   @override
-  Future<bool> get isNotificationAllowed => Future.value(false);
-
-  @override
   void openNotificationsPage() {
     // TODO: implement openNotificationsPage
   }
 
   @override
-  void requestPermission() {
-    // TODO: implement requestPermission
+  Future<bool?> requestPermission() async {
+    return false;
   }
 
   @override
   Future<bool> sendNotification(
-      {required String body,
-      required UniqueId documentId,
-      required Duration delay,
-      Uri? image}) {
+      {required String body, required UniqueId documentId, Uri? image}) {
     // TODO: implement sendNotification
     return Future.value(false);
   }
@@ -393,4 +388,13 @@ class FakeRemoteNotificationsService implements RemoteNotificationsService {
   @override
   // TODO: implement userNotificationsEnabled
   Future<bool?> get userNotificationsEnabled => Future.value();
+}
+
+@Injectable(as: AreLocalNotificationsAllowedUseCase)
+class TestableAreLocalNotificationsAllowedUseCase
+    extends AreLocalNotificationsAllowedUseCase {
+  @override
+  Stream<bool> transaction(param) async* {
+    yield true;
+  }
 }

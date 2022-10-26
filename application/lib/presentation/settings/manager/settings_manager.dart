@@ -28,6 +28,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/app_version/get_app_v
 import 'package:xayn_discovery_app/infrastructure/use_case/develop/extract_log_usecase.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/share_uri_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/haptic_feedback_medium_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/are_local_notifications_allowed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_management_url_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/get_subscription_status_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/payment/listen_subscription_status_use_case.dart';
@@ -88,6 +89,8 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
   final RemoteNotificationsService _remoteNotificationsService;
   final DiscoveryFeedManager _discoveryFeedManager;
   final GetUserIdUseCase _getUserIdUseCase;
+  final AreLocalNotificationsAllowedUseCase
+      _areLocalNotificationsAllowedUseCase;
 
   SettingsScreenManager(
     this._getAppVersionUseCase,
@@ -111,6 +114,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     this._remoteNotificationsService,
     this._discoveryFeedManager,
     this._getUserIdUseCase,
+    this._areLocalNotificationsAllowedUseCase,
   ) : super(const SettingsScreenState.initial()) {
     _init();
   }
@@ -198,7 +202,7 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
       final userNotificationsEnabled =
           await _remoteNotificationsService.userNotificationsEnabled ?? false;
       final isNotificationAllowed =
-          await _localNotificationsService.isNotificationAllowed;
+          await _areLocalNotificationsAllowedUseCase.singleOutput(none);
       return SettingsScreenState.ready(
         theme: _theme,
         appVersion: _appVersion,
@@ -316,7 +320,6 @@ class SettingsScreenManager extends Cubit<SettingsScreenState>
     _localNotificationsService.sendNotification(
       body: document.resource.title,
       documentId: UniqueId.fromTrustedString(document.documentId.toString()),
-      delay: const Duration(seconds: 5),
       image: document.resource.image,
     );
   }
