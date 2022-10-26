@@ -23,7 +23,7 @@ dependencies:
   dart_remote_config:
     git:
       url: https://github.com/xaynetwork/dart_remote_config
-      ref: 7ff913391d7f33f0b0c324cd23f05cee19311fbb
+      ref: eeb4f678bc2b608cd9a850e7b52448467ca254ff
   equatable: 2.0.3
   envify: 2.0.2
   flat: ^0.4.1
