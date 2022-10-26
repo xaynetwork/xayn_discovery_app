@@ -17,14 +17,12 @@ abstract class BaseStaticShader extends StatefulWidget {
   final double? width;
   final double? height;
   final ImageErrorWidgetBuilder noImageBuilder;
-  final Color? shadowColor;
   final Uri uri;
 
   const BaseStaticShader({
     Key? key,
     required this.bytes,
     required this.noImageBuilder,
-    required this.shadowColor,
     required this.uri,
     this.width,
     this.height,
@@ -134,7 +132,6 @@ abstract class BaseAnimationShader extends BaseStaticShader {
     this.transitionToIdle = false,
     this.looping = true,
     this.singleFrameOnly = false,
-    Color? shadowColor,
     Duration? duration,
     Curve? curve = Curves.easeInOut,
     double? width,
@@ -145,7 +142,6 @@ abstract class BaseAnimationShader extends BaseStaticShader {
         super(
           key: key,
           uri: uri,
-          shadowColor: shadowColor,
           noImageBuilder: noImageBuilder,
           bytes: bytes,
           width: width,
