@@ -11,7 +11,6 @@ class StaticPainter extends BaseStaticPainter {
     Color? shadowColor,
   }) : super(
           image: image,
-          shadowColor: shadowColor,
         );
 
   @override

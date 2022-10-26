@@ -2,15 +2,12 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/cached_image.dart';
-import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 
 class CountrySelectionCard extends _CustomFeedCardBase {
   CountrySelectionCard({
     Key? key,
     required VoidCallback onPressed,
-    ShaderBuilder? primaryCardShader,
     String? countryName,
   }) : super(
           key: key,
@@ -24,7 +21,6 @@ class CountrySelectionCard extends _CustomFeedCardBase {
               R.styles.mBoldStyle.copyWith(color: R.colors.brightText),
           onPressed: onPressed,
           animationAsset: R.assets.lottie.countrySelection,
-          primaryCardShader: primaryCardShader,
         );
 }
 
@@ -32,7 +28,6 @@ class SourceSelectionCard extends _CustomFeedCardBase {
   SourceSelectionCard({
     Key? key,
     required VoidCallback onPressed,
-    ShaderBuilder? primaryCardShader,
   }) : super(
           key: key,
           title: R.strings.sourceSelectionCardTitle,
@@ -40,7 +35,6 @@ class SourceSelectionCard extends _CustomFeedCardBase {
           cTAString: R.strings.manageNewsSourcesCTA,
           onPressed: onPressed,
           animationAsset: R.assets.lottie.sourceSelection,
-          primaryCardShader: primaryCardShader,
         );
 }
 
@@ -48,7 +42,6 @@ class SurveyCard extends _CustomFeedCardBase {
   SurveyCard({
     Key? key,
     required VoidCallback onPressed,
-    ShaderBuilder? primaryCardShader,
   }) : super(
           key: key,
           title: R.strings.takeSurveyTitle,
@@ -56,12 +49,10 @@ class SurveyCard extends _CustomFeedCardBase {
           cTAString: R.strings.takeSurveyCTA,
           onPressed: onPressed,
           animationAsset: R.assets.lottie.survey,
-          primaryCardShader: primaryCardShader,
         );
 }
 
 class _CustomFeedCardBase extends StatelessWidget {
-  final ShaderBuilder primaryCardShader;
   final VoidCallback onPressed;
   final String animationAsset;
   final String title;
@@ -70,19 +61,16 @@ class _CustomFeedCardBase extends StatelessWidget {
   final String? highlightedSubtitleText;
   final TextStyle? highlightedSubtitleTextStyle;
 
-  _CustomFeedCardBase({
+  const _CustomFeedCardBase({
     Key? key,
     required this.onPressed,
-    ShaderBuilder? primaryCardShader,
     required this.animationAsset,
     required this.title,
     required this.subtitle,
     required this.cTAString,
     this.highlightedSubtitleText,
     this.highlightedSubtitleTextStyle,
-  })  : primaryCardShader =
-            primaryCardShader ?? ShaderFactory.fromType(ShaderType.static),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -85,7 +85,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
         builder: (context, state) => buildFromState(
           context,
           state,
-          buildImage(R.colors.swipeCardBackgroundDefault),
+          buildImage(),
         ),
       );
 
@@ -121,7 +121,7 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
     };
   }
 
-  Widget buildImage(Color shadowColor) {
+  Widget buildImage() {
     // allow opaque-when-loading, because the card will fade in on load completion.
     buildBackgroundPane({required bool opaque}) =>
         Container(color: opaque ? null : R.colors.swipeCardBackgroundHome);
@@ -180,7 +180,6 @@ abstract class DiscoveryCardBaseState<T extends DiscoveryCardBase>
       uri: Uri.parse(imageUrl),
       width: R.dimen.screenSize.width.floor(),
       height: R.dimen.screenSize.height.floor(),
-      shadowColor: shadowColor,
       loadingBuilder: (_, __) => buildBackgroundPane(opaque: true),
       errorBuilder: (_) => buildBackgroundPane(opaque: false),
       noImageBuilder: (_) => getDeterministicNoImage(),

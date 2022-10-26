@@ -5,20 +5,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_manager.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_shadow_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
+import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
+import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_extension.dart';
 import 'package:xayn_discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
@@ -50,7 +48,6 @@ class DiscoveryCardStatic extends DiscoveryCardBase {
 class _DiscoveryCardStaticState
     extends DiscoveryCardBaseState<DiscoveryCardStatic> with OverlayStateMixin {
   late final _scrollController = ScrollController(keepScrollOffset: false);
-  late final DiscoveryCardShadowManager _shadowManager = di.get();
   double _scrollOffset = .0;
 
   @override
@@ -84,18 +81,6 @@ class _DiscoveryCardStaticState
           isInteractionEnabled: true,
           onLikePressed: () => onFeedbackPressed(UserReaction.positive),
           onDislikePressed: () => onFeedbackPressed(UserReaction.negative),
-          onOpenHeaderMenu: () {
-            widget.onTtsData?.call(TtsData.disabled());
-
-            toggleOverlay(
-              builder: (_) => DiscoveryCardHeaderMenu(
-                itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                source: Source.fromJson(widget.document.resource.url.host),
-                onClose: removeOverlay,
-              ),
-              useRootOverlay: true,
-            );
-          },
           onProviderSectionTap: () {
             widget.onTtsData?.call(TtsData.disabled());
 
@@ -119,6 +104,7 @@ class _DiscoveryCardStaticState
           bookmarkStatus: state.bookmarkStatus,
           fractionSize: .0,
           feedType: widget.feedType,
+          useLargeTitle: false,
         );
 
         // Limits the max scroll-away distance,
@@ -127,33 +113,62 @@ class _DiscoveryCardStaticState
         final outerScrollOffset =
             min(_scrollOffset, _kImageFractionSize * mediaQuery.size.height);
 
+        final readerMode = _buildReaderMode(
+          processHtmlResult: state.processedDocument?.processHtmlResult,
+          size: mediaQuery.size,
+          bookmarkStatus: state.bookmarkStatus,
+        );
+
+        final imageWidget = Container(
+          height: constraints.maxHeight * _kImageFractionSize,
+          alignment: Alignment.topCenter,
+          child: image,
+        );
+
+        final indicator = CardMenuIndicator(
+          isInteractionEnabled: widget.isPrimary,
+          onOpenHeaderMenu: () {
+            widget.onTtsData?.call(TtsData.disabled());
+
+            toggleOverlay(
+              builder: (_) => DiscoveryCardHeaderMenu(
+                itemsMap: _buildDiscoveryCardHeaderMenuItems,
+                source: Source.fromJson(widget.document.resource.url.host),
+                onClose: removeOverlay,
+              ),
+              useRootOverlay: true,
+            );
+          },
+        );
+
         return AppScrollbar(
           scrollController: _scrollController,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: _buildReaderMode(
-                  processHtmlResult: state.processedDocument?.processHtmlResult,
-                  size: mediaQuery.size,
-                  bookmarkStatus: state.bookmarkStatus,
+          child: LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                Positioned.fill(
+                  child: readerMode,
                 ),
-              ),
-              Positioned(
-                top: -outerScrollOffset,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: constraints.maxHeight * _kImageFractionSize,
-                  alignment: Alignment.topCenter,
-                  child: Stack(
-                    children: [
-                      image,
-                      elements,
-                    ],
-                  ),
+                Positioned(
+                  top: constraints.maxHeight / 2.5 - _scrollOffset,
+                  bottom: (constraints.maxHeight / 3.5) + _scrollOffset,
+                  left: 0,
+                  right: 0,
+                  child: elements,
                 ),
-              ),
-            ],
+                Positioned(
+                  top: -outerScrollOffset,
+                  left: 0,
+                  right: 0,
+                  child: imageWidget,
+                ),
+                Positioned(
+                  top: R.dimen.unit2,
+                  right: R.dimen.unit2,
+                  child: indicator,
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -161,14 +176,9 @@ class _DiscoveryCardStaticState
   }
 
   @override
-  Widget buildImage(Color shadowColor) =>
-      BlocBuilder<DiscoveryCardShadowManager, DiscoveryCardShadowState>(
-        bloc: _shadowManager,
-        builder: (_, state) => super.buildImage(
-          R.isDarkMode
-              ? state.readerModeBackgroundColor.color
-              : R.colors.swipeCardBackgroundHome,
-        ),
+  Widget buildImage() => Arc(
+        arcVariation: discoveryCardManager.state.arcVariation,
+        child: super.buildImage(),
       );
 
   Widget _buildReaderMode({
@@ -176,6 +186,9 @@ class _DiscoveryCardStaticState
     required Size size,
     required BookmarkStatus bookmarkStatus,
   }) {
+    final imageAndTitleSpace =
+        size.height * _kImageFractionSize + R.dimen.unit21;
+
     final readerMode = ReaderMode(
       scrollController: _scrollController,
       title: title,
@@ -186,7 +199,7 @@ class _DiscoveryCardStaticState
         left: R.dimen.unit3,
         right: R.dimen.unit3,
         bottom: R.dimen.readerModeBottomPadding,
-        top: size.height * _kImageFractionSize,
+        top: imageAndTitleSpace,
       ),
       onScroll: (position) => setState(() => _scrollOffset = position),
     );

@@ -37,7 +37,7 @@ class DiscoveryCardFooter extends StatelessWidget {
           ? R.assets.icons.thumbsUpActive
           : R.assets.icons.thumbsUp,
       onPressed: onLikePressed,
-      iconColor: R.colors.brightIcon,
+      iconColor: R.colors.icon,
     ).withSemanticsLabel(
       '${Keys.navBarItemLike.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
     );
@@ -48,7 +48,7 @@ class DiscoveryCardFooter extends StatelessWidget {
           : R.assets.icons.bookmark,
       onPressed: onBookmarkPressed,
       onLongPressed: onBookmarkLongPressed,
-      iconColor: R.colors.brightIcon,
+      iconColor: R.colors.icon,
     ).withSemanticsLabel(
       '${Keys.navBarItemBookmark.valueKey} = ${explicitDocumentUserReaction.isRelevant}',
     );
@@ -56,7 +56,7 @@ class DiscoveryCardFooter extends StatelessWidget {
     final shareButton = AppGhostButton.icon(
       R.assets.icons.share,
       onPressed: onSharePressed,
-      iconColor: R.colors.brightIcon,
+      iconColor: R.colors.icon,
     ).withSemanticsLabel(Keys.navBarItemShare.valueKey);
 
     final dislikeButton = AppGhostButton.icon(
@@ -64,7 +64,7 @@ class DiscoveryCardFooter extends StatelessWidget {
           ? R.assets.icons.thumbsDownActive
           : R.assets.icons.thumbsDown,
       onPressed: onDislikePressed,
-      iconColor: R.colors.brightIcon,
+      iconColor: R.colors.icon,
     ).withSemanticsLabel(
         '${Keys.navBarItemDisLike.valueKey} = ${explicitDocumentUserReaction.isIrrelevant}');
 

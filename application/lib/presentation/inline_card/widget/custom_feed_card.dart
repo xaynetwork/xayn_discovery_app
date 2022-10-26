@@ -27,24 +27,20 @@ class CustomFeedCard extends StatelessWidget {
       case CardType.survey:
         return SurveyCard(
           onPressed: onPressed,
-          primaryCardShader: primaryCardShader,
         );
       case CardType.sourceSelection:
         return SourceSelectionCard(
           onPressed: onPressed,
-          primaryCardShader: primaryCardShader,
         );
       case CardType.countrySelection:
         return CountrySelectionCard(
           onPressed: onPressed,
-          primaryCardShader: primaryCardShader,
           countryName: selectedCountryName,
         );
       case CardType.pushNotifications:
         return PushNotificationsCard(
           cardType: cardType,
           onPressed: onPressed,
-          primaryCardShader: primaryCardShader,
         );
       case CardType.topics:
         return TopicsInLineCard(
