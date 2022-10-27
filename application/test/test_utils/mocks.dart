@@ -96,6 +96,7 @@ import 'package:xayn_discovery_app/infrastructure/use_case/haptic_feedbacks/hapt
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/can_display_inline_cards.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/country_selection/can_display_country_selection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/inline_card_injection_use_case.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/are_local_notifications_allowed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/can_display_push_notifications_card_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/handle_push_notifications_card_clicked_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/listen_push_notifications_conditions_use_case.dart';
@@ -312,6 +313,7 @@ import 'package:xayn_discovery_engine/discovery_engine.dart';
   GetUserIdUseCase,
   DbEntityMapToTopicsInLineCardMapper,
   CanDisplayTopicsUseCase,
+  AreLocalNotificationsAllowedUseCase,
 ])
 class Mocks {
   Mocks._();

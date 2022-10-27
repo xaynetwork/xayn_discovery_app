@@ -1,110 +1,141 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:app_settings/app_settings.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/document_id_payload_mapper.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/push_notifications/save_notification_image_use_case.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_data.dart';
 import 'package:xayn_discovery_app/presentation/navigation/deep_link_manager.dart';
-import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 const String kChannelKey = 'basic_channel';
-const String kAndroidIconPath = 'resource://drawable/res_app_icon';
+const String kAndroidIconName = 'res_app_icon';
 
 abstract class LocalNotificationsService {
-  void requestPermission();
+  Future<bool?> requestPermission();
   void openNotificationsPage();
-  Future<bool> sendNotification({
+  Future<void> sendNotification({
     required String body,
     required UniqueId documentId,
-    required Duration delay,
     Uri? image,
   });
-  Future<bool> get isNotificationAllowed;
 }
 
 @LazySingleton(as: LocalNotificationsService)
 class LocalNotificationsServiceImpl implements LocalNotificationsService {
   final DeepLinkManager _deepLinkManager;
-  final DocumentIdToPayloadMapper _documentIdToPayloadMapper;
-  final PayloadToDocumentIdMapper _payloadToDocumentIdMapper;
+  final SaveNotificationImageUseCase _saveNotificationImageUseCase;
+
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   LocalNotificationsServiceImpl(
     this._deepLinkManager,
-    this._documentIdToPayloadMapper,
-    this._payloadToDocumentIdMapper,
+    this._saveNotificationImageUseCase,
   ) {
     _init();
   }
 
-  void _init() {
-    AwesomeNotifications().initialize(
-        kAndroidIconPath,
-        [
-          NotificationChannel(
-            channelKey: kChannelKey,
-            channelName: R.strings.notificationsChannelName,
-            channelDescription: R.strings.notificationsChannelDescription,
-          )
-        ],
-        debug: EnvironmentHelper.kIsDebug);
+  void _init() async {
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings(kAndroidIconName);
 
-    AwesomeNotifications().actionStream.listen(_deepLinkHandler);
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+    );
+
+    const initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+    );
   }
 
-  void _deepLinkHandler(ReceivedNotification receivedNotification) {
-    final payload = receivedNotification.payload;
+  void _onDidReceiveNotificationResponse(
+    NotificationResponse notificationResponse,
+  ) async {
+    logger.i('[Local Notifications] Did receive notification response.');
+
+    final String? payload = notificationResponse.payload;
     if (payload == null) {
       logger.i('[Local Notifications] Payload not set.');
       return;
     }
-    final documentId = _payloadToDocumentIdMapper.map(payload);
-    if (documentId == null) {
-      logger.i(
-          '[Local Notifications] documentId not found in notification payload.');
-      return;
-    }
+    final documentId = UniqueId.fromTrustedString(payload);
     final deepLinkData = DeepLinkData.feed(documentId: documentId);
     _deepLinkManager.onDeepLink(deepLinkData);
   }
 
   @override
-  Future<bool> get isNotificationAllowed =>
-      AwesomeNotifications().isNotificationAllowed();
-
-  @override
-  void requestPermission() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+  Future<bool?> requestPermission() async {
+    if (Platform.isIOS) {
+      return _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  IOSFlutterLocalNotificationsPlugin>()
+              ?.requestPermissions(
+                alert: true,
+                badge: true,
+                sound: true,
+              ) ??
+          Future.value(false);
+    } else if (Platform.isAndroid) {
+      return _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestPermission();
+    } else {
+      return false;
+    }
   }
 
   @override
-  void openNotificationsPage() =>
-      AwesomeNotifications().showNotificationConfigPage();
+  void openNotificationsPage() => AppSettings.openNotificationSettings();
 
   @override
-  Future<bool> sendNotification({
+  Future<void> sendNotification({
     required String body,
     required UniqueId documentId,
-    required Duration delay,
     Uri? image,
-  }) {
-    final scheduleTime = DateTime.now().add(delay);
-    return AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 1,
-        channelKey: kChannelKey,
-        title: R.strings.notificationTitle,
-        body: body,
-        payload: _documentIdToPayloadMapper.map(documentId),
-        bigPicture: image?.toString(),
-        notificationLayout:
-            image != null ? NotificationLayout.BigPicture : null,
-      ),
-      schedule: NotificationCalendar.fromDate(date: scheduleTime),
+  }) async {
+    logger.i('[Local Notifications] Sending notification.');
+
+    final imagePath = await _saveNotificationImageUseCase.singleOutput(image);
+
+    final androidNotificationDetails = AndroidNotificationDetails(
+      kChannelKey,
+      R.strings.notificationsChannelName,
+      channelDescription: R.strings.notificationsChannelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+      largeIcon: imagePath != null ? FilePathAndroidBitmap(imagePath) : null,
+    );
+
+    final iOS = DarwinNotificationDetails(
+      attachments:
+          imagePath != null ? [DarwinNotificationAttachment(imagePath)] : null,
+    );
+
+    final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: iOS,
+    );
+
+    return _flutterLocalNotificationsPlugin.show(
+      0,
+      R.strings.notificationTitle,
+      body,
+      notificationDetails,
+      payload: documentId.value,
     );
   }
 }
