@@ -63,6 +63,8 @@ void main() {
   late MockRemoteNotificationsService remoteNotificationsService;
   late MockDiscoveryFeedManager discoveryFeedManager;
   late MockGetUserIdUseCase getUserIdUseCase;
+  late MockAreLocalNotificationsAllowedUseCase
+      areLocalNotificationsAllowedUseCase;
 
   setUp(() {
     featureManager = MockFeatureManager();
@@ -88,6 +90,8 @@ void main() {
     remoteNotificationsService = MockRemoteNotificationsService();
     discoveryFeedManager = MockDiscoveryFeedManager();
     getUserIdUseCase = MockGetUserIdUseCase();
+    areLocalNotificationsAllowedUseCase =
+        MockAreLocalNotificationsAllowedUseCase();
 
     di.allowReassignment = true;
     di.registerLazySingleton<SendAnalyticsUseCase>(() => SendAnalyticsUseCase(
@@ -133,7 +137,7 @@ void main() {
           GetSubscriptionManagementUrlOutput(subscriptionManagementURL)),
     );
 
-    when(localNotificationsService.isNotificationAllowed)
+    when(areLocalNotificationsAllowedUseCase.singleOutput(any))
         .thenAnswer((_) => Future.value(false));
 
     when(remoteNotificationsService.userNotificationsEnabled)
@@ -162,6 +166,7 @@ void main() {
         remoteNotificationsService,
         discoveryFeedManager,
         getUserIdUseCase,
+        areLocalNotificationsAllowedUseCase,
       );
   blocTest<SettingsScreenManager, SettingsScreenState>(
     'WHEN manager just created THEN get default values and emit state Ready',

@@ -52,13 +52,13 @@ enum Feature {
   ),
   sourceSelectionInLineCard(
     Owner.Michael,
-    true,
+    false,
     description: 'Showing source selection inline Card',
     remoteKey: 'source_selection_inline_card',
   ),
   countrySelectionInLineCard(
     Owner.Michael,
-    true,
+    false,
     description: 'Showing country selection inline Card',
     remoteKey: 'country_selection_inline_card',
   ),

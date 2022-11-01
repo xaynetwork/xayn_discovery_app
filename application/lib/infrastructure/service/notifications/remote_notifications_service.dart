@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:airship_flutter/airship_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/concepts/use_case/none.dart';
 import 'package:xayn_discovery_app/infrastructure/service/notifications/remote_notification.dart';
+import 'package:xayn_discovery_app/infrastructure/use_case/inline_custom_card/push_notifications/are_local_notifications_allowed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/user_id/get_user_id_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
@@ -19,13 +19,18 @@ abstract class RemoteNotificationsService {
 @LazySingleton(as: RemoteNotificationsService)
 class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
   final GetUserIdUseCase _getUserIdUseCase;
+  final AreLocalNotificationsAllowedUseCase
+      _areLocalNotificationsAllowedUseCase;
   final StreamController<RemoteNotification> _controller =
       StreamController<RemoteNotification>.broadcast();
 
   @override
   Stream<RemoteNotification> get notificationStream => _controller.stream;
 
-  RemoteNotificationsServiceImpl(this._getUserIdUseCase) {
+  RemoteNotificationsServiceImpl(
+    this._getUserIdUseCase,
+    this._areLocalNotificationsAllowedUseCase,
+  ) {
     _init();
   }
 
@@ -40,7 +45,11 @@ class RemoteNotificationsServiceImpl implements RemoteNotificationsService {
     Airship.onPushReceived.listen(_pushMessageHandler);
     Airship.setNamedUser(userId);
 
-    if (Platform.isAndroid) enableNotifications();
+    final isNotificationAllowed =
+        await _areLocalNotificationsAllowedUseCase.singleOutput(none);
+    if (isNotificationAllowed) {
+      enableNotifications();
+    }
   }
 
   void _channelCreatedHandler(ChannelEvent event) {
