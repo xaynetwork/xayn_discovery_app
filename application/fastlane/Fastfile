@@ -60,7 +60,7 @@ before_all do |lane, options|
 
   platform = options[Options::PLATFORM]
   offset = Config::FLAVOR_MATRIX[flavor][platform][Keys::BUILD_NUMBER_OFFSET]
-  build_number = gitVersionNumber().to_i + offset
+  build_number = gitVersionNumber().to_i + offset + 6 # Temporary offset for Android publishing
   setIfNotSet.call(Options::BUILD_NUMBER, build_number)
   setIfNotSet.call(Options::VERSION_NAME, version_name)
   setIfNotSet.call(Options::STORE, flavor == Flavors::BETA)
