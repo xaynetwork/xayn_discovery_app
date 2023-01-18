@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 
 part 'discovery_card_screen_state.freezed.dart';
 

@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_view_mode.dart';
 
 class DiscoveryCardObservation {
   final Document? document;

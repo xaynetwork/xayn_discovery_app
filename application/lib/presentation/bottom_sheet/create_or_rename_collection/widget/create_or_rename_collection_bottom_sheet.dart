@@ -112,10 +112,6 @@ class _CreateOrRenameCollectionState extends State<_CreateOrRenameCollection>
 
           final footer = BottomSheetFooter(
             onCancelPressed: () {
-              _createOrRenameCollectionManager.onCancelPressed(
-                isRenameMode: isRenameMode,
-                screenDuration: getWidgetDuration,
-              );
               widget.onSystemPop?.call();
               closeBottomSheet(context);
             },

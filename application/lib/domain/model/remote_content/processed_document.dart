@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/news_resource.dart';
 import 'package:xayn_readability/xayn_readability.dart';
 
 /// Represents a document that was:

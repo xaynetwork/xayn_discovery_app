@@ -1,5 +1,7 @@
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_id.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 
 extension DocumentExtension on Document {

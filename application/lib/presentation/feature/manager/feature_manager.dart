@@ -8,7 +8,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/set_experiments_identity_params_use_case.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'feature_manager_state.dart';
@@ -22,12 +21,10 @@ class FeatureManager extends Cubit<FeatureManagerState>
     with UseCaseBlocHelper<FeatureManagerState> {
   FeatureManager(
     this._remoteConfigState,
-    this._setExperimentsIdentityParamsUseCase,
   ) : super(FeatureManagerState.initial(_alterFeatureMapAccordingToExperiments(
             kInitialFeatureMap, _remoteConfigState))) {
     _init();
     _remoteConfigState.whenOrNull(success: (_, result) {
-      _setExperimentsIdentityParamsUseCase(result);
       _subscribedVariantIds = result.subscribedVariantIds;
     }, failed: (_, __) {
       _subscribedVariantIds = {};
@@ -38,9 +35,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   late final Set<KnownVariantId> _subscribedVariantIds;
 
-  final SetExperimentsIdentityParamsUseCase
-      _setExperimentsIdentityParamsUseCase;
-
   late FeatureMap _featureMap;
 
   void _init() {
@@ -49,8 +43,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get showFeaturesScreen =>
       Feature.values.isNotEmpty && isEnabled(Feature.featuresScreen);
-
-  bool get isPaymentEnabled => isEnabled(Feature.payment);
 
   bool get isAlternativePromoCodeEnabled => isEnabled(Feature.altPromoCode);
 
@@ -74,8 +66,6 @@ class FeatureManager extends Cubit<FeatureManagerState>
 
   bool get isSourceSelectionInLineCardEnabled =>
       isEnabled(Feature.sourceSelectionInLineCard);
-
-  bool get isTopicsEnabled => isEnabled(Feature.topics);
 
   @override
   Future<FeatureManagerState?> computeState() async => FeatureManagerState(

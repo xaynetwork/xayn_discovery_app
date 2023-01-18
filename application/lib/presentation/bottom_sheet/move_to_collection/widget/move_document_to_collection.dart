@@ -6,6 +6,7 @@ import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
@@ -21,7 +22,6 @@ import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/utils/mixin/screen_duration_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class MoveDocumentToCollectionBottomSheet extends BottomSheetBase {
   MoveDocumentToCollectionBottomSheet({
@@ -137,7 +137,6 @@ class _MoveDocumentToCollectionState extends State<_MoveDocumentToCollection>
       bloc: _manager,
       builder: (_, state) => BottomSheetFooter(
         onCancelPressed: () {
-          _manager.onCancelPressed(screenDuration: getWidgetDuration);
           closeBottomSheet(context);
         },
         setup: BottomSheetFooterSetup.row(

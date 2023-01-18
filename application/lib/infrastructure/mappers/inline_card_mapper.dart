@@ -24,30 +24,10 @@ class DbEntityMapToSurveyInLineCardMapper
 }
 
 @singleton
-class DbEntityMapToSourceSelectionInLineCardMapper
-    extends _DbEntityMapToInLineCardMapper {
-  const DbEntityMapToSourceSelectionInLineCardMapper()
-      : super(CardType.sourceSelection);
-}
-
-@singleton
-class DbEntityMapToCountrySelectionInLineCardMapper
-    extends _DbEntityMapToInLineCardMapper {
-  const DbEntityMapToCountrySelectionInLineCardMapper()
-      : super(CardType.countrySelection);
-}
-
-@singleton
 class DbEntityMapToPushNotificationsInLineCardMapper
     extends _DbEntityMapToInLineCardMapper {
   const DbEntityMapToPushNotificationsInLineCardMapper()
       : super(CardType.pushNotifications);
-}
-
-@singleton
-class DbEntityMapToTopicsInLineCardMapper
-    extends _DbEntityMapToInLineCardMapper {
-  const DbEntityMapToTopicsInLineCardMapper() : super(CardType.topics);
 }
 
 class _DbEntityMapToInLineCardMapper extends Mapper<DbEntityMap?, InLineCard> {

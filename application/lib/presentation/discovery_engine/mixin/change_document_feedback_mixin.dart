@@ -5,16 +5,16 @@ import 'package:xayn_discovery_app/domain/model/document/document_feedback_conte
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_view_mode.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/engine_event.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/change_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_feedback_changed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 const Duration _kExplicitLikeTimeSpentDuration = Duration(minutes: 1);
 
@@ -55,8 +55,6 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
       final willUpdateEngine = document.userReaction != userReaction;
 
       if (willUpdateEngine) {
-        final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
-
         _useCaseSink!(
           DocumentFeedbackChange(
             documentId: document.documentId,
@@ -75,14 +73,6 @@ mixin ChangeUserReactionMixin<T> on UseCaseBlocHelper<T> {
             ),
           );
         }
-
-        sendAnalyticsUseCase(
-          DocumentFeedbackChangedEvent(
-            document: document.copyWith(userReaction: userReaction),
-            context: context,
-            feedType: feedType,
-          ),
-        );
       }
     }
   }

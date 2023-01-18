@@ -1,4 +1,4 @@
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/engine_event.dart';
 
 /// Class containing the error messages that can be found in
 /// an engine event when an error occurs

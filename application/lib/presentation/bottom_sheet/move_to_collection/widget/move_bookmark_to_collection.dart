@@ -126,9 +126,6 @@ class _MoveBookmarkToCollectionState extends State<_MoveBookmarkToCollection>
 
     final footer = BottomSheetFooter(
       onCancelPressed: () {
-        _moveBookmarkToCollectionManager.onCancelPressed(
-          screenDuration: getWidgetDuration,
-        );
         closeBottomSheet(context);
         widget.onSystemPop?.call();
       },

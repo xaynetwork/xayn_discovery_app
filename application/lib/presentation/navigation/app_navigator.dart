@@ -2,18 +2,12 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/presentation/active_search/manager/active_search_manager.dart';
 import 'package:xayn_discovery_app/presentation/bookmark/manager/bookmarks_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/country/manager/country_feed_settings_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/topic/manager/topics_manager.dart';
-import 'package:xayn_discovery_app/presentation/inline_card/manager/inline_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
-import 'package:xayn_discovery_app/presentation/payment/manager/payment_screen_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/settings/manager/settings_manager.dart';
 import 'package:xayn_discovery_app/presentation/splash/manager/splash_screen_manager.dart';
@@ -45,16 +39,8 @@ class DiscoveryFeedNavActionsImpl extends DiscoveryFeedNavActions {
       : changeStack = manager.manipulateStack;
 
   @override
-  void onSearchNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.search));
-
-  @override
   void onPersonalAreaNavPressed() =>
       changeStack((stack) => stack.replace(PageRegistry.personalArea));
-
-  @override
-  void onTrialExpired() =>
-      changeStack((stack) => stack.replace(PageRegistry.payment));
 }
 
 @Injectable(as: DiscoveryCardNavActions)
@@ -67,10 +53,6 @@ class DiscoveryCardNavActionsImpl extends DiscoveryCardNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
-
-  @override
-  void onManageSourcesPressed() => changeStack((stack) => stack
-      .push(PageRegistry.sourceFeedSettings(openOnHiddenSourcesTab: true)));
 }
 
 @Injectable(as: BookmarksScreenNavActions)
@@ -106,46 +88,6 @@ class SettingsNavActionsImpl extends SettingsNavActions {
 
   @override
   void onBackNavPressed() => changeStack((stack) => stack.pop());
-
-  @override
-  void onCountriesOptionsPressed() => changeStack(
-        (stack) => stack.push(
-          PageRegistry.countryFeedSettings,
-        ),
-      );
-
-  @override
-  void onSourcesOptionsPressed() => changeStack(
-        (stack) => stack.push(
-          PageRegistry.sourceFeedSettings(),
-        ),
-      );
-
-  @override
-  void onTopicsOptionsPressed() => changeStack(
-        (stack) => stack.push(PageRegistry.topicsFeedSettings),
-      );
-}
-
-@Injectable(as: ActiveSearchNavActions)
-class ActiveSearchNavActionsImpl implements ActiveSearchNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  ActiveSearchNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onHomeNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
-
-  @override
-  void onPersonalAreaNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.personalArea));
-
-  @override
-  void onTrialExpired() =>
-      changeStack((stack) => stack.replace(PageRegistry.payment));
 }
 
 @Injectable(as: DiscoveryCardScreenManagerNavActions)
@@ -184,19 +126,6 @@ class ErrorNavActionsImpl extends ErrorNavActions {
   void onClosePressed() => changeStack((stack) => stack.pop());
 }
 
-@Injectable(as: PaymentScreenNavActions)
-class PaymentScreenNavActionsImpl implements PaymentScreenNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  PaymentScreenNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onGoBackToFeed() =>
-      changeStack((stack) => stack.replace(PageRegistry.discovery));
-}
-
 @Injectable(as: PersonalAreaNavActions)
 class NewPersonalAreaNavActionsImpl implements PersonalAreaNavActions {
   final xayn.StackManipulationFunction changeStack;
@@ -210,83 +139,10 @@ class NewPersonalAreaNavActionsImpl implements PersonalAreaNavActions {
       changeStack((stack) => stack.replace(PageRegistry.discovery));
 
   @override
-  void onActiveSearchNavPressed() =>
-      changeStack((stack) => stack.replace(PageRegistry.search));
-
-  @override
   void onSettingsNavPressed() =>
       changeStack((stack) => stack.push(PageRegistry.settings));
 
   @override
   void onCollectionPressed(UniqueId collectionId) =>
       changeStack((stack) => stack.push(PageRegistry.bookmarks(collectionId)));
-}
-
-@Injectable(as: CountryFeedSettingsNavActions)
-class CountryFeedSettingsNavActionsImpl extends CountryFeedSettingsNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  CountryFeedSettingsNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onBackNavPressed() => changeStack((stack) => stack.pop());
-}
-
-@Injectable(as: SourcesScreenNavActions)
-class SourcesScreenNavActionsImpl implements SourcesScreenNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  SourcesScreenNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onDismissSourcesSelection() => changeStack((stack) => stack.pop());
-
-  @override
-  void onLoadExcludedSourcesInterface() =>
-      changeStack((stack) => stack.push(PageRegistry.excludedSourceSelection));
-
-  @override
-  void onLoadTrustedSourcesInterface() =>
-      changeStack((stack) => stack.push(PageRegistry.trustedSourceSelection));
-}
-
-@Injectable(as: InLineNavActions)
-class InLineNavActionsImpl extends InLineNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  InLineNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onManageCountriesPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.countryFeedSettings));
-
-  @override
-  void onManageSourcesPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.sourceFeedSettings()));
-}
-
-@Injectable(as: TopicsScreenNavActions)
-class TopicsScreenNavActionsImpl implements TopicsScreenNavActions {
-  final xayn.StackManipulationFunction changeStack;
-
-  TopicsScreenNavActionsImpl(AppNavigationManager manager)
-      // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-      : changeStack = manager.manipulateStack;
-
-  @override
-  void onDismissTopicsScreen() => changeStack((stack) => stack.pop());
-
-  @override
-  void onAddTopicButtonClicked() =>
-      changeStack((stack) => stack.push(PageRegistry.addTopic));
-
-  @override
-  void onManageTopicsPressed() =>
-      changeStack((stack) => stack.push(PageRegistry.topicsFeedSettings));
 }

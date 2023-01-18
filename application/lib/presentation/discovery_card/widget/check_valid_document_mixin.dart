@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_managers_cache.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
   late final CardManagersCache _cardManagersCache = di.get();
@@ -17,7 +16,6 @@ mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
     bool isDismissible = true,
     VoidCallback? onValid,
     VoidCallback? onClosePressed,
-    required CurrentView currentView,
   }) async {
     final discoveryCardManager =
         _cardManagersCache.managersOf(document).discoveryCardManager;
@@ -36,9 +34,7 @@ mixin CheckValidDocumentMixin<T> on OverlayManagerMixin<T> {
           OverlayData.bottomSheetReaderModeUnavailableBottomSheet(
             isDismissible: isDismissible,
             onOpenViaBrowser: () => discoveryCardManager.openExternalUrl(
-              url: document.resource.url.toString(),
-              currentView: currentView,
-            ),
+                url: document.resource.url.toString()),
             onClosePressed: onClosePressed,
           ),
         );

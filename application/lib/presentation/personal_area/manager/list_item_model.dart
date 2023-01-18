@@ -12,11 +12,6 @@ class ListItemModel with _$ListItemModel {
     required Collection collection,
   }) = ListItemModelCollection;
 
-  const factory ListItemModel.payment({
-    required UniqueId id,
-    required DateTime trialEndDate,
-  }) = ListItemModelPayment;
-
   const factory ListItemModel.contact({
     required UniqueId id,
   }) = ListItemModelContact;

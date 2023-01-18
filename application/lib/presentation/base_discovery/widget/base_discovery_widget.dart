@@ -5,9 +5,9 @@ import 'package:xayn_design/xayn_design.dart' hide WidgetBuilder;
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart'
     as item_renderer;
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
-import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_view_mode.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/news_resource.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
@@ -18,11 +18,8 @@ import 'package:xayn_discovery_app/presentation/discovery_card/manager/card_mana
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/swipeable_discovery_card.dart';
-import 'package:xayn_discovery_app/presentation/discovery_engine_report/widget/discovery_engine_report_overlay.dart';
 import 'package:xayn_discovery_app/presentation/feature/manager/feature_manager.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart';
-import 'package:xayn_discovery_app/presentation/inline_card/widget/custom_feed_card.dart';
-import 'package:xayn_discovery_app/presentation/premium/utils/subsciption_trial_banner_state_mixin.dart';
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
@@ -30,7 +27,6 @@ import 'package:xayn_discovery_app/presentation/utils/reader_mode_settings_exten
 import 'package:xayn_discovery_app/presentation/widget/app_scaffold/app_scaffold.dart';
 import 'package:xayn_discovery_app/presentation/widget/feed_view.dart';
 import 'package:xayn_discovery_app/presentation/widget/shimmering_feed_view.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// A widget which displays a list of discovery results.
 abstract class BaseDiscoveryWidget<T extends BaseDiscoveryManager>
@@ -53,7 +49,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         WidgetsBindingObserver,
         NavBarConfigMixin,
         TooltipStateMixin<W>,
-        SubscriptionTrialBannerStateMixin<W>,
         OverlayMixin<W>,
         OverlayStateMixin<W> {
   late final CardViewController _cardViewController = CardViewController();
@@ -67,7 +62,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   DiscoveryCardController? currentCardController;
 
   double _dragDistance = .0;
-  bool _trialBannerShown = false;
   T get manager;
 
   CardViewController get cardViewController => _cardViewController;
@@ -88,11 +82,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
   Widget build(BuildContext context) =>
       BlocConsumer<BaseDiscoveryManager, DiscoveryState>(
         bloc: manager,
-        listener: (context, state) {
-          ///TODO: Uncomment once TY-2592 is fixed
-          // if (state.isInErrorState) showErrorBottomSheet();
-          _showTrialBannerIfNeeded(state.subscriptionStatus);
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           // this is for:
           // - any menu bar
@@ -120,9 +110,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
               data: ttsData,
               child: Padding(
                 padding: EdgeInsets.only(top: topPadding),
-                child: featureManager.showDiscoveryEngineReportOverlay
-                    ? DiscoveryEngineReportOverlay(child: feed)
-                    : feed,
+                child: feed,
               ),
             ),
           );
@@ -215,8 +203,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         final normalizedIndex = index.clamp(0, results.length - 1);
         final card = results.elementAt(normalizedIndex);
 
-        return card.document?.documentId.toString() ??
-            'custom_card_${card.hashCode}';
+        return card.document.documentId.toString();
       };
 
   Widget Function(BuildContext, int) _itemBuilder({
@@ -230,30 +217,29 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         final card = results.elementAt(normalizedIndex);
         final document = card.document;
         final managers = card.type == item_renderer.CardType.document
-            ? cardManagersCache.managersOf(card.requireDocument)
+            ? cardManagersCache.managersOf(card.document)
             : null;
 
         onTapPrimary() async {
           hideTooltip();
 
-          if (document != null) manager.maybeNavigateIntoCard(document);
+          manager.maybeNavigateIntoCard(document);
         }
 
         onTapSecondary() => _cardViewController.jump(JumpDirection.down);
 
-        if (isPrimary && document != null) {
+        if (isPrimary) {
           manager.handleViewType(
             document,
             isFullScreen ? DocumentViewMode.reader : DocumentViewMode.story,
           );
         }
 
-        final shaderType =
-            document != null ? _getShaderType(document.resource) : null;
+        final shaderType = _getShaderType(document.resource);
         final cardWidget = isFullScreen
             ? DiscoveryCard(
                 isPrimary: true,
-                document: document!,
+                document: document,
                 onDiscard: () {
                   manager.triggerHapticFeedbackMedium();
                   return manager.handleNavigateOutOfCard(document);
@@ -265,51 +251,39 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
                     () => ttsData = ttsData.enabled ? TtsData.disabled() : it),
                 feedType: manager.feedType,
                 primaryCardShader: ShaderFactory.fromType(
-                  shaderType!,
+                  shaderType,
                   transitionToIdle: true,
                 ),
               )
             : GestureDetector(
                 onTap: isPrimary ? onTapPrimary : onTapSecondary,
-                child: document != null
-                    ? DiscoveryFeedCard(
-                        isPrimary: isPrimary,
-                        document: document,
-                        primaryCardShader: ShaderFactory.fromType(shaderType!),
-                        onTtsData: (it) => setState(() => ttsData =
-                            ttsData.enabled ? TtsData.disabled() : it),
-                        feedType: manager.feedType,
-                      )
-                    : CustomFeedCard(
-                        cardType: card.type,
-                        onPressed: () =>
-                            manager.handleCustomCardTapped(card.type),
-                        primaryCardShader:
-                            ShaderFactory.fromType(ShaderType.static),
-                        selectedCountryName: manager.getSelectedCountryName(),
-                      ),
+                child: DiscoveryFeedCard(
+                  isPrimary: isPrimary,
+                  document: document,
+                  primaryCardShader: ShaderFactory.fromType(shaderType),
+                  onTtsData: (it) => setState(() =>
+                      ttsData = ttsData.enabled ? TtsData.disabled() : it),
+                  feedType: manager.feedType,
+                ),
               );
 
         return Semantics(
             button: true,
-            child: document != null
-                ? SwipeableDiscoveryCard(
-                    onSwipe: (option) =>
-                        managers!.discoveryCardManager.onFeedback(
-                      document: document,
-                      userReaction: option.toUserReaction(),
-                      feedType: manager.feedType,
-                    ),
-                    isPrimary: isPrimary,
-                    document: document,
-                    explicitDocumentUserReaction: managers!.discoveryCardManager
-                        .state.explicitDocumentUserReaction,
-                    card: cardWidget,
-                    isSwipingEnabled: isSwipingEnabled,
-                    onFling: managers
-                        .discoveryCardManager.triggerHapticFeedbackMedium,
-                  )
-                : cardWidget);
+            child: SwipeableDiscoveryCard(
+              onSwipe: (option) => managers!.discoveryCardManager.onFeedback(
+                document: document,
+                userReaction: option.toUserReaction(),
+                feedType: manager.feedType,
+              ),
+              isPrimary: isPrimary,
+              document: document,
+              explicitDocumentUserReaction: managers!
+                  .discoveryCardManager.state.explicitDocumentUserReaction,
+              card: cardWidget,
+              isSwipingEnabled: isSwipingEnabled,
+              onFling:
+                  managers.discoveryCardManager.triggerHapticFeedbackMedium,
+            ));
       };
 
   ShaderType _getShaderType(NewsResource newsResource) {
@@ -345,13 +319,8 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         }
 
         final document = card.document;
-        final managers =
-            document != null ? cardManagersCache.managersOf(document) : null;
-        final state = managers?.discoveryCardManager.state;
-
-        if (state == null) {
-          return null;
-        }
+        final managers = cardManagersCache.managersOf(document);
+        final state = managers.discoveryCardManager.state;
 
         switch (state.explicitDocumentUserReaction) {
           case UserReaction.neutral:
@@ -371,21 +340,6 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
 
   void _onFullScreenDrag(double distance) =>
       setState(() => _dragDistance = distance.abs());
-
-  void _showTrialBannerIfNeeded(SubscriptionStatus? subscriptionStatus) {
-    if (_trialBannerShown) return;
-
-    final needToShowBanner = subscriptionStatus?.isLastDayOfFreeTrial == true &&
-        manager.feedType == FeedType.feed;
-
-    if (needToShowBanner) {
-      _trialBannerShown = true;
-      showTrialBanner(
-        trialEndDate: subscriptionStatus!.trialEndDate!,
-        onTap: manager.onPaymentTrialBannerTap,
-      );
-    }
-  }
 }
 
 extension on SwipeOption {
