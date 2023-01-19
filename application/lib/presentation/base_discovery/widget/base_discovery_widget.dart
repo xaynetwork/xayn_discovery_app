@@ -203,7 +203,7 @@ abstract class BaseDiscoveryFeedState<T extends BaseDiscoveryManager,
         final normalizedIndex = index.clamp(0, results.length - 1);
         final card = results.elementAt(normalizedIndex);
 
-        return card.document.documentId.toString();
+        return card.document.documentId.value;
       };
 
   Widget Function(BuildContext, int) _itemBuilder({

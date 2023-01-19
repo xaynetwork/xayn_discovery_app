@@ -1,5 +1,3 @@
-import 'package:dart_remote_config/dart_remote_config.dart';
-import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:dart_remote_config/model/known_experiment_variant.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -8,7 +6,6 @@ import 'package:xayn_discovery_app/domain/model/extensions/app_status_extension.
 import 'package:xayn_discovery_app/domain/model/feature.dart';
 import 'package:xayn_discovery_app/domain/repository/app_status_repository.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
 
 import 'feature_manager_state.dart';
 
@@ -19,19 +16,11 @@ FeatureMap kInitialFeatureMap = {
 @lazySingleton
 class FeatureManager extends Cubit<FeatureManagerState>
     with UseCaseBlocHelper<FeatureManagerState> {
-  FeatureManager(
-    this._remoteConfigState,
-  ) : super(FeatureManagerState.initial(_alterFeatureMapAccordingToExperiments(
-            kInitialFeatureMap, _remoteConfigState))) {
+  FeatureManager()
+      : super(FeatureManagerState.initial(
+            _alterFeatureMapAccordingToExperiments(kInitialFeatureMap))) {
     _init();
-    _remoteConfigState.whenOrNull(success: (_, result) {
-      _subscribedVariantIds = result.subscribedVariantIds;
-    }, failed: (_, __) {
-      _subscribedVariantIds = {};
-    });
   }
-
-  final DartRemoteConfigState _remoteConfigState;
 
   late final Set<KnownVariantId> _subscribedVariantIds;
 
@@ -74,34 +63,8 @@ class FeatureManager extends Cubit<FeatureManagerState>
       );
 
   static FeatureMap _alterFeatureMapAccordingToExperiments(
-    FeatureMap initialMap,
-    DartRemoteConfigState state,
-  ) {
-    if (state is! DartRemoteConfigStateSuccess) {
-      return initialMap;
-    }
-
-    final featureMap = Map<Feature, bool>.from(initialMap);
-    for (var it in state.experiments.enabledFeatures) {
-      final feature = Feature.values
-          .firstWhereOrNull((element) => element.remoteKey == it.id);
-      if (feature != null) {
-        it.value.map(nothing: (_) {
-          /// We assume that being part of an experiment and no value is provided that this means it is active
-          logger.i(
-              'RemoteConfig: Flipped $feature from ${featureMap[feature]} -> true');
-          featureMap[feature] = true;
-        }, string: (s) {
-          /// Not used yet
-        }, boolean: (b) {
-          logger.i(
-              'RemoteConfig: Flipped $feature from ${featureMap[feature]} -> ${b.boolValue}');
-          featureMap[feature] = b.boolValue;
-        });
-      }
-    }
-    return featureMap;
-  }
+          FeatureMap initialMap) =>
+      initialMap;
 
   bool isEnabled(Feature feature) => _featureMap[feature] ?? false;
 

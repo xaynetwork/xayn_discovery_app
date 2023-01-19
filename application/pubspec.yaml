@@ -41,7 +41,7 @@ dependencies:
       url: https://github.com/svonidze/francd
       ref: 170e633af9a7b8b31769eb232f99e105e1359692
   freezed_annotation: 2.1.0
-  fwfh_chewie: 0.7.0+1
+  fwfh_chewie: 0.7.1
   get_it: 7.2.0
   gibberish:
     git:
@@ -97,9 +97,7 @@ dependencies:
       url: https://github.com/xaynetwork/xayn_design.git
       ref: e19b3ad8ef07e2349b250abac8c27cddec68beef
   xayn_readability:
-    git:
-      url: https://github.com/xaynetwork/xayn_readability.git
-      ref: e37cd9d4b33ddfb30469f260e11b6692beac1c88
+    path: ../../xayn_readability
   xayn_swipe_it: 1.0.4
 
 dependency_overrides:
@@ -147,6 +145,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/data_set.json
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
     # https://github.com/flutter/flutter/issues/27802

@@ -254,17 +254,23 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         _cardIndex ??= cardIndex;
 
         if (_cardIndex == null) return null;
+        print('already have ${state.cards.length} items');
+        final requireDocuments = documents ?? const {};
+        final cards = {
+          ...state.cards,
+          ...requireDocuments.map((it) => Card.document(it))
+        };
 
         /// override card index to start from the first card in case of having
         /// an inline card as the first card in the feed
         ///
         if (_cardIndex == 1 &&
-            state.cards.isNotEmpty &&
-            state.cards.first.type != CardType.document) {
+            cards.isNotEmpty &&
+            cards.first.type != CardType.document) {
           _cardIndex = 0;
         }
 
-        final sets = await maybeReduceCardCount(state.cards);
+        final sets = await maybeReduceCardCount(cards);
         final nextCardIndex = sets.nextCardIndex;
 
         if (errorReport.isNotEmpty) {

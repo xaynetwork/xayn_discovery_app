@@ -41,10 +41,7 @@ Future<void> setup() async {
   );
   await hiveDb;
 
-  final remoteConfig = await fetchRemoteConfig();
-
   await configureDependencies(
-    remoteConfig,
     environment:
         EnvironmentHelper.kIsDebug ? debugEnvironment : releaseEnvironment,
   );

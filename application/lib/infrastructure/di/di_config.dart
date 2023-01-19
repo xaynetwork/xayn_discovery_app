@@ -34,15 +34,13 @@ const Environment testEnvironment = Environment(Environment.test);
   preferRelativeImports: true, // default
   asExtension: false, // default
 )
-Future<void> configureDependencies(
-  DartRemoteConfigState remoteConfigState, {
+Future<void> configureDependencies({
   Environment environment = releaseEnvironment,
 }) async {
   await $initGetIt(
     di,
     environment: environment.name,
   );
-  di.registerSingleton<DartRemoteConfigState>(remoteConfigState);
   di.registerLazySingleton<RouteRegistration>(
       () => di.get<AppNavigationManager>());
   di.registerLazySingleton<AppSettingsRepository>(
