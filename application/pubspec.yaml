@@ -64,10 +64,6 @@ dependencies:
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
-  notification_permissions:
-    git:
-      url: https://github.com/bshvets8/flutter_notification_permissions.git
-      ref: feature/android-13-support
   package_info_plus: 1.4.0
   path_provider: 2.0.9
   platform: ^3.1.0
@@ -97,7 +93,9 @@ dependencies:
       url: https://github.com/xaynetwork/xayn_design.git
       ref: e19b3ad8ef07e2349b250abac8c27cddec68beef
   xayn_readability:
-    path: ../../xayn_readability
+    git:
+      url: https://github.com/xaynetwork/xayn_readability.git
+      ref: 57004de3575084725173dbfeb60c57595c3721d3
   xayn_swipe_it: 1.0.4
 
 dependency_overrides:
