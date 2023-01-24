@@ -255,7 +255,7 @@ lane :check_config_files do |options|
   askAndSetProperties("../.env.dev",
                       {
     "SEARCH_API_URL_DEBUG" => "SEARCH_API_BASE_URL",
-    "SEARCH_API_SECRET_KEY_V2" => "SEARCH_API_SECRET_KEY",
+    "SEARCH_API_SECRET_DEBUG" => "SEARCH_API_SECRET_KEY",
     "IMAGE_FETCHER_URL_DEBUG" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN",
     "MIXPANEL_TOKEN_DEBUG" => "MIXPANEL_TOKEN",
@@ -274,7 +274,7 @@ lane :check_config_files do |options|
   askAndSetProperties("../.env.prod",
                       {
     "SEARCH_API_URL_PRODUCTION" => "SEARCH_API_BASE_URL",
-    "SEARCH_API_SECRET_KEY_V2" => "SEARCH_API_SECRET_KEY",
+    "SEARCH_API_SECRET_PRODUCTION" => "SEARCH_API_SECRET_KEY",
     "IMAGE_FETCHER_URL_PRODUCTION" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN",
     "MIXPANEL_TOKEN_PRODUCTION" => "MIXPANEL_TOKEN",
