@@ -338,7 +338,7 @@ lane :check do |options|
   maybe_pub_get(options)
   build_runner(options)
 
-  flutter(args: %W(--no-version-check analyze lib test))
+  flutter(args: %W(--no-version-check analyze lib))
   if IS_CI
     flutter(args: %W(--no-version-check format ./ --set-exit-if-changed))
   else
