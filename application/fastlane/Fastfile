@@ -178,8 +178,6 @@ private_lane :build_with_flutter do |options|
     dartDefines << buildForSimulator
   end
 
-
-  shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/remote_config/default.yaml")
   shell((%W(flutter --no-version-check build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
 
 end
