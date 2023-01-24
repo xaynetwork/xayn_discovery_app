@@ -33,7 +33,7 @@ class DocumentResponseDecoder
         userReaction: UserReaction.neutral,
         resource: NewsResource(
           title: properties['title'] as String? ?? '',
-          snippet: input['snippet'] as String,
+          snippet: input['snippet'] as String? ?? '',
           url: Uri.parse(properties['link'] as String? ?? ''),
           sourceDomain: const Source(''),
           image: Uri.parse(properties['image'] as String? ?? ''),

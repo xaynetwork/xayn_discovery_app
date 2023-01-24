@@ -7,7 +7,6 @@ import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/remote_content/processed_document.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
 
 @injectable
 class GibberishDetectionUseCase
@@ -67,8 +66,6 @@ class GibberishDetectionUseCase
         isGibberish: null,
         detectedLanguage: detectedLanguage,
       );
-      logger.i(
-          'Text is $detectedLanguage (meta data: $metaLanguage), but we don\'t support that');
       return;
     }
 
@@ -82,8 +79,6 @@ class GibberishDetectionUseCase
       detectedLanguage: detectedLanguage,
     );
     watch.stop();
-    logger.i(
-        'Text is $detectedLanguage (time: ${watch.elapsed}, meta lang: $metaLanguage) : $gibberishCandidate\n\n${gibberishCandidate.isGibberish ? contents : contents.truncate(1000)}');
   }
 }
 

@@ -5,7 +5,7 @@ class NewsResource {
   final String snippet;
   final Uri url;
   final Source sourceDomain;
-  final Uri image;
+  final Uri? image;
   final DateTime datePublished;
   final String country;
   final String language;
@@ -32,7 +32,7 @@ class NewsResource {
         snippet: json['snippet'],
         url: Uri.parse(json['url']),
         sourceDomain: Source(json['sourceDomain']),
-        image: Uri.parse(json['image']),
+        image: json.containsKey('image') ? Uri.parse(json['image']) : null,
         datePublished:
             DateTime.fromMillisecondsSinceEpoch(json['datePublished']),
         country: json['country'],

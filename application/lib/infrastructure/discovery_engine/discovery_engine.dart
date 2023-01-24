@@ -28,7 +28,8 @@ class DiscoveryEngine {
   final http.Client client = http.Client();
   final StreamController<EngineEvent> _engineEventsController =
       StreamController<EngineEvent>();
-  late final _restoredItems = _restoreFeed();
+  final Set<DocumentId> _sessionCache = <DocumentId>{};
+  late final _restoredItems = _loadRandomDocuments();
 
   DiscoveryEngine._(this.userId);
 
@@ -40,7 +41,121 @@ class DiscoveryEngine {
 
   Stream<EngineEvent> get engineEvents => _engineEventsController.stream;
 
-  static Future<List<Document>> _restoreFeed() async {
+  Future<EngineEvent> restoreFeed() async {
+    late final EngineEvent engineEvent;
+
+    try {
+      final items = await _restoredItems;
+
+      engineEvent = RestoreFeedSucceeded(items
+          .where((it) => _sessionCache.add(it.documentId))
+          .toList(growable: false));
+    } catch (e, s) {
+      logger.e('restoreFeed exception: $e - $s');
+
+      engineEvent = const RestoreFeedFailed();
+    }
+
+    _engineEventsController.add(engineEvent);
+
+    return engineEvent;
+  }
+
+  Future<EngineEvent> requestNextFeedBatch() async {
+    logger.i('requestNextFeedBatch starts');
+    const decoder = DocumentResponseDecoder();
+    final url = endpoint
+        .resolve('default/users/$userId/personalized_documents')
+        .replace(queryParameters: const {'count': '40'});
+    final response = await client.get(url, headers: {
+      tokenHeaderName: token,
+      'Accept': 'application/json',
+    });
+
+    if (response.statusCode != 200) {
+      logger.e(
+          '[${response.statusCode}] requestNextFeedBatch failed\n${response.body}');
+
+      final engineEvent = response.statusCode == 409
+          ? NextFeedBatchRequestSucceeded(await _loadRandomDocuments())
+          : const NextFeedBatchRequestFailed();
+
+      _engineEventsController.add(engineEvent);
+
+      return engineEvent;
+    }
+
+    final json =
+        const JsonDecoder().convert(_extractResponseBody(response.bodyBytes));
+    final documents = json['documents'] as List;
+    final items = documents
+        .cast<Map<String, dynamic>>()
+        .map(decoder.convert)
+        .toList(growable: false);
+    final uniqueItems = <Document>{};
+    var index = 0;
+
+    while (uniqueItems.length < 2) {
+      final next = items[index];
+
+      if (_sessionCache.add(next.documentId)) {
+        uniqueItems.add(next);
+      }
+
+      index++;
+    }
+
+    final engineEvent =
+        NextFeedBatchRequestSucceeded(uniqueItems.toList(growable: false));
+
+    logger.i('requestNextFeedBatch succeeded, ${uniqueItems.length} received');
+
+    _engineEventsController.add(engineEvent);
+
+    return engineEvent;
+  }
+
+  Future<EngineEvent> changeUserReaction({
+    required DocumentId documentId,
+    required UserReaction userReaction,
+  }) async {
+    final url = endpoint.resolve('default/users/$userId/interactions');
+    final response = await client.patch(url,
+        headers: {
+          tokenHeaderName: token,
+          'Content-Type': 'application/json',
+        },
+        body: const JsonEncoder().convert({
+          'documents': [
+            {
+              'id': documentId.value,
+              'type': 'Positive',
+            }
+          ],
+        }));
+
+    if (response.statusCode == 204) {
+      logger.i('patched interaction for documentId: $documentId');
+    } else {
+      logger.e(
+          '[${response.statusCode}] could not patch interaction for documentId: $documentId\n${response.body}');
+    }
+
+    const engineEvent = ClientEventSucceeded();
+
+    _engineEventsController.add(engineEvent);
+
+    return engineEvent;
+  }
+
+  Future<EngineEvent> logDocumentTime({
+    required DocumentId documentId,
+    required int seconds,
+    required DocumentViewMode mode,
+  }) async =>
+      const ClientEventSucceeded();
+
+  Future<List<Document>> _loadRandomDocuments() async {
     final random = Random();
     const decoder = DocumentResponseDecoder();
 
@@ -55,83 +170,17 @@ class DiscoveryEngine {
         .toList(growable: false);
   }
 
-  Future<EngineEvent> restoreFeed() async {
-    late final EngineEvent engineEvent;
-
+  String _extractResponseBody(List<int> bytes) {
     try {
-      engineEvent = RestoreFeedSucceeded(await _restoredItems);
-    } catch (e, s) {
-      logger.e('restoreFeed exception: $e - $s');
+      // we did a request for utf-8...
+      const decoder = Utf8Codec();
 
-      engineEvent = const RestoreFeedFailed();
+      return decoder.decode(bytes);
+    } catch (e) {
+      // ...unfortunately some sites still then return eg iso-8859-1
+      const decoder = Latin1Codec();
+
+      return decoder.decode(bytes);
     }
-
-    _engineEventsController.add(engineEvent);
-
-    return engineEvent;
   }
-
-  Future<EngineEvent> requestNextFeedBatch() async {
-    const decoder = DocumentResponseDecoder();
-    final url = endpoint.resolve('default/users/$userId/personalized_documents')
-      ..replace(queryParameters: const {'count': '2'});
-    final response = await client.get(url, headers: {tokenHeaderName: token});
-
-    if (response.statusCode != 200) {
-      logger.e(
-          '[${response.statusCode}] requestNextFeedBatch failed\n${response.body}');
-
-      final engineEvent = response.statusCode == 409
-          ? const NextFeedBatchRequestSucceeded([])
-          : const NextFeedBatchRequestFailed();
-
-      _engineEventsController.add(engineEvent);
-
-      return engineEvent;
-    }
-
-    final json = const JsonDecoder().convert(response.body);
-    final documents = json['documents'] as List;
-    final items = documents
-        .cast<Map<String, dynamic>>()
-        .map(decoder.convert)
-        .toList(growable: false);
-    final engineEvent = NextFeedBatchRequestSucceeded(items);
-
-    _engineEventsController.add(engineEvent);
-
-    return engineEvent;
-  }
-
-  Future<EngineEvent> changeUserReaction({
-    required DocumentId documentId,
-    required UserReaction userReaction,
-  }) async {
-    final url = endpoint.resolve('default/users/$userId/interactions');
-    final response = await client.patch(url,
-        headers: {tokenHeaderName: token},
-        body: const JsonEncoder().convert({
-          'documents': [documentId.value],
-        }));
-
-    if (response.statusCode == 204) {
-      logger.i('patched interaction for documentId: $documentId');
-    } else {
-      logger.e(
-          '[${response.statusCode}] could not patch interaction for documentId: $documentId\n${response.body}');
-    }
-
-    const engineEvent = NoneEvent();
-
-    _engineEventsController.add(engineEvent);
-
-    return engineEvent;
-  }
-
-  Future<EngineEvent> logDocumentTime({
-    required DocumentId documentId,
-    required int seconds,
-    required DocumentViewMode mode,
-  }) async =>
-      const NoneEvent();
 }

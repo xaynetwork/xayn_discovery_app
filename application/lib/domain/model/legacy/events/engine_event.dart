@@ -1,5 +1,5 @@
 abstract class EngineEvent {}
 
-class NoneEvent implements EngineEvent {
-  const NoneEvent();
+class ClientEventSucceeded implements EngineEvent {
+  const ClientEventSucceeded();
 }

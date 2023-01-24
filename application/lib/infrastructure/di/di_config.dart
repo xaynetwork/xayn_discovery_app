@@ -1,4 +1,3 @@
-import 'package:dart_remote_config/model/dart_remote_config_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:platform/platform.dart' as google;
