@@ -16,7 +16,7 @@ on:
 
 env:
   flutter_channel: 'stable'
-  flutter_version: '3.0.2'
+  flutter_version: '3.3.10'
   java_version: '12.x'
   ios_device: 'iPhone 11'
   ios_os_version: '>=13.0'
