@@ -62,7 +62,6 @@ class DiscoveryEngine {
   }
 
   Future<EngineEvent> requestNextFeedBatch() async {
-    logger.i('requestNextFeedBatch starts');
     const decoder = DocumentResponseDecoder();
     final url = endpoint
         .resolve('default/users/$userId/personalized_documents')

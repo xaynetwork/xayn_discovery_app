@@ -256,7 +256,7 @@ abstract class BaseDiscoveryManager extends Cubit<DiscoveryState>
         if (_cardIndex == null) return null;
 
         final requireDocuments = documents ?? const {};
-        final cards = {...state.cards, ...requireDocuments.map(Card.document)};
+        final cards = requireDocuments.map(Card.document).toSet();
 
         /// override card index to start from the first card in case of having
         /// an inline card as the first card in the feed
