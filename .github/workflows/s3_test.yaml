@@ -1,4 +1,4 @@
-name: Pull Embedding Service Release
+name: Testing
 
 on:
   pull_request:
