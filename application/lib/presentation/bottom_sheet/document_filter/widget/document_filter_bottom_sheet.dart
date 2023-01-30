@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:xayn_design/xayn_design.dart';
-import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/source.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_button_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/model/bottom_sheet_footer/bottom_sheet_footer_data.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_footer.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/widgets/bottom_sheet_header.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/source/manager/sources_manager.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
 import 'package:xayn_discovery_app/presentation/widget/thumbnail_widget.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DocumentFilterBottomSheet extends BottomSheetBase {
   DocumentFilterBottomSheet({
@@ -30,7 +29,7 @@ class _DocumentFilterList extends StatefulWidget {
   _DocumentFilterList({
     Key? key,
     required this.document,
-  })  : source = Source.fromJson(document.resource.url.host),
+  })  : source = Source(document.resource.url.host),
         super(key: key);
 
   @override
@@ -39,8 +38,6 @@ class _DocumentFilterList extends StatefulWidget {
 
 class _DocumentFilterListState extends State<_DocumentFilterList>
     with BottomSheetBodyMixin {
-  late final SourcesManager _manager = di.get();
-
   @override
   Widget build(BuildContext context) {
     final body = _SourceItem(item: widget.source);
@@ -54,9 +51,6 @@ class _DocumentFilterListState extends State<_DocumentFilterList>
           isDisabled: false,
           text: R.strings.bottomSheetApply,
           onPressed: () {
-            _manager
-              ..addSourceToExcludedList(widget.source)
-              ..applyChanges(isBatchedProcess: false);
             closeBottomSheet(context);
           },
         ),

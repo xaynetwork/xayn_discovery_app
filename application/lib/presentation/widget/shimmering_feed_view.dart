@@ -1,10 +1,15 @@
 import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:xayn_card_view/xayn_card_view.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_id.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/news_resource.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/source.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/stack_id.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/dicovery_feed_card.dart';
 import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 final BorderRadius _kBorderRadius = BorderRadius.circular(R.dimen.cardRadius);
 final double _kItemSpacing = R.dimen.unit;
@@ -20,7 +25,7 @@ class ShimmeringFeedView extends StatelessWidget {
     title: '',
     snippet: '',
     url: Uri.base,
-    sourceDomain: Source('none'),
+    sourceDomain: const Source('none'),
     image: Uri.base,
     datePublished: DateTime.fromMicrosecondsSinceEpoch(0),
     rank: -1,
@@ -39,7 +44,7 @@ class ShimmeringFeedView extends StatelessWidget {
     /// shimmering view
     ///
     // ignore: invalid_use_of_visible_for_testing_member
-    stackId: StackId.nil(),
+    stackId: const StackId.nil(),
   );
 
   ShimmeringFeedView({

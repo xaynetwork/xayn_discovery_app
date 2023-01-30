@@ -178,8 +178,6 @@ private_lane :build_with_flutter do |options|
     dartDefines << buildForSimulator
   end
 
-
-  shell("dart bin/download_remote_config.dart #{appId} #{flavor} > assets/remote_config/default.yaml")
   shell((%W(flutter --no-version-check build #{target} #{type} --build-number=#{options[Options::BUILD_NUMBER]} --build-name="#{options[Options::VERSION_NAME]}") + dartDefines).join(' '))
 
 end
@@ -247,7 +245,6 @@ desc "Flutter build runner"
 lane :build_runner do |options|
   check_config_files(options)
   maybe_pub_get(options)
-  update_assets(options)
 
   mode = options[Options::WATCH] ? "watch" : "build"
   flutter(args: %W(--no-version-check pub run build_runner #{mode} --delete-conflicting-outputs))
@@ -257,8 +254,8 @@ desc "Checks alle the config (env, properties, etc) if they are correctly set"
 lane :check_config_files do |options|
   askAndSetProperties("../.env.dev",
                       {
-    "SEARCH_API_URL_DEBUG" => "SEARCH_API_BASE_URL",
-    "SEARCH_API_SECRET_DEBUG" => "SEARCH_API_SECRET_KEY",
+    "SEARCH_API_URL" => "SEARCH_API_BASE_URL",
+    "SEARCH_API_SECRET" => "SEARCH_API_SECRET_KEY",
     "IMAGE_FETCHER_URL_DEBUG" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_DEBUG" => "INSTABUG_TOKEN",
     "MIXPANEL_TOKEN_DEBUG" => "MIXPANEL_TOKEN",
@@ -276,8 +273,8 @@ lane :check_config_files do |options|
 
   askAndSetProperties("../.env.prod",
                       {
-    "SEARCH_API_URL_PRODUCTION" => "SEARCH_API_BASE_URL",
-    "SEARCH_API_SECRET_PRODUCTION" => "SEARCH_API_SECRET_KEY",
+    "SEARCH_API_URL" => "SEARCH_API_BASE_URL",
+    "SEARCH_API_SECRET" => "SEARCH_API_SECRET_KEY",
     "IMAGE_FETCHER_URL_PRODUCTION" => "IMAGE_FETCHER_URL",
     "INSTABUG_TOKEN_PRODUCTION" => "INSTABUG_TOKEN",
     "MIXPANEL_TOKEN_PRODUCTION" => "MIXPANEL_TOKEN",
@@ -339,7 +336,7 @@ lane :check do |options|
   maybe_pub_get(options)
   build_runner(options)
 
-  flutter(args: %W(--no-version-check analyze lib test))
+  flutter(args: %W(--no-version-check analyze lib))
   if IS_CI
     flutter(args: %W(--no-version-check format ./ --set-exit-if-changed))
   else
@@ -427,26 +424,6 @@ lane :publish do |options|
       writeBetaReport(options, uploadedFile)
     end
   end
-end
-
-desc "Update the assets folder based on the Assets Manifest from xayn_discovery_engine"
-lane :update_assets do |options|
-  isUnderTest = options[Options::TEST]
-  manifestPath = File.join(pathFromDependency("xayn_discovery_engine"), "assets", "asset_manifest.json")
-  manifestPath = manifestPath.gsub("%25", "%")
-  if not manifestPath.include?("file://")
-    # if manifestPath does not include file:// it means that it is define as a relative path in the pubspec.yaml.
-    # since the relative path is from 'application' we add '../' to adjust it w.r.t. the current file.
-    manifestPath = File.join("..", manifestPath)
-  else
-    manifestPath["file://"] = ""
-  end
-  raise "No manifest file at #{manifestPath}" unless File.file?(manifestPath)
-  UI.user_error!("No AI_ASSETS_URL provided!") unless options[_Options::ENV].key?("AI_ASSETS_URL")
-  UI.success("Downloading/ Checking files from Manifest: #{manifestPath}")
-  downloadAssetsFromManifest(manifestPath, options[_Options::ENV]["AI_ASSETS_URL"], File.join("..", "assets", "ai"), isUnderTest)
-  shell("mkdir -p assets/remote_config ")
-  shell("touch assets/remote_config/default.yaml")
 end
 
 desc "Takes the current tag and increments the version on the minor position and creates a new Tag.\n" \

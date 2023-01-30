@@ -5,16 +5,17 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_id.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_view_mode.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/engine_event.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/restore_feed_succeeded.dart';
 import 'package:xayn_discovery_app/domain/model/session/session.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/are_markets_outdated_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/close_feed_documents_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_explicit_document_feedback_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/crud_feed_settings_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_feed_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/request_next_feed_batch_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/session_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/update_markets_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/crud/db_entity_crud_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_feed/fetch_card_index_use_case.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/discovery_state.dart';
@@ -22,7 +23,6 @@ import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/observe_d
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
 import 'package:xayn_discovery_app/presentation/utils/logger/logger.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 mixin RequestFeedMixin<T extends DiscoveryState>
     on SingletonSubscriptionObserver<T> {
@@ -98,7 +98,7 @@ mixin RequestFeedMixin<T extends DiscoveryState>
           {
             ...state.cards
                 .where((it) => it.type == CardType.document)
-                .map((it) => it.requireDocument.documentId)
+                .map((it) => it.document.documentId)
           },
         );
 
@@ -134,15 +134,12 @@ mixin RequestFeedMixin<T extends DiscoveryState>
         .doOnData(onResetParameters(1));
 
     // rebuilds the feed when the market(s) change
-    makeMarketChangedFeed(Stream<bool> stream) => stream
+    makeMarketChangedFeed(Stream<EngineEvent> stream) => stream
         .doOnData((_) => logger.i('- stop document observation'))
         .doOnData((_) => observeDocument())
         .doOnData((_) => logger.i('- onCloseExplicitFeedback'))
         // cleanup the old feed, from the previous market
         .asyncMap(onCloseExplicitFeedback)
-        .doOnData((_) => logger.i('- finalizeFeedMarketsChange'))
-        // update the feed, it is now using the new market
-        .finalizeFeedMarketsChange()
         .doOnData((_) => logger.i('- onResetParameters'))
         // reset the feed to the start index
         .doOnData(onResetParameters())
@@ -155,13 +152,12 @@ mixin RequestFeedMixin<T extends DiscoveryState>
         final cleanedUpOldFeed = makeCleanedUpOldFeed(out);
         final actualizedFeed = makeActualizeFeed(cleanedUpOldFeed);
 
-        return makeMarketChangedFeed(actualizedFeed.whereMarketsChanged());
+        return makeMarketChangedFeed(actualizedFeed);
       },
     ).autoSubscribe(onError: onError);
   }
 
   Future<void> _closeExplicitFeedback(Set<DocumentId> documents) async {
-    final closeDocumentsUseCase = di.get<CloseFeedDocumentsUseCase>();
     final crudExplicitDocumentFeedbackUseCase =
         di.get<CrudExplicitDocumentFeedbackUseCase>();
 
@@ -170,8 +166,6 @@ mixin RequestFeedMixin<T extends DiscoveryState>
         DbCrudIn.remove(id.uniqueId),
       );
     }
-
-    await closeDocumentsUseCase(documents);
   }
 }
 
@@ -184,13 +178,4 @@ extension _StreamExtension<T> on Stream<T> {
 
   Stream<EngineEvent> doResetFeedAndRequestNextBatch() =>
       doRequestFeed().doRequestNextBatch();
-
-  Stream<bool> whereMarketsChanged() => mapTo(const DbCrudIn.watchAllChanged())
-      .followedBy(di.get<CrudFeedSettingsUseCase>())
-      .mapTo(FeedType.feed)
-      .switchedBy(di.get<AreMarketsOutdatedUseCase>())
-      .where((didMarketsChange) => didMarketsChange);
-
-  Stream<EngineEvent> finalizeFeedMarketsChange() =>
-      mapTo(FeedType.feed).followedBy(di.get<UpdateMarketsUseCase>());
 }

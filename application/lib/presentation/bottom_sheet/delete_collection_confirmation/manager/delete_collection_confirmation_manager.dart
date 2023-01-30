@@ -2,9 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_deleted_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/get_all_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/remove_collection_use_case.dart';
@@ -22,7 +19,6 @@ class DeleteCollectionConfirmationManager
   final RemoveCollectionUseCase _removeCollectionUseCase;
   final RemoveBookmarksUseCase _removeBookmarksUseCase;
   final GetAllBookmarksUseCase _getAllBookmarksUseCase;
-  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late UniqueId _collectionId;
   late final UseCaseSink<GetAllBookmarksUseCaseIn, GetAllBookmarksUseCaseOut>
@@ -34,7 +30,6 @@ class DeleteCollectionConfirmationManager
     this._removeCollectionUseCase,
     this._getAllBookmarksUseCase,
     this._removeBookmarksUseCase,
-    this._sendAnalyticsUseCase,
   ) : super(DeleteCollectionConfirmationState.initial());
 
   void enteringScreen(UniqueId collectionId) {
@@ -51,27 +46,12 @@ class DeleteCollectionConfirmationManager
       bookmarksIds: state.bookmarksIds,
     ));
     await deleteCollection();
-    _sendAnalyticsUseCase(
-      CollectionDeletedEvent(context: DeleteCollectionContext.deleteBookmarks),
-    );
   }
 
   Future<void> deleteCollection() async {
     await _removeCollectionUseCase.call(
       RemoveCollectionUseCaseParam(
         collectionIdToRemove: _collectionId,
-      ),
-    );
-    _sendAnalyticsUseCase(
-      CollectionDeletedEvent(context: DeleteCollectionContext.empty),
-    );
-  }
-
-  void onCancelPressed({required Duration screenDuration}) {
-    _sendAnalyticsUseCase(
-      BottomSheetDismissedEvent(
-        bottomSheetView: BottomSheetView.confirmDeletingCollection,
-        duration: screenDuration,
       ),
     );
   }

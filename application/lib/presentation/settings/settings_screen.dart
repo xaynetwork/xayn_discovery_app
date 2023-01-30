@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/app_theme.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/extensions/subscription_status_extension.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/constants.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
@@ -15,13 +12,7 @@ import 'package:xayn_discovery_app/presentation/settings/manager/settings_state.
 import 'package:xayn_discovery_app/presentation/settings/widget/app_theme_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/general_info_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/help_improve_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/home_feed_settings_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/local_notifications_debug_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/notifications_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/remote_notifications_debug_section.dart';
 import 'package:xayn_discovery_app/presentation/settings/widget/share_app_section.dart';
-import 'package:xayn_discovery_app/presentation/settings/widget/subscripton_section.dart';
-import 'package:xayn_discovery_app/presentation/utils/environment_helper.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/animated_state_switcher.dart';
@@ -54,9 +45,6 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Linden get linden => UnterDenLinden.getLinden(context);
-
-  bool get _showDebugSecions =>
-      EnvironmentHelper.kAppId != EnvironmentHelper.kReleaseAppId;
 
   @override
   void initState() {
@@ -105,33 +93,13 @@ class _SettingsScreenState extends State<SettingsScreen>
           padding: EdgeInsets.symmetric(horizontal: R.dimen.unit3),
           child: child,
         );
-    final buildSubscriptionSection =
-        state.subscriptionStatus.isSubscriptionActive ||
-            state.subscriptionStatus.isFreeTrialActive;
-    final isBetaUser = state.subscriptionStatus.isBetaUser;
     final children = [
-      if (state.isPaymentEnabled && buildSubscriptionSection && !isBetaUser)
-        _buildSubscriptionSection(
-          subscriptionStatus: state.subscriptionStatus,
-        ),
-      _buildHomeFeedSection(
-        isPaymentEnabled: state.isPaymentEnabled,
-        isTopicsEnabled: state.isTopicsEnabled,
-      ),
-      if (state.areRemoteNotificationsEnabled)
-        _buildNotificationsSection(
-          arePushNotificationsActive: state.arePushNotificationsActive,
-        ),
       _buildAppThemeSection(
         appTheme: state.theme,
       ),
       _buildGeneralSection(),
       _buildHelpImproveSection(),
       _buildShareAppSection(),
-      if (state.areLocalNotificationsEnabled && _showDebugSecions)
-        _buildLocalNotificationDebugSection(),
-      if (state.areRemoteNotificationsEnabled && _showDebugSecions)
-        _buildRemoteNotificationDebugSection(),
       _buildAppVersion(state.appVersion),
       _buildBottomSpace(),
     ];
@@ -143,37 +111,6 @@ class _SettingsScreenState extends State<SettingsScreen>
     return SingleChildScrollView(child: column);
   }
 
-  Widget _buildSubscriptionSection({
-    required SubscriptionStatus subscriptionStatus,
-  }) =>
-      SubscriptionSection(
-        subscriptionStatus: subscriptionStatus,
-        onPressed: () => _manager.onSubscriptionSectionPressed(
-          subscriptionStatus: subscriptionStatus,
-        ),
-      );
-
-  Widget _buildHomeFeedSection({
-    required bool isPaymentEnabled,
-    required bool isTopicsEnabled,
-  }) =>
-      SettingsHomeFeedSection(
-        isFirstSection: !isPaymentEnabled,
-        isTopicsEnabled: isTopicsEnabled,
-        onCountriesPressed: _manager.onCountriesOptionsPressed,
-        onSourcesPressed: _manager.onSourcesOptionsPressed,
-        onResetAIPressed: _manager.onResetAIPressed,
-        onTopicsPressed: _manager.onTopicsOptionsPressed,
-      );
-
-  Widget _buildNotificationsSection({
-    required bool arePushNotificationsActive,
-  }) =>
-      NotificationsSection(
-        togglePushNotificationsState: _manager.togglePushNotificationsState,
-        arePushNotificationsActive: arePushNotificationsActive,
-      );
-
   Widget _buildAppThemeSection({
     required AppTheme appTheme,
   }) =>
@@ -183,26 +120,16 @@ class _SettingsScreenState extends State<SettingsScreen>
       );
 
   Widget _buildGeneralSection() => SettingsGeneralInfoSection(
-        onAboutPressed: () => _manager.openExternalUrl(
-          url: Constants.aboutXaynUrl,
-          currentView: CurrentView.settings,
-        ),
-        onCarbonNeutralPressed: () => _manager.openExternalUrl(
-          url: Constants.carbonNeutralUrl,
-          currentView: CurrentView.settings,
-        ),
-        onImprintPressed: () => _manager.openExternalUrl(
-          url: Constants.imprintUrl,
-          currentView: CurrentView.settings,
-        ),
-        onPrivacyPressed: () => _manager.openExternalUrl(
-          url: Constants.privacyPolicyUrl,
-          currentView: CurrentView.settings,
-        ),
-        onTermsPressed: () => _manager.openExternalUrl(
-          url: Constants.termsAndConditionsUrl,
-          currentView: CurrentView.settings,
-        ),
+        onAboutPressed: () =>
+            _manager.openExternalUrl(url: Constants.aboutXaynUrl),
+        onCarbonNeutralPressed: () =>
+            _manager.openExternalUrl(url: Constants.carbonNeutralUrl),
+        onImprintPressed: () =>
+            _manager.openExternalUrl(url: Constants.imprintUrl),
+        onPrivacyPressed: () =>
+            _manager.openExternalUrl(url: Constants.privacyPolicyUrl),
+        onTermsPressed: () =>
+            _manager.openExternalUrl(url: Constants.termsAndConditionsUrl),
       );
 
   Widget _buildHelpImproveSection() => SettingsHelpImproveSection(
@@ -212,19 +139,6 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   Widget _buildShareAppSection() =>
       ShareAppSection(onShareAppPressed: _manager.shareApp);
-
-  Widget _buildLocalNotificationDebugSection() =>
-      LocalNotificationsDebugSection(
-        onRequestLocalNotificationPermissionPressed:
-            _manager.requestLocalNotificationPermission,
-        onSendTestLocalNotificationPressed: _manager.sendTestLocalNotification,
-      );
-
-  Widget _buildRemoteNotificationDebugSection() =>
-      RemoteNotificationsDebugSection(
-        onCopyChannelIdPressed: _manager.copyChannelId,
-        onCopyUserIdPressed: _manager.copyUserId,
-      );
 
   Widget _buildAppVersion(AppVersion appVersion) => GestureDetector(
         child: Padding(

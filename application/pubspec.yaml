@@ -13,7 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  airship_flutter: 6.1.0
   app_settings: 4.1.8
   appsflyer_sdk: 6.5.2
   auto_size_text: 3.0.0
@@ -42,7 +41,7 @@ dependencies:
       url: https://github.com/svonidze/francd
       ref: 170e633af9a7b8b31769eb232f99e105e1359692
   freezed_annotation: 2.1.0
-  fwfh_chewie: 0.7.0+1
+  fwfh_chewie: 0.7.1
   get_it: 7.2.0
   gibberish:
     git:
@@ -65,14 +64,8 @@ dependencies:
   json_serializable: 6.1.4
   logger: 1.1.0
   lottie: 1.2.2
-  mixpanel_flutter: 1.5.0
-  notification_permissions:
-    git:
-      url: https://github.com/bshvets8/flutter_notification_permissions.git
-      ref: feature/android-13-support
   package_info_plus: 1.4.0
   path_provider: 2.0.9
-  purchases_flutter: 4.0.0-beta.1
   platform: ^3.1.0
   rxdart: 0.27.3
   sprintf: 6.0.0
@@ -99,13 +92,10 @@ dependencies:
     git:
       url: https://github.com/xaynetwork/xayn_design.git
       ref: e19b3ad8ef07e2349b250abac8c27cddec68beef
-  xayn_discovery_engine_flutter:
-    hosted: https://xayn.jfrog.io/artifactory/api/pub/dart.xayn.private
-    version: 0.1.0+main.220914085310
   xayn_readability:
     git:
       url: https://github.com/xaynetwork/xayn_readability.git
-      ref: e37cd9d4b33ddfb30469f260e11b6692beac1c88
+      ref: 57004de3575084725173dbfeb60c57595c3721d3
   xayn_swipe_it: 1.0.4
 
 dependency_overrides:
@@ -153,15 +143,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    # This must be the real toplevel directories for the AI assets.
-    # Whenever the manifest changes this must be updated to contain the correct folders.
-    # In order to determine the real folder structure run:
-    # fastlane clean && fastlane build_runner  (which will run the update_assets lane and download the assets)
-    - assets/ai/kpe_v0001/
-    - assets/ai/smbert_v0001/
-    - assets/ai/sources_v0000/
-    - assets/remote_config/
-
+    - assets/data_set.json
     # Including all the files in a directory is not supported for external packages
     # The following could be refactored when this issue is resolved
     # https://github.com/flutter/flutter/issues/27802

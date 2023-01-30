@@ -1,8 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/engine_event.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/next_feed_batch_request_succeeded.dart';
+import 'package:xayn_discovery_app/infrastructure/discovery_engine/discovery_engine.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/connectivity/connectivity_use_case.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @injectable
 class RequestNextFeedBatchUseCase extends UseCase<None, EngineEvent> {

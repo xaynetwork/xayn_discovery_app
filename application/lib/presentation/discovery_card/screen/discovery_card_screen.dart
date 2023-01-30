@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
@@ -14,7 +15,6 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/tts/widget/tts.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 /// Implementation of [DiscoveryCardBase] which can be used as a navigation endpoint.
 class DiscoveryCardScreen extends StatefulWidget {
@@ -151,9 +151,6 @@ class _DiscoveryCardScreenState extends State<DiscoveryCardScreen>
       builder: (_) => EditReaderModeSettingsMenu(
         onCloseMenu: removeOverlay,
       ),
-    );
-    _discoveryCardScreenManager.onReaderModeMenuDisplayed(
-      isVisible: isOverlayShown,
     );
   }
 }

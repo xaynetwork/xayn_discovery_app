@@ -4,10 +4,6 @@ import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/error/error_object.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bottom_sheet_dismissed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_created_event.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/collection_renamed_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/collection_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/create_collection_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/collection/rename_collection_use_case.dart';
@@ -23,7 +19,6 @@ class CreateOrRenameCollectionManager
   final CreateCollectionUseCase _createCollectionUseCase;
   final RenameCollectionUseCase _renameCollectionUseCase;
   final CollectionErrorsEnumMapper _collectionErrorsEnumMapper;
-  final SendAnalyticsUseCase _sendAnalyticsUseCase;
 
   late final UseCaseSink<String, Collection> _createCollectionHandler =
       pipe(_createCollectionUseCase);
@@ -37,7 +32,6 @@ class CreateOrRenameCollectionManager
     this._createCollectionUseCase,
     this._collectionErrorsEnumMapper,
     this._renameCollectionUseCase,
-    this._sendAnalyticsUseCase,
   ) : super(CreateOrRenameCollectionState.initial());
 
   void updateCollectionName(String name) =>
@@ -46,7 +40,6 @@ class CreateOrRenameCollectionManager
   void createCollection() {
     _checkForError = true;
     _createCollectionHandler(state.collectionName);
-    _sendAnalyticsUseCase(CollectionCreatedEvent());
   }
 
   void renameCollection(UniqueId collectionId) async {
@@ -57,22 +50,6 @@ class CreateOrRenameCollectionManager
     );
     _renameCollectionHandler(
       param,
-    );
-    _sendAnalyticsUseCase(CollectionRenamedEvent());
-  }
-
-  void onCancelPressed({
-    required bool isRenameMode,
-    required Duration screenDuration,
-  }) {
-    final view = isRenameMode
-        ? BottomSheetView.renameCollection
-        : BottomSheetView.createCollection;
-    _sendAnalyticsUseCase(
-      BottomSheetDismissedEvent(
-        bottomSheetView: view,
-        duration: screenDuration,
-      ),
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/model/app_version.dart';
-import 'package:xayn_discovery_app/domain/model/cta/cta.dart';
 import 'package:xayn_discovery_app/domain/model/db_entity.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
@@ -21,7 +20,6 @@ class AppStatus extends DbEntity with _$AppStatus {
     required OnboardingStatus onboardingStatus,
     required bool ratingDialogAlreadyVisible,
     required bool isBetaUser,
-    required CTA cta,
     required bool userDidChangePushNotificationsStatus,
   }) = _AppStatus;
 
@@ -36,7 +34,6 @@ class AppStatus extends DbEntity with _$AppStatus {
     required OnboardingStatus onboardingStatus,
     required bool ratingDialogAlreadyVisible,
     required bool isBetaUser,
-    required CTA cta,
     required bool userDidChangePushNotificationsStatus,
   }) =>
       AppStatus._(
@@ -51,7 +48,6 @@ class AppStatus extends DbEntity with _$AppStatus {
         onboardingStatus: onboardingStatus,
         ratingDialogAlreadyVisible: ratingDialogAlreadyVisible,
         isBetaUser: isBetaUser,
-        cta: cta,
         userDidChangePushNotificationsStatus:
             userDidChangePushNotificationsStatus,
       );
@@ -68,7 +64,6 @@ class AppStatus extends DbEntity with _$AppStatus {
         onboardingStatus: const OnboardingStatus.initial(),
         ratingDialogAlreadyVisible: false,
         isBetaUser: false,
-        cta: const CTA.initial(),
         userDidChangePushNotificationsStatus: false,
       );
 

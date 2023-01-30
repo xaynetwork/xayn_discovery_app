@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:xayn_discovery_app/domain/item_renderer/card.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_background_color.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/manager/base_discovery_manager.dart';
 
@@ -23,7 +22,6 @@ class DiscoveryState with _$DiscoveryState {
     ExplicitDocumentFeedback? latestExplicitDocumentFeedback,
     @Default(false) bool shouldUpdateNavBar,
     required bool didReachEnd,
-    SubscriptionStatus? subscriptionStatus,
     ReaderModeBackgroundColor? readerModeBackgroundColor,
   }) = _DiscoveryState;
 
@@ -40,6 +38,5 @@ class DiscoveryState with _$DiscoveryState {
       didReachEnd == other.didReachEnd &&
       latestExplicitDocumentFeedback == other.latestExplicitDocumentFeedback &&
       _setEquality.equals(cards, other.cards) &&
-      subscriptionStatus == other.subscriptionStatus &&
       readerModeBackgroundColor == other.readerModeBackgroundColor;
 }

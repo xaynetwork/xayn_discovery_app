@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/source.dart';
 import 'package:xayn_discovery_app/domain/model/sources_management/sources_management_task.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 class SourcesManagementOperation extends Equatable {
   final Source source;

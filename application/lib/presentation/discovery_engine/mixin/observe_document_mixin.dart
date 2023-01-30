@@ -4,15 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/discovery_card_observation.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_view_mode.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/events/engine_event.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/discovery_engine/use_case/log_document_time_use_case.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/document_time_spent_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/discovery_engine/discovery_card_observation_use_case.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/singleton_subscription_observer.dart';
 import 'package:xayn_discovery_app/presentation/discovery_engine/mixin/util/use_case_sink_extensions.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 typedef OnObservation = void Function(
     DiscoveryCardMeasuredObservation observation);
@@ -57,18 +56,8 @@ mixin ObserveDocumentMixin<T> on SingletonSubscriptionObserver<T> {
         di.get<DiscoveryCardObservationUseCase>();
     final discoveryCardMeasuredObservationUseCase =
         di.get<DiscoveryCardMeasuredObservationUseCase>();
-    final sendAnalyticsUseCase = di.get<SendAnalyticsUseCase>();
 
     observeAndTrack(DiscoveryCardMeasuredObservation observation) {
-      final document = observation.document!;
-
-      sendAnalyticsUseCase(
-        DocumentTimeSpentEvent(
-            document: document,
-            duration: observation.duration,
-            viewMode: observation.viewType!),
-      );
-
       onObservation(observation);
     }
 

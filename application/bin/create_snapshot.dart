@@ -18,6 +18,12 @@ import 'package:xayn_discovery_app/domain/model/extensions/hive_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type_markets.dart';
 import 'package:xayn_discovery_app/domain/model/feed_settings/feed_settings.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document_id.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/news_resource.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/source.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/stack_id.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/domain/model/reader_mode/reader_mode_settings.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_settings_mapper.dart';
@@ -26,14 +32,12 @@ import 'package:xayn_discovery_app/infrastructure/mappers/app_theme_mapper.dart'
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/bookmark_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/collection_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/db_entity_to_feed_market_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/document_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/explicit_document_feedback_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_settings_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/feed_type_markets_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/inline_card_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/migration_info_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/reader_mode_settings_mapper.dart';
@@ -52,7 +56,6 @@ import 'package:xayn_discovery_app/infrastructure/repository/hive_reader_mode_se
 import 'package:xayn_discovery_app/infrastructure/util/box_names.dart';
 import 'package:xayn_discovery_app/infrastructure/util/discovery_engine_markets.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_constants.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 /// Creates a database snapshot in the given directory
 void main(List<String> args) async {
@@ -146,7 +149,7 @@ void _createDocuments() {
       title: '',
       snippet: '',
       url: Uri.base,
-      sourceDomain: Source('example'),
+      sourceDomain: const Source('example'),
       image: Uri.base,
       datePublished: DateTime(2022),
       country: 'US',
@@ -156,36 +159,18 @@ void _createDocuments() {
       topic: 'topic',
     ),
     // ignore: invalid_use_of_visible_for_testing_member
-    stackId: StackId.nil(),
+    stackId: const StackId.nil(),
   );
   final documentWrapper = DocumentWrapper(document);
   repository.save(documentWrapper);
 }
 
 void _createAppStatus(int version) {
-  const inlineCardMapper = InLineCardMapper();
-  const dbEntityMapToSurveyBannerMapper = DbEntityMapToSurveyInLineCardMapper();
-  const dbEntityMapToCountrySelectionMapper =
-      DbEntityMapToCountrySelectionInLineCardMapper();
-  const dbEntityMapToSourceSelectionMapper =
-      DbEntityMapToSourceSelectionInLineCardMapper();
-  const dbEntityMapToPushNotificationsMapper =
-      DbEntityMapToPushNotificationsInLineCardMapper();
-  const dbEntityMapToTopicsMapper = DbEntityMapToTopicsInLineCardMapper();
-
   const mapper = AppStatusMapper(
     MapToAppVersionMapper(),
     AppVersionToMapMapper(),
     OnboardingStatusToDbEntityMapMapper(),
     DbEntityMapToOnboardingStatusMapper(),
-    CTAMapToDbEntityMapper(inlineCardMapper),
-    DbEntityMapToCTAMapper(
-      dbEntityMapToSurveyBannerMapper,
-      dbEntityMapToCountrySelectionMapper,
-      dbEntityMapToSourceSelectionMapper,
-      dbEntityMapToPushNotificationsMapper,
-      dbEntityMapToTopicsMapper,
-    ),
   );
   final repository = HiveAppStatusRepository(mapper);
 

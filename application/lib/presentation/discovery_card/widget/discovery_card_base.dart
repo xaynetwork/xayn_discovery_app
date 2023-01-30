@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/news_resource.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
@@ -14,7 +17,6 @@ import 'package:xayn_discovery_app/presentation/images/widget/shader/shader.dart
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/widget/animation_player.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 typedef OnTtsData = void Function(TtsData);
 

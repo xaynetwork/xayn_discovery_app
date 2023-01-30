@@ -13,7 +13,6 @@ import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.
 import 'package:xayn_discovery_app/presentation/personal_area/manager/list_item_model.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_manager.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/manager/personal_area_state.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_trial_banner.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_mixin.dart';
 import 'package:xayn_discovery_app/presentation/utils/semantics_labels.dart';
@@ -61,10 +60,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
             hideTooltip();
             _manager.onHomeNavPressed();
           }),
-          buildNavBarItemSearch(onPressed: () {
-            hideTooltip();
-            _manager.onActiveSearchNavPressed();
-          }),
           buildNavBarItemPersonalArea(
             isActive: true,
             onPressed: hideTooltip,
@@ -109,9 +104,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         final child = item.map(
           collection: (itemModel) => _buildCard(
             itemModel.collection,
-          ),
-          payment: (itemModel) => _buildTrialBanner(
-            itemModel.trialEndDate,
           ),
           contact: (_) => _buildContact(),
         );
@@ -182,14 +174,6 @@ class PersonalAreaScreenState extends State<PersonalAreaScreen>
         collectionCard: _buildBaseCard(collection),
         onSwipeOptionTap: _onSwipeOptionsTap(collection),
         onFling: _manager.triggerHapticFeedbackMedium,
-      );
-
-  Widget _buildTrialBanner(DateTime trialEndDate) => Padding(
-        padding: EdgeInsets.only(bottom: R.dimen.unit2),
-        child: SubscriptionTrialBanner(
-          trialEndDate: trialEndDate,
-          onPressed: _manager.onPaymentTrialBannerPressed,
-        ),
       );
 
   Map<SwipeOptionCollectionCard, VoidCallback> _onSwipeOptionsTap(

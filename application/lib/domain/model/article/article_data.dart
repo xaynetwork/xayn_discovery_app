@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 
 part 'article_data.freezed.dart';
 part 'article_data.g.dart';

@@ -9,7 +9,6 @@ import 'package:path_provider/path_provider.dart' as path;
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/infrastructure/service/bug_reporting/bug_reporting_service.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/remote_config/fetch_remote_config.dart';
 import 'package:xayn_discovery_app/infrastructure/util/hive_db.dart';
 import 'package:xayn_discovery_app/presentation/app/manager/app_manager.dart';
 import 'package:xayn_discovery_app/presentation/app/widget/app.dart';
@@ -41,10 +40,7 @@ Future<void> setup() async {
   );
   await hiveDb;
 
-  final remoteConfig = await fetchRemoteConfig();
-
   await configureDependencies(
-    remoteConfig,
     environment:
         EnvironmentHelper.kIsDebug ? debugEnvironment : releaseEnvironment,
   );

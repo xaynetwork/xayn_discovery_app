@@ -3,12 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/infrastructure/di/di_config.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/base_discovery_widget.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/manager/discovery_feed_manager.dart';
 import 'package:xayn_discovery_app/presentation/menu/edit_reader_mode_settings/widget/edit_reader_mode_settings.dart';
 import 'package:xayn_discovery_app/presentation/navigation/widget/nav_bar_items.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 class DiscoveryFeed extends BaseDiscoveryWidget<DiscoveryFeedManager> {
   const DiscoveryFeed({
@@ -38,10 +38,6 @@ class _DiscoveryFeedState
                   hideTooltip();
                   _manager.onHomeNavPressed();
                 }),
-            buildNavBarItemSearch(onPressed: () {
-              hideTooltip();
-              _manager.onSearchNavPressed();
-            }),
             buildNavBarItemPersonalArea(
               onPressed: () {
                 hideTooltip();
@@ -52,7 +48,7 @@ class _DiscoveryFeedState
         );
     NavBarConfig buildReaderMode() {
       final card = _manager.state.cards.elementAt(_manager.state.cardIndex);
-      final document = card.requireDocument;
+      final document = card.document;
       final managers = cardManagersCache.managersOf(document);
 
       void onBookmarkPressed() =>
@@ -75,7 +71,6 @@ class _DiscoveryFeedState
             onCloseMenu: removeOverlay,
           ),
         );
-        manager.onReaderModeMenuDisplayed(isVisible: isOverlayShown);
       }
 
       return NavBarConfig(

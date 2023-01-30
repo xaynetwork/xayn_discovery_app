@@ -23,20 +23,6 @@ class InLineCard extends Equatable {
     this.cardType = CardType.survey,
   });
 
-  const InLineCard.countrySelection({
-    required this.numberOfTimesShown,
-    required this.hasBeenClicked,
-    required this.lastSessionNumberWhenShown,
-    this.cardType = CardType.countrySelection,
-  });
-
-  const InLineCard.sourceSelection({
-    required this.numberOfTimesShown,
-    required this.hasBeenClicked,
-    required this.lastSessionNumberWhenShown,
-    this.cardType = CardType.sourceSelection,
-  });
-
   const InLineCard.initial(this.cardType)
       : numberOfTimesShown = 0,
         hasBeenClicked = false,

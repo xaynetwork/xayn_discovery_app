@@ -8,8 +8,8 @@ import 'package:xayn_design/xayn_design.dart' as design;
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
-import 'package:xayn_discovery_app/domain/model/payment/subscription_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/util/string_extensions.dart';
 import 'package:xayn_discovery_app/presentation/base_discovery/widget/reader_mode_unavailable_bottom_sheet.dart';
@@ -28,13 +28,8 @@ import 'package:xayn_discovery_app/presentation/bottom_sheet/move_to_collection/
 import 'package:xayn_discovery_app/presentation/bottom_sheet/onboarding/widget/onboarding_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/promo_code_applied_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/bottom_sheet/promo_code/redeem_promo_code_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/widget/reset_ai_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/bottom_sheet/reset_ai/widget/resetting_ai_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
-import 'package:xayn_discovery_app/presentation/payment/payment_bottom_sheet.dart';
-import 'package:xayn_discovery_app/presentation/premium/widgets/subscription_details_bottom_sheet.dart';
 import 'package:xayn_discovery_app/presentation/utils/string_utils.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 part 'overlay_data.freezed.dart';
 
@@ -191,30 +186,6 @@ class OverlayData {
         ),
       );
 
-  static BottomSheetData bottomSheetSubscriptionDetails({
-    required SubscriptionStatus subscriptionStatus,
-    required VoidCallback onSubscriptionLinkCancelTapped,
-  }) =>
-      BottomSheetData<SubscriptionStatus>(
-        args: subscriptionStatus,
-        builder: (context, subscriptionStatus) =>
-            SubscriptionDetailsBottomSheet(
-          subscriptionStatus: subscriptionStatus!,
-          onSubscriptionLinkCancelTapped: onSubscriptionLinkCancelTapped,
-        ),
-      );
-
-  static BottomSheetData bottomSheetPayment({
-    required VoidCallback onClosePressed,
-    required VoidCallback? onRedeemPressed,
-  }) =>
-      BottomSheetData(
-        builder: (context, subscriptionStatus) => PaymentBottomSheet(
-          onClosePressed: onClosePressed,
-          onRedeemPressed: onRedeemPressed,
-        ),
-      );
-
   static BottomSheetData bottomSheetCreateOrRenameCollection({
     Collection? collection,
     VoidCallback? onSystemPop,
@@ -356,30 +327,6 @@ class OverlayData {
       BottomSheetData(
         allowStacking: allowStacking,
         builder: (_, __) => NoActiveSubscriptionFoundErrorBottomSheet(),
-      );
-
-  static BottomSheetData bottomSheetResetAI({
-    required VoidCallback onResetAIPressed,
-    VoidCallback? onSystemPop,
-  }) =>
-      BottomSheetData(
-        builder: (_, __) => ResetAIBottomSheet(
-          onSystemPop: onSystemPop,
-          onResetAIPressed: onResetAIPressed,
-        ),
-      );
-
-  static BottomSheetData bottomSheetResettingAI({
-    VoidCallback? onSystemPop,
-    bool isDismissible = false,
-    required VoidCallback onResetAIFailed,
-  }) =>
-      BottomSheetData(
-        isDismissible: isDismissible,
-        builder: (_, __) => ResettingAIBottomSheet(
-          onSystemPop: onSystemPop,
-          onResetAIFailed: onResetAIFailed,
-        ),
       );
 }
 

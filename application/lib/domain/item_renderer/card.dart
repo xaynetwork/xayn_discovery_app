@@ -1,24 +1,17 @@
 import 'package:equatable/equatable.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 
 enum CardType {
   document,
   survey,
-  sourceSelection,
-  countrySelection,
   pushNotifications,
-  topics,
 }
 
 class Card extends Equatable {
   final CardType type;
-  final Document? document;
-
-  Document get requireDocument => document!;
+  final Document document;
 
   const Card.document(this.document) : type = CardType.document;
-
-  const Card.other(this.type) : document = null;
 
   @override
   List<Object?> get props => [type, document];

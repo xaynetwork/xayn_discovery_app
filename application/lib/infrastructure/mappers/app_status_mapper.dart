@@ -4,7 +4,6 @@ import 'package:xayn_discovery_app/domain/model/app_status.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/app_version_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
-import 'package:xayn_discovery_app/infrastructure/mappers/cta_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/onboarding_status_mapper.dart';
 
 @singleton
@@ -13,16 +12,12 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
   final AppVersionToMapMapper _appVersionToMapMapper;
   final OnboardingStatusToDbEntityMapMapper _onboardingStatusToMapMapper;
   final DbEntityMapToOnboardingStatusMapper _mapToOnboardingStatusMapper;
-  final CTAMapToDbEntityMapper _ctaMapToDbEntityMapper;
-  final DbEntityMapToCTAMapper _mapToCTAMapper;
 
   const AppStatusMapper(
     this._mapToAppVersionMapper,
     this._appVersionToMapMapper,
     this._onboardingStatusToMapMapper,
     this._mapToOnboardingStatusMapper,
-    this._ctaMapToDbEntityMapper,
-    this._mapToCTAMapper,
   );
 
   @override
@@ -41,7 +36,6 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
     final ratingDialogAlreadyVisible =
         map[AppStatusFields.ratingDialogAlreadyVisible] as bool?;
     final isBetaUser = map[AppStatusFields.isBetaUser] as bool?;
-    final cta = _mapToCTAMapper.map(map[AppStatusFields.cta]);
     final extraTrialDate = map[AppStatusFields.extraTrialDate] as DateTime?;
     final usedPromoCodes = map[AppStatusFields.usedPromoCodes] as List<String>?;
     final userDidChangePushNotificationsStatus =
@@ -58,7 +52,6 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
       onboardingStatus: onboardingStatus,
       ratingDialogAlreadyVisible: ratingDialogAlreadyVisible ?? false,
       isBetaUser: isBetaUser ?? false,
-      cta: cta,
       userDidChangePushNotificationsStatus:
           userDidChangePushNotificationsStatus ?? false,
     );
@@ -77,7 +70,6 @@ class AppStatusMapper extends BaseDbEntityMapper<AppStatus> {
         AppStatusFields.ratingDialogAlreadyVisible:
             entity.ratingDialogAlreadyVisible,
         AppStatusFields.isBetaUser: entity.isBetaUser,
-        AppStatusFields.cta: _ctaMapToDbEntityMapper.map(entity.cta),
         AppStatusFields.extraTrialDate: entity.extraTrialEndDate,
         AppStatusFields.usedPromoCodes: entity.usedPromoCodes.toList(),
         AppStatusFields.userDidChangePushNotificationsStatus:

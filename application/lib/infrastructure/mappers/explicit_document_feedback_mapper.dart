@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
 import 'package:xayn_discovery_app/domain/model/document/explicit_document_feedback.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
 
 @singleton
 class ExplicitDocumentFeedbackMapper

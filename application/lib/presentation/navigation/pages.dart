@@ -2,21 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:xayn_architecture/xayn_architecture_navigation.dart' as xayn;
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/presentation/active_search/widget/active_search.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart' as engine;
 import 'package:xayn_discovery_app/presentation/bookmark/widget/bookmarks_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/screen/discovery_card_screen.dart';
 import 'package:xayn_discovery_app/presentation/discovery_feed/widget/discovery_feed.dart';
 import 'package:xayn_discovery_app/presentation/error/widget/error_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/country/widget/country_feed_settings_page.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/add_source_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/source/widget/sources_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/add_topic_screen.dart';
-import 'package:xayn_discovery_app/presentation/feed_settings/topic/widget/topics_screen.dart';
-import 'package:xayn_discovery_app/presentation/payment/paywall_screen.dart';
 import 'package:xayn_discovery_app/presentation/personal_area/personal_area_screen.dart';
 import 'package:xayn_discovery_app/presentation/settings/settings_screen.dart';
 import 'package:xayn_discovery_app/presentation/splash/widget/splash_screen.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart' as engine;
 
 enum PageName {
   splashScreen,
@@ -29,7 +22,6 @@ enum PageName {
   bookmarks,
   sourceFeedSettings,
   error,
-  paywall,
   excludedSourceSelection,
   trustedSourceSelection,
 }
@@ -46,11 +38,8 @@ class PageRegistry {
   static final Set<xayn.UntypedPageData> pages = {
     splashScreen,
     discovery,
-    search,
     personalArea,
     settings,
-    countryFeedSettings,
-    payment,
   };
 
   // Make sure to add the page names in camel case
@@ -76,13 +65,6 @@ class PageRegistry {
   /// when device orientation changes. This also fixes an issue
   /// with playing videos in full screen mode.
   static final searchKey = GlobalKey();
-  static final search = xayn.PageData(
-    name: PageName.search.name,
-    //ignore: prefer_const_constructors
-    builder: (_, args) => ActiveSearch(
-      key: searchKey,
-    ),
-  );
 
   static cardDetailsFromDocumentId({
     required UniqueId documentId,
@@ -129,27 +111,6 @@ class PageRegistry {
     builder: (_, args) => SettingsScreen(),
   );
 
-  static sourceFeedSettings({bool openOnHiddenSourcesTab = false}) =>
-      xayn.PageData(
-        name: PageName.sourceFeedSettings.name,
-        arguments: openOnHiddenSourcesTab,
-        builder: (_, bool? args) => SourcesScreen(
-          openOnHiddenSourcesTab: args!,
-        ),
-      );
-
-  static final topicsFeedSettings = xayn.PageData(
-    name: "topicsFeedSettings",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => TopicsScreen(),
-  );
-
-  static final countryFeedSettings = xayn.PageData(
-    name: PageName.countryFeedSettings.name,
-    //ignore: prefer_const_constructors
-    builder: (_, args) => CountryFeedSettingsPage(),
-  );
-
   static error(String? errorCode) => xayn.PageData(
         name: PageName.error.name,
         arguments: errorCode,
@@ -158,28 +119,4 @@ class PageRegistry {
           errorCode: args,
         ),
       );
-
-  static final payment = xayn.PageData(
-    name: PageName.paywall.name,
-    //ignore: prefer_const_constructors
-    builder: (_, args) => PaywallScreen(),
-  );
-
-  static final excludedSourceSelection = xayn.PageData(
-    name: PageName.excludedSourceSelection.name,
-    //ignore: prefer_const_constructors
-    builder: (_, args) => AddSourceScreen.excluded(),
-  );
-
-  static final addTopic = xayn.PageData(
-    name: "addTopic",
-    //ignore: prefer_const_constructors
-    builder: (_, args) => AddTopicScreen(),
-  );
-
-  static final trustedSourceSelection = xayn.PageData(
-    name: PageName.trustedSourceSelection.name,
-    //ignore: prefer_const_constructors
-    builder: (_, args) => AddSourceScreen.trusted(),
-  );
 }

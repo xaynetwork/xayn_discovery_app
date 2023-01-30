@@ -1,7 +1,7 @@
 name: Code Quality
 
 env:
-  FLUTTER_VERSION: '3.0.2'
+  FLUTTER_VERSION: '3.3.10'
 
 on:
   push:
@@ -49,8 +49,8 @@ jobs:
       - name: Run checks
         timeout-minutes: 20
         env:
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_DEBUG }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_PRODUCTION }}
+          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
+          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}

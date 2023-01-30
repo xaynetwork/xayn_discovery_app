@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_data.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager_mixin.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 mixin CollectionManagerFlowMixin<T> on OverlayManagerMixin<T> {
   /// Starts a flow for bookmarking/un-bookmarking a document or moving it

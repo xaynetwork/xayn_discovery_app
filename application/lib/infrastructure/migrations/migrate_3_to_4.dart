@@ -4,11 +4,11 @@ import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_provider.dart';
 import 'package:xayn_discovery_app/domain/model/document/document_wrapper.dart';
 import 'package:xayn_discovery_app/domain/model/extensions/document_extension.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
 import 'package:xayn_discovery_app/infrastructure/mappers/base_mapper.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/base_migration.dart';
 import 'package:xayn_discovery_app/infrastructure/migrations/crud_entity_repository.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 
 // ignore: camel_case_types
 class Migration_3_To_4 extends BaseDbMigration {

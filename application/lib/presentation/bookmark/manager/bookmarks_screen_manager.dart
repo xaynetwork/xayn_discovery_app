@@ -3,12 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xayn_architecture/xayn_architecture.dart';
 import 'package:xayn_discovery_app/domain/model/bookmark/bookmark.dart';
-import 'package:xayn_discovery_app/domain/model/collection/collection.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
 import 'package:xayn_discovery_app/domain/model/onboarding/onboarding_type.dart';
 import 'package:xayn_discovery_app/domain/model/unique_id.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/bookmark_deleted_event.dart';
-import 'package:xayn_discovery_app/infrastructure/use_case/analytics/send_analytics_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/bookmark_use_cases_errors.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/listen_bookmarks_use_case.dart';
 import 'package:xayn_discovery_app/infrastructure/use_case/bookmark/remove_bookmark_use_case.dart';
@@ -47,7 +44,6 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
   final DateTimeHandler _dateTimeHandler;
   final BookmarksScreenNavActions _bookmarksScreenNavActions;
   final HapticFeedbackMediumUseCase _hapticFeedbackMediumUseCase;
-  final SendAnalyticsUseCase _sendAnalyticsUseCase;
   late final UniqueId? _collectionId;
   final NeedToShowOnboardingUseCase _needToShowOnboardingUseCase;
   final MarkOnboardingTypeCompletedUseCase _markOnboardingTypeCompletedUseCase;
@@ -61,7 +57,6 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
     this._bookmarksScreenNavActions,
     this._needToShowOnboardingUseCase,
     this._markOnboardingTypeCompletedUseCase,
-    this._sendAnalyticsUseCase,
     this._featureManager, {
 
     /// Required param to load a collection when entering a screen, alternatively call [enteringScreen]
@@ -103,14 +98,7 @@ class BookmarksScreenManager extends Cubit<BookmarksScreenState>
       matchOnError: {
         On<BookmarkUseCaseError>(_matchOnBookmarkUseCaseError),
       },
-      onValue: (bookmark) {
-        _sendAnalyticsUseCase(
-          BookmarkDeletedEvent(
-            fromDefaultCollection:
-                bookmark.collectionId == Collection.readLaterId,
-          ),
-        );
-      },
+      onValue: (bookmark) {},
     );
   }
 

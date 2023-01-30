@@ -4,21 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xayn_design/xayn_design.dart';
 import 'package:xayn_discovery_app/domain/model/feed/feed_type.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/document.dart';
+import 'package:xayn_discovery_app/domain/model/legacy/user_reaction.dart';
 import 'package:xayn_discovery_app/domain/tts/tts_data.dart';
-import 'package:xayn_discovery_app/infrastructure/service/analytics/events/open_external_url_event.dart';
 import 'package:xayn_discovery_app/presentation/constants/r.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_manager.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/manager/discovery_card_state.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/app_scrollbar.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/card_menu_indicator.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_base.dart';
 import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_elements.dart';
-import 'package:xayn_discovery_app/presentation/discovery_card/widget/discovery_card_header_menu.dart';
 import 'package:xayn_discovery_app/presentation/images/widget/arc.dart';
 import 'package:xayn_discovery_app/presentation/reader_mode/widget/reader_mode.dart';
 import 'package:xayn_discovery_app/presentation/utils/overlay/overlay_manager.dart';
-import 'package:xayn_discovery_engine/discovery_engine.dart';
-import 'package:xayn_discovery_engine_flutter/discovery_engine.dart';
 import 'package:xayn_readability/xayn_readability.dart' show ProcessHtmlResult;
 
 /// the fraction height of the card image.
@@ -86,7 +83,6 @@ class _DiscoveryCardStaticState
 
             discoveryCardManager.openWebResourceUrl(
               widget.document,
-              CurrentView.story,
               widget.feedType,
             );
           },
@@ -125,22 +121,6 @@ class _DiscoveryCardStaticState
           child: image,
         );
 
-        final indicator = CardMenuIndicator(
-          isInteractionEnabled: widget.isPrimary,
-          onOpenHeaderMenu: () {
-            widget.onTtsData?.call(TtsData.disabled());
-
-            toggleOverlay(
-              builder: (_) => DiscoveryCardHeaderMenu(
-                itemsMap: _buildDiscoveryCardHeaderMenuItems,
-                source: Source.fromJson(widget.document.resource.url.host),
-                onClose: removeOverlay,
-              ),
-              useRootOverlay: true,
-            );
-          },
-        );
-
         return AppScrollbar(
           scrollController: _scrollController,
           child: LayoutBuilder(
@@ -161,11 +141,6 @@ class _DiscoveryCardStaticState
                   left: 0,
                   right: 0,
                   child: imageWidget,
-                ),
-                Positioned(
-                  top: R.dimen.unit2,
-                  right: R.dimen.unit2,
-                  child: indicator,
                 ),
               ],
             ),
@@ -221,37 +196,4 @@ class _DiscoveryCardStaticState
       },
     );
   }
-
-  Map<DiscoveryCardHeaderMenuItemEnum, DiscoveryCardHeaderMenuItem>
-      get _buildDiscoveryCardHeaderMenuItems => {
-            DiscoveryCardHeaderMenuItemEnum.openInBrowser:
-                DiscoveryCardHeaderMenuHelper.buildOpenInBrowserItem(
-              onTap: () {
-                removeOverlay();
-                discoveryCardManager.openWebResourceUrl(
-                  widget.document,
-                  CurrentView.story,
-                  widget.feedType,
-                );
-              },
-            ),
-            DiscoveryCardHeaderMenuItemEnum.excludeSource:
-                DiscoveryCardHeaderMenuHelper.buildExcludeSourceItem(
-              onTap: () {
-                removeOverlay();
-                discoveryCardManager.onExcludeSource(
-                  document: widget.document,
-                );
-              },
-            ),
-            DiscoveryCardHeaderMenuItemEnum.includeSource:
-                DiscoveryCardHeaderMenuHelper.buildIncludeSourceBackItem(
-              onTap: () {
-                removeOverlay();
-                discoveryCardManager.onIncludeSource(
-                  document: widget.document,
-                );
-              },
-            ),
-          };
 }

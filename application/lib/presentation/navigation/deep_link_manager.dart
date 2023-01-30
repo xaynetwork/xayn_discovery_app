@@ -7,7 +7,6 @@ import 'package:xayn_discovery_app/presentation/navigation/pages.dart';
 
 enum DeepLinkValue {
   none,
-  activeSearch,
   cardDetailsFromDocument,
 }
 
@@ -31,7 +30,6 @@ class DeepLinkManagerImpl extends DeepLinkManager {
     changeStack(
       (stack) => deepLinkData.when(
         none: () => stack.replace(page),
-        activeSearch: () => stack.replace(page),
         feed: (_) => stack.push(page),
         cardDetails: (_) {
           /// If the app is being opened, first replace the splash screen with the feed screen
@@ -49,7 +47,6 @@ extension on DeepLinkData {
   UntypedPageData? get toPage {
     return when(
       none: () => null,
-      activeSearch: () => PageRegistry.search,
       feed: (documentId) =>
           PageRegistry.cardDetailsFromDocumentId(documentId: documentId),
       cardDetails: (document) =>
