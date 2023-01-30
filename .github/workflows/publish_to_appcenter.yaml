@@ -8,6 +8,15 @@ on:
       - '*'
   workflow_dispatch:
     inputs:
+      documents_json_url:
+        required: true
+        type: string
+      endpoint_url:
+        required: true
+        type: string
+      front_office_key:
+        required: true
+        type: string
       android_internal:
         description: 'Android Internal'
         required: false
@@ -106,8 +115,9 @@ jobs:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
           APPCENTER_IOS_INTERNAL_TOKEN: ${{ secrets.APPCENTER_IOS_INTERNAL_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
+          SEARCH_API_URL: ${{ inputs.endpoint_url }}
+          SEARCH_API_SECRET: ${{ inputs.front_office_key }}
+          STATIC_DATA_SET_URL: ${{ inputs.documents_json_url }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
@@ -193,8 +203,9 @@ jobs:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPSTORE_API_KEY: ${{ secrets.APPSTORE_API_KEY }}
           APPCENTER_IOS_BETA_TOKEN: ${{ secrets.APPCENTER_IOS_BETA_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
+          SEARCH_API_URL: ${{ inputs.endpoint_url }}
+          SEARCH_API_SECRET: ${{ inputs.front_office_key }}
+          STATIC_DATA_SET_URL: ${{ inputs.documents_json_url }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
@@ -266,8 +277,9 @@ jobs:
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_INTERNAL_TOKEN: ${{ secrets.APPCENTER_ANDROID_INTERNAL_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
+          SEARCH_API_URL: ${{ inputs.endpoint_url }}
+          SEARCH_API_SECRET: ${{ inputs.front_office_key }}
+          STATIC_DATA_SET_URL: ${{ inputs.documents_json_url }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
@@ -340,8 +352,9 @@ jobs:
         env:
           PROVISIONING_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           APPCENTER_ANDROID_BETA_TOKEN: ${{ secrets.APPCENTER_ANDROID_BETA_TOKEN }}
-          SEARCH_API_SECRET_DEBUG: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
-          SEARCH_API_SECRET_PRODUCTION: ${{ secrets.SEARCH_API_SECRET_KEY_V2 }}
+          SEARCH_API_URL: ${{ inputs.endpoint_url }}
+          SEARCH_API_SECRET: ${{ inputs.front_office_key }}
+          STATIC_DATA_SET_URL: ${{ inputs.documents_json_url }}
           INSTABUG_TOKEN_DEBUG: ${{ secrets.INSTABUG_TOKEN_DEBUG }}
           INSTABUG_TOKEN_PRODUCTION: ${{ secrets.INSTABUG_TOKEN_PRODUCTION }}
           MIXPANEL_TOKEN_DEBUG: ${{ secrets.MIXPANEL_TOKEN_DEBUG }}
