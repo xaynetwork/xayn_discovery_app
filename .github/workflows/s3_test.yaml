@@ -28,4 +28,4 @@ jobs:
 
       - name: Download 
         run: |
-          aws s3 cp s3://xayn-data-storage/test.txt test.txt
+          aws s3 ls s3://xayn-data-storage/test.txt 
